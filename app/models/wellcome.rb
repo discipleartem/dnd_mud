@@ -1,0 +1,2 @@
+class Wellcome < ApplicationRecord
+end
