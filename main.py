@@ -23,7 +23,6 @@ class Game:
 
     @staticmethod
     def initialize() -> None:
-        """Initialize game settings and data."""
         Game._load_database()
 
     @staticmethod
@@ -35,7 +34,6 @@ class Game:
 
     @staticmethod
     def run() -> None:
-        """Run the game."""
         print(Messages.WELCOME)
         races, race_keys = RaceHandler.get_race_data()
         if races:
@@ -47,17 +45,15 @@ class RaceHandler:
 
     @staticmethod
     def get_race_data() -> Tuple[Dict[int, str], List[str]]:
-        """Load race data from the game database."""
         race_data = Game.database.get(GameDatabaseKeys.RACES)
         if not race_data:
-            ErrorHandler.log_error_message(Messages.ERROR_MESSAGE_KEY_NOT_FOUND.format(GameDatabaseKeys.RACES))
+            RaceHandler._log_missing_key_error(GameDatabaseKeys.RACES)
             return {}, []
         race_dict = RaceHandler._parse_race_data(race_data)
         return race_dict, list(race_data.keys())
 
     @staticmethod
     def _parse_race_data(race_data: Dict[str, Any]) -> Dict[int, str]:
-        """Construct a dictionary of races."""
         return {
             i: race[GameDatabaseKeys.NAME][GameDatabaseKeys.RU]
             for i, race in enumerate(race_data.values())
@@ -65,15 +61,13 @@ class RaceHandler:
 
     @staticmethod
     def get_creature_details(race_key: str) -> Union[Dict[str, Any], None]:
-        """Get creature details given a race key."""
         return Game.database.get(GameDatabaseKeys.RACES, {}).get(race_key)
 
     @staticmethod
     def handle_race_choice(race_key: str, race_dict: Dict[int, str], user_choice: int) -> bool:
-        """Process the race choice made by the user."""
         creature_data = RaceHandler.get_creature_details(race_key)
         if not creature_data:
-            ErrorHandler.log_error_message(Messages.ERROR_MESSAGE_KEY_NOT_FOUND.format(race_key))
+            RaceHandler._log_missing_key_error(race_key)
             return False
         try:
             player = RaceHandler._create_player_instance(race_dict[user_choice], creature_data)
@@ -85,7 +79,6 @@ class RaceHandler:
 
     @staticmethod
     def _create_player_instance(race: str, creature_data: Dict[str, Any]) -> Player:
-        """Create a new player instance."""
         return Player(
             race=race,
             creature_type=creature_data[GameDatabaseKeys.CREATURE_TYPE][GameDatabaseKeys.TYPE],
@@ -94,11 +87,15 @@ class RaceHandler:
             speed=int(creature_data[GameDatabaseKeys.SPEED])
         )
 
+    @staticmethod
+    def _log_missing_key_error(key_name: str) -> None:
+        ErrorHandler.log_error_message(Messages.ERROR_MESSAGE_KEY_NOT_FOUND.format(key_name))
+
 
 class UserInterface:
+
     @staticmethod
     def display_races(races: Dict[int, str]) -> None:
-        """Display the available races."""
         if not races:
             print(Messages.NO_RACES)
             return
@@ -108,7 +105,6 @@ class UserInterface:
 
     @staticmethod
     def get_user_choice() -> int:
-        """Get and return the user's choice, handling input errors."""
         try:
             return int(input().strip())
         except ValueError:
@@ -117,22 +113,18 @@ class UserInterface:
 
     @staticmethod
     def is_valid_choice(choice: int, options: List[str]) -> bool:
-        """Check if the user input is valid."""
         return 0 <= choice < len(options)
 
     @staticmethod
     def show_player_info(player: Player) -> None:
-        """Print player information."""
         print(player)
 
     @staticmethod
     def handle_error(e: Exception) -> None:
-        """Handle data-related errors."""
         print(f"{Messages.ERROR_OCCURRED}{e}")
 
     @staticmethod
     def process_user_choice(user_choice: int, race_keys: List[str], races: Dict[int, str]) -> None:
-        """Validate user choice and process accordingly."""
         if UserInterface.is_valid_choice(user_choice, race_keys):
             race_key = race_keys[user_choice]
             if not RaceHandler.handle_race_choice(race_key, races, user_choice):
@@ -142,7 +134,6 @@ class UserInterface:
 
     @staticmethod
     def select_race(races: Dict[int, str], race_keys: List[str]) -> None:
-        """Handle the race selection process."""
         UserInterface.display_races(races)
         user_choice = UserInterface.get_user_choice()
         UserInterface.process_user_choice(user_choice, race_keys, races)
