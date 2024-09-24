@@ -1,18 +1,21 @@
 import os
+import yaml  # Using PyYAML for YAML parsing
+
 
 def parse_yaml(file_path):
-    data = {}
-    with open(file_path, 'r') as file:
-        for line in file:
-            key, value = line.strip().split(': ')
-            data[key] = value
+    with open(file_path, 'r', encoding='utf-8') as file:
+        try:
+            data = yaml.safe_load(file)
+        except yaml.YAMLError as exc:
+            print(f"Error parsing YAML file: {exc}")
+            return {}
     return data
+
 
 def make_db():
     file_path = 'database.yaml'
     if os.path.isfile(file_path):
-        xls = parse_yaml(file_path)
-        return xls
+        return parse_yaml(file_path)
     else:
         print(f"Error: The file '{file_path}' was not found.")
         return {}
