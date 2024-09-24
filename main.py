@@ -1,39 +1,35 @@
-import os
 import yaml
 from dataclasses import dataclass
-from typing import Dict, Any
+from typing import Dict, Any, Tuple
 
-# Extracted Constants
+# Constants
 DATABASE_FILE_PATH = 'database.yaml'
 WELCOME_MESSAGE = 'Добро пожаловать в текстовую игру по мотивам D&D 5й редакции!'
 FILE_NOT_FOUND_ERROR = "Error: The file '{}' was not found."
 KEY_ERROR_MESSAGE = "Error: Key '{}' not found in the game database."
 INVALID_CHOICE_MESSAGE = "Invalid choice or data error."
+NO_AVAILABLE_RACES_MESSAGE = "No available races to display."
 
 
 def parse_yaml(file_path: str) -> Any:
     """Parse a YAML file and return the data."""
     try:
         with open(file_path, 'r', encoding='utf-8') as file:
-            try:
-                return yaml.safe_load(file)
-            except yaml.YAMLError as exc:
-                print(f"Error parsing YAML file: {exc}")
-    except (IOError, OSError) as exc:
-        print(f"Error opening file: {exc}")
-    return {}
+            return yaml.safe_load(file)
+    except (yaml.YAMLError, OSError) as exc:
+        print(f"Error accessing file {file_path}: {exc}")
+        return {}
 
 
 def load_game_database(file_path: str) -> Dict:
     """Load the database from a YAML file."""
-    if os.path.isfile(file_path):
-        return parse_yaml(file_path)
-    else:
+    data = parse_yaml(file_path)
+    if not data:
         print(FILE_NOT_FOUND_ERROR.format(file_path))
-    return {}
+    return data
 
 
-GAME_DATA_BASE = load_game_database(DATABASE_FILE_PATH)
+GAME_DATABASE = load_game_database(DATABASE_FILE_PATH)
 
 
 @dataclass
@@ -50,86 +46,78 @@ class Player(Creature):
 
 
 class Game:
-    @staticmethod
-    def print_welcome_message():
+    def __init__(self):
+        if not GAME_DATABASE:
+            print("Game cannot be started due to missing or corrupted database.")
+            exit(1)
+        self.races_dict, self.race_keys = self.build_races_dict()
+
+    def greet_player(self):
         """Print the welcome message."""
         print(WELCOME_MESSAGE)
 
-    @staticmethod
-    def build_races_dict():
-        """Build the races dictionary from game database."""
-        if 'creature_types' not in GAME_DATA_BASE:
-            print(KEY_ERROR_MESSAGE.format('creature_types'))
+    def build_races_dict(self) -> Tuple[Dict[int, str], list]:
+        """Build the races dictionary from the game database."""
+        if 'races' not in GAME_DATABASE:
+            print(KEY_ERROR_MESSAGE.format('races'))
             return {}, []
-        races = GAME_DATA_BASE['creature_types']
-        races_dict = {index: value['name']['ru'] for index, (key, value) in enumerate(races.items())}
+        races = GAME_DATABASE['races']
+        races_dict = {index: race['name']['ru'] for index, race in races.items()}
         keys = list(races.keys())
         return races_dict, keys
 
-    @staticmethod
-    def get_user_choice() -> int:
-        """Get and return the user's choice, handle input errors."""
-        try:
-            return int(input())
-        except ValueError:
-            print(INVALID_CHOICE_MESSAGE)
-            return -1
+    def get_user_choice(self) -> int:
+        while True:
+            try:
+                choice = int(input("Please enter your choice: "))
+                if self.is_valid_choice(choice):
+                    return choice
+                else:
+                    print(INVALID_CHOICE_MESSAGE)
+            except ValueError:
+                print(INVALID_CHOICE_MESSAGE)
 
-    @staticmethod
-    def run_game():
-        """Run the game."""
-        Game.print_welcome_message()
-
-        races_dict, race_keys = Game.build_races_dict()
-        if not races_dict:
-            Game.handle_no_races()
+    def start_game(self):
+        """Start the game."""
+        self.greet_player()
+        if not self.races_dict:
+            self.no_races_available()
             return
-        Game.display_races(races_dict)
+        self.display_races(self.races_dict)
+        user_selection = self.get_user_choice()
+        self.process_user_choice(user_selection)
 
-        user_choice = Game.get_user_choice()
-        if not Game.is_valid_choice(user_choice, race_keys):
-            Game.handle_invalid_choice()
-            return
+    def process_user_choice(self, user_selection: int):
+        """Validate and handle the user's choice."""
+        race_key = self.race_keys[user_selection]
+        if not self.handle_creature_data(race_key, user_selection):
+            self.handle_invalid_choice()
 
-        chosen_race_key = race_keys[user_choice]
-        if not Game.handle_creature_data(chosen_race_key, races_dict, user_choice):
-            Game.handle_invalid_choice()
+    def no_races_available(self):
+        print(NO_AVAILABLE_RACES_MESSAGE)
 
-    @staticmethod
-    def handle_creature_data(race_key, races_dict, user_choice):
-        creature_data = Game.get_creature_data(race_key)
-        if creature_data is None:
-            return False
-        Game.create_and_display_player(races_dict, user_choice, creature_data)
-        return True
+    def handle_invalid_choice(self):
+        print(INVALID_CHOICE_MESSAGE)
 
-    @staticmethod
-    def handle_no_races():
-        print("No available races to display.")
-
-    @staticmethod
-    def display_races(races_dict):
+    def display_races(self, races_dict: Dict):
         print("Выберите расу:")
         for index, race in races_dict.items():
             print(f"{index}: {race}")
 
-    @staticmethod
-    def is_valid_choice(user_choice, race_keys):
-        return user_choice in range(len(race_keys))
+    def is_valid_choice(self, user_selection: int) -> bool:
+        return 0 <= user_selection < len(self.race_keys)
 
-    @staticmethod
-    def handle_invalid_choice():
-        print(INVALID_CHOICE_MESSAGE)
+    def handle_creature_data(self, race_key: str, user_selection: int) -> bool:
+        creature_data = GAME_DATABASE['races'].get(race_key)
+        if creature_data is None:
+            return False
+        self.create_and_display_player(user_selection, creature_data)
+        return True
 
-    @staticmethod
-    def get_creature_data(race_key):
-        return GAME_DATA_BASE['creature_types'].get(race_key)
-
-    @staticmethod
-    def create_and_display_player(races_dict, user_choice, creature_data):
+    def create_and_display_player(self, user_choice: int, creature_data: Dict):
         try:
             player = Player(
-                race=races_dict[user_choice],
+                race=creature_data['name']['ru'],
                 creature_type=creature_data['creature_type']['type'],
                 description=creature_data['description'],
                 size=creature_data['size'],
@@ -139,9 +127,11 @@ class Game:
         except (KeyError, TypeError) as exc:
             print(f"An error occurred: {exc}")
 
+
 # Run the game
 if __name__ == "__main__":
-    if GAME_DATA_BASE:
-        Game.run_game()
+    if GAME_DATABASE:
+        game_instance = Game()
+        game_instance.start_game()
     else:
         print("Game cannot be started due to missing or corrupted database.")
