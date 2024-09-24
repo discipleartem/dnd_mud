@@ -13,7 +13,7 @@ RACES_KEY = 'Races'
 RACE_NAME_KEY = 'name'
 RU_KEY = 'ru'
 
-# Game initialization
+# Initialize game database
 game_database = initialize_game_database()
 
 
@@ -22,7 +22,7 @@ class Game:
     def run() -> None:
         """Run the game."""
         Game.greet_player()
-        available_races, race_keys = Game.fetch_race_data()
+        available_races, race_keys = Game.load_race_data()
         Game.handle_race_selection(available_races, race_keys)
 
     @staticmethod
@@ -31,14 +31,13 @@ class Game:
         print(WELCOME_MESSAGE)
 
     @staticmethod
-    def fetch_race_data() -> Tuple[Dict[int, str], List[str]]:
-        """Fetch and return race data."""
+    def load_race_data() -> Tuple[Dict[int, str], List[str]]:
+        """Load race data from the game database."""
         if RACES_KEY not in game_database:
             log_error(f"Error: Key '{RACES_KEY}' not found in the game database.")
             return {}, []
-
         races = game_database[RACES_KEY]
-        race_dict = {i: value[RACE_NAME_KEY][RU_KEY] for i, (key, value) in enumerate(races.items())}
+        race_dict = {i: race[RACE_NAME_KEY][RU_KEY] for i, race in enumerate(races.values())}
         race_keys = list(races.keys())
         return race_dict, race_keys
 
@@ -48,7 +47,6 @@ class Game:
         if not races_dict:
             print(NO_AVAILABLE_RACES_MESSAGE)
             return
-
         print(CHOOSE_RACE_MESSAGE)
         for index, race in races_dict.items():
             print(f"{index}: {race}")
@@ -57,7 +55,7 @@ class Game:
     def get_user_selection() -> int:
         """Get and return the user's choice, handle input errors."""
         try:
-            return int(input())
+            return int(input().strip())
         except ValueError:
             print(INVALID_CHOICE_MESSAGE)
             return -1
@@ -97,9 +95,8 @@ class Game:
     def process_creature_data(race_key: str, races_dict: Dict[int, str], user_choice: int) -> bool:
         """Handle creature data related actions."""
         creature_data = Game.fetch_creature_data(race_key)
-        if creature_data is None:
+        if not creature_data:
             return False
-
         try:
             player = Game.create_player(races_dict, user_choice, creature_data)
             Game.display_player(player)
@@ -114,7 +111,6 @@ class Game:
         if not Game.validate_choice(user_choice, race_keys):
             print(INVALID_CHOICE_MESSAGE)
             return
-
         race_key = race_keys[user_choice]
         if not Game.process_creature_data(race_key, races_dict, user_choice):
             print(INVALID_CHOICE_MESSAGE)
