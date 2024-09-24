@@ -25,7 +25,8 @@ class Game:
         """Run the game."""
         print(Messages.WELCOME)
         available_races, race_keys = Game.load_race_data()
-        Game.select_race(available_races, race_keys)
+        if available_races:
+            Game.select_race(available_races, race_keys)
 
     @staticmethod
     def load_race_data() -> Tuple[Dict[int, str], List[str]]:
@@ -33,7 +34,6 @@ class Game:
         if DatabaseKeys.RACES not in Game.game_database:
             log_error(f"Error: Key '{DatabaseKeys.RACES}' not found in the game database.")
             return {}, []
-
         races = Game.game_database[DatabaseKeys.RACES]
         race_dict = {
             i: race[DatabaseKeys.RACE_NAME][DatabaseKeys.RU]
@@ -62,7 +62,7 @@ class Game:
             return -1
 
     @staticmethod
-    def is_valid_input(choice: int, options: List[str]) -> bool:
+    def is_valid_choice(choice: int, options: List[str]) -> bool:
         """Check if the user input is valid."""
         return 0 <= choice < len(options)
 
@@ -94,7 +94,7 @@ class Game:
 
     @staticmethod
     def process_data(race_key: str, races_dict: Dict[int, str], user_choice: int) -> bool:
-        """Handle creature data related actions."""
+        """Handle creature data-related actions."""
         creature_data = Game.get_creature_data(race_key)
         if not creature_data:
             return False
@@ -107,9 +107,9 @@ class Game:
         return True
 
     @staticmethod
-    def validate_user_choice(user_choice: int, race_keys: List[str], races_dict: Dict[int, str]) -> None:
+    def handle_user_choice(user_choice: int, race_keys: List[str], races_dict: Dict[int, str]) -> None:
         """Validate user choice and handle accordingly."""
-        if not Game.is_valid_input(user_choice, race_keys):
+        if not Game.is_valid_choice(user_choice, race_keys):
             print(Messages.INVALID_CHOICE)
             return
         race_key = race_keys[user_choice]
@@ -121,7 +121,7 @@ class Game:
         """Handle the process of race choice."""
         Game.display_races(available_races)
         user_choice = Game.get_user_input()
-        Game.validate_user_choice(user_choice, race_keys, available_races)
+        Game.handle_user_choice(user_choice, race_keys, available_races)
 
 
 # Run the game
