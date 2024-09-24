@@ -23,10 +23,6 @@ def load_game_database(file_path: str) -> Dict:
         ErrorHandler.log_error(f"Error: The file '{file_path}' was not found.")
     return {}
 
-
-
-
-
 def initialize_game_database() -> Dict:
     """Initialize and load the game database."""
     return load_game_database(DATABASE_FILE_PATH)
