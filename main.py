@@ -17,13 +17,21 @@ game_database = initialize_game_database()
 
 
 class Game:
+
+    @staticmethod
+    def run() -> None:
+        """Run the game."""
+        Game.greet_player()
+        available_races, race_keys = Game.fetch_race_data()
+        Game.choose_race(available_races, race_keys)
+
     @staticmethod
     def greet_player() -> None:
         """Print the welcome message."""
         print(WELCOME_MESSAGE)
 
     @staticmethod
-    def get_race_data() -> Tuple[Dict[int, str], List[str]]:
+    def fetch_race_data() -> Tuple[Dict[int, str], List[str]]:
         """Fetch and return race data."""
         if RACES_KEY not in game_database:
             log_error(f"Error: Key '{RACES_KEY}' not found in the game database.")
@@ -74,6 +82,11 @@ class Game:
         print(player)
 
     @staticmethod
+    def handle_data_error(exc: Exception) -> None:
+        """Handle data-related errors."""
+        print(f"{ERROR_OCCURRED_MESSAGE}{exc}")
+
+    @staticmethod
     def process_creature_data(race_key: str, races_dict: Dict[int, str], user_choice: int) -> bool:
         """Handle creature data related actions."""
         creature_data = Game.fetch_creature_data(race_key)
@@ -83,7 +96,7 @@ class Game:
             player = Game.create_player(races_dict, user_choice, creature_data)
             Game.display_player(player)
         except (KeyError, TypeError) as exc:
-            print(f"{ERROR_OCCURRED_MESSAGE}{exc}")
+            Game.handle_data_error(exc)
         return True
 
     @staticmethod
@@ -104,13 +117,6 @@ class Game:
             user_choice = Game.get_user_selection()
             if not Game.process_user_choice(user_choice, race_keys, available_races):
                 print(INVALID_CHOICE_MESSAGE)
-
-    @staticmethod
-    def run() -> None:
-        """Run the game."""
-        Game.greet_player()
-        available_races, race_keys = Game.get_race_data()
-        Game.choose_race(available_races, race_keys)
 
 
 # Run the game
