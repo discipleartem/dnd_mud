@@ -1,4 +1,4 @@
-from yaml_parse import log_error, initialize_game_database
+from yaml_parse import initialize_game_database, log_error
 from player import Player
 from massages import Messages, INVALID_CHOICE
 from typing import Tuple, Dict, Any, Union, List
@@ -6,8 +6,8 @@ from dataclasses import dataclass
 
 
 @dataclass(frozen=True)
-class DatabaseKeys:
-    RACES: str = 'Races'
+class GameDatabaseKeys:
+    RASES_KEY: str = 'Races'
     RACE_NAME: str = 'name'
     RU: str = 'ru'
 
@@ -35,28 +35,25 @@ class Game:
     @staticmethod
     def _get_race_data() -> Tuple[Dict[int, str], List[str]]:
         """Load race data from the game database."""
-        races_data = Game._get_races()
-        if not races_data:
-            log_error(f"Error: Key '{DatabaseKeys.RACES}' not found in the game database.")
+        if not Game.game_database.get(GameDatabaseKeys.RASES_KEY):
+            Game.display_error(f"Error: Key '{GameDatabaseKeys.RASES_KEY}' not found in the game database.")
             return {}, []
-        race_dict = Game._create_race_dict(races_data)
-        race_keys = list(races_data.keys())
+        race_dict = {
+            i: race[GameDatabaseKeys.RACE_NAME][GameDatabaseKeys.RU]
+            for i, race in enumerate(Game.game_database[GameDatabaseKeys.RASES_KEY].values())
+        }
+        race_keys = list(Game.game_database[GameDatabaseKeys.RASES_KEY].keys())
         return race_dict, race_keys
 
     @staticmethod
-    def _create_race_dict(races_data: Dict[str, Any]) -> Dict[int, str]:
-        """Create race dictionary from races data."""
-        return {i: race[DatabaseKeys.RACE_NAME][DatabaseKeys.RU] for i, race in enumerate(races_data.values())}
-
-    @staticmethod
-    def _get_races() -> Dict[str, Any]:
-        """Get races from the game database."""
-        return Game.game_database.get(DatabaseKeys.RACES, {})
+    def display_error(message: str) -> None:
+        """Log an error message."""
+        log_error(message)
 
     @staticmethod
     def _get_creature_details(race_key: str) -> Union[Dict[str, Any], None]:
         """Get creature details given a race key."""
-        return Game.game_database.get(DatabaseKeys.RACES, {}).get(race_key)
+        return Game.game_database.get(GameDatabaseKeys.RASES_KEY, {}).get(race_key)
 
     @staticmethod
     def _create_player_instance(race: str, creature_data: Dict[str, Any]) -> Player:
