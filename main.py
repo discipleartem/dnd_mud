@@ -24,6 +24,10 @@ class Game:
     @staticmethod
     def initialize() -> None:
         Game._load_database()
+        if Game.database:
+            Game.run()
+        else:
+            print(Messages.GAME_ERROR)
 
     @staticmethod
     def _load_database() -> None:
@@ -68,6 +72,11 @@ class RaceService:
         if not creature_data:
             ErrorHandler.log_key_not_found_error(race_key)
             return False
+        return RaceService._create_and_show_player(race_dict, user_choice, creature_data)
+
+    @staticmethod
+    def _create_and_show_player(race_dict: Dict[int, str], user_choice: int,
+                                creature_data: Dict[str, Any]) -> bool:
         try:
             player = RaceService._create_player_instance(race_dict[user_choice], creature_data)
             UI.show_player_info(player)
@@ -128,7 +137,3 @@ class UI:
 # Run the game
 if __name__ == "__main__":
     Game.initialize()
-    if Game.database:
-        Game.run()
-    else:
-        print(Messages.GAME_ERROR)
