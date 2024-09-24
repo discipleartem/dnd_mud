@@ -9,11 +9,16 @@ from dataclasses import dataclass
 class GameDatabaseKeys:
     RACES_KEY: str = 'Races'
     RACE_NAME: str = 'name'
+    CREATURE_TYPE: str = 'creature_type'
+    TYPE: str = 'type'
+    DESCRIPTION: str = 'description'
+    SIZE: str = 'size'
+    SPEED: str = 'speed'
     RU: str = 'ru'
 
 
 class Game:
-    game_database: Dict = {}
+    database: Dict = {}
 
     @staticmethod
     def initialize() -> None:
@@ -22,7 +27,7 @@ class Game:
 
     @staticmethod
     def load_database() -> None:
-        Game.game_database = initialize_game_database()
+        Game.database = initialize_game_database()
 
     @staticmethod
     def run() -> None:
@@ -43,15 +48,15 @@ class RaceHandler:
     @staticmethod
     def get_race_data() -> Tuple[Dict[int, str], List[str]]:
         """Load race data from the game database."""
-        if not Game.game_database.get(GameDatabaseKeys.RACES_KEY):
+        race_data = Game.database.get(GameDatabaseKeys.RACES_KEY)
+        if not race_data:
             Game.log_error(f"Error: Key '{GameDatabaseKeys.RACES_KEY}' not found in the game database.")
             return {}, []
-        race_dict = RaceHandler.get_race_dict(Game.game_database[GameDatabaseKeys.RACES_KEY])
-        race_keys = list(Game.game_database[GameDatabaseKeys.RACES_KEY].keys())
-        return race_dict, race_keys
+        race_dict = RaceHandler.parse_race_data(race_data)
+        return race_dict, list(race_data.keys())
 
     @staticmethod
-    def get_race_dict(race_data: Dict[str, Any]) -> Dict[int, str]:
+    def parse_race_data(race_data: Dict[str, Any]) -> Dict[int, str]:
         """Construct a dictionary of races."""
         return {
             i: race[GameDatabaseKeys.RACE_NAME][GameDatabaseKeys.RU]
@@ -61,7 +66,7 @@ class RaceHandler:
     @staticmethod
     def get_creature_details(race_key: str) -> Union[Dict[str, Any], None]:
         """Get creature details given a race key."""
-        return Game.game_database.get(GameDatabaseKeys.RACES_KEY, {}).get(race_key)
+        return Game.database.get(GameDatabaseKeys.RACES_KEY, {}).get(race_key)
 
     @staticmethod
     def handle_race_choice(race_key: str, race_dict: Dict[int, str], user_choice: int) -> bool:
@@ -82,10 +87,10 @@ class RaceHandler:
         """Create a new player instance."""
         return Player(
             race=race,
-            creature_type=creature_data['creature_type']['type'],
-            description=creature_data['description'],
-            size=creature_data['size'],
-            speed=int(creature_data['speed'])
+            creature_type=creature_data[GameDatabaseKeys.CREATURE_TYPE][GameDatabaseKeys.TYPE],
+            description=creature_data[GameDatabaseKeys.DESCRIPTION],
+            size=creature_data[GameDatabaseKeys.SIZE],
+            speed=int(creature_data[GameDatabaseKeys.SPEED])
         )
 
 
@@ -145,7 +150,7 @@ class UserInterface:
 # Run the game
 if __name__ == "__main__":
     Game.initialize()
-    if Game.game_database:
+    if Game.database:
         Game.run()
     else:
         print(Messages.GAME_ERROR)
