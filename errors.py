@@ -5,14 +5,23 @@ class ErrorHandler:
     @staticmethod
     def log_error(message: str) -> None:
         """Handle error by printing a message."""
-        print(message)
+        ErrorHandler._print_message(message)
 
     @staticmethod
-    def log_error_message(message: str) -> None:
+    def log_error_message_static(message: str) -> None:
         """Log an error message."""
-        ErrorHandler.log_error(message)  # Corrected the method call
+        ErrorHandler.log_error(message)
 
     @staticmethod
     def handle_error(e: Exception) -> None:
         """Handle errors."""
-        print(f"{Messages.ERROR_OCCURRED}{e}")
+        ErrorHandler._print_message(f"{Messages.ERROR_OCCURRED}{e}")
+
+    @staticmethod
+    def log_key_not_found_error(key_name: str) -> None:
+        ErrorHandler._print_message(Messages.ERROR_MESSAGE_KEY_NOT_FOUND.format(key_name))
+
+    @staticmethod
+    def _print_message(message: str) -> None:
+        """Print a message."""
+        print(message)
