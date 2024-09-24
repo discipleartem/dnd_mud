@@ -1,4 +1,4 @@
-from massages import Messages
+from messages import Messages
 
 
 class ErrorHandler:
