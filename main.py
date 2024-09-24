@@ -18,10 +18,10 @@ class Game:
     @staticmethod
     def initialize() -> None:
         """Initialize game settings and data."""
-        Game._load_game_database()
+        Game.load_database()
 
     @staticmethod
-    def _load_game_database() -> None:
+    def load_database() -> None:
         Game.game_database = initialize_game_database()
 
     @staticmethod
@@ -35,13 +35,23 @@ class Game:
     @staticmethod
     def _get_race_data() -> Tuple[Dict[int, str], List[str]]:
         """Load race data from the game database."""
-        races_data = Game.game_database.get(DatabaseKeys.RACES, {})
+        races_data = Game._get_races()
         if not races_data:
             log_error(f"Error: Key '{DatabaseKeys.RACES}' not found in the game database.")
             return {}, []
-        race_dict = {i: race[DatabaseKeys.RACE_NAME][DatabaseKeys.RU] for i, race in enumerate(races_data.values())}
+        race_dict = Game._create_race_dict(races_data)
         race_keys = list(races_data.keys())
         return race_dict, race_keys
+
+    @staticmethod
+    def _create_race_dict(races_data: Dict[str, Any]) -> Dict[int, str]:
+        """Create race dictionary from races data."""
+        return {i: race[DatabaseKeys.RACE_NAME][DatabaseKeys.RU] for i, race in enumerate(races_data.values())}
+
+    @staticmethod
+    def _get_races() -> Dict[str, Any]:
+        """Get races from the game database."""
+        return Game.game_database.get(DatabaseKeys.RACES, {})
 
     @staticmethod
     def _get_creature_details(race_key: str) -> Union[Dict[str, Any], None]:
