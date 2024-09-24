@@ -35,21 +35,20 @@ class Game:
     @staticmethod
     def run() -> None:
         print(Messages.WELCOME)
-        races, race_keys = RaceHandler.get_race_data()
+        races, race_keys = RaceService.get_race_data()
         if races:
             UserInterface.select_race(races, race_keys)
 
 
 @dataclass
-class RaceHandler:
-
+class RaceService:
     @staticmethod
     def get_race_data() -> Tuple[Dict[int, str], List[str]]:
         race_data = Game.database.get(GameDatabaseKeys.RACES)
         if not race_data:
-            RaceHandler._log_missing_key_error(GameDatabaseKeys.RACES)
+            RaceService._log_missing_key_error(GameDatabaseKeys.RACES)
             return {}, []
-        race_dict = RaceHandler._parse_race_data(race_data)
+        race_dict = RaceService._parse_race_data(race_data)
         return race_dict, list(race_data.keys())
 
     @staticmethod
@@ -65,12 +64,12 @@ class RaceHandler:
 
     @staticmethod
     def handle_race_choice(race_key: str, race_dict: Dict[int, str], user_choice: int) -> bool:
-        creature_data = RaceHandler.get_creature_details(race_key)
+        creature_data = RaceService.get_creature_details(race_key)
         if not creature_data:
-            RaceHandler._log_missing_key_error(race_key)
+            RaceService._log_missing_key_error(race_key)
             return False
         try:
-            player = RaceHandler._create_player_instance(race_dict[user_choice], creature_data)
+            player = RaceService._create_player_instance(race_dict[user_choice], creature_data)
             UserInterface.show_player_info(player)
         except (KeyError, TypeError) as e:
             ErrorHandler.handle_error(e)
@@ -93,7 +92,6 @@ class RaceHandler:
 
 
 class UserInterface:
-
     @staticmethod
     def display_races(races: Dict[int, str]) -> None:
         if not races:
@@ -127,7 +125,7 @@ class UserInterface:
     def process_user_choice(user_choice: int, race_keys: List[str], races: Dict[int, str]) -> None:
         if UserInterface.is_valid_choice(user_choice, race_keys):
             race_key = race_keys[user_choice]
-            if not RaceHandler.handle_race_choice(race_key, races, user_choice):
+            if not RaceService.handle_race_choice(race_key, races, user_choice):
                 print(Messages.INVALID_CHOICE)
         else:
             print(Messages.INVALID_CHOICE)
