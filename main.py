@@ -3,19 +3,18 @@ import yaml
 from dataclasses import dataclass
 from typing import Dict, Any, Tuple, Union
 
-# Constants
 DATABASE_FILE_PATH = 'database.yaml'
 WELCOME_MESSAGE = 'Добро пожаловать в текстовую игру по мотивам D&D 5й редакции!'
 GAME_CANNOT_START_MESSAGE = "Game cannot be started due to missing or corrupted database."
 
 
-def parse_yaml(file_path: str) -> Any:
+def parse_yaml(file_path: str) -> Dict[str, Any]:
     """Parse a YAML file and return the data."""
     try:
         with open(file_path, 'r', encoding='utf-8') as file:
             return yaml.safe_load(file)
     except (yaml.YAMLError, IOError, OSError) as exc:
-        handle_error(f"Error accessing file: {exc}")
+        log_error(f"Error accessing file: {exc}")
     return {}
 
 
@@ -24,16 +23,21 @@ def load_game_database(file_path: str) -> Dict:
     if os.path.isfile(file_path):
         return parse_yaml(file_path)
     else:
-        handle_error(f"Error: The file '{file_path}' was not found.")
+        log_error(f"Error: The file '{file_path}' was not found.")
     return {}
 
 
-def handle_error(message: str) -> None:
+def log_error(message: str) -> None:
     """Handle error by printing a message."""
     print(message)
 
 
-GAME_DATABASE = load_game_database(DATABASE_FILE_PATH)
+def initialize_game_database() -> Dict:
+    """Initialize and load the game database."""
+    return load_game_database(DATABASE_FILE_PATH)
+
+
+game_database = initialize_game_database()
 
 
 @dataclass
@@ -63,10 +67,10 @@ class Game:
     @staticmethod
     def get_race_data() -> Tuple[Dict[int, str], list]:
         """Fetch and return race data."""
-        if 'Races' not in GAME_DATABASE:
-            handle_error("Error: Key 'Races' not found in the game database.")
+        if 'Races' not in game_database:
+            log_error("Error: Key 'Races' not found in the game database.")
             return {}, []
-        races = GAME_DATABASE['Races']
+        races = game_database['Races']
         races_dict = {index: value['name']['ru'] for index, (key, value) in enumerate(races.items())}
         keys = list(races.keys())
         return races_dict, keys
@@ -95,7 +99,7 @@ class Game:
     @staticmethod
     def fetch_creature_data(race_key: str) -> Union[Dict[str, Any], None]:
         """Get creature data given a race key."""
-        return GAME_DATABASE['Races'].get(race_key)
+        return game_database['Races'].get(race_key)
 
     @staticmethod
     def create_player_instance(races_dict: Dict[int, str], user_choice: int, creature_data: Dict[str, Any]) -> Player:
@@ -159,7 +163,7 @@ class Game:
 
 # Run the game
 if __name__ == "__main__":
-    if GAME_DATABASE:
+    if game_database:
         Game.run_game()
     else:
         Game.display_message(GAME_CANNOT_START_MESSAGE)
