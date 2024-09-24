@@ -141,12 +141,17 @@ class Game:
         Game.greet_player()
         races_dict, race_keys = Game.fetch_race_data()
         if not races_dict:
-            Game.display_message(NO_AVAILABLE_RACES_MESSAGE)
+            Game.display_message(Game.NO_AVAILABLE_RACES_MESSAGE)
             return
+
+        Game.display_available_races_and_get_choice(races_dict, race_keys)
+
+    @staticmethod
+    def display_available_races_and_get_choice(races_dict: Dict[int, str], race_keys: list) -> None:
         Game.display_races(races_dict)
         user_choice = Game.get_user_selection()
         if not Game.process_user_choice(user_choice, race_keys, races_dict):
-            Game.display_message(INVALID_CHOICE_MESSAGE)
+            Game.display_message(Game.INVALID_CHOICE_MESSAGE)
 
 
 # Run the game
