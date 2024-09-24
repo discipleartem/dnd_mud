@@ -6,8 +6,6 @@ from typing import Tuple, Dict, Any, Union, List
 from dataclasses import dataclass
 
 
-
-
 @dataclass(frozen=True)
 class GameDatabaseKeys:
     RACES: str = 'Races'
@@ -26,10 +24,10 @@ class Game:
     @staticmethod
     def initialize() -> None:
         """Initialize game settings and data."""
-        Game.load_database()
+        Game._load_database()
 
     @staticmethod
-    def load_database() -> None:
+    def _load_database() -> None:
         try:
             Game.database = initialize_game_database()
         except Exception:
@@ -46,6 +44,7 @@ class Game:
 
 @dataclass
 class RaceHandler:
+
     @staticmethod
     def get_race_data() -> Tuple[Dict[int, str], List[str]]:
         """Load race data from the game database."""
@@ -76,7 +75,6 @@ class RaceHandler:
         if not creature_data:
             ErrorHandler.log_error_message(Messages.ERROR_MESSAGE_KEY_NOT_FOUND.format(race_key))
             return False
-
         try:
             player = RaceHandler._create_player_instance(race_dict[user_choice], creature_data)
             UserInterface.show_player_info(player)
