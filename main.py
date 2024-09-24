@@ -1,6 +1,6 @@
 from yaml_parse import log_error, initialize_game_database
 from player import Player
-from massages import Messages
+from massages import Messages, INVALID_CHOICE
 from typing import Tuple, Dict, Any, Union, List
 from dataclasses import dataclass
 
@@ -24,14 +24,14 @@ class Game:
     def run() -> None:
         """Run the game."""
         print(Messages.WELCOME)
-        available_races, race_keys = Game.load_race_data()
-        if available_races:
-            UserInterface.select_race(available_races, race_keys)
+        races, race_keys = Game.load_race_data()
+        if races:
+            UserInterface.select_race(races, race_keys)
 
     @staticmethod
     def load_race_data() -> Tuple[Dict[int, str], List[str]]:
         """Load race data from the game database."""
-        races_data = Game.game_database.get(DatabaseKeys.RACES)
+        races_data = Game.game_database.get(DatabaseKeys.RACES, {})
         if not races_data:
             log_error(f"Error: Key '{DatabaseKeys.RACES}' not found in the game database.")
             return {}, []
@@ -43,7 +43,7 @@ class Game:
     @staticmethod
     def get_creature_data(race_key: str) -> Union[Dict[str, Any], None]:
         """Get creature data given a race key."""
-        return Game.game_database[DatabaseKeys.RACES].get(race_key)
+        return Game.game_database.get(DatabaseKeys.RACES, {}).get(race_key)
 
     @staticmethod
     def create_player(race: str, creature_data: Dict[str, Any]) -> Player:
@@ -65,21 +65,21 @@ class Game:
         try:
             player = Game.create_player(races_dict[user_choice], creature_data)
             UserInterface.show_player_info(player)
-        except (KeyError, TypeError) as exc:
-            UserInterface.handle_error(exc)
+        except (KeyError, TypeError) as e:
+            UserInterface.handle_error(e)
             return False
         return True
 
 
 class UserInterface:
     @staticmethod
-    def display_races(races_dict: Dict[int, str]) -> None:
+    def display_races(races: Dict[int, str]) -> None:
         """Display the available races."""
-        if not races_dict:
+        if not races:
             print(Messages.NO_RACES)
             return
         print(Messages.CHOOSE_RACE)
-        for index, race in races_dict.items():
+        for index, race in races.items():
             print(f"{index}: {race}")
 
     @staticmethod
@@ -89,7 +89,7 @@ class UserInterface:
             return int(input().strip())
         except ValueError:
             print(Messages.INVALID_CHOICE)
-            return -1
+            return INVALID_CHOICE
 
     @staticmethod
     def is_valid_choice(choice: int, options: List[str]) -> bool:
@@ -102,26 +102,26 @@ class UserInterface:
         print(player)
 
     @staticmethod
-    def handle_error(exc: Exception) -> None:
+    def handle_error(e: Exception) -> None:
         """Handle data-related errors."""
-        print(f"{Messages.ERROR_OCCURRED}{exc}")
+        print(f"{Messages.ERROR_OCCURRED}{e}")
 
     @staticmethod
-    def handle_user_choice(user_choice: int, race_keys: List[str], races_dict: Dict[int, str]) -> None:
+    def handle_user_choice(user_choice: int, race_keys: List[str], races: Dict[int, str]) -> None:
         """Validate user choice and handle accordingly."""
-        if not UserInterface.is_valid_choice(user_choice, race_keys):
-            print(Messages.INVALID_CHOICE)
-            return
-        race_key = race_keys[user_choice]
-        if not Game.process_race_choice(race_key, races_dict, user_choice):
+        if UserInterface.is_valid_choice(user_choice, race_keys):
+            race_key = race_keys[user_choice]
+            if not Game.process_race_choice(race_key, races, user_choice):
+                print(Messages.INVALID_CHOICE)
+        else:
             print(Messages.INVALID_CHOICE)
 
     @staticmethod
-    def select_race(available_races: Dict[int, str], race_keys: List[str]) -> None:
+    def select_race(races: Dict[int, str], race_keys: List[str]) -> None:
         """Handle the process of race choice."""
-        UserInterface.display_races(available_races)
+        UserInterface.display_races(races)
         user_choice = UserInterface.get_user_input()
-        UserInterface.handle_user_choice(user_choice, race_keys, available_races)
+        UserInterface.handle_user_choice(user_choice, race_keys, races)
 
 
 # Run the game
