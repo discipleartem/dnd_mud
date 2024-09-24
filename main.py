@@ -139,11 +139,24 @@ class Game:
     def run_game() -> None:
         """Run the game."""
         Game.greet_player()
-        races_dict, race_keys = Game.fetch_race_data()
-        if not races_dict:
-            Game.display_message(Game.NO_AVAILABLE_RACES_MESSAGE)
-            return
+        available_races, race_keys = Game.get_race_data()
+        Game.handle_race_availability(available_races, race_keys)
 
+    @staticmethod
+    def handle_race_availability(available_races: Dict[int, str], race_keys: list) -> None:
+        if not available_races:
+            Game.display_message(Game.NO_AVAILABLE_RACES_MESSAGE)
+        else:
+            Game.manage_race_choice(available_races, race_keys)
+
+    @staticmethod
+    def get_race_data() -> Tuple[Dict[int, str], list]:
+        """Fetch and return race data."""
+        return Game.fetch_race_data()
+
+    @staticmethod
+    def manage_race_choice(races_dict: Dict[int, str], race_keys: list) -> None:
+        """Display available races and get user choice."""
         Game.display_available_races_and_get_choice(races_dict, race_keys)
 
     @staticmethod
