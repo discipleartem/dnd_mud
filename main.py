@@ -6,8 +6,8 @@ from typing import Dict, Any
 # Constants
 DATABASE_FILE_PATH = 'database.yaml'
 WELCOME_MESSAGE = 'Добро пожаловать в текстовую игру по мотивам D&D 5й редакции!'
-FILE_NOT_FOUND_ERROR = "Error: The file '{}' was not found."
-KEY_ERROR_MESSAGE = "Error: Key '{}' not found in the game database."
+ERROR_FILE_NOT_FOUND = "Error: The file '{}' was not found."
+ERROR_KEY_MISSING = "Error: Key '{}' not found in the game database."
 INVALID_CHOICE_MESSAGE = "Invalid choice or data error."
 NO_AVAILABLE_RACES_MESSAGE = "No available races to display."
 
@@ -27,7 +27,7 @@ def load_game_database(file_path: str) -> Dict:
     if os.path.isfile(file_path):
         return parse_yaml(file_path)
     else:
-        print(FILE_NOT_FOUND_ERROR.format(file_path))
+        print(ERROR_FILE_NOT_FOUND.format(file_path))
     return {}
 
 
@@ -54,20 +54,15 @@ class Game:
         print(WELCOME_MESSAGE)
 
     @staticmethod
-    def display_no_races_available():
-        """Display a message when no races are available."""
-        print(NO_AVAILABLE_RACES_MESSAGE)
-
-    @staticmethod
-    def display_invalid_choice():
-        """Display a message for invalid choice."""
-        print(INVALID_CHOICE_MESSAGE)
+    def display_message(message: str):
+        """Display a generic message."""
+        print(message)
 
     @staticmethod
     def build_races_dict():
         """Build the races dictionary from game database."""
         if 'Races' not in GAME_DATABASE:
-            print(KEY_ERROR_MESSAGE.format('Races'))
+            Game.display_message(ERROR_KEY_MISSING.format('Races'))
             return {}, []
         races = GAME_DATABASE['Races']
         races_dict = {index: value['name']['ru'] for index, (key, value) in enumerate(races.items())}
@@ -76,8 +71,8 @@ class Game:
 
     @staticmethod
     def display_races(races_dict):
-        """Display the racces."""
-        print("Выберите расу:")
+        """Display the available races."""
+        Game.display_message("Выберите расу:")
         for index, race in races_dict.items():
             print(f"{index}: {race}")
 
@@ -87,7 +82,7 @@ class Game:
         try:
             return int(input())
         except ValueError:
-            Game.display_invalid_choice()
+            Game.display_message(INVALID_CHOICE_MESSAGE)
             return -1
 
     @staticmethod
@@ -113,7 +108,7 @@ class Game:
             )
             print(player)
         except (KeyError, TypeError) as exc:
-            print(f"An error occurred: {exc}")
+            Game.display_message(f"An error occurred: {exc}")
 
     @staticmethod
     def handle_creature_data(race_key, races_dict, user_choice):
@@ -138,12 +133,12 @@ class Game:
         Game.greet_player()
         races_dict, race_keys = Game.build_races_dict()
         if not races_dict:
-            Game.display_no_races_available()
+            Game.display_message(NO_AVAILABLE_RACES_MESSAGE)
             return
         Game.display_races(races_dict)
         user_choice = Game.get_user_choice()
         if not Game.validate_and_handle_choice(user_choice, race_keys, races_dict):
-            Game.display_invalid_choice()
+            Game.display_message(INVALID_CHOICE_MESSAGE)
 
 
 # Run the game
@@ -151,4 +146,4 @@ if __name__ == "__main__":
     if GAME_DATABASE:
         Game.run_game()
     else:
-        print("Game cannot be started due to missing or corrupted database.")
+        Game.display_message("Game cannot be started due to missing or corrupted database.")
