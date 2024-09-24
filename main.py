@@ -48,32 +48,35 @@ class Player(Creature):
 
 
 class Game:
-
     @staticmethod
     def greet_player():
         """Print the welcome message."""
         print(WELCOME_MESSAGE)
 
     @staticmethod
-    def display_message(message: str):
-        """Display a generic message."""
-        print(message)
+    def display_no_races_available():
+        """Display a message when no races are available."""
+        print(NO_AVAILABLE_RACES_MESSAGE)
+
+    @staticmethod
+    def display_invalid_choice():
+        """Display a message for invalid choice."""
+        print(INVALID_CHOICE_MESSAGE)
 
     @staticmethod
     def build_races_dict():
-        """Build the races dictionary from the game database."""
+        """Build the races dictionary from game database."""
         if 'Races' not in GAME_DATABASE:
-            Game.display_message(KEY_ERROR_MESSAGE.format('Races'))
+            print(KEY_ERROR_MESSAGE.format('Races'))
             return {}, []
-
         races = GAME_DATABASE['Races']
         races_dict = {index: value['name']['ru'] for index, (key, value) in enumerate(races.items())}
         keys = list(races.keys())
         return races_dict, keys
 
     @staticmethod
-    def display_races(races_dict: Dict[int, str]):
-        """Display the available races."""
+    def display_races(races_dict):
+        """Display the racces."""
         print("Выберите расу:")
         for index, race in races_dict.items():
             print(f"{index}: {race}")
@@ -84,21 +87,21 @@ class Game:
         try:
             return int(input())
         except ValueError:
-            Game.display_message(INVALID_CHOICE_MESSAGE)
+            Game.display_invalid_choice()
             return -1
 
     @staticmethod
-    def is_valid_choice(user_choice: int, race_keys: list) -> bool:
-        """Check if the user's choice is valid."""
+    def is_valid_choice(user_choice, race_keys):
+        """Check if the user choice is valid."""
         return 0 <= user_choice < len(race_keys)
 
     @staticmethod
-    def get_creature_data(race_key: str) -> Dict:
+    def get_creature_data(race_key):
         """Get creature data given a race key."""
         return GAME_DATABASE['Races'].get(race_key)
 
     @staticmethod
-    def create_and_display_player(races_dict: Dict[int, str], user_choice: int, creature_data: Dict):
+    def create_and_display_player(races_dict, user_choice, creature_data):
         """Create and display player information."""
         try:
             player = Player(
@@ -110,24 +113,22 @@ class Game:
             )
             print(player)
         except (KeyError, TypeError) as exc:
-            Game.display_message(f"An error occurred: {exc}")
+            print(f"An error occurred: {exc}")
 
     @staticmethod
-    def handle_creature_data(race_key: str, races_dict: Dict[int, str], user_choice: int) -> bool:
+    def handle_creature_data(race_key, races_dict, user_choice):
         """Handle creature data related actions."""
         creature_data = Game.get_creature_data(race_key)
         if creature_data is None:
             return False
-
         Game.create_and_display_player(races_dict, user_choice, creature_data)
         return True
 
     @staticmethod
-    def validate_and_handle_choice(user_choice: int, race_keys: list, races_dict: Dict[int, str]) -> bool:
+    def validate_and_handle_choice(user_choice, race_keys, races_dict):
         """Validate user choice and handle accordingly."""
         if not Game.is_valid_choice(user_choice, race_keys):
             return False
-
         race_key = race_keys[user_choice]
         return Game.handle_creature_data(race_key, races_dict, user_choice)
 
@@ -137,13 +138,12 @@ class Game:
         Game.greet_player()
         races_dict, race_keys = Game.build_races_dict()
         if not races_dict:
-            Game.display_message(NO_AVAILABLE_RACES_MESSAGE)
+            Game.display_no_races_available()
             return
-
         Game.display_races(races_dict)
         user_choice = Game.get_user_choice()
         if not Game.validate_and_handle_choice(user_choice, race_keys, races_dict):
-            Game.display_message(INVALID_CHOICE_MESSAGE)
+            Game.display_invalid_choice()
 
 
 # Run the game
