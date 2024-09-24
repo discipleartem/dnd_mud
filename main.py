@@ -1,4 +1,4 @@
-from yaml_parse import *
+from yaml_parse import log_error, initialize_game_database
 from player import Player
 from typing import Tuple, Dict, Any, Union, List
 
@@ -99,8 +99,7 @@ class Game:
     def process_creature_data(race_key: str, races_dict: Dict[int, str], user_choice: int) -> bool:
         """Handle creature data related actions."""
         creature_data = Game.fetch_creature_data(race_key)
-        if not creature_data:
-            return False
+        if not creature_data: return False
         try:
             player = Game.create_player(races_dict, user_choice, creature_data)
             Game.display_player(player)
