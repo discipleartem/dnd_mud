@@ -1,21 +1,20 @@
 from yaml_parse import *
 from player import Player
 
+# Constants
 WELCOME_MESSAGE = 'Добро пожаловать в текстовую игру по мотивам D&D 5й редакции!'
 GAME_CANNOT_START_MESSAGE = "Game cannot be started due to missing or corrupted database."
+CHOOSE_RACE_MESSAGE = "Выберите расу:"
+INVALID_CHOICE_MESSAGE = "Invalid choice or data error."
 
 game_database = initialize_game_database()
+
 
 class Game:
     @staticmethod
     def greet_player() -> None:
         """Print the welcome message."""
-        Game.display_message(WELCOME_MESSAGE)
-
-    @staticmethod
-    def display_message(message: str) -> None:
-        """Display a generic message."""
-        print(message)
+        print(WELCOME_MESSAGE)
 
     @staticmethod
     def get_race_data() -> Tuple[Dict[int, str], list]:
@@ -31,7 +30,7 @@ class Game:
     @staticmethod
     def display_races(races_dict: Dict[int, str]) -> None:
         """Display the available races."""
-        Game.display_message("Выберите расу:")
+        print(CHOOSE_RACE_MESSAGE)
         for index, race in races_dict.items():
             print(f"{index}: {race}")
 
@@ -41,7 +40,7 @@ class Game:
         try:
             return int(input())
         except ValueError:
-            Game.display_message("Invalid choice or data error.")
+            print(INVALID_CHOICE_MESSAGE)
             return -1
 
     @staticmethod
@@ -80,7 +79,7 @@ class Game:
             player = Game.create_player_instance(races_dict, user_choice, creature_data)
             Game.display_player(player)
         except (KeyError, TypeError) as exc:
-            Game.display_message(f"An error occurred: {exc}")
+            print(f"An error occurred: {exc}")
         return True
 
     @staticmethod
@@ -92,31 +91,27 @@ class Game:
         return Game.process_creature_data(race_key, races_dict, user_choice)
 
     @staticmethod
-    def run_game() -> None:
+    def choose_race(available_races: Dict[int, str], race_keys: list) -> None:
+        """Handle the process of race choice."""
+        if not available_races:
+            print("No available races to display.")
+        else:
+            Game.display_races(available_races)
+            user_choice = Game.get_user_selection()
+            if not Game.process_user_choice(user_choice, race_keys, available_races):
+                print(INVALID_CHOICE_MESSAGE)
+
+    @staticmethod
+    def run() -> None:
         """Run the game."""
         Game.greet_player()
         available_races, race_keys = Game.get_race_data()
-        Game.handle_race_availability(available_races, race_keys)
-
-    @staticmethod
-    def handle_race_availability(available_races: Dict[int, str], race_keys: list) -> None:
-        if not available_races:
-            Game.display_message("No available races to display.")
-        else:
-            Game.manage_race_choice(available_races, race_keys)
-
-    @staticmethod
-    def manage_race_choice(races_dict: Dict[int, str], race_keys: list) -> None:
-        """Display available races and get user choice."""
-        Game.display_races(races_dict)
-        user_choice = Game.get_user_selection()
-        if not Game.process_user_choice(user_choice, race_keys, races_dict):
-            Game.display_message("Invalid choice or data error.")
+        Game.choose_race(available_races, race_keys)
 
 
 # Run the game
 if __name__ == "__main__":
     if game_database:
-        Game.run_game()
+        Game.run()
     else:
-        Game.display_message(GAME_CANNOT_START_MESSAGE)
+        print(GAME_CANNOT_START_MESSAGE)
