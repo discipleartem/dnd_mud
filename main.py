@@ -25,7 +25,7 @@ class Game:
         """Run the game."""
         print(Messages.WELCOME)
         available_races, race_keys = Game.load_race_data()
-        Game.handle_race_selection(available_races, race_keys)
+        Game.select_race(available_races, race_keys)
 
     @staticmethod
     def load_race_data() -> Tuple[Dict[int, str], List[str]]:
@@ -39,7 +39,7 @@ class Game:
         return race_dict, race_keys
 
     @staticmethod
-    def show_races(races_dict: Dict[int, str]) -> None:
+    def display_races(races_dict: Dict[int, str]) -> None:
         """Display the available races."""
         if not races_dict:
             print(Messages.NO_RACES)
@@ -49,7 +49,7 @@ class Game:
             print(f"{index}: {race}")
 
     @staticmethod
-    def get_user_choice() -> int:
+    def get_user_input() -> int:
         """Get and return the user's choice, handle input errors."""
         try:
             return int(input().strip())
@@ -58,17 +58,17 @@ class Game:
             return -1
 
     @staticmethod
-    def is_valid_choice(choice: int, options: List[str]) -> bool:
-        """Check if the user choice is valid."""
+    def is_valid_input(choice: int, options: List[str]) -> bool:
+        """Check if the user input is valid."""
         return 0 <= choice < len(options)
 
     @staticmethod
-    def fetch_creature_data(race_key: str) -> Union[Dict[str, Any], None]:
+    def get_creature_data(race_key: str) -> Union[Dict[str, Any], None]:
         """Get creature data given a race key."""
         return Game.game_database[DatabaseKeys.RACES].get(race_key)
 
     @staticmethod
-    def create_player(races_dict: Dict[int, str], user_choice: int, creature_data: Dict[str, Any]) -> Player:
+    def create_new_player(races_dict: Dict[int, str], user_choice: int, creature_data: Dict[str, Any]) -> Player:
         """Create a new player instance."""
         return Player(
             race=races_dict[user_choice],
@@ -79,45 +79,45 @@ class Game:
         )
 
     @staticmethod
-    def display_player_info(player: Player) -> None:
+    def show_player_info(player: Player) -> None:
         """Print player information."""
         print(player)
 
     @staticmethod
-    def handle_data_error(exc: Exception) -> None:
+    def handle_error(exc: Exception) -> None:
         """Handle data-related errors."""
         print(f"{Messages.ERROR_OCCURRED}{exc}")
 
     @staticmethod
-    def process_creature_data(race_key: str, races_dict: Dict[int, str], user_choice: int) -> bool:
+    def process_data(race_key: str, races_dict: Dict[int, str], user_choice: int) -> bool:
         """Handle creature data related actions."""
-        creature_data = Game.fetch_creature_data(race_key)
+        creature_data = Game.get_creature_data(race_key)
         if not creature_data:
             return False
         try:
-            player = Game.create_player(races_dict, user_choice, creature_data)
-            Game.display_player_info(player)
+            player = Game.create_new_player(races_dict, user_choice, creature_data)
+            Game.show_player_info(player)
         except (KeyError, TypeError) as exc:
-            Game.handle_data_error(exc)
+            Game.handle_error(exc)
             return False
         return True
 
     @staticmethod
-    def handle_user_choice(user_choice: int, race_keys: List[str], races_dict: Dict[int, str]) -> None:
+    def validate_user_choice(user_choice: int, race_keys: List[str], races_dict: Dict[int, str]) -> None:
         """Validate user choice and handle accordingly."""
-        if not Game.is_valid_choice(user_choice, race_keys):
+        if not Game.is_valid_input(user_choice, race_keys):
             print(Messages.INVALID_CHOICE)
             return
         race_key = race_keys[user_choice]
-        if not Game.process_creature_data(race_key, races_dict, user_choice):
+        if not Game.process_data(race_key, races_dict, user_choice):
             print(Messages.INVALID_CHOICE)
 
     @staticmethod
-    def handle_race_selection(available_races: Dict[int, str], race_keys: List[str]) -> None:
+    def select_race(available_races: Dict[int, str], race_keys: List[str]) -> None:
         """Handle the process of race choice."""
-        Game.show_races(available_races)
-        user_choice = Game.get_user_choice()
-        Game.handle_user_choice(user_choice, race_keys, available_races)
+        Game.display_races(available_races)
+        user_choice = Game.get_user_input()
+        Game.validate_user_choice(user_choice, race_keys, available_races)
 
 
 # Run the game
