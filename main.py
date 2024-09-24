@@ -1,5 +1,5 @@
 import os
-import yaml  # Using PyYAML for YAML parsing
+import yaml
 from dataclasses import dataclass
 from typing import Dict, Any
 
@@ -13,13 +13,15 @@ INVALID_CHOICE_MESSAGE = "Invalid choice or data error."
 
 def parse_yaml(file_path: str) -> Any:
     """Parse a YAML file and return the data."""
-    with open(file_path, 'r', encoding='utf-8') as file:
-        try:
-            data = yaml.safe_load(file)
-        except yaml.YAMLError as exc:
-            print(f"Error parsing YAML file: {exc}")
-            return {}
-    return data
+    try:
+        with open(file_path, 'r', encoding='utf-8') as file:
+            try:
+                return yaml.safe_load(file)
+            except yaml.YAMLError as exc:
+                print(f"Error parsing YAML file: {exc}")
+    except (IOError, OSError) as exc:
+        print(f"Error opening file: {exc}")
+    return {}
 
 
 def load_game_database(file_path: str) -> Dict:
@@ -28,7 +30,7 @@ def load_game_database(file_path: str) -> Dict:
         return parse_yaml(file_path)
     else:
         print(FILE_NOT_FOUND_ERROR.format(file_path))
-        return {}
+    return {}
 
 
 GAME_DATA_BASE = load_game_database(DATABASE_FILE_PATH)
@@ -36,7 +38,7 @@ GAME_DATA_BASE = load_game_database(DATABASE_FILE_PATH)
 
 @dataclass
 class Creature:
-    creature_type: Dict[str, Dict[str, str]]
+    creature_type: str
     description: str
     size: str
     speed: int
@@ -77,34 +79,65 @@ class Game:
     def run_game():
         """Run the game."""
         Game.print_welcome_message()
-        races_dict, keys = Game.build_races_dict()
+
+        races_dict, race_keys = Game.build_races_dict()
         if not races_dict:
-            print("No available races to display.")
+            Game.handle_no_races()
+            return
+        Game.display_races(races_dict)
+
+        user_choice = Game.get_user_choice()
+        if not Game.is_valid_choice(user_choice, race_keys):
+            Game.handle_invalid_choice()
             return
 
+        chosen_race_key = race_keys[user_choice]
+        if not Game.handle_creature_data(chosen_race_key, races_dict, user_choice):
+            Game.handle_invalid_choice()
+
+    @staticmethod
+    def handle_creature_data(race_key, races_dict, user_choice):
+        creature_data = Game.get_creature_data(race_key)
+        if creature_data is None:
+            return False
+        Game.create_and_display_player(races_dict, user_choice, creature_data)
+        return True
+
+    @staticmethod
+    def handle_no_races():
+        print("No available races to display.")
+
+    @staticmethod
+    def display_races(races_dict):
         print("Выберите расу:")
         for index, race in races_dict.items():
             print(f"{index}: {race}")
 
-        user_choice = Game.get_user_choice()
-        if user_choice not in range(len(keys)):
-            print(INVALID_CHOICE_MESSAGE)
-            return
+    @staticmethod
+    def is_valid_choice(user_choice, race_keys):
+        return user_choice in range(len(race_keys))
 
+    @staticmethod
+    def handle_invalid_choice():
+        print(INVALID_CHOICE_MESSAGE)
+
+    @staticmethod
+    def get_creature_data(race_key):
+        return GAME_DATA_BASE['creature_types'].get(race_key)
+
+    @staticmethod
+    def create_and_display_player(races_dict, user_choice, creature_data):
         try:
-            chosen_race_key = keys[user_choice]
-            creature_data = GAME_DATA_BASE['creature_types'][chosen_race_key]
             player = Player(
                 race=races_dict[user_choice],
                 creature_type=creature_data['creature_type']['type'],
                 description=creature_data['description'],
                 size=creature_data['size'],
-                speed=creature_data['speed']
+                speed=int(creature_data['speed'])
             )
             print(player)
-        except (IndexError, KeyError):
-            print(INVALID_CHOICE_MESSAGE)
-
+        except (KeyError, TypeError) as exc:
+            print(f"An error occurred: {exc}")
 
 # Run the game
 if __name__ == "__main__":
