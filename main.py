@@ -33,8 +33,12 @@ class Game:
         if DatabaseKeys.RACES not in Game.game_database:
             log_error(f"Error: Key '{DatabaseKeys.RACES}' not found in the game database.")
             return {}, []
+
         races = Game.game_database[DatabaseKeys.RACES]
-        race_dict = {i: race[DatabaseKeys.RACE_NAME][DatabaseKeys.RU] for i, race in enumerate(races.values())}
+        race_dict = {
+            i: race[DatabaseKeys.RACE_NAME][DatabaseKeys.RU]
+            for i, race in enumerate(races.values())
+        }
         race_keys = list(races.keys())
         return race_dict, race_keys
 
