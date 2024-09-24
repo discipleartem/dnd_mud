@@ -4,7 +4,6 @@ from massages import Messages, INVALID_CHOICE
 from typing import Tuple, Dict, Any, Union, List
 from dataclasses import dataclass
 
-
 @dataclass(frozen=True)
 class DatabaseKeys:
     RACES: str = 'Races'
@@ -18,18 +17,22 @@ class Game:
     @staticmethod
     def initialize() -> None:
         """Initialize game settings and data."""
+        Game._initialize_game_database()
+
+    @staticmethod
+    def _initialize_game_database() -> None:
         Game.game_database = initialize_game_database()
 
     @staticmethod
     def run() -> None:
         """Run the game."""
         print(Messages.WELCOME)
-        races, race_keys = Game.load_race_data()
+        races, race_keys = Game._load_race_data()
         if races:
             UserInterface.select_race(races, race_keys)
 
     @staticmethod
-    def load_race_data() -> Tuple[Dict[int, str], List[str]]:
+    def _load_race_data() -> Tuple[Dict[int, str], List[str]]:
         """Load race data from the game database."""
         races_data = Game.game_database.get(DatabaseKeys.RACES, {})
         if not races_data:
@@ -41,12 +44,12 @@ class Game:
         )
 
     @staticmethod
-    def get_creature_data(race_key: str) -> Union[Dict[str, Any], None]:
+    def _get_creature_data(race_key: str) -> Union[Dict[str, Any], None]:
         """Get creature data given a race key."""
         return Game.game_database.get(DatabaseKeys.RACES, {}).get(race_key)
 
     @staticmethod
-    def create_player(race: str, creature_data: Dict[str, Any]) -> Player:
+    def _create_player(race: str, creature_data: Dict[str, Any]) -> Player:
         """Create a new player instance."""
         return Player(
             race=race,
@@ -59,11 +62,11 @@ class Game:
     @staticmethod
     def process_race_choice(race_key: str, races_dict: Dict[int, str], user_choice: int) -> bool:
         """Handle creature data-related actions."""
-        creature_data = Game.get_creature_data(race_key)
+        creature_data = Game._get_creature_data(race_key)
         if not creature_data:
             return False
         try:
-            player = Game.create_player(races_dict[user_choice], creature_data)
+            player = Game._create_player(races_dict[user_choice], creature_data)
             UserInterface.show_player_info(player)
         except (KeyError, TypeError) as e:
             UserInterface.handle_error(e)
