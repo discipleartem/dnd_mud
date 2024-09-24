@@ -1,6 +1,8 @@
-from yaml_parse import initialize_game_database, log_error
+from yaml_parse import initialize_game_database
 from player import Player
 from massages import Messages, INVALID_CHOICE
+from errors import ErrorHandler
+
 from typing import Tuple, Dict, Any, Union, List
 from dataclasses import dataclass
 
@@ -17,6 +19,10 @@ class GameDatabaseKeys:
     RU: str = 'ru'
 
 
+ERROR_MESSAGE_KEY_NOT_FOUND = "Error: Key '{}' not found in the game database."
+DATABASE_LOAD_FAILED = "Failed to load the game database."
+
+
 class Game:
     database: Dict = {}
 
@@ -27,7 +33,10 @@ class Game:
 
     @staticmethod
     def load_database() -> None:
-        Game.database = initialize_game_database()
+        try:
+            Game.database = initialize_game_database()
+        except Exception:
+            ErrorHandler.log_error_message(DATABASE_LOAD_FAILED)
 
     @staticmethod
     def run() -> None:
@@ -38,9 +47,9 @@ class Game:
             UserInterface.select_race(races, race_keys)
 
     @staticmethod
-    def log_error(message: str) -> None:
+    def log_error_message(message: str) -> None:
         """Log an error message."""
-        log_error(message)
+        ErrorHandler.log_error(message)
 
 
 @dataclass
@@ -50,7 +59,7 @@ class RaceHandler:
         """Load race data from the game database."""
         race_data = Game.database.get(GameDatabaseKeys.RACES_KEY)
         if not race_data:
-            Game.log_error(f"Error: Key '{GameDatabaseKeys.RACES_KEY}' not found in the game database.")
+            Game.log_error_message(ERROR_MESSAGE_KEY_NOT_FOUND.format(GameDatabaseKeys.RACES_KEY))
             return {}, []
         race_dict = RaceHandler.parse_race_data(race_data)
         return race_dict, list(race_data.keys())
@@ -78,7 +87,7 @@ class RaceHandler:
             player = RaceHandler.create_player_instance(race_dict[user_choice], creature_data)
             UserInterface.show_player_info(player)
         except (KeyError, TypeError) as e:
-            UserInterface.handle_error(e)
+            ErrorHandler.handle_error(e)
             return False
         return True
 
@@ -145,6 +154,9 @@ class UserInterface:
         UserInterface.display_races(races)
         user_choice = UserInterface.get_user_choice()
         UserInterface.process_user_choice(user_choice, race_keys, races)
+
+
+
 
 
 # Run the game
