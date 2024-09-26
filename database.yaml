@@ -17,7 +17,11 @@ RACES:
       name:
         ru: гуманоид
 
-    size: medium
+    size:
+      value: medium
+      name:
+        ru: средний
+
     speed: 30
 
     race_ability:
@@ -57,7 +61,10 @@ RACES:
       name:
         ru: гуманоид
 
-    size: medium
+    size:
+      value: medium
+      name:
+        ru: средний
     speed: 30
 
     race_ability:
@@ -97,7 +104,10 @@ RACES:
       name:
         ru: гуманоид
 
-    size: medium
+    size:
+      value: medium
+      name:
+        ru: средний
     speed: 30
 
     race_ability:
