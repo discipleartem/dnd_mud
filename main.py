@@ -30,51 +30,40 @@ class Creature:
 # Player must be created from Race
 @dataclass
 class Player(Creature):
-
     @staticmethod
-    def create_player_from_race(race_data: dict, race_key: str):
+    def from_race_data(race_data: dict, race_key: str):
         race_info = race_data[race_key]
-
-        name_ru = race_info['name']['ru']
-        creature_type = race_info['creature_type']['type']
-        creature_type_name_ru = race_info['creature_type']['name']['ru']
-        description = race_info['description']
-        size_value = race_info['size']['value']
-        size_name_ru = race_info['size']['name']['ru']
-        speed = race_info['speed']
-
         return Player(
             race=race_key,
-            race_name_ru=name_ru,
-            creature_type=creature_type,
-            creature_type_name_ru=creature_type_name_ru,
-            description=description,
-            size=size_value,
-            size_name_ru=size_name_ru,
-            speed=speed
+            race_name_ru=race_info['name']['ru'],
+            creature_type=race_info['creature_type']['type'],
+            creature_type_name_ru=race_info['creature_type']['name']['ru'],
+            description=race_info['description'],
+            size=race_info['size']['value'],
+            size_name_ru=race_info['size']['name']['ru'],
+            speed=race_info['speed']
         )
 
 
 
 #Game must run
 class Game:
+
+    @staticmethod
+    def is_valid_race(race):
+        #Проверка наличия ключей, если их нет, то раса не создаётся.
+        #['RACES']['name']['ru'] должно быть заполнено
+        return race and race.get('name') and race['name'].get('ru')
+
     @staticmethod
     def create_race_dictionary(races):
-        def is_valid_race(race):
-            """
-            Проверка наличия ключей, если их нет, то раса не создаётся.
-            ['RACES']['name']['ru'] должно быть заполнено
-            """
-            return race and race.get('name') and race['name'].get('ru')
-
         race_dict = {}
         race_keys = []
         for index, (race_key, race_value) in enumerate(races.items()):
-            if is_valid_race(race_value):
+            if Game.is_valid_race(race_value):
                 race_dict[index] = race_value['name']['ru']
                 race_keys.append(race_key)
         return race_dict, race_keys
-
 
 
     def run(self):
@@ -87,7 +76,7 @@ class Game:
         player_choice = int(input())
         chosen_race_key = race_keys[player_choice]
 
-        player = Player.create_player_from_race(DATABASE[RACES_KEY], chosen_race_key)
+        player = Player.from_race_data(DATABASE[RACES_KEY], chosen_race_key)
         print(player)
 
 
