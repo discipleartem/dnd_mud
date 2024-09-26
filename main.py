@@ -71,7 +71,7 @@ class Human(Creature):
             print('Хотите перебросить кубик?')
             print('1 - Да, 0 - Нет')
             if int(input()):
-                result = result = randint(1, 20)
+                result = randint(1, 20)
                 self.resourcefulness = False
                 return result
 
