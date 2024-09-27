@@ -4,28 +4,17 @@ from random import randint
 
 DATABASE = initialize_game_database()
 
-# Extracting repeated string values as constants
-WELCOME_MESSAGE = 'Добро пожаловать в текстовую игру по мотивам D&D 5.5 редакции! от 2024 года'
-CHOOSE_RACE_MESSAGE = "Выберите расу:"
-RACES_KEY = 'RACES'
-
-
-@dataclass(frozen=True)
-class Messages:
-    WELCOME: str = WELCOME_MESSAGE
-    CHOOSE_RACE: str = CHOOSE_RACE_MESSAGE
-
 
 #Core mechanic can roll dice
-@dataclass
-class Core:
-    @staticmethod
-    def roll_d20():
-        return randint(1, 20)
+# @dataclass
+# class Core:
+#     @classmethod
+#     def roll_d20(cls):
+#         return randint(1, 20)
 
 
 @dataclass
-class Creature(Core):
+class Creature:
     race: str
     race_name_ru: str
     creature_type: str
@@ -58,16 +47,16 @@ class Human(Creature):
     def is_resourcefulness(self):
         return self.resourcefulness
 
-    def roll_d20(self):
-        result = randint(1, 20)
-        print(result)
-        if self.is_resourcefulness():
-            print('Хотите перебросить кубик?')
-            print('1 - Да, 0 - Нет')
-            if int(input()):
-                result = randint(1, 20)
-                self.resourcefulness = False
-                return result
+    # def roll_d20(self):
+    #     result = randint(1, 20)
+    #     print(result)
+    #     if self.is_resourcefulness():
+    #         print('Хотите перебросить кубик?')
+    #         print('1 - Да, 0 - Нет')
+    #         if int(input()):
+    #             result = randint(1, 20)
+    #             self.resourcefulness = False
+    #             return result
 
 # @dataclass
 # class Skills(Core):
@@ -75,13 +64,13 @@ class Human(Creature):
 #     pass
 
 # Player must be created from Race
-# Player can roll dice
 @dataclass
 class Player(Human):
     pass
 
 #Game must run
 #Game has Core mechanic
+#Game can create Player
 class Game:
 
     @classmethod
@@ -132,8 +121,8 @@ class Game:
 
     @classmethod
     def choose_race(cls):
-        print(Messages.CHOOSE_RACE)
-        race_data = DATABASE[RACES_KEY]
+        print("Выберите расу:")
+        race_data = DATABASE['RACES']
         race_dict, race_keys = cls.create_race_dictionary(race_data)
         print(race_dict)
 
@@ -147,7 +136,7 @@ class Game:
 
     def run(self):
         #Wellcome screen
-        print(Messages.WELCOME)
+        print('Добро пожаловать в текстовую игру по мотивам D&D 5.5 редакции! от 2024 года')
 
         #choose race
         race_key, race_data = self.choose_race()
@@ -155,7 +144,7 @@ class Game:
         #create player
         player = self.create_player(race_key, race_data)
         print(player)
-        print(player.roll_d20())
+
 
 
 # Run the game
