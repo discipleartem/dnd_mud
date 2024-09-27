@@ -44,22 +44,16 @@ class Human(Creature):
        Если вы получаете Героическое вдохновение, но у вас оно уже есть, то оно теряется, если вы
        не передадите его Персонажу Игрока, который не имеет его."""
     resourcefulness :bool
-    resourcefulness_name_ru: str
+    resourcefulness_name_ru :str
+    resourcefulness_description :str
 
-    @staticmethod
-    def create_human_from_data(race_key, race_data: dict):
-        return Human(
-            race= race_key,
-            race_name_ru=race_data['name']['ru'],
-            creature_type=race_data['creature_type']['type'],
-            creature_type_name_ru=race_data['creature_type']['name']['ru'],
-            description=race_data['description'],
-            size=race_data['size']['value'],
-            size_name_ru=race_data['size']['name']['ru'],
-            speed=race_data['speed'],
-            resourcefulness=True if race_data['race_ability'].get('resourcefulness') else False,
-            resourcefulness_name_ru=race_data['race_ability']['resourcefulness']['name']['ru']
-        )
+    #Умелость. Вы получаете владение одним навыком на ваш выбор.
+    is_skilled  :bool
+    is_skilled_description :str
+
+    #Универсальность. Вы получаете черту Происхождения на ваш выбор
+    is_universality :bool
+    is_universality_description :str
 
     def is_resourcefulness(self):
         return self.resourcefulness
@@ -75,7 +69,10 @@ class Human(Creature):
                 self.resourcefulness = False
                 return result
 
-
+# @dataclass
+# class Skills(Core):
+#     # acrobatics: {is_skilled: False, characteristic: dexterity}
+#     pass
 
 # Player must be created from Race
 # Player can roll dice
@@ -87,14 +84,14 @@ class Player(Human):
 #Game has Core mechanic
 class Game:
 
-    @staticmethod
-    def is_valid_race(race):
+    @classmethod
+    def is_valid_race(cls, race):
         #Проверка наличия ключей, если их нет, то раса не создаётся.
         #['RACES']['name']['ru'] должно быть заполнено
         return race and race.get('name') and race['name'].get('ru')
 
-    @staticmethod
-    def create_race_dictionary(races):
+    @classmethod
+    def create_race_dictionary(cls, races):
         race_dict = {}
         race_keys = []
         for index, (race_key, race_value) in enumerate(races.items()):
@@ -103,17 +100,32 @@ class Game:
                 race_keys.append(race_key)
         return race_dict, race_keys
 
+    @classmethod
+    def create_player(cls, race_key, race_data: dict):
+        return Human(
+            race=race_key,
+            race_name_ru=race_data['name']['ru'],
+            creature_type=race_data['creature_type']['type'],
+            creature_type_name_ru=race_data['creature_type']['name']['ru'],
+            description=race_data['description'],
+            size=race_data['size']['value'],
+            size_name_ru=race_data['size']['name']['ru'],
+            speed=race_data['speed'],
+            resourcefulness= True if race_data['race_ability'].get('resourcefulness') else False,
+            resourcefulness_name_ru= race_data['race_ability']['resourcefulness']['name']['ru'],
+            resourcefulness_description= race_data['race_ability']['resourcefulness']['description'],
+            is_skilled= True if race_data['race_ability'].get('skilled') else False,
+            is_skilled_description= race_data['race_ability']['skilled']['description'],
+            is_universality= True if race_data['race_ability'].get('universality') else False,
+            is_universality_description= race_data['race_ability']['universality']['description']
+        )
 
-    @staticmethod
-    def create_player(race_key, race_data):
-        return Human.create_human_from_data(race_key, race_data)
 
-
-
-    def choose_race(self):
+    @classmethod
+    def choose_race(cls):
         print(Messages.CHOOSE_RACE)
         race_data = DATABASE[RACES_KEY]
-        race_dict, race_keys = self.create_race_dictionary(race_data)
+        race_dict, race_keys = cls.create_race_dictionary(race_data)
         print(race_dict)
 
         chosen_race_index = int(input())
