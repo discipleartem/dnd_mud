@@ -120,6 +120,15 @@ class Game:
             is_universality_description= race_data['race_ability']['universality']['description']
         )
 
+    @staticmethod
+    def user_digital_input(race_keys):
+        while True:
+            user_choice = input("Введите число: ")
+            if user_choice.isdigit() and int(user_choice) in range(len(race_keys)):
+                return int(user_choice)
+            else:
+                print("Неверный ввод, введите число в заданном диапазоне")
+
 
     @classmethod
     def choose_race(cls):
@@ -128,10 +137,13 @@ class Game:
         race_dict, race_keys = cls.create_race_dictionary(race_data)
         print(race_dict)
 
-        chosen_race_index = int(input())
+        chosen_race_index = cls.user_digital_input(race_keys)
+
         chosen_race_key = race_keys[chosen_race_index]
         chosen_race_data = race_data[chosen_race_key]
         return chosen_race_key, chosen_race_data
+
+
 
     def run(self):
         #Wellcome screen
