@@ -108,14 +108,14 @@ class Elf(Creature):
 
 @dataclass
 class HighElf(Elf):
-    # TODO: implement leveling sub race ability mechanic
+    #TODO: implement leveling sub race ability mechanic
     first_lvl :str
     third_lvl :str
     fifth_lvl :str
 
 @dataclass
 class Drow(Elf):
-    # TODO: implement leveling sub race ability mechanic
+    #TODO: implement leveling sub race ability mechanic
     first_lvl :str
     third_lvl :str
     fifth_lvl :str
@@ -182,8 +182,17 @@ class Player:
                     sub_race_dict = {}
                     sub_race_keys = []
                     if race_data.get('sub_races'):
-                        print('Выбирите подрасу:')
+                        print('Выберите подрасу:')
                         for index, (sub_race_key, sub_race_value) in enumerate(race_data['sub_races'].items()):
+                            print()
+                            print(sub_race_value['name']['ru'].capitalize())
+                            print(sub_race_value['description'])
+
+                            print('Особенности подрасы: ')
+                            print('На 1 уровне: ', sub_race_value['first_lvl'])
+                            print('На 3 уровне: ', sub_race_value['third_lvl'])
+                            print('На 5 уровне: ', sub_race_value['fifth_lvl'])
+
                             sub_race_dict[index] = sub_race_value['name']['ru']
                             sub_race_keys.append(sub_race_key)
 
@@ -280,6 +289,18 @@ class Game:
     def choose_race(cls):
         print("Выберите расу:")
         race_data = DATABASE['RACES']
+
+        for race in race_data:
+            print(race_data[race]['name']['ru'].capitalize())
+            print(race_data[race]['description'])
+            print('Расовые особенности:')
+
+            for ability in race_data[race]['race_ability']:
+                print(race_data[race]['race_ability'][ability]['name']['ru'].capitalize() + ': ')
+                print(race_data[race]['race_ability'][ability]['description'])
+                print()
+            print()
+
         race_dict, race_keys = cls.create_race_dictionary(race_data)
         print(race_dict)
 
