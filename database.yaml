@@ -167,7 +167,7 @@ RACES:
         third_lvl: заклинание Обнаружение магии
         fifth_lvl: заклинание Туманный Шаг
 
-      drow:
+      dark_elf:
         name:
           ru: дроу
         description: |
