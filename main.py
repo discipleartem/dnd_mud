@@ -25,6 +25,7 @@ class Creature:
 
 @dataclass
 class Human(Creature):
+    #TODO: implement resourcefulness mechanic
     #Вы получаете Героическое вдохновение каждый раз после продолжительного отдыха
     """ Героическое вдохновение (resourcefulness)
        Если вы (Персонаж Игрока) имеете Героическое вдохновение, то вы можете потратить его, чтобы
@@ -35,11 +36,13 @@ class Human(Creature):
     resourcefulness_name_ru :str
     resourcefulness_description :str
 
+    #TODO: implement skilled mechanic
     #Умелость. Вы получаете владение одним навыком на ваш выбор.
     have_skilled  :bool
     skilled_name_ru: str
     skilled_description :str
 
+    #TODO: implement universality mechanic
     #Универсальность. Вы получаете черту Происхождения на ваш выбор
     have_universality :bool
     universality_description :str
@@ -114,7 +117,7 @@ class HighElf(Elf):
     fifth_lvl :str
 
 @dataclass
-class Drow(Elf):
+class DarkElf(Elf):
     sub_race: str
     sub_race_name_ru: str
     sub_race_description: str
@@ -134,115 +137,120 @@ class Drow(Elf):
 class Player:
     @classmethod
     def create_player(cls, race_key, race_data: dict):
-        def initialize_creature(data):
-            return {
-                'race': race_key,
-                'race_name_ru': data['name']['ru'],
-                'creature_type': data['creature_type']['type'],
-                'creature_type_name_ru': data['creature_type']['name']['ru'],
-                'description': data['description'],
-                'size': data['size']['value'],
-                'size_name_ru': data['size']['name']['ru'],
-                'speed': data['speed'],
-            }
+        attributes = cls.initialize_creature(race_data, race_key)
 
         if race_key == 'human':
-            attributes = initialize_creature(race_data)
-            return Human(
-                **attributes,
-                have_resourcefulness='resourcefulness' in race_data['race_ability'],
-                resourcefulness_name_ru=race_data['race_ability']['resourcefulness']['name']['ru'],
-                resourcefulness_description=race_data['race_ability']['resourcefulness']['description'],
-                have_skilled='skilled' in race_data['race_ability'],
-                skilled_name_ru=race_data['race_ability']['skilled']['name']['ru'],
-                skilled_description=race_data['race_ability']['skilled']['description'],
-                have_universality='universality' in race_data['race_ability'],
-                universality_description=race_data['race_ability']['universality']['description']
-            )
-
+            return cls.create_human(attributes, race_data)
         if race_key == 'orc':
-            attributes = initialize_creature(race_data)
-            return Orc(
-                **attributes,
-                adrenaline_rush='adrenaline_rush' in race_data['race_ability'],
-                adrenaline_rush_name_ru=race_data['race_ability']['adrenaline_rush']['name']['ru'],
-                adrenaline_rush_description=race_data['race_ability']['adrenaline_rush']['description'],
-                have_dark_vision='dark_vision' in race_data['race_ability'],
-                dark_vision=race_data['race_ability']['dark_vision']['value'],
-                dark_vision_name_ru=race_data['race_ability']['dark_vision']['name']['ru'],
-                dark_vision_description=race_data['race_ability']['dark_vision']['description'],
-                have_unwavering_fortitude='unwavering_fortitude' in race_data['race_ability'],
-                unwavering_fortitude_name_ru=race_data['race_ability']['unwavering_fortitude']['name']['ru'],
-                have_unwavering_fortitude_description=race_data['race_ability']['unwavering_fortitude']['description']
-            )
-
+            return cls.create_orc(attributes, race_data)
         if race_key == 'elf':
-            while True:
-                sub_race_dict = {}
-                sub_race_keys = []
-                if race_data.get('sub_races'):
-                    print('Выберите подрасу:')
-                    for index, (sub_race_key, sub_race_value) in enumerate(race_data['sub_races'].items()):
-                        print()
-                        print(sub_race_value['name']['ru'].capitalize())
-                        print(sub_race_value['description'])
-                        print('Особенности подрасы: ')
-                        print('На 1 уровне: ', sub_race_value['first_lvl'])
-                        print('На 3 уровне: ', sub_race_value['third_lvl'])
-                        print('На 5 уровне: ', sub_race_value['fifth_lvl'])
-                        sub_race_dict[index] = sub_race_value['name']['ru']
-                        sub_race_keys.append(sub_race_key)
-                print(sub_race_dict)
-                user_sub_race_choice_index = Game.user_digital_input(sub_race_keys)
-                sub_race_key = sub_race_keys[user_sub_race_choice_index]
-                creature_attributes = initialize_creature(race_data)
+            return cls.create_elf(race_data)
 
-                def initialize_elf(data):
-                    return {
-                        'have_dark_vision': 'dark_vision' in race_data['race_ability'],
-                        'dark_vision': data['race_ability']['dark_vision']['value'],
-                        'dark_vision_name_ru': data['race_ability']['dark_vision']['name']['ru'],
-                        'dark_vision_description': data['race_ability']['dark_vision']['description'],
+    @staticmethod
+    def initialize_creature(data, race_key):
+        return {
+            'race': race_key,
+            'race_name_ru': data['name']['ru'],
+            'creature_type': data['creature_type']['type'],
+            'creature_type_name_ru': data['creature_type']['name']['ru'],
+            'description': data['description'],
+            'size': data['size']['value'],
+            'size_name_ru': data['size']['name']['ru'],
+            'speed': data['speed'],
+        }
 
-                        'elven_origin': 'elven_origin' in race_data['race_ability'],
-                        'elven_origin_name_ru': data['race_ability']['elven_origin']['name']['ru'],
-                        'elven_origin_description': data['race_ability']['elven_origin']['description'],
+    @staticmethod
+    def create_human(attributes, data):
+        return Human(
+            **attributes,
+            have_resourcefulness='resourcefulness' in data['race_ability'],
+            resourcefulness_name_ru=data['race_ability']['resourcefulness']['name']['ru'],
+            resourcefulness_description=data['race_ability']['resourcefulness']['description'],
+            have_skilled='skilled' in data['race_ability'],
+            skilled_name_ru=data['race_ability']['skilled']['name']['ru'],
+            skilled_description=data['race_ability']['skilled']['description'],
+            have_universality='universality' in data['race_ability'],
+            universality_description=data['race_ability']['universality']['description']
+        )
+
+    @staticmethod
+    def create_orc(attributes, data):
+        return Orc(
+            **attributes,
+            adrenaline_rush='adrenaline_rush' in data['race_ability'],
+            adrenaline_rush_name_ru=data['race_ability']['adrenaline_rush']['name']['ru'],
+            adrenaline_rush_description=data['race_ability']['adrenaline_rush']['description'],
+            have_dark_vision='dark_vision' in data['race_ability'],
+            dark_vision=data['race_ability']['dark_vision']['value'],
+            dark_vision_name_ru=data['race_ability']['dark_vision']['name']['ru'],
+            dark_vision_description=data['race_ability']['dark_vision']['description'],
+            have_unwavering_fortitude='unwavering_fortitude' in data['race_ability'],
+            unwavering_fortitude_name_ru=data['race_ability']['unwavering_fortitude']['name']['ru'],
+            have_unwavering_fortitude_description=data['race_ability']['unwavering_fortitude']['description']
+        )
+
+    @staticmethod
+    def create_elf(data):
+        sub_race_keys, sub_race_dict = [], {}
+        if data.get('sub_races'):
+            print('Выберите подрасу:')
+            for index, (sub_race_key, sub_race_value) in enumerate(data['sub_races'].items()):
+                print(f"\n{sub_race_value['name']['ru'].capitalize()}\n{sub_race_value['description']}")
+                print(f"Особенности подрасы:\nНа 1 уровне: {sub_race_value['first_lvl']}")
+                print(f"На 3 уровне: {sub_race_value['third_lvl']}\nНа 5 уровне: {sub_race_value['fifth_lvl']}")
+                sub_race_dict[index] = sub_race_value['name']['ru']
+                sub_race_keys.append(sub_race_key)
+        print(sub_race_dict)
+        user_sub_race_choice_index = Game.user_digital_input(sub_race_keys)
+        sub_race_key = sub_race_keys[user_sub_race_choice_index]
+
+        creature_attributes = Player.initialize_creature(data, 'elf')
+        elf_attributes = Player.initialize_elf_attributes(data)
+
+        if sub_race_key == "high_elf":
+            return HighElf(**creature_attributes, **elf_attributes,
+                           sub_race=data['sub_races'][sub_race_key],
+                           sub_race_name_ru=data['sub_races'][sub_race_key]['name']['ru'],
+                           sub_race_description=data['sub_races'][sub_race_key]['description'],
+                           first_lvl=data['sub_races'][sub_race_key]['first_lvl'],
+                           third_lvl=data['sub_races'][sub_race_key]['third_lvl'],
+                           fifth_lvl=data['sub_races'][sub_race_key]['fifth_lvl']
+                           )
+        if sub_race_key == "dark_elf":
+            return DarkElf(**creature_attributes, **elf_attributes,
+                           sub_race= data['sub_races'][sub_race_key],
+                           sub_race_name_ru= data['sub_races'][sub_race_key]['name']['ru'],
+                           sub_race_description= data['sub_races'][sub_race_key]['description'],
+                           first_lvl= data['sub_races'][sub_race_key]['first_lvl'],
+                           third_lvl=data['sub_races'][sub_race_key]['third_lvl'],
+                           fifth_lvl=data['sub_races'][sub_race_key]['fifth_lvl']
+                           )
+
+    @staticmethod
+    def initialize_elf_attributes(data):
+        return {
+                'have_dark_vision': 'dark_vision' in data['race_ability'],
+                'dark_vision': data['race_ability']['dark_vision']['value'],
+                'dark_vision_name_ru': data['race_ability']['dark_vision']['name']['ru'],
+                'dark_vision_description': data['race_ability']['dark_vision']['description'],
+
+                'elven_origin': 'elven_origin' in data['race_ability'],
+                'elven_origin_name_ru': data['race_ability']['elven_origin']['name']['ru'],
+                'elven_origin_description': data['race_ability']['elven_origin']['description'],
 
 
-                        'legacy_of_fae': 'legacy_of_fae' in race_data['race_ability'],
-                        'legacy_of_fae_name_ru': data['race_ability']['legacy_of_fae']['name']['ru'],
-                        'legacy_of_fae_description': data['race_ability']['legacy_of_fae']['description'],
+                'legacy_of_fae': 'legacy_of_fae' in data['race_ability'],
+                'legacy_of_fae_name_ru': data['race_ability']['legacy_of_fae']['name']['ru'],
+                'legacy_of_fae_description': data['race_ability']['legacy_of_fae']['description'],
 
-                        'heightened_senses': 'heightened_senses' in race_data['race_ability'],
-                        'heightened_senses_name_ru': data['race_ability']['heightened_senses']['name']['ru'],
-                        'heightened_senses_description': data['race_ability']['heightened_senses']['description'],
+                'heightened_senses': 'heightened_senses' in data['race_ability'],
+                'heightened_senses_name_ru': data['race_ability']['heightened_senses']['name']['ru'],
+                'heightened_senses_description': data['race_ability']['heightened_senses']['description'],
 
-                        'trance': 'trance' in data['race_ability'],
-                        'trance_name_ru': data['race_ability']['trance']['name']['ru'],
-                        'trance_description': data['race_ability']['trance']['description'],
-                    }
-                elf_attributes = initialize_elf(race_data)
-
-                if sub_race_key == 'high_elf':
-                    return HighElf(
-                        **creature_attributes, **elf_attributes,
-                        sub_race= sub_race_key,
-                        sub_race_name_ru= race_data['sub_races'][sub_race_key]['name']['ru'],
-                        sub_race_description= race_data['sub_races'][sub_race_key]['description'],
-                        first_lvl= race_data['sub_races'][sub_race_key]['first_lvl'],
-                        third_lvl= race_data['sub_races'][sub_race_key]['third_lvl'],
-                        fifth_lvl= race_data['sub_races'][sub_race_key]['fifth_lvl']
-                    )
-                if sub_race_key == 'drow':
-                    return Drow(
-                        **creature_attributes, **elf_attributes,
-                        sub_race= sub_race_key,
-                        sub_race_name_ru= race_data['sub_races'][sub_race_key]['name']['ru'],
-                        sub_race_description= race_data['sub_races'][sub_race_key]['description'],
-                        first_lvl= race_data['sub_races'][sub_race_key]['first_lvl'],
-                        third_lvl= race_data['sub_races'][sub_race_key]['third_lvl'],
-                        fifth_lvl= race_data['sub_races'][sub_race_key]['fifth_lvl']
-                    )
+                'trance': 'trance' in data['race_ability'],
+                'trance_name_ru': data['race_ability']['trance']['name']['ru'],
+                'trance_description': data['race_ability']['trance']['description'],
+                }
 
 #Game must run
 #Game has Core mechanic
