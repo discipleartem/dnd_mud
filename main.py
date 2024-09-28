@@ -137,17 +137,16 @@ class DarkElf(Elf):
 class Player:
     @classmethod
     def create_player(cls, race_key, race_data: dict):
-        attributes = cls.initialize_creature(race_data, race_key)
-
+        attributes = cls.initialize_common_attributes(race_data, race_key)
         if race_key == 'human':
             return cls.create_human(attributes, race_data)
         if race_key == 'orc':
             return cls.create_orc(attributes, race_data)
         if race_key == 'elf':
-            return cls.create_elf(race_data)
+            return cls.create_elf(attributes, race_data)
 
     @staticmethod
-    def initialize_creature(data, race_key):
+    def initialize_common_attributes(data, race_key):
         return {
             'race': race_key,
             'race_name_ru': data['name']['ru'],
@@ -190,67 +189,63 @@ class Player:
         )
 
     @staticmethod
-    def create_elf(data):
-        sub_race_keys, sub_race_dict = [], {}
-        if data.get('sub_races'):
-            print('Выберите подрасу:')
-            for index, (sub_race_key, sub_race_value) in enumerate(data['sub_races'].items()):
-                print(f"\n{sub_race_value['name']['ru'].capitalize()}\n{sub_race_value['description']}")
-                print(f"Особенности подрасы:\nНа 1 уровне: {sub_race_value['first_lvl']}")
-                print(f"На 3 уровне: {sub_race_value['third_lvl']}\nНа 5 уровне: {sub_race_value['fifth_lvl']}")
-                sub_race_dict[index] = sub_race_value['name']['ru']
-                sub_race_keys.append(sub_race_key)
-        print(sub_race_dict)
-        user_sub_race_choice_index = Game.user_digital_input(sub_race_keys)
-        sub_race_key = sub_race_keys[user_sub_race_choice_index]
-
-        creature_attributes = Player.initialize_creature(data, 'elf')
-        elf_attributes = Player.initialize_elf_attributes(data)
-
-        if sub_race_key == "high_elf":
-            return HighElf(**creature_attributes, **elf_attributes,
-                           sub_race=data['sub_races'][sub_race_key],
-                           sub_race_name_ru=data['sub_races'][sub_race_key]['name']['ru'],
-                           sub_race_description=data['sub_races'][sub_race_key]['description'],
-                           first_lvl=data['sub_races'][sub_race_key]['first_lvl'],
-                           third_lvl=data['sub_races'][sub_race_key]['third_lvl'],
-                           fifth_lvl=data['sub_races'][sub_race_key]['fifth_lvl']
-                           )
-        if sub_race_key == "dark_elf":
-            return DarkElf(**creature_attributes, **elf_attributes,
-                           sub_race= data['sub_races'][sub_race_key],
-                           sub_race_name_ru= data['sub_races'][sub_race_key]['name']['ru'],
-                           sub_race_description= data['sub_races'][sub_race_key]['description'],
-                           first_lvl= data['sub_races'][sub_race_key]['first_lvl'],
-                           third_lvl=data['sub_races'][sub_race_key]['third_lvl'],
-                           fifth_lvl=data['sub_races'][sub_race_key]['fifth_lvl']
-                           )
+    def create_elf(attributes, data):
+        elf_attributes = Player.extract_elf_attributes(data)
+        sub_race_key = Player.select_elf_sub_race(data)
+        creature_attributes = {**attributes, **elf_attributes}
+        if sub_race_key == 'high_elf':
+            return HighElf(**creature_attributes, **Player.extract_sub_race_attributes(data, sub_race_key))
+        if sub_race_key == 'dark_elf':
+            return DarkElf(**creature_attributes, **Player.extract_sub_race_attributes(data, sub_race_key))
 
     @staticmethod
-    def initialize_elf_attributes(data):
+    def extract_elf_attributes(data):
         return {
-                'have_dark_vision': 'dark_vision' in data['race_ability'],
-                'dark_vision': data['race_ability']['dark_vision']['value'],
-                'dark_vision_name_ru': data['race_ability']['dark_vision']['name']['ru'],
-                'dark_vision_description': data['race_ability']['dark_vision']['description'],
+            'have_dark_vision': 'dark_vision' in data['race_ability'],
+            'dark_vision': data['race_ability']['dark_vision']['value'],
+            'dark_vision_name_ru': data['race_ability']['dark_vision']['name']['ru'],
+            'dark_vision_description': data['race_ability']['dark_vision']['description'],
+            'elven_origin': 'elven_origin' in data['race_ability'],
+            'elven_origin_name_ru': data['race_ability']['elven_origin']['name']['ru'],
+            'elven_origin_description': data['race_ability']['elven_origin']['description'],
+            'legacy_of_fae': 'legacy_of_fae' in data['race_ability'],
+            'legacy_of_fae_name_ru': data['race_ability']['legacy_of_fae']['name']['ru'],
+            'legacy_of_fae_description': data['race_ability']['legacy_of_fae']['description'],
+            'heightened_senses': 'heightened_senses' in data['race_ability'],
+            'heightened_senses_name_ru': data['race_ability']['heightened_senses']['name']['ru'],
+            'heightened_senses_description': data['race_ability']['heightened_senses']['description'],
+            'trance': 'trance' in data['race_ability'],
+            'trance_name_ru': data['race_ability']['trance']['name']['ru'],
+            'trance_description': data['race_ability']['trance']['description']
+        }
 
-                'elven_origin': 'elven_origin' in data['race_ability'],
-                'elven_origin_name_ru': data['race_ability']['elven_origin']['name']['ru'],
-                'elven_origin_description': data['race_ability']['elven_origin']['description'],
+    @staticmethod
+    def select_elf_sub_race(data):
+        sub_race_keys = list(data.get('sub_races', {}).keys())
+        for i, (sub_race_key, sub_race_data) in enumerate(data['sub_races'].items()):
+            print(f"\n{sub_race_data['name']['ru'].capitalize()}\n{sub_race_data['description']}")
+            print(f"Особенности подрасы:\nНа 1 уровне: {sub_race_data['first_lvl']}")
+            print(f"На 3 уровне: {sub_race_data['third_lvl']}\nНа 5 уровне: {sub_race_data['fifth_lvl']}")
+
+            sub_race_dict, sub_race_keys = Game.create_race_dictionary(data['sub_races'])
+            print(f'\n', sub_race_dict)
 
 
-                'legacy_of_fae': 'legacy_of_fae' in data['race_ability'],
-                'legacy_of_fae_name_ru': data['race_ability']['legacy_of_fae']['name']['ru'],
-                'legacy_of_fae_description': data['race_ability']['legacy_of_fae']['description'],
 
-                'heightened_senses': 'heightened_senses' in data['race_ability'],
-                'heightened_senses_name_ru': data['race_ability']['heightened_senses']['name']['ru'],
-                'heightened_senses_description': data['race_ability']['heightened_senses']['description'],
+        user_sub_race_choice = Game.user_digital_input(sub_race_keys)
+        return sub_race_keys[user_sub_race_choice]
 
-                'trance': 'trance' in data['race_ability'],
-                'trance_name_ru': data['race_ability']['trance']['name']['ru'],
-                'trance_description': data['race_ability']['trance']['description'],
-                }
+    @staticmethod
+    def extract_sub_race_attributes(data, sub_race_key):
+        sub_race_data = data['sub_races'][sub_race_key]
+        return {
+            'sub_race': sub_race_key,
+            'sub_race_name_ru': sub_race_data['name']['ru'],
+            'sub_race_description': sub_race_data['description'],
+            'first_lvl': sub_race_data['first_lvl'],
+            'third_lvl': sub_race_data['third_lvl'],
+            'fifth_lvl': sub_race_data['fifth_lvl']
+        }
 
 #Game must run
 #Game has Core mechanic
