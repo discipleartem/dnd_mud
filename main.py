@@ -1,6 +1,5 @@
 from yaml_parse import initialize_game_database
 from dataclasses import dataclass
-from random import randint
 
 DATABASE = initialize_game_database()
 
@@ -32,20 +31,19 @@ class Human(Creature):
        перебросить любую кость сразу после броска, и вы обязаны использовать новый результат.
        Если вы получаете Героическое вдохновение, но у вас оно уже есть, то оно теряется, если вы
        не передадите его Персонажу Игрока, который не имеет его."""
-    resourcefulness :bool
+    have_resourcefulness :bool
     resourcefulness_name_ru :str
     resourcefulness_description :str
 
     #Умелость. Вы получаете владение одним навыком на ваш выбор.
-    is_skilled  :bool
-    is_skilled_description :str
+    have_skilled  :bool
+    skilled_name_ru: str
+    skilled_description :str
 
     #Универсальность. Вы получаете черту Происхождения на ваш выбор
-    is_universality :bool
-    is_universality_description :str
+    have_universality :bool
+    universality_description :str
 
-    def is_resourcefulness(self):
-        return self.resourcefulness
 
     # def roll_d20(self):
     #     result = randint(1, 20)
@@ -58,6 +56,24 @@ class Human(Creature):
     #             self.resourcefulness = False
     #             return result
 
+@dataclass
+class Orc(Creature):
+    #TODO: implement adrenaline_rush mechanic
+    adrenaline_rush :bool
+    adrenaline_rush_name_ru :str
+    adrenaline_rush_description :str
+
+    #TODO: implement dark_vision mechanic
+    have_dark_vision :bool
+    dark_vision :int
+    dark_vision_name_ru :str
+    have_dark_vision_description :str
+
+    #TODO: implement unwavering_fortitude mechanic
+    have_unwavering_fortitude :bool
+    unwavering_fortitude_name_ru :str
+    have_unwavering_fortitude_description :str
+
 # @dataclass
 # class Skills(Core):
 #     # acrobatics: {is_skilled: False, characteristic: dexterity}
@@ -65,7 +81,7 @@ class Human(Creature):
 
 # Player must be created from Race
 @dataclass
-class Player(Human):
+class Player(Human,Orc):
     pass
 
 #Game must run
@@ -91,23 +107,54 @@ class Game:
 
     @classmethod
     def create_player(cls, race_key, race_data: dict):
-        return Human(
-            race=race_key,
-            race_name_ru=race_data['name']['ru'],
-            creature_type=race_data['creature_type']['type'],
-            creature_type_name_ru=race_data['creature_type']['name']['ru'],
-            description=race_data['description'],
-            size=race_data['size']['value'],
-            size_name_ru=race_data['size']['name']['ru'],
-            speed=race_data['speed'],
-            resourcefulness= True if race_data['race_ability'].get('resourcefulness') else False,
-            resourcefulness_name_ru= race_data['race_ability']['resourcefulness']['name']['ru'],
-            resourcefulness_description= race_data['race_ability']['resourcefulness']['description'],
-            is_skilled= True if race_data['race_ability'].get('skilled') else False,
-            is_skilled_description= race_data['race_ability']['skilled']['description'],
-            is_universality= True if race_data['race_ability'].get('universality') else False,
-            is_universality_description= race_data['race_ability']['universality']['description']
-        )
+        while True:
+            if race_key == 'human':
+                return Human(
+                    race= race_key,
+                    race_name_ru= race_data['name']['ru'],
+                    creature_type= race_data['creature_type']['type'],
+                    creature_type_name_ru= race_data['creature_type']['name']['ru'],
+                    description= race_data['description'],
+                    size= race_data['size']['value'],
+                    size_name_ru= race_data['size']['name']['ru'],
+                    speed= race_data['speed'],
+
+                    have_resourcefulness= True if race_data['race_ability'].get('resourcefulness') else False,
+                    resourcefulness_name_ru= race_data['race_ability']['resourcefulness']['name']['ru'],
+                    resourcefulness_description= race_data['race_ability']['resourcefulness']['description'],
+
+                    have_skilled= True if race_data['race_ability'].get('skilled') else False,
+                    skilled_name_ru= race_data['race_ability']['skilled']['name']['ru'],
+                    skilled_description= race_data['race_ability']['skilled']['description'],
+                    have_universality= True if race_data['race_ability'].get('universality') else False,
+                    universality_description= race_data['race_ability']['universality']['description']
+                )
+            if race_key == 'orc':
+                return Orc(
+                    race=race_key,
+                    race_name_ru=race_data['name']['ru'],
+                    creature_type=race_data['creature_type']['type'],
+                    creature_type_name_ru=race_data['creature_type']['name']['ru'],
+                    description=race_data['description'],
+                    size=race_data['size']['value'],
+                    size_name_ru=race_data['size']['name']['ru'],
+                    speed=race_data['speed'],
+
+                    adrenaline_rush= True if race_data['race_ability'].get('adrenaline_rush') else False,
+                    adrenaline_rush_name_ru= race_data['race_ability']['adrenaline_rush']['name']['ru'],
+                    adrenaline_rush_description= race_data['race_ability']['adrenaline_rush']['description'],
+
+                    have_dark_vision= True if race_data['race_ability'].get('dark_vision') else False,
+                    dark_vision= race_data['race_ability']['dark_vision']['value'],
+                    dark_vision_name_ru= race_data['race_ability']['dark_vision']['name']['ru'],
+                    have_dark_vision_description= race_data['race_ability']['dark_vision']['description'],
+
+                    have_unwavering_fortitude= True if race_data['race_ability'].get('unwavering_fortitude') else False,
+                    unwavering_fortitude_name_ru= race_data['race_ability']['unwavering_fortitude']['name']['ru'],
+                    have_unwavering_fortitude_description= race_data['race_ability']['unwavering_fortitude']['description']
+                )
+            else:
+                print('Неверный выбор расы (отсутствует в БД)')
 
     @staticmethod
     def user_digital_input(race_keys):
