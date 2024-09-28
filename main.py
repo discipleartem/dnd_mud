@@ -115,7 +115,7 @@ class DarkElf(Elf):
 class Player:
     @classmethod
     def create_player(cls, race_key, race_data):
-        common_attributes = cls.get_common_attributes(race_data, race_key)
+        common_attributes = cls.extract_common_attributes(race_data, race_key)
         race_handler = {
             'human': cls.create_human,
             'orc': cls.create_orc,
@@ -124,7 +124,7 @@ class Player:
         return race_handler[race_key](common_attributes, race_data)
 
     @staticmethod
-    def get_common_attributes(data, race_key):
+    def extract_common_attributes(data, race_key):
         return {
             'race': race_key,
             'race_name_ru': data['name']['ru'],
@@ -168,7 +168,7 @@ class Player:
 
     @staticmethod
     def create_elf(attributes, data):
-        elf_attributes = Player.get_elf_attributes(data)
+        elf_attributes = Player.extract_elf_attributes(data)
         sub_race_key = Player.select_elf_sub_race(data)
         creature_attributes = {**attributes, **elf_attributes}
         if sub_race_key == 'high_elf':
@@ -177,7 +177,21 @@ class Player:
             return DarkElf(**creature_attributes, **Player.extract_sub_race_attributes(data, sub_race_key))
 
     @staticmethod
-    def get_elf_attributes(data):
+    def select_elf_sub_race(data):
+        sub_race_keys = list(data.get('sub_races', {}).keys())
+        for i, (sub_race_key, sub_race_data) in enumerate(data['sub_races'].items()):
+            print(f"\n{sub_race_data['name']['ru'].capitalize()}\n{sub_race_data['description']}")
+            print(f"Особенности подрасы:\nНа 1 уровне: {sub_race_data['first_lvl']}")
+            print(f"На 3 уровне: {sub_race_data['third_lvl']}\nНа 5 уровне: {sub_race_data['fifth_lvl']}")
+
+            sub_race_dict, sub_race_keys = Game.create_race_dictionary(data['sub_races'])
+            print(f'\n', sub_race_dict)
+
+        user_sub_race_choice = Game.user_digital_input(sub_race_keys)
+        return sub_race_keys[user_sub_race_choice]
+
+    @staticmethod
+    def extract_elf_attributes(data):
         return {
             'have_dark_vision': 'dark_vision' in data['race_ability'],
             'dark_vision': data['race_ability']['dark_vision']['value'],
@@ -198,30 +212,17 @@ class Player:
         }
 
     @staticmethod
-    def select_elf_sub_race(data):
-        sub_race_keys = list(data.get('sub_races', {}).keys())
-        for i, (sub_race_key, sub_race_data) in enumerate(data['sub_races'].items()):
-            print(f"\n{sub_race_data['name']['ru'].capitalize()}\n{sub_race_data['description']}")
-            print(f"Особенности подрасы:\nНа 1 уровне: {sub_race_data['first_lvl']}")
-            print(f"На 3 уровне: {sub_race_data['third_lvl']}\nНа 5 уровне: {sub_race_data['fifth_lvl']}")
-
-            sub_race_dict, sub_race_keys = Game.create_race_dictionary(data['sub_races'])
-            print(f'\n', sub_race_dict)
-
-        user_sub_race_choice = Game.user_digital_input(sub_race_keys)
-        return sub_race_keys[user_sub_race_choice]
-
-    @staticmethod
     def extract_sub_race_attributes(data, sub_race_key):
         sub_race_data = data['sub_races'][sub_race_key]
         return {
             'sub_race': sub_race_key,
             'sub_race_name_ru': sub_race_data['name']['ru'],
             'sub_race_description': sub_race_data['description'],
-            'first_lvl': sub_race_data['first_lvl'],
-            'third_lvl': sub_race_data['third_lvl'],
-            'fifth_lvl': sub_race_data['fifth_lvl']
+            'first_lvl': sub_race_data.get('first_lvl'),
+            'third_lvl': sub_race_data.get('third_lvl'),
+            'fifth_lvl': sub_race_data.get('fifth_lvl')
         }
+
 
 #Game must run
 #Game has Core mechanic
