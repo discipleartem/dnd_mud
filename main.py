@@ -4,14 +4,6 @@ from dataclasses import dataclass
 DATABASE = initialize_game_database()
 
 
-#Core mechanic can roll dice
-# @dataclass
-# class Core:
-#     @classmethod
-#     def roll_d20(cls):
-#         return randint(1, 20)
-
-
 @dataclass
 class Creature:
     race :str
@@ -48,16 +40,6 @@ class Human(Creature):
     universality_description :str
 
 
-    # def roll_d20(self):
-    #     result = randint(1, 20)
-    #     print(result)
-    #     if self.is_resourcefulness():
-    #         print('Хотите перебросить кубик?')
-    #         print('1 - Да, 0 - Нет')
-    #         if int(input()):
-    #             result = randint(1, 20)
-    #             self.resourcefulness = False
-    #             return result
 
 @dataclass
 class Orc(Creature):
@@ -127,26 +109,22 @@ class DarkElf(Elf):
     third_lvl :str
     fifth_lvl :str
 
-# @dataclass
-# class Skills(Core):
-#     # acrobatics: {is_skilled: False, characteristic: dexterity}
-#     pass
 
 # Player must be created from Race
 @dataclass
 class Player:
     @classmethod
-    def create_player(cls, race_key, race_data: dict):
-        attributes = cls.initialize_common_attributes(race_data, race_key)
-        if race_key == 'human':
-            return cls.create_human(attributes, race_data)
-        if race_key == 'orc':
-            return cls.create_orc(attributes, race_data)
-        if race_key == 'elf':
-            return cls.create_elf(attributes, race_data)
+    def create_player(cls, race_key, race_data):
+        common_attributes = cls.get_common_attributes(race_data, race_key)
+        race_handler = {
+            'human': cls.create_human,
+            'orc': cls.create_orc,
+            'elf': cls.create_elf,
+        }
+        return race_handler[race_key](common_attributes, race_data)
 
     @staticmethod
-    def initialize_common_attributes(data, race_key):
+    def get_common_attributes(data, race_key):
         return {
             'race': race_key,
             'race_name_ru': data['name']['ru'],
@@ -190,7 +168,7 @@ class Player:
 
     @staticmethod
     def create_elf(attributes, data):
-        elf_attributes = Player.extract_elf_attributes(data)
+        elf_attributes = Player.get_elf_attributes(data)
         sub_race_key = Player.select_elf_sub_race(data)
         creature_attributes = {**attributes, **elf_attributes}
         if sub_race_key == 'high_elf':
@@ -199,7 +177,7 @@ class Player:
             return DarkElf(**creature_attributes, **Player.extract_sub_race_attributes(data, sub_race_key))
 
     @staticmethod
-    def extract_elf_attributes(data):
+    def get_elf_attributes(data):
         return {
             'have_dark_vision': 'dark_vision' in data['race_ability'],
             'dark_vision': data['race_ability']['dark_vision']['value'],
@@ -229,8 +207,6 @@ class Player:
 
             sub_race_dict, sub_race_keys = Game.create_race_dictionary(data['sub_races'])
             print(f'\n', sub_race_dict)
-
-
 
         user_sub_race_choice = Game.user_digital_input(sub_race_keys)
         return sub_race_keys[user_sub_race_choice]
@@ -296,9 +272,7 @@ class Game:
 
         race_dict, race_keys = cls.create_race_dictionary(race_data)
         print(race_dict)
-
         chosen_race_index = cls.user_digital_input(race_keys)
-
         chosen_race_key = race_keys[chosen_race_index]
         chosen_race_data = race_data[chosen_race_key]
         return chosen_race_key, chosen_race_data
