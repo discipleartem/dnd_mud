@@ -124,57 +124,57 @@ class Player:
         return race_handler[race_key](common_attributes, race_data)
 
     @staticmethod
-    def extract_common_attributes(data, race_key):
+    def extract_common_attributes(race_data, race_key):
         return {
             'race': race_key,
-            'race_name_ru': data['name']['ru'],
-            'creature_type': data['creature_type']['type'],
-            'creature_type_name_ru': data['creature_type']['name']['ru'],
-            'description': data['description'],
-            'size': data['size']['value'],
-            'size_name_ru': data['size']['name']['ru'],
-            'speed': data['speed'],
+            'race_name_ru': race_data['name']['ru'],
+            'creature_type': race_data['creature_type']['type'],
+            'creature_type_name_ru': race_data['creature_type']['name']['ru'],
+            'description': race_data['description'],
+            'size': race_data['size']['value'],
+            'size_name_ru': race_data['size']['name']['ru'],
+            'speed': race_data['speed'],
         }
 
     @staticmethod
-    def create_human(attributes, data):
+    def create_human(attributes, race_data):
         return Human(
             **attributes,
-            have_resourcefulness='resourcefulness' in data['race_ability'],
-            resourcefulness_name_ru=data['race_ability']['resourcefulness']['name']['ru'],
-            resourcefulness_description=data['race_ability']['resourcefulness']['description'],
-            have_skilled='skilled' in data['race_ability'],
-            skilled_name_ru=data['race_ability']['skilled']['name']['ru'],
-            skilled_description=data['race_ability']['skilled']['description'],
-            have_universality='universality' in data['race_ability'],
-            universality_description=data['race_ability']['universality']['description']
+            have_resourcefulness= 'resourcefulness' in race_data['race_ability'],
+            resourcefulness_name_ru= race_data['race_ability']['resourcefulness']['name']['ru'],
+            resourcefulness_description= race_data['race_ability']['resourcefulness']['description'],
+            have_skilled= 'skilled' in race_data['race_ability'],
+            skilled_name_ru= race_data['race_ability']['skilled']['name']['ru'],
+            skilled_description= race_data['race_ability']['skilled']['description'],
+            have_universality= 'universality' in race_data['race_ability'],
+            universality_description= race_data['race_ability']['universality']['description']
         )
 
     @staticmethod
-    def create_orc(attributes, data):
+    def create_orc(attributes, race_data):
         return Orc(
             **attributes,
-            adrenaline_rush='adrenaline_rush' in data['race_ability'],
-            adrenaline_rush_name_ru=data['race_ability']['adrenaline_rush']['name']['ru'],
-            adrenaline_rush_description=data['race_ability']['adrenaline_rush']['description'],
-            have_dark_vision='dark_vision' in data['race_ability'],
-            dark_vision=data['race_ability']['dark_vision']['value'],
-            dark_vision_name_ru=data['race_ability']['dark_vision']['name']['ru'],
-            dark_vision_description=data['race_ability']['dark_vision']['description'],
-            have_unwavering_fortitude='unwavering_fortitude' in data['race_ability'],
-            unwavering_fortitude_name_ru=data['race_ability']['unwavering_fortitude']['name']['ru'],
-            have_unwavering_fortitude_description=data['race_ability']['unwavering_fortitude']['description']
+            adrenaline_rush= 'adrenaline_rush' in race_data['race_ability'],
+            adrenaline_rush_name_ru= race_data['race_ability']['adrenaline_rush']['name']['ru'],
+            adrenaline_rush_description= race_data['race_ability']['adrenaline_rush']['description'],
+            have_dark_vision= 'dark_vision' in race_data['race_ability'],
+            dark_vision= race_data['race_ability']['dark_vision']['value'],
+            dark_vision_name_ru= race_data['race_ability']['dark_vision']['name']['ru'],
+            dark_vision_description= race_data['race_ability']['dark_vision']['description'],
+            have_unwavering_fortitude= 'unwavering_fortitude' in race_data['race_ability'],
+            unwavering_fortitude_name_ru= race_data['race_ability']['unwavering_fortitude']['name']['ru'],
+            have_unwavering_fortitude_description= race_data['race_ability']['unwavering_fortitude']['description']
         )
 
     @staticmethod
-    def create_elf(attributes, data):
-        elf_attributes = Player.extract_elf_attributes(data)
-        sub_race_key = Player.select_elf_sub_race(data)
+    def create_elf(attributes, race_data):
+        elf_attributes = Player.extract_elf_attributes(race_data)
+        sub_race_key = Player.select_elf_sub_race(race_data)
         creature_attributes = {**attributes, **elf_attributes}
         if sub_race_key == 'high_elf':
-            return HighElf(**creature_attributes, **Player.extract_sub_race_attributes(data, sub_race_key))
+            return HighElf(**creature_attributes, **Player.extract_sub_race_attributes(race_data, sub_race_key))
         if sub_race_key == 'dark_elf':
-            return DarkElf(**creature_attributes, **Player.extract_sub_race_attributes(data, sub_race_key))
+            return DarkElf(**creature_attributes, **Player.extract_sub_race_attributes(race_data, sub_race_key))
 
     @staticmethod
     def select_elf_sub_race(data):
@@ -224,10 +224,11 @@ class Player:
         }
 
 
-#Game must run
+#Game must run (Singleton)
 #Game has Core mechanic
-#Game can create Player
+#Game can create Player (Character)
 class Game:
+    __instance = None
 
     @classmethod
     def is_valid_race(cls, race):
@@ -282,18 +283,17 @@ class Game:
 
     def run(self):
         #Wellcome screen
-        print('Добро пожаловать в текстовую игру по мотивам D&D 5.5 редакции! от 2024 года')
+        print('Добро пожаловать в текстовую одно-пользовательскую игру по мотивам D&D 5.5 редакции! от 2024 года')
 
         #choose race
         race_key, race_data = self.choose_race()
 
         #create player
         player = Player.create_player(race_key, race_data)
-        print(player)
+        print(player.sub_race_name_ru if hasattr(player,'sub_race_name_ru') else '', player)
 
 
 
 # Run the game
 if __name__ == "__main__":
-    game_instance = Game()
-    game_instance.run()
+    Game().run()
