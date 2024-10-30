@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field
-from typing import Optional
+from typing import Optional, Type, Callable
 from race_descriptions import *
 from fix_print_function import wrap_print
 
@@ -7,13 +7,14 @@ from fix_print_function import wrap_print
 @dataclass
 class Creature:
     name: str
+    age: int
+    ideology: str
+
     race: str
     creature_type: str
     size: str
     speed: int
     description: str
-    age: int = field(init=False)
-    ideology: Optional[str] = field(init=False)
 
     @classmethod
     def get_race_translation(cls) -> str:
@@ -74,7 +75,6 @@ class Elf(GameRace):
 
 @dataclass
 class Player(GameRace):
-    age: int
     height: int
     weight: int
     eyes: str
@@ -82,7 +82,6 @@ class Player(GameRace):
     hair: str
     appearance: str
     quenta: str
-    ideology: str
 
 
 
@@ -94,13 +93,21 @@ def user_digital_input(array: list) -> int:
         print("Неверный ввод, введите число в заданном диапазоне")
 
 
-def get_user_choice(text: str, user_input: str, unit: str) -> bool:
+def get_user_choice(text: str, user_input: str, unit: str, function: Optional[Callable] = None) -> bool:
     answer = ' '.join(text.split()[1:])
     print(f"{answer} {user_input} {unit} ?")
+
     choose_dict = {0: 'Нет', 1: 'Да'}
     print(choose_dict)
+
     user_choice = user_digital_input(array=list(choose_dict.values()))
-    return user_choice == 1
+
+    # Проверка, была ли передана функция
+    if user_choice == 0 and function is not None:
+        return function()  # Вызов функции, если она передана
+    else:
+        return user_choice == 1  # Возвращаем True, если выбрано "Да"
+
 
 
 def create_player_attributes(text: str, attr_type: type):
@@ -120,17 +127,25 @@ def create_player_attributes(text: str, attr_type: type):
                 print("Введено неверное значение")
 
 def create_player_height_attributes(text: str, attr_type: type, race: str):
-    print(text)
+    if race in ['человек', 'эльф', 'полу-орк']:
+        wrap_print(f"Для расы {race}: рост отдельного представителя может составлять от 5 до 6 футов")
+        print(text)
+
     while True:
-        if race in ['человек', 'эльф', 'полу-орк']:
-            wrap_print(f"для расы {race}: рост отдельного представителя может составлять от 5 до 6 футов:")
-            user_input = input()
+        user_input = input()
+
+        try:
             converted_input = attr_type(user_input)
-            if converted_input and 5 <= int(user_input) <= 6:
-                if get_user_choice(text=text, user_input=user_input, unit='футов'):
-                    return converted_input
-                else:
-                    print("Введено неверное значение")
+        except ValueError:
+            print("Неверный ввод, пожалуйста, введите число.")
+            continue  # Запрашиваем ввод снова
+
+        if 5 <= converted_input <= 6:
+            if get_user_choice(text=text, user_input=user_input, unit='футов'):
+                               # function=create_player_height_attributes(text, attr_type, race)):
+                return converted_input
+        else:
+            print("Введено неверное значение")
 
 
 def create_player_weight_attributes(text: str, attr_type: type, race: str):
@@ -184,16 +199,16 @@ def create_player_age_attribute(text: str, attr_type: type, race: str):
         return None
 
     min_age, max_age = age_ranges[race]
-    wrap_print(f"для расы {race}: возраст — от {min_age} до {max_age} лет: ")
 
     while True:
+        wrap_print(f"для расы {race}: возраст — от {min_age} до {max_age} лет: ")
         user_input = input()
         converted_input = attr_type(user_input)
         if converted_input and min_age <= converted_input <= max_age:
             if get_user_choice(text=text, user_input=user_input, unit='лет'):
                 return converted_input
-            else:
-                print("Введено неверное значение")
+        else:
+            print("Введено неверное значение. Пожалуйста, попробуйте снова.")
 
 
 def create_player(selected_race):
@@ -216,30 +231,30 @@ def create_player(selected_race):
 
     player_appearance = input("Введите описание внешности вашего персонажа: ")
     player_quenta = input("Введите краткую историю вашего персонажа: ")
+    player_ideology = input("Введите идеологию вашего персонажа: ")
+
     player = Player(
+        name=player_name,
+        age=player_age,
+        ideology=player_ideology,
+
         race=selected_race.race,
         creature_type=selected_race.creature_type,
         size=selected_race.size,
         speed=selected_race.speed,
         description=selected_race.description,
-        name=player_name,
-        age=player_age,
+
         height=player_height,
         weight=player_weight,
         eyes=player_eyes,
         skin=player_skin,
         hair=player_hair,
         appearance=player_appearance,
-        quenta=player_quenta,
-        ideology=''
+        quenta=player_quenta
     )
     return player
 
-def choose_race():
-    print("Выберите расу:")
-    # удаляем класс Player из общего списка
-    game_races = [subclass for subclass in GameRace.__subclasses__() if subclass.__name__ != 'Player']
-    game_races_ru_dict = {index: game_race.get_race_translation() for index, game_race in enumerate(game_races)}
+def describe_game_races(game_races= list[Type[GameRace]]) -> None:
     for index, game_race in enumerate(game_races):
         print()
         print(f"{index}: {game_race.get_race_translation()}")
@@ -247,6 +262,21 @@ def choose_race():
         print(f"Размер: {game_race.get_size_translation()}")
         print(f"Скорость: {game_race.speed} футов")
         wrap_print(f"Описание: {game_race.description}")
+
+
+def choose_race():
+    print("Выберите расу:")
+
+    # удаляем класс Player из общего списка
+    game_races = [subclass for subclass in GameRace.__subclasses__() if subclass.__name__ != 'Player']
+    print(game_races)
+
+
+    # Создаем словарь, ключи — имена рас, значения — объекты класса GameRace
+    game_races_ru_dict = {index: game_race.get_race_translation() for index, game_race in enumerate(game_races)}
+
+    # Выводим описание всех рас
+    describe_game_races(game_races=game_races)
     print(game_races_ru_dict)
 
     user_race_choice = user_digital_input(list(game_races_ru_dict.values()))
@@ -255,6 +285,8 @@ def choose_race():
     selected_race = next(game_race for game_race in game_races if game_race.get_race_translation() == game_races_ru_dict[user_race_choice])
 
     player = create_player(selected_race)
+    print(player.__dict__)
+    print(dir(player))
 
 
 
