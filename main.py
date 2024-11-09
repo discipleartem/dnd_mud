@@ -1,5 +1,4 @@
-from dataclasses import dataclass, field
-from typing import Optional, Type, Callable, Any
+from dataclasses import dataclass
 from enum import Enum
 from race_descriptions import *
 from fix_print_function import wrap_print
@@ -25,18 +24,21 @@ class Creature:
     speed: int
     description: str
 
-    def get_race_translation(self) -> str:
+    @classmethod
+    def get_race_translation(cls) -> str:
         translations = {
             Race.HUMAN: 'человек',
             Race.HALF_ORC: 'полу-орк',
             Race.ELF: 'эльф'
         }
-        return translations.get(self.race, self.race.value)
+        return translations.get(cls.race, cls.race.value)
 
-    def get_creature_type_translation(self) -> str:
-        return 'гуманоид' if self.creature_type == CreatureType.HUMANOID else self.creature_type.value
+    @classmethod
+    def get_creature_type_translation(cls) -> str:
+        return 'гуманоид' if cls.creature_type == CreatureType.HUMANOID else cls.creature_type.value
 
-    def get_size_translation(self) -> str:
+    @classmethod
+    def get_size_translation(cls) -> str:
         size_translations = {
             'tiny': 'крохотный',
             'small': 'маленький',
@@ -44,16 +46,11 @@ class Creature:
             'large': 'большой',
             'huge': 'огромный'
         }
-        return size_translations.get(self.size, self.size)
+        return size_translations.get(cls.size, cls.size)
 
 
 @dataclass
-class GameRace(Creature):
-    pass
-
-
-@dataclass
-class Human(GameRace):
+class Human(Creature):
     race: Race = Race.HUMAN
     creature_type: CreatureType = CreatureType.HUMANOID
     size: str = 'medium'
@@ -62,7 +59,7 @@ class Human(GameRace):
 
 
 @dataclass
-class HalfOrc(GameRace):
+class HalfOrc(Creature):
     race: Race = Race.HALF_ORC
     creature_type: CreatureType = CreatureType.HUMANOID
     size: str = 'medium'
@@ -71,7 +68,7 @@ class HalfOrc(GameRace):
 
 
 @dataclass
-class Elf(GameRace):
+class Elf(Creature):
     race: Race = Race.ELF
     creature_type: CreatureType = CreatureType.HUMANOID
     size: str = 'medium'
@@ -80,7 +77,7 @@ class Elf(GameRace):
 
 
 @dataclass
-class Player(GameRace):
+class Player(Creature):
     height: int
     weight: int
     eyes: str
@@ -89,56 +86,43 @@ class Player(GameRace):
     appearance: str
     quenta: str
 
+@dataclass
+class SystemMessage:
+    __instance__ = None
+    wellcome: str = 'Добро пожаловать в игру по мотивам D&D 5e!'
+    step_1: str = 'Выберите вашу расу:'
 
-def get_user_input(prompt: str, attr_type: Callable, valid_range: Optional[tuple] = None) -> Any:
-    """Get validated user input of a specified type."""
-    while True:
-        user_input = input(prompt)
-        try:
-            converted_input = attr_type(user_input)
-            if valid_range and not (valid_range[0] <= converted_input <= valid_range[1]):
-                print(f"Введено неверное значение, должно быть в диапазоне {valid_range}.")
-                continue
-            return converted_input
-        except ValueError:
-            print("Неверный ввод, пожалуйста, введите корректное значение.")
+def choose_race():
+    # удаляем класс Player из общего списка
+    game_races = [subclass for subclass in Creature.__subclasses__() if subclass.__name__ != 'Player']
+
+    # создаем словарь с индексами и названиями рас {0: 'человек', 1: 'полу-орк', 2: 'эльф'}
+    game_races_ru_dict = {index: game_race.get_race_translation() for index, game_race in enumerate(game_races)}
+    for index, game_race in enumerate(game_races):
+        print()
+        print(f"{index}: {game_race.get_race_translation()}")
+        print(f"Тип существа: {game_race.get_creature_type_translation()}")
+        print(f"Размер: {game_race.get_size_translation()}")
+        print(f"Скорость: {game_race.speed} футов")
+        wrap_print(f"Описание: {game_race.description}")
+    print("Доступные расы:", game_races_ru_dict)
+
+class Game:
+    __instance__ = None
+
+    @staticmethod
+    def run():
+        message = SystemMessage()
+
+        #step_0 wellcome
+        print(message.wellcome)
+
+        #step_1 choose race
+        print(message.step_1)
+        choose_race()
 
 
-def user_digital_input(array: list) -> int:
-    while True:
-        user_choice = input("Введите число: ")
-        if user_choice.isdigit() and 0 <= int(user_choice) < len(array):
-            return int(user_choice)
-        print("Неверный ввод, введите число в заданном диапазоне")
 
-
-def get_validated_user_input(prompt: str, attr_type: Callable, valid_range: tuple = None) -> Any:
-    while True:
-        user_input = input(prompt)
-        try:
-            converted_input = attr_type(user_input)
-            if valid_range and not (valid_range[0] <= converted_input <= valid_range[1]):
-                print(f"Введено неверное значение, должно быть в диапазоне {valid_range}.")
-                continue
-            return converted_input
-        except ValueError:
-            print("Неверный ввод, пожалуйста, введите корректное значение.")
-
-
-def get_user_choice(text: str, user_input: str, unit: str,
-                    function: Optional[Callable] = None) -> bool:
-    """Prompt the user for a yes/no choice."""
-    answer = ' '.join(text.split()[1:])
-    print(f"{answer} {user_input} {unit} ?")
-
-    choose_dict = {0: 'Нет', 1: 'Да'}
-    for key, value in choose_dict.items():
-        print(f"{key}: {value}")
-
-    user_choice = get_user_input("Введите номер выбора: ", int, (0, 1))
-
-    if user_choice == 0:
-        if function is not None:
-            return function()  # Call function if provided
-        return False  # Return False if no function is provided
-    return user_choice == 1  # Return True if "Да" is chosen
+if __name__ == '__main__':
+    game = Game()
+    game.run()
