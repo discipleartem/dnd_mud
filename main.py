@@ -1,5 +1,7 @@
 from dataclasses import dataclass
 from enum import Enum
+from typing import Type
+
 from race_descriptions import *
 from fix_print_function import wrap_print
 
@@ -92,7 +94,7 @@ class SystemMessage:
     wellcome: str = 'Добро пожаловать в игру по мотивам D&D 5e!'
     step_1: str = 'Выберите вашу расу:'
 
-def choose_race():
+def choose_race() -> Type[Creature]:
     # удаляем класс Player из общего списка
     game_races = [subclass for subclass in Creature.__subclasses__() if subclass.__name__ != 'Player']
 
@@ -106,6 +108,10 @@ def choose_race():
         print(f"Скорость: {game_race.speed} футов")
         wrap_print(f"Описание: {game_race.description}")
     print("Доступные расы:", game_races_ru_dict)
+    return game_races[player_choice(game_races_ru_dict)]
+
+def player_choice(choice_dict: dict)-> int:
+    pass
 
 class Game:
     __instance__ = None
@@ -119,7 +125,7 @@ class Game:
 
         #step_1 choose race
         print(message.step_1)
-        choose_race()
+        game_race = choose_race()
 
 
 
