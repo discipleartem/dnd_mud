@@ -1,3 +1,5 @@
+from dataclasses import dataclass
+
 @dataclass
 class Ideology:
     vector: str       # E.g., 'law', 'chaotic', 'neutral'
@@ -7,12 +9,13 @@ class Ideology:
 
 # Example instance
 lawful_good = Ideology(
-    vector='',
+    vector='law',
     name='Законно-Добрые',
-    short_name='',
+    short_name='lg',
     description=(
-        'Существа совершают поступки, считающиеся в обществе как правильные. '
-        'Золотые драконы, паладины и большинство дварфов являются законно-добрыми.'
+                    """
+                    
+                    """
     )
 )
 

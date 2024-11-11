@@ -1,48 +1,43 @@
 from dataclasses import dataclass
-from enum import Enum
 from typing import Type, Callable, Optional, Any
-
 from race_descriptions import *
 from fix_print_function import wrap_print
 
-
-class Race(Enum):
-    HUMAN = 'human'
-    HALF_ORC = 'half-orc'
-    ELF = 'elf'
-
-
-class CreatureType(Enum):
-    HUMANOID = 'humanoid'
 
 
 @dataclass
 class Creature:
     name: str
-    ideology: str
     age: int
-
-    race: Race
-    creature_type: CreatureType
+    ideology: str
+    creature_type: str
     size: str
+    race: str
     speed: int
     description: str
 
+    @classmethod
+    def get_creature_type_translation(cls) -> str:
+        if cls.creature_type == 'humanoid':
+            return 'гуманоид'
+        else:
+            cls.creature_type
 
 class GameRace(Creature):
+    age_range: tuple[int, int]
+    creature_type: str = 'humanoid'
+    size: str = 'medium'
 
     @classmethod
     def get_race_translation(cls) -> str:
         translations = {
-            Race.HUMAN: 'человек',
-            Race.HALF_ORC: 'полу-орк',
-            Race.ELF: 'эльф'
+            'human': 'человек',
+            'half-orc': 'полу-орк',
+            'elf': 'эльф'
         }
-        return translations.get(cls.race, cls.race.value)
+        return translations.get(cls.race, cls.race)
 
-    @classmethod
-    def get_creature_type_translation(cls) -> str:
-        return 'гуманоид' if cls.creature_type == CreatureType.HUMANOID else cls.creature_type.value
+
 
     @classmethod
     def get_size_translation(cls) -> str:
@@ -57,33 +52,25 @@ class GameRace(Creature):
 
 @dataclass
 class Human(GameRace):
-    age: int = range(18, 100)
-    race: Race = Race.HUMAN
-    creature_type: CreatureType = CreatureType.HUMANOID
-    size: str = 'medium'
+    race: str = 'human'
     speed: int = 30
     description: str = HUMAN_DESCRIPTION
+    age_range: tuple = (18, 100)
 
 
 @dataclass
 class HalfOrc(GameRace):
-    age: int = range(14, 75)
-    race: Race = Race.HALF_ORC
-    creature_type: CreatureType = CreatureType.HUMANOID
-    size: str = 'medium'
+    race: str = 'half-orc'
     speed: int = 30
     description: str = HALF_ORC_DESCRIPTION
-
+    age_range: tuple = (14, 75)
 
 @dataclass
 class Elf(GameRace):
-    age: int = range(100, 750)
-    race: Race = Race.ELF
-    creature_type: CreatureType = CreatureType.HUMANOID
-    size: str = 'medium'
+    race: str = 'elf'
     speed: int = 30
     description: str = ELF_DESCRIPTION
-
+    age_range: tuple = (100, 750)
 
 @dataclass
 class Player(Creature):
@@ -103,7 +90,7 @@ class SystemMessage:
     step_1: str = 'Выберите вашу расу:'
 
 
-def choose_race() -> Type[Creature]:
+def choose_race() -> Type[GameRace]:
     # Динамически получаем все подклассы GameRace
     game_races = GameRace.__subclasses__()
     print(game_races)
@@ -111,12 +98,12 @@ def choose_race() -> Type[Creature]:
     # создаем словарь с индексами и названиями рас {0: 'человек', 1: 'полу-орк', 2: 'эльф'}
     game_races_ru_dict = {index: game_race.get_race_translation() for index, game_race in enumerate(game_races)}
     for index, game_race in enumerate(game_races):
-        print()
-        print(f"{index}: {game_race.get_race_translation()}")
+        print(f"\n{index}: {game_race.get_race_translation()}")
         print(f"Тип существа: {game_race.get_creature_type_translation()}")
         print(f"Размер: {game_race.get_size_translation()}")
         print(f"Скорость: {game_race.speed} футов")
         wrap_print(f"Описание: {game_race.description}")
+
     print("Доступные расы:", game_races_ru_dict)
     return game_races[player_choice(game_races_ru_dict)]
 
@@ -144,41 +131,58 @@ def user_confirm(callback: Optional[Callable]) -> bool:
         except ValueError:
             print("Вы ввели неверное значение. Попробуйте еще раз.")
 
-
+#проверка ввода пользователя
 def validate_user_choice(question: str, value: Any, expected_type: type,
                          callback: Optional[Callable]) -> Any:
     while True:
         if isinstance(value, expected_type):
             print(f"{' '.join(question.split()[1:])} {value} ?")
+
+            #подтверждение выбора
             if user_confirm(callback=callback):
                 return value
-        else:
-            callback()
 
 
-
+#создаем имя персонажа
 def create_player_name() -> str:
     text = "Введите имя игрока: "
     while True:
         player_name = input(text).strip()
         if player_name:  # Проверяем, что имя не пустое
+            #валидируем имя
             return validate_user_choice(question=text, value=player_name, expected_type=str,
                                         callback=create_player_name)
         else:
             print("Имя не может быть пустым. Пожалуйста, введите имя.")
 
+#создаем возраст игрока
+def create_player_age(age_range: tuple) -> int:
+    text = "Введите возраст игрока: "
+    while True:
+        player_age = input(text).strip()
+        try:
+            player_age = int(player_age)
+            if player_age in range(age_range[0], age_range[1] + 1):
+                confirmed_age = validate_user_choice(question=text, value=player_age, expected_type=int,
+                                            callback=lambda: create_player_age(age_range))
+                return confirmed_age
+            else:
+                print(f"Вы ввели неверный возраст. Пожалуйста, введите возраст "
+                      f"в диапазоне от {age_range[0]} до {age_range[1]} лет.")
+        except ValueError:
+            print("Вы ввели неверное значение. Пожалуйста, введите возраст числом.")
 
-def create_player(race: Type[GameRace]) -> Player:
+def create_player(game_race: Type[GameRace]) -> Player:
     player = Player(
         name=create_player_name(),
+        age=create_player_age(age_range=game_race.age_range),
         ideology=input("Введите идеологию: "),
-        age=int(input("Введите возраст: ")),
 
-        race=race.race,
-        creature_type=race.creature_type,
-        size=race.size,
-        speed=race.speed,
-        description=race.description,
+        creature_type=game_race.creature_type,
+        size=game_race.size,
+        race=game_race.race,
+        speed=game_race.speed,
+        description=game_race.description,
 
         height=int(input("Введите рост: ")),
         weight=int(input("Введите вес: ")),
