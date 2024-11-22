@@ -1,32 +1,38 @@
-from dataclasses import dataclass
 from typing import Type, Callable, Optional, Any
 from race_descriptions import *
+from ideology import *
 from fix_print_function import wrap_print
-
-
 
 @dataclass
 class Creature:
-    name: str
-    age: int
-    ideology: str
-    creature_type: str
-    size: str
-    race: str
-    speed: int
-    description: str
+    name: str #1
+    age: int #2
+    ideology: Ideology #3
 
-    @classmethod
-    def get_creature_type_translation(cls) -> str:
-        if cls.creature_type == 'humanoid':
+    race_name: str #4
+    speed: int #5
+    description: str #6
+
+    creature_type: str #7
+    size: str #8
+
+
+
+
+    def get_creature_type_translation(self) -> str:
+        if self.creature_type == 'humanoid':
             return 'гуманоид'
         else:
-            cls.creature_type
+            return self.creature_type
 
+
+@dataclass
 class GameRace(Creature):
-    age_range: tuple[int, int]
-    creature_type: str = 'humanoid'
-    size: str = 'medium'
+    creature_type: str = 'humanoid' #7
+    size: str = 'medium' #8
+    age_range: Optional[tuple[int, int]] = None    #9
+
+
 
     @classmethod
     def get_race_translation(cls) -> str:
@@ -35,7 +41,7 @@ class GameRace(Creature):
             'half-orc': 'полу-орк',
             'elf': 'эльф'
         }
-        return translations.get(cls.race, cls.race)
+        return translations.get(cls.race_name, cls.race_name)
 
 
 
@@ -52,28 +58,30 @@ class GameRace(Creature):
 
 @dataclass
 class Human(GameRace):
-    race: str = 'human'
-    speed: int = 30
-    description: str = HUMAN_DESCRIPTION
-    age_range: tuple = (18, 100)
+    race_name: str = 'human'  # 4
+    speed: int = 30  # 5
+    description: str = HUMAN_DESCRIPTION  # 6
+    age_range: tuple = (18, 100)  # 9 доп
 
 
 @dataclass
 class HalfOrc(GameRace):
-    race: str = 'half-orc'
-    speed: int = 30
-    description: str = HALF_ORC_DESCRIPTION
-    age_range: tuple = (14, 75)
+    race_name: str = 'half-orc'  # 4
+    speed: int = 30  # 5
+    description: str = HALF_ORC_DESCRIPTION  # 6
+    age_range: tuple = (14, 75)  # 9 доп
 
 @dataclass
 class Elf(GameRace):
-    race: str = 'elf'
-    speed: int = 30
-    description: str = ELF_DESCRIPTION
-    age_range: tuple = (100, 750)
+    race_name: str = 'elf'  # 4
+    speed: int = 30  # 5
+    description: str = ELF_DESCRIPTION  # 6
+    age_range: tuple = (100, 750)  # 9 доп
+
 
 @dataclass
-class Player(Creature):
+class Character:
+    race: Type[GameRace]
     height: int
     weight: int
     eyes: str
@@ -93,7 +101,6 @@ class SystemMessage:
 def choose_race() -> Type[GameRace]:
     # Динамически получаем все подклассы GameRace
     game_races = GameRace.__subclasses__()
-    print(game_races)
 
     # создаем словарь с индексами и названиями рас {0: 'человек', 1: 'полу-орк', 2: 'эльф'}
     game_races_ru_dict = {index: game_race.get_race_translation() for index, game_race in enumerate(game_races)}
@@ -105,7 +112,8 @@ def choose_race() -> Type[GameRace]:
         wrap_print(f"Описание: {game_race.description}")
 
     print("Доступные расы:", game_races_ru_dict)
-    return game_races[player_choice(game_races_ru_dict)]
+    chosen_index = player_choice(choice_dict=game_races_ru_dict)
+    return game_races[chosen_index]
 
 
 def player_choice(choice_dict: dict) -> int:
@@ -141,13 +149,15 @@ def validate_user_choice(question: str, value: Any, expected_type: type,
             #подтверждение выбора
             if user_confirm(callback=callback):
                 return value
+        else:
+            print(f"Вы ввели неверное значение. Пожалуйста, введите {expected_type.__name__}.")
 
 
 #создаем имя персонажа
 def create_player_name() -> str:
     text = "Введите имя игрока: "
     while True:
-        player_name = input(text).strip()
+        player_name = input(text).strip()  # убираем пробелы в начале и в конце
         if player_name:  # Проверяем, что имя не пустое
             #валидируем имя
             return validate_user_choice(question=text, value=player_name, expected_type=str,
@@ -172,28 +182,29 @@ def create_player_age(age_range: tuple) -> int:
         except ValueError:
             print("Вы ввели неверное значение. Пожалуйста, введите возраст числом.")
 
-def create_player(game_race: Type[GameRace]) -> Player:
-    player = Player(
+def create_player(game_race: Type[GameRace.__subclasses__()], player_class) -> Character:
+    # Создаем экземпляр выбранной расы
+    race_instance = game_race(
         name=create_player_name(),
-        age=create_player_age(age_range=game_race.age_range),
-        ideology=input("Введите идеологию: "),
-
-        creature_type=game_race.creature_type,
-        size=game_race.size,
-        race=game_race.race,
+        age=create_player_age(game_race.age_range),
+        ideology=input("Введите идеологию игрока: "),
+        race_name=game_race.race_name,
         speed=game_race.speed,
         description=game_race.description,
-
-        height=int(input("Введите рост: ")),
-        weight=int(input("Введите вес: ")),
-        eyes=input("Введите цвет глаз: "),
-        skin=input("Введите цвет кожи: "),
-        hair=input("Введите цвет волос: "),
-        appearance=input("Введите внешний вид: "),
-        quenta=input("Введите краткое описание: ")
+        creature_type=game_race.creature_type,
+        size=game_race.size,
     )
-    return player
 
+    player = player_class(race=race_instance,
+                      height=int(input("Введите рост игрока: ")),
+                      weight=int(input("Введите вес игрока: ")),
+                      eyes=input("Введите кожу игрока: "),
+                      skin=input("Введите ткань игрока: "),
+                      hair=input("Введите шиш игрока: "),
+                      appearance=input("Введите внешность игрока: "),
+                      quenta=input("Введите квента игрока: ")
+                      )
+    return player
 
 class Game:
     __instance__ = None
@@ -207,10 +218,10 @@ class Game:
 
         #step_1 choose race
         print(message.step_1)
-        game_race = choose_race()
+        race = choose_race()
 
         #step_2 create player
-        player = create_player(game_race)
+        player = create_player(game_race=race, player_class= Character)
         print(player)
 
 
