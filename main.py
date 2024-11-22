@@ -1,19 +1,38 @@
-from dataclasses import dataclass, field
-from typing import Optional
+from typing import Type, Callable, Optional, Any
 from race_descriptions import *
+from ideology import *
 from fix_print_function import wrap_print
-
 
 @dataclass
 class Creature:
-    name: str
-    race: str
-    creature_type: str
-    size: str
-    speed: int
-    description: str
-    age: int = field(init=False)
-    ideology: Optional[str] = field(init=False)
+    name: str #1
+    age: int #2
+    ideology: Ideology #3
+
+    race_name: str #4
+    speed: int #5
+    description: str #6
+
+    creature_type: str #7
+    size: str #8
+
+
+
+
+    def get_creature_type_translation(self) -> str:
+        if self.creature_type == 'humanoid':
+            return 'гуманоид'
+        else:
+            return self.creature_type
+
+
+@dataclass
+class GameRace(Creature):
+    creature_type: str = 'humanoid' #7
+    size: str = 'medium' #8
+    age_range: Optional[tuple[int, int]] = None    #9
+
+
 
     @classmethod
     def get_race_translation(cls) -> str:
@@ -22,11 +41,9 @@ class Creature:
             'half-orc': 'полу-орк',
             'elf': 'эльф'
         }
-        return translations.get(cls.race, cls.race)
+        return translations.get(cls.race_name, cls.race_name)
 
-    @classmethod
-    def get_creature_type_translation(cls) -> str:
-        return 'гуманоид' if cls.creature_type == 'humanoid' else cls.creature_type
+
 
     @classmethod
     def get_size_translation(cls) -> str:
@@ -35,46 +52,36 @@ class Creature:
             'small': 'маленький',
             'medium': 'средний',
             'large': 'большой',
-            'huge': 'огромный'
         }
         return size_translations.get(cls.size, cls.size)
 
 
 @dataclass
-class GameRace(Creature):
-    pass
-
-
-@dataclass
 class Human(GameRace):
-    race: str = 'human'
-    creature_type: str = 'humanoid'
-    size: str = 'medium'
-    speed: int = 30
-    description: str = HUMAN_DESCRIPTION
+    race_name: str = 'human'  # 4
+    speed: int = 30  # 5
+    description: str = HUMAN_DESCRIPTION  # 6
+    age_range: tuple = (18, 100)  # 9 доп
 
 
 @dataclass
 class HalfOrc(GameRace):
-    race: str = 'half-orc'
-    creature_type: str = 'humanoid'
-    size: str = 'medium'
-    speed: int = 30
-    description: str = HALF_ORC_DESCRIPTION
-
+    race_name: str = 'half-orc'  # 4
+    speed: int = 30  # 5
+    description: str = HALF_ORC_DESCRIPTION  # 6
+    age_range: tuple = (14, 75)  # 9 доп
 
 @dataclass
 class Elf(GameRace):
-    race: str = 'elf'
-    creature_type: str = 'humanoid'
-    size: str = 'medium'
-    speed: int = 30
-    description: str = ELF_DESCRIPTION
+    race_name: str = 'elf'  # 4
+    speed: int = 30  # 5
+    description: str = ELF_DESCRIPTION  # 6
+    age_range: tuple = (100, 750)  # 9 доп
 
 
 @dataclass
-class Player(GameRace):
-    age: int
+class Character:
+    race: Type[GameRace]
     height: int
     weight: int
     eyes: str
@@ -82,195 +89,142 @@ class Player(GameRace):
     hair: str
     appearance: str
     quenta: str
-    ideology: str
 
 
-
-def user_digital_input(array: list) -> int:
-    while True:
-        user_choice = input("Введите число: ")
-        if user_choice.isdigit() and 0 <= int(user_choice) < len(array):
-            return int(user_choice)
-        print("Неверный ввод, введите число в заданном диапазоне")
+@dataclass
+class SystemMessage:
+    __instance__ = None
+    wellcome: str = 'Добро пожаловать в игру по мотивам D&D 5e!'
+    step_1: str = 'Выберите вашу расу:'
 
 
-def get_user_choice(text: str, user_input: str, unit: str) -> bool:
-    answer = ' '.join(text.split()[1:])
-    print(f"{answer} {user_input} {unit} ?")
-    choose_dict = {0: 'Нет', 1: 'Да'}
-    print(choose_dict)
-    user_choice = user_digital_input(array=list(choose_dict.values()))
-    return user_choice == 1
+def choose_race() -> Type[GameRace]:
+    # Динамически получаем все подклассы GameRace
+    game_races = GameRace.__subclasses__()
 
-
-def create_player_attributes(text: str, attr_type: type):
-    while True:
-        print(text)
-        user_input = input()
-        if isinstance(user_input, attr_type):
-            answer = ' '.join(text.split()[1:])
-            print(f"{answer}: {user_input} ?")
-            choose_dict = {0: 'Нет', 1: 'Да'}
-            print(choose_dict)
-
-            user_choice = user_digital_input(array=list(choose_dict.values()))
-            if user_choice == 1:
-                return user_input
-            else:
-                print("Введено неверное значение")
-
-def create_player_height_attributes(text: str, attr_type: type, race: str):
-    print(text)
-    while True:
-        if race in ['человек', 'эльф', 'полу-орк']:
-            wrap_print(f"для расы {race}: рост отдельного представителя может составлять от 5 до 6 футов:")
-            user_input = input()
-            converted_input = attr_type(user_input)
-            if converted_input and 5 <= int(user_input) <= 6:
-                if get_user_choice(text=text, user_input=user_input, unit='футов'):
-                    return converted_input
-                else:
-                    print("Введено неверное значение")
-
-
-def create_player_weight_attributes(text: str, attr_type: type, race: str):
-    while True:
-        print(text)
-        weight_ranges = {
-            'человек': (125, 250),
-            'полу-орк': (180, 250),
-            'эльф': (100, 145)
-        }
-
-        if race in weight_ranges:
-            min_weight, max_weight = weight_ranges[race]
-            wrap_print(f"для расы {race}: вес — от {min_weight} до {max_weight} фунтов: ")
-            user_input = input()
-            converted_input = attr_type(user_input)
-
-            if converted_input and min_weight <= converted_input <= max_weight:
-                if get_user_choice(text=text, user_input=user_input, unit='фунтов'):
-                    return converted_input
-                else:
-                    print("Введено неверное значение")
-
-
-
-
-def create_player_optional_attributes(text: str, attr_type: type):
-    while True:
-        print("Пожалуйста, введите только одно слово.")
-        print(text)
-
-        user_input = input()
-        converted_input = attr_type(user_input)
-
-        # Проверяем, что введенное значение не содержит пробелов
-        if converted_input and  " " not in user_input:
-            if get_user_choice(text, user_input, unit=''):
-                return user_input
-            else:
-                print("Введено неверное значение")
-
-def create_player_age_attribute(text: str, attr_type: type, race: str):
-    age_ranges: dict = {
-        'человек': (18, 100),
-        'полу-орк': (14, 75),
-        'эльф': (100, 750)
-    }
-
-    if race not in age_ranges:
-        print("Неизвестная раса.")
-        return None
-
-    min_age, max_age = age_ranges[race]
-    wrap_print(f"для расы {race}: возраст — от {min_age} до {max_age} лет: ")
-
-    while True:
-        user_input = input()
-        converted_input = attr_type(user_input)
-        if converted_input and min_age <= converted_input <= max_age:
-            if get_user_choice(text=text, user_input=user_input, unit='лет'):
-                return converted_input
-            else:
-                print("Введено неверное значение")
-
-
-def create_player(selected_race):
-    player_name = create_player_optional_attributes(text="Введите имя вашего персонажа: ", attr_type=str)
-    player_age = create_player_age_attribute(text="Введите возраст вашего персонажа: ",
-                                                    attr_type=int, race=selected_race.get_race_translation())
-
-    player_height = create_player_height_attributes(text="Введите рост вашего персонажа: ",
-                                             attr_type=int, race = selected_race.get_race_translation())
-
-    player_weight = create_player_weight_attributes(text="Введите вес вашего персонажа: ", attr_type=int, race = selected_race.get_race_translation())
-    player_eyes = create_player_optional_attributes(text="Введите цвет глаз вашего персонажа: ", attr_type=str)
-
-
-    player_skin = create_player_optional_attributes(text="Введите цвет кожи вашего персонажа: ", attr_type=str)
-    player_hair = create_player_optional_attributes(text="Введите цвет волос вашего персонажа: ", attr_type=str)
-
-
-
-
-    player_appearance = input("Введите описание внешности вашего персонажа: ")
-    player_quenta = input("Введите краткую историю вашего персонажа: ")
-    player = Player(
-        race=selected_race.race,
-        creature_type=selected_race.creature_type,
-        size=selected_race.size,
-        speed=selected_race.speed,
-        description=selected_race.description,
-        name=player_name,
-        age=player_age,
-        height=player_height,
-        weight=player_weight,
-        eyes=player_eyes,
-        skin=player_skin,
-        hair=player_hair,
-        appearance=player_appearance,
-        quenta=player_quenta,
-        ideology=''
-    )
-    return player
-
-def choose_race():
-    print("Выберите расу:")
-    # удаляем класс Player из общего списка
-    game_races = [subclass for subclass in GameRace.__subclasses__() if subclass.__name__ != 'Player']
+    # создаем словарь с индексами и названиями рас {0: 'человек', 1: 'полу-орк', 2: 'эльф'}
     game_races_ru_dict = {index: game_race.get_race_translation() for index, game_race in enumerate(game_races)}
     for index, game_race in enumerate(game_races):
-        print()
-        print(f"{index}: {game_race.get_race_translation()}")
+        print(f"\n{index}: {game_race.get_race_translation()}")
         print(f"Тип существа: {game_race.get_creature_type_translation()}")
         print(f"Размер: {game_race.get_size_translation()}")
         print(f"Скорость: {game_race.speed} футов")
         wrap_print(f"Описание: {game_race.description}")
-    print(game_races_ru_dict)
 
-    user_race_choice = user_digital_input(list(game_races_ru_dict.values()))
-
-    # Выбираем расу
-    selected_race = next(game_race for game_race in game_races if game_race.get_race_translation() == game_races_ru_dict[user_race_choice])
-
-    player = create_player(selected_race)
+    print("Доступные расы:", game_races_ru_dict)
+    chosen_index = player_choice(choice_dict=game_races_ru_dict)
+    return game_races[chosen_index]
 
 
+def player_choice(choice_dict: dict) -> int:
+    while True:
+        user_choice = input("Сделайте свой выбор: ")
+        try:
+            user_choice = int(user_choice)
+            if user_choice in choice_dict.keys():
+                return user_choice
+        except ValueError:
+            print("Вы ввели неверное значение. Попробуйте еще раз.")
+
+def user_confirm(callback: Optional[Callable]) -> bool:
+    options = {0: 'нет', 1: 'да'}
+    while True:
+        choice = input(f"Выберите {options}: ")
+        try:
+            choice = int(choice)
+            if choice == 1:
+                return True
+            elif choice == 0:
+                return callback()
+        except ValueError:
+            print("Вы ввели неверное значение. Попробуйте еще раз.")
+
+#проверка ввода пользователя
+def validate_user_choice(question: str, value: Any, expected_type: type,
+                         callback: Optional[Callable]) -> Any:
+    while True:
+        if isinstance(value, expected_type):
+            print(f"{' '.join(question.split()[1:])} {value} ?")
+
+            #подтверждение выбора
+            if user_confirm(callback=callback):
+                return value
+        else:
+            print(f"Вы ввели неверное значение. Пожалуйста, введите {expected_type.__name__}.")
 
 
-@dataclass
+#создаем имя персонажа
+def create_player_name() -> str:
+    text = "Введите имя игрока: "
+    while True:
+        player_name = input(text).strip()  # убираем пробелы в начале и в конце
+        if player_name:  # Проверяем, что имя не пустое
+            #валидируем имя
+            return validate_user_choice(question=text, value=player_name, expected_type=str,
+                                        callback=create_player_name)
+        else:
+            print("Имя не может быть пустым. Пожалуйста, введите имя.")
+
+#создаем возраст игрока
+def create_player_age(age_range: tuple) -> int:
+    text = "Введите возраст игрока: "
+    while True:
+        player_age = input(text).strip()
+        try:
+            player_age = int(player_age)
+            if player_age in range(age_range[0], age_range[1] + 1):
+                confirmed_age = validate_user_choice(question=text, value=player_age, expected_type=int,
+                                            callback=lambda: create_player_age(age_range))
+                return confirmed_age
+            else:
+                print(f"Вы ввели неверный возраст. Пожалуйста, введите возраст "
+                      f"в диапазоне от {age_range[0]} до {age_range[1]} лет.")
+        except ValueError:
+            print("Вы ввели неверное значение. Пожалуйста, введите возраст числом.")
+
+def create_player(game_race: Type[GameRace.__subclasses__()], player_class) -> Character:
+    # Создаем экземпляр выбранной расы
+    race_instance = game_race(
+        name=create_player_name(),
+        age=create_player_age(game_race.age_range),
+        ideology=input("Введите идеологию игрока: "),
+        race_name=game_race.race_name,
+        speed=game_race.speed,
+        description=game_race.description,
+        creature_type=game_race.creature_type,
+        size=game_race.size,
+    )
+
+    player = player_class(race=race_instance,
+                      height=int(input("Введите рост игрока: ")),
+                      weight=int(input("Введите вес игрока: ")),
+                      eyes=input("Введите кожу игрока: "),
+                      skin=input("Введите ткань игрока: "),
+                      hair=input("Введите шиш игрока: "),
+                      appearance=input("Введите внешность игрока: "),
+                      quenta=input("Введите квента игрока: ")
+                      )
+    return player
+
 class Game:
-    race: GameRace = field(init=False)
+    __instance__ = None
+
+    @staticmethod
+    def run():
+        message = SystemMessage()
+
+        #step_0 wellcome
+        print(message.wellcome)
+
+        #step_1 choose race
+        print(message.step_1)
+        race = choose_race()
+
+        #step_2 create player
+        player = create_player(game_race=race, player_class= Character)
+        print(player)
 
 
-    @classmethod
-    def run(cls):
-        print('Добро пожаловать в текстовую одно-пользовательскую игру по мотивам D&D 5 редакции!')
-        choose_race()
-
-
-# Run the game
-if __name__ == "__main__":
+if __name__ == '__main__':
     game = Game()
     game.run()
