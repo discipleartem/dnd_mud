@@ -1,6 +1,7 @@
+from dataclasses import dataclass
 from typing import Type, Callable, Optional, Any
 from race_descriptions import *
-from ideology import *
+from ideology import IDEOLOGY_DICT, Ideology
 from fix_print_function import wrap_print
 
 @dataclass
@@ -18,12 +19,12 @@ class Creature:
 
 
 
-
-    def get_creature_type_translation(self) -> str:
-        if self.creature_type == 'humanoid':
+    @classmethod
+    def get_creature_type_translation(cls) -> str:
+        if cls.creature_type == 'humanoid':
             return 'гуманоид'
         else:
-            return self.creature_type
+            return cls.creature_type
 
 
 @dataclass
@@ -165,6 +166,7 @@ def create_player_name() -> str:
         else:
             print("Имя не может быть пустым. Пожалуйста, введите имя.")
 
+
 #создаем возраст игрока
 def create_player_age(age_range: tuple) -> int:
     text = "Введите возраст игрока: "
@@ -182,27 +184,49 @@ def create_player_age(age_range: tuple) -> int:
         except ValueError:
             print("Вы ввели неверное значение. Пожалуйста, введите возраст числом.")
 
+#выбор мировоззрение игрока
+def create_player_ideology() -> Ideology:
+
+    print('Выберите ваше мировоззрение: ')
+    for key, ideology in IDEOLOGY_DICT.items():
+        print(f'короткая запись: {key}')
+        print(f'название: {ideology.get_name_translation().title()}')
+        print(f'направление: {ideology.get_vector_translation().capitalize()}')
+        wrap_print(f'Описание: {ideology.description}')
+        print()
+
+    while True:
+        text = "Выберите мировоззрение: "
+        player_ideology = input(text).strip()
+
+        if player_ideology in IDEOLOGY_DICT.keys():
+            user_choice = validate_user_choice(question=text,
+                                               value=player_ideology,
+                                               expected_type=str,
+                                               callback=create_player_ideology)
+            return IDEOLOGY_DICT[user_choice]
+
+        else:
+            print("Вы ввели неверное значение. Введите короткую запись.")
+
+
+
 def create_player(game_race: Type[GameRace.__subclasses__()], player_class) -> Character:
     # Создаем экземпляр выбранной расы
     race_instance = game_race(
         name=create_player_name(),
         age=create_player_age(game_race.age_range),
-        ideology=input("Введите идеологию игрока: "),
-        race_name=game_race.race_name,
-        speed=game_race.speed,
-        description=game_race.description,
-        creature_type=game_race.creature_type,
-        size=game_race.size,
+        ideology=create_player_ideology()
     )
 
     player = player_class(race=race_instance,
                       height=int(input("Введите рост игрока: ")),
                       weight=int(input("Введите вес игрока: ")),
-                      eyes=input("Введите кожу игрока: "),
-                      skin=input("Введите ткань игрока: "),
-                      hair=input("Введите шиш игрока: "),
+                      eyes=input("Введите цвет глаз игрока: "),
+                      skin=input("Введите цвет кожи игрока: "),
+                      hair=input("Введите цвет волос игрока: "),
                       appearance=input("Введите внешность игрока: "),
-                      quenta=input("Введите квента игрока: ")
+                      quenta=input("Введите предысторию игрока: ")
                       )
     return player
 
