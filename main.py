@@ -1,8 +1,14 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Type, Callable, Optional, Any
 from race_descriptions import *
 from ideology import IDEOLOGY_DICT, Ideology
 from fix_print_function import wrap_print
+
+@dataclass
+class Attribute:
+    name: str
+    description: str
+    value: int
 
 @dataclass
 class Creature:
@@ -16,6 +22,19 @@ class Creature:
 
     creature_type: str #7
     size: str #8
+
+    strength: Attribute = field(default_factory=lambda:
+                                Attribute(name="Сила", description="Физическая сила и мощь.", value=10))  # 9
+    dexterity: Attribute = field(default_factory=lambda:
+                                Attribute(name="Ловкость", description="Гибкость и рефлексы.", value=10))  # 10
+    constitution: Attribute = field(default_factory=lambda:
+                            Attribute(name="Телосложение", description="Здоровье и выносливость.", value=10))  # 11
+    intelligence: Attribute = field(default_factory=lambda:
+                        Attribute(name="Интеллект", description="Умственные способности и логика.", value=10))  # 12
+    wisdom: Attribute = field(default_factory=lambda:
+                                    Attribute(name="Мудрость", description="Восприятие и интуиция.", value=10))  # 13
+    charisma: Attribute = field(default_factory=lambda:
+                                Attribute(name="Харизма", description="Влияние и социальные навыки.", value=10))  # 14
 
 
 
@@ -31,7 +50,10 @@ class Creature:
 class GameRace(Creature):
     creature_type: str = 'humanoid' #7
     size: str = 'medium' #8
-    age_range: Optional[tuple[int, int]] = None    #9
+
+    #добавил Optional, чтобы не было ошибок при создании экземпляра (нарушен порядок наследования параметров)
+    age_range: Optional[tuple[int, int]] = None    #доп
+
 
 
 
