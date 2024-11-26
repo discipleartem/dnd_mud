@@ -52,17 +52,15 @@ class GameRace(Creature):
     size: str = 'medium' #8
 
     #добавил Optional, чтобы не было ошибок при создании экземпляра (нарушен порядок наследования параметров)
-    age_range: Optional[tuple[int, int]] = None    #доп
-
-
-
+    age_range: Optional[tuple[int, int]] = None    #9 доп
+    specificity: Optional[str] = None #10 доп
 
     @classmethod
-    def get_race_translation(cls) -> str:
+    def get_race_name_translation(cls) -> str:
         translations = {
             'human': 'человек',
             'half-orc': 'полу-орк',
-            'elf': 'эльф'
+            'high-elf': 'высший эльф'
         }
         return translations.get(cls.race_name, cls.race_name)
 
@@ -86,6 +84,9 @@ class Human(GameRace):
     description: str = HUMAN_DESCRIPTION  # 6
     age_range: tuple = (18, 100)  # 9 доп
 
+    #TODO добавить атрибуты и механику для "особенностей расы"
+    specificity: str = HUMAN_SPECIFICITY  # 10 доп
+
 
 @dataclass
 class HalfOrc(GameRace):
@@ -94,12 +95,18 @@ class HalfOrc(GameRace):
     description: str = HALF_ORC_DESCRIPTION  # 6
     age_range: tuple = (14, 75)  # 9 доп
 
+    # TODO добавить атрибуты и механику для "особенностей расы"
+    specificity: str = HALF_ORC_SPECIFICITY  # 10 доп
+
 @dataclass
-class Elf(GameRace):
-    race_name: str = 'elf'  # 4
+class HighElf(GameRace):
+    race_name: str = 'high-elf'  # 4
     speed: int = 30  # 5
     description: str = ELF_DESCRIPTION  # 6
     age_range: tuple = (100, 750)  # 9 доп
+
+    # TODO добавить атрибуты и механику для "особенностей расы"
+    specificity: str = ELF_SPECIFICITY  # 10 доп
 
 
 @dataclass
@@ -126,13 +133,19 @@ def choose_race() -> Type[GameRace]:
     game_races = GameRace.__subclasses__()
 
     # создаем словарь с индексами и названиями рас {0: 'человек', 1: 'полу-орк', 2: 'эльф'}
-    game_races_ru_dict = {index: game_race.get_race_translation() for index, game_race in enumerate(game_races)}
+    game_races_ru_dict = {index: game_race.get_race_name_translation() for index, game_race in enumerate(game_races)}
     for index, game_race in enumerate(game_races):
-        print(f"\n{index}: {game_race.get_race_translation()}")
+
+        print(f"\n{index}: {game_race.get_race_name_translation()}")
         print(f"Тип существа: {game_race.get_creature_type_translation()}")
         print(f"Размер: {game_race.get_size_translation()}")
         print(f"Скорость: {game_race.speed} футов")
+        print()
         wrap_print(f"Описание: {game_race.description}")
+        print()
+        print(f"Особенности расы: {game_race.specificity}")
+        print("===============================================================")
+
 
     print("Доступные расы:", game_races_ru_dict)
     chosen_index = player_choice(choice_dict=game_races_ru_dict)
@@ -141,11 +154,13 @@ def choose_race() -> Type[GameRace]:
 
 def player_choice(choice_dict: dict) -> int:
     while True:
-        user_choice = input("Сделайте свой выбор: ")
         try:
+            user_choice = input("Сделайте свой выбор: ")
             user_choice = int(user_choice)
             if user_choice in choice_dict.keys():
                 return user_choice
+            else:
+                print(f"Выберите значение из {choice_dict.keys()}.")
         except ValueError:
             print("Вы ввели неверное значение. Попробуйте еще раз.")
 
@@ -218,7 +233,7 @@ def create_player_ideology() -> Ideology:
         print()
 
     while True:
-        text = "Выберите мировоззрение: "
+        text = "Выберите мировоззрение (короткая запись): "
         player_ideology = input(text).strip()
 
         if player_ideology in IDEOLOGY_DICT.keys():
