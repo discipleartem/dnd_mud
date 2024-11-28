@@ -10,6 +10,17 @@ class Attribute:
     description: str
     value: int
 
+    def get_characteristics_name_translation(self) -> str:
+        translations = {
+            "strength": "сила",
+            "dexterity": "ловкость",
+            "constitution": "телосложение",
+            "intelligence": "интеллект",
+            "wisdom": "мудрость",
+            "charisma": "харизма"
+        }
+        return translations.get(self.name, self.name)
+
 @dataclass
 class Creature:
     name: str #1
@@ -23,19 +34,14 @@ class Creature:
     creature_type: str #7
     size: str #8
 
-    strength: Attribute = field(default_factory=lambda:
-                                Attribute(name="Сила", description="Физическая сила и мощь.", value=10))  # 9
-    dexterity: Attribute = field(default_factory=lambda:
-                                Attribute(name="Ловкость", description="Гибкость и рефлексы.", value=10))  # 10
-    constitution: Attribute = field(default_factory=lambda:
-                            Attribute(name="Телосложение", description="Здоровье и выносливость.", value=10))  # 11
-    intelligence: Attribute = field(default_factory=lambda:
-                        Attribute(name="Интеллект", description="Умственные способности и логика.", value=10))  # 12
-    wisdom: Attribute = field(default_factory=lambda:
-                                    Attribute(name="Мудрость", description="Восприятие и интуиция.", value=10))  # 13
-    charisma: Attribute = field(default_factory=lambda:
-                                Attribute(name="Харизма", description="Влияние и социальные навыки.", value=10))  # 14
-
+    characteristics: dict = field(default_factory=lambda: {
+        "strength": Attribute(name="strength", description="Физическая сила и мощь.", value=10),
+        "dexterity": Attribute(name="dexterity", description="Гибкость и рефлексы.", value=10),
+        "constitution": Attribute(name="constitution", description="Здоровье и выносливость.", value=10),
+        "intelligence": Attribute(name="intelligence", description="Умственные способности и логика.", value=10),
+        "wisdom": Attribute(name="wisdom", description="Восприятие и интуиция.", value=10),
+        "charisma": Attribute(name="charisma", description="Влияние и социальные навыки.", value=10)
+    })
 
 
     @classmethod
@@ -52,7 +58,7 @@ class GameRace(Creature):
     size: str = 'medium' #8
 
     #добавил Optional, чтобы не было ошибок при создании экземпляра (нарушен порядок наследования параметров)
-    age_range: Optional[tuple[int, int]] = None    #9 доп
+    age_range: range = None    #9 доп
     specificity: Optional[str] = None #10 доп
 
     @classmethod
@@ -82,7 +88,7 @@ class Human(GameRace):
     race_name: str = 'human'  # 4
     speed: int = 30  # 5
     description: str = HUMAN_DESCRIPTION  # 6
-    age_range: tuple = (18, 100)  # 9 доп
+    age_range: range = range(18, 100)  # 9 доп
 
     #TODO добавить атрибуты и механику для "особенностей расы"
     specificity: str = HUMAN_SPECIFICITY  # 10 доп
@@ -93,7 +99,7 @@ class HalfOrc(GameRace):
     race_name: str = 'half-orc'  # 4
     speed: int = 30  # 5
     description: str = HALF_ORC_DESCRIPTION  # 6
-    age_range: tuple = (14, 75)  # 9 доп
+    age_range: range = range(14, 75)  # 9 доп
 
     # TODO добавить атрибуты и механику для "особенностей расы"
     specificity: str = HALF_ORC_SPECIFICITY  # 10 доп
@@ -103,7 +109,7 @@ class HighElf(GameRace):
     race_name: str = 'high-elf'  # 4
     speed: int = 30  # 5
     description: str = ELF_DESCRIPTION  # 6
-    age_range: tuple = (100, 750)  # 9 доп
+    age_range: range = range(100, 750)  # 9 доп
 
     # TODO добавить атрибуты и механику для "особенностей расы"
     specificity: str = ELF_SPECIFICITY  # 10 доп
@@ -148,21 +154,24 @@ def choose_race() -> Type[GameRace]:
 
 
     print("Доступные расы:", game_races_ru_dict)
-    chosen_index = player_choice(choice_dict=game_races_ru_dict)
-    return game_races[chosen_index]
+    player_race_index = player_race_choice(choice_dict=game_races_ru_dict)
+    return game_races[player_race_index]
 
 
-def player_choice(choice_dict: dict) -> int:
+
+def player_race_choice(choice_dict: dict) -> int:
     while True:
+        text = "Ваша раса: "
+        user_choice = input(text)
         try:
-            user_choice = input("Сделайте свой выбор: ")
-            user_choice = int(user_choice)
-            if user_choice in choice_dict.keys():
-                return user_choice
-            else:
-                print(f"Выберите значение из {choice_dict.keys()}.")
+            chosen_index = int(user_choice)
+            if chosen_index in choice_dict.keys():
+                chosen_index = validate_user_choice(question=text, value=chosen_index,
+                                                    expected_type=int, callback=choose_race,
+                                                    data= choice_dict)
+                return chosen_index
         except ValueError:
-            print("Вы ввели неверное значение. Попробуйте еще раз.")
+            print(f"Выберите значение из {list(choice_dict.keys())}")
 
 def user_confirm(callback: Optional[Callable]) -> bool:
     options = {0: 'нет', 1: 'да'}
@@ -179,10 +188,21 @@ def user_confirm(callback: Optional[Callable]) -> bool:
 
 #проверка ввода пользователя
 def validate_user_choice(question: str, value: Any, expected_type: type,
-                         callback: Optional[Callable]) -> Any:
+                         callback: Optional[Callable],
+                         data: Optional[Any] = None, attr_name: Optional[Any] = None,
+                         translate_func: str= None) -> Any:
     while True:
         if isinstance(value, expected_type):
-            print(f"{' '.join(question.split()[1:])} {value} ?")
+            if attr_name:
+                if translate_func:
+                    translate = getattr(data[value], translate_func)()
+                    print(f"{' '.join(question.split()[1:])} {translate.title()} ?")
+                else:
+                    print(f"{' '.join(question.split()[1:])} {getattr(data[value], attr_name)}?")
+            elif data:
+                print(f"{' '.join(question.split()[1:])} {data[value]} ?")
+
+
 
             #подтверждение выбора
             if user_confirm(callback=callback):
@@ -205,13 +225,13 @@ def create_player_name() -> str:
 
 
 #создаем возраст игрока
-def create_player_age(age_range: tuple) -> int:
+def create_player_age(age_range: range) -> int:
     text = "Введите возраст игрока: "
     while True:
         player_age = input(text).strip()
         try:
             player_age = int(player_age)
-            if player_age in range(age_range[0], age_range[1] + 1):
+            if player_age in age_range:
                 confirmed_age = validate_user_choice(question=text, value=player_age, expected_type=int,
                                             callback=lambda: create_player_age(age_range))
                 return confirmed_age
@@ -233,14 +253,16 @@ def create_player_ideology() -> Ideology:
         print()
 
     while True:
-        text = "Выберите мировоззрение (короткая запись): "
+        text = "Выберите мировоззрение: "
         player_ideology = input(text).strip()
 
         if player_ideology in IDEOLOGY_DICT.keys():
             user_choice = validate_user_choice(question=text,
                                                value=player_ideology,
                                                expected_type=str,
-                                               callback=create_player_ideology)
+                                               callback=create_player_ideology,
+                                               data=IDEOLOGY_DICT, attr_name='name',
+                                               translate_func='get_name_translation')
             return IDEOLOGY_DICT[user_choice]
 
         else:
@@ -267,6 +289,16 @@ def create_player(game_race: Type[GameRace.__subclasses__()], player_class) -> C
                       )
     return player
 
+def choose_characteristics(player: Character) -> None:
+    print()
+    print("Характеристики игрока:")
+    for key, value in player.race.characteristics.items():
+        print(f"{value.get_characteristics_name_translation().capitalize()}: "
+              f"отвечает за {value.description}"
+              )
+
+
+
 class Game:
     __instance__ = None
 
@@ -283,6 +315,7 @@ class Game:
 
         #step_2 create player
         player = create_player(game_race=race, player_class= Character)
+        choose_characteristics(player=player)
         print(player)
 
 
