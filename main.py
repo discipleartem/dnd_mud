@@ -10,6 +10,17 @@ class Attribute:
     description: str
     value: int
 
+    def get_characteristics_name_translation(self) -> str:
+        translations = {
+            "strength": "сила",
+            "dexterity": "ловкость",
+            "constitution": "телосложение",
+            "intelligence": "интеллект",
+            "wisdom": "мудрость",
+            "charisma": "харизма"
+        }
+        return translations.get(self.name, self.name)
+
 @dataclass
 class Creature:
     name: str #1
@@ -23,19 +34,14 @@ class Creature:
     creature_type: str #7
     size: str #8
 
-    strength: Attribute = field(default_factory=lambda:
-                                Attribute(name="Сила", description="Физическая сила и мощь.", value=10))  # 9
-    dexterity: Attribute = field(default_factory=lambda:
-                                Attribute(name="Ловкость", description="Гибкость и рефлексы.", value=10))  # 10
-    constitution: Attribute = field(default_factory=lambda:
-                            Attribute(name="Телосложение", description="Здоровье и выносливость.", value=10))  # 11
-    intelligence: Attribute = field(default_factory=lambda:
-                        Attribute(name="Интеллект", description="Умственные способности и логика.", value=10))  # 12
-    wisdom: Attribute = field(default_factory=lambda:
-                                    Attribute(name="Мудрость", description="Восприятие и интуиция.", value=10))  # 13
-    charisma: Attribute = field(default_factory=lambda:
-                                Attribute(name="Харизма", description="Влияние и социальные навыки.", value=10))  # 14
-
+    characteristics: dict = field(default_factory=lambda: {
+        "strength": Attribute(name="strength", description="Физическая сила и мощь.", value=10),
+        "dexterity": Attribute(name="dexterity", description="Гибкость и рефлексы.", value=10),
+        "constitution": Attribute(name="constitution", description="Здоровье и выносливость.", value=10),
+        "intelligence": Attribute(name="intelligence", description="Умственные способности и логика.", value=10),
+        "wisdom": Attribute(name="wisdom", description="Восприятие и интуиция.", value=10),
+        "charisma": Attribute(name="charisma", description="Влияние и социальные навыки.", value=10)
+    })
 
 
     @classmethod
@@ -267,6 +273,16 @@ def create_player(game_race: Type[GameRace.__subclasses__()], player_class) -> C
                       )
     return player
 
+def choose_characteristics(player: Character) -> None:
+    print()
+    print("Характеристики игрока:")
+    for key, value in player.race.characteristics.items():
+        print(f"{value.get_characteristics_name_translation().capitalize()}: "
+              f"отвечает за {value.description}"
+              )
+
+
+
 class Game:
     __instance__ = None
 
@@ -283,6 +299,7 @@ class Game:
 
         #step_2 create player
         player = create_player(game_race=race, player_class= Character)
+        choose_characteristics(player=player)
         print(player)
 
 
