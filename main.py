@@ -58,7 +58,7 @@ class GameRace(Creature):
     size: str = 'medium' #8
 
     #добавил Optional, чтобы не было ошибок при создании экземпляра (нарушен порядок наследования параметров)
-    age_range: Optional[tuple[int, int]] = None    #9 доп
+    age_range: range = None    #9 доп
     specificity: Optional[str] = None #10 доп
 
     @classmethod
@@ -88,7 +88,7 @@ class Human(GameRace):
     race_name: str = 'human'  # 4
     speed: int = 30  # 5
     description: str = HUMAN_DESCRIPTION  # 6
-    age_range: tuple = (18, 100)  # 9 доп
+    age_range: range = range(18, 100)  # 9 доп
 
     #TODO добавить атрибуты и механику для "особенностей расы"
     specificity: str = HUMAN_SPECIFICITY  # 10 доп
@@ -99,7 +99,7 @@ class HalfOrc(GameRace):
     race_name: str = 'half-orc'  # 4
     speed: int = 30  # 5
     description: str = HALF_ORC_DESCRIPTION  # 6
-    age_range: tuple = (14, 75)  # 9 доп
+    age_range: range = range(14, 75)  # 9 доп
 
     # TODO добавить атрибуты и механику для "особенностей расы"
     specificity: str = HALF_ORC_SPECIFICITY  # 10 доп
@@ -109,7 +109,7 @@ class HighElf(GameRace):
     race_name: str = 'high-elf'  # 4
     speed: int = 30  # 5
     description: str = ELF_DESCRIPTION  # 6
-    age_range: tuple = (100, 750)  # 9 доп
+    age_range: range = range(100, 750)  # 9 доп
 
     # TODO добавить атрибуты и механику для "особенностей расы"
     specificity: str = ELF_SPECIFICITY  # 10 доп
@@ -225,13 +225,13 @@ def create_player_name() -> str:
 
 
 #создаем возраст игрока
-def create_player_age(age_range: tuple) -> int:
+def create_player_age(age_range: range) -> int:
     text = "Введите возраст игрока: "
     while True:
         player_age = input(text).strip()
         try:
             player_age = int(player_age)
-            if player_age in range(age_range[0], age_range[1] + 1):
+            if player_age in age_range:
                 confirmed_age = validate_user_choice(question=text, value=player_age, expected_type=int,
                                             callback=lambda: create_player_age(age_range))
                 return confirmed_age
