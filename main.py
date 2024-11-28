@@ -154,21 +154,23 @@ def choose_race() -> Type[GameRace]:
 
 
     print("Доступные расы:", game_races_ru_dict)
-    chosen_index = player_choice(choice_dict=game_races_ru_dict)
-    return game_races[chosen_index]
+    player_race_index = player_race_choice(choice_dict=game_races_ru_dict)
+    return game_races[player_race_index]
 
 
-def player_choice(choice_dict: dict) -> int:
+
+def player_race_choice(choice_dict: dict) -> int:
     while True:
+        text = "Ваша раса: "
+        user_choice = input(text)
         try:
-            user_choice = input("Сделайте свой выбор: ")
-            user_choice = int(user_choice)
-            if user_choice in choice_dict.keys():
-                return user_choice
-            else:
-                print(f"Выберите значение из {choice_dict.keys()}.")
+            chosen_index = int(user_choice)
+            if chosen_index in choice_dict.keys():
+                chosen_index = validate_user_choice(question=text, value=chosen_index,
+                                                           expected_type=int, callback=choose_race, data=choice_dict)
+                return chosen_index
         except ValueError:
-            print("Вы ввели неверное значение. Попробуйте еще раз.")
+            print(f"Выберите значение из {list(choice_dict.keys())}")
 
 def user_confirm(callback: Optional[Callable]) -> bool:
     options = {0: 'нет', 1: 'да'}
@@ -185,10 +187,13 @@ def user_confirm(callback: Optional[Callable]) -> bool:
 
 #проверка ввода пользователя
 def validate_user_choice(question: str, value: Any, expected_type: type,
-                         callback: Optional[Callable]) -> Any:
+                         callback: Optional[Callable], data= None) -> Any:
     while True:
         if isinstance(value, expected_type):
-            print(f"{' '.join(question.split()[1:])} {value} ?")
+            if data is not None:
+                print(f"{' '.join(question.split()[1:])} {data[value]}?")
+            else:
+                print(f"{' '.join(question.split()[1:])} {value} ?")
 
             #подтверждение выбора
             if user_confirm(callback=callback):
