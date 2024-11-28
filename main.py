@@ -167,7 +167,8 @@ def player_race_choice(choice_dict: dict) -> int:
             chosen_index = int(user_choice)
             if chosen_index in choice_dict.keys():
                 chosen_index = validate_user_choice(question=text, value=chosen_index,
-                                                           expected_type=int, callback=choose_race, data=choice_dict)
+                                                    expected_type=int, callback=choose_race,
+                                                    data= choice_dict)
                 return chosen_index
         except ValueError:
             print(f"Выберите значение из {list(choice_dict.keys())}")
@@ -187,13 +188,21 @@ def user_confirm(callback: Optional[Callable]) -> bool:
 
 #проверка ввода пользователя
 def validate_user_choice(question: str, value: Any, expected_type: type,
-                         callback: Optional[Callable], data= None) -> Any:
+                         callback: Optional[Callable],
+                         data: Optional[Any] = None, attr_name: Optional[Any] = None,
+                         translate_func: str= None) -> Any:
     while True:
         if isinstance(value, expected_type):
-            if data is not None:
-                print(f"{' '.join(question.split()[1:])} {data[value]}?")
-            else:
-                print(f"{' '.join(question.split()[1:])} {value} ?")
+            if attr_name:
+                if translate_func:
+                    translate = getattr(data[value], translate_func)()
+                    print(f"{' '.join(question.split()[1:])} {translate.title()} ?")
+                else:
+                    print(f"{' '.join(question.split()[1:])} {getattr(data[value], attr_name)}?")
+            elif data:
+                print(f"{' '.join(question.split()[1:])} {data[value]} ?")
+
+
 
             #подтверждение выбора
             if user_confirm(callback=callback):
@@ -244,14 +253,16 @@ def create_player_ideology() -> Ideology:
         print()
 
     while True:
-        text = "Выберите мировоззрение (короткая запись): "
+        text = "Выберите мировоззрение: "
         player_ideology = input(text).strip()
 
         if player_ideology in IDEOLOGY_DICT.keys():
             user_choice = validate_user_choice(question=text,
                                                value=player_ideology,
                                                expected_type=str,
-                                               callback=create_player_ideology)
+                                               callback=create_player_ideology,
+                                               data=IDEOLOGY_DICT, attr_name='name',
+                                               translate_func='get_name_translation')
             return IDEOLOGY_DICT[user_choice]
 
         else:
