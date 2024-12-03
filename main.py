@@ -218,7 +218,25 @@ def user_confirm(callback: Optional[Callable]) -> bool:
             print("Вы ввели неверное значение. Попробуйте еще раз.")
 
 
-#создаем имя персонажа
+def create_player(game_race: Type[GameRace.__subclasses__()], player_class) -> Character:
+    # Создаем экземпляр выбранной расы
+    race_instance = game_race(
+        name=create_player_name(),
+        age=create_player_age(game_race.age_range),
+        ideology=create_player_ideology()
+    )
+
+    player = player_class(race=race_instance,
+                      height=create_player_height(race_instance.height_range),
+                      weight=int(input("Введите вес игрока: ")),
+                      eyes=input("Введите цвет глаз игрока: "),
+                      skin=input("Введите цвет кожи игрока: "),
+                      hair=input("Введите цвет волос игрока: "),
+                      appearance=input("Введите внешность игрока: "),
+                      quenta=input("Введите предысторию игрока: ")
+                      )
+    return player
+
 def create_player_name() -> str:
     text = "Введите имя игрока: "
     while True:
@@ -275,6 +293,7 @@ def create_player_ideology() -> Ideology:
         else:
             print("Вы ввели неверное значение. Введите короткую запись.")
 
+
 def create_player_height(height_range: range) -> int:
     text = "Введите рост игрока: "
     while True:
@@ -291,25 +310,6 @@ def create_player_height(height_range: range) -> int:
         except ValueError:
             print("Вы ввели неверное значение. Пожалуйста, введите целое число.")
 
-
-def create_player(game_race: Type[GameRace.__subclasses__()], player_class) -> Character:
-    # Создаем экземпляр выбранной расы
-    race_instance = game_race(
-        name=create_player_name(),
-        age=create_player_age(game_race.age_range),
-        ideology=create_player_ideology()
-    )
-
-    player = player_class(race=race_instance,
-                      height=create_player_height(race_instance.height_range),
-                      weight=int(input("Введите вес игрока: ")),
-                      eyes=input("Введите цвет глаз игрока: "),
-                      skin=input("Введите цвет кожи игрока: "),
-                      hair=input("Введите цвет волос игрока: "),
-                      appearance=input("Введите внешность игрока: "),
-                      quenta=input("Введите предысторию игрока: ")
-                      )
-    return player
 
 def choose_characteristics(player: Character) -> None:
     print()
