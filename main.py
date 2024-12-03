@@ -228,7 +228,7 @@ def create_player(game_race: Type[GameRace.__subclasses__()], player_class) -> C
 
     player = player_class(race=race_instance,
                       height=create_player_height(race_instance.height_range),
-                      weight=int(input("Введите вес игрока: ")),
+                      weight=create_player_weight(race_instance.weight_range),
                       eyes=input("Введите цвет глаз игрока: "),
                       skin=input("Введите цвет кожи игрока: "),
                       hair=input("Введите цвет волос игрока: "),
@@ -293,23 +293,28 @@ def create_player_ideology() -> Ideology:
         else:
             print("Вы ввели неверное значение. Введите короткую запись.")
 
-
 def create_player_height(height_range: range) -> int:
-    text = "Введите рост игрока: "
+    return create_player_measurement("рост", height_range)
+
+def create_player_weight(weight_range: range) -> int:
+    return create_player_measurement("вес", weight_range)
+
+def create_player_measurement(measurement_type: str, measurement_range: range) -> int:
+    text = f"Введите {measurement_type} игрока: "
     while True:
-        player_height = input(text).strip()
+        player_measurement = input(text).strip()
         try:
-            player_height = int(player_height)
-            if player_height in height_range:
-                confirmed_height = validate_user_choice(question=text, value=player_height, expected_type=int,
-                                                        callback=lambda: create_player_height(height_range))
-                return confirmed_height
+            player_measurement = int(player_measurement)
+            if player_measurement in measurement_range:
+                confirmed_measurement = validate_user_choice(question=text, value=player_measurement, expected_type=int,
+                                                              callback=lambda: create_player_measurement(measurement_type, measurement_range))
+                return confirmed_measurement
             else:
-                print(f"Вы ввели неверный рост. Пожалуйста, введите рост "
-                      f"в диапазоне от {height_range.start} до {height_range.stop} футов")
+                print(f"Вы ввели неверный {measurement_type}. Пожалуйста, введите {measurement_type}: "
+                      f"в диапазоне от {measurement_range.start} до {measurement_range.stop} футов" if measurement_type == "рост" else
+                      f"в диапазоне от {measurement_range.start} до {measurement_range.stop} фунтов")
         except ValueError:
             print("Вы ввели неверное значение. Пожалуйста, введите целое число.")
-
 
 def choose_characteristics(player: Character) -> None:
     print()
