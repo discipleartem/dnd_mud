@@ -58,7 +58,8 @@ class GameRace(Creature):
 
     #добавил Optional, чтобы не было ошибок при создании экземпляра (нарушен порядок наследования параметров)
     age_range: Optional[range] = None    #9 доп
-    specificity: Optional[str] = None #10 доп
+    height_range: Optional[range] = None  # 10 доп
+    specificity: Optional[str] = None #11 доп
 
     @staticmethod
     def get_race_name_translation(cls) -> str:
@@ -87,9 +88,11 @@ class Human(GameRace):
     speed: int = 30  # 5
     description: str = HUMAN_DESCRIPTION  # 6
     age_range: range = range(18, 100)  # 9 доп
+    height_range: range = range(5, 6)  # 10 доп
+    weight_range: range = range(125, 250)  # 11 доп
 
     #TODO добавить атрибуты и механику для "особенностей расы"
-    specificity: str = HUMAN_SPECIFICITY  # 10 доп
+    specificity: str = HUMAN_SPECIFICITY  # 12 доп
 
 
 @dataclass
@@ -98,9 +101,11 @@ class HalfOrc(GameRace):
     speed: int = 30  # 5
     description: str = HALF_ORC_DESCRIPTION  # 6
     age_range: range = range(14, 75)  # 9 доп
+    height_range: range = range(6, 7)  # 10 доп
+    weight_range: range = range(180, 250)  # 11 доп
 
     # TODO добавить атрибуты и механику для "особенностей расы"
-    specificity: str = HALF_ORC_SPECIFICITY  # 10 доп
+    specificity: str = HALF_ORC_SPECIFICITY  # 12 доп
 
 @dataclass
 class HighElf(GameRace):
@@ -108,9 +113,11 @@ class HighElf(GameRace):
     speed: int = 30  # 5
     description: str = ELF_DESCRIPTION  # 6
     age_range: range = range(100, 750)  # 9 доп
+    height_range: range = range(5, 6)  # 10 доп
+    weight_range: range = range(100, 145)  # 11 доп
 
     # TODO добавить атрибуты и механику для "особенностей расы"
-    specificity: str = ELF_SPECIFICITY  # 10 доп
+    specificity: str = ELF_SPECIFICITY  # 12 доп
 
 
 @dataclass
@@ -187,6 +194,9 @@ def validate_user_choice(question: str, value: Any, expected_type: type,
                     print(f"{' '.join(question.split()[1:])} {getattr(data[value], attr_name)}?")
             elif data:
                 print(f"{' '.join(question.split()[1:])} {data[value]} ?")
+            else:
+                print(f"{' '.join(question.split()[1:])} {value}?")
+
             #подтверждение выбора
             if user_confirm(callback=callback):
                 return value
@@ -265,6 +275,21 @@ def create_player_ideology() -> Ideology:
         else:
             print("Вы ввели неверное значение. Введите короткую запись.")
 
+def create_player_height(height_range: range) -> int:
+    text = "Введите рост игрока: "
+    while True:
+        player_height = input(text).strip()
+        try:
+            player_height = int(player_height)
+            if player_height in height_range:
+                confirmed_height = validate_user_choice(question=text, value=player_height, expected_type=int,
+                                                        callback=lambda: create_player_height(height_range))
+                return confirmed_height
+            else:
+                print(f"Вы ввели неверный рост. Пожалуйста, введите рост "
+                      f"в диапазоне от {height_range.start} до {height_range.stop} футов")
+        except ValueError:
+            print("Вы ввели неверное значение. Пожалуйста, введите целое число.")
 
 
 def create_player(game_race: Type[GameRace.__subclasses__()], player_class) -> Character:
@@ -276,7 +301,7 @@ def create_player(game_race: Type[GameRace.__subclasses__()], player_class) -> C
     )
 
     player = player_class(race=race_instance,
-                      height=int(input("Введите рост игрока: ")),
+                      height=create_player_height(race_instance.height_range),
                       weight=int(input("Введите вес игрока: ")),
                       eyes=input("Введите цвет глаз игрока: "),
                       skin=input("Введите цвет кожи игрока: "),
