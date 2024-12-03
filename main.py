@@ -88,7 +88,7 @@ class Human(GameRace):
     speed: int = 30  # 5
     description: str = HUMAN_DESCRIPTION  # 6
     age_range: range = range(18, 100)  # 9 доп
-    height_range: range = range(5, 6)  # 10 доп
+    height_range: range = range(5, 7)  # 10 доп
     weight_range: range = range(125, 250)  # 11 доп
 
     #TODO добавить атрибуты и механику для "особенностей расы"
@@ -101,7 +101,7 @@ class HalfOrc(GameRace):
     speed: int = 30  # 5
     description: str = HALF_ORC_DESCRIPTION  # 6
     age_range: range = range(14, 75)  # 9 доп
-    height_range: range = range(6, 7)  # 10 доп
+    height_range: range = range(6, 8)  # 10 доп
     weight_range: range = range(180, 250)  # 11 доп
 
     # TODO добавить атрибуты и механику для "особенностей расы"
@@ -113,7 +113,7 @@ class HighElf(GameRace):
     speed: int = 30  # 5
     description: str = ELF_DESCRIPTION  # 6
     age_range: range = range(100, 750)  # 9 доп
-    height_range: range = range(5, 6)  # 10 доп
+    height_range: range = range(5, 7)  # 10 доп
     weight_range: range = range(100, 145)  # 11 доп
 
     # TODO добавить атрибуты и механику для "особенностей расы"
@@ -191,11 +191,11 @@ def validate_user_choice(question: str, value: Any, expected_type: type,
                     translate = getattr(data[value], translate_func)()
                     print(f"{' '.join(question.split()[1:])} {translate.title()} ?")
                 else:
-                    print(f"{' '.join(question.split()[1:])} {getattr(data[value], attr_name)}?")
+                    print(f"{' '.join(question.split()[1:])} {getattr(data[value], attr_name)} ?")
             elif data:
                 print(f"{' '.join(question.split()[1:])} {data[value]} ?")
             else:
-                print(f"{' '.join(question.split()[1:])} {value}?")
+                print(f"{' '.join(question.split()[1:])} {value} ?")
 
             #подтверждение выбора
             if user_confirm(callback=callback):
@@ -262,7 +262,7 @@ def create_player_age(age_range: range) -> int:
                 return confirmed_age
             else:
                 print(f"Вы ввели неверный возраст. Пожалуйста, введите возраст "
-                      f"в диапазоне от {age_range.start} до {age_range.stop} лет.")
+                      f"в диапазоне от {age_range.start} до {age_range.stop -1} лет.")
         except ValueError:
             print("Вы ввели неверное значение. Пожалуйста, введите возраст числом.")
 
@@ -311,8 +311,8 @@ def create_player_measurement(measurement_type: str, measurement_range: range) -
                 return confirmed_measurement
             else:
                 print(f"Вы ввели неверный {measurement_type}. Пожалуйста, введите {measurement_type}: "
-                      f"в диапазоне от {measurement_range.start} до {measurement_range.stop} футов" if measurement_type == "рост" else
-                      f"в диапазоне от {measurement_range.start} до {measurement_range.stop} фунтов")
+                      f"в диапазоне от {measurement_range.start} до {measurement_range.stop -1} футов" if measurement_type == "рост" else
+                      f"в диапазоне от {measurement_range.start} до {measurement_range.stop -1} фунтов")
         except ValueError:
             print("Вы ввели неверное значение. Пожалуйста, введите целое число.")
 
