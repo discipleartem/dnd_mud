@@ -125,11 +125,11 @@ class Character:
     race: Type[GameRace]
     height: int
     weight: int
-    eyes: str
-    skin: str
-    hair: str
-    appearance: str
-    quenta: str
+    eyes: Optional[str] = None
+    skin: Optional[str] = None
+    hair: Optional[str] = None
+    appearance: Optional[str] = None
+    quenta: Optional[str] = None
 
 
 @dataclass
@@ -229,11 +229,11 @@ def create_player(game_race: Type[GameRace.__subclasses__()], player_class) -> C
     player = player_class(race=race_instance,
                       height=create_player_height(race_instance.height_range),
                       weight=create_player_weight(race_instance.weight_range),
-                      eyes=input("Введите цвет глаз игрока: "),
-                      skin=input("Введите цвет кожи игрока: "),
-                      hair=input("Введите цвет волос игрока: "),
-                      appearance=input("Введите внешность игрока: "),
-                      quenta=input("Введите предысторию игрока: ")
+                      eyes=input("Введите цвет глаз игрока (не обязательно): "),
+                      skin=input("Введите цвет кожи игрока (не обязательно): "),
+                      hair=input("Введите цвет волос игрока (не обязательно): "),
+                      appearance=input("Введите описание внешности игрока (не обязательно): "),
+                      quenta=input("Введите предысторию игрока (не обязательно): ")
                       )
     return player
 
