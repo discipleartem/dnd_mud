@@ -61,7 +61,7 @@ class GameRace(Creature):
     height_range: Optional[range] = None  # 10 доп
     specificity: Optional[str] = None #11 доп
 
-    @staticmethod
+    @classmethod
     def get_race_name_translation(cls) -> str:
         translations = {
             'human': 'человек',
@@ -137,6 +137,7 @@ class SystemMessage:
     __instance__ = None
     wellcome: str = 'Добро пожаловать в игру по мотивам D&D 5e!'
     step_1: str = 'Выберите вашу расу:'
+    step_2: str = 'Выберите тип распределения характеристик:'
 
 
 def choose_race() -> Type[GameRace]:
@@ -144,10 +145,10 @@ def choose_race() -> Type[GameRace]:
     game_races = GameRace.__subclasses__()
 
     # создаем словарь с индексами и названиями рас {0: 'человек', 1: 'полу-орк', 2: 'эльф'}
-    game_races_ru_dict = {index: GameRace.get_race_name_translation(game_race) for index, game_race in enumerate(game_races)}
+    game_races_ru_dict = {index: game_race.get_race_name_translation() for index, game_race in enumerate(game_races)}
     for index, game_race in enumerate(game_races):
 
-        print(f"\n{index}: {GameRace.get_race_name_translation(game_race)}")
+        print(f"\n{index}: {game_race.get_race_name_translation()}")
         print(f"Тип существа: {GameRace.get_creature_type_translation(game_race)}")
         print(f"Размер: {GameRace.get_size_translation(game_race)}")
         print(f"Скорость: {game_race.speed} футов")
@@ -323,7 +324,63 @@ def choose_characteristics(player: Character) -> None:
         print(f"{value.get_characteristics_name_translation().capitalize()}: "
               f"отвечает за {value.description}"
               )
+    characteristics_role_dice_type(player=player)
 
+
+def characteristics_role_dice_type(player: Character) -> Character:
+    print()
+    print('Выберите тип распределения характеристик: ')
+    variant = {0: 'EasyMode', 1: 'HardMode'}
+    key_list = list(variant.keys())
+    print(f'{key_list[0]} - {variant[0]} (самостоятельное распределение); '
+          f'{key_list[0]} - {variant[1]} (случайное распределение)')
+    while True:
+        choice = input(f"Выберите {variant}: ")
+        try:
+            choice = int(choice)
+            if choice in key_list:
+                if choice == key_list[0]:
+                    # подтверждение выбора
+                    if user_confirm(callback=lambda: characteristics_role_dice_type(player=player)):
+                        characteristics_easy_mode(player=player)
+                # elif choice == key_list[1]:
+                #     # подтверждение выбора
+                #     if user_confirm(callback=lambda: characteristics_role_dice_type(player=player)):
+                #         characteristics_hard_mode(player=player)
+                return player
+        except ValueError:
+            print(f"Вы ввели неверное значение. Пожалуйста, введите из {key_list}.")
+
+def characteristics_easy_mode(player: Character) -> Character:
+    print()
+    print("Вы выбрали EasyMode. Вы можете самостоятельно распределить характеристики.")
+    digit_list = [15, 14, 13, 12, 10, 8]
+    print(f'Выберите значение из списка {digit_list}:')
+    player = set_zero_attributes(player=player)
+    show_rise_char(player=player)
+
+    while digit_list:
+        for attribute in player.race.characteristics.values():
+            print(f"{attribute.get_characteristics_name_translation().capitalize()}: "
+                  f"{attribute.value}")
+        break
+
+
+def set_zero_attributes(player: Character) -> Character:
+    # обнуление всех характеристик
+    [setattr(attribute, 'value', 0) for attribute in player.race.characteristics.values()]
+    return player
+
+def show_rise_char(player: Character) -> None:
+    print()
+    print(f"Так как вы {player.race.get_race_name_translation() }: ")
+    match player.race.race_name:
+        case 'human':
+            print(f"{HUMAN_RISE_CHAR}")
+        case 'high-elf':
+            print(f"{ELF_RISE_CHAR}")
+        case 'half-orc':
+            print(f"{HALF_ORC_RISE_CHAR}")
 
 
 class Game:
@@ -342,6 +399,7 @@ class Game:
 
         #step_2 create player
         player = create_player(game_race=race, player_class= Character)
+        print(message.step_2)
         choose_characteristics(player=player)
         print(player)
 
