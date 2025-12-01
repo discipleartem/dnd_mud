@@ -1,0 +1,117 @@
+# game/data/schemas/class_schema.yaml
+# JSON Schema для валидации файлов классов
+
+class_schema:
+  type: object
+  required:
+    - name
+    - description
+    - hit_die
+    - primary_ability
+    - saving_throws
+    - proficiencies
+
+  properties:
+    name:
+      type: string
+      minLength: 1
+      maxLength: 50
+      description: "Название класса"
+
+    description:
+      type: string
+      minLength: 10
+      maxLength: 500
+      description: "Описание класса"
+
+    hit_die:
+      type: integer
+      enum: [6, 8, 10, 12]
+      description: "Кость хитов"
+
+    primary_ability:
+      type: string
+      enum: ["strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma"]
+      description: "Основная характеристика"
+
+    saving_throws:
+      type: array
+      minItems: 2
+      maxItems: 2
+      items:
+        type: string
+        enum: ["strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma"]
+      description: "Спасброски"
+
+    proficiencies:
+      type: object
+      required:
+        - armor
+        - weapons
+        - skills_choose
+        - skills_available
+      properties:
+        armor:
+          type: array
+          items:
+            type: string
+        weapons:
+          type: array
+          items:
+            type: string
+        tools:
+          type: array
+          items:
+            type: string
+        skills_choose:
+          type: integer
+          minimum: 0
+        skills_available:
+          oneOf:
+            - type: string
+              enum: ["any"]
+            - type: array
+              items:
+                type: string
+
+    starting_equipment:
+      type: array
+      items:
+        type: string
+      description: "Начальное снаряжение"
+
+    features:
+      type: object
+      description: "Особенности класса по уровням"
+      patternProperties:
+        "^level_[0-9]+$":
+          type: array
+          items:
+            type: object
+            required:
+              - name
+              - description
+            properties:
+              name:
+                type: string
+              description:
+                type: string
+
+    spellcasting:
+      type: object
+      description: "Использование магии (опционально)"
+      properties:
+        ability:
+          type: string
+          enum: ["intelligence", "wisdom", "charisma"]
+        cantrips_known:
+          type: integer
+          minimum: 0
+        spells_known:
+          oneOf:
+            - type: integer
+            - type: string
+        spell_slots_level_1:
+          type: array
+          items:
+            type: integer
