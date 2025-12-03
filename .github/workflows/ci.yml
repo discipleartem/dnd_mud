@@ -34,7 +34,7 @@ jobs:
 
     - name: Check formatting with Black
       run: |
-        black --check 
+        black --check dnd_mud
 
     - name: Type check with mypy
       run: |
