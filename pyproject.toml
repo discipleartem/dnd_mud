@@ -3,14 +3,14 @@ requires = ["setuptools>=61.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "text-mud-game"
+name = "dnd_mud"
 version = "0.1.0"
 description = "Текстовая MUD-подобная игра на Python"
 readme = "README.md"
 requires-python = ">=3.13"
 license = {text = "MIT"}
 authors = [
-    {name = "Ваше Имя", email = "ваш@email.com"},
+    {name = "Tomas", email = "discipleartem@gmail.com"},
 ]
 classifiers = [
     "Development Status :: 3 - Alpha",
@@ -33,7 +33,7 @@ dev = [
 ]
 
 [project.scripts]
-mud-game = "mud_game.main:main"
+mud-game = "main:main"
 
 [tool.black]
 line-length = 88
