@@ -33,7 +33,7 @@ dev = [
 ]
 
 [project.scripts]
-mud-game = "main:main"
+mud-game = "src.main:main"
 
 [tool.black]
 line-length = 88

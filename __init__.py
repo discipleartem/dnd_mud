@@ -3,5 +3,5 @@
 """
 
 __version__ = "0.1.0"
-__author__ = "Ваше Имя"
+__author__ = "Tomas"
 __description__ = "Текстовая MUD-подобная игра на Python"

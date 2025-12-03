@@ -80,7 +80,7 @@ jobs:
       uses: softprops/action-gh-release@v1
       with:
         files: |
-          dist_linux/dnd_mud-linux
-          dist_windows/dnd_mud-windows.exe
+          dist_linux/mud-game-linux
+          dist_windows/mud-game-windows.exe
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
