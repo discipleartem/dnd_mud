@@ -29,8 +29,8 @@ jobs:
 
     - name: Lint with flake8
       run: |
-        flake8 src/ game/ ui/ utils/ config/ tests/ main.py --count --select=E9,F63,F7,F82 --show-source --statistics
-        flake8 src/ game/ ui/ utils/ config/ tests/ main.py --count --exit-zero --max-complexity=10 --max-line-length=88 --statistics
+        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+        flake8 . --count --exit-zero --max-complexity=10 --max-line-length=88 --statistics
 
     - name: Check formatting with Black
       run: |
@@ -38,7 +38,7 @@ jobs:
 
     - name: Type check with mypy
       run: |
-        mypy src/ game/ ui/ utils/ config/ tests/ main.py 
+        mypy .
 
     - name: Test with pytest
       run: |
@@ -80,7 +80,7 @@ jobs:
       uses: softprops/action-gh-release@v1
       with:
         files: |
-          dist_linux/dnd_mud-linux
-          dist_windows/dnd_mud-windows.exe
+          dist_linux/mud-game-linux
+          dist_windows/mud-game-windows.exe
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
