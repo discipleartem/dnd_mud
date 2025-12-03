@@ -29,16 +29,16 @@ jobs:
 
     - name: Lint with flake8
       run: |
-        flake8 dnd_mud --count --select=E9,F63,F7,F82 --show-source --statistics
-        flake8 dnd_mud --count --exit-zero --max-complexity=10 --max-line-length=88 --statistics
+        flake8  --count --select=E9,F63,F7,F82 --show-source --statistics
+        flake8  --count --exit-zero --max-complexity=10 --max-line-length=88 --statistics
 
     - name: Check formatting with Black
       run: |
-        black --check dnd_mud
+        black --check 
 
     - name: Type check with mypy
       run: |
-        mypy dnd_mud
+        mypy 
 
     - name: Test with pytest
       run: |
@@ -48,7 +48,7 @@ jobs:
       if: matrix.os == 'windows-latest' || matrix.os == 'ubuntu-latest'
       run: |
         pip install pyinstaller
-        pyinstaller --onefile dnd_mud/main.py --name mud-game --distpath dist_test
+        pyinstaller --onefile main.py --name mud-game --distpath dist_test
 
   release:
     needs: test
@@ -70,11 +70,11 @@ jobs:
 
     - name: Build for Linux
       run: |
-        pyinstaller --onefile dnd_mud/main.py --name mud-game-linux --distpath dist_linux
+        pyinstaller --onefile main.py --name mud-game-linux --distpath dist_linux
 
     - name: Build for Windows
       run: |
-        pyinstaller --onefile dnd_mud/main.py --name mud-game-windows --distpath dist_windows
+        pyinstaller --onefile main.py --name mud-game-windows --distpath dist_windows
 
     - name: Create Release
       uses: softprops/action-gh-release@v1
