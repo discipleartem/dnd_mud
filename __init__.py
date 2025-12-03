@@ -1,8 +1,7 @@
 """
-D&D MUD Game
-Текстовая ролевая игра по мотивам Dungeons & Dragons 5e
+Текстовая MUD-игра
 """
 
-__version__ = "0.0.1"
-__author__ = "Tomas"
-__license__ = "MIT"
+__version__ = "0.1.0"
+__author__ = "Ваше Имя"
+__description__ = "Текстовая MUD-подобная игра на Python"

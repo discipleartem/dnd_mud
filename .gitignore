@@ -19,54 +19,51 @@ wheels/
 *.egg-info/
 .installed.cfg
 *.egg
-MANIFEST
 
-# Virtual environments
+# PyInstaller
+*.manifest
+*.spec
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+.hypothesis/
+.pytest_cache/
+
+# Environments
+.env
+.venv
+env/
 venv/
 ENV/
-env/
-.venv
+env.bak/
+venv.bak/
 
 # IDE
 .vscode/
 .idea/
 *.swp
 *.swo
-*~
+
+# OS
 .DS_Store
-
-# Pytest
-.pytest_cache/
-.coverage
-htmlcov/
-*.cover
-.hypothesis/
-
-# MyPy
-.mypy_cache/
-.dmypy.json
-dmypy.json
-
-# Logs
-logs/*.log
-*.log
-
-# Game saves
-saves/*.json
-
-# User config (keep default_config.yaml)
-config/user_config.yaml
-
-# PyInstaller
-*.spec
-build/
-dist/
-
-# Temporary files
-*.tmp
-*.bak
-*.swp
-
-# OS specific
 Thumbs.db
-.DS_Store
+
+# Game data
+saves/*.json
+!saves/.gitkeep
+
+# PyInstaller output
+dist/
+build/
