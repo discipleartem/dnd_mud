@@ -1,0 +1,140 @@
+# Локализация интерфейса
+
+ru:
+  # Главное меню
+  menu:
+    title: "Главное меню"
+    continue: "Продолжить"
+    new_game: "Новая игра"
+    load_game: "Загрузить"
+    settings: "Настройки"
+    exit: "Выход"
+    back: "Назад"
+
+  # Описания пунктов меню
+  menu_desc:
+    continue: "Продолжить последнюю игру"
+    new_game: "Начать новое приключение"
+    load_game: "Загрузить сохранённую игру"
+    settings: "Настройки игры"
+    exit: "Выход из игры"
+
+  # Сообщения
+  messages:
+    welcome: "Добро пожаловать в DnD MUD Game!"
+    loading: "Загрузка..."
+    saving: "Сохранение..."
+    save_success: "Игра успешно сохранена"
+    save_failed: "Ошибка сохранения игры"
+    load_success: "Игра успешно загружена"
+    load_failed: "Ошибка загрузки игры"
+    goodbye: "Спасибо за игру!"
+    invalid_input: "Неверный ввод. Попробуйте снова."
+
+  # Создание персонажа
+  character_creation:
+    title: "Создание персонажа"
+    enter_name: "Введите имя персонажа"
+    choose_race: "Выберите расу"
+    choose_class: "Выберите класс"
+    roll_stats: "Бросок характеристик"
+    confirm: "Подтвердить"
+
+  # Команды
+  commands:
+    help: "Помощь"
+    save: "Сохранить"
+    load: "Загрузить"
+    inventory: "Инвентарь"
+    stats: "Характеристики"
+    quit: "Выход"
+
+  # Боевая система
+  combat:
+    initiative: "Инициатива"
+    your_turn: "Ваш ход"
+    enemy_turn: "Ход противника"
+    attack: "Атаковать"
+    defend: "Защищаться"
+    use_item: "Использовать предмет"
+    flee: "Бежать"
+    victory: "Победа!"
+    defeat: "Поражение!"
+
+  # Общее
+  common:
+    yes: "Да"
+    no: "Нет"
+    cancel: "Отмена"
+    confirm: "Подтвердить"
+    level: "Уровень"
+    experience: "Опыт"
+    health: "Здоровье"
+    mana: "Мана"
+    gold: "Золото"
+
+en:
+  menu:
+    title: "Main Menu"
+    continue: "Continue"
+    new_game: "New Game"
+    load_game: "Load Game"
+    settings: "Settings"
+    exit: "Exit"
+    back: "Back"
+
+  menu_desc:
+    continue: "Continue last game"
+    new_game: "Start new adventure"
+    load_game: "Load saved game"
+    settings: "Game settings"
+    exit: "Exit game"
+
+  messages:
+    welcome: "Welcome to DnD MUD Game!"
+    loading: "Loading..."
+    saving: "Saving..."
+    save_success: "Game saved successfully"
+    save_failed: "Failed to save game"
+    load_success: "Game loaded successfully"
+    load_failed: "Failed to load game"
+    goodbye: "Thanks for playing!"
+    invalid_input: "Invalid input. Please try again."
+
+  character_creation:
+    title: "Character Creation"
+    enter_name: "Enter character name"
+    choose_race: "Choose race"
+    choose_class: "Choose class"
+    roll_stats: "Roll stats"
+    confirm: "Confirm"
+
+  commands:
+    help: "Help"
+    save: "Save"
+    load: "Load"
+    inventory: "Inventory"
+    stats: "Stats"
+    quit: "Quit"
+
+  combat:
+    initiative: "Initiative"
+    your_turn: "Your turn"
+    enemy_turn: "Enemy turn"
+    attack: "Attack"
+    defend: "Defend"
+    use_item: "Use item"
+    flee: "Flee"
+    victory: "Victory!"
+    defeat: "Defeat!"
+
+  common:
+    yes: "Yes"
+    no: "No"
+    cancel: "Cancel"
+    confirm: "Confirm"
+    level: "Level"
+    experience: "Experience"
+    health: "Health"
+    mana: "Mana"
+    gold: "Gold"
