@@ -27,27 +27,30 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install -e .
+        pip install cx_Freeze
 
-    - name: Build with PyInstaller (Linux)
+    - name: Build with cx_Freeze (Linux)
       if: runner.os == 'Linux'
       run: |
-        pyinstaller --onefile --name dnd_mud-linux src/main.py
+        python setup.py build
+        mv dist/dnd_mud-linux dnd_mud-linux
 
-    - name: Build with PyInstaller (Windows)
+    - name: Build with cx_Freeze (Windows)
       if: runner.os == 'Windows'
       run: |
-        pyinstaller --onefile --name dnd_mud-windows.exe src/main.py
+        python setup.py build
+        mv dist\dnd_mud-windows dnd_mud-windows
 
     - name: Upload artifacts (Linux)
       if: runner.os == 'Linux'
       uses: actions/upload-artifact@v4
       with:
         name: dnd_mud-linux
-        path: dist/dnd_mud-linux
+        path: dnd_mud-linux
 
     - name: Upload artifacts (Windows)
       if: runner.os == 'Windows'
       uses: actions/upload-artifact@v4
       with:
         name: dnd_mud-windows
-        path: dist/dnd_mud-windows.exe
+        path: dnd_mud-windows
