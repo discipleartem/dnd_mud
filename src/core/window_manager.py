@@ -35,6 +35,7 @@ class WindowManager:
     """
 
     _instance: Optional['WindowManager'] = None
+    _initialized: bool = False
 
     MIN_WIDTH = 80
     MIN_HEIGHT = 24
@@ -93,7 +94,7 @@ class WindowManager:
                     import fcntl
                     import termios
                     import struct
-                    h, w = struct.unpack('hh', fcntl.ioctl(0, termios.TIOCGWINSZ, '1234'))
+                    h, w = struct.unpack('hh', fcntl.ioctl(0, termios.TIOCGWINSZ, b'1234'))
                     self._current_size = TerminalSize(width=w, height=h)
             except Exception:
                 # Финальный fallback
