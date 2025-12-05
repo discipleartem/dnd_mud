@@ -49,6 +49,7 @@ class StateManager:
     """
 
     _instance: Optional['StateManager'] = None
+    _initialized: bool = False
 
     CONTINUE_SAVE_PATH = "data/saves/continue.json"
 
@@ -194,7 +195,8 @@ class StateManager:
                 except ValueError:
                     self._current_state = GameState.ADVENTURE
 
-            return snapshot.get("data", {})
+            data = snapshot.get("data", {})
+            return data if isinstance(data, dict) else {}
 
         except json.JSONDecodeError as e:
             print(f"Ошибка при загрузке сохранения: повреждённый файл ({e})")
@@ -206,7 +208,8 @@ class StateManager:
                     with open(backup_path, 'r', encoding='utf-8') as f:
                         snapshot = json.load(f)
                     print("Загружен резервный файл сохранения")
-                    return snapshot.get("data", {})
+                    data = snapshot.get("data", {})
+                    return data if isinstance(data, dict) else {}
                 except Exception:
                     pass
 
