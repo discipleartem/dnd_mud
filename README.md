@@ -4,7 +4,7 @@
 
 ![Python Version](https://img.shields.io/badge/python-3.13+-blue.svg)
 ![License](https://img.shields.io/badge/license-MIT-green.svg)
-![Build Status](https://github.com/discipleartem/dnd_mud/workflows/CI%20Tests/badge.svg)
+![Build Status](https://github.com/yourusername/dnd-mud-game/workflows/CI%20Tests/badge.svg)
 
 ## 📋 Описание
 
@@ -188,6 +188,8 @@ pyinstaller --onefile --name dnd-game-windows.exe src/main.py
 
 - [План разработки](docs/PLAN.md)
 - [Техническая документация](docs/TECHNICAL.md)
+- [Система локализации](docs/LOCALIZATION.md)
+- [Создание модов](docs/MODS.md)
 - [API документация](docs/API.md)
 
 ## 🎓 Принципы разработки
