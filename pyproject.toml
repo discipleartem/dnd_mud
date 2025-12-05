@@ -30,7 +30,7 @@ dev = [
     "black>=25.11.0",
     "flake8>=7.3.0",
     "mypy>=1.19.0",
-    "pyinstaller>=6.17.0",
+    "cx_Freeze>=8.5.0",
     "types-PyYAML>=6.0.0",
 ]
 
@@ -38,7 +38,7 @@ dev = [
 dnd-game = "src.main:main"
 
 [build-system]
-requires = ["setuptools>=69.0", "wheel"]
+requires = ["setuptools>=69.0", "wheel", "cx_Freeze>=8.5.0"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools]
@@ -61,3 +61,7 @@ python_version = "3.13"
 warn_return_any = true
 warn_unused_configs = true
 disallow_untyped_defs = true
+
+[tool.cx_Freeze]
+excludes = ["tkinter", "unittest", "matplotlib", "numpy"]
+optimize = 1
