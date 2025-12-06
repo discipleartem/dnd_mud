@@ -15,18 +15,21 @@ build_dir = f"dist/dnd_mud-{'windows' if is_windows else 'linux'}"
 # Подготовка файлов для включения в сборку
 include_files = []
 
+# Получаем абсолютный путь к корню проекта
+project_root = Path(__file__).parent.absolute()
+
 # Включаем директорию data/yaml (конфигурации и базовая локализация)
-yaml_dir = Path("data/yaml")
+yaml_dir = project_root / "data" / "yaml"
 if yaml_dir.exists():
     include_files.append((str(yaml_dir), "data/yaml"))
 
 # Включаем директорию data/mods (модификации)
-mods_dir = Path("data/mods")
+mods_dir = project_root / "data" / "mods"
 if mods_dir.exists():
     include_files.append((str(mods_dir), "data/mods"))
 
 # Включаем директорию data/adventures (приключения, если существует)
-adventures_dir = Path("data/adventures")
+adventures_dir = project_root / "data" / "adventures"
 if adventures_dir.exists():
     include_files.append((str(adventures_dir), "data/adventures"))
 

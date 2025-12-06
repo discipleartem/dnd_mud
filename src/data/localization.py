@@ -62,6 +62,7 @@ class LocalizationManager:
         if self._initialized:
             return
 
+        # Язык по умолчанию - русский
         self._current_language: str = "ru"
         self._sources: List[LocalizationSource] = []
         self._cache: Dict[str, str] = {}
@@ -69,6 +70,9 @@ class LocalizationManager:
         self._loaded_mods: Dict[str, Path] = {}  # mod_name -> mod_path
         self._loaded_adventures: Dict[str, Path] = {}  # adventure_name -> adventure_path
         self._initialized = True
+
+        # Загрузка языка из настроек (если доступно)
+        self._load_language_from_settings()
 
         # Загрузка базовой локализации
         self._load_base_localization()
@@ -88,6 +92,29 @@ class LocalizationManager:
     def get_language(self) -> str:
         """Получение текущего языка."""
         return self._current_language
+
+    def _load_language_from_settings(self) -> None:
+        """Загрузка языка из settings.yaml."""
+        settings_path = Path("data/yaml/settings.yaml")
+
+        if not settings_path.exists():
+            return
+
+        try:
+            with open(settings_path, 'r', encoding='utf-8') as f:
+                data = yaml.safe_load(f)
+
+            # Извлекаем язык из настроек (ui.language)
+            if data and isinstance(data, dict):
+                ui_settings = data.get('ui', {})
+                if isinstance(ui_settings, dict):
+                    language = ui_settings.get('language', 'ru')
+                    if isinstance(language, str) and language:
+                        self._current_language = language
+
+        except Exception as e:
+            # В случае ошибки используем язык по умолчанию (ru)
+            print(f"Предупреждение: не удалось загрузить язык из настроек: {e}")
 
     def _load_base_localization(self) -> None:
         """Загрузка базовой локализации из data/yaml/localization.yaml."""
