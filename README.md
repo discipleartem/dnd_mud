@@ -4,7 +4,6 @@
 
 ![Python Version](https://img.shields.io/badge/python-3.13+-blue.svg)
 ![License](https://img.shields.io/badge/license-MIT-green.svg)
-![Build Status](https://github.com/yourusername/dnd-mud-game/workflows/CI%20Tests/badge.svg)
 
 ## 📋 Описание
 
@@ -48,28 +47,22 @@
 
 ```bash
 # 1. Клонировать репозиторий
-git clone https://github.com/yourusername/dnd-mud-game.git
-cd dnd-mud-game
+git clone <repository-url>
+cd dnd_mud
 
-# 2. Создать структуру проекта (Linux/Mac)
-bash create_structure.sh
-
-# Или вручную на Windows:
-# Запустите команды из файла create_structure.sh
-
-# 3. Создать виртуальное окружение
+# 2. Создать виртуальное окружение
 python -m venv venv
 
-# 4. Активировать виртуальное окружение
+# 3. Активировать виртуальное окружение
 # Linux/Mac:
 source venv/bin/activate
 # Windows:
 venv\Scripts\activate
 
-# 5. Установить зависимости
-pip install -r requirements.txt
+# 4. Установить зависимости
+pip install -e .
 
-# 6. Запустить игру
+# 5. Запустить игру
 python src/main.py
 ```
 
@@ -77,8 +70,8 @@ python src/main.py
 
 ```bash
 # Клонировать репозиторий
-git clone https://github.com/yourusername/dnd-mud-game.git
-cd dnd-mud-game
+git clone <repository-url>
+cd dnd_mud
 
 # Создать виртуальное окружение
 python -m venv venv
@@ -92,9 +85,17 @@ pip install -e .
 
 ### Готовые сборки
 
-Скачайте исполняемые файлы для вашей платформы из раздела [Releases](https://github.com/yourusername/dnd-mud-game/releases):
-- `dnd-game-windows.exe` - для Windows
-- `dnd-game-linux` - для Linux
+Сборки создаются с помощью `cx_Freeze`. Для создания исполняемого файла:
+
+```bash
+# Установить dev-зависимости
+pip install -e ".[dev]"
+
+# Создать сборку
+python setup.py build
+```
+
+Исполняемые файлы будут в папке `build/`.
 
 ## 🎯 Запуск
 
@@ -105,17 +106,18 @@ python src/main.py
 
 ### Исполняемый файл
 ```bash
+# После сборки через cx_Freeze
 # Linux
-./dnd-game-linux
+./build/exe.linux-x86_64-3.13/dnd-game
 
 # Windows
-dnd-game-windows.exe
+build\exe.win-amd64-3.13\dnd-game.exe
 ```
 
 ## 🏗️ Структура проекта
 
 ```
-dnd_mud_game/
+dnd_mud/
 ├── src/
 │   ├── core/              # Ядро игры
 │   │   ├── game.py
@@ -129,12 +131,20 @@ dnd_mud_game/
 │   │   ├── character.py
 │   │   ├── combat.py
 │   │   ├── dice.py
-│   │   └── ...
+│   │   ├── adventure.py
+│   │   ├── inventory.py
+│   │   ├── magic.py
+│   │   ├── mods.py
+│   │   ├── rest.py
+│   │   ├── save_system.py
+│   │   └── time.py
 │   ├── data/              # Загрузчики данных
 │   │   ├── config.py
 │   │   ├── loader.py
 │   │   └── localization.py   ← Система локализации
 │   └── utils/             # Утилиты
+│       ├── helpers.py
+│       └── validators.py
 ├── data/
 │   ├── yaml/              # Конфигурационные файлы
 │   │   ├── settings.yaml
@@ -142,18 +152,19 @@ dnd_mud_game/
 │   │   └── localization.yaml
 │   ├── saves/             # Сохранения игры
 │   ├── mods/              # Модификации
-│   │   └── example_mod/
-│   │       ├── mod.yaml
-│   │       ├── localization.yaml  ← Обязательно!
-│   │       └── mechanics.yaml
-│   └── adventures/        # Приключения
-│       └── example_adventure/
-│           ├── adventure.yaml
-│           ├── localization.yaml  ← Обязательно!
-│           └── quests/
+│   │   └── README.md
+│   └── adventures/        # Приключения (планируется)
 ├── tests/                 # Тесты
 ├── docs/                  # Документация
-└── .github/               # CI/CD конфигурация
+│   ├── agents/            # Определения MCP агентов
+│   ├── PLAN.md
+│   ├── TECHNICAL.md
+│   ├── API.md
+│   ├── localization_docs.md
+│   ├── MODS.md
+│   └── adventures_docs.md
+├── pyproject.toml         # Конфигурация проекта
+└── setup.py               # Скрипт установки
 ```
 
 ## 🛠️ Разработка
@@ -177,20 +188,25 @@ mypy src/
 
 ### Сборка исполняемого файла
 ```bash
-# Linux
-pyinstaller --onefile --name dnd-game-linux src/main.py
+# Установить dev-зависимости
+pip install -e ".[dev]"
 
-# Windows
-pyinstaller --onefile --name dnd-game-windows.exe src/main.py
+# Создать сборку через cx_Freeze
+python setup.py build
+
+# Исполняемые файлы будут в build/exe.*/
 ```
 
 ## 📚 Документация
 
 - [План разработки](docs/PLAN.md)
 - [Техническая документация](docs/TECHNICAL.md)
-- [Система локализации](docs/LOCALIZATION.md)
+- [Система локализации](docs/localization_docs.md)
 - [Создание модов](docs/MODS.md)
+- [Создание приключений](docs/adventures_docs.md)
 - [API документация](docs/API.md)
+- [Правила проекта](docs/project_rules.md)
+- [Пользовательские правила](docs/user_rules.md)
 
 ## 🎓 Принципы разработки
 
@@ -214,11 +230,12 @@ MIT License - см. файл [LICENSE](LICENSE)
 ## 🤝 Вклад в проект
 
 Приветствуются любые вклады! Пожалуйста:
-1. Форкните репозиторий
+1. Форкните репозиторий (если доступен)
 2. Создайте ветку для вашей функции (`git checkout -b feature/AmazingFeature`)
-3. Закоммитьте изменения (`git commit -m 'Add some AmazingFeature'`)
-4. Запушьте в ветку (`git push origin feature/AmazingFeature`)
-5. Откройте Pull Request
+3. Следуйте правилам проекта (см. `docs/project_rules.md`)
+4. Закоммитьте изменения (`git commit -m 'Add some AmazingFeature'`)
+5. Запушьте в ветку (`git push origin feature/AmazingFeature`)
+6. Откройте Pull Request (если доступен)
 
 ## 📧 Контакты
 

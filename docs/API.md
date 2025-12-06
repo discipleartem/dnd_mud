@@ -2,55 +2,113 @@
 
 ### Основные классы и методы
 
-#### Game
-
-```python
-class Game:
-    def __init__(self) -> None:
-        """Инициализация игры"""
-    
-    def start(self) -> None:
-        """Запуск игры"""
-    
-    def main_loop(self) -> None:
-        """Главный игровой цикл"""
-    
-    def shutdown(self) -> None:
-        """Корректное завершение игры"""
-```
-
 #### StateManager
 
 ```python
 class StateManager:
-    def set_state(self, state: GameState) -> None:
+    """Управление состояниями игры (Singleton)"""
+    
+    def set_state(self, state: GameState, data: Optional[Dict[str, Any]] = None) -> None:
         """Установка нового состояния"""
     
     def get_state(self) -> GameState:
         """Получение текущего состояния"""
     
+    def get_previous_state(self) -> Optional[GameState]:
+        """Получение предыдущего состояния"""
+    
     def can_continue(self) -> bool:
         """Проверка наличия активной игры"""
+    
+    def save_snapshot(self) -> GameSnapshot:
+        """Сохранение снимка состояния"""
+    
+    def load_snapshot(self, snapshot: GameSnapshot) -> None:
+        """Загрузка снимка состояния"""
 ```
 
-#### Character
+#### WindowManager
 
 ```python
-class Character:
-    def __init__(self, name: str, race: str, char_class: str) -> None:
-        """Создание персонажа"""
+class WindowManager:
+    """Управление окном терминала (Singleton)"""
     
-    def get_modifier(self, stat: str) -> int:
-        """Получение модификатора характеристики"""
+    def get_terminal_size(self) -> TerminalSize:
+        """Получение размера терминала"""
     
-    def take_damage(self, damage: int) -> None:
-        """Получение урона"""
+    def check_minimum_size(self) -> Tuple[bool, str]:
+        """Проверка минимального размера терминала"""
     
-    def heal(self, amount: int) -> None:
-        """Лечение"""
+    def wrap_text(self, text: str, width: Optional[int] = None) -> List[str]:
+        """Перенос текста по ширине"""
+```
+
+#### LocalizationManager
+
+```python
+class LocalizationManager:
+    """Менеджер локализации (Singleton)"""
     
-    def level_up(self) -> None:
-        """Повышение уровня"""
+    def set_language(self, language: str) -> None:
+        """Установка языка интерфейса"""
+    
+    def get_language(self) -> str:
+        """Получение текущего языка"""
+    
+    def get(self, key: str, default: Optional[str] = None, **kwargs) -> str:
+        """Получение перевода по ключу"""
+    
+    def load_mod_localization(self, mod_id: str, mod_path: Path) -> None:
+        """Загрузка локализации мода"""
+    
+    def load_adventure_localization(self, adventure_id: str, adventure_path: Path) -> None:
+        """Загрузка локализации приключения"""
+```
+
+#### MenuBase
+
+```python
+class MenuBase(ABC):
+    """Базовый класс для всех меню"""
+    
+    def add_item(self, label: str, action: Callable[[], Any],
+                 enabled: bool = True, description: Optional[str] = None) -> None:
+        """Добавление пункта меню"""
+    
+    def render(self) -> None:
+        """Отрисовка меню"""
+    
+    def handle_input(self, user_input: str) -> Any:
+        """Обработка ввода пользователя"""
+    
+    def run(self) -> None:
+        """Запуск меню"""
+```
+
+#### MainMenu
+
+```python
+class MainMenu(MenuBase):
+    """Главное меню игры"""
+    
+    def build_menu(self) -> None:
+        """Построение пунктов главного меню"""
+```
+
+#### GameState
+
+```python
+class GameState(Enum):
+    """Состояния игры"""
+    MAIN_MENU = "main_menu"
+    CHARACTER_CREATION = "character_creation"
+    ADVENTURE = "adventure"
+    COMBAT = "combat"
+    INVENTORY = "inventory"
+    REST = "rest"
+    SETTINGS = "settings"
+    LOAD_GAME = "load_game"
+    EXIT = "exit"
 ```
 
 ---
@@ -101,37 +159,18 @@ class Character:
 
 ## Сборка и развёртывание
 
-### PyInstaller конфигурация
+### cx_Freeze конфигурация
 
-```python
-# dnd_mud_game.spec
-a = Analysis(
-    ['src/main.py'],
-    pathex=[],
-    binaries=[],
-    datas=[
-        ('data/yaml', 'data/yaml'),
-    ],
-    hiddenimports=['rich', 'yaml'],
-    hookspath=[],
-    hooksconfig={},
-    runtime_hooks=[],
-    excludes=[],
-    win_no_prefer_redirects=False,
-    win_private_assemblies=False,
-    cipher=None,
-    noarchive=False,
-)
-```
-
-### Команды сборки
+Конфигурация находится в `pyproject.toml` и `setup.py`. Для создания исполняемого файла:
 
 ```bash
-# Linux
-pyinstaller --onefile --name dnd-game-linux src/main.py
+# Установить dev-зависимости
+pip install -e ".[dev]"
 
-# Windows
-pyinstaller --onefile --name dnd-game-windows.exe src/main.py
+# Создать сборку
+python setup.py build
+
+# Исполняемые файлы будут в build/exe.*/
 ```
 
 ---

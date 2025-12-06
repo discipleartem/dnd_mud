@@ -141,9 +141,9 @@ class ConfigManager:
 | Технология | Версия | Назначение |
 |------------|--------|------------|
 | Python | 3.13+ | Основной язык программирования |
-| Rich | 13.7+ | UI библиотека для терминала |
+| Rich | 14.2+ | UI библиотека для терминала |
 | PyYAML | 6.0+ | Работа с YAML файлами |
-| PyInstaller | 6.3+ | Создание исполняемых файлов |
+| cx_Freeze | 8.5+ | Создание исполняемых файлов |
 
 ### Инструменты разработки
 
@@ -777,37 +777,28 @@ class Character:
 
 ## Сборка и развёртывание
 
-### PyInstaller конфигурация
+### cx_Freeze конфигурация
 
-```python
-# dnd_mud_game.spec
-a = Analysis(
-    ['src/main.py'],
-    pathex=[],
-    binaries=[],
-    datas=[
-        ('data/yaml', 'data/yaml'),
-    ],
-    hiddenimports=['rich', 'yaml'],
-    hookspath=[],
-    hooksconfig={},
-    runtime_hooks=[],
-    excludes=[],
-    win_no_prefer_redirects=False,
-    win_private_assemblies=False,
-    cipher=None,
-    noarchive=False,
-)
+Конфигурация находится в `pyproject.toml`:
+
+```toml
+[tool.cx_Freeze]
+excludes = ["tkinter", "unittest", "matplotlib", "numpy"]
+optimize = 1
 ```
+
+Дополнительная конфигурация в `setup.py`.
 
 ### Команды сборки
 
 ```bash
-# Linux
-pyinstaller --onefile --name dnd-game-linux src/main.py
+# Установить dev-зависимости
+pip install -e ".[dev]"
 
-# Windows
-pyinstaller --onefile --name dnd-game-windows.exe src/main.py
+# Создать сборку
+python setup.py build
+
+# Исполняемые файлы будут в build/exe.*/
 ```
 
 ---

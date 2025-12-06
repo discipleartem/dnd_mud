@@ -65,6 +65,9 @@ class LocalizationManager:
         self._current_language: str = "ru"
         self._sources: List[LocalizationSource] = []
         self._cache: Dict[str, str] = {}
+        # Храним информацию о загруженных модах и приключениях для перезагрузки
+        self._loaded_mods: Dict[str, Path] = {}  # mod_name -> mod_path
+        self._loaded_adventures: Dict[str, Path] = {}  # adventure_name -> adventure_path
         self._initialized = True
 
         # Загрузка базовой локализации
@@ -143,6 +146,9 @@ class LocalizationManager:
             )
             self._sources.append(source)
 
+            # Сохраняем путь для перезагрузки
+            self._loaded_mods[mod_name] = mod_path
+
             # Сортируем по приоритету (выше = важнее)
             self._sources.sort(key=lambda s: s.priority, reverse=True)
 
@@ -189,6 +195,9 @@ class LocalizationManager:
             )
             self._sources.append(source)
 
+            # Сохраняем путь для перезагрузки
+            self._loaded_adventures[adventure_name] = adventure_path
+
             # Сортируем по приоритету
             self._sources.sort(key=lambda s: s.priority, reverse=True)
 
@@ -209,6 +218,8 @@ class LocalizationManager:
             mod_name: название мода
         """
         self._sources = [s for s in self._sources if s.name != f"mod_{mod_name}"]
+        # Удаляем из списка загруженных модов
+        self._loaded_mods.pop(mod_name, None)
         self._cache.clear()
 
     def unload_adventure(self, adventure_name: str) -> None:
@@ -220,6 +231,8 @@ class LocalizationManager:
         """
         self._sources = [s for s in self._sources
                          if s.name != f"adventure_{adventure_name}"]
+        # Удаляем из списка загруженных приключений
+        self._loaded_adventures.pop(adventure_name, None)
         self._cache.clear()
 
     def get(self, key: str, default: Optional[str] = None, **kwargs: Any) -> str:
@@ -367,12 +380,15 @@ class LocalizationManager:
         return keys
 
     def _reload_all(self) -> None:
-        """Перезагрузка всех источников локализации."""
-        # Сохраняем информацию об источниках
-        sources_info = [
-            (s.name, s.source_type, s.priority)
-            for s in self._sources
-        ]
+        """
+        Перезагрузка всех источников локализации.
+        
+        Сохраняет и перезагружает все загруженные моды и приключения
+        при смене языка.
+        """
+        # Сохраняем информацию о загруженных модах и приключениях
+        loaded_mods = self._loaded_mods.copy()
+        loaded_adventures = self._loaded_adventures.copy()
 
         # Очищаем источники
         self._sources.clear()
@@ -381,8 +397,13 @@ class LocalizationManager:
         # Загружаем базовую локализацию
         self._load_base_localization()
 
-        # Перезагружаем остальные источники
-        # (в реальном коде здесь будет вызов соответствующих менеджеров)
+        # Перезагружаем все моды
+        for mod_name, mod_path in loaded_mods.items():
+            self.load_mod_localization(mod_name, mod_path)
+
+        # Перезагружаем все приключения
+        for adventure_name, adventure_path in loaded_adventures.items():
+            self.load_adventure_localization(adventure_name, adventure_path)
 
     def get_loaded_sources(self) -> List[Dict[str, Any]]:
         """

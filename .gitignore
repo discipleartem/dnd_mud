@@ -39,6 +39,7 @@ env/
 *.swo
 *~
 .DS_Store
+.cursor/
 
 # Testing
 .pytest_cache/
