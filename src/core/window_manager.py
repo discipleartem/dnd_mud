@@ -59,13 +59,13 @@ class WindowManager:
         """
         Получение размера терминала.
 
-        Работает в PyInstaller сборках и обычном терминале.
+        Работает в cx_Freeze сборках и обычном терминале.
 
         Returns:
             TerminalSize: текущий размер терминала
         """
         try:
-            # Попытка получить размер через shutil (работает в PyInstaller)
+            # Попытка получить размер через shutil (работает в cx_Freeze)
             size = shutil.get_terminal_size(fallback=(self.MIN_WIDTH, self.MIN_HEIGHT))
             self._current_size = TerminalSize(width=size.columns, height=size.lines)
         except Exception:
