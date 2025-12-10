@@ -33,9 +33,14 @@ adventures_dir = project_root / "data" / "adventures"
 if adventures_dir.exists():
     include_files.append((str(adventures_dir), "data/adventures"))
 
-# Создаём директорию data/saves (будет создана при первом запуске, но включаем структуру)
-saves_dir = Path("data/saves")
-saves_dir.mkdir(parents=True, exist_ok=True)
+# Включаем директорию data/saves (сохранения игры)
+saves_dir = project_root / "data" / "saves"
+if saves_dir.exists():
+    include_files.append((str(saves_dir), "data/saves"))
+else:
+    # Создаём директорию если её нет (будет создана при первом запуске)
+    saves_dir.mkdir(parents=True, exist_ok=True)
+    include_files.append((str(saves_dir), "data/saves"))
 
 # Основные настройки
 setup(
