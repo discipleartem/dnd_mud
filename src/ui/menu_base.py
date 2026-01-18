@@ -7,6 +7,8 @@ from rich.panel import Panel
 from rich.text import Text
 from rich import box
 
+from src.core.window_manager import window_manager
+
 
 @dataclass
 class MenuItem:
@@ -74,7 +76,13 @@ class MenuBase(ABC):
     def render(self) -> None:
         """Отрисовка меню."""
         # Получение размера терминала
-        # size = window_manager.get_terminal_size()
+        size = window_manager.get_terminal_size()
+        
+        # Проверка минимального размера
+        if not size.is_valid():
+            self.console.print(f"[red]Размер терминала {size.width}x{size.height} слишком мал[/red]")
+            self.console.print(f"[yellow]Минимальный размер: {window_manager.MIN_WIDTH}x{window_manager.MIN_HEIGHT}[/yellow]")
+            return
 
         # Очистка экрана
         self.console.clear()
@@ -90,7 +98,21 @@ class MenuBase(ABC):
 
     def _render_title(self) -> None:
         """Отрисовка заголовка меню."""
-        title_text = Text(self.title, style="bold cyan", justify="center")
+        size = window_manager.get_terminal_size()
+        content_width = window_manager.get_content_width(border=4)
+        
+        # Адаптивный заголовок - перенос длинных заголовков
+        title_lines = window_manager.wrap_text(self.title, width=content_width)
+        
+        if len(title_lines) == 1:
+            # Короткий заголовок - центрируем
+            title_text = Text(title_lines[0], style="bold cyan", justify="center")
+        else:
+            # Длинный заголовок - выравниваем по левому краю с переносом
+            title_text = Text()
+            for line in title_lines:
+                title_text.append(line + "\n", style="bold cyan")
+        
         title_panel = Panel(
             title_text,
             box=box.DOUBLE,
@@ -102,6 +124,9 @@ class MenuBase(ABC):
 
     def _render_items(self) -> None:
         """Отрисовка пунктов меню."""
+        size = window_manager.get_terminal_size()
+        content_width = window_manager.get_content_width(border=4)
+        
         items_text = Text()
 
         for item in self.items:
@@ -112,13 +137,18 @@ class MenuBase(ABC):
                 style = "dim"
                 prefix = " "
 
-            # Номер и текст пункта
-            line = f"{prefix} {item.number}. {item.label}"
-            items_text.append(line + "\n", style=style)
-
-            # Описание (если есть)
-            if item.description and item.enabled:
-                items_text.append(f"   {item.description}\n", style="dim")
+            # Номер и текст пункта с переносом длинных строк
+            label = f"{prefix} {item.number}. {item.label}"
+            label_lines = window_manager.wrap_text(label, width=content_width)
+            
+            for i, line in enumerate(label_lines):
+                items_text.append(line + "\n", style=style)
+                
+                # Описание только для первой строки
+                if i == 0 and item.description and item.enabled:
+                    desc_lines = window_manager.wrap_text(item.description, width=content_width - 3)
+                    for desc_line in desc_lines:
+                        items_text.append(f"   {desc_line}\n", style="dim")
 
         # Панель с пунктами
         items_panel = Panel(
@@ -131,10 +161,17 @@ class MenuBase(ABC):
 
     def _render_hint(self) -> None:
         """Отрисовка подсказки для пользователя."""
-        hint = Text("Введите номер пункта меню или /help для справки",
-                    style="italic yellow")
+        size = window_manager.get_terminal_size()
+        content_width = window_manager.get_content_width(border=2)
+        
+        hint_text = "Введите номер пункта меню или /help для справки"
+        hint_lines = window_manager.wrap_text(hint_text, width=content_width)
+        
+        for line in hint_lines:
+            hint = Text(line, style="italic yellow")
+            self.console.print(hint)
+            
         self.console.print()
-        self.console.print(hint)
 
     def handle_input(self, user_input: str) -> Optional[Any]:
         """

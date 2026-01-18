@@ -27,14 +27,14 @@ def check_environment() -> bool:
     console = Console()
 
     # Проверка размера терминала
-    # is_valid, message = window_manager.check_minimum_size()
-    # if not is_valid:
-    #     console.print(Panel(
-    #         message,
-    #         title="Ошибка",
-    #         border_style="red"
-    #     ))
-    #     return False
+    is_valid, message = window_manager.check_minimum_size()
+    if not is_valid:
+        console.print(Panel(
+            message,
+            title="Ошибка размера терминала",
+            border_style="red"
+        ))
+        return False
 
     # Проверка необходимых директорий
     required_dirs = [

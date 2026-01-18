@@ -85,9 +85,26 @@ class MainMenu(MenuBase):
 ╚═══════════════════════════════════════════════════════════╝
         """
 
-        # Отрисовка через Rich с градиентом
-        title_text = Text(title_art)
-        title_text.stylize("bold bright_cyan")
+        # Проверка размера терминала для ASCII-арт
+        size = window_manager.get_terminal_size()
+        art_lines = title_art.strip().split('\n')
+        max_line_length = max(len(line) for line in art_lines)
+        
+        # Если терминал слишком узкий для ASCII-арт, показываем упрощенную версию
+        if max_line_length > size.width:
+            # Упрощенный заголовок для узких терминалов
+            simple_title = "DnD MUD Game\nDungeons & Dragons 5 Edition"
+            title_lines = window_manager.wrap_text(simple_title, width=size.width - 4)
+            
+            title_text = Text()
+            for line in title_lines:
+                title_text.append(line + "\n", style="bold bright_cyan")
+            
+            title_text.stylize("bold bright_cyan")
+        else:
+            # Полный ASCII-арт для нормальных терминалов
+            title_text = Text(title_art)
+            title_text.stylize("bold bright_cyan")
 
         self.console.print(Align.center(title_text))
         self.console.print()
