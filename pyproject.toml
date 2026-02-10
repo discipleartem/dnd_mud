@@ -1,0 +1,43 @@
+[build-system]
+requires = ["setuptools>=75"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "dnd-mud"
+version = "0.1.0"
+description = "Текстовая однопользовательская MUD-игра по мотивам D&D 5e (2023)."
+requires-python = ">=3.12"
+dependencies = [
+  "rich>=14.2.0",
+  "pyyaml>=6.0.3",
+  "pydantic>=2.7",
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=8.0",
+  "ruff>=0.5",
+  "black>=24.0",
+  "mypy>=1.10",
+]
+
+[project.scripts]
+dnd-mud = "src.main:main"
+
+[tool.black]
+line-length = 88
+target-version = ["py312"]
+
+[tool.ruff]
+line-length = 88
+target-version = "py312"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+warn_return_any = true
+warn_unused_configs = true
+

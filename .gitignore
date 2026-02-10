@@ -1,0 +1,6 @@
+.venv/
+__pycache__/
+.cursor/
+.snapshots/
+.envrc
+src/dnd_mud.egg-info/
