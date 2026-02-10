@@ -1,0 +1,24 @@
+{
+  "permissions": {
+    "allow": [
+      "Shell(cd)",
+      "Shell(ls)",
+      "Shell(cat)",
+      "Shell(git)",
+      "Shell(npm)",
+      "Shell(npx)",
+      "Shell(python)",
+      "Shell(pytest)",
+      "Shell(black)",
+      "Shell(ruff)",
+      "Shell(mypy)"
+    ],
+    "deny": [
+      "Shell(rm -rf)",
+      "Shell(sudo)",
+      "Shell(chmod)",
+      "Shell(chown)"
+    ]
+  }
+}
+
