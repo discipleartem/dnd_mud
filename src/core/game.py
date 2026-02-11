@@ -24,7 +24,9 @@ class Game(metaclass=SingletonMeta):
 
         self.console = Console()
         self._initialized = True
+        self.state_manager = StateManager()
         self.window_manager = WindowManager(self.console)
+        self.main_menu = MainMenu(self.window_manager)
         
         self.data_dir = Path(__file__).parent.parent.parent / "data"  
         self.yaml_dir = self.data_dir / "yaml"
@@ -33,8 +35,6 @@ class Game(metaclass=SingletonMeta):
         self.adventures_dir = self.data_dir / "adventures"
             
         # TODO: Инициализация слоев по мере их создания
-        # self.state_manager = StateManager()
-        # self.window_manager = WindowManager()
         # self.localization_manager = LocalizationManager()
         
         
