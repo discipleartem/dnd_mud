@@ -24,7 +24,8 @@ class Game(metaclass=SingletonMeta):
 
         self.console = Console()
         self._initialized = True
-
+        self.window_manager = WindowManager(self.console)
+        
         self.data_dir = Path(__file__).parent.parent.parent / "data"  
         self.yaml_dir = self.data_dir / "yaml"
         self.saves_dir = self.data_dir / "saves"
@@ -40,6 +41,13 @@ class Game(metaclass=SingletonMeta):
     
     def run(self) -> None:
         """Основной цикл игры."""
+        if not self.window_manager.check_terminal_size():
+            self.window_manager.show_error(
+                "Терминал слишком маленький! Минимум 80x24"
+            )
+            return
+        
+        self.window_manager.show_title("DnD MUD", "Текстовая RPG по D&D 5e")
         self.console.print("DnD MUD запускается...")
         self.console.print(f"Директория данных: {self.data_dir}")
         
