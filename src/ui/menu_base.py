@@ -5,8 +5,8 @@ from __future__ import annotations
 from abc import ABC, abstractmethod
 from typing import Any
 
-from src.core.state_manager import GameState
-from src.core.window_manager import WindowManager
+from core.state import GameState
+from core.window_manager import WindowManager
 
 
 class MenuBase(ABC):

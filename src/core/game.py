@@ -4,6 +4,11 @@ from __future__ import annotations
 from pathlib import Path
 from rich.console import Console
 
+from core.state import StateManager
+from core.window_manager import WindowManager
+from ui.main_menu import MainMenu
+from data.localization_manager import LocalizationManager
+
 
 class SingletonMeta(type):
     _instances: dict[type, object] = {}
@@ -24,18 +29,22 @@ class Game(metaclass=SingletonMeta):
 
         self.console = Console()
         self._initialized = True
-        self.state_manager = StateManager()
-        self.window_manager = WindowManager(self.console)
-        self.main_menu = MainMenu(self.window_manager)
         
+        # Сначала устанавливаем пути
         self.data_dir = Path(__file__).parent.parent.parent / "data"  
         self.yaml_dir = self.data_dir / "yaml"
         self.saves_dir = self.data_dir / "saves"
         self.mods_dir = self.data_dir / "mods"
         self.adventures_dir = self.data_dir / "adventures"
-            
-        # TODO: Инициализация слоев по мере их создания
-        # self.localization_manager = LocalizationManager()
+        
+        # Потом создаем объекты
+        self.state_manager = StateManager()
+        self.window_manager = WindowManager(self.console)
+        self.main_menu = MainMenu(self.window_manager)
+
+        self.localization_manager = LocalizationManager(self.console)
+        self.localization_manager.add_source(self.yaml_dir / "localization.yaml", priority=0)
+
         
         
     

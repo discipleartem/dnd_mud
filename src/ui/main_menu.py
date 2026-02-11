@@ -4,9 +4,9 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from src.core.state_manager import GameState
-from src.core.window_manager import WindowManager
-from src.ui.menu_base import MenuBase
+from core.state import GameState
+from core.window_manager import WindowManager
+from ui.menu_base import MenuBase
 
 
 class MainMenu(MenuBase):

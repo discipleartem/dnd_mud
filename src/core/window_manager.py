@@ -69,12 +69,12 @@ class WindowManager:
     def __init__(self, console: Console) -> None:
         """Инициализация фасада."""
         self.console = console
-        self._size = self._get_terminal_size()
         self._text_settings = TextSettings()
+        self._size = self._get_terminal_size()
         
     def _get_terminal_size(self) -> TerminalSize:
         """Получить текущий размер терминала."""
-        size = self.console.get_size()
+        size = self.console.size
         return TerminalSize(
             width=size.width, 
             height=size.height,

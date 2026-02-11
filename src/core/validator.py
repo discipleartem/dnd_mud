@@ -1,3 +1,6 @@
+from pathlib import Path
+
+
 class ProjectStructureValidator:
     """Валидатор структуры проекта."""
     

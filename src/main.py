@@ -1,9 +1,9 @@
 from __future__ import annotations
-from rich.console import Console
 from pathlib import Path
+from rich.console import Console
 
-from src.core.game import Game
-from src.core.validator import ProjectStructureValidator
+from core.game import Game
+from core.validator import ProjectStructureValidator
 
 
 def main() -> bool:
