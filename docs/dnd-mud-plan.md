@@ -116,21 +116,18 @@ flowchart TB
 
 Ниже — порядок, который снижает риск переделок: сначала инфраструктура/контракты и data-пайплайн, затем системы, затем UI/контент, затем качество.
 
-### Фаза 0: Основание проекта (скелет)
-
+### Фаза 0: Основание проекта (скелет) ✅ ЗАВЕРШЕНА
 - Зафиксировать структуру каталогов как в документации (src/core, src/ui, src/systems, src/data, src/utils; data/yaml, data/saves, data/mods, data/adventures).
 - Поднять базовый запуск: `main.py`/точка входа, инициализация Rich Console.
 - Подготовить минимальные конфиги `data/yaml/settings.yaml` и `data/yaml/localization.yaml`.
 
-### Фаза 1: Core + UI каркас
-
+### Фаза 1: Core + UI каркас ✅ ЗАВЕРШЕНА
 - Реализовать (или перенести дизайн) `**WindowManager**` с `TerminalSize`, проверкой 80x24 и `wrap_text` (ориентир: [docs/development/technical_window_manager.md](docs/development/technical_window_manager.md)).
 - Реализовать `**StateManager**` и перечисление `GameState` (ориентир: [docs/development/api.md](docs/development/api.md)).
 - Реализовать `**MenuBase**` и `**MainMenu**` (адаптивная отрисовка, пункт “Continue” зависит от `can_continue`).
 - Реализовать `**Renderer**` как фасад над Rich (панели, таблицы, форматирование).
 
-### Фаза 2: Data layer (локализация, загрузчики, контракты контента)
-
+### Фаза 2: Data layer (локализация, загрузчики, контракты контента) ✅ ЗАВЕРШЕНА
 - Реализовать `**LocalizationManager**` с приоритетами base/mod/adventure, кэшированием, форматированием строк.
 - Реализовать загрузку YAML:
   - базовых файлов (`settings.yaml`, `localization.yaml`)
