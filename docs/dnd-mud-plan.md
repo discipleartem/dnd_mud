@@ -140,6 +140,13 @@ flowchart TB
 - Генерация статов: 4d6 drop lowest, стандартный массив, point-buy (как в [docs/development/plan.md](docs/development/plan.md)).
 - Начальные навыки/языки/снаряжение.
 
+### Фаза 4: Игровое ядро (MVP геймплей) ✅ ЗАПЛАНИРОВАНА
+- **Dice**: нотация (`2d6+3`, `1d20`), advantage/disadvantage, крит (естественные 20/1), подробный `DiceResult`.
+- **Character**: STR/DEX/CON/INT/WIS/CHA, модификаторы, HP, уровень, класс/раса/предыстория.
+- **CombatSystem (MVP)**: инициатива, порядок ходов, action economy (action/bonus/reaction), атака vs AC, урон, conditions.
+- **Inventory (MVP)**: поднимать/использовать/экипировать базовые предметы.
+- **Сохранения (MVP)**: save/load JSON, версионирование, атомарность, автосейв со слотами.
+
 ### Фаза 4: Игровое ядро (MVP геймплей)
 
 - **Dice**: парсинг нотации, преимущества/помеха, крит, история.
