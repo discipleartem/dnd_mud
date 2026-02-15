@@ -8,9 +8,7 @@ version = "0.1.0"
 description = "Текстовая однопользовательская MUD-игра по мотивам D&D 5e (2023)."
 requires-python = ">=3.12"
 dependencies = [
-  "rich>=14.2.0",
   "pyyaml>=6.0.3",
-  "pydantic>=2.7",
 ]
 
 [project.optional-dependencies]

@@ -5,3 +5,6 @@ __pycache__/
 .envrc
 src/dnd_mud.egg-info/
 dnd_mud.egg-info/
+.cursor
+.windsurf
+docs/*.pdf
