@@ -44,18 +44,21 @@ class RaceFactory:
             race = Race(
                 name=race_data['name'],
                 bonuses=race_data.get('bonuses', {}),
-                description=race_data.get('description', '')
+                description=race_data.get('description', ''),
+                alternative_features=race_data.get('alternative_features', {})
             )
-            
-            # Добавляем подрасы если они есть
-            if 'subraces' in race_data:
-                for sub_key, sub_data in race_data['subraces'].items():
-                    subrace = Race(
-                        name=sub_data['name'],
-                        bonuses=sub_data.get('bonuses', {}),
-                        description=sub_data.get('description', '')
-                    )
-                    race.add_subrace(subrace)
+        
+        # Добавляем подрасы если они есть
+        if 'subraces' in race_data:
+            for sub_key, sub_data in race_data['subraces'].items():
+                subrace = Race(
+                    name=sub_data['name'],
+                    bonuses=sub_data.get('bonuses', {}),
+                    description=sub_data.get('description', ''),
+                    alternative_features=sub_data.get('alternative_features', {})
+                )
+                # Используем sub_key как ключ, а не локализованное имя
+                race.subraces[sub_key] = subrace
         
         cls._races_cache[cache_key] = race
         return race
@@ -73,7 +76,7 @@ class RaceFactory:
     
     @classmethod
     def get_race_choices(cls) -> Dict[str, str]:
-        """Возвращает словарь для меню выбора рас."""
+        """Возвращает словарь для меню выбора основных рас."""
         races_data = localization.get_all_races()
         choices = {}
         choice_num = 1
@@ -81,14 +84,67 @@ class RaceFactory:
         for race_key, race_data in races_data.items():
             choices[str(choice_num)] = race_data['name']
             choice_num += 1
-            
-            # Добавляем подрасы
-            if 'subraces' in race_data and race_data['subraces']:
-                for sub_key, sub_data in race_data['subraces'].items():
-                    choices[str(choice_num)] = sub_data['name']
-                    choice_num += 1
         
         return choices
+    
+    @classmethod
+    def get_race_key_by_choice(cls, choice_num: int) -> Optional[str]:
+        """Возвращает ключ расы по номеру выбора."""
+        races_data = localization.get_all_races()
+        race_keys = list(races_data.keys())
+        
+        if 1 <= choice_num <= len(race_keys):
+            return race_keys[choice_num - 1]
+        
+        return None
+    
+    @classmethod
+    def get_subrace_choices(cls, race_key: str) -> Dict[str, str]:
+        """Возвращает словарь для меню выбора подрас указанной расы."""
+        races_data = localization.get_all_races()
+        
+        if race_key not in races_data:
+            return {}
+        
+        race_data = races_data[race_key]
+        choices = {}
+        choice_num = 1
+        
+        # Добавляем основную расу как вариант
+        choices[str(choice_num)] = race_data['name']
+        choice_num += 1
+        
+        # Добавляем подрасы если они есть
+        if 'subraces' in race_data and race_data['subraces']:
+            for sub_key, sub_data in race_data['subraces'].items():
+                choices[str(choice_num)] = sub_data['name']
+                choice_num += 1
+        
+        return choices
+    
+    @classmethod
+    def get_subrace_key_by_choice(cls, race_key: str, choice_num: int) -> Optional[str]:
+        """Возвращает ключ подрасы по номеру выбора."""
+        races_data = localization.get_all_races()
+        
+        if race_key not in races_data:
+            return None
+        
+        race_data = races_data[race_key]
+        
+        # choice_num == 1 означает основную расу (без подрасы)
+        if choice_num == 1:
+            return None
+        
+        # Для подрас
+        if 'subraces' in race_data and race_data['subraces']:
+            subrace_keys = list(race_data['subraces'].keys())
+            subrace_index = choice_num - 2  # -1 для основной расы, -1 для индексации с 0
+            
+            if 0 <= subrace_index < len(subrace_keys):
+                return subrace_keys[subrace_index]
+        
+        return None
     
     @classmethod
     def clear_cache(cls) -> None:
