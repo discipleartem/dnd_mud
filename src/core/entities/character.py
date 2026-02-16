@@ -5,7 +5,11 @@
 """
 
 from dataclasses import dataclass, field
+from typing import Dict
 from ..mechanics.attributes import StandardAttributes
+from .attribute import Attribute
+from .race import Race
+from .race_factory import RaceFactory
 
 
 @dataclass
@@ -15,7 +19,7 @@ class Character:
     # Базовая информация
     name: str = field(default="Безымянный")
     level: int = field(default=1, min=1)
-    race: str = field(default="Человек")
+    race: Race = field(default_factory=lambda: RaceFactory.create_race("human"))
     character_class: str = field(default="Воин")
     
     # Характеристики
@@ -54,3 +58,42 @@ class Character:
             getattr(self, attribute_map[name]).value = value
         else:
             super().__setattr__(name, value)
+    
+    def apply_race_bonuses(self) -> None:
+        """Применяет расовые бонусы к характеристикам."""
+        attributes = {
+            'strength': self.strength.value,
+            'dexterity': self.dexterity.value,
+            'constitution': self.constitution.value,
+            'intelligence': self.intelligence.value,
+            'wisdom': self.wisdom.value,
+            'charisma': self.charisma.value
+        }
+        
+        boosted_attributes = self.race.apply_bonuses(attributes)
+        
+        # Обновляем значения характеристик
+        for attr_name, value in boosted_attributes.items():
+            getattr(self, attr_name).value = value
+    
+    def get_ability_modifier(self, value: int) -> int:
+        """Рассчитывает модификатор характеристики.
+        
+        Args:
+            value: Значение характеристики
+            
+        Returns:
+            Модификатор (значение - 10) // 2
+        """
+        return (value - 10) // 2
+    
+    def get_all_modifiers(self) -> Dict[str, int]:
+        """Возвращает словарь всех модификаторов характеристик."""
+        return {
+            'strength': self.get_ability_modifier(self.strength.value),
+            'dexterity': self.get_ability_modifier(self.dexterity.value),
+            'constitution': self.get_ability_modifier(self.constitution.value),
+            'intelligence': self.get_ability_modifier(self.intelligence.value),
+            'wisdom': self.get_ability_modifier(self.wisdom.value),
+            'charisma': self.get_ability_modifier(self.charisma.value)
+        }

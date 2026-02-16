@@ -34,6 +34,32 @@ class LocalizationLoader:
         """Возвращает локализованное описание характеристики."""
         info = self.get_attribute_info(attribute_name)
         return info.get('description', '')
+    
+    def get_race_info(self, race_name: str) -> Dict[str, Any]:
+        """Возвращает информацию о расе из YAML."""
+        try:
+            path = Path(__file__).parent.parent.parent.parent / "data" / "yaml" / "attributes" / "races.yaml"
+            with open(path, 'r', encoding='utf-8') as file:
+                races_data = yaml.safe_load(file)
+                return races_data.get(race_name, {})
+        except FileNotFoundError:
+            print(f"Файл рас не найден, возвращаем пустые данные")
+            return {}
+    
+    def get_race_name(self, race_name: str) -> str:
+        """Возвращает локализованное название расы."""
+        info = self.get_race_info(race_name)
+        return info.get('name', race_name)
+    
+    def get_all_races(self) -> Dict[str, Any]:
+        """Возвращает все доступные расы."""
+        try:
+            path = Path(__file__).parent.parent.parent.parent / "data" / "yaml" / "attributes" / "races.yaml"
+            with open(path, 'r', encoding='utf-8') as file:
+                return yaml.safe_load(file) or {}
+        except FileNotFoundError:
+            print(f"Файл рас не найден, возвращаем пустой словарь")
+            return {}
 
 # Глобальный экземпляр
 localization = LocalizationLoader()

@@ -79,41 +79,25 @@ class CharacterMenu:
         renderer.show_text("\n")
         return name
     
-    def show_race_selection(self) -> Optional[str]:
+    def show_race_selection(self) -> Optional[Dict[str, Any]]:
         """Показывает меню выбора расы.
         
         Returns:
-            Название выбранной расы или None
+            Словарь с информацией о выбранной расе или None
         """
+        from ...core.entities.race_factory import RaceFactory
+        
         renderer.clear_screen()
         renderer.show_title("=== ВЫБОР РАСЫ ===")
         
-        # Временные данные рас до создания YAML
-        races = {
-            "Человек": Race.from_dict({
-                'name': 'Человек',
-                'description': 'Универсальная раса',
-                'bonuses': {'strength': 1, 'dexterity': 1, 'constitution': 1, 'intelligence': 1, 'wisdom': 1, 'charisma': 1}
-            }),
-            "Высокий эльф": Race.from_dict({
-                'name': 'Высокий эльф',
-                'description': 'Грациозный эльф с магическими способностями',
-                'bonuses': {'dexterity': 2, 'intelligence': 1}
-            }),
-            "Лесной эльф": Race.from_dict({
-                'name': 'Лесной эльф',
-                'description': 'Эльф, связанный с природой',
-                'bonuses': {'dexterity': 2, 'wisdom': 1}
-            }),
-            "Полуорк": Race.from_dict({
-                'name': 'Полуорк',
-                'description': 'Сильный и выносливый воин',
-                'bonuses': {'strength': 2, 'constitution': 1}
-            })
-        }
+        # Получаем все расы из фабрики
+        races = RaceFactory.get_all_races()
+        race_choices = RaceFactory.get_race_choices()
         
-        for i, (race_name, race) in enumerate(races.items(), 1):
-            renderer.show_text(f"{i}. {race.name}")
+        # Отображаем расы
+        for choice_num, race_name in race_choices.items():
+            if choice_num != "0":
+                renderer.show_text(f"{choice_num}. {race_name}")
         
         renderer.show_text("0. Назад")
         renderer.show_text("\nВведите номер расы:")
@@ -123,18 +107,148 @@ class CharacterMenu:
         if choice == "0":
             return None
         
-        try:
-            race_index = int(choice) - 1
-            race_names = list(races.keys())
+        if choice in race_choices:
+            race_name = race_choices[choice]
             
-            if 0 <= race_index < len(race_names):
-                return race_names[race_index]
-            else:
-                renderer.show_error("Неверный выбор!")
-                return None
-        except ValueError:
-            renderer.show_error("Введите число!")
+            # Находим объект расы
+            selected_race = None
+            for r in races:
+                if r.name == race_name:
+                    selected_race = r
+                    break
+                # Проверяем подрасы
+                for subrace in r.subraces.values():
+                    if subrace.name == race_name:
+                        selected_race = subrace
+                        break
+                if selected_race:
+                    break
+            
+            if selected_race:
+                result = {'race': selected_race}
+                
+                # Если это человек и есть альтернативные особенности
+                if selected_race.name == "Человек" and selected_race.has_alternative_features():
+                    alternative_choice = self.show_alternative_features_selection(selected_race)
+                    if alternative_choice:
+                        result['alternative_choices'] = alternative_choice
+                
+                return result
+        else:
+            renderer.show_error("Неверный выбор.")
             return None
+    
+    def show_alternative_features_selection(self, race: 'Race') -> Optional[Dict[str, Any]]:
+        """Показывает меню выбора альтернативных особенностей для людей.
+        
+        Args:
+            race: Объект расы Человек
+            
+        Returns:
+            Словарь с выбранными альтернативными опциями или None
+        """
+        renderer.clear_screen()
+        renderer.show_title("=== АЛЬТЕРНАТИВНЫЕ ОСОБЕННОСТИ ЛЮДЕЙ ===")
+        
+        renderer.show_text(race.alternative_features.get('description', ''))
+        renderer.show_text("\nВыберите альтернативную особенность:")
+        
+        options = race.get_alternative_options()
+        choice_map = {}
+        
+        for i, (key, option) in enumerate(options.items(), 1):
+            choice_map[str(i)] = key
+            renderer.show_text(f"{i}. {option['name']}")
+            renderer.show_text(f"   {option['description']}")
+            renderer.show_text("")
+        
+        renderer.show_text(f"{len(options) + 1}. Стандартные бонусы (+1 ко всем характеристикам)")
+        renderer.show_text("0. Назад")
+        renderer.show_text("\nВведите номер:")
+        
+        choice = input()
+        
+        if choice == "0":
+            return None
+        
+        if choice == str(len(options) + 1):
+            # Стандартные бонусы
+            return None
+        
+        if choice in choice_map:
+            selected_key = choice_map[choice]
+            selected_option = options[selected_key]
+            
+            if selected_option['type'] == 'ability_bonus':
+                return self.show_ability_bonus_selection(selected_option)
+            elif selected_option['type'] == 'skill':
+                return self.show_skill_selection(selected_option)
+            elif selected_option['type'] == 'feat':
+                return self.show_feat_selection(selected_option)
+        
+        renderer.show_error("Неверный выбор.")
+        return None
+    
+    def show_ability_bonus_selection(self, option: Dict[str, Any]) -> Dict[str, Any]:
+        """Показывает выбор увеличения характеристик."""
+        renderer.clear_screen()
+        renderer.show_title("=== УВЕЛИЧЕНИЕ ХАРАКТЕРИСТИК ===")
+        
+        renderer.show_text(option['description'])
+        renderer.show_text(f"\nВыберите {option['max_choices']} характеристики:")
+        
+        attributes = option['allowed_attributes']
+        attr_names = {
+            'strength': 'СИЛ',
+            'dexterity': 'ЛОВ', 
+            'constitution': 'ТЕЛ',
+            'intelligence': 'ИНТ',
+            'wisdom': 'МДР',
+            'charisma': 'ХАР'
+        }
+        
+        for i, attr in enumerate(attributes, 1):
+            renderer.show_text(f"{i}. {attr_names[attr]} ({attr})")
+        
+        renderer.show_text("\nВведите номера через пробел:")
+        
+        choice = input()
+        chosen_indices = [int(x.strip()) - 1 for x in choice.split() if x.strip().isdigit()]
+        
+        if len(chosen_indices) != option['max_choices']:
+            renderer.show_error(f"Нужно выбрать ровно {option['max_choices']} характеристики!")
+            return self.show_ability_bonus_selection(option)
+        
+        chosen_attrs = []
+        for idx in chosen_indices:
+            if 0 <= idx < len(attributes):
+                chosen_attrs.append(attributes[idx])
+        
+        return {'ability_scores': chosen_attrs}
+    
+    def show_skill_selection(self, option: Dict[str, Any]) -> Dict[str, Any]:
+        """Показывает выбор навыка (заглушка)."""
+        renderer.clear_screen()
+        renderer.show_title("=== ВЛАДЕНИЕ НАВЫКОМ ===")
+        
+        renderer.show_text(option['description'])
+        renderer.show_text("\nВ разработке - будет доступно в следующей версии")
+        renderer.show_text("\nНажмите Enter для продолжения...")
+        input()
+        
+        return {'skill': 'athletics'}  # Временная заглушка
+    
+    def show_feat_selection(self, option: Dict[str, Any]) -> Dict[str, Any]:
+        """Показывает выбор черты (заглушка)."""
+        renderer.clear_screen()
+        renderer.show_title("=== ЧЕРТА ===")
+        
+        renderer.show_text(option['description'])
+        renderer.show_text("\nВ разработке - будет доступно в следующей версии")
+        renderer.show_text("\nНажмите Enter для продолжения...")
+        input()
+        
+        return {'feat': 'heavily_armored'}  # Временная заглушка
     
     def select_class(self) -> str:
         """Выбор класса персонажа."""
@@ -205,27 +319,27 @@ class CharacterMenu:
         
         return attributes
     
-    def apply_bonuses(self, attributes: Dict[str, int], race_name: str, class_name: str) -> Dict[str, int]:
+    def apply_bonuses(self, attributes: Dict[str, int], race_info: Dict[str, Any], class_name: str) -> Dict[str, int]:
         """Применяет расовые и классовые бонусы к характеристикам."""
-        # Временные данные до создания YAML
-        races_data = {
-            "Человек": {'bonuses': {'strength': 1, 'dexterity': 1, 'constitution': 1, 'intelligence': 1, 'wisdom': 1, 'charisma': 1}},
-            "Высокий эльф": {'bonuses': {'dexterity': 2, 'intelligence': 1}},
-            "Лесной эльф": {'bonuses': {'dexterity': 2, 'wisdom': 1}},
-            "Полуорк": {'bonuses': {'strength': 2, 'constitution': 1}}
-        }
+        from ...core.entities.race_factory import RaceFactory
         
+        race = race_info['race']
+        alternative_choices = race_info.get('alternative_choices')
+        
+        # Применяем расовые бонусы
+        if alternative_choices:
+            # Альтернативные бонусы для людей
+            attributes = race.apply_alternative_bonuses(attributes, alternative_choices)
+        else:
+            # Стандартные расовые бонусы
+            attributes = race.apply_bonuses(attributes)
+        
+        # Временные данные классов до создания YAML
         classes_data = {
             "Воин": {'bonuses': {'strength': 1, 'constitution': 1}},
             "Волшебник": {'bonuses': {'intelligence': 1, 'wisdom': 1}},
             "Плут": {'bonuses': {'dexterity': 1, 'charisma': 1}}
         }
-        
-        # Применяем расовые бонусы
-        race_data = races_data.get(race_name, {})
-        for attr, bonus in race_data.get('bonuses', {}).items():
-            if attr in attributes:
-                attributes[attr] += bonus
         
         # Применяем классовые бонусы
         class_data = classes_data.get(class_name, {})
@@ -241,17 +355,17 @@ class CharacterMenu:
         renderer.show_title("=== ПРЕДПРОСМОТР ПЕРСОНАЖА ===")
         
         renderer.show_text(f"Имя: {character.name}")
-        renderer.show_text(f"Раса: {character.race}")
+        renderer.show_text(f"Раса: {character.race.localized_name}")
         renderer.show_text(f"Класс: {character.character_class}")
         renderer.show_text(f"Уровень: {character.level}")
         
         renderer.show_text("\nХарактеристики:")
-        renderer.show_text(f"  СИЛ: {character.strength} ({character.get_ability_modifier(character.strength):+d})")
-        renderer.show_text(f"  ЛОВ: {character.dexterity} ({character.get_ability_modifier(character.dexterity):+d})")
-        renderer.show_text(f"  ТЕЛ: {character.constitution} ({character.get_ability_modifier(character.constitution):+d})")
-        renderer.show_text(f"  ИНТ: {character.intelligence} ({character.get_ability_modifier(character.intelligence):+d})")
-        renderer.show_text(f"  МДР: {character.wisdom} ({character.get_ability_modifier(character.wisdom):+d})")
-        renderer.show_text(f"  ХАР: {character.charisma} ({character.get_ability_modifier(character.charisma):+d})")
+        renderer.show_text(f"  СИЛ: {character.strength.value} ({character.get_ability_modifier(character.strength.value):+d})")
+        renderer.show_text(f"  ЛОВ: {character.dexterity.value} ({character.get_ability_modifier(character.dexterity.value):+d})")
+        renderer.show_text(f"  ТЕЛ: {character.constitution.value} ({character.get_ability_modifier(character.constitution.value):+d})")
+        renderer.show_text(f"  ИНТ: {character.intelligence.value} ({character.get_ability_modifier(character.intelligence.value):+d})")
+        renderer.show_text(f"  МДР: {character.wisdom.value} ({character.get_ability_modifier(character.wisdom.value):+d})")
+        renderer.show_text(f"  ХАР: {character.charisma.value} ({character.get_ability_modifier(character.charisma.value):+d})")
         
         renderer.show_text(f"\nПроизводные:")
         renderer.show_text(f"  HP: {character.hp_current}/{character.hp_max}")
@@ -262,14 +376,16 @@ class CharacterMenu:
     
     def create_character(self) -> Optional[Character]:
         """Создает персонажа."""
+        from ...core.entities.race_factory import RaceFactory
+        
         # Шаг 1: Ввод имени
         name = self.input_name()
         if not name:
             return None
         
         # Шаг 2: Выбор расы
-        race_name = self.select_race()
-        if not race_name:
+        race_info = self.show_race_selection()
+        if not race_info:
             return None
         
         # Шаг 3: Выбор класса
@@ -281,12 +397,15 @@ class CharacterMenu:
         attributes = self.generate_attributes()
         
         # Шаг 5: Применение бонусов
-        final_attributes = self.apply_bonuses(attributes, race_name, class_name)
+        final_attributes = self.apply_bonuses(attributes, race_info, class_name)
+        
+        # Получаем объект расы
+        race = race_info['race']
         
         # Создаем персонажа
         character = Character(
             name=name,
-            race=race_name,
+            race=race,
             character_class=class_name,
             level=1,
             **final_attributes
