@@ -250,79 +250,129 @@ class CharacterMenu:
         
         return {'feat': 'heavily_armored'}  # Временная заглушка
     
-    def select_class(self) -> str:
+    def select_class(self) -> CharacterClass:
         """Выбор класса персонажа."""
+        from ...core.entities.class_factory import CharacterClassFactory
+        
         renderer.clear_screen()
         renderer.show_title("=== ВЫБОР КЛАССА ===")
         
-        # Временные данные классов до создания YAML
-        classes = {
-            "Воин": CharacterClass.from_dict({
-                'name': 'Воин',
-                'description': 'Мастер боевых искусств',
-                'bonuses': {'strength': 1, 'constitution': 1},
-                'hit_die': 'd10'
-            }),
-            "Волшебник": CharacterClass.from_dict({
-                'name': 'Волшебник',
-                'description': 'Маг могущественных заклинаний',
-                'bonuses': {'intelligence': 1, 'wisdom': 1},
-                'hit_die': 'd6'
-            }),
-            "Плут": CharacterClass.from_dict({
-                'name': 'Плут',
-                'description': 'Мастер скрытности и ловкости',
-                'bonuses': {'dexterity': 1, 'charisma': 1},
-                'hit_die': 'd8'
-            })
-        }
+        # Получаем все классы из фабрики
+        classes = CharacterClassFactory.get_all_classes()
+        class_choices = CharacterClassFactory.get_class_choices()
         
-        for i, (class_name, character_class) in enumerate(classes.items(), 1):
-            renderer.show_text(f"{i}. {class_name}")
-            renderer.show_text(f"   {character_class.description}")
+        # Отображаем классы
+        for choice_num, class_name in class_choices.items():
+            renderer.show_text(f"{choice_num}. {class_name}")
         
-        choice = self.get_choice("Выберите класс", len(classes))
+        renderer.show_text("0. Назад")
+        renderer.show_text("\nВведите номер класса:")
         
-        class_list = list(classes.keys())
-        if 1 <= choice <= len(class_list):
-            selected_class = class_list[choice - 1]
-            
-            renderer.show_text(f"\nВыбран класс: {selected_class}")
-            renderer.show_text("")
-            
-            return selected_class
+        choice = input()
         
-        renderer.show_error("Выбор отменен.")
+        if choice == "0":
+            return None
+        
+        if choice in class_choices:
+            class_name = class_choices[choice]
+            # Находим объект класса
+            for character_class in classes:
+                if character_class.name == class_name:
+                    return character_class
+        
+        renderer.show_error("Класс не найден.")
         return None
     
-    def generate_attributes(self) -> Dict[str, int]:
-        """Генерирует характеристики для персонажа."""
+    def generate_attributes(self, method: str = 'standard_array') -> Dict[str, int]:
+        """Генерирует характеристики для персонажа.
+        
+        Args:
+            method: Метод генерации ('standard_array', 'four_d6_drop_lowest', 'point_buy')
+            
+        Returns:
+            Словарь сгенерированных характеристик
+        """
         from ...core.mechanics.attributes import StandardAttributes
         
-        # Стандартный набор (15, 14, 13, 12, 10, 8)
-        attributes = {
-            'strength': 15,
-            'dexterity': 14,
-            'constitution': 13,
-            'intelligence': 12,
-            'wisdom': 10,
-            'charisma': 8
-        }
+        # Загружаем методы генерации из конфигурации
+        from ...core.localization.loader import localization
+        try:
+            import yaml
+            from pathlib import Path
+            config_path = Path(__file__).parent.parent.parent.parent / "data" / "yaml" / "attributes" / "core_attributes.yaml"
+            with open(config_path, 'r', encoding='utf-8') as file:
+                config = yaml.safe_load(file)
+                generation_methods = config.get('generation_methods', {})
+        except FileNotFoundError:
+            generation_methods = {}
         
-        # Перемешиваем для случайного распределения
-        import random
-        attr_names = list(attributes.keys())
-        random.shuffle(attr_names)
+        # Выбираем метод генерации
+        selected_method = generation_methods.get(method, generation_methods.get('standard_array', {}))
         
-        for i, attr_name in enumerate(attr_names):
-            attributes[attr_names[i]] = attributes[attr_name]
+        if selected_method.get('name') == 'standard_array':
+            # Стандартный набор (15, 14, 13, 12, 10, 8)
+            attributes = {
+                'strength': selected_method['values'][0],
+                'dexterity': selected_method['values'][1],
+                'constitution': selected_method['values'][2],
+                'intelligence': selected_method['values'][3],
+                'wisdom': selected_method['values'][4],
+                'charisma': selected_method['values'][5]
+            }
+        elif selected_method.get('name') == 'four_d6_drop_lowest':
+            # 4d6 drop lowest
+            import random
+            attributes = {}
+            attr_names = ['strength', 'dexterity', 'constitution', 'intelligence', 'wisdom', 'charisma']
+            
+            for attr_name in attr_names:
+                # Бросаем 4d6 и отбрасываем наименьший
+                    rolls = [random.randint(1, 6) for _ in range(4)]
+                    rolls.sort()
+                    result = sum(rolls[1:])  # Отбрасываем наименьший
+                    attributes[attr_name] = result
+        elif selected_method.get('name') == 'point_buy':
+            # Покупка очков (простая реализация)
+            total_points = selected_method.get('total_points', 27)
+            min_value = selected_method.get('min_value', 8)
+            max_value = selected_method.get('max_value', 15)
+            
+            # Равномерное распределение
+            points_per_attr = total_points // 6
+            attributes = {
+                'strength': min_value + points_per_attr,
+                'dexterity': min_value + points_per_attr,
+                'constitution': min_value + points_per_attr,
+                'intelligence': min_value + points_per_attr,
+                'wisdom': min_value + points_per_attr,
+                'charisma': min_value + points_per_attr
+            }
+        else:
+            # Fallback на старый метод
+            attributes = {
+                'strength': 15,
+                'dexterity': 14,
+                'constitution': 13,
+                'intelligence': 12,
+                'wisdom': 10,
+                'charisma': 8
+            }
+        
+        # Перемешиваем для случайного распределения (кроме point_buy)
+        if selected_method.get('name') != 'point_buy':
+            import random
+            attr_names = list(attributes.keys())
+            random.shuffle(attr_names)
+            
+            shuffled_attrs = {}
+            for i, attr_name in enumerate(attr_names):
+                shuffled_attrs[attr_name] = attributes[attr_names[i]]
+            attributes = shuffled_attrs
         
         return attributes
     
-    def apply_bonuses(self, attributes: Dict[str, int], race_info: Dict[str, Any], class_name: str) -> Dict[str, int]:
-        """Применяет расовые и классовые бонусы к характеристикам."""
-        from ...core.entities.race_factory import RaceFactory
-        
+    def apply_bonuses(self, attributes: Dict[str, int], race_info: Dict[str, Any], character_class: CharacterClass) -> Dict[str, int]:
+        """Применяет расовые бонусы к характеристикам."""
         race = race_info['race']
         alternative_choices = race_info.get('alternative_choices')
         
@@ -334,19 +384,6 @@ class CharacterMenu:
             # Стандартные расовые бонусы
             attributes = race.apply_bonuses(attributes)
         
-        # Временные данные классов до создания YAML
-        classes_data = {
-            "Воин": {'bonuses': {'strength': 1, 'constitution': 1}},
-            "Волшебник": {'bonuses': {'intelligence': 1, 'wisdom': 1}},
-            "Плут": {'bonuses': {'dexterity': 1, 'charisma': 1}}
-        }
-        
-        # Применяем классовые бонусы
-        class_data = classes_data.get(class_name, {})
-        for attr, bonus in class_data.get('bonuses', {}).items():
-            if attr in attributes:
-                attributes[attr] += bonus
-        
         return attributes
     
     def show_preview(self, character: Character) -> None:
@@ -356,7 +393,7 @@ class CharacterMenu:
         
         renderer.show_text(f"Имя: {character.name}")
         renderer.show_text(f"Раса: {character.race.localized_name}")
-        renderer.show_text(f"Класс: {character.character_class}")
+        renderer.show_text(f"Класс: {character.character_class.name}")
         renderer.show_text(f"Уровень: {character.level}")
         
         renderer.show_text("\nХарактеристики:")
@@ -389,27 +426,34 @@ class CharacterMenu:
             return None
         
         # Шаг 3: Выбор класса
-        class_name = self.select_class()
-        if not class_name:
+        character_class = self.select_class()
+        if not character_class:
             return None
         
         # Шаг 4: Генерация характеристик
         attributes = self.generate_attributes()
         
         # Шаг 5: Применение бонусов
-        final_attributes = self.apply_bonuses(attributes, race_info, class_name)
+        final_attributes = self.apply_bonuses(attributes, race_info, character_class)
         
         # Получаем объект расы
         race = race_info['race']
         
-        # Создаем персонажа
+        # Создаем персонажа с базовыми характеристиками (10)
         character = Character(
             name=name,
             race=race,
-            character_class=class_name,
-            level=1,
-            **final_attributes
+            character_class=character_class,
+            level=1
         )
+        
+        # Применяем финальные характеристики (базовые + расовые + классовые бонусы)
+        for attr_name, value in final_attributes.items():
+            if hasattr(character, attr_name):
+                getattr(character, attr_name).value = value
+        
+        # Рассчитываем производные характеристики
+        character.calculate_derived_stats()
         
         # Шаг 6: Предпросмотр
         self.show_preview(character)
