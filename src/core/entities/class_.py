@@ -1,12 +1,12 @@
 """
 Модуль классов D&D MUD.
 
-Определяет класс персонажа и их бонусы к характеристикам.
+Определяет класс персонажа и их особенности.
 """
 
 from __future__ import annotations
-from dataclasses import dataclass
-from typing import Dict, Any
+from dataclasses import dataclass, field
+from typing import Dict, Any, List, Optional
 
 
 @dataclass
@@ -15,25 +15,16 @@ class CharacterClass:
     
     name: str
     description: str
-    bonuses: Dict[str, int]
     hit_die: str = "d10"  # Кубик для HP
     
-    def apply_bonuses(self, attributes: Dict[str, int]) -> Dict[str, int]:
-        """Применяет классовые бонусы к характеристикам.
-        
-        Args:
-            attributes: Исходные характеристики персонажа
-            
-        Returns:
-            Характеристики с примененными бонусами
-        """
-        result = attributes.copy()
-        
-        for attr_name, bonus in self.bonuses.items():
-            if attr_name in result:
-                result[attr_name] += bonus
-        
-        return result
+    # Дополнительные поля из YAML
+    primary_ability: str = "strength"
+    saving_throws: List[str] = field(default_factory=list)
+    armor_proficiencies: List[str] = field(default_factory=list)
+    weapon_proficiencies: List[str] = field(default_factory=list)
+    spellcasting: Dict[str, Any] = field(default_factory=dict)
+    divine_domain: Optional[str] = None
+    skills: Dict[str, Any] = field(default_factory=dict)
     
     def calculate_hp(self, constitution: int) -> int:
         """Рассчитывает максимальное HP.
@@ -69,7 +60,6 @@ class CharacterClass:
         return cls(
             name=data.get('name', 'Безымянный класс'),
             description=data.get('description', ''),
-            bonuses=data.get('bonuses', {}),
             hit_die=data.get('hit_die', 'd10')
         )
     
@@ -82,6 +72,52 @@ class CharacterClass:
         return {
             'name': self.name,
             'description': self.description,
-            'bonuses': self.bonuses,
-            'hit_die': self.hit_die
+            'hit_die': self.hit_die,
+            'primary_ability': self.primary_ability,
+            'saving_throws': self.saving_throws,
+            'armor_proficiencies': self.armor_proficiencies,
+            'weapon_proficiencies': self.weapon_proficiencies,
+            'spellcasting': self.spellcasting,
+            'divine_domain': self.divine_domain,
+            'skills': self.skills
         }
+    
+    def has_spellcasting(self) -> bool:
+        """Проверяет, может ли класс колдовать."""
+        return bool(self.spellcasting)
+    
+    def get_saving_throw_modifier(self, ability: str, character: 'Character') -> int:
+        """Рассчитывает модификатор спасброска.
+        
+        Args:
+            ability: Характеристика для спасброска
+            character: Объект персонажа
+            
+        Returns:
+            Модификатор спасброска
+        """
+        from ..mechanics.saving_throws import SavingThrowsManager
+        
+        # Проверяем, существует ли спасбросок для характеристики
+        if not SavingThrowsManager.is_valid_saving_throw(ability):
+            return character.get_ability_modifier(getattr(character, ability).value)
+        
+        # Базовый модификатор характеристики
+        base_modifier = character.get_ability_modifier(getattr(character, ability).value)
+        
+        # Если класс имеет мастерство в этом спасброске, добавляем бонус
+        if ability in self.saving_throws:
+            return base_modifier + 2  # Профессиональный бонус
+        else:
+            return base_modifier
+    
+    def get_save_proficiencies(self) -> List[str]:
+        """Возвращает список владений спасбросками класса."""
+        return self.saving_throws.copy()
+    
+    def get_ac_bonus(self) -> int:
+        """Возвращает бонус к классу доспеха от класса."""
+        # У воинов есть мастерство доспехов
+        if self.name == "Воин":
+            return 1
+        return 0

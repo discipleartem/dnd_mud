@@ -1,0 +1,154 @@
+# Классы D&D MUD
+# Воин - мастер боевых искусств
+fighter:
+  name: "Воин"
+  description: "Мастер боевых искусств и тяжелого оружия, specializes in weapons and armor"
+  bonuses:
+    strength: 1
+    constitution: 1
+  hit_die: "d10"
+  primary_ability: "strength"
+  saving_throws: ["strength", "constitution"]
+  armor_proficiencies: ["all_armor", "shields"]
+  weapon_proficiencies: ["simple_weapons", "martial_weapons"]
+  skills:
+    count: 2
+    choices: ["acrobatics", "animal_handling", "athletics", "history", "insight", "intimidation", "perception", "survival"]
+  subclasses:
+    martial_arts_master:
+      name: "Мастер боевых искусств"
+      description: "Специализируется на различных боевых стилях и техниках"
+      features:
+        - "Боевой стиль (Battle Master)"
+        - "Улучшенная критическая атака (Improved Critical)"
+        - "Маневры (Maneuvers)"
+    mystic_knight:
+      name: "Мистический рыцарь"
+      description: "Сочетает боевое искусство с магией"
+      features:
+        - "Заклинания (Spellcasting)"
+        - "Мистическое оружие (Mystic Weapon)"
+        - "Абсолютная защита (Absolute Protection)"
+    champion:
+      name: "Чемпион"
+      description: "Мастер оружия и брони, фокусируется на чистом боевом мастерстве"
+      features:
+        - "Улучшенная критическая атака (Improved Critical)"
+        - "Выносливость (Remarkable Athlete)"
+        - "Владение оружием (Superior Critical)"
+
+# Плут - мастер скрытности и обмана
+rogue:
+  name: "Плут"
+  description: "Мастер скрытности, ловкости и обмана, specializes in stealth and precision"
+  bonuses:
+    dexterity: 1
+    charisma: 1
+  hit_die: "d8"
+  primary_ability: "dexterity"
+  saving_throws: ["dexterity", "intelligence"]
+  armor_proficiencies: ["light_armor"]
+  weapon_proficiencies: ["simple_weapons", "hand_crossbows", "longswords", "rapiers", "shortswords"]
+  skills:
+    count: 4
+    choices: ["acrobatics", "athletics", "deception", "insight", "intimidation", "investigation", "perception", "performance", "persuasion", "sleight_of_hand", "stealth"]
+  subclasses:
+    thief:
+      name: "Вор"
+      description: "Мастер взлома, кражи и скрытного проникновения"
+      features:
+        - "Быстрые руки (Fast Hands)"
+        - "Второй рабочий ход (Second-Story Work)"
+        - "Воровское мастерство (Thief's Reflexes)"
+    assassin:
+      name: "Убийца"
+      description: "Специализируется на скрытных атаках и устранении целей"
+      features:
+        - "Имитация (Imitation)"
+        - "Атака из тени (Assassinate)"
+        - "Смертельный удар (Death Strike)"
+    arcane_trickster:
+      name: "Мистический ловкач"
+      description: "Сочетает ловкость плута с тайной магией"
+      features:
+        - "Заклинания (Spellcasting)"
+        - "Магические руки (Mage Hand Legerdemain)"
+        - "Воровское заклинание (Magical Ambush)"
+
+# Бард - мастер магии музыки и слов
+bard:
+  name: "Бард"
+  description: "Мастер вдохновения, магии и социальных навыков, inspires allies through music and words"
+  bonuses:
+    charisma: 1
+    dexterity: 1
+  hit_die: "d8"
+  primary_ability: "charisma"
+  saving_throws: ["dexterity", "charisma"]
+  armor_proficiencies: ["light_armor"]
+  weapon_proficiencies: ["simple_weapons", "hand_crossbows", "longswords", "rapiers", "shortswords"]
+  spellcasting:
+    ability: "charisma"
+    cantrips_known: 2
+    spells_known: 4
+  skills:
+    count: 3
+    choices: ["athletics", "acrobatics", "sleight_of_hand", "stealth", "arcana", "history", "investigation", "nature", "religion", "animal_handling", "insight", "medicine", "perception", "survival", "deception", "intimidation", "performance", "persuasion"]
+  subclasses:
+    college_of_valor:
+      name: "Коллегия Доблести"
+      description: "Воинственный бард, вдохновляющий союзников в бою"
+      features:
+        - "Боевое вдохновение (Combat Inspiration)"
+        - "Дополнительные навыки (Bonus Proficiencies)"
+        - "Атака из вдохновения (Inspiring Strike)"
+    college_of_knowledge:
+      name: "Коллегия Знаний"
+      description: "Хранитель знаний и тайн, мастер информации"
+      features:
+        - "Универсальность знаний (Knowledge of the Ages)"
+        - "Тайные знания (Secrets of the Tale)"
+        - "Мудрость рассказчика (Storyteller's Wisdom)"
+
+# Жрец - служитель божественного
+cleric:
+  name: "Жрец"
+  description: "Слуга божественного, целитель и защитник, divine spellcaster who serves a deity"
+  bonuses:
+    wisdom: 1
+    constitution: 1
+  hit_die: "d8"
+  primary_ability: "wisdom"
+  saving_throws: ["wisdom", "charisma"]
+  armor_proficiencies: ["light_armor", "medium_armor", "shields"]
+  weapon_proficiencies: ["simple_weapons"]
+  spellcasting:
+    ability: "wisdom"
+    cantrips_known: 3
+    spells_known: 4
+  divine_domain: "life"  # Может быть выбрано при создании
+  skills:
+    count: 2
+    choices: ["history", "insight", "medicine", "persuasion", "religion"]
+  subclasses:
+    tempest_domain:
+      name: "Домен Бури"
+      description: "Жрец бури, повелитель грома и молний"
+      features:
+        - "Благословение бури (Blessing of the Storm)"
+        - "Гнев бури (Wrath of the Storm)"
+        - "Громовая власть (Thunderbolt Strike)"
+    war_domain:
+      name: "Домен Войны"
+      description: "Воинственный жрец, мастер тактики и боя"
+      features:
+        - "Божественное оружие (Divine Weapon)"
+        - "Атака по возможности (War Priest's Attack)"
+        - "Владение оружием (Weapon Master)"
+    life_domain:
+      name: "Домен Жизни"
+      description: "Целитель и защитник, слуга жизни"
+      features:
+        - "Обучение дисциплине (Discipline of Life)"
+        - "Сохранение жизни (Preserve Life)"
+        - "Владение защитой (Divine Armor)"
