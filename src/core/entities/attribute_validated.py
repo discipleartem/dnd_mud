@@ -9,8 +9,8 @@ class AttributeConfig:
     """Конфигурация атрибута из YAML."""
     name: str
     default_value: int = 10
-    min_value: int = 3
-    max_value: int = 18
+    min_value: int = 1
+    max_value: int = 20
     short_name: str = ""
     description: str = ""
     
@@ -20,8 +20,8 @@ class AttributeConfig:
         return cls(
             name=data.get('name', ''),
             default_value=data.get('default_value', 10),
-            min_value=data.get('min_value', 3),
-            max_value=data.get('max_value', 18),
+            min_value=data.get('min_value', 1),
+            max_value=data.get('max_value', 20),
             short_name=data.get('short_name', ''),
             description=data.get('description', '')
         )
