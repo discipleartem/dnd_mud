@@ -3,41 +3,61 @@ base_attributes:
   strength:
     name: "strength"
     default_value: 10
-    min_value: 1
-    max_value: 20
+    min_value: 3
+    max_value: 18
     short_name: "STR"
   
   dexterity:
     name: "dexterity"
     default_value: 10
-    min_value: 1
-    max_value: 20
+    min_value: 3
+    max_value: 18
     short_name: "DEX"
   
   constitution:
     name: "constitution"
     default_value: 10
-    min_value: 1
-    max_value: 20
+    min_value: 3
+    max_value: 18
     short_name: "CON"
   
   intelligence:
     name: "intelligence"
     default_value: 10
-    min_value: 1
-    max_value: 20
+    min_value: 3
+    max_value: 18
     short_name: "INT"
   
   wisdom:
     name: "wisdom"
     default_value: 10
-    min_value: 1
-    max_value: 20
+    min_value: 3
+    max_value: 18
     short_name: "WIS"
   
   charisma:
     name: "charisma"
     default_value: 10
-    min_value: 1
-    max_value: 20
+    min_value: 3
+    max_value: 18
     short_name: "CHA"
+
+# Методы генерации характеристик
+generation_methods:
+  standard_array:
+    name: "Стандартный набор"
+    description: "Стандартный набор (15, 14, 13, 12, 10, 8)"
+    values: [15, 14, 13, 12, 10, 8]
+  
+  four_d6_drop_lowest:
+    name: "4d6"
+    description: "Бросок 4d6, отбрасываем наименьший"
+    dice_count: 4
+    drop_count: 1
+  
+  point_buy:
+    name: "Покупка очков"
+    description: "Распределение очков по выбору (27 очков)"
+    total_points: 27
+    min_value: 8
+    max_value: 15
