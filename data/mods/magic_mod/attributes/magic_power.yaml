@@ -1,0 +1,7 @@
+# Атрибут магической силы
+name: "magic_power"
+default_value: 8
+min_value: 1
+max_value: 30
+short_name: "MAG"
+description: "Сила магической энергии персонажа"

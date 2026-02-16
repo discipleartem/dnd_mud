@@ -1,0 +1,18 @@
+# Драконорожденный раса от мода магии
+name: "Драконорожденный"
+description: "Потомок драконов с врожденной магической силой"
+
+# Бонусы от расы
+bonuses:
+  magic_power: 2
+  charisma: 1
+
+# Дополнительные характеристики от мода
+attributes:
+  magic_resistance:
+    name: "magic_resistance"
+    default_value: 10
+    min_value: 1
+    max_value: 20
+    short_name: "MRES"
+    description: "Сопротивление к магии"
