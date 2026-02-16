@@ -9,8 +9,8 @@ class AttributeConfig:
     """Конфигурация атрибута из YAML."""
     name: str
     default_value: int = 10
-    min_value: int = 1
-    max_value: int = 20
+    min_value: int = 0  # Будет переопределено из конфига
+    max_value: int = 0  # Будет переопределено из конфига
     short_name: str = ""
     description: str = ""
     
