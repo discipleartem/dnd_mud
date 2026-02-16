@@ -20,8 +20,8 @@ class AttributeConfig:
         return cls(
             name=data.get('name', ''),
             default_value=data.get('default_value', 10),
-            min_value=data.get('min_value', 1),
-            max_value=data.get('max_value', 20),
+            min_value=data.get('min_value', 0),
+            max_value=data.get('max_value', 0),
             short_name=data.get('short_name', ''),
             description=data.get('description', '')
         )
