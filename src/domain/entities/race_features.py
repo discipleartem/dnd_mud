@@ -1,0 +1,296 @@
+# src/domain/entities/race_features.py
+"""
+Универсальная система обработки особенностей рас для D&D MUD.
+
+Поддерживает различные типы особенностей:
+- ability_choice: Выбор характеристик
+- skill_choice: Выбор навыков  
+- feat_choice: Выбор черт
+- trait: Пассивные черты
+- proficiency: Владения
+- spell: Заклинания
+- language: Языки
+"""
+
+from typing import Dict, List, Any, Optional
+from dataclasses import dataclass
+from ..value_objects.attributes import StandardAttributes
+
+
+@dataclass
+class FeatureProcessor:
+    """Универсальный процессор особенностей рас."""
+    
+    @staticmethod
+    def format_bonuses(bonuses: Dict[str, int], features: List[Dict] = None) -> str:
+        """Форматирует бонусы к характеристикам с учетом особенностей.
+        
+        Args:
+            bonuses: Базовые бонусы расы
+            features: Список особенностей расы
+            
+        Returns:
+            Отформатированная строка с бонусами
+        """
+        # Словарь с русскими названиями характеристик
+        russian_names = {
+            "strength": "Сила",
+            "dexterity": "Ловкость",
+            "constitution": "Телосложение",
+            "intelligence": "Интеллект",
+            "wisdom": "Мудрость",
+            "charisma": "Харизма"
+        }
+        
+        if not bonuses and not features:
+            return "Нет бонусов"
+        
+        result_parts = []
+        
+        # Обрабатываем базовые бонусы
+        if bonuses:
+            for attr_name, bonus in bonuses.items():
+                if bonus > 0:
+                    # Используем словарь с русскими названиями
+                    russian_name = russian_names.get(attr_name, attr_name.title())
+                    bonus_str = f"+{bonus}"
+                    result_parts.append(f"\t🎯 {russian_name}: {bonus_str}")
+        
+        # Обрабатываем особенности с выбором характеристик
+        if features:
+            for feature in features:
+                if feature.get("type") == "ability_choice":
+                    max_choices = feature.get("max_choices", 1)
+                    bonus_value = feature.get("bonus_value", 1)
+                    result_parts.append(f"\t🎯 Бонусы: {max_choices} хар-ки (+{bonus_value} к каждой)")
+        
+        return "\n".join(result_parts) if result_parts else "Нет бонусов"
+    
+    @staticmethod
+    def format_features(features: List[Dict]) -> List[str]:
+        """Форматирует особенности для отображения.
+        
+        Args:
+            features: Список особенностей
+            
+        Returns:
+            Список отформатированных строк с особенностями
+        """
+        formatted = []
+        
+        for feature in features:
+            feature_type = feature.get("type", "unknown")
+            name = feature.get("name", "Неизвестная особенность")
+            description = feature.get("description", "")
+            
+            if feature_type == "trait":
+                formatted.append(f"\t🎯 {name}: {description}")
+            elif feature_type == "proficiency":
+                items = feature.get("weapons", feature.get("skills", []))
+                if items:
+                    items_str = ", ".join(items) if isinstance(items, list) else str(items)
+                    formatted.append(f"\t⚔️ {name}: {items_str}")
+                else:
+                    formatted.append(f"\t⚔️ {name}: {description}")
+            elif feature_type == "spell":
+                spells = feature.get("spells", [])
+                if spells:
+                    spells_str = ", ".join(spells) if isinstance(spells, list) else str(spells)
+                    formatted.append(f"\t🔮 {name}: {spells_str}")
+                else:
+                    formatted.append(f"\t🔮 {name}: {description}")
+            elif feature_type == "language":
+                languages = feature.get("languages", [])
+                if languages:
+                    if "choice" in str(languages):
+                        formatted.append(f"\t🌐 {name}: {description}")
+                    else:
+                        lang_str = ", ".join(languages) if isinstance(languages, list) else str(languages)
+                        formatted.append(f"\t🌐 {name}: {lang_str}")
+                else:
+                    formatted.append(f"\t🌐 {name}: {description}")
+            elif feature_type in ["ability_choice", "skill_choice", "feat_choice"]:
+                formatted.append(f"\t⚙️ {name}: {description}")
+            else:
+                formatted.append(f"\t✨ {name}: {description}")
+        
+        return formatted
+    
+    @staticmethod
+    def get_effective_bonuses(base_bonuses: Dict[str, int], 
+                             subrace_bonuses: Dict[str, int] = None,
+                             inherit_bonuses: bool = True) -> Dict[str, int]:
+        """Вычисляет эффективные бонусы с учетом наследования.
+        
+        Args:
+            base_bonuses: Бонусы основной расы
+            subrace_bonuses: Бонусы подрасы
+            inherit_bonuses: Наследовать ли бонусы от основной расы
+            
+        Returns:
+            Словарь с итоговыми бонусами
+        """
+        result = {}
+        
+        # Если наследуем бонусы, начинаем с базовых
+        if inherit_bonuses:
+            result.update(base_bonuses)
+        
+        # Добавляем бонусы подрасы
+        if subrace_bonuses:
+            result.update(subrace_bonuses)
+        
+        return result
+    
+    @staticmethod
+    def get_all_features(base_features: List[Dict], 
+                       subrace_features: List[Dict] = None,
+                       inherit_features: bool = True) -> List[Dict]:
+        """Получает все особенности с учетом наследования.
+        
+        Args:
+            base_features: Особенности основной расы
+            subrace_features: Особенности подрасы
+            inherit_features: Наследовать ли особенности от основной расы
+            
+        Returns:
+            Список всех особенностей
+        """
+        result = []
+        
+        # Если наследуем особенности, начинаем с базовых
+        if inherit_features and base_features:
+            result.extend(base_features)
+        
+        # Добавляем особенности подрасы
+        if subrace_features:
+            result.extend(subrace_features)
+        
+        return result
+
+
+class RaceDisplayFormatter:
+    """Форматировщик для отображения информации о расах."""
+    
+    def __init__(self):
+        self.processor = FeatureProcessor()
+    
+    def format_race_info(self, race_data: Dict, subrace_key: str = None) -> Dict[str, str]:
+        """Форматирует полную информацию о расе для отображения.
+        
+        Args:
+            race_data: Данные расы из YAML
+            subrace_key: Ключ подрасы (опционально)
+            
+        Returns:
+            Словарь с отформатированной информацией
+        """
+        # Словарь с русскими названиями характеристик
+        russian_names = {
+            "strength": "Сила",
+            "dexterity": "Ловкость",
+            "constitution": "Телосложение",
+            "intelligence": "Интеллект",
+            "wisdom": "Мудрость",
+            "charisma": "Харизма"
+        }
+        
+        # Если указана подраса
+        if subrace_key and "subraces" in race_data:
+            subrace_data = race_data["subraces"][subrace_key]
+            
+            name = subrace_data.get("name", "Неизвестная подраса")
+            description = subrace_data.get("description", "")
+            
+            # Только бонусы подрасы (без базовых)
+            subrace_bonuses = subrace_data.get("bonuses", {})
+            
+            # Только особенности подрасы (без базовых)
+            subrace_features = subrace_data.get("features", [])
+            
+            # Форматируем только бонусы подрасы
+            bonus_parts = []
+            for attr_name, bonus in subrace_bonuses.items():
+                if bonus > 0:
+                    russian_name = russian_names.get(attr_name, attr_name.title())
+                    bonus_str = f"+{bonus}"
+                    bonus_parts.append(f"\t🎯 {russian_name}: {bonus_str}")
+            
+            bonuses_str = "\n".join(bonus_parts) if bonus_parts else ""
+            
+            # Форматируем только особенности подрасы
+            features_list = self.processor.format_features(subrace_features)
+            features_str = "\n".join(feature for feature in features_list) if features_list else ""
+            
+            return {
+                "name": name,
+                "description": description,
+                "short_description": self._get_short_description(description),
+                "bonuses": bonuses_str,
+                "features": features_str
+            }
+        else:
+            # Основная раса - показываем ВСЕ бонусы и особенности
+            name = race_data.get("name", "Неизвестная раса")
+            description = race_data.get("description", "")
+            base_bonuses = race_data.get("bonuses", {})
+            base_features = race_data.get("features", [])
+            
+            # Собираем все бонусы: базовые + из особенностей
+            all_bonus_parts = []
+            
+            # Базовые бонусы
+            for attr_name, bonus in base_bonuses.items():
+                if bonus > 0:
+                    russian_name = russian_names.get(attr_name, attr_name.title())
+                    bonus_str = f"+{bonus}"
+                    all_bonus_parts.append(f"\t🎯 {russian_name}: {bonus_str}")
+            
+            # Бонусы из особенностей (если есть)
+            for feature in base_features:
+                if feature.get("type") == "ability_choice":
+                    max_choices = feature.get("max_choices", 1)
+                    bonus_value = feature.get("bonus_value", 1)
+                    all_bonus_parts.append(f"\t🎯 Бонусы: {max_choices} хар-ки (+{bonus_value} к каждой)")
+            
+            bonuses_str = "\n".join(all_bonus_parts) if all_bonus_parts else ""
+            
+            # Форматируем все особенности
+            features_list = self.processor.format_features(base_features)
+            features_str = "\n".join(feature for feature in features_list) if features_list else ""
+            
+            return {
+                "name": name,
+                "description": description,
+                "short_description": self._get_short_description(description),
+                "bonuses": bonuses_str,
+                "features": features_str
+            }
+    
+    def _get_short_description(self, description: str) -> str:
+        """Получает короткое описание из полного (1-2 предложения).
+        
+        Args:
+            description: Полное описание расы
+            
+        Returns:
+            Короткое описание (максимум 2 предложения)
+        """
+        if not description:
+            return "Описание отсутствует"
+        
+        # Разделяем на предложения
+        sentences = description.split('.')
+        
+        # Берем первые 1-2 предложения
+        short_sentences = []
+        for sentence in sentences[:2]:
+            sentence = sentence.strip()
+            if sentence:
+                short_sentences.append(sentence)
+        
+        short_desc = '. '.join(short_sentences)
+        if short_desc and not short_desc.endswith('.'):
+            short_desc += '.'
+            
+        return short_desc if short_desc else "Описание отсутствует"
