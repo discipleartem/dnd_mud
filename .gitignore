@@ -10,3 +10,4 @@ dnd_mud.egg-info/
 .windsurf
 docs/*.pdf
 *.log
+.coverage
