@@ -1,0 +1,19 @@
+# Методы генерации характеристик персонажа
+generation_methods:
+  standard_array:
+    name: "Стандартный набор"
+    description: "(15, 14, 13, 12, 10, 8)"
+    values: [15, 14, 13, 12, 10, 8]
+  
+  four_d6_drop_lowest:
+    name: "4d6"
+    description: "Бросок 4d6, отбрасываем наименьший"
+    dice_count: 4
+    drop_count: 1
+  
+  point_buy:
+    name: "Покупка очков"
+    description: "Распределение очков по выбору (27 очков)"
+    total_points: 27
+    min_value: 8
+    max_value: 15

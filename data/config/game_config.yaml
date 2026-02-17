@@ -1,0 +1,11 @@
+# Базовая конфигурация игры D&D MUD
+  
+character_creation:
+  default_level: 1
+  allow_custom_level: true
+  min_level: 1
+  max_level: 20
+  
+ui:
+  language: ru
+  theme: default
