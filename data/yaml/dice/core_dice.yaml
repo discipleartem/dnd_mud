@@ -1,0 +1,67 @@
+# data/yaml/dice/core_dice.yaml
+# Базовая конфигурация системы бросков кубиков D&D
+
+# Типы кубиков
+dice_types:
+  d2:
+    sides: 2
+    name: "d2"
+    description: "Монетка"
+  
+  d4:
+    sides: 4
+    name: "d4"
+    description: "Четырехгранный кубик"
+  
+  d6:
+    sides: 6
+    name: "d6"
+    description: "Шестигранный кубик"
+  
+  d8:
+    sides: 8
+    name: "d8"
+    description: "Восьмигранный кубик"
+  
+  d10:
+    sides: 10
+    name: "d10"
+    description: "Десятигранный кубик"
+  
+  d12:
+    sides: 12
+    name: "d12"
+    description: "Двенадцатигранный кубик"
+  
+  d20:
+    sides: 20
+    name: "d20"
+    description: "Двадцатигранный кубик"
+  
+  d100:
+    sides: 100
+    name: "d100"
+    description: "Процентный кубик"
+
+# Модификаторы бросков
+roll_modifiers:
+  advantage:
+    name: "advantage"
+    description: "Преимущество - бросаем дважды, берем лучший"
+    type: "best_of"
+    rolls: 2
+  
+  disadvantage:
+    name: "disadvantage"
+    description: "Помеха - бросаем дважды, берем худший"
+    type: "worst_of"
+    rolls: 2
+  
+
+# Правила валидации
+validation_rules:
+  max_dice_count: 100
+  max_sides: 1000
+  min_sides: 2
+  max_modifier: 1000
+  min_modifier: -1000

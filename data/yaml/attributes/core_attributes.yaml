@@ -3,43 +3,43 @@ base_attributes:
   strength:
     name: "strength"
     default_value: 10
-    min_value: 3
-    max_value: 18
+    min_value: 1
+    max_value: 20
     short_name: "STR"
   
   dexterity:
     name: "dexterity"
     default_value: 10
-    min_value: 3
-    max_value: 18
+    min_value: 1
+    max_value: 20
     short_name: "DEX"
   
   constitution:
     name: "constitution"
     default_value: 10
-    min_value: 3
-    max_value: 18
+    min_value: 1
+    max_value: 20
     short_name: "CON"
   
   intelligence:
     name: "intelligence"
     default_value: 10
-    min_value: 3
-    max_value: 18
+    min_value: 1
+    max_value: 20
     short_name: "INT"
   
   wisdom:
     name: "wisdom"
     default_value: 10
-    min_value: 3
-    max_value: 18
+    min_value: 1
+    max_value: 20
     short_name: "WIS"
   
   charisma:
     name: "charisma"
     default_value: 10
-    min_value: 3
-    max_value: 18
+    min_value: 1
+    max_value: 20
     short_name: "CHA"
 
 # Методы генерации характеристик
