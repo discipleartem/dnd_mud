@@ -1,22 +1,22 @@
 """Интерфейс локализации для доменного слоя."""
 
 from abc import ABC, abstractmethod
-from typing import Dict, Any, Optional
+from typing import Optional
 
 
 class LocalizationInterface(ABC):
     """Абстрактный интерфейс для локализации."""
-    
+
     @abstractmethod
     def get_text(self, key: str, default: Optional[str] = None, **kwargs) -> str:
         """Получает локализованный текст по ключу."""
         pass
-    
+
     @abstractmethod
     def get_language(self) -> str:
         """Получает текущий язык."""
         pass
-    
+
     @abstractmethod
     def set_language(self, language: str) -> None:
         """Устанавливает язык."""
