@@ -32,7 +32,7 @@ class UniversalRaceFactory:
     
     @classmethod
     def _load_modifications_data(cls) -> Dict:
-        """Загружает данные о модификациях."""
+        """Загружает данные о модификациях, учитывая только активные моды."""
         if not cls._modifications_data:
             current_dir = os.path.dirname(os.path.abspath(__file__))
             project_root = os.path.dirname(os.path.dirname(os.path.dirname(current_dir)))
@@ -40,9 +40,22 @@ class UniversalRaceFactory:
             
             cls._modifications_data = {}
             
+            # Импортируем GameConfig для проверки активных модов
+            try:
+                from ..services.game_config import game_config
+                active_mods = game_config.get_active_mods_info()
+                active_mod_names = [mod.folder_name for mod in active_mods]
+            except Exception:
+                # Если не удалось загрузить конфигурацию, считаем все моды неактивными
+                active_mod_names = []
+            
             # Ищем модификации в папке модов
             if os.path.exists(mods_dir):
                 for mod_name in os.listdir(mods_dir):
+                    # Загружаем только активные моды
+                    if mod_name not in active_mod_names:
+                        continue
+                        
                     mod_path = os.path.join(mods_dir, mod_name)
                     if os.path.isdir(mod_path):
                         race_mod_file = os.path.join(mod_path, 'races_mod.yaml')
@@ -51,40 +64,101 @@ class UniversalRaceFactory:
                                 import yaml
                                 with open(race_mod_file, 'r', encoding='utf-8') as file:
                                     mod_data = yaml.safe_load(file) or {}
-                                    if 'modifications' in mod_data:
-                                        cls._modifications_data[mod_name] = mod_data['modifications']
+                                    # Сохраняем весь файл как модификацию
+                                    cls._modifications_data[mod_name] = mod_data
                             except Exception as e:
                                 print(f"Предупреждение: Ошибка загрузки модификации {mod_name}: {e}")
         
         return cls._modifications_data
     
     @classmethod
+    def _apply_modifications(cls, race_data: ParsedRaceData) -> ParsedRaceData:
+        """Применяет модификации к данным расы."""
+        modifications = cls._load_modifications_data()
+        
+        if not modifications:
+            return race_data
+        
+        # Создаем копию данных для модификации
+        modified_data = ParsedRaceData(
+            key=race_data.key,
+            name=race_data.name,
+            description=race_data.description,
+            short_description=race_data.short_description,
+            size=race_data.size,
+            speed=race_data.speed,
+            age=race_data.age.copy(),
+            languages=race_data.languages.copy(),
+            bonuses=race_data.bonuses.copy(),
+            features=race_data.features.copy(),
+            subraces=race_data.subraces.copy(),
+            templates=race_data.templates
+        )
+        
+        # Применяем модификации от всех модов
+        for mod_name, mod_data in modifications.items():
+            if 'modifications' in mod_data and race_data.key in mod_data['modifications']:
+                changes = mod_data['modifications'][race_data.key]
+                
+                # Применяем бонусы
+                if 'bonuses' in changes:
+                    for attr, bonus in changes['bonuses'].items():
+                        modified_data.bonuses[attr] = modified_data.bonuses.get(attr, 0) + bonus
+                
+                # Применяем особенности
+                if 'features' in changes:
+                    modified_data.features.extend(changes['features'])
+                
+                # Применяем подрасы
+                if 'subraces' in changes:
+                    for subrace_key, subrace_changes in changes['subraces'].items():
+                        if subrace_key in modified_data.subraces:
+                            # Обновляем существующую подрасу
+                            existing_subrace = modified_data.subraces[subrace_key]
+                            if 'bonuses' in subrace_changes:
+                                for attr, bonus in subrace_changes['bonuses'].items():
+                                    existing_subrace.bonuses[attr] = existing_subrace.bonuses.get(attr, 0) + bonus
+                            if 'features' in subrace_changes:
+                                existing_subrace.features.extend(subrace_changes['features'])
+                        else:
+                            # Добавляем новую подрасу
+                            # Создаем базовую подрасу на основе основной расы
+                            new_subrace = ParsedSubraceData(
+                                key=subrace_key,
+                                name=subrace_changes.get('name', f'Новая подраса {subrace_key}'),
+                                description=subrace_changes.get('description', ''),
+                                short_description=subrace_changes.get('short_description', ''),
+                                bonuses=subrace_changes.get('bonuses', {}),
+                                features=subrace_changes.get('features', []),
+                                inherit_bonuses=subrace_changes.get('inherit_bonuses', True),
+                                inherit_features=subrace_changes.get('inherit_features', True)
+                            )
+                            modified_data.subraces[subrace_key] = new_subrace
+        
+        return modified_data
+    
+    @classmethod
     def _get_parsed_race_data(cls, race_key: str) -> Optional[ParsedRaceData]:
-        """Возвращает распарсенные данные расы."""
+        """Возвращает распарсенные данные расы с примененными модификациями."""
         parser = cls._get_parser()
-        return parser.get_race_data(race_key)
+        base_data = parser.get_race_data(race_key)
+        
+        if not base_data:
+            return None
+        
+        # Применяем модификации
+        return cls._apply_modifications(base_data)
     
     @classmethod
     def _get_parsed_subrace_data(cls, race_key: str, subrace_key: str) -> Optional[ParsedSubraceData]:
-        """Возвращает распарсенные данные подрасы."""
-        parser = cls._get_parser()
-        return parser.get_subrace_data(race_key, subrace_key)
-    
-    @classmethod
-    def get_all_races(cls) -> List:
-        """Возвращает список всех доступных рас."""
-        parser = cls._get_parser()
-        all_race_keys = parser.get_all_race_keys()
-        races = []
+        """Возвращает распарсенные данные подрасы с примененными модификациями."""
+        # Сначала получаем модифицированные данные основной расы
+        modified_race_data = cls._get_parsed_race_data(race_key)
         
-        for race_key in all_race_keys:
-            try:
-                race = cls.create_race(race_key)
-                races.append(race)
-            except Exception as e:
-                print(f"Предупреждение: Ошибка создания расы {race_key}: {e}")
+        if not modified_race_data or subrace_key not in modified_race_data.subraces:
+            return None
         
-        return races
+        return modified_race_data.subraces[subrace_key]
     
     @classmethod
     def get_race_choices(cls) -> Dict[str, str]:
@@ -95,8 +169,10 @@ class UniversalRaceFactory:
         choice_num = 1
 
         for race_key, race_data in all_data.items():
-            if race_data.name:  # Только добавляем если имя не пустое
-                choices[str(choice_num)] = race_data.name
+            # Получаем модифицированные данные
+            modified_data = cls._get_parsed_race_data(race_key)
+            if modified_data and modified_data.name:  # Только добавляем если имя не пустое
+                choices[str(choice_num)] = modified_data.name
                 choice_num += 1
 
         return choices
@@ -166,40 +242,61 @@ class UniversalRaceFactory:
         if not race_data:
             return {}
         
-        # Если указана подраса
-        if subrace_key:
-            subrace_data = cls._get_parsed_subrace_data(race_key, subrace_key)
-            if not subrace_data:
-                return {}
-            
-            # Собираем данные для подрасы (ТОЛЬКО уникальные)
-            name = subrace_data.name
-            description = subrace_data.description
-            
-            # Бонусы подрасы (только уникальные)
-            bonuses = subrace_data.bonuses
-            
-            # Особенности подрасы (только уникальные)
-            features = subrace_data.features
-        else:
-            # Основная раса - показываем ВСЕ бонусы и особенности
-            name = race_data.name
-            description = race_data.description
-            bonuses = race_data.bonuses
-            features = race_data.features
-        
-        # Форматируем через существующий форматировщик
+        # Используем форматировщик для работы с новыми структурами
         formatter = RaceDisplayFormatter()
         
-        # Конвертируем в старый формат для совместимости
-        legacy_data = {
-            'name': name,
-            'description': description,
-            'bonuses': bonuses,
-            'features': features
+        # Если указана подраса
+        if subrace_key:
+            return formatter.format_race_info(race_data, subrace_key)
+        else:
+            # Основная раса
+            return formatter.format_race_info(race_data)
+    
+    @classmethod
+    def get_subrace_only_info(cls, race_key: str, subrace_key: str) -> Dict[str, str]:
+        """Возвращает информацию только о подрасе (без унаследованных бонусов и особенностей)."""
+        race_data = cls._get_parsed_race_data(race_key)
+        if not race_data or subrace_key not in race_data.subraces:
+            return {}
+        
+        subrace_data = race_data.subraces[subrace_key]
+        
+        # Словарь с русскими названиями характеристик
+        russian_names = {
+            "strength": "Сила",
+            "dexterity": "Ловкость",
+            "constitution": "Телосложение",
+            "intelligence": "Интеллект",
+            "wisdom": "Мудрость",
+            "charisma": "Харизма"
         }
         
-        return formatter.format_race_info(legacy_data, subrace_key)
+        name = subrace_data.name
+        description = subrace_data.description
+        short_description = subrace_data.short_description
+        
+        # Форматируем только бонусы подрасы (без унаследованных)
+        bonus_parts = []
+        for attr_name, bonus in subrace_data.bonuses.items():
+            if bonus > 0:
+                russian_name = russian_names.get(attr_name, attr_name.title())
+                bonus_str = f"+{bonus}"
+                bonus_parts.append(f"\t🎯 {russian_name}: {bonus_str}")
+        
+        bonuses_str = "\n".join(bonus_parts) if bonus_parts else ""
+        
+        # Форматируем только особенности подрасы (без унаследованных)
+        formatter = RaceDisplayFormatter()
+        features_list = formatter.processor.format_features(subrace_data.features)
+        features_str = "\n".join(feature for feature in features_list) if features_list else ""
+        
+        return {
+            "name": name,
+            "description": description,
+            "short_description": short_description,
+            "bonuses": bonuses_str,
+            "features": features_str
+        }
     
     @classmethod
     def create_race(cls, race_key: str, subrace_key: Optional[str] = None) -> Race:
@@ -209,19 +306,55 @@ class UniversalRaceFactory:
         if cache_key in cls._races_cache:
             return cls._races_cache[cache_key]
 
-        # Получаем отформатированную информацию
-        formatted_info = cls.get_formatted_race_info(race_key, subrace_key)
-        
-        if not formatted_info:
-            raise ValueError(f"Раса '{race_key}' не найдена")
-        
-        # Создаем объект расы
-        race = Race(
-            name=formatted_info["name"],
-            bonuses={},  # Бонусы теперь хранятся в особенностях
-            description=formatted_info["description"],
-            alternative_features={"features": formatted_info["features"]}
-        )
+        # Получаем распарсенные данные
+        if subrace_key:
+            race_data = cls._get_parsed_race_data(race_key)
+            subrace_data = cls._get_parsed_subrace_data(race_key, subrace_key)
+            
+            if not race_data or not subrace_data:
+                raise ValueError(f"Подраса '{subrace_key}' для расы '{race_key}' не найдена")
+            
+            # Вычисляем эффективные бонусы
+            effective_bonuses = {}
+            if subrace_data.inherit_bonuses:
+                effective_bonuses.update(race_data.bonuses)
+            effective_bonuses.update(subrace_data.bonuses)
+            
+            # Вычисляем все особенности
+            all_features = []
+            if subrace_data.inherit_features:
+                all_features.extend(race_data.features)
+            all_features.extend(subrace_data.features)
+            
+            race = Race(
+                name=subrace_data.name,
+                bonuses=effective_bonuses,
+                description=subrace_data.description,
+                short_description=subrace_data.short_description,
+                size=race_data.size,  # Наследуем от основной расы
+                speed=race_data.speed,  # Наследуем от основной расы
+                age=race_data.age,  # Наследуем от основной расы
+                languages=race_data.languages,  # Наследуем от основной расы
+                features=all_features,
+                inherit_bonuses=subrace_data.inherit_bonuses,
+                inherit_features=subrace_data.inherit_features
+            )
+        else:
+            race_data = cls._get_parsed_race_data(race_key)
+            if not race_data:
+                raise ValueError(f"Раса '{race_key}' не найдена")
+            
+            race = Race(
+                name=race_data.name,
+                bonuses=race_data.bonuses,
+                description=race_data.description,
+                short_description=race_data.short_description,
+                size=race_data.size,
+                speed=race_data.speed,
+                age=race_data.age,
+                languages=race_data.languages,
+                features=race_data.features
+            )
         
         cls._races_cache[cache_key] = race
         return race

@@ -25,6 +25,11 @@ class ParsedRaceData:
     key: str
     name: str
     description: str
+    short_description: str
+    size: str
+    speed: int
+    age: Dict[str, int]
+    languages: Dict[str, Any]
     bonuses: Dict[str, int]
     features: List[Dict]
     subraces: Dict[str, 'ParsedSubraceData']
@@ -37,6 +42,7 @@ class ParsedSubraceData:
     key: str
     name: str
     description: str
+    short_description: str
     bonuses: Dict[str, int]
     features: List[Dict]
     inherit_bonuses: bool
@@ -81,6 +87,13 @@ class RaceDataParser:
         # Базовые поля
         name = race_data.get('name', 'Безымянная раса')
         description = race_data.get('description', '')
+        short_description = race_data.get('short_description', '')
+        
+        # Физические характеристики
+        size = race_data.get('size', 'medium')
+        speed = race_data.get('speed', 30)
+        age = race_data.get('age', {'min': 16, 'max': 100})
+        languages = race_data.get('languages', {'base': [], 'choice': 0})
         
         # Парсим бонусы
         bonuses = self._parse_bonuses(race_data.get('bonuses', {}))
@@ -93,6 +106,11 @@ class RaceDataParser:
             key=race_key,
             name=name,
             description=description,
+            short_description=short_description,
+            size=size,
+            speed=speed,
+            age=age,
+            languages=languages,
             bonuses=bonuses,
             features=features,
             subraces={},  # Заполним ниже
@@ -106,6 +124,11 @@ class RaceDataParser:
             key=race_key,
             name=name,
             description=description,
+            short_description=short_description,
+            size=size,
+            speed=speed,
+            age=age,
+            languages=languages,
             bonuses=bonuses,
             features=features,
             subraces=subraces,
@@ -126,6 +149,7 @@ class RaceDataParser:
         """Парсит данные подрасы с вычислением уникальных особенностей."""
         name = subrace_data.get('name', 'Безымянная подраса')
         description = subrace_data.get('description', '')
+        short_description = subrace_data.get('short_description', '')
         
         # Бонусы подрасы (всегда уникальные)
         bonuses = self._parse_bonuses(subrace_data.get('bonuses', {}))
@@ -145,6 +169,7 @@ class RaceDataParser:
             key=subrace_key,
             name=name,
             description=description,
+            short_description=short_description,
             bonuses=bonuses,
             features=unique_features,
             inherit_bonuses=inherit_bonuses,
@@ -293,6 +318,10 @@ class RaceDataParser:
             return self._parse_spell_feature(feature_raw)
         elif feature_type == 'language':
             return self._parse_language_feature(feature_raw)
+        elif feature_type == 'traits':
+            return self._parse_traits_feature(feature_raw)
+        elif feature_type == 'mask_wilderness':
+            return self._parse_mask_wilderness_feature(feature_raw)
         elif feature_type in ['ability_choice', 'skill_choice', 'feat_choice']:
             return self._parse_choice_feature(feature_raw)
         else:
@@ -352,6 +381,29 @@ class RaceDataParser:
     
     def _parse_trait_feature(self, feature: Dict) -> Dict:
         """Парсит черты характера."""
+        return feature
+    
+    def _parse_traits_feature(self, feature: Dict) -> Dict:
+        """Парсит составные черты с эффектами."""
+        # Обрабатываем вложенные черты и эффекты
+        if 'traits' in feature:
+            traits = feature['traits']
+            if isinstance(traits, list):
+                # Нормализуем список черт
+                feature['traits'] = traits
+            elif isinstance(traits, dict):
+                feature['traits'] = [traits]
+            else:
+                feature['traits'] = []
+        
+        return feature
+    
+    def _parse_mask_wilderness_feature(self, feature: Dict) -> Dict:
+        """Парсит особенность маскировки в дикой местности."""
+        # Добавляем специфичные поля для маскировки
+        if 'description' not in feature:
+            feature['description'] = 'Маскировка в дикой местности'
+        
         return feature
     
     def get_race_data(self, race_key: str) -> Optional[ParsedRaceData]:

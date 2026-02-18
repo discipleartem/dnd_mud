@@ -68,12 +68,12 @@ class CharacterCreationMenu:
         self.point_buy_remaining = 27
         self.temp_adventure: Optional[str] = None
 
-    def _format_text_with_wrapping(self, text: str, width: int = 50, indent: str = "   📖 ") -> str:
+    def _format_text_with_wrapping(self, text: str, width: int = 70, indent: str = "   📖 ") -> str:
         """Форматирует текст с переносами для лучшего отображения.
         
         Args:
             text: Исходный текст
-            width: Максимальная ширина строки (уменьшена до 50 для лучшего отображения)
+            width: Максимальная ширина строки текста (без учета отступа)
             indent: Отступ для каждой строки
             
         Returns:
@@ -701,7 +701,7 @@ class CharacterCreationMenu:
         if len(subrace_choices) > 1:  # Есть подрасы (только подрасы, без основной расы)
             while True:  # Цикл для возможности возврата к выбору подрасы
                 self.renderer.clear_screen()
-                self.renderer.render_title("Выбор подрасы")
+                self.renderer.render_title("                            Выбор подрасы                             ")
                 
                 # Показываем краткую информацию о расе
                 base_info = UniversalRaceFactory.get_formatted_race_info(race_key)
@@ -710,8 +710,29 @@ class CharacterCreationMenu:
                 
                 # Показываем общие бонусы основной расы
                 if base_info['bonuses']:
-                    print(f"Общие бонусы:")
-                    print(base_info['bonuses'])
+                    print("Общие бонусы:")
+                    # Обрабатываем бонусы для формата как в примере
+                    bonus_lines = base_info['bonuses'].strip().split('\n')
+                    for line in bonus_lines:
+                        line = line.strip()
+                        if line.startswith('🎯'):
+                            # Извлекаем текст после эмодзи
+                            bonus_text = line.replace('🎯', '').strip()
+                            print(f"\t{bonus_text}")
+                
+                # Показываем общие особенности основной расы
+                if base_info['features']:
+                    print("Общие особенности:")
+                    # Форматируем особенности без лишних табуляций
+                    feature_lines = base_info['features'].split('\n')
+                    for line in feature_lines:
+                        line = line.strip()
+                        if line:
+                            # Убираем табуляцию в начале
+                            if line.startswith('\t'):
+                                line = line[1:]
+                            # Добавляем правильный отступ
+                            print(f"\t{line}")
                 
                 print(f"\nДоступные варианты:")
                 print()
@@ -721,8 +742,8 @@ class CharacterCreationMenu:
                     subrace_key = UniversalRaceFactory.get_subrace_key_by_choice(race_key, int(choice_num))
                     
                     if subrace_key:
-                        # Получаем информацию о подрасе
-                        subrace_info = UniversalRaceFactory.get_formatted_race_info(race_key, subrace_key)
+                        # Получаем информацию о подрасе (только бонусы и особенности подрасы)
+                        subrace_info = UniversalRaceFactory.get_subrace_only_info(race_key, subrace_key)
                         print(f"{choice_num}. {subrace_info['name']}")
                         
                         # Форматируем описание с переносами
@@ -730,9 +751,8 @@ class CharacterCreationMenu:
                             subrace_info['short_description'], width=50, indent="   📖 "
                         )
                         print(formatted_desc)
-                        print()  # Пустая строка после описания
                         
-                        # Показываем бонусы подрасы
+                        # Показываем бонусы подрасы (только дополнительные)
                         if subrace_info['bonuses']:
                             # Форматируем бонусы в нужный формат
                             bonus_lines = subrace_info['bonuses'].strip().split('\n')
@@ -741,18 +761,18 @@ class CharacterCreationMenu:
                                 bonus_parts = []
                                 for line in bonus_lines:
                                     line = line.strip()
-                                    if line.startswith('🎯 '):
-                                        # Извлекаем название характеристики и значение
-                                        parts = line.replace('🎯 ', '').split(': ')
-                                        if len(parts) == 2:
-                                            # Убираем возможные лишние эмодзи из названия
-                                            clean_name = parts[0].replace('🎯 ', '').strip()
-                                            bonus_parts.append(f"{clean_name} {parts[1]}")
+                                    if line.startswith('🎯'):
+                                        # Извлекаем текст после эмодзи
+                                        bonus_text = line.replace('🎯', '').strip()
+                                        # Убираем табуляцию в начале если есть
+                                        if bonus_text.startswith('\t'):
+                                            bonus_text = bonus_text[1:]
+                                        bonus_parts.append(bonus_text)
                                 
                                 if bonus_parts:
                                     print(f"   🎯 Бонусы: {', '.join(bonus_parts)}")
                         
-                        # Показываем особенности подрасы
+                        # Показываем особенности подрасы (только дополнительные)
                         if subrace_info['features']:
                             print("   ✨ Особенности:")
                             # Форматируем особенности без лишних табуляций

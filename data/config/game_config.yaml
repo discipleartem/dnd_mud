@@ -9,3 +9,28 @@ character_creation:
 ui:
   language: ru
   theme: default
+
+# ==============================================================================
+# НАСТРОЙКИ МОДИФИКАЦИЙ
+# ==============================================================================
+mods:
+  enabled: false  # Модификации по умолчанию выключены
+  available_mods:
+    - name: "high_level_mod"
+      enabled: false
+      description: "Начинаем игру с высокого уровня"
+    - name: "magic_mod"
+      enabled: false
+      description: "Магические улучшения и новые расы"
+
+# ==============================================================================
+# НАСТРОЙКИ ПРИКЛЮЧЕНИЙ
+# ==============================================================================
+adventures:
+  enabled: true  # Приключения доступны
+  available_adventures:
+    - name: "tutorial_adventure"
+      file: "tutorial_adventure.yaml"
+      enabled: true
+      description: "Начало пути"
+

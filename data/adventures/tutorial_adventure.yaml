@@ -1,12 +1,13 @@
 # Учебное приключение для D&D MUD
 name: "Начало пути"
+type: tutorital
 description: "Первое приключение для новых игроков"
-recommended_level: 5
+recommended_level: 1
 difficulty: "Легкий"
 
 character_settings:
-  starting_level: 5
-  max_level: 8
+  starting_level: 1
+  max_level: 3
   allow_import: true
 
 story:

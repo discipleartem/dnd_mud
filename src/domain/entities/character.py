@@ -5,7 +5,7 @@
 """
 
 from dataclasses import dataclass, field
-from typing import Dict, Optional
+from typing import Dict, Optional, List
 from ..value_objects.attributes import StandardAttributes
 from ..value_objects.skills import SkillsManager
 from .attribute import Attribute
@@ -124,8 +124,12 @@ class Character:
         else:
             super().__setattr__(name, value)
 
-    def apply_race_bonuses(self) -> None:
-        """Применяет расовые бонусы к характеристикам."""
+    def apply_race_bonuses(self, chosen_attributes: Optional[List[str]] = None) -> None:
+        """Применяет расовые бонусы к характеристикам.
+        
+        Args:
+            chosen_attributes: Список выбранных характеристик для особенностей типа ability_choice
+        """
         attributes = {
             "strength": self.strength.value,
             "dexterity": self.dexterity.value,
@@ -135,7 +139,7 @@ class Character:
             "charisma": self.charisma.value,
         }
 
-        boosted_attributes = self.race.apply_bonuses(attributes)
+        boosted_attributes = self.race.apply_bonuses(attributes, chosen_attributes)
 
         # Обновляем значения характеристик
         for attr_name, value in boosted_attributes.items():

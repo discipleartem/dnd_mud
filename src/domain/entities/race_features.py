@@ -83,7 +83,17 @@ class FeatureProcessor:
             name = feature.get("name", "Неизвестная особенность")
             description = feature.get("description", "")
             
-            if feature_type == "trait":
+            if feature_type == "traits":
+                # Обрабатываем составные черты
+                traits = feature.get("traits", [])
+                if traits:
+                    for trait in traits:
+                        trait_name = trait.get("name", "Неизвестная черта")
+                        trait_desc = trait.get("description", "")
+                        formatted.append(f"\t🎯 {trait_name}: {trait_desc}")
+                else:
+                    formatted.append(f"\t🎯 {name}: {description}")
+            elif feature_type == "trait":
                 formatted.append(f"\t🎯 {name}: {description}")
             elif feature_type == "proficiency":
                 items = feature.get("weapons", feature.get("skills", []))
@@ -100,15 +110,21 @@ class FeatureProcessor:
                 else:
                     formatted.append(f"\t🔮 {name}: {description}")
             elif feature_type == "language":
-                languages = feature.get("languages", [])
+                languages = feature.get("languages", {})
                 if languages:
-                    if "choice" in str(languages):
-                        formatted.append(f"\t🌐 {name}: {description}")
-                    else:
-                        lang_str = ", ".join(languages) if isinstance(languages, list) else str(languages)
+                    base_langs = languages.get("base", [])
+                    choice_count = languages.get("choice", 0)
+                    
+                    if base_langs:
+                        lang_str = ", ".join(base_langs) if isinstance(base_langs, list) else str(base_langs)
                         formatted.append(f"\t🌐 {name}: {lang_str}")
+                    
+                    if choice_count > 0:
+                        formatted.append(f"\t🌐 {name}: {description}")
                 else:
                     formatted.append(f"\t🌐 {name}: {description}")
+            elif feature_type == "mask_wilderness":
+                formatted.append(f"\t🌲 {name}: {description}")
             elif feature_type in ["ability_choice", "skill_choice", "feat_choice"]:
                 formatted.append(f"\t⚙️ {name}: {description}")
             else:
@@ -175,11 +191,11 @@ class RaceDisplayFormatter:
     def __init__(self):
         self.processor = FeatureProcessor()
     
-    def format_race_info(self, race_data: Dict, subrace_key: str = None) -> Dict[str, str]:
+    def format_race_info(self, race_data, subrace_key: str = None) -> Dict[str, str]:
         """Форматирует полную информацию о расе для отображения.
         
         Args:
-            race_data: Данные расы из YAML
+            race_data: Данные расы (ParsedRaceData или Dict из YAML)
             subrace_key: Ключ подрасы (опционально)
             
         Returns:
@@ -196,21 +212,30 @@ class RaceDisplayFormatter:
         }
         
         # Если указана подраса
-        if subrace_key and "subraces" in race_data:
-            subrace_data = race_data["subraces"][subrace_key]
+        if subrace_key and hasattr(race_data, 'subraces') and subrace_key in race_data.subraces:
+            subrace_data = race_data.subraces[subrace_key]
             
-            name = subrace_data.get("name", "Неизвестная подраса")
-            description = subrace_data.get("description", "")
+            name = subrace_data.name
+            description = subrace_data.description
+            short_description = subrace_data.short_description
             
-            # Только бонусы подрасы (без базовых)
-            subrace_bonuses = subrace_data.get("bonuses", {})
+            # Вычисляем эффективные бонусы
+            effective_bonuses = self.processor.get_effective_bonuses(
+                race_data.bonuses, 
+                subrace_data.bonuses, 
+                subrace_data.inherit_bonuses
+            )
             
-            # Только особенности подрасы (без базовых)
-            subrace_features = subrace_data.get("features", [])
+            # Вычисляем все особенности
+            all_features = self.processor.get_all_features(
+                race_data.features,
+                subrace_data.features,
+                subrace_data.inherit_features
+            )
             
-            # Форматируем только бонусы подрасы
+            # Форматируем бонусы
             bonus_parts = []
-            for attr_name, bonus in subrace_bonuses.items():
+            for attr_name, bonus in effective_bonuses.items():
                 if bonus > 0:
                     russian_name = russian_names.get(attr_name, attr_name.title())
                     bonus_str = f"+{bonus}"
@@ -218,36 +243,37 @@ class RaceDisplayFormatter:
             
             bonuses_str = "\n".join(bonus_parts) if bonus_parts else ""
             
-            # Форматируем только особенности подрасы
-            features_list = self.processor.format_features(subrace_features)
+            # Форматируем особенности
+            features_list = self.processor.format_features(all_features)
             features_str = "\n".join(feature for feature in features_list) if features_list else ""
             
             return {
                 "name": name,
                 "description": description,
-                "short_description": self._get_short_description(description),
+                "short_description": short_description,
                 "bonuses": bonuses_str,
                 "features": features_str
             }
         else:
-            # Основная раса - показываем ВСЕ бонусы и особенности
-            name = race_data.get("name", "Неизвестная раса")
-            description = race_data.get("description", "")
-            base_bonuses = race_data.get("bonuses", {})
-            base_features = race_data.get("features", [])
+            # Основная раса
+            name = getattr(race_data, 'name', 'Неизвестная раса')
+            description = getattr(race_data, 'description', '')
+            short_description = getattr(race_data, 'short_description', '')
+            bonuses = getattr(race_data, 'bonuses', {})
+            features = getattr(race_data, 'features', [])
             
             # Собираем все бонусы: базовые + из особенностей
             all_bonus_parts = []
             
             # Базовые бонусы
-            for attr_name, bonus in base_bonuses.items():
+            for attr_name, bonus in bonuses.items():
                 if bonus > 0:
                     russian_name = russian_names.get(attr_name, attr_name.title())
                     bonus_str = f"+{bonus}"
                     all_bonus_parts.append(f"\t🎯 {russian_name}: {bonus_str}")
             
             # Бонусы из особенностей (если есть)
-            for feature in base_features:
+            for feature in features:
                 if feature.get("type") == "ability_choice":
                     max_choices = feature.get("max_choices", 1)
                     bonus_value = feature.get("bonus_value", 1)
@@ -256,26 +282,32 @@ class RaceDisplayFormatter:
             bonuses_str = "\n".join(all_bonus_parts) if all_bonus_parts else ""
             
             # Форматируем все особенности
-            features_list = self.processor.format_features(base_features)
+            features_list = self.processor.format_features(features)
             features_str = "\n".join(feature for feature in features_list) if features_list else ""
             
             return {
                 "name": name,
                 "description": description,
-                "short_description": self._get_short_description(description),
+                "short_description": short_description,
                 "bonuses": bonuses_str,
                 "features": features_str
             }
     
-    def _get_short_description(self, description: str) -> str:
-        """Получает короткое описание из полного (1-2 предложения).
+    def _get_short_description(self, description: str, yaml_short_desc: str = None) -> str:
+        """Получает короткое описание из полного или из YAML поля.
         
         Args:
             description: Полное описание расы
+            yaml_short_desc: Короткое описание из YAML (опционально)
             
         Returns:
-            Короткое описание (максимум 2 предложения)
+            Короткое описание
         """
+        # Если в YAML есть короткое описание, используем его
+        if yaml_short_desc:
+            return yaml_short_desc
+        
+        # Иначе генерируем из полного (старая логика)
         if not description:
             return "Описание отсутствует"
         

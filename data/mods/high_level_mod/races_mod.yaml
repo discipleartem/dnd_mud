@@ -1,0 +1,32 @@
+# Тестовая модификация для демонстрации системы модификаций рас
+name: "Продвинутые расы"
+description: "Модификация, добавляющая продвинутые варианты рас"
+affects_races: ["human", "elf", "half_orc"]
+
+modifications:
+  human:
+    bonuses:
+      strength: 2  # Увеличиваем бонус силы
+      dexterity: 2  # Увеличиваем бонус ловкости
+    
+    features:
+      - type: "trait"
+        name: "Адаптивность"
+        description: "Вы можете менять один бонус к характеристикам раз в день"
+        effect: "adaptive_bonuses"
+  
+  elf:
+    subraces:
+      moon_elf:
+        name: "Лунный эльф"
+        description: "Эльфы, черпающие силу от луны"
+        short_description: "Эльфы с лунной магией и мудростью"
+        inherit_bonuses: true
+        bonuses:
+          wisdom: 1
+        features:
+          - type: "spell"
+            name: "Лунная магия"
+            description: "Вы получаете доступ к заклинаниям школы иллюзий"
+            spells: ["moon_magic"]
+            ability: "intelligence"
