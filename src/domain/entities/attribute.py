@@ -6,55 +6,41 @@ from ..value_objects.attributes import StandardAttributes
 @dataclass
 class Attribute:
     name: str
-    value: int = field(default=10)
-    description: str = field(default="")
+    value: int = 10
+    description: str = ""
 
     def __post_init__(self) -> None:
-        """Валидация и загрузка локализации."""
-        # Валидация через конфигурацию
-        attr_config = StandardAttributes.get_attribute(self.name)
-        if attr_config:
-            min_val = attr_config.min_value
-            max_val = attr_config.max_value
-        else:
-            # Fallback значения если конфиг не найден
-            min_val, max_val = 3, 20
+        self.validate()
+        if not self.description:
+            self.description = self._get_description()
 
-        if not (min_val <= self.value <= max_val):
-            raise ValueError(
-                f"Значение характеристики {self.name} должно быть от {min_val} до {max_val}, получено: {self.value}"
-            )
-
-        # Загружаем локализацию
+    def _get_description(self) -> str:
+        """Возвращает описание из конфигурации."""
         info = StandardAttributes.get_attribute(self.name)
-        self.description = info.description
+        return info.description if info else ""
+
+    @property
+    def bounds(self) -> tuple[int, int]:
+        """Возвращает границы значений для характеристики."""
+        attr_config = StandardAttributes.get_attribute(self.name)
+        return (attr_config.min_value, attr_config.max_value) if attr_config else (3, 20)
 
     @property
     def localized_name(self) -> str:
         """Возвращает локализованное название."""
-        return StandardAttributes.get_attribute(self.name).name
+        info = StandardAttributes.get_attribute(self.name)
+        return info.name if info else self.name
 
     @property
     def is_valid(self) -> bool:
-        """Проверяет валидность значения через конфигурацию."""
-        attr_config = StandardAttributes.get_attribute(self.name)
-        if attr_config:
-            min_val = attr_config.min_value
-            max_val = attr_config.max_value
-        else:
-            min_val, max_val = 3, 20
-
+        """Проверяет валидность значения."""
+        min_val, max_val = self.bounds
         return min_val <= self.value <= max_val
 
     def validate(self) -> None:
         """Проверяет и выбрасывает исключение если невалидно."""
         if not self.is_valid:
-            attr_config = StandardAttributes.get_attribute(self.name)
-            if attr_config:
-                min_val = attr_config.min_value
-                max_val = attr_config.max_value
-            else:
-                min_val, max_val = 3, 20
+            min_val, max_val = self.bounds
             raise ValueError(
                 f"Значение характеристики {self.name} должно быть от {min_val} до {max_val}, получено: {self.value}"
             )

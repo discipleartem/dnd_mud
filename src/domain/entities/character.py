@@ -98,74 +98,14 @@ class Character:
             if hasattr(attr, "validate"):
                 attr.validate()
 
-    def __getattr__(self, name: str) -> int:
-        """Динамический доступ к характеристикам."""
-        # Ищем в стандартах
-        for attr_name, standard_attr in StandardAttributes.get_all().items():
-            if standard_attr.short_name == name:
-                return getattr(self, attr_name).value
-
-        raise AttributeError(
-            f"'{self.__class__.__name__}' object has no attribute '{name}'"
-        )
-
-    def __setattr__(self, name: str, value: int) -> None:
-        """Динамическая запись характеристик."""
-        if name in ["STR", "DEX", "CON", "INT", "WIS", "CHA"]:
-            attribute_map = {
-                "STR": "strength",
-                "DEX": "dexterity",
-                "CON": "constitution",
-                "INT": "intelligence",
-                "WIS": "wisdom",
-                "CHA": "charisma",
-            }
-            getattr(self, attribute_map[name]).value = value
-        else:
-            super().__setattr__(name, value)
-
-    def apply_race_bonuses(self, chosen_attributes: Optional[List[str]] = None) -> None:
-        """Применяет расовые бонусы к характеристикам.
-        
-        Args:
-            chosen_attributes: Список выбранных характеристик для особенностей типа ability_choice
-        """
-        attributes = {
-            "strength": self.strength.value,
-            "dexterity": self.dexterity.value,
-            "constitution": self.constitution.value,
-            "intelligence": self.intelligence.value,
-            "wisdom": self.wisdom.value,
-            "charisma": self.charisma.value,
-        }
-
-        boosted_attributes = self.race.apply_bonuses(attributes, chosen_attributes)
-
-        # Обновляем значения характеристик
-        for attr_name, value in boosted_attributes.items():
-            getattr(self, attr_name).value = value
-
-    def get_ability_modifier(self, value: int) -> int:
-        """Рассчитывает модификатор характеристики.
-
-        Args:
-            value: Значение характеристики
-
-        Returns:
-            Модификатор (значение - 10) // 2
-        """
-        return (value - 10) // 2
+    def get_modifier(self, attr_name: str) -> int:
+        """Возвращает модификатор характеристики."""
+        return (getattr(self, attr_name).value - 10) // 2
 
     def get_all_modifiers(self) -> Dict[str, int]:
-        """Возвращает словарь всех модификаторов характеристик."""
-        return {
-            "strength": self.get_ability_modifier(self.strength.value),
-            "dexterity": self.get_ability_modifier(self.dexterity.value),
-            "constitution": self.get_ability_modifier(self.constitution.value),
-            "intelligence": self.get_ability_modifier(self.intelligence.value),
-            "wisdom": self.get_ability_modifier(self.wisdom.value),
-            "charisma": self.get_ability_modifier(self.charisma.value),
-        }
+        """Возвращает все модификаторы характеристик."""
+        attrs = ['strength', 'dexterity', 'constitution', 'intelligence', 'wisdom', 'charisma']
+        return {attr: self.get_modifier(attr) for attr in attrs}
 
     def calculate_hp(self) -> int:
         """Рассчитывает максимальное HP на основе класса и телосложения."""
@@ -173,13 +113,7 @@ class Character:
 
     def calculate_ac(self) -> int:
         """Рассчитывает класс доспеха."""
-        # Базовый AC = 10 + модификатор ловкости
-        base_ac = 10 + self.get_ability_modifier(self.dexterity.value)
-
-        # Добавляем бонус от класса если есть
-        base_ac += self.character_class.get_ac_bonus()
-
-        return base_ac
+        return 10 + self.get_modifier('dexterity') + self.character_class.get_ac_bonus()
 
     def calculate_derived_stats(self) -> None:
         """Рассчитывает все производные характеристики."""
@@ -209,35 +143,32 @@ class Character:
         if not skill:
             return 0
 
-        # Получаем значения характеристик
-        attributes = {
-            "strength": self.strength.value,
-            "dexterity": self.dexterity.value,
-            "constitution": self.constitution.value,
-            "intelligence": self.intelligence.value,
-            "wisdom": self.wisdom.value,
-            "charisma": self.charisma.value,
-        }
+        attributes = {attr: getattr(self, attr).value 
+                     for attr in ['strength', 'dexterity', 'constitution', 'intelligence', 'wisdom', 'charisma']}
 
         return skill.calculate_total_bonus(attributes, self.get_proficiency_bonus())
 
     def get_saving_throw_bonus(self, attribute: str) -> int:
         """Рассчитывает бонус к спасброску характеристики."""
-        # Создаем временный навык-спасбросок
         save_config = SkillsManager.get_saving_throw(attribute)
         if not save_config:
             return 0
 
-        # Проверяем, имеет ли персонаж мастерство в спасброске
         proficiency_bonus = (
             self.get_proficiency_bonus() if self.has_save_proficiency(attribute) else 0
         )
-
-        # Модификатор характеристики
-        attribute_value = getattr(self, attribute).value
-        attribute_modifier = (attribute_value - 10) // 2
+        attribute_modifier = self.get_modifier(attribute)
 
         return attribute_modifier + proficiency_bonus
+
+    def apply_race_bonuses(self, chosen_attributes: Optional[List[str]] = None) -> None:
+        """Применяет расовые бонусы к характеристикам."""
+        attributes = {attr: getattr(self, attr).value for attr in 
+                     ['strength', 'dexterity', 'constitution', 'intelligence', 'wisdom', 'charisma']}
+        boosted_attributes = self.race.apply_bonuses(attributes, chosen_attributes)
+        
+        for attr_name, value in boosted_attributes.items():
+            getattr(self, attr_name).value = value
 
     def get_proficiency_bonus(self) -> int:
         """Возвращает бонус мастерства персонажа."""
@@ -316,9 +247,18 @@ class Character:
             if skill.attribute_name == attribute
         }
 
+    def _roll_d20(self, advantage: str = "none") -> tuple[int, int, bool, bool]:
+        """Выполняет бросок d20 с учётом преимущества/помехи.
+        
+        Returns:
+            Кортеж (бросок_d20, крит_успех, крит_провал)
+        """
+        from ..value_objects.dice_roller import DiceRoller
+        return DiceRoller.roll_d20(advantage)
+
     def roll_skill_check(
         self, skill_name: str, advantage: str = "none", situational_bonus: int = 0
-    ) -> tuple:
+    ) -> tuple[int, int, bool, bool]:
         """Выполняет бросок навыка.
 
         Args:
@@ -329,35 +269,14 @@ class Character:
         Returns:
             Кортеж (бросок_d20, общий_результат, крит_успех, крит_провал)
         """
-        import random
-
+        d20_roll, crit_success, crit_fail = self._roll_d20(advantage)
         skill_bonus = self.get_skill_bonus(skill_name)
-
-        # Бросок с преимуществом/помехой
-        if advantage == "advantage":
-            d20_1 = random.randint(1, 20)
-            d20_2 = random.randint(1, 20)
-            d20_roll = max(d20_1, d20_2)
-            crit_success = d20_roll == 20
-            crit_fail = d20_roll == 1
-        elif advantage == "disadvantage":
-            d20_1 = random.randint(1, 20)
-            d20_2 = random.randint(1, 20)
-            d20_roll = min(d20_1, d20_2)
-            crit_success = d20_roll == 20
-            crit_fail = d20_roll == 1
-        else:  # normal roll
-            d20_roll = random.randint(1, 20)
-            crit_success = d20_roll == 20
-            crit_fail = d20_roll == 1
-
         total = d20_roll + skill_bonus + situational_bonus
-
         return d20_roll, total, crit_success, crit_fail
 
     def roll_saving_throw(
         self, attribute: str, advantage: str = "none", situational_bonus: int = 0
-    ) -> tuple:
+    ) -> tuple[int, int, bool, bool]:
         """Выполняет спасбросок характеристики.
 
         Args:
@@ -368,30 +287,9 @@ class Character:
         Returns:
             Кортеж (бросок_d20, общий_результат, крит_успех, крит_провал)
         """
-        import random
-
+        d20_roll, crit_success, crit_fail = self._roll_d20(advantage)
         save_bonus = self.get_saving_throw_bonus(attribute)
-
-        # Бросок с преимуществом/помехой
-        if advantage == "advantage":
-            d20_1 = random.randint(1, 20)
-            d20_2 = random.randint(1, 20)
-            d20_roll = max(d20_1, d20_2)
-            crit_success = d20_roll == 20
-            crit_fail = d20_roll == 1
-        elif advantage == "disadvantage":
-            d20_1 = random.randint(1, 20)
-            d20_2 = random.randint(1, 20)
-            d20_roll = min(d20_1, d20_2)
-            crit_success = d20_roll == 20
-            crit_fail = d20_roll == 1
-        else:  # normal roll
-            d20_roll = random.randint(1, 20)
-            crit_success = d20_roll == 20
-            crit_fail = d20_roll == 1
-
         total = d20_roll + save_bonus + situational_bonus
-
         return d20_roll, total, crit_success, crit_fail
 
     def calculate_spell_save_dc(self, spell_ability: str) -> int:

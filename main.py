@@ -69,43 +69,42 @@ def show_splash_screen() -> None:
     renderer.get_input()
 
 
+def display_character_info(character) -> None:
+    """Отображает информацию о персонаже."""
+    print(f"\n=== {character.name} ===")
+    print(f"Раса: {character.race.name}")
+    print(f"Класс: {character.character_class.name}")
+    print(f"Уровень: {character.level}")
+    print(f"HP: {character.hp_current}/{character.hp_max}")
+    print(f"AC: {character.ac}")
+    if hasattr(character, 'gold'):
+        print(f"Золото: {character.gold}")
+    
+    print(f"\nХарактеристики:")
+    modifiers = character.get_all_modifiers()
+    for attr_name in ['strength', 'dexterity', 'constitution', 'intelligence', 'wisdom', 'charisma']:
+        from src.domain.value_objects.attributes import StandardAttributes
+        attr_info = StandardAttributes.get_attribute(attr_name)
+        value = getattr(character, attr_name).value
+        modifier = modifiers[attr_name]
+        try:
+            mod_str = f"+{modifier}" if modifier >= 0 else str(modifier)
+            print(f"  {attr_info.short_name}: {value} ({mod_str})")
+        except TypeError:
+            print(f"  {attr_info.short_name}: {value} (недоступно)")
 def handle_new_game() -> None:
     """Обрабатывает создание новой игры."""
     renderer.clear_screen()
     renderer.render_title("Новая игра")
     
-    # Создаем контроллер персонажей
     character_controller = CharacterCreationController(input_handler, renderer)
-    
-    # Создаем нового персонажа
     character = character_controller.create_character()
     
     if character:
-        # Сохраняем персонажа
         manager = CharacterManager.get_instance()
-        success = manager.save_character(character)
-        
-        if success:
+        if manager.save_character(character):
             renderer.show_success(f"Персонаж {character.name} успешно создан и сохранен!")
-            
-            # Показываем краткую информацию
-            print(f"\n=== {character.name} ===")
-            print(f"Раса: {character.race.name}")
-            print(f"Класс: {character.character_class.name}")
-            print(f"Уровень: {character.level}")
-            print(f"HP: {character.hp_current}/{character.hp_max}")
-            print(f"AC: {character.ac}")
-            
-            # Показываем характеристики
-            print(f"\nХарактеристики:")
-            modifiers = character.get_all_modifiers()
-            for attr_name in ['strength', 'dexterity', 'constitution', 'intelligence', 'wisdom', 'charisma']:
-                from src.domain.value_objects.attributes import StandardAttributes
-                attr_info = StandardAttributes.get_attribute(attr_name)
-                value = getattr(character, attr_name).value
-                modifier = modifiers[attr_name]
-                mod_str = f"+{modifier}" if modifier >= 0 else str(modifier)
-                print(f"  {attr_info.short_name}: {value} ({mod_str})")
+            display_character_info(character)
         else:
             renderer.show_error("Ошибка при сохранении персонажа")
     else:
@@ -147,32 +146,7 @@ def handle_load_game() -> None:
     
     if character:
         renderer.show_success(f"Персонаж {character.name} успешно загружен!")
-        
-        # Показываем информацию о персонаже
-        print(f"\n=== {character.name} ===")
-        print(f"Раса: {character.race.name}")
-        print(f"Класс: {character.character_class.name}")
-        print(f"Уровень: {character.level}")
-        print(f"HP: {character.hp_current}/{character.hp_max}")
-        print(f"AC: {character.ac}")
-        print(f"Золото: {character.gold}")
-        
-        # Показываем характеристики
-        print(f"\nХарактеристики:")
-        modifiers = character.get_all_modifiers()
-        for attr_name in ['strength', 'dexterity', 'constitution', 'intelligence', 'wisdom', 'charisma']:
-            from src.domain.value_objects.attributes import StandardAttributes
-            attr_info = StandardAttributes.get_attribute(attr_name)
-            value = getattr(character, attr_name).value
-            modifier = modifiers[attr_name]
-            try:
-                mod_str = f"+{modifier}" if modifier >= 0 else str(modifier)
-                print(f"  {attr_info.short_name}: {value} ({mod_str})")
-            except TypeError:
-                # Если modifier - мок, пропускаем эту характеристику
-                print(f"  {attr_info.short_name}: {value} (недоступно)")
-        
-        # Здесь можно добавить начало игры с загруженным персонажем
+        display_character_info(character)
         renderer.show_info("\n(Здесь начнется игра с загруженным персонажем)")
     else:
         renderer.show_error("Ошибка при загрузке персонажа")
