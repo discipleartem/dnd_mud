@@ -1,0 +1,124 @@
+# Классы Dungeons & Dragons 5e
+# Базовые классы из Player's Handbook
+
+classes:
+  fighter:
+    name: "Воин"
+    description: "Мастер оружия и доспехов, специалист по бою"
+    hit_dice: 10
+    prime_abilities: ["strength", "dexterity"]
+    saving_throws: ["strength", "constitution"]
+    skill_choices: [
+      "acrobatics", "animal_handling", "athletics", "history", 
+      "insight", "intimidation", "perception", "survival"
+    ]
+    equipment:
+      weapons: ["все простые", "все воинские"]
+      armor: ["все доспехи", "щиты"]
+      tools: ["нет"]
+    features:
+      - "Боевой стиль (1 уровень)"
+      - "Восстановление (1 уровень)"
+      - "Улучшенная критическая атака (3 уровень)"
+      - "Улучшенное восстановление (5 уровень)"
+      - "Атака дополнительным действием (11 уровень)"
+      - "Непоколебимость (18 уровень)"
+    subclasses:
+      - "Мастер боевых искусств"
+      - "Рыцарь-заклинатель"
+      - "Самурай"
+    
+  rogue:
+    name: "Плут"
+    description: "Мастер скрытности, ловкости и точных ударов"
+    hit_dice: 8
+    prime_abilities: ["dexterity"]
+    saving_throws: ["dexterity", "intelligence"]
+    skill_choices: [
+      "acrobatics", "athletics", "deception", "insight", 
+      "intimidation", "investigation", "sleight_of_hand", "stealth", 
+      "expertise", "performance"
+    ]
+    equipment:
+      weapons: ["простые", "ручные арбалеты", "длинные мечи", "рапиры", "короткие мечи"]
+      armor: ["лёгкие"]
+      tools: ["набор вора", "набор отмычек"]
+    features:
+      - "Экспертиза (1 уровень)"
+      - "Скрытая атака (1 уровень)"
+      - "Воровский жаргон (1 уровень)"
+      - "Коварная атака (2 уровень)"
+      - "Улучшенная скрытая атака (3 уровень)"
+      - "Улучшенная коварная атака (9 уровень)"
+      - "Невидимость в бою (14 уровень)"
+      - "Удар в спину (17 уровень)"
+    subclasses:
+      - "Ассасин"
+      - "Призрачный разбойник"
+      - "Теневой плут"
+    
+  cleric:
+    name: "Жрец"
+    description: "Слуга божества, использующий божественную магию"
+    hit_dice: 8
+    prime_abilities: ["wisdom"]
+    saving_throws: ["wisdom", "charisma"]
+    skill_choices: [
+      "history", "insight", "medicine", "investigation", 
+      "religion", "persuasion"
+    ]
+    equipment:
+      weapons: ["простые"]
+      armor: ["лёгкие", "средние", "щиты"]
+      tools: ["нет"]
+    features:
+      - "Божественный домен (1 уровень)"
+      - "Заклинание ритуала (1 уровень)"
+      - "Восстановление заклинаний (1 уровень)"
+      - "Божественная фокусировка (2 уровень)"
+      - "Уничтожение нежити (5 уровень)"
+      - "Божественное вмешательство (10 уровень)"
+      - "Улучшенное уничтожение нежити (14 уровень)"
+      - "Мастерство божественных заклинаний (17 уровень)"
+    subclasses:
+      - "Домен знания"
+      - "Домен жизни"
+      - "Домен света"
+      - "Домен природы"
+      - "Домен порядка"
+      - "Домен бури"
+      - "Домен войны"
+      - "Домен обмана"
+      - "Домен кузницы"
+    
+  bard:
+    name: "Бард"
+    description: "Вдохновляющий рассказчик и маг музыки"
+    hit_dice: 8
+    prime_abilities: ["charisma"]
+    saving_throws: ["dexterity", "charisma"]
+    skill_choices: [
+      "acrobatics", "animal_handling", "arcana", "athletics", 
+      "deception", "history", "insight", "intimidation", "investigation", 
+      "medicine", "nature", "perception", "persuasion", "religion", 
+      "sleight_of_hand", "stealth", "survival"
+    ]
+    equipment:
+      weapons: ["простые", "ручные арбалеты", "длинные мечи", "рапиры", "короткие мечи"]
+      armor: ["лёгкие"]
+      tools: ["три музыкальных инструмента"]
+    features:
+      - "Вдохновение барда (1 уровень)"
+      - "Джек всех мастеров (1 уровень)"
+      - "Песнь отдыха (2 уровень)"
+      - "Экспертиза (3 уровень)"
+      - "Вдохновляющая защитная мантия (6 уровень)"
+      - "Улучшенное вдохновение (9 уровень)"
+      - "Магические тайны (10 уровень)"
+      - "Улучшенная песнь отдыха (13 уровень)"
+      - "Вдохновляющий герой (14 уровень)"
+      - "Величайшее вдохновение (20 уровень)"
+    subclasses:
+      - "Коллегия знания"
+      - "Коллегия доблести"
+      - "Коллегия совести"

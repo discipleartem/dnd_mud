@@ -1,0 +1,175 @@
+# Расы Dungeons & Dragons 5e
+# Базовые расы из Player's Handbook
+
+races:
+  human:
+    name: "Человек"
+    description: "Человечество - самая разнообразная и амбициозная раса"
+    ability_bonuses:
+      strength: 1
+      dexterity: 1
+      constitution: 1
+      intelligence: 1
+      wisdom: 1
+      charisma: 1
+    size: "MEDIUM"
+    speed: 30
+    age:
+      min: 16
+      max: 100
+    languages: ["common"]
+    features:
+      - name: "Разносторонность"
+        description: "Бонус +1 ко всем характеристикам"
+        mechanics:
+          type: "ability_bonus"
+          target: "all"
+          value: 1
+      - name: "Дополнительный язык"
+        description: "Можно выучить один дополнительный язык по выбору"
+        mechanics:
+          type: "language"
+          count: 1
+          choice: true
+    
+    subraces:
+      variant_human:
+        name: "Человек (вариант)"
+        description: "Альтернативный вариант создания человека с выбором характеристик, навыков и черт"
+        ability_bonuses: {}
+        features:
+          - name: "Увеличение характеристик"
+            description: "Значение двух характеристик на ваш выбор увеличивается на 1"
+            mechanics:
+              type: "ability_bonus"
+              target: "choice"
+              count: 2
+              value: 1
+              choice: true
+          - name: "Навыки"
+            description: "Вы получаете владение одним навыком на ваш выбор"
+            mechanics:
+              type: "skill_proficiency"
+              count: 1
+              choice: true
+          - name: "Черта"
+            description: "Вы получаете одну черту на ваш выбор"
+            mechanics:
+              type: "feat"
+              count: 1
+              choice: true
+    
+  elf:
+    name: "Эльф"
+    description: "Эльфы - изящные и долгоживущие существа с тонкими чувствами"
+    ability_bonuses:
+      dexterity: 2
+    size: "MEDIUM"
+    speed: 30
+    age:
+      min: 20
+      max: 750
+    languages: ["common", "elvish"]
+    features:
+      - name: "Внимательность"
+        description: "Преимущество при проверках Мудрости (Восприятие)"
+        mechanics:
+          type: "advantage"
+          skill: "perception"
+      - name: "Тёмное зрение"
+        description: "Может видеть в условиях слабого освещения на расстоянии 60 футов как в ярком освещении"
+        mechanics:
+          type: "darkvision"
+          range: 60
+      - name: "Наследие фей"
+        description: "Преимущество при спасбросках от очарования"
+        mechanics:
+          type: "advantage"
+          save: "charisma"
+          effect: "charm"
+      - name: "Мастерство оружия"
+        description: "Владение длинными мечами, рапирами, короткими мечами, длинными и короткими луками"
+        mechanics:
+          type: "weapon_proficiency"
+          weapons: ["longsword", "rapier", "shortsword", "longbow", "shortbow"]
+      - name: "Транс"
+        description: "Медитация вместо сна. 4 часа медитации дают тот же отдых, что и 8 часов сна"
+        mechanics:
+          type: "rest"
+          duration: 4
+          effect: "full_rest"
+    subraces:
+      high_elf:
+        name: "Высший эльф"
+        ability_bonuses:
+          intelligence: 1
+        languages: []
+        features:
+          - name: "Дополнительный язык"
+            description: "Можно выучить один дополнительный язык по выбору"
+            mechanics:
+              type: "language"
+              count: 1
+              choice: true
+          - name: "Заговор высшего эльфа"
+            description: "Вы знаете один заговор из списка волшебника. Интеллект — ваша базовая характеристика для него"
+            mechanics:
+              type: "cantrip"
+              source: "wizard"
+              ability: "intelligence"
+              count: 1
+              choice: true
+      wood_elf:
+        name: "Лесной эльф"
+        ability_bonuses:
+          wisdom: 1
+        features:
+          - name: "Мастерство оружия лесного эльфа"
+            description: "Владение длинными мечами, рапирами, короткими мечами, длинными и короткими луками"
+            mechanics:
+              type: "weapon_proficiency"
+              weapons: ["longsword", "rapier", "shortsword", "longbow", "shortbow"]
+          - name: "Быстрота лесного эльфа"
+            description: "Базовая скорость передвижения 35 футов"
+            mechanics:
+              type: "speed_bonus"
+              value: 35
+          - name: "Маскировка лесного эльфа"
+            description: "Преимущество при проверках Ловкости (Скрытность) в лесистой местности"
+            mechanics:
+              type: "advantage"
+              skill: "stealth"
+              terrain: "forest"
+
+    
+  half_orc:
+    name: "Полуорк"
+    description: "Полуорки - сильные и выносливые воины"
+    ability_bonuses:
+      strength: 2
+      constitution: 1
+    size: "MEDIUM"
+    speed: 30
+    age:
+      min: 14
+      max: 80
+    languages: ["common", "orcish"]
+    features:
+      - name: "Непреклонность"
+        description: "Преимущество при спасбросках Силы от эффекта испуга"
+        mechanics:
+          type: "advantage"
+          save: "strength"
+          effect: "frightened"
+      - name: "Жестокость"
+        description: "Когда урон снижает ваши хиты до 0, вы остаётесь с 1 хитом"
+        mechanics:
+          type: "persistent_endurance"
+          trigger: "damage_reduces_to_zero"
+          effect: "remain_at_1_hp"
+      - name: "Полуоркская выносливость"
+        description: "Увеличенные хиты на каждом уровне"
+        mechanics:
+          type: "hit_point_bonus"
+          value: 1
+          per_level: true

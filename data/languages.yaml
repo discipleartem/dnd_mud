@@ -1,0 +1,81 @@
+# Языки Dungeons & Dragons 5e
+# Базовые языки из Player's Handbook
+
+languages:
+  common:
+    name: "Общий"
+    description: "Основной язык торговли и общения между расами"
+    script: "Общий"
+    speakers: "Все расы"
+    
+  elvish:
+    name: "Эльфийский"
+    description: "Изящный язык эльфов с древней историей"
+    script: "Эльфийский"
+    speakers: "Эльфы, высшие эльфы"
+    
+  dwarvish:
+    name: "Дварфийский"
+    description: "Грубый и резкий язык дварфов"
+    script: "Дварфийский"
+    speakers: "Дварфы"
+    
+  orcish:
+    name: "Орочий"
+    description: "Жесткий и агрессивный язык орков"
+    script: "Дварфийский"
+    speakers: "Орки, полуорки"
+    
+  halfling:
+    name: "Полурослийский"
+    description: "Простой и мелодичный язык полуросликов"
+    script: "Общий"
+    speakers: "Полурослики"
+    
+  draconic:
+    name: "Драконий"
+    description: "Древний язык драконов и драконорожденных"
+    script: "Драконий"
+    speakers: "Драконы, драконорожденные"
+    
+  gnomish:
+    name: "Гномийский"
+    description: "Сложный и технический язык гномов"
+    script: "Дварфийский"
+    speakers: "Гномы"
+    
+  abyssal:
+    name: "Бездонный"
+    description: "Язык демонов и тёмных существ"
+    script: "Бездонный"
+    speakers: "Демоны"
+    
+  celestial:
+    name: "Небесный"
+    description: "Язык ангелов и небожителей"
+    script: "Небесный"
+    speakers: "Ангелы"
+    
+  infernal:
+    name: "Инфернальный"
+    description: "Язык дьяволов и законных злых существ"
+    script: "Инфернальный"
+    speakers: "Дьяволы"
+    
+  primordial:
+    name: "Первородный"
+    description: "Древний язык элементалей"
+    script: "Первородный"
+    speakers: "Элементали"
+    
+  sylvan:
+    name: "Лесной"
+    description: "Язык лесных существ и фей"
+    script: "Эльфийский"
+    speakers: "Феи, сухады, кентавры"
+    
+  undercommon:
+    name: "Подземный"
+    description: "Торговый язык Подземья"
+    script: "Эльфийский"
+    speakers: "Дроу, глубокие дварфы"
