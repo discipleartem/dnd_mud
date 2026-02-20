@@ -6,9 +6,41 @@
 
 from __future__ import annotations
 from dataclasses import dataclass
-from typing import Dict, Any, Optional
+from typing import Dict, Union, Optional, TypedDict
 from pathlib import Path
 import yaml
+
+
+class AttributeData(TypedDict):
+    """Данные атрибута."""
+
+    name: str
+    default_value: int
+    min_value: int
+    max_value: int
+    short_name: str
+    description: Optional[str]
+    enabled: Optional[bool]
+
+
+class CoreAttributes(TypedDict):
+    """Базовые характеристики."""
+
+    base_attributes: Dict[str, AttributeData]
+
+
+class ModData(TypedDict):
+    """Данные мода."""
+
+    config: Dict[str, Union[str, int, bool]]
+    attributes: Dict[str, AttributeData]
+
+
+class Configs(TypedDict):
+    """Структура конфигураций."""
+
+    core: CoreAttributes
+    mods: Dict[str, ModData]
 
 
 @dataclass
@@ -31,7 +63,7 @@ class UnifiedConfigManager:
     """
 
     def __init__(self) -> None:
-        self.configs = {}
+        self.configs: Configs = {"core": {"base_attributes": {}}, "mods": {}}
         self._load_configs()
 
     def _load_configs(self) -> None:
@@ -42,7 +74,7 @@ class UnifiedConfigManager:
         # Загружаем модификации
         self.configs["mods"] = self._load_mods_attributes()
 
-    def _load_core_attributes(self) -> Dict[str, Any]:
+    def _load_core_attributes(self) -> CoreAttributes:
         """Загружает базовые характеристики."""
         try:
             path = (
@@ -54,12 +86,16 @@ class UnifiedConfigManager:
             )
 
             with open(path, "r", encoding="utf-8") as file:
-                return yaml.safe_load(file) or {}
+                data = yaml.safe_load(file)
+                if data and "base_attributes" in data:
+                    return data
+                else:
+                    return self._get_builtin_core_attributes()
         except FileNotFoundError:
             print("Базовые атрибуты не найдены, используем встроенные")
             return self._get_builtin_core_attributes()
 
-    def _get_builtin_core_attributes(self) -> Dict[str, Any]:
+    def _get_builtin_core_attributes(self) -> CoreAttributes:
         """Встроенные базовые характеристики."""
         return {
             "base_attributes": {
@@ -69,6 +105,8 @@ class UnifiedConfigManager:
                     "min_value": 1,
                     "max_value": 20,
                     "short_name": "STR",
+                    "description": None,
+                    "enabled": True,
                 },
                 "dexterity": {
                     "name": "dexterity",
@@ -76,6 +114,8 @@ class UnifiedConfigManager:
                     "min_value": 1,
                     "max_value": 20,
                     "short_name": "DEX",
+                    "description": None,
+                    "enabled": True,
                 },
                 "constitution": {
                     "name": "constitution",
@@ -83,6 +123,8 @@ class UnifiedConfigManager:
                     "min_value": 1,
                     "max_value": 20,
                     "short_name": "CON",
+                    "description": None,
+                    "enabled": True,
                 },
                 "intelligence": {
                     "name": "intelligence",
@@ -90,6 +132,8 @@ class UnifiedConfigManager:
                     "min_value": 1,
                     "max_value": 20,
                     "short_name": "INT",
+                    "description": None,
+                    "enabled": True,
                 },
                 "wisdom": {
                     "name": "wisdom",
@@ -97,6 +141,8 @@ class UnifiedConfigManager:
                     "min_value": 1,
                     "max_value": 20,
                     "short_name": "WIS",
+                    "description": None,
+                    "enabled": True,
                 },
                 "charisma": {
                     "name": "charisma",
@@ -104,11 +150,13 @@ class UnifiedConfigManager:
                     "min_value": 1,
                     "max_value": 20,
                     "short_name": "CHA",
+                    "description": None,
+                    "enabled": True,
                 },
             }
         }
 
-    def _load_mods_attributes(self) -> Dict[str, Any]:
+    def _load_mods_attributes(self) -> Dict[str, ModData]:
         """Загружает модификации от модов."""
         mods_path = Path(__file__).parent.parent.parent.parent / "data" / "mods"
 
@@ -123,9 +171,9 @@ class UnifiedConfigManager:
 
                     all_mods[mod_name] = {"config": mod_config, "attributes": mod_attrs}
 
-        return all_mods
+        return all_mods  # type: ignore
 
-    def _load_mod_config(self, mod_folder: Path) -> Dict[str, Any]:
+    def _load_mod_config(self, mod_folder: Path) -> Dict[str, Union[str, int, bool]]:
         """Загружает конфигурацию мода."""
         config_path = mod_folder / "config.yaml"
 
@@ -135,27 +183,40 @@ class UnifiedConfigManager:
         except FileNotFoundError:
             return {}
 
-    def _load_mod_attributes(self, mod_folder: Path) -> Dict[str, Any]:
+    def _load_mod_attributes(self, mod_folder: Path) -> Dict[str, AttributeData]:
         """Загружает атрибуты мода."""
         attrs_path = mod_folder / "attributes"
 
-        attrs = {}
+        attrs: Dict[str, AttributeData] = {}
 
         if attrs_path.exists():
             for attr_file in attrs_path.glob("*.yaml"):
                 with open(attr_file, "r", encoding="utf-8") as file:
                     attr_data = yaml.safe_load(file)
-                    attrs[attr_file.stem] = attr_data
+                    # Преобразуем в AttributeData, добавляя недостающие поля
+                    if attr_data and isinstance(attr_data, dict):
+                        full_attr_data: AttributeData = {
+                            "name": attr_data.get("name", attr_file.stem),
+                            "default_value": attr_data.get("default_value", 10),
+                            "min_value": attr_data.get("min_value", 1),
+                            "max_value": attr_data.get("max_value", 20),
+                            "short_name": attr_data.get(
+                                "short_name", attr_file.stem[:3].upper()
+                            ),
+                            "description": attr_data.get("description"),
+                            "enabled": attr_data.get("enabled", True),
+                        }
+                        attrs[attr_file.stem] = full_attr_data
 
         return attrs
 
-    def get_final_attribute_config(self, name: str) -> Optional[Dict[str, Any]]:
+    def get_final_attribute_config(self, name: str) -> Optional[AttributeData]:
         """Возвращает финальную конфигурацию характеристики с учетом модов."""
         # 1. Проверяем базовые характеристики
         core_attrs = self.configs.get("core", {}).get("base_attributes", {})
 
         if name in core_attrs:
-            final_config = core_attrs[name].copy()
+            final_config: AttributeData = core_attrs[name].copy()
 
             # 2. Применяем модификации
             for mod_name, mod_data in self.configs.get("mods", {}).items():
@@ -163,16 +224,28 @@ class UnifiedConfigManager:
                     mod_attrs = mod_data["attributes"]
                     if name in mod_attrs:
                         for key, value in mod_attrs[name].items():
-                            if key != "name":
-                                final_config[key] = value
+                            if key != "name" and key in final_config:
+                                # Явное приведение типа для удовлетворения mypy
+                                if key == "default_value":
+                                    final_config["default_value"] = value  # type: ignore
+                                elif key == "min_value":
+                                    final_config["min_value"] = value  # type: ignore
+                                elif key == "max_value":
+                                    final_config["max_value"] = value  # type: ignore
+                                elif key == "short_name":
+                                    final_config["short_name"] = value  # type: ignore
+                                elif key == "description":
+                                    final_config["description"] = value  # type: ignore
+                                elif key == "enabled":
+                                    final_config["enabled"] = value  # type: ignore
 
             return final_config
 
         return None
 
-    def get_all_enabled_attributes(self) -> Dict[str, Dict[str, Any]]:
+    def get_all_enabled_attributes(self) -> Dict[str, AttributeData]:
         """Возвращает все включенные характеристики."""
-        result = {}
+        result: Dict[str, AttributeData] = {}
 
         # Базовые характеристики
         core_attrs = self.configs.get("core", {}).get("base_attributes", {})

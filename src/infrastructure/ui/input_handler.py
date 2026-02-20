@@ -47,9 +47,7 @@ class InputHandler:
         except (EOFError, KeyboardInterrupt):
             return ""
 
-    def get_string(
-        self, prompt: str, default: str = "", allow_empty: bool = True
-    ) -> str:
+    def get_text(self, prompt: str, default: str = "", allow_empty: bool = True) -> str:
         """Получает строку от пользователя."""
         max_attempts = 10
         attempts = 0
@@ -85,9 +83,9 @@ class InputHandler:
     def get_int(
         self,
         prompt: str,
-        min_value: int = None,
-        max_value: int = None,
-        default: int = None,
+        min_value: int | None = None,
+        max_value: int | None = None,
+        default: int | None = None,
     ) -> int:
         """Получает целое число от пользователя."""
         max_attempts = 10

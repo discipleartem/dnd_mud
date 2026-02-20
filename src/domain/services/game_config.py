@@ -1,305 +1,386 @@
-"""
-Сервис управления конфигурацией игры.
+# src/domain/services/game_config.py
+"""Конфигурация игры."""
 
-Применяемые паттерны:
-- Singleton (Одиночка) - единый источник конфигурации
-- Observer (Наблюдатель) - уведомление об изменениях
-- Repository (Хранилище) - работа с файлами конфигурации
-
-Применяемые принципы:
-- Single Responsibility - только управление конфигурацией
-- Open/Closed - легко добавить новые настройки
-- Dependency Inversion - зависимость от абстракций файловой системы
-"""
-
-from typing import Dict, List, Optional, Set
+from dataclasses import dataclass
+from typing import Dict, List, Union, Optional, TypedDict
 from pathlib import Path
-import yaml
-import json
-from dataclasses import dataclass, asdict
+
+
+class ModData(TypedDict):
+    """Данные мода."""
+
+    name: str
+    enabled: bool
+    description: str
+    is_active: bool
+    folder_name: str
+    starting_level: int
+    version: str
+    author: str
+    dependencies: Optional[List[str]]
+    config: Optional[Dict[str, Union[str, int, bool]]]
+    load_order: Optional[int]
+
+
+class AdventureSettings(TypedDict):
+    """Настройки приключений."""
+
+    show_all: Optional[bool]
+    active: Optional[str]
+
+
+class AdventureData(TypedDict):
+    """Данные приключения."""
+
+    name: str
+    file: str
+    enabled: bool
+    description: str
+    is_active: bool
+    file_name: str
+    recommended_level: int
+    difficulty: str
+    min_level: int
+    max_level: int
+    prerequisites: Optional[List[str]]
+    show_all: bool
+    active: str
+    rewards: Optional[Dict[str, Union[int, List[str]]]]
+    completion_requirements: Optional[Dict[str, Union[str, int]]]
+    time_limit: Optional[int]
+    encounters: Optional[List[Dict[str, Union[str, int]]]]
+
+
+class CharacterCreationConfig(TypedDict):
+    """Конфигурация создания персонажа."""
+
+    point_buy: bool
+    rolling_method: str
+    max_level: int
+    allow_multiclass: bool
+    min_level: int
+    starting_gold: int
+    allowed_races: Optional[List[str]]
+    allowed_classes: Optional[List[str]]
+    attribute_points: int
+    default_level: Optional[int]
+
+
+class UIConfig(TypedDict):
+    """Конфигурация интерфейса."""
+
+    theme: str
+    language: str
+    show_tooltips: bool
+    auto_save: bool
+    save_interval: int
+    window_size: Optional[List[int]]
+    font_size: int
+    color_scheme: str
 
 
 @dataclass
 class ModInfo:
-    """Информация о моде."""
-    
+    """Информация о модификации."""
+
     name: str
-    description: str
-    version: str
-    author: str
-    folder_name: str
+    enabled: bool = False
+    description: str = ""
     is_active: bool = False
-    starting_level: Optional[int] = None
+    folder_name: str = ""
+    starting_level: int = 1
+
+    @classmethod
+    def from_dict(cls, data: ModData) -> "ModInfo":
+        """Создает из словаря."""
+        return cls(
+            name=data.get("name", ""),
+            enabled=data.get("enabled", False),
+        )
 
 
-@dataclass
 class AdventureInfo:
     """Информация о приключении."""
-    
-    name: str
-    description: str
-    file_name: str
-    recommended_level: Optional[int] = None
-    difficulty: str = "Средний"
-    is_active: bool = False
-    starting_level: Optional[int] = None
+
+    def __init__(
+        self,
+        name: str,
+        file: str = "",
+        enabled: bool = False,
+        description: str = "",
+        is_active: bool = False,
+        file_name: str = "",
+        recommended_level: int = 1,
+        difficulty: str = "средний",
+    ):
+        self.name = name
+        self.file = file
+        self.enabled = enabled
+        self.description = description
+        self.is_active = is_active
+        self.file_name = file_name
+        self.recommended_level = recommended_level
+        self.difficulty = difficulty
+
+    @classmethod
+    def from_dict(cls, data: AdventureData) -> "AdventureInfo":
+        """Создает из словаря."""
+        return cls(
+            name=data.get("name", ""),
+            file=data.get("file", ""),
+            enabled=data.get("enabled", False),
+            description=data.get("description", ""),
+            is_active=data.get("is_active", False),
+            file_name=data.get("file_name", ""),
+        )
 
 
 @dataclass
-class GameSettings:
-    """Настройки игры."""
-    
-    active_mods: List[str] = None
-    active_adventure: Optional[str] = None
-    show_all_adventures: bool = True
-    default_starting_level: int = 1
-    
-    def __post_init__(self):
-        if self.active_mods is None:
-            self.active_mods = []
-
-
 class GameConfig:
-    """Сервис управления конфигурацией игры."""
-    
-    def __init__(self):
-        """Инициализирует сервис конфигурации."""
-        self._config_path = Path(__file__).parent.parent.parent.parent / "data" / "config"
-        self._mods_path = Path(__file__).parent.parent.parent.parent / "data" / "mods"
-        self._adventures_path = Path(__file__).parent.parent.parent.parent / "data" / "adventures"
-        
-        self._config_file = self._config_path / "game_settings.json"
-        self._settings = GameSettings()
-        
-        # Загружаем настройки при инициализации
-        self._load_settings()
-    
-    def _load_settings(self) -> None:
-        """Загружает настройки из файла."""
-        try:
-            if self._config_file.exists():
-                with open(self._config_file, "r", encoding="utf-8") as f:
-                    data = json.load(f)
-                    self._settings = GameSettings(**data)
-            else:
-                # Если файл не существует, создаем настройки по умолчанию
-                self._settings = GameSettings()
-                # Устанавливаем приключение Tutorial по умолчанию
-                self._set_default_adventure()
-                self._save_settings()
-        except (json.JSONDecodeError, FileNotFoundError, TypeError):
-            # Если файл поврежден, используем настройки по умолчанию
-            self._settings = GameSettings()
-            self._set_default_adventure()
-            self._save_settings()
-    
-    def _set_default_adventure(self) -> None:
-        """Устанавливает приключение по умолчанию только если есть другие приключения."""
-        # Проверяем, есть ли приключения кроме учебного
-        non_tutorial_adventures = self.get_non_tutorial_adventures()
-        
-        if not non_tutorial_adventures:
-            # Если нет других приключений, не активируем ни одно
-            self._settings.active_adventure = None
-        else:
-            # Если есть другие приключения, можно активировать учебное по умолчанию
-            tutorial_file = "tutorial_adventure.yaml"
-            adventures = self.get_available_adventures()
-            
-            for adventure in adventures:
-                if adventure.file_name == tutorial_file:
-                    self._settings.active_adventure = tutorial_file
-                    break
-    
-    def _save_settings(self) -> None:
-        """Сохраняет настройки в файл."""
-        try:
-            self._config_path.mkdir(parents=True, exist_ok=True)
-            with open(self._config_file, "w", encoding="utf-8") as f:
-                json.dump(asdict(self._settings), f, indent=2, ensure_ascii=False)
-        except (IOError, TypeError):
-            pass  # Логируем ошибку в реальном приложении
-    
+    """Основная конфигурация игры."""
+
+    # Настройки персонажа
+    character_creation: CharacterCreationConfig
+
+    # Настройки UI
+    ui: UIConfig
+
+    # Модификации
+    mods: Dict[str, ModInfo]
+
+    # Приключения
+    adventures: Dict[str, AdventureData]
+    adventure_settings: AdventureSettings
+
+    @classmethod
+    def get_default_config(cls) -> "GameConfig":
+        """Возвращает конфигурацию по умолчанию."""
+        return cls(
+            character_creation={
+                "point_buy": False,
+                "rolling_method": "standard_array",
+                "max_level": 20,
+                "allow_multiclass": True,
+                "min_level": 1,
+                "starting_gold": 10,
+                "allowed_races": None,
+                "allowed_classes": None,
+                "attribute_points": 27,
+                "default_level": 1,
+            },
+            ui={
+                "theme": "dark",
+                "language": "ru",
+                "show_tooltips": True,
+                "auto_save": True,
+                "save_interval": 300,
+                "window_size": [1200, 800],
+                "font_size": 12,
+                "color_scheme": "default",
+            },
+            mods={},
+            adventure_settings={"show_all": False, "active": None},
+            adventures={},
+        )
+
     def get_available_mods(self) -> List[ModInfo]:
-        """Возвращает список доступных модов."""
+        """Возвращает список доступных модификаций."""
         mods = []
-        
-        if not self._mods_path.exists():
-            return mods
-        
-        for mod_folder in self._mods_path.iterdir():
-            if not mod_folder.is_dir():
-                continue
-            
-            config_file = mod_folder / "config.yaml"
-            if not config_file.exists():
-                continue
-            
-            try:
-                with open(config_file, "r", encoding="utf-8") as f:
-                    config = yaml.safe_load(f) or {}
-                
-                # Извлекаем информацию о моде
-                name = config.get("name", mod_folder.name)
-                description = config.get("description", "")
-                version = config.get("version", "1.0.0")
-                author = config.get("author", "Неизвестен")
-                
-                # Определяем начальный уровень из мода
-                starting_level = None
-                if "game_settings" in config and "starting_level" in config["game_settings"]:
-                    starting_level = config["game_settings"]["starting_level"]
-                elif "character_creation" in config and "starting_level" in config["character_creation"]:
-                    starting_level = config["character_creation"]["starting_level"]
-                
-                # Проверяем, активен ли мод
-                is_active = mod_folder.name in self._settings.active_mods
-                
-                mods.append(ModInfo(
-                    name=name,
-                    description=description,
-                    version=version,
-                    author=author,
-                    folder_name=mod_folder.name,
-                    is_active=is_active,
-                    starting_level=starting_level
-                ))
-                
-            except (yaml.YAMLError, IOError):
-                continue
-        
+        for mod_name, mod_info in self.mods.items():
+            mods.append(mod_info)
         return mods
-    
-    def get_available_adventures(self, include_tutorial: bool = True) -> List[AdventureInfo]:
+
+    def get_available_adventures(self) -> List[AdventureInfo]:
         """Возвращает список доступных приключений."""
         adventures = []
-        
-        if not self._adventures_path.exists():
-            return adventures
-        
-        for adventure_file in self._adventures_path.glob("*.yaml"):
-            if not adventure_file.is_file():
-                continue
-            
-            try:
-                with open(adventure_file, "r", encoding="utf-8") as f:
-                    adventure = yaml.safe_load(f) or {}
-                
-                name = adventure.get("name", adventure_file.stem)
-                description = adventure.get("description", "")
-                recommended_level = adventure.get("recommended_level")
-                difficulty = adventure.get("difficulty", "Средний")
-                
-                # Для "Начало пути" всегда устанавливаем уровень 1
-                if adventure_file.name == "tutorial_adventure.yaml":
-                    starting_level = 1
-                else:
-                    # Определяем начальный уровень из приключения
-                    starting_level = None
-                    if "character_settings" in adventure and "starting_level" in adventure["character_settings"]:
-                        starting_level = adventure["character_settings"]["starting_level"]
-                    elif recommended_level:
-                        starting_level = recommended_level
-                
-                # Проверяем, активно ли приключение
-                is_active = adventure_file.name == self._settings.active_adventure
-                
-                # Фильтр учебного приключения если нужно
-                if not include_tutorial and adventure_file.name == "tutorial_adventure.yaml":
-                    continue
-                
-                # Проверяем, должно ли приключение отображаться
-                should_show = self._settings.show_all_adventures or is_active
-                
-                if should_show:
-                    adventures.append(AdventureInfo(
-                        name=name,
-                        description=description,
-                        file_name=adventure_file.name,
-                        recommended_level=recommended_level,
-                        difficulty=difficulty,
-                        is_active=is_active,
-                        starting_level=starting_level
-                    ))
-                
-            except (yaml.YAMLError, IOError):
-                continue
-        
+        for adventure_data in self.adventures.values():
+            adventures.append(AdventureInfo.from_dict(adventure_data))
         return adventures
-    
-    def get_non_tutorial_adventures(self) -> List[AdventureInfo]:
-        """Возвращает список приключений кроме учебного."""
-        return self.get_available_adventures(include_tutorial=False)
-    
-    def activate_mod(self, mod_folder_name: str) -> bool:
-        """Активирует мод."""
-        mods = self.get_available_mods()
-        mod_exists = any(mod.folder_name == mod_folder_name for mod in mods)
-        
-        if not mod_exists:
-            return False
-        
-        if mod_folder_name not in self._settings.active_mods:
-            self._settings.active_mods.append(mod_folder_name)
-            self._save_settings()
-        
-        return True
-    
-    def deactivate_mod(self, mod_folder_name: str) -> bool:
-        """Деактивирует мод."""
-        if mod_folder_name in self._settings.active_mods:
-            self._settings.active_mods.remove(mod_folder_name)
-            self._save_settings()
-            return True
-        return False
-    
-    def set_active_adventure(self, adventure_file_name: str) -> bool:
-        """Устанавливает активное приключение."""
-        adventures = self.get_available_adventures()
-        adventure_exists = any(adv.file_name == adventure_file_name for adv in adventures)
-        
-        if not adventure_exists:
-            return False
-        
-        self._settings.active_adventure = adventure_file_name
-        self._save_settings()
-        return True
-    
-    def get_active_mods_info(self) -> List[ModInfo]:
-        """Возвращает информацию об активных модах."""
-        all_mods = self.get_available_mods()
-        return [mod for mod in all_mods if mod.is_active]
-    
-    def get_active_adventure_info(self) -> Optional[AdventureInfo]:
-        """Возвращает информацию об активном приключении."""
-        if not self._settings.active_adventure:
-            return None
-        
-        adventures = self.get_available_adventures()
-        for adventure in adventures:
-            if adventure.file_name == self._settings.active_adventure:
-                return adventure
-        return None
-    
-    def set_show_all_adventures(self, show: bool) -> None:
-        """Устанавливает флаг отображения всех приключений."""
-        self._settings.show_all_adventures = show
-        self._save_settings()
-    
+
+    def deactivate_mod(self, mod_name: str) -> None:
+        """Деактивирует модификацию."""
+        for mod in self.get_available_mods():
+            if mod.name == mod_name:
+                mod.enabled = False
+                break
+
+    def activate_mod(self, mod_name: str) -> None:
+        """Активирует модификацию."""
+        for mod in self.get_available_mods():
+            if mod.name == mod_name:
+                mod.enabled = True
+                break
+
     def get_show_all_adventures(self) -> bool:
-        """Возвращает флаг отображения всех приключений."""
-        return self._settings.show_all_adventures
-    
+        """Возвращает настройку показа всех приключений."""
+        return bool(self.adventure_settings.get("show_all", False))
+
+    def set_show_all_adventures(self, show: bool) -> None:
+        """Устанавливает настройку показа всех приключений."""
+        self.adventure_settings["show_all"] = show
+
     def get_default_starting_level(self) -> int:
         """Возвращает начальный уровень по умолчанию."""
-        return self._settings.default_starting_level
-    
+        level = self.character_creation.get("default_level", 1)
+        return int(level) if level is not None else 1
+
     def set_default_starting_level(self, level: int) -> None:
         """Устанавливает начальный уровень по умолчанию."""
-        if 1 <= level <= 20:
-            self._settings.default_starting_level = level
-            self._save_settings()
+        self.character_creation["default_level"] = level
+
+    def get_active_adventure_info(self) -> Optional[AdventureInfo]:
+        """Возвращает информацию об активном приключении."""
+        active_name = self.adventure_settings.get("active")
+        if active_name and active_name in self.adventures:
+            return AdventureInfo.from_dict(self.adventures[active_name])
+        return None
+
+    def get_non_tutorial_adventures(self) -> List[AdventureInfo]:
+        """Возвращает список приключений кроме учебного."""
+        non_tutorial = []
+        for adventure_data in self.adventures.values():
+            if adventure_data.get("file_name") != "tutorial_adventure.yaml":
+                non_tutorial.append(AdventureInfo.from_dict(adventure_data))
+        return non_tutorial
+
+    def set_active_adventure(self, adventure_name: str) -> None:
+        """Устанавливает активное приключение."""
+        self.adventure_settings["active"] = adventure_name
 
 
-# Глобальный экземпляр для удобного использования
-game_config = GameConfig()
+# Глобальный экземпляр конфигурации
+game_config = GameConfig.get_default_config()
+
+
+def load_config(config_path: Optional[Path] = None) -> None:
+    """Загружает конфигурацию из файла."""
+    global game_config
+
+    if config_path and config_path.exists():
+        try:
+            import yaml
+
+            with open(config_path, "r", encoding="utf-8") as f:
+                data = yaml.safe_load(f)
+
+            # Обновляем конфигурацию
+            if "character_creation" in data:
+                game_config.character_creation.update(data["character_creation"])
+
+            if "ui" in data:
+                game_config.ui.update(data["ui"])
+
+            if "mods" in data:
+                game_config.mods.update(data["mods"])
+
+            if "adventures" in data:
+                game_config.adventures.update(data["adventures"])
+
+        except Exception:
+            # Оставляем конфигурацию по умолчанию при ошибке
+            pass
+
+
+def get_mods() -> List[ModInfo]:
+    """Возвращает список модификаций."""
+    mods = []
+    for mod_name, mod_info in game_config.mods.items():
+        mods.append(mod_info)
+    return mods
+
+
+def get_adventures() -> List[AdventureInfo]:
+    """Возвращает список приключений."""
+    adventures = []
+    for adventure_data in game_config.adventures.values():
+        adventures.append(AdventureInfo.from_dict(adventure_data))
+    return adventures
+
+
+def is_mod_enabled(mod_name: str) -> bool:
+    """Проверяет, включена ли модификация."""
+    for mod in get_mods():
+        if mod.name == mod_name:
+            return mod.enabled
+    return False
+
+
+def is_adventure_enabled(adventure_name: str) -> bool:
+    """Проверяет, доступно ли приключение."""
+    for adventure in get_adventures():
+        if adventure.name == adventure_name:
+            return adventure.enabled
+    return False
+
+
+def get_available_mods() -> List[ModInfo]:
+    """Возвращает список доступных модификаций."""
+    return get_mods()
+
+
+def get_available_adventures() -> List[AdventureInfo]:
+    """Возвращает список доступных приключений."""
+    if game_config.adventure_settings.get("show_all", False):
+        return get_adventures()
+    else:
+        return [adventure for adventure in get_adventures() if adventure.enabled]
+
+
+def get_show_all_adventures() -> bool:
+    """Возвращает настройку показа всех приключений."""
+    return game_config.get_show_all_adventures()
+
+
+def set_show_all_adventures(show: bool) -> None:
+    """Устанавливает настройку показа всех приключений."""
+    game_config.adventure_settings["show_all"] = show
+
+
+def get_default_starting_level() -> int:
+    """Возвращает начальный уровень по умолчанию."""
+    level = game_config.character_creation.get("default_level", 1)
+    return int(level) if level is not None else 1
+
+
+def set_default_starting_level(level: int) -> None:
+    """Устанавливает начальный уровень по умолчанию."""
+    game_config.character_creation["default_level"] = level
+
+
+def activate_mod(mod_name: str) -> bool:
+    """Активирует модификацию.
+
+    Returns:
+        True если мод успешно активирован, иначе False
+    """
+    for mod in get_mods():
+        if mod.name == mod_name:
+            mod.enabled = True
+            return True
+    return False
+
+
+def deactivate_mod(mod_name: str) -> bool:
+    """Деактивирует модификацию.
+
+    Returns:
+        True если мод успешно деактивирован, иначе False
+    """
+    for mod in get_mods():
+        if mod.name == mod_name:
+            mod.enabled = False
+            return True
+    return False
+
+
+def set_active_adventure(adventure_name: str) -> bool:
+    """Устанавливает активное приключение.
+
+    Returns:
+        True если приключение успешно установлено, иначе False
+    """
+    try:
+        game_config.adventure_settings["active"] = adventure_name
+        return True
+    except Exception:
+        return False

@@ -1,5 +1,6 @@
 # src/core/entities/skill.py
 from dataclasses import dataclass, field
+from typing import Dict, List, Union
 from ..interfaces.localization import get_text
 from ..value_objects.skills import SkillsManager
 
@@ -33,9 +34,18 @@ class Skill:
             )
 
     @property
-    def config(self):
+    def config(self) -> Dict[str, Union[str, List[str]]]:
         """Возвращает конфигурацию навыка."""
-        return SkillsManager.get_skill(self.name)
+        skill_config = SkillsManager.get_skill(self.name)
+        if skill_config:
+            return {
+                "name": skill_config.name,
+                "display_name": skill_config.display_name,
+                "attribute": skill_config.attribute,
+                "description": skill_config.description,
+                "penalties": skill_config.penalties,
+            }
+        return {}
 
     @property
     def localized_name(self) -> str:
@@ -50,7 +60,9 @@ class Skill:
     @property
     def attribute_name(self) -> str:
         """Возвращает название связанной характеристики."""
-        return self.config.attribute if self.config else "strength"
+        if self.config and "attribute" in self.config:
+            return str(self.config["attribute"])
+        return "strength"
 
     @property
     def is_proficient(self) -> bool:
@@ -63,7 +75,10 @@ class Skill:
         return self.expertise_bonus > 0
 
     def calculate_total_bonus(
-        self, character_attributes: dict, proficiency_bonus: int, penalties: dict = None
+        self,
+        character_attributes: Dict[str, int],
+        proficiency_bonus: int,
+        penalties: Dict[str, int] | None = None,
     ) -> int:
         """Рассчитывает общий бонус навыка с учётом штрафов.
 
@@ -137,7 +152,7 @@ class Skill:
         """Проверяет, применяется ли к навыку указанный штраф."""
         return SkillsManager.has_penalty(self.name, penalty_type)
 
-    def get_penalties(self) -> list:
+    def get_penalties(self) -> List[str]:
         """Возвращает список штрафов для навыка."""
         return SkillsManager.get_penalties(self.name)
 

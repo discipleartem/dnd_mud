@@ -36,16 +36,16 @@ def create_mock_character(name: str = "Тестовый персонаж"):
     """Создает правильный мок персонажа с всеми необходимыми атрибутами."""
     mock_character = Mock()
     mock_character.name = name
-    
+
     # Создаем моки для race и character_class
     mock_race = Mock()
     mock_race.name = "Человек"
     mock_character.race = mock_race
-    
+
     mock_char_class = Mock()
     mock_char_class.name = "Воин"
     mock_character.character_class = mock_char_class
-    
+
     mock_character.level = 1
     mock_character.hp_current = 10
     mock_character.hp_max = 10
@@ -58,14 +58,21 @@ def create_mock_character(name: str = "Тестовый персонаж"):
         "wisdom": 0,
         "charisma": 0,
     }
-    
+
     # Добавляем атрибуты характеристик
-    attributes = ["strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma"]
+    attributes = [
+        "strength",
+        "dexterity",
+        "constitution",
+        "intelligence",
+        "wisdom",
+        "charisma",
+    ]
     for attr in attributes:
         mock_attr = Mock()
         mock_attr.value = 12 if attr == "strength" else 10
         setattr(mock_character, attr, mock_attr)
-    
+
     return mock_character
 
 
@@ -125,7 +132,7 @@ class TestMainMenuHandlers:
         # Настройка моков
         mock_builtin_input.return_value = ""
         mock_input.wait_for_enter.return_value = None
-        
+
         mock_character = create_mock_character()
 
         mock_creation_controller = Mock()
@@ -133,10 +140,10 @@ class TestMainMenuHandlers:
 
         mock_manager_instance = Mock()
         mock_manager_instance.save_character.return_value = True
-        
+
         # Патчим get_instance чтобы возвращал наш мок
         mock_manager_class.get_instance.return_value = mock_manager_instance
-        
+
         # Отключаем проверку сериализации для save_character
         mock_manager_instance.save_character = Mock(return_value=True)
 
@@ -162,7 +169,7 @@ class TestMainMenuHandlers:
         # Настройка моков
         mock_builtin_input.return_value = ""
         mock_input.wait_for_enter.return_value = None
-        
+
         mock_creation_controller = Mock()
         mock_creation_controller.create_character.return_value = None  # Отмена
 
@@ -185,7 +192,7 @@ class TestMainMenuHandlers:
     ):
         """Тестирует загрузку игры с сохраненными персонажами."""
         from src.adapters.repositories.character_repository import CharacterManager
-        
+
         # Настройка моков
         mock_characters = ["character1.json", "character2.json"]
         mock_manager_instance = Mock()
@@ -194,28 +201,28 @@ class TestMainMenuHandlers:
             "name": "Тестовый персонаж",
             "race": "Человек",
             "class": "Воин",
-            "level": 1
+            "level": 1,
         }
-        
+
         # Создаем mock для загруженного персонажа с минимальными атрибутами
         mock_loaded_character = Mock()
         mock_loaded_character.name = "Тестовый персонаж"
-        
+
         # Создаем моки для race и character_class
         mock_race = Mock()
         mock_race.name = "Человек"
         mock_loaded_character.race = mock_race
-        
+
         mock_char_class = Mock()
         mock_char_class.name = "Воин"
         mock_loaded_character.character_class = mock_char_class
-        
+
         mock_loaded_character.level = 1
         mock_loaded_character.hp_current = 10
         mock_loaded_character.hp_max = 10
         mock_loaded_character.ac = 12
         mock_loaded_character.gold = 100
-        
+
         # Создаем моки для атрибутов персонажа
         mock_strength = Mock()
         mock_strength.value = 15
@@ -229,7 +236,7 @@ class TestMainMenuHandlers:
         mock_wisdom.value = 10
         mock_charisma = Mock()
         mock_charisma.value = 8
-        
+
         # Присваиваем атрибуты персонажу
         mock_loaded_character.strength = mock_strength
         mock_loaded_character.dexterity = mock_dexterity
@@ -237,7 +244,7 @@ class TestMainMenuHandlers:
         mock_loaded_character.intelligence = mock_intelligence
         mock_loaded_character.wisdom = mock_wisdom
         mock_loaded_character.charisma = mock_charisma
-        
+
         # Возвращаем полный словарь модификаторов со всеми нужными ключами
         modifiers_dict = {
             "strength": 2,
@@ -248,10 +255,12 @@ class TestMainMenuHandlers:
             "charisma": -1,
         }
         mock_loaded_character.get_all_modifiers.return_value = modifiers_dict
-        
+
         mock_manager_instance.load_character.return_value = mock_loaded_character
-        mock_manager_instance.load_character.side_effect = lambda filename: mock_loaded_character
-        
+        mock_manager_instance.load_character.side_effect = lambda filename: (
+            mock_loaded_character
+        )
+
         # Создаем моки для renderer и input_handler
         mock_renderer = Mock()
         mock_input = Mock()
@@ -259,7 +268,9 @@ class TestMainMenuHandlers:
         mock_input.wait_for_enter.return_value = None
 
         # Патчим все зависимости одновременно
-        with patch.object(CharacterManager, 'get_instance', return_value=mock_manager_instance):
+        with patch.object(
+            CharacterManager, "get_instance", return_value=mock_manager_instance
+        ):
             with patch("main.renderer", mock_renderer):
                 with patch("main.input_handler", mock_input):
                     with patch("builtins.print"):
@@ -276,17 +287,19 @@ class TestMainMenuHandlers:
     ):
         """Тестирует загрузку игры без сохраненных персонажей."""
         from src.adapters.repositories.character_repository import CharacterManager
-        
+
         mock_manager_instance = Mock()
         mock_manager_instance.list_characters.return_value = []
         mock_manager_instance.get_character_info.return_value = None
-        
+
         # Создаем моки для renderer и input_handler
         mock_renderer = Mock()
         mock_input = Mock()
         mock_input.wait_for_enter.return_value = None
 
-        with patch.object(CharacterManager, 'get_instance', return_value=mock_manager_instance):
+        with patch.object(
+            CharacterManager, "get_instance", return_value=mock_manager_instance
+        ):
             with patch("main.renderer", mock_renderer):
                 with patch("main.input_handler", mock_input):
                     with patch("builtins.print"):
@@ -315,9 +328,7 @@ class TestMainMenuHandlers:
 
         # В handle_settings show_info вызывается дважды
         assert mock_renderer.show_info.call_count == 2
-        mock_renderer.show_info.assert_any_call(
-            "Открытие настроек..."
-        )
+        mock_renderer.show_info.assert_any_call("Открытие настроек...")
         mock_renderer.show_info.assert_any_call(
             "Функция настроек будет реализована в следующей версии."
         )
@@ -414,7 +425,9 @@ class TestMainFunction:
 
         assert result == 1
         # Проверяем, что print был вызван с сообщением об ошибке
-        mock_print.assert_called_with("Критическая ошибка при запуске игры: Критическая ошибка")
+        mock_print.assert_called_with(
+            "Критическая ошибка при запуске игры: Критическая ошибка"
+        )
         # Проверяем, что критический лог был записан
         mock_logging_critical.assert_called_once()
 
@@ -439,7 +452,7 @@ class TestMainFunction:
         # Создаем мок renderer с правильным поведением get_input
         mock_renderer = Mock()
         mock_renderer.get_input.side_effect = ["", ""]  # Два вызова get_input
-        
+
         with patch("main.renderer", mock_renderer):
             with patch("main.input_handler", Mock()):
                 with patch("builtins.print"):

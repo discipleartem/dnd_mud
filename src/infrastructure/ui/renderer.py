@@ -1,3 +1,4 @@
+# src/infrastructure/ui/renderer.py
 """
 Модуль рендеринга D&D MUD.
 
@@ -7,7 +8,10 @@
 from __future__ import annotations
 
 import sys
-from typing import List, Dict, Any
+from typing import List, Dict, Union
+
+# Алиасы для сложных типов
+MenuOptions = List[Dict[str, Union[str, int, List[str]]]]
 
 
 class Renderer:
@@ -38,7 +42,7 @@ class Renderer:
         """Отображает заголовок (псевдоним для show_title)."""
         self.show_title(title)
 
-    def show_menu(self, title: str, options: List[Dict[str, Any]]) -> None:
+    def show_menu(self, title: str, options: MenuOptions) -> None:
         """Отображает меню."""
         width = 50
         border = "-" * width
@@ -75,6 +79,10 @@ class Renderer:
     def render_info(self, message: str) -> None:
         """Отображает информационное сообщение (псевдоним для show_info)."""
         self.show_info(message)
+
+    def show_text(self, message: str) -> None:
+        """Отображает простой текст."""
+        print(message)
 
     def get_input(self, prompt: str = "> ") -> str:
         """Получает ввод от пользователя."""

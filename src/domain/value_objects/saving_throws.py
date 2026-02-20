@@ -1,132 +1,134 @@
-# src/core/mechanics/saving_throws.py
+# src/domain/value_objects/saving_throws.py
+"""Менеджер спасбросков D&D 5e."""
+
 from dataclasses import dataclass
-from typing import Dict, List, Optional
-import yaml
-from pathlib import Path
+from typing import Dict, Optional, List
 
 
 @dataclass
 class SavingThrowConfig:
     """Конфигурация спасброска."""
 
-    name: str  # "strength_save"
-    display_name: str  # "Спасбросок Силы"
-    attribute: str  # "strength"
-    description: str  # "Сопротивление силовым эффектам"
+    name: str
+    display_name: str
+    attribute: str
+    description: str = ""
+
+    @classmethod
+    def from_dict(cls, data: Dict[str, str]) -> "SavingThrowConfig":
+        """Создает конфигурацию из словаря."""
+        return cls(
+            name=data.get("name", ""),
+            display_name=data.get("display_name", ""),
+            attribute=data.get("attribute", ""),
+            description=data.get("description", ""),
+        )
 
 
 class SavingThrowsManager:
-    """Менеджер спасбросков D&D."""
+    """Менеджер спасбросков с загрузкой из YAML."""
 
-    _saves_config: Dict[str, SavingThrowConfig] = {}
+    _throws_config: Dict[str, SavingThrowConfig] = {}
     _config_loaded: bool = False
 
     @classmethod
     def _load_config(cls) -> None:
-        """Загружает конфигурацию из YAML."""
+        """Загружает конфигурацию спасбросков из YAML файла."""
         if cls._config_loaded:
             return
 
         try:
-            config_path = (
-                Path(__file__).parent.parent.parent.parent
-                / "data"
-                / "yaml"
-                / "attributes"
-                / "saving_throws.yaml"
-            )
-            with open(config_path, "r", encoding="utf-8") as file:
-                config = yaml.safe_load(file)
-
-            # Загружаем спасброски
-            if "saving_throws" in config:
-                for save_name, save_data in config["saving_throws"].items():
-                    cls._saves_config[save_name] = SavingThrowConfig(
-                        name=save_data["name"],
-                        display_name=save_data["display_name"],
-                        attribute=save_data["attribute"],
-                        description=save_data["description"],
-                    )
-
-        except FileNotFoundError:
-            print(
-                "Конфигурация спасбросков не найдена, используем значения по умолчанию"
-            )
+            # Временно используем встроенную конфигурацию
+            cls._load_fallback_config()
+        except Exception:
             cls._load_fallback_config()
 
         cls._config_loaded = True
 
     @classmethod
     def _load_fallback_config(cls) -> None:
-        """Загружает базовую конфигурацию если YAML не найден."""
-        # Базовые спасброски
-        basic_saves = {
-            "strength": SavingThrowConfig(
-                "strength_save", "Спасбросок Силы", "strength", "Сопротивление силе"
-            ),
-            "dexterity": SavingThrowConfig(
-                "dexterity_save", "Спасбросок Ловкости", "dexterity", "Уворот"
-            ),
-            "constitution": SavingThrowConfig(
-                "constitution_save",
-                "Спасбросок Телосложения",
-                "constitution",
-                "Сопротивление ядам",
-            ),
-            "intelligence": SavingThrowConfig(
-                "intelligence_save",
-                "Спасбросок Интеллекта",
-                "intelligence",
-                "Сопротивление ментальным атакам",
-            ),
-            "wisdom": SavingThrowConfig(
-                "wisdom_save", "Спасбросок Мудрости", "wisdom", "Сопротивление иллюзиям"
-            ),
-            "charisma": SavingThrowConfig(
-                "charisma_save",
-                "Спасбросок Харизмы",
-                "charisma",
-                "Сопротивление проклятиям",
-            ),
+        """Загружает встроенную конфигурацию спасбросков."""
+        fallback_data = {
+            "strength": {
+                "name": "strength_save",
+                "display_name": "Спасбросок Силы",
+                "attribute": "strength",
+                "description": "Сопротивление силовым эффектам, удержание, вырывание из захвата",
+            },
+            "dexterity": {
+                "name": "dexterity_save",
+                "display_name": "Спасбросок Ловкости",
+                "attribute": "dexterity",
+                "description": "Уворот от ловушек, снарядов, взрывов, эффектов области",
+            },
+            "constitution": {
+                "name": "constitution_save",
+                "display_name": "Спасбросок Телосложения",
+                "attribute": "constitution",
+                "description": "Сопротивление ядам, болезням, истощению, эффектам выносливости",
+            },
+            "intelligence": {
+                "name": "intelligence_save",
+                "display_name": "Спасбросок Интеллекта",
+                "attribute": "intelligence",
+                "description": "Сопротивление ментальным атакам, магии разума, эффектам памяти",
+            },
+            "wisdom": {
+                "name": "wisdom_save",
+                "display_name": "Спасбросок Мудрости",
+                "attribute": "wisdom",
+                "description": "Сопротивление иллюзиям, очарованию, страху, эффектам восприятия",
+            },
+            "charisma": {
+                "name": "charisma_save",
+                "display_name": "Спасбросок Харизмы",
+                "attribute": "charisma",
+                "description": "Сопротивление проклятиям, изгнанию, эффектам личности",
+            },
         }
-        cls._saves_config.update(basic_saves)
+
+        cls._throws_config = {
+            key: SavingThrowConfig.from_dict(data)
+            for key, data in fallback_data.items()
+        }
 
     @classmethod
-    def get_saving_throw(cls, attribute: str) -> Optional[SavingThrowConfig]:
-        """Возвращает конфигурацию спасброска по характеристике."""
+    def get_saving_throw(cls, name: str) -> Optional[SavingThrowConfig]:
+        """Возвращает конфигурацию спасброска по имени."""
         cls._load_config()
-        return cls._saves_config.get(attribute)
+        return cls._throws_config.get(name)
 
     @classmethod
     def get_all_saving_throws(cls) -> Dict[str, SavingThrowConfig]:
         """Возвращает все спасброски."""
         cls._load_config()
-        return cls._saves_config.copy()
+        return cls._throws_config.copy()
 
     @classmethod
-    def is_valid_saving_throw(cls, attribute: str) -> bool:
-        """Проверяет, существует ли спасбросок для характеристики."""
-        cls._load_config()
-        return attribute in cls._saves_config
-
-    @classmethod
-    def get_saving_throw_attribute(cls, save_name: str) -> Optional[str]:
-        """Возвращает характеристику спасброска."""
-        save = cls.get_saving_throw(save_name)
-        return save.attribute if save else None
-
-    @classmethod
-    def get_saving_throws_list_for_display(cls) -> List[tuple]:
-        """Возвращает список спасбросков для отображения (имя, отображаемое имя, характеристика)."""
+    def get_saving_throws_by_attribute(cls, attribute: str) -> List[SavingThrowConfig]:
+        """Возвращает спасброски для указанной характеристики."""
         cls._load_config()
         return [
-            (name, config.display_name, config.attribute)
-            for name, config in cls._saves_config.items()
+            config
+            for config in cls._throws_config.values()
+            if config.attribute == attribute
         ]
 
     @classmethod
     def reload_config(cls) -> None:
-        """Перезагружает конфигурацию (полезно для разработки)."""
-        cls._saves_config.clear()
+        """Перезагружает конфигурацию."""
         cls._config_loaded = False
+        cls._throws_config.clear()
         cls._load_config()
+
+    @classmethod
+    def is_valid_saving_throw(cls, name: str) -> bool:
+        """Проверяет, существует ли спасбросок."""
+        cls._load_config()
+        return name in cls._throws_config
+
+    @classmethod
+    def get_saving_throw_names(cls) -> List[str]:
+        """Возвращает список всех имен спасбросков."""
+        cls._load_config()
+        return list(cls._throws_config.keys())

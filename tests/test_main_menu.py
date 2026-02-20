@@ -59,7 +59,7 @@ class TestMainMenu:
         """Тестирует отображение меню."""
         menu = MainMenu()
         mock_renderer = Mock()
-        
+
         with patch("src.infrastructure.ui.menus.main_menu.renderer", mock_renderer):
             menu.show()
 
@@ -90,7 +90,7 @@ class TestMainMenu:
         menu = MainMenu()
         mock_callback = Mock()
         menu.set_callback(MenuOption.NEW_GAME, mock_callback)
-        
+
         mock_renderer = Mock()
         mock_input = Mock()
         mock_input.get_menu_choice.return_value = 1  # Новая игра

@@ -11,3 +11,6 @@ dnd_mud.egg-info/
 docs/*.pdf
 *.log
 .coverage
+mypy.ini
+.ruff_cache/
+.mypy_cache/

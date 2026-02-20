@@ -1,349 +1,58 @@
-"""
-Модуль персонажа D&D MUD.
-
-Определяет базовый класс персонажа и его характеристики.
-"""
+# src/domain/entities/character.py
+"""Персонаж D&D 5e."""
 
 from dataclasses import dataclass, field
-from typing import Dict, Optional, List
-from ..value_objects.attributes import StandardAttributes
-from ..value_objects.skills import SkillsManager
+from typing import Dict, List, Union, TypedDict, Any
 from .attribute import Attribute
-from .race import Race
-from .race_factory import RaceFactory
-from .class_ import CharacterClass
-from .class_factory import CharacterClassFactory
-from .skill import Skill
+from .race import Race, RaceData
+from .class_ import CharacterClass, ClassData
+
+
+class CharacterData(TypedDict):
+    """Данные персонажа."""
+
+    name: str
+    race: RaceData
+    character_class: ClassData
+    level: int
+    attributes: Dict[str, Dict[str, Union[str, int]]]
+    hp_max: int
+    hp_current: int
+    ac: int
+    gold: int
 
 
 @dataclass
 class Character:
-    """Класс персонажа D&D."""
+    """Персонаж D&D."""
 
-    # Базовая информация
-    name: str = field(default="Безымянный")
-    level: int = field(default=1)
-    race: Race = field(default_factory=lambda: RaceFactory.create_race("human"))
-    character_class: CharacterClass = field(
-        default_factory=lambda: CharacterClassFactory.create_class("fighter")
-    )
-
-    # Характеристики
-    strength: Attribute = field(
-        default_factory=lambda: Attribute(
-            name="strength",
-            value=StandardAttributes.get_attribute("strength").default_value,
-        )
-    )
-    dexterity: Attribute = field(
-        default_factory=lambda: Attribute(
-            name="dexterity",
-            value=StandardAttributes.get_attribute("dexterity").default_value,
-        )
-    )
-    constitution: Attribute = field(
-        default_factory=lambda: Attribute(
-            name="constitution",
-            value=StandardAttributes.get_attribute("constitution").default_value,
-        )
-    )
-    intelligence: Attribute = field(
-        default_factory=lambda: Attribute(
-            name="intelligence",
-            value=StandardAttributes.get_attribute("intelligence").default_value,
-        )
-    )
-    wisdom: Attribute = field(
-        default_factory=lambda: Attribute(
-            name="wisdom",
-            value=StandardAttributes.get_attribute("wisdom").default_value,
-        )
-    )
-    charisma: Attribute = field(
-        default_factory=lambda: Attribute(
-            name="charisma",
-            value=StandardAttributes.get_attribute("charisma").default_value,
-        )
-    )
-
-    # Производные характеристики
-    hp_max: int = field(default=10)
-    hp_current: int = field(default=10)
-    ac: int = field(default=10)
-    gold: int = field(default=0)
-
-    # Навыки (инициализируются лениво)
-    _skills: Optional[Dict[str, Skill]] = field(default=None, init=False)
-
-    # Владение спасбросками (инициализируются лениво)
-    _save_proficiencies: Optional[Dict[str, bool]] = field(default=None, init=False)
+    name: str
+    race: Race
+    character_class: CharacterClass
+    level: int = 1
+    attributes: Dict[str, Attribute] = field(default_factory=dict)
+    hp_max: int = 0
+    hp_current: int = 0
+    ac: int = 10
+    gold: int = 0
 
     def __post_init__(self) -> None:
-        """Валидация персонажа."""
-        if self.level < 1:
-            raise ValueError(
-                f"Уровень персонажа должен быть не менее 1, получено: {self.level}"
-            )
+        """Инициализация после создания."""
+        if not self.attributes:
+            self._initialize_attributes()
 
-        # Валидируем все характеристики
-        for attr_name in [
-            "strength",
-            "dexterity",
-            "constitution",
-            "intelligence",
-            "wisdom",
-            "charisma",
-        ]:
-            attr = getattr(self, attr_name)
-            if hasattr(attr, "validate"):
-                attr.validate()
+        if self.hp_max == 0:
+            self._calculate_hp_max()
 
-    def get_modifier(self, attr_name: str) -> int:
-        """Возвращает модификатор характеристики."""
-        return (getattr(self, attr_name).value - 10) // 2
+        if self.hp_current == 0:
+            self.hp_current = self.hp_max
 
-    def get_all_modifiers(self) -> Dict[str, int]:
-        """Возвращает все модификаторы характеристик."""
-        attrs = ['strength', 'dexterity', 'constitution', 'intelligence', 'wisdom', 'charisma']
-        return {attr: self.get_modifier(attr) for attr in attrs}
+        if self.ac == 10:
+            self._calculate_ac()
 
-    def calculate_hp(self) -> int:
-        """Рассчитывает максимальное HP на основе класса и телосложения."""
-        return self.character_class.calculate_hp(self.constitution.value)
-
-    def calculate_ac(self) -> int:
-        """Рассчитывает класс доспеха."""
-        return 10 + self.get_modifier('dexterity') + self.character_class.get_ac_bonus()
-
-    def calculate_derived_stats(self) -> None:
-        """Рассчитывает все производные характеристики."""
-        self.hp_max = self.calculate_hp()
-        self.hp_current = self.hp_max
-        self.ac = self.calculate_ac()
-
-    # === Методы работы с навыками ===
-
-    @property
-    def skills(self) -> Dict[str, Skill]:
-        """Возвращает словарь навыков персонажа (ленивая инициализация)."""
-        if self._skills is None:
-            self._skills = {}
-            # Создаем все навыки из конфигурации
-            for skill_name in SkillsManager.get_all_skills():
-                self._skills[skill_name] = Skill(name=skill_name)
-        return self._skills
-
-    def get_skill(self, skill_name: str) -> Optional[Skill]:
-        """Возвращает навык по имени."""
-        return self.skills.get(skill_name)
-
-    def get_skill_bonus(self, skill_name: str) -> int:
-        """Рассчитывает общий бонус к навыку."""
-        skill = self.get_skill(skill_name)
-        if not skill:
-            return 0
-
-        attributes = {attr: getattr(self, attr).value 
-                     for attr in ['strength', 'dexterity', 'constitution', 'intelligence', 'wisdom', 'charisma']}
-
-        return skill.calculate_total_bonus(attributes, self.get_proficiency_bonus())
-
-    def get_saving_throw_bonus(self, attribute: str) -> int:
-        """Рассчитывает бонус к спасброску характеристики."""
-        save_config = SkillsManager.get_saving_throw(attribute)
-        if not save_config:
-            return 0
-
-        proficiency_bonus = (
-            self.get_proficiency_bonus() if self.has_save_proficiency(attribute) else 0
-        )
-        attribute_modifier = self.get_modifier(attribute)
-
-        return attribute_modifier + proficiency_bonus
-
-    def apply_race_bonuses(self, chosen_attributes: Optional[List[str]] = None) -> None:
-        """Применяет расовые бонусы к характеристикам."""
-        attributes = {attr: getattr(self, attr).value for attr in 
-                     ['strength', 'dexterity', 'constitution', 'intelligence', 'wisdom', 'charisma']}
-        boosted_attributes = self.race.apply_bonuses(attributes, chosen_attributes)
-        
-        for attr_name, value in boosted_attributes.items():
-            getattr(self, attr_name).value = value
-
-    def get_proficiency_bonus(self) -> int:
-        """Возвращает бонус мастерства персонажа."""
-        return 1 + (self.level // 4)  # +2 на 1-4 уровне, +3 на 5-8, и т.д.
-
-    def has_save_proficiency(self, attribute: str) -> bool:
-        """Проверяет, имеет ли персонаж мастерство в спасброске."""
-        if self._save_proficiencies is None:
-            self._save_proficiencies = {}
-            # Инициализируем базовые владения спасбросками
-            self._initialize_save_proficiencies()
-
-        return self._save_proficiencies.get(attribute, False)
-
-    def _initialize_save_proficiencies(self) -> None:
-        """Инициализирует владение спасбросками от класса и расы."""
-        # TODO: Получить владения от класса персонажа
-        # Пока используем базовые владения для воина (Сила и Телосложение)
-        class_saves = self.character_class.get_save_proficiencies()
-
-        # TODO: Получить владения от расы
-        race_saves = (
-            self.race.get_save_proficiencies()
-            if hasattr(self.race, "get_save_proficiencies")
-            else []
-        )
-
-        # Объединяем владения
-        all_saves = set(class_saves + race_saves)
-
-        for attr in all_saves:
-            self._save_proficiencies[attr] = True
-
-    def add_save_proficiency(self, attribute: str) -> None:
-        """Добавляет владение спасброском."""
-        if self._save_proficiencies is None:
-            self._initialize_save_proficiencies()
-
-        if SkillsManager.is_valid_saving_throw(attribute):
-            self._save_proficiencies[attribute] = True
-
-    def remove_save_proficiency(self, attribute: str) -> None:
-        """Удаляет владение спасброском."""
-        if self._save_proficiencies is not None:
-            self._save_proficiencies[attribute] = False
-
-    def get_save_proficiencies(self) -> Dict[str, bool]:
-        """Возвращает все владения спасбросками."""
-        if self._save_proficiencies is None:
-            self._initialize_save_proficiencies()
-        return self._save_proficiencies.copy()
-
-    def add_skill_proficiency(self, skill_name: str) -> None:
-        """Добавляет мастерство в навык."""
-        skill = self.get_skill(skill_name)
-        if skill:
-            skill.add_proficiency(self.get_proficiency_bonus())
-
-    def add_skill_expertise(self, skill_name: str) -> None:
-        """Добавляет экспертизу в навык."""
-        skill = self.get_skill(skill_name)
-        if skill:
-            skill.add_expertise(self.get_proficiency_bonus() * 2)
-
-    def remove_skill_proficiency(self, skill_name: str) -> None:
-        """Удаляет мастерство из навыка."""
-        skill = self.get_skill(skill_name)
-        if skill:
-            skill.remove_proficiency()
-
-    def get_skills_by_attribute(self, attribute: str) -> Dict[str, Skill]:
-        """Возвращает навыки, использующие указанную характеристику."""
-        return {
-            name: skill
-            for name, skill in self.skills.items()
-            if skill.attribute_name == attribute
-        }
-
-    def _roll_d20(self, advantage: str = "none") -> tuple[int, int, bool, bool]:
-        """Выполняет бросок d20 с учётом преимущества/помехи.
-        
-        Returns:
-            Кортеж (бросок_d20, крит_успех, крит_провал)
-        """
-        from ..value_objects.dice_roller import DiceRoller
-        return DiceRoller.roll_d20(advantage)
-
-    def roll_skill_check(
-        self, skill_name: str, advantage: str = "none", situational_bonus: int = 0
-    ) -> tuple[int, int, bool, bool]:
-        """Выполняет бросок навыка.
-
-        Args:
-            skill_name: Имя навыка
-            advantage: "advantage", "disadvantage", или "none"
-            situational_bonus: Ситуационный бонус/штраф
-
-        Returns:
-            Кортеж (бросок_d20, общий_результат, крит_успех, крит_провал)
-        """
-        d20_roll, crit_success, crit_fail = self._roll_d20(advantage)
-        skill_bonus = self.get_skill_bonus(skill_name)
-        total = d20_roll + skill_bonus + situational_bonus
-        return d20_roll, total, crit_success, crit_fail
-
-    def roll_saving_throw(
-        self, attribute: str, advantage: str = "none", situational_bonus: int = 0
-    ) -> tuple[int, int, bool, bool]:
-        """Выполняет спасбросок характеристики.
-
-        Args:
-            attribute: Характеристика для спасброска
-            advantage: "advantage", "disadvantage", или "none"
-            situational_bonus: Ситуационный бонус/штраф
-
-        Returns:
-            Кортеж (бросок_d20, общий_результат, крит_успех, крит_провал)
-        """
-        d20_roll, crit_success, crit_fail = self._roll_d20(advantage)
-        save_bonus = self.get_saving_throw_bonus(attribute)
-        total = d20_roll + save_bonus + situational_bonus
-        return d20_roll, total, crit_success, crit_fail
-
-    def calculate_spell_save_dc(self, spell_ability: str) -> int:
-        """Рассчитывает Сложность спасброска заклинания.
-
-        Args:
-            spell_ability: Характеристика заклинателя (intelligence, wisdom, charisma)
-
-        Returns:
-            Сложность спасброска (8 + мод. характеристики + бонус мастерства)
-        """
-        # Модификатор характеристики заклинателя
-        ability_value = getattr(self, spell_ability).value
-        ability_modifier = (ability_value - 10) // 2
-
-        # СЛ = 8 + модификатор характеристики + бонус мастерства
-        save_dc = 8 + ability_modifier + self.get_proficiency_bonus()
-
-        return save_dc
-
-    def make_target_save(
-        self, target_character, spell_ability: str, advantage: str = "none"
-    ) -> tuple:
-        """Заставляет цель совершить спасбросок от заклинания.
-
-        Args:
-            target_character: Цель спасброска
-            spell_ability: Характеристика заклинателя
-            advantage: Преимущество/помеха для цели
-
-        Returns:
-            Кортеж (СЛ_заклинания, бросок_цели, успех_спасброска)
-        """
-        save_dc = self.calculate_spell_save_dc(spell_ability)
-
-        # Определяем характеристику для спасброска (зависит от заклинания)
-        # TODO: Добавить определение характеристики спасброска от типа заклинания
-        save_attribute = "wisdom"  # По умолчанию
-
-        d20_roll, total, crit_success, crit_fail = target_character.roll_saving_throw(
-            save_attribute, advantage
-        )
-
-        save_success = total >= save_dc
-
-        return save_dc, total, save_success
-
-    def get_all_skill_bonuses(self) -> Dict[str, int]:
-        """Возвращает словарь всех бонусов навыков."""
-        return {name: self.get_skill_bonus(name) for name in self.skills.keys()}
-
-    def get_all_save_bonuses(self) -> Dict[str, int]:
-        """Возвращает словарь всех бонусов спасбросков."""
-        attributes = [
+    def _initialize_attributes(self) -> None:
+        """Инициализирует характеристики персонажа."""
+        base_attributes = [
             "strength",
             "dexterity",
             "constitution",
@@ -351,4 +60,164 @@ class Character:
             "wisdom",
             "charisma",
         ]
-        return {attr: self.get_saving_throw_bonus(attr) for attr in attributes}
+
+        for attr_name in base_attributes:
+            # Применяем бонусы расы
+            base_value = 10 + self.race.get_attribute_bonus(attr_name)
+            self.attributes[attr_name] = Attribute(name=attr_name, value=base_value)
+
+    def _calculate_hp_max(self) -> None:
+        """Рассчитывает максимальные хиты."""
+        # Базовые хиты от класса
+        class_hp = self.character_class.hit_points_at_level
+
+        # Модификатор телосложения
+        con_mod = self.get_attribute_modifier("constitution")
+
+        # Общие хиты
+        self.hp_max = class_hp + (con_mod * self.level)
+
+    def _calculate_ac(self) -> None:
+        """Рассчитывает класс брони."""
+        # Базовый AC = 10 + модификатор ловкости
+        dex_mod = self.get_attribute_modifier("dexterity")
+        self.ac = 10 + dex_mod
+
+    def get_attribute_value(self, attribute_name: str) -> int:
+        """Возвращает значение характеристики."""
+        if attribute_name not in self.attributes:
+            raise ValueError(f"Неизвестная характеристика: {attribute_name}")
+        return self.attributes[attribute_name].value
+
+    def get_attribute_modifier(self, attribute_name: str) -> int:
+        """Возвращает модификатор характеристики."""
+        value = self.get_attribute_value(attribute_name)
+        return (value - 10) // 2
+
+    def get_all_modifiers(self) -> Dict[str, int]:
+        """Возвращает модификаторы всех характеристик."""
+        return {
+            attr_name: self.get_attribute_modifier(attr_name)
+            for attr_name in self.attributes
+        }
+
+    def get_proficiency_bonus(self) -> int:
+        """Возвращает бонус мастерства."""
+        return self.character_class.get_proficiency_bonus()
+
+    def level_up(self) -> None:
+        """Повышает уровень персонажа."""
+        self.level += 1
+        self.character_class.level_up()
+        self._calculate_hp_max()
+        # Восстанавливаем хиты при повышении уровня
+        self.hp_current = self.hp_max
+
+    def take_damage(self, damage: int) -> int:
+        """Получает урон."""
+        actual_damage = min(damage, self.hp_current)
+        self.hp_current -= actual_damage
+        return actual_damage
+
+    def heal(self, amount: int) -> int:
+        """Лечит персонажа."""
+        actual_heal = min(amount, self.hp_max - self.hp_current)
+        self.hp_current += actual_heal
+        return actual_heal
+
+    def is_alive(self) -> bool:
+        """Проверяет, жив ли персонаж."""
+        return self.hp_current > 0
+
+    def get_saving_throws(self) -> List[str]:
+        """Возвращает спасброски персонажа."""
+        return self.character_class.get_saving_throws()
+
+    def has_saving_throw_proficiency(self, save_name: str) -> bool:
+        """Проверяет владение спасброском."""
+        return save_name in self.get_saving_throws()
+
+    def get_ability_modifier(self, value: int) -> int:
+        """Возвращает модификатор характеристики."""
+        return (value - 10) // 2
+
+    @property
+    def strength(self) -> Attribute:
+        """Возвращает характеристику Силы."""
+        return self.attributes.get("strength", Attribute("strength", 10))
+
+    @property
+    def dexterity(self) -> Attribute:
+        """Возвращает характеристику Ловкости."""
+        return self.attributes.get("dexterity", Attribute("dexterity", 10))
+
+    @property
+    def constitution(self) -> Attribute:
+        """Возвращает характеристику Телосложения."""
+        return self.attributes.get("constitution", Attribute("constitution", 10))
+
+    @property
+    def intelligence(self) -> Attribute:
+        """Возвращает характеристику Интеллекта."""
+        return self.attributes.get("intelligence", Attribute("intelligence", 10))
+
+    @property
+    def wisdom(self) -> Attribute:
+        """Возвращает характеристику Мудрости."""
+        return self.attributes.get("wisdom", Attribute("wisdom", 10))
+
+    @property
+    def charisma(self) -> Attribute:
+        """Возвращает характеристику Харизмы."""
+        return self.attributes.get("charisma", Attribute("charisma", 10))
+
+    def calculate_derived_stats(self) -> None:
+        """Рассчитывает производные характеристики."""
+        self._calculate_hp_max()
+        self._calculate_ac()
+
+    def to_dict(self) -> Dict[str, Any]:
+        """Преобразует в словарь для сериализации."""
+        race_dict = self.race.to_dict()
+        class_dict = self.character_class.to_dict()
+
+        return {
+            "name": self.name,
+            "race": race_dict,
+            "character_class": class_dict,
+            "level": self.level,
+            "attributes": {k: v.__dict__ for k, v in self.attributes.items()},
+            "hp_max": self.hp_max,
+            "hp_current": self.hp_current,
+            "ac": self.ac,
+            "gold": self.gold,
+        }
+
+    @classmethod
+    def from_dict(cls, data: CharacterData) -> "Character":
+        """Создает персонажа из словаря."""
+        # Конвертируем словари в объекты
+        race_data = data["race"]
+        class_data = data["character_class"]
+
+        race_obj = Race.from_dict(race_data)
+        class_obj = CharacterClass.from_dict(class_data)
+
+        return cls(
+            name=data["name"],
+            race=race_obj,
+            character_class=class_obj,
+            level=data["level"],
+            hp_max=data["hp_max"],
+            hp_current=data["hp_current"],
+            ac=data["ac"],
+            gold=data["gold"],
+        )
+
+    def __str__(self) -> str:
+        """Строковое представление."""
+        return f"{self.name} - {self.race.name} {self.character_class.name} ({self.level} уровень)"
+
+    def __repr__(self) -> str:
+        """Полное строковое представление."""
+        return f"Character(name='{self.name}', race='{self.race.name}', class='{self.character_class.name}', level={self.level})"

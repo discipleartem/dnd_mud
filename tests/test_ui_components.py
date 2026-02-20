@@ -469,12 +469,8 @@ class TestUIIntegration:
 
         # Шаг 1: Базовая информация
         test_renderer.show_title("Создание персонажа", "Шаг 1: Базовая информация")
-        name = test_input_handler.get_string(
-            "Введите имя персонажа", allow_empty=False
-        )
-        level = test_input_handler.get_int(
-            "Введите уровень", min_value=1, max_value=20
-        )
+        name = test_input_handler.get_string("Введите имя персонажа", allow_empty=False)
+        level = test_input_handler.get_int("Введите уровень", min_value=1, max_value=20)
 
         # Шаг 2: Выбор расы и класса
         test_renderer.show_title("Создание персонажа", "Шаг 2: Раса и класс")

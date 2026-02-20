@@ -1,7 +1,8 @@
 # src/core/entities/saving_throw.py
 from dataclasses import dataclass, field
+from typing import Optional
 from ..interfaces.localization import get_text
-from ..value_objects.saving_throws import SavingThrowsManager
+from ..value_objects.saving_throws import SavingThrowsManager, SavingThrowConfig
 
 
 @dataclass
@@ -27,7 +28,7 @@ class SavingThrow:
             )
 
     @property
-    def config(self):
+    def config(self) -> Optional["SavingThrowConfig"]:
         """Возвращает конфигурацию спасброска."""
         return SavingThrowsManager.get_saving_throw(self.name)
 
@@ -52,7 +53,7 @@ class SavingThrow:
         return self.proficiency_bonus > 0
 
     def calculate_total_bonus(
-        self, character_attributes: dict, proficiency_bonus: int
+        self, character_attributes: dict[str, int], proficiency_bonus: int
     ) -> int:
         """Рассчитывает общий бонус спасброска.
 

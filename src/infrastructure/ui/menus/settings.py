@@ -12,7 +12,6 @@
 - Dependency Inversion — зависимость от абстракций бизнес-логики
 """
 
-from typing import Optional
 from enum import Enum
 
 from ....domain.services.game_config import game_config, ModInfo, AdventureInfo
@@ -44,7 +43,9 @@ class SettingsMenu:
         max_attempts = 20
         attempts = 0
 
-        while attempts < max_attempts and self.current_category != SettingsCategory.BACK:
+        while (
+            attempts < max_attempts and self.current_category != SettingsCategory.BACK
+        ):
             attempts += 1
             try:
                 self._handle_current_category()
@@ -67,9 +68,7 @@ class SettingsMenu:
         print("3. Геймплей")
         print("4. Вернуться в главное меню")
 
-        choice = self.input_handler.get_int(
-            "\nВаш выбор: ", min_value=1, max_value=4
-        )
+        choice = self.input_handler.get_int("\nВаш выбор: ", min_value=1, max_value=4)
 
         if choice == 1:
             self._handle_mods_settings()
@@ -91,7 +90,7 @@ class SettingsMenu:
             self.renderer.render_title("Настройки модификаций")
 
             mods = game_config.get_available_mods()
-            
+
             if not mods:
                 print("\nМодификации не найдены.")
                 self.input_handler.wait_for_enter()
@@ -100,7 +99,9 @@ class SettingsMenu:
             print("\nДоступные модификации:")
             for i, mod in enumerate(mods, 1):
                 status = "✓ Активна" if mod.is_active else "○ Неактивна"
-                level_info = f" (уровень {mod.starting_level})" if mod.starting_level else ""
+                level_info = (
+                    f" (уровень {mod.starting_level})" if mod.starting_level else ""
+                )
                 print(f"{i}. {mod.name} {status}{level_info}")
                 print(f"   {mod.description}")
 
@@ -109,7 +110,7 @@ class SettingsMenu:
             choice = self.input_handler.get_int(
                 "\nВыберите мод для toggling или вернитесь назад: ",
                 min_value=1,
-                max_value=len(mods) + 1
+                max_value=len(mods) + 1,
             )
 
             if choice == len(mods) + 1:
@@ -122,18 +123,12 @@ class SettingsMenu:
         """Переключает активацию мода."""
         if mod.is_active:
             # Деактивируем
-            success = game_config.deactivate_mod(mod.folder_name)
-            if success:
-                self.renderer.render_success(f"Мод '{mod.name}' деактивирован")
-            else:
-                self.renderer.render_error(f"Не удалось деактивировать мод '{mod.name}'")
+            game_config.deactivate_mod(mod.folder_name)
+            self.renderer.render_success(f"Мод '{mod.name}' деактивирован")
         else:
             # Активируем
-            success = game_config.activate_mod(mod.folder_name)
-            if success:
-                self.renderer.render_success(f"Мод '{mod.name}' активирован")
-            else:
-                self.renderer.render_error(f"Не удалось активировать мод '{mod.name}'")
+            game_config.activate_mod(mod.folder_name)
+            self.renderer.render_success(f"Мод '{mod.name}' активирован")
 
         self.input_handler.wait_for_enter()
 
@@ -148,7 +143,7 @@ class SettingsMenu:
             self.renderer.render_title("Настройки приключений")
 
             adventures = game_config.get_available_adventures()
-            
+
             if not adventures:
                 print("\nПриключения не найдены.")
                 self.input_handler.wait_for_enter()
@@ -157,14 +152,18 @@ class SettingsMenu:
             print("\nДоступные приключения:")
             for i, adventure in enumerate(adventures, 1):
                 status = "✓ Активно" if adventure.is_active else "○ Неактивно"
-                level_info = f" (уровень {adventure.recommended_level})" if adventure.recommended_level else ""
+                level_info = (
+                    f" (уровень {adventure.recommended_level})"
+                    if adventure.recommended_level
+                    else ""
+                )
                 print(f"{i}. {adventure.name} {status}{level_info}")
                 print(f"   {adventure.description}")
                 print(f"   Сложность: {adventure.difficulty}")
 
             # Показываем текущие настройки отображения
             show_all = game_config.get_show_all_adventures()
-            print(f"\nНастройки отображения:")
+            print("\nНастройки отображения:")
             print(f"• Показывать все приключения: {'Да' if show_all else 'Нет'}")
 
             print(f"\n{len(adventures) + 1}. Выбрать приключение")
@@ -172,9 +171,7 @@ class SettingsMenu:
             print(f"{len(adventures) + 3}. Вернуться назад")
 
             choice = self.input_handler.get_int(
-                "\nВаш выбор: ",
-                min_value=1,
-                max_value=len(adventures) + 3
+                "\nВаш выбор: ", min_value=1, max_value=len(adventures) + 3
             )
 
             if choice == len(adventures) + 1:
@@ -198,12 +195,8 @@ class SettingsMenu:
         )
 
         selected_adventure = adventures[choice - 1]
-        success = game_config.set_active_adventure(selected_adventure.file_name)
-        
-        if success:
-            self.renderer.render_success(f"Приключение '{selected_adventure.name}' выбрано")
-        else:
-            self.renderer.render_error(f"Не удалось выбрать приключение '{selected_adventure.name}'")
+        game_config.set_active_adventure(selected_adventure.file_name)
+        self.renderer.render_success(f"Приключение '{selected_adventure.name}' выбрано")
 
         self.input_handler.wait_for_enter()
 
@@ -211,18 +204,14 @@ class SettingsMenu:
         """Переключает активацию приключения."""
         if adventure.is_active:
             # Деактивируем (устанавливаем None)
-            success = game_config.set_active_adventure("")
-            if success:
-                self.renderer.render_success(f"Приключение '{adventure.name}' деактивировано")
-            else:
-                self.renderer.render_error(f"Не удалось деактивировать приключение '{adventure.name}'")
+            game_config.set_active_adventure("")
+            self.renderer.render_success(
+                f"Приключение '{adventure.name}' деактивировано"
+            )
         else:
             # Активируем
-            success = game_config.set_active_adventure(adventure.file_name)
-            if success:
-                self.renderer.render_success(f"Приключение '{adventure.name}' активировано")
-            else:
-                self.renderer.render_error(f"Не удалось активировать приключение '{adventure.name}'")
+            game_config.set_active_adventure(adventure.file_name)
+            self.renderer.render_success(f"Приключение '{adventure.name}' активировано")
 
         self.input_handler.wait_for_enter()
 
@@ -230,7 +219,7 @@ class SettingsMenu:
         """Переключает отображение всех приключений."""
         current = game_config.get_show_all_adventures()
         game_config.set_show_all_adventures(not current)
-        
+
         status = "включено" if not current else "выключено"
         self.renderer.render_success(f"Отображение всех приключений {status}")
         self.input_handler.wait_for_enter()
@@ -247,14 +236,14 @@ class SettingsMenu:
 
             # Показываем текущий уровень
             current_level = game_config.get_default_starting_level()
-            level_info = level_resolver.get_level_info()
-            
-            print(f"\nТекущие настройки:")
-            print(f"• Начальный уровень по умолчанию: {current_level}")
-            print(f"• Текущий начальный уровень: {level_info['final_level']}")
-            print(f"• Источник уровня: {level_info['active_source']}")
+            level_info = level_resolver.get_level_info(current_level)
 
-            print(f"\nДействия:")
+            print("\nТекущие настройки:")
+            print(f"• Начальный уровень по умолчанию: {current_level}")
+            print(f"• Текущий начальный уровень: {level_info.level}")
+            print(f"• Бонус мастерства: {level_info.proficiency_bonus}")
+
+            print("\nДействия:")
             print("1. Изменить начальный уровень по умолчанию")
             print("2. Показать информацию об определении уровня")
             print("3. Вернуться назад")
@@ -273,32 +262,35 @@ class SettingsMenu:
     def _change_default_level(self) -> None:
         """Изменяет начальный уровень по умолчанию."""
         current = game_config.get_default_starting_level()
-        
+
         new_level = self.input_handler.get_int(
-            f"\nВведите новый начальный уровень (1-20): ",
+            "\nВведите новый начальный уровень (1-20): ",
             min_value=1,
             max_value=20,
-            default=current
+            default=current,
         )
 
         game_config.set_default_starting_level(new_level)
-        self.renderer.render_success(f"Начальный уровень по умолчанию изменен на {new_level}")
+        self.renderer.render_success(
+            f"Начальный уровень по умолчанию изменен на {new_level}"
+        )
         self.input_handler.wait_for_enter()
 
     def _show_level_info(self) -> None:
         """Показывает подробную информацию об определении уровня."""
-        level_info = level_resolver.get_level_info()
-        
+        level = game_config.get_default_starting_level()
+        level_info = level_resolver.get_level_info(level)
+
         self.renderer.clear_screen()
         self.renderer.render_title("Информация об определении уровня")
-        
-        print(f"\nФинальный уровень: {level_info['final_level']}")
-        print(f"Активный источник: {level_info['active_source']}")
-        
-        print(f"\nВсе источники (по приоритету):")
-        for source in level_info['all_sources']:
-            status = "✓" if source['is_active'] else "○"
-            print(f"{status} {source['name']} (приоритет {source['priority']}) -> уровень {source['level']}")
+
+        print(f"\nУровень: {level_info.level}")
+        print(f"Бонус мастерства: {level_info.proficiency_bonus}")
+        print(f"Особенности: {', '.join(level_info.features)}")
+        if level_info.spell_slots:
+            print("Слоты заклинаний:")
+            for spell_level, slots in level_info.spell_slots.items():
+                print(f"  Уровень {spell_level}: {slots}")
 
         self.input_handler.wait_for_enter()
 
