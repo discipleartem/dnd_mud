@@ -11,6 +11,7 @@ from src.ui.character_creator import CharacterCreator
 from src.frameworks.repositories import (
     YAMLRaceRepository, YAMLClassRepository, InMemoryCharacterRepository
 )
+from src.frameworks.ability_generator import AbilityGenerator
 
 
 class DIContainer:
@@ -21,6 +22,7 @@ class DIContainer:
         self._race_repository: YAMLRaceRepository | None = None
         self._class_repository: YAMLClassRepository | None = None
         self._character_repository: InMemoryCharacterRepository | None = None
+        self._ability_generator: AbilityGenerator | None = None
         self._create_character_use_case: CreateCharacterUseCase | None = None
         self._get_race_choices_use_case: GetRaceChoicesUseCase | None = None
         self._get_class_choices_use_case: GetClassChoicesUseCase | None = None
@@ -89,11 +91,19 @@ class DIContainer:
         return self._character_controller
     
     @property
+    def ability_generator(self) -> AbilityGenerator:
+        """Получить генератор характеристик."""
+        if self._ability_generator is None:
+            self._ability_generator = AbilityGenerator()
+        return self._ability_generator
+    
+    @property
     def character_creator(self) -> CharacterCreator:
         """Получить создатель персонажей."""
         if self._character_creator is None:
             self._character_creator = CharacterCreator(
-                self.character_controller
+                self.character_controller,
+                self.ability_generator
             )
         return self._character_creator
 

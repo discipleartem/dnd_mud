@@ -21,27 +21,28 @@ class AbilityGenerator:
     
     def generate_standard_array(self, race_choice: str, race_data: Optional[Dict], 
                              subrace_data: Optional[Dict]) -> Dict[str, int]:
-        """Сгенерировать характеристики стандартным массивом."""
+        """Сгенерировать характеристики стандартным массивом с интерактивным выбором."""
         abilities = self._get_base_abilities()
         
         # Показываем стандартный массив
         print(f"\n📊 Стандартный массив: {', '.join(map(str, self.STANDARD_ARRAY))}")
+        print("\n🎯 Распределите значения по характеристикам:")
         
-        # Показываем расовые бонусы
-        self._show_race_bonuses_info(race_choice, race_data, subrace_data)
+        # Интерактивное распределение значений
+        abilities = self._distribute_standard_array_interactive(abilities)
         
         # Применяем расовые бонусы
-        abilities = self._apply_race_bonuses_to_abilities(
+        final_abilities = self._apply_race_bonuses_to_abilities(
             abilities, race_choice, race_data, subrace_data
         )
         
         # Показываем финальные характеристики
         print("\n📋 Итоговые характеристики (с расовыми бонусами):")
-        for ability, value in abilities.items():
+        for ability, value in final_abilities.items():
             formatted = self.format_ability_with_modifier(ability, value)
             print(f"  {formatted}")
         
-        return abilities
+        return final_abilities
     
     def generate_point_buy(self, race_choice: str, race_data: Optional[Dict], 
                          subrace_data: Optional[Dict]) -> Dict[str, int]:
@@ -55,9 +56,6 @@ class AbilityGenerator:
         # Начинаем со стандартного массива
         for ability, value in zip(abilities.keys(), self.STANDARD_ARRAY):
             abilities[ability] = value
-        
-        # Показываем расовые бонусы
-        self._show_race_bonuses_info(race_choice, race_data, subrace_data)
         
         # Применяем расовые бонусы
         abilities = self._apply_race_bonuses_to_abilities(
@@ -238,3 +236,64 @@ class AbilityGenerator:
             print(f"  {ability_names[ability]}: {old_value} → {new_value}")
         
         return result
+    
+    def _distribute_standard_array_interactive(self, abilities: Dict[str, int]) -> Dict[str, int]:
+        """Интерактивно распределить значения стандартного массива по характеристикам."""
+        ability_names = {
+            "strength": "Сила", "dexterity": "Ловкость", "constitution": "Выносливость",
+            "intelligence": "Интеллект", "wisdom": "Мудрость", "charisma": "Харизма"
+        }
+        
+        available_values = self.STANDARD_ARRAY.copy()
+        assigned_abilities = {}
+        
+        for i in range(6):
+            print(f"\n--- Распределение #{i+1} ---")
+            print(f"Доступные значения: {', '.join(map(str, sorted(available_values, reverse=True)))}")
+            
+            # Показываем доступные характеристики
+            print("Доступные характеристики:")
+            ability_list = []
+            available_ability_keys = []
+            for idx, (ability_key, ability_name) in enumerate(ability_names.items()):
+                if ability_key not in assigned_abilities:
+                    ability_list.append(f"{len(ability_list)+1}. {ability_name}")
+                    available_ability_keys.append(ability_key)
+            
+            print("\n".join(ability_list))
+            
+            # Выбор характеристики
+            while True:
+                try:
+                    choice = int(input(f"Выберите характеристику #{i+1}: "))
+                    if 1 <= choice <= len(ability_list):
+                        selected_ability = available_ability_keys[choice - 1]
+                        break
+                    else:
+                        print(f"❌ Выберите число от 1 до {len(ability_list)}")
+                except ValueError:
+                    print("❌ Введите число.")
+            
+            # Выбор значения
+            print(f"\nДоступные значения для {ability_names[selected_ability]}: {', '.join(map(str, sorted(available_values, reverse=True)))}")
+            
+            while True:
+                try:
+                    value_choice = int(input(f"Выберите значение для {ability_names[selected_ability]}: "))
+                    if value_choice in available_values:
+                        available_values.remove(value_choice)
+                        assigned_abilities[selected_ability] = value_choice
+                        print(f"✅ {ability_names[selected_ability]}: {value_choice}")
+                        break
+                    else:
+                        print(f"❌ Выберите значение из: {', '.join(map(str, available_values))}")
+                except ValueError:
+                    print("❌ Введите число.")
+        
+        # Показываем итоговое распределение
+        print("\n📊 Распределенные характеристики:")
+        for ability, value in assigned_abilities.items():
+            formatted = self.format_ability_with_modifier(ability, value)
+            print(f"  {formatted}")
+        
+        return assigned_abilities

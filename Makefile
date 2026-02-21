@@ -1,7 +1,8 @@
 # Makefile для D&D MUD проекта
 # Основные команды для разработки
+# Все команды автоматически активируют виртуальное окружение
 
-.PHONY: help install run test lint format clean
+.PHONY: help install run test lint format clean shell
 
 # Переменные
 PYTHON := python3
@@ -25,27 +26,31 @@ install: ## Установить зависимости
 	@if [ ! -d "$(VENV)" ]; then \
 		$(PYTHON) -m venv $(VENV); \
 	fi
-	@source $(VENV_BIN)/activate && pip install --upgrade pip
-	@source $(VENV_BIN)/activate && pip install -e ".[dev]"
+	@. $(VENV_BIN)/activate && pip install --upgrade pip
+	@. $(VENV_BIN)/activate && pip install -e ".[dev]"
 	@echo "$(GREEN)Готово!$(NC)"
 
 run: ## Запустить приложение
 	@echo "$(BLUE)Запуск D&D MUD...$(NC)"
-	@source $(VENV_BIN)/activate && $(PYTHON) $(MAIN_FILE)
+	@. $(VENV_BIN)/activate && $(PYTHON) $(MAIN_FILE)
 
 test: ## Запустить все тесты
 	@echo "$(BLUE)Запуск тестов...$(NC)"
-	@source $(VENV_BIN)/activate && pytest $(TESTS_DIR) -v --maxfail=5
+	@. $(VENV_BIN)/activate && pytest $(TESTS_DIR) -v --maxfail=5
 
 lint: ## Проверить код
 	@echo "$(BLUE)Проверка кода...$(NC)"
-	@source $(VENV_BIN)/activate && ruff check $(SRC_DIR) $(TESTS_DIR)
-	@source $(VENV_BIN)/activate && mypy $(SRC_DIR)
+	@. $(VENV_BIN)/activate && ruff check $(SRC_DIR) $(TESTS_DIR)
+	@. $(VENV_BIN)/activate && mypy $(SRC_DIR)
 
 format: ## Отформатировать код
 	@echo "$(BLUE)Форматирование кода...$(NC)"
-	@source $(VENV_BIN)/activate && black $(SRC_DIR) $(TESTS_DIR)
-	@source $(VENV_BIN)/activate && ruff format $(SRC_DIR) $(TESTS_DIR)
+	@. $(VENV_BIN)/activate && black $(SRC_DIR) $(TESTS_DIR)
+	@. $(VENV_BIN)/activate && ruff format $(SRC_DIR) $(TESTS_DIR)
+
+shell: ## Открыть оболочку с активированным окружением
+	@echo "$(BLUE)Открытие оболочки с активированным окружением...$(NC)"
+	@. $(VENV_BIN)/activate && bash
 
 clean: ## Очистить временные файлы
 	@echo "$(BLUE)Очистка...$(NC)"

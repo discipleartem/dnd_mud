@@ -8,8 +8,8 @@ from typing import Dict, List, Optional, Tuple
 
 from src.ui.user_choice import get_user_choice
 from src.ui.character_controller import CharacterController
-from src.use_cases.character_creation import CreateCharacterResponse
 from src.frameworks.size_repository import SizeRepository
+from src.frameworks.ability_generator import AbilityGenerator
 from src.entities.character import Character
 
 
@@ -19,11 +19,11 @@ class CharacterCreator:
     Interface Adapter для UI слоя.
     """
     
-    def __init__(self, controller: CharacterController) -> None:
-        """Инициализировать с контроллером."""
+    def __init__(self, controller: CharacterController, ability_generator: AbilityGenerator) -> None:
+        """Инициализировать с контроллером и генератором характеристик."""
         self._controller = controller
         self._size_repo = SizeRepository()
-        self._ability_generator = AbilityGenerator()
+        self._ability_generator = ability_generator
     
     def create_character(self) -> Optional[Character]:
         """Запустить процесс создания персонажа."""
@@ -355,10 +355,14 @@ class CharacterCreator:
         try:
             if choice == 1:
                 # Стандартный массив
+                # Показываем расовые бонусы перед распределением
+                self._show_race_bonuses_info(race_choice, race_data, subrace_data)
                 abilities = self._ability_generator.generate_standard_array(race_choice, race_data, subrace_data)
                 
             elif choice == 2:
                 # Point Buy
+                # Показываем расовые бонусы перед генерацией
+                self._show_race_bonuses_info(race_choice, race_data, subrace_data)
                 abilities = self._ability_generator.generate_point_buy(race_choice, race_data, subrace_data)
                 
             elif choice == 3:
