@@ -25,27 +25,27 @@ install: ## Установить зависимости
 	@if [ ! -d "$(VENV)" ]; then \
 		$(PYTHON) -m venv $(VENV); \
 	fi
-	@$(VENV_BIN)/pip install --upgrade pip
-	@$(VENV_BIN)/pip install -e ".[dev]"
+	@source $(VENV_BIN)/activate && pip install --upgrade pip
+	@source $(VENV_BIN)/activate && pip install -e ".[dev]"
 	@echo "$(GREEN)Готово!$(NC)"
 
 run: ## Запустить приложение
 	@echo "$(BLUE)Запуск D&D MUD...$(NC)"
-	@$(VENV_BIN)/$(PYTHON) $(MAIN_FILE)
+	@source $(VENV_BIN)/activate && $(PYTHON) $(MAIN_FILE)
 
 test: ## Запустить все тесты
 	@echo "$(BLUE)Запуск тестов...$(NC)"
-	@$(VENV_BIN)/pytest $(TESTS_DIR) -v --maxfail=5
+	@source $(VENV_BIN)/activate && pytest $(TESTS_DIR) -v --maxfail=5
 
 lint: ## Проверить код
 	@echo "$(BLUE)Проверка кода...$(NC)"
-	@$(VENV_BIN)/ruff check $(SRC_DIR) $(TESTS_DIR)
-	@$(VENV_BIN)/mypy $(SRC_DIR)
+	@source $(VENV_BIN)/activate && ruff check $(SRC_DIR) $(TESTS_DIR)
+	@source $(VENV_BIN)/activate && mypy $(SRC_DIR)
 
 format: ## Отформатировать код
 	@echo "$(BLUE)Форматирование кода...$(NC)"
-	@$(VENV_BIN)/black $(SRC_DIR) $(TESTS_DIR)
-	@$(VENV_BIN)/ruff format $(SRC_DIR) $(TESTS_DIR)
+	@source $(VENV_BIN)/activate && black $(SRC_DIR) $(TESTS_DIR)
+	@source $(VENV_BIN)/activate && ruff format $(SRC_DIR) $(TESTS_DIR)
 
 clean: ## Очистить временные файлы
 	@echo "$(BLUE)Очистка...$(NC)"

@@ -8,7 +8,7 @@ import yaml
 from typing import Dict, List, Optional, Tuple
 from pathlib import Path
 
-from src.models.data import RaceData, ClassData, CharacterRace, CharacterClass
+from src.models.data import RaceData, ClassData
 
 
 class DataRepository:

@@ -2,12 +2,12 @@
 __pycache__/
 .pytest_cache/
 .cursor
+.vscode
+.cursor
 .snapshots/
 .envrc
 src/dnd_mud.egg-info/
 dnd_mud.egg-info/
-.cursor
-.windsurf
 docs/*.pdf
 *.log
 .coverage
