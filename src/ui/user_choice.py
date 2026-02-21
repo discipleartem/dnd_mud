@@ -45,12 +45,12 @@ def get_user_choice(
         raise ValueError("Список элементов не может быть пустым")
     
     while True:
-        print("\n" + "="*50)
+        print("\n" + "="*60)
         if title:
-            print(title.center(50))
-        print("="*50)
+            print(title.center(60))
+        print("="*60)
         
-        # Отображаем все пункты меню
+        # Отображаем все пункты меню с улучшенным форматированием
         for i, item in enumerate(items, 1):
             print(f"{i}. {item}")
         
@@ -62,13 +62,13 @@ def get_user_choice(
         else:
             max_choice = len(items)
         
-        print("="*50)
+        print("="*60)
         
         # Формируем приглашение для ввода
         if prompt is None:
-            prompt_text = f"Выберите пункт (1-{max_choice})"
+            prompt_text = f"🎯 Выберите пункт (1-{max_choice})"
         else:
-            prompt_text = prompt
+            prompt_text = f"🎯 {prompt}"
             
         choice = input(f"{prompt_text}: ").strip()
         

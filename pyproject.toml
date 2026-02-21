@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "dnd-mud"
-version = "0.1.0"
-description = "Текстовая однопользовательская MUD-игра по мотивам D&D 5e (2023)."
+version = "2.0.0"
+description = "Простой создатель персонажей D&D 5e following KISS principles."
 requires-python = ">=3.12"
 dependencies = [
   "pyyaml>=6.0.3",
@@ -24,7 +24,7 @@ dnd-mud = "dnd_mud.src.main:main"
 
 [tool.setuptools.packages.find]
 where = ["."]
-include = ["src*"]
+include = ["src*", "data*"]
 
 [tool.black]
 line-length = 88

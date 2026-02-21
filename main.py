@@ -1,16 +1,17 @@
 """
-D&D MUD - Текстовая многопользовательская ролевая игра в мире Dungeons & Dragons.
+D&D MUD - Создание персонажей.
 
-Основная точка входа в приложение. Запускает заставку и главное меню.
+Простая программа для создания персонажей Dungeons & Dragons.
+Следует принципам KISS и YAGNI.
 """
 
 import sys
-from src.ui.menu import show_menu
+from src.ui.main_menu import show_main_menu
 
 
-def wellcome_screen() -> None:
-    """Отображает заставку игры."""
-    wellcome = """
+def welcome_screen() -> None:
+    """Приветственный экран."""
+    welcome = """
 ╔══════════════════════════════════════════════════════════════════════╗
 ║                                                                      ║
 ║    ████████╗███████╗██████╗ ███╗   ███╗██╗███╗   ██╗ █████╗ ██╗      ║
@@ -22,29 +23,23 @@ def wellcome_screen() -> None:
 ║                                                                      ║
 ║                          D&D MUD Game                                ║
 ║                                                                      ║
-║                      Версия 0.1.0 Alpha                              ║
+║                      Версия 2.0.0 Simple                             ║
 ║                                                                      ║
 ╚══════════════════════════════════════════════════════════════════════╝    
 """
     
-    print(wellcome)
-    print()
-    print("Нажмите Enter для продолжения...")
+    print(welcome)
+    input("Нажмите Enter для продолжения...")
 
 
 def main() -> int:
-    """Основная функция приложения."""
-    try:        
-        # Отображаем заставку
-        wellcome_screen()
-        input()  # Ожидаем нажатия Enter после заставки
-        
-        # Показываем простое меню
-        show_menu()
-                
+    """Основная функция."""
+    try:
+        welcome_screen()
+        show_main_menu()
     except KeyboardInterrupt:
-        print("\n\nПрограмма прервана пользователем.")
-        
+        print("\n\nПрограмма прервана.")
+    
     return 0
 
 

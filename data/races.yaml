@@ -12,6 +12,7 @@ races:
       intelligence: 1
       wisdom: 1
       charisma: 1
+    ability_bonuses_description: "Все характеристики +1"
     size: "MEDIUM"
     speed: 30
     age:
@@ -37,6 +38,7 @@ races:
         name: "Человек (вариант)"
         description: "Альтернативный вариант создания человека с выбором характеристик, навыков и черт"
         ability_bonuses: {}
+        ability_bonuses_description: "2 характеристики +1"
         features:
           - name: "Увеличение характеристик"
             description: "Значение двух характеристик на ваш выбор увеличивается на 1"
@@ -64,6 +66,7 @@ races:
     description: "Эльфы - изящные и долгоживущие существа с тонкими чувствами"
     ability_bonuses:
       dexterity: 2
+    ability_bonuses_description: "Ловкость +2"
     size: "MEDIUM"
     speed: 30
     age:
@@ -103,6 +106,7 @@ races:
         name: "Высший эльф"
         ability_bonuses:
           intelligence: 1
+        ability_bonuses_description: "Интеллект +1"
         languages: []
         features:
           - name: "Дополнительный язык"
@@ -123,6 +127,7 @@ races:
         name: "Лесной эльф"
         ability_bonuses:
           wisdom: 1
+        ability_bonuses_description: "Мудрость +1"
         features:
           - name: "Мастерство оружия лесного эльфа"
             description: "Владение длинными мечами, рапирами, короткими мечами, длинными и короткими луками"
@@ -148,6 +153,7 @@ races:
     ability_bonuses:
       strength: 2
       constitution: 1
+    ability_bonuses_description: "Сила +2, Телосложение +1"
     size: "MEDIUM"
     speed: 30
     age:
