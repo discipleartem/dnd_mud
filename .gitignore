@@ -14,3 +14,4 @@ docs/*.pdf
 mypy.ini
 .ruff_cache/
 .mypy_cache/
+data/PHB_D&D_2023_RUS.pdf
