@@ -63,7 +63,7 @@ races:
     
   elf:
     name: "Эльф"
-    description: "Эльфы - изящные и долгоживущие существа с тонкими чувствами"
+    description: "Эльфы - изящные и долгоживущие существа с тонкими чувствами. Особенности: Внимательность, Тёмное зрение, Наследие фей, Мастерство оружия, Транс"
     ability_bonuses:
       dexterity: 2
     ability_bonuses_description: "Ловкость +2"
@@ -74,33 +74,32 @@ races:
       max: 750
     languages: ["common", "elvish"]
     features:
-      - name: "Внимательность"
-        description: "Преимущество при проверках Мудрости (Восприятие)"
+      - name: "Обострённые чувства"
+        description: "Вы владеете навыком Внимательность."
         mechanics:
-          type: "advantage"
-          skill: "perception"
+          type: "skill_proficiency"
+          skills: ["perception"]
+
       - name: "Тёмное зрение"
         description: "Может видеть в условиях слабого освещения на расстоянии 60 футов как в ярком освещении"
         mechanics:
           type: "darkvision"
           range: 60
+
       - name: "Наследие фей"
         description: "Преимущество при спасбросках от очарования"
         mechanics:
           type: "advantage"
           save: "charisma"
           effect: "charm"
-      - name: "Мастерство оружия"
-        description: "Владение длинными мечами, рапирами, короткими мечами, длинными и короткими луками"
-        mechanics:
-          type: "weapon_proficiency"
-          weapons: ["longsword", "rapier", "shortsword", "longbow", "shortbow"]
+
       - name: "Транс"
         description: "Медитация вместо сна. 4 часа медитации дают тот же отдых, что и 8 часов сна"
         mechanics:
           type: "rest"
           duration: 4
           effect: "full_rest"
+
     subraces:
       high_elf:
         name: "Высший эльф"
@@ -123,6 +122,7 @@ races:
               ability: "intelligence"
               count: 1
               choice: true
+
       wood_elf:
         name: "Лесной эльф"
         ability_bonuses:
@@ -167,6 +167,11 @@ races:
           type: "advantage"
           save: "strength"
           effect: "frightened"
+      - name: "Орская стойкость"
+        description: "Врождённое владение атлетикой"
+        mechanics:
+          type: "skill_proficiency"
+          skills: ["athletics"]
       - name: "Жестокость"
         description: "Когда урон снижает ваши хиты до 0, вы остаётесь с 1 хитом"
         mechanics:
