@@ -6,7 +6,7 @@ D&D MUD - Создание персонажей.
 """
 
 import sys
-from src.ui.main_menu import show_main_menu
+from src.ui.main_menu.main import show_main_menu
 
 
 def welcome_screen() -> None:
