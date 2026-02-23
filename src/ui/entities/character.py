@@ -8,6 +8,7 @@ import yaml
 if TYPE_CHECKING:
     from .race import Race, Subrace
     from .language_loader import Language
+    from .abilities import AbilityScores
 
 # Импорт локализации
 import sys
@@ -46,6 +47,7 @@ class Character:
     level: int = 1
     subrace: Union['Subrace', None] = None
     sub_class: Union[str, None] = None
+    ability_scores: Optional['AbilityScores'] = None
     
     @property
     def size(self) -> Size:

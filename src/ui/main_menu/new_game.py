@@ -1,6 +1,7 @@
 from typing import Optional
 from src.ui.entities.race import Race, SubRace
 from src.ui.entities.character import Character
+from src.ui.main_menu.ability_generation import generate_ability_scores
 
 # Импорт локализации
 import sys
@@ -220,6 +221,23 @@ def new_game():
     else:
         print(t('new_game.subrace_selection.not_selected'))
 
+    # 5. Генерация характеристик
+    print(f"\n{'='*50}")
+    print(f"🎲 {t('ability_generation.title')} 🎲")
+    print(f"{'='*50}")
+    
+    # TODO: Добавить проверку на hardcore режим из настроек
+    hardcore_mode = False  # Временно выключен
+    
+    character.ability_scores = generate_ability_scores(
+        selected_race, 
+        selected_subrace, 
+        hardcore_mode
+    )
+    
+    print(f"\n✅ {t('ability_generation.final.title')}")
+    print(f"📊 {t('ability_generation.final.completed')}")
+    
     return character
     
  

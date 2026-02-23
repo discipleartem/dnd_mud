@@ -34,6 +34,7 @@ races:
         description: "Альтернативный вариант создания человека с выбором характеристик, навыков и черт"
         ability_bonuses: {}
         ability_bonuses_description: "2 характеристики +1"
+        inherit_base_abilities: false
         features:
           - name: "Увеличение характеристик"
             description: "Значение двух характеристик на ваш выбор увеличивается на 1"

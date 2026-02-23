@@ -29,6 +29,7 @@ class SubRace:
     ability_bonuses_description: str = ""
     languages: List[str] = field(default_factory=list)
     features: List[Feature] = field(default_factory=list)
+    inherit_base_abilities: bool = True  # Наследовать бонусы базовой расы
 
 
 @dataclass
@@ -68,6 +69,20 @@ class Race:
                 language_names.append(lang_code)
         
         return ", ".join(language_names)
+    
+    def get_effective_ability_bonuses(self, subrace: Optional['SubRace'] = None) -> Dict[str, int]:
+        """Получить итоговые бонусы к характеристикам с учетом наследования."""
+        bonuses = {}
+        
+        # Добавляем бонусы базовой расы, если подраса не выбрана или она наследует бонусы
+        if not subrace or subrace.inherit_base_abilities:
+            bonuses.update(self.ability_bonuses)
+        
+        # Добавляем бонусы подрасы
+        if subrace:
+            bonuses.update(subrace.ability_bonuses)
+        
+        return bonuses
     
     @staticmethod
     def get_race_by_name(race_name: str) -> Optional['Race']:
@@ -120,7 +135,8 @@ class RaceLoader:
                     ability_bonuses=subrace_data.get('ability_bonuses', {}),
                     ability_bonuses_description=subrace_data.get('ability_bonuses_description', ''),
                     languages=subrace_data.get('languages', []),
-                    features=subrace_features
+                    features=subrace_features,
+                    inherit_base_abilities=subrace_data.get('inherit_base_abilities', True)
                 )
             
             # Преобразуем размер с поддержкой всех значений

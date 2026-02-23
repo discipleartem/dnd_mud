@@ -5,15 +5,20 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "dnd-mud"
 version = "1.0.0"
-description = "D&D MUD - демо"
+description = "D&D MUD - консольное приложение для создания персонажей Dungeons & Dragons 5e"
 authors = [{name = "Tomas", email = "discipleartem@gmail.com"}]
 readme = "README.md"
 requires-python = ">=3.12"
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Intended Audience :: Developers",
+    "Intended Audience :: End Users/Desktop Game",
     "License :: OSI Approved :: MIT License",
-    "Programming Language :: Python :: 3.12"
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Games/Entertainment :: Role-Playing",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Environment :: Console",
 ]
 
 dependencies = [
@@ -28,7 +33,14 @@ dev = [
     "black>=23.0",
     "flake8>=6.0",
     "mypy>=1.0",
+    "pre-commit>=3.0",
 ]
+
+[project.urls]
+Homepage = "https://github.com/discipleartem/dnd_mud"
+Repository = "https://github.com/discipleartem/dnd_mud"
+Documentation = "https://github.com/discipleartem/dnd_mud/docs"
+"Bug Tracker" = "https://github.com/discipleartem/dnd_mud/issues"
 
 [project.scripts]
 dnd-mud = "main:main"
