@@ -1,0 +1,23 @@
+# English localization for D&D MUD
+# Simple YAML format for easy editing
+
+main:
+  welcome:
+    title: "D&D MUD Game"
+    version: "Version 1.0.0"
+    press_enter: "Press Enter to continue..."
+    interrupted: "Program interrupted."
+
+menu:
+  title: "🎮 MAIN MENU 🎮"
+  items:
+    - "New Game"
+    - "Load Game"
+    - "Settings"
+    - "Exit"
+  prompt: "Choose menu item (1-4): "
+  errors:
+    invalid_number: "❌ Error: enter a number from 1 to 4"
+    out_of_range: "❌ Error: choose a number from 1 to {max}"
+  goodbye: "👋 Goodbye!"
+  continue: "Press Enter to return to main menu..."

@@ -7,11 +7,12 @@ D&D MUD - Создание персонажей.
 
 import sys
 from src.ui.main_menu.main import show_main_menu
+from i18n import t
 
 
 def welcome_screen() -> None:
     """Приветственный экран."""
-    welcome = """
+    welcome = f"""
 ╔══════════════════════════════════════════════════════════════════════╗
 ║                                                                      ║
 ║    ████████╗███████╗██████╗ ███╗   ███╗██╗███╗   ██╗ █████╗ ██╗      ║
@@ -21,15 +22,15 @@ def welcome_screen() -> None:
 ║       ██║   ███████╗██║  ██║██║ ╚═╝ ██║██║██║ ╚████║██║  ██║███████  ║
 ║       ╚═╝   ╚══════╝╚═╝  ╚═╝╚═╝     ╚═╝╚═╝╚═╝ ╚═══╝╚═╝  ╚═╝╚══════╝  ║
 ║                                                                      ║
-║                          D&D MUD Game                                ║
+║                          {t('main.welcome.title')}                                ║
 ║                                                                      ║
-║                          Версия 1.0.0                                ║
+║                          {t('main.welcome.version')}                                ║
 ║                                                                      ║
 ╚══════════════════════════════════════════════════════════════════════╝    
 """
     
     print(welcome)
-    input("Нажмите Enter для продолжения...")
+    input(t('main.welcome.press_enter'))
 
 
 def main() -> int:
@@ -38,7 +39,7 @@ def main() -> int:
         welcome_screen()
         show_main_menu()
     except KeyboardInterrupt:
-        print("\n\nПрограмма прервана.")
+        print(t('main.welcome.interrupted'))
     
     return 0
 

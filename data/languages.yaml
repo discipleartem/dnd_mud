@@ -1,81 +1,329 @@
 # Языки Dungeons & Dragons 5e
-# Базовые языки из Player's Handbook
+# Структура оптимизирована для использования в character.py, race.py и локализации
 
+# Метаданные языков для игрового движка
+language_metadata:
+  # Типы языков для механик
+  types:
+    standard: "Стандартные языки"
+    exotic: "Экзотические языки" 
+    secret: "Секретные языки"
+    elemental: "Элементальные языки"
+    planar: "Планарные языки"
+  
+  # Сложность изучения
+  difficulties:
+    easy: 1
+    normal: 2
+    hard: 3
+    very_hard: 4
+
+# База данных языков
 languages:
   common:
-    name: "Общий"
-    description: "Основной язык торговли и общения между расами"
-    script: "Общий"
-    speakers: "Все расы"
+    # Основные данные
+    code: "common"
+    type: "standard"
+    difficulty: "easy"
+    
+    # Локализация - ключи для i18n
+    localization_keys:
+      name: "language.common.name"
+      description: "language.common.description"
+      speakers: "language.common.speakers"
+    
+    # Игровые механики
+    mechanics:
+      script: "common"
+      is_default: true
+      learnable_by_all: true
+      
+    # Описания для fallback
+    fallback_data:
+      name: "Общий"
+      description: "Основной язык торговли и общения между расами"
+      speakers: "Все расы"
     
   elvish:
-    name: "Эльфийский"
-    description: "Изящный язык эльфов с древней историей"
-    script: "Эльфийский"
-    speakers: "Эльфы, высшие эльфы"
+    code: "elvish"
+    type: "standard"
+    difficulty: "normal"
+    
+    localization_keys:
+      name: "language.elvish.name"
+      description: "language.elvish.description"
+      speakers: "language.elvish.speakers"
+    
+    mechanics:
+      script: "elvish"
+      is_default: false
+      learnable_by: ["elf", "high_elf", "half_elf"]
+      race_bonus: ["elf", "high_elf"]
+    
+    fallback_data:
+      name: "Эльфийский"
+      description: "Изящный язык эльфов с древней историей"
+      speakers: "Эльфы, высшие эльфы"
     
   dwarvish:
-    name: "Дварфийский"
-    description: "Грубый и резкий язык дварфов"
-    script: "Дварфийский"
-    speakers: "Дварфы"
+    code: "dwarvish"
+    type: "standard"
+    difficulty: "normal"
+    
+    localization_keys:
+      name: "language.dwarvish.name"
+      description: "language.dwarvish.description"
+      speakers: "language.dwarvish.speakers"
+    
+    mechanics:
+      script: "dwarvish"
+      is_default: false
+      learnable_by: ["dwarf"]
+      race_bonus: ["dwarf", "mountain_dwarf", "hill_dwarf"]
+    
+    fallback_data:
+      name: "Дварфийский"
+      description: "Грубый и резкий язык дварфов"
+      speakers: "Дварфы"
     
   orcish:
-    name: "Орочий"
-    description: "Жесткий и агрессивный язык орков"
-    script: "Дварфийский"
-    speakers: "Орки, полуорки"
+    code: "orcish"
+    type: "standard"
+    difficulty: "normal"
+    
+    localization_keys:
+      name: "language.orcish.name"
+      description: "language.orcish.description"
+      speakers: "language.orcish.speakers"
+    
+    mechanics:
+      script: "dwarvish"  # Использует дварфийский алфавит
+      is_default: false
+      learnable_by: ["orc", "half_orc"]
+      race_bonus: ["orc", "half_orc"]
+    
+    fallback_data:
+      name: "Орочий"
+      description: "Жесткий и агрессивный язык орков"
+      speakers: "Орки, полуорки"
     
   halfling:
-    name: "Полурослийский"
-    description: "Простой и мелодичный язык полуросликов"
-    script: "Общий"
-    speakers: "Полурослики"
+    code: "halfling"
+    type: "standard"
+    difficulty: "easy"
+    
+    localization_keys:
+      name: "language.halfling.name"
+      description: "language.halfling.description"
+      speakers: "language.halfling.speakers"
+    
+    mechanics:
+      script: "common"
+      is_default: false
+      learnable_by: ["halfling"]
+      race_bonus: ["lightfoot_halfling", "stout_halfling"]
+    
+    fallback_data:
+      name: "Полурослийский"
+      description: "Простой и мелодичный язык полуросликов"
+      speakers: "Полурослики"
     
   draconic:
-    name: "Драконий"
-    description: "Древний язык драконов и драконорожденных"
-    script: "Драконий"
-    speakers: "Драконы, драконорожденные"
+    code: "draconic"
+    type: "exotic"
+    difficulty: "hard"
+    
+    localization_keys:
+      name: "language.draconic.name"
+      description: "language.draconic.description"
+      speakers: "language.draconic.speakers"
+    
+    mechanics:
+      script: "draconic"
+      is_default: false
+      learnable_by: ["dragonborn"]
+      race_bonus: ["dragonborn"]
+      magic_language: true
+    
+    fallback_data:
+      name: "Драконий"
+      description: "Древний язык драконов и драконорожденных"
+      speakers: "Драконы, драконорожденные"
     
   gnomish:
-    name: "Гномийский"
-    description: "Сложный и технический язык гномов"
-    script: "Дварфийский"
-    speakers: "Гномы"
+    code: "gnomish"
+    type: "standard"
+    difficulty: "normal"
+    
+    localization_keys:
+      name: "language.gnomish.name"
+      description: "language.gnomish.description"
+      speakers: "language.gnomish.speakers"
+    
+    mechanics:
+      script: "dwarvish"
+      is_default: false
+      learnable_by: ["gnome"]
+      race_bonus: ["rock_gnome", "forest_gnome"]
+    
+    fallback_data:
+      name: "Гномийский"
+      description: "Сложный и технический язык гномов"
+      speakers: "Гномы"
     
   abyssal:
-    name: "Бездонный"
-    description: "Язык демонов и тёмных существ"
-    script: "Бездонный"
-    speakers: "Демоны"
+    code: "abyssal"
+    type: "planar"
+    difficulty: "very_hard"
+    
+    localization_keys:
+      name: "language.abyssal.name"
+      description: "language.abyssal.description"
+      speakers: "language.abyssal.speakers"
+    
+    mechanics:
+      script: "infernal"
+      is_default: false
+      learnable_by_special: ["warlock", "cleric"]
+      magic_language: true
+      evil_alignment: true
+    
+    fallback_data:
+      name: "Бездонный"
+      description: "Язык демонов и тёмных существ"
+      speakers: "Демоны"
     
   celestial:
-    name: "Небесный"
-    description: "Язык ангелов и небожителей"
-    script: "Небесный"
-    speakers: "Ангелы"
+    code: "celestial"
+    type: "planar"
+    difficulty: "very_hard"
+    
+    localization_keys:
+      name: "language.celestial.name"
+      description: "language.celestial.description"
+      speakers: "language.celestial.speakers"
+    
+    mechanics:
+      script: "celestial"
+      is_default: false
+      learnable_by_special: ["cleric", "paladin"]
+      magic_language: true
+      good_alignment: true
+    
+    fallback_data:
+      name: "Небесный"
+      description: "Язык ангелов и небожителей"
+      speakers: "Ангелы"
     
   infernal:
-    name: "Инфернальный"
-    description: "Язык дьяволов и законных злых существ"
-    script: "Инфернальный"
-    speakers: "Дьяволы"
+    code: "infernal"
+    type: "planar"
+    difficulty: "very_hard"
+    
+    localization_keys:
+      name: "language.infernal.name"
+      description: "language.infernal.description"
+      speakers: "language.infernal.speakers"
+    
+    mechanics:
+      script: "infernal"
+      is_default: false
+      learnable_by_special: ["warlock", "sorcerer"]
+      magic_language: true
+      lawful_evil_alignment: true
+    
+    fallback_data:
+      name: "Инфернальный"
+      description: "Язык дьяволов и законных злых существ"
+      speakers: "Дьяволы"
     
   primordial:
-    name: "Первородный"
-    description: "Древний язык элементалей"
-    script: "Первородный"
-    speakers: "Элементали"
+    code: "primordial"
+    type: "elemental"
+    difficulty: "hard"
+    
+    localization_keys:
+      name: "language.primordial.name"
+      description: "language.primordial.description"
+      speakers: "language.primordial.speakers"
+    
+    mechanics:
+      script: "dwarvish"
+      is_default: false
+      learnable_by_special: ["druid", "ranger"]
+      magic_language: true
+    
+    fallback_data:
+      name: "Первородный"
+      description: "Древний язык элементалей"
+      speakers: "Элементали"
     
   sylvan:
-    name: "Лесной"
-    description: "Язык лесных существ и фей"
-    script: "Эльфийский"
-    speakers: "Феи, сухады, кентавры"
+    code: "sylvan"
+    type: "exotic"
+    difficulty: "normal"
+    
+    localization_keys:
+      name: "language.sylvan.name"
+      description: "language.sylvan.description"
+      speakers: "language.sylvan.speakers"
+    
+    mechanics:
+      script: "elvish"
+      is_default: false
+      learnable_by: ["elf", "fairy"]
+      race_bonus: ["elf", "fairy"]
+      magic_language: true
+    
+    fallback_data:
+      name: "Лесной"
+      description: "Язык лесных существ и фей"
+      speakers: "Феи, сухады, кентавры"
     
   undercommon:
-    name: "Подземный"
-    description: "Торговый язык Подземья"
-    script: "Эльфийский"
-    speakers: "Дроу, глубокие дварфы"
+    code: "undercommon"
+    type: "secret"
+    difficulty: "hard"
+    
+    localization_keys:
+      name: "language.undercommon.name"
+      description: "language.undercommon.description"
+      speakers: "language.undercommon.speakers"
+    
+    mechanics:
+      script: "elvish"
+      is_default: false
+      learnable_by: ["drow", "duergar"]
+      race_bonus: ["drow", "duergar"]
+      secret_language: true
+    
+    fallback_data:
+      name: "Подземный"
+      description: "Торговый язык Подземья"
+      speakers: "Дроу, глубокие дварфы"
+
+# Системные алфавиты для механик
+scripts:
+  common:
+    name: "Общий алфавит"
+    languages: ["common", "halfling"]
+  
+  elvish:
+    name: "Эльфийский алфавит"
+    languages: ["elvish", "sylvan", "undercommon"]
+  
+  dwarvish:
+    name: "Дварфийский алфавит"
+    languages: ["dwarvish", "orcish", "gnomish", "primordial"]
+  
+  draconic:
+    name: "Драконий алфавит"
+    languages: ["draconic"]
+  
+  infernal:
+    name: "Инфернальный алфавит"
+    languages: ["infernal", "abyssal"]
+  
+  celestial:
+    name: "Небесный алфавит"
+    languages: ["celestial"]

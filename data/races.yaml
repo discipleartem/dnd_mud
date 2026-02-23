@@ -13,25 +13,20 @@ races:
       wisdom: 1
       charisma: 1
     ability_bonuses_description: "Все характеристики +1"
-    size: "MEDIUM"
+    size: "medium"
     speed: 30
     age:
       min: 16
       max: 100
     languages: ["common"]
     features:
-      - name: "Разносторонность"
-        description: "Бонус +1 ко всем характеристикам"
-        mechanics:
-          type: "ability_bonus"
-          target: "all"
-          value: 1
       - name: "Дополнительный язык"
         description: "Можно выучить один дополнительный язык по выбору"
         mechanics:
           type: "language"
           count: 1
           choice: true
+    allow_base_race_choice: true  # Можно выбрать базовую расу
     
     subraces:
       variant_human:
@@ -67,12 +62,13 @@ races:
     ability_bonuses:
       dexterity: 2
     ability_bonuses_description: "Ловкость +2"
-    size: "MEDIUM"
+    size: "medium"
     speed: 30
     age:
       min: 20
       max: 750
     languages: ["common", "elvish"]
+    allow_base_race_choice: false  # Нельзя выбрать базовую расу, только подрасы
     features:
       - name: "Обострённые чувства"
         description: "Вы владеете навыком Внимательность."
@@ -154,7 +150,7 @@ races:
       strength: 2
       constitution: 1
     ability_bonuses_description: "Сила +2, Телосложение +1"
-    size: "MEDIUM"
+    size: "medium"
     speed: 30
     age:
       min: 14
