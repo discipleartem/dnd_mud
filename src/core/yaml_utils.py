@@ -47,3 +47,36 @@ class BaseYamlLoader:
         """
         with open(self.data_path, encoding="utf-8") as file:
             return yaml.safe_load(file) or {}
+
+
+def load_yaml_file(file_path: Path) -> dict[str, Any]:
+    """Загрузить данные из YAML файла.
+
+    Args:
+        file_path: Путь к YAML файлу
+
+    Returns:
+        Распарсенные данные из YAML
+
+    Raises:
+        FileNotFoundError: Если файл не найден
+        yaml.YAMLError: При ошибке парсинга YAML
+    """
+    with open(file_path, encoding="utf-8") as file:
+        return yaml.safe_load(file) or {}
+
+
+def save_yaml_file(file_path: Path, data: dict[str, Any]) -> None:
+    """Сохранить данные в YAML файл.
+
+    Args:
+        file_path: Путь к YAML файлу
+        data: Данные для сохранения
+
+    Raises:
+        yaml.YAMLError: При ошибке сериализации YAML
+    """
+    with open(file_path, "w", encoding="utf-8") as file:
+        yaml.safe_dump(
+            data, file, default_flow_style=False, allow_unicode=True
+        )

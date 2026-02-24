@@ -1,4 +1,4 @@
 def settings() -> None:
     """Настройки."""
     print("Настройки")
-    # TODO: Implement settings logic
+    print("(Функция будет реализована при необходимости)")

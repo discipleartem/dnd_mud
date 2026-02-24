@@ -10,7 +10,7 @@ sys.path.insert(0, str(Path(__file__).parent / "src"))
 from src.ui.entities.race import Race
 
 
-def demonstrate_race_usage():
+def demonstrate_race_usage() -> None:
     """Демонстрация использования рас в игре."""
     print("🎮 D&D MUD - Демонстрация работы с расами\n")
 
@@ -46,7 +46,10 @@ def demonstrate_race_usage():
     if selected_race.subraces:
         print("\n🔸 Доступные подрасы:")
         for _subrace_id, subrace in selected_race.subraces.items():
-            print(f"  • {subrace.name}: {subrace.ability_bonuses_description}")
+            print(
+                f"  • {subrace.name}: "
+                f"{subrace.ability_bonuses_description}"
+            )
 
         # Симуляция выбора подрасы
         selected_subrace_id = "high_elf"

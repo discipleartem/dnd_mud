@@ -15,7 +15,6 @@ classifiers = [
     "Intended Audience :: End Users/Desktop Game",
     "License :: OSI Approved :: MIT License",
     "Programming Language :: Python :: 3.12",
-    "Programming Language :: Python :: 3.13",
     "Topic :: Games/Entertainment :: Role-Playing",
     "Topic :: Software Development :: Libraries :: Python Modules",
     "Environment :: Console",
@@ -25,23 +24,16 @@ keywords = ["dnd", "mud", "character-creator", "tabletop", "rpg"]
 
 dependencies = [
     "PyYAML>=6.0",
-    "Babel>=2.14.0",
 ]
 
 [project.optional-dependencies]
 dev = [
     "pytest>=8.0",
     "pytest-cov>=4.0",
-    "pytest-mock>=3.12.0",
-    "pytest-xdist>=3.0",
-    "pytest-html>=4.0",
-    "pytest-benchmark>=4.0",
     "coverage>=7.0",
-    "hypothesis>=6.0",
     "black>=24.0",
     "ruff>=0.1.0",
     "mypy>=1.8.0",
-    "pre-commit>=3.5.0",
 ]
 
 [project.urls]

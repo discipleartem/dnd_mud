@@ -9,8 +9,6 @@ import pytest
 import yaml
 
 from src.services.language_service import Language, LanguageMechanics
-from src.ui.entities.character import Size
-from src.ui.entities.race import Feature, Race, SubRace
 
 
 @pytest.fixture
@@ -21,11 +19,11 @@ def temp_yaml_file():
         yaml.dump(content, temp_file, allow_unicode=True)
         temp_file.flush()
         temp_file.close()
-        
+
         # Очистка после теста
         yield Path(temp_file.name)
         Path(temp_file.name).unlink()
-    
+
     return _create_temp_yaml
 
 
@@ -156,7 +154,7 @@ def sample_races():
         ability_bonuses_description="+2 к двум характеристикам",
         inherit_base_abilities=False
     )
-    
+
     return {
         "human": Race(
             name="Человек",
@@ -313,10 +311,10 @@ def sample_race_data():
 def mock_i18n():
     """Фикстура для мока i18n функций."""
     from unittest.mock import Mock
-    
+
     mock_t = Mock()
     mock_t.return_value = "Translated text"
-    
+
     return mock_t
 
 
@@ -328,11 +326,11 @@ def temp_locale_file():
         yaml.dump(content, temp_file, allow_unicode=True)
         temp_file.flush()
         temp_file.close()
-        
+
         # Очистка после теста
         yield Path(temp_file.name)
         Path(temp_file.name).unlink()
-    
+
     return _create_locale_file
 
 

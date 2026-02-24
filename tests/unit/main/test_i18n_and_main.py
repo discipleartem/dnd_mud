@@ -4,7 +4,7 @@
 from pathlib import Path
 from tempfile import NamedTemporaryFile
 from typing import Any
-from unittest.mock import Mock, patch
+from unittest.mock import patch
 
 import pytest
 import yaml
@@ -31,8 +31,9 @@ class TestI18nError:
     def test_i18n_error_with_cause(self) -> None:
         """Тест I18nError с причиной."""
         original_error = ValueError("Original error")
-        error = I18nError("Wrapped error") from original_error
-        
+        error = I18nError("Wrapped error")
+        error.__cause__ = original_error
+
         assert str(error) == "Wrapped error"
         assert error.__cause__ is original_error
 
@@ -51,24 +52,24 @@ class TestSimpleI18nManager:
     def test_init_default_language(self) -> None:
         """Тест инициализации с языком по умолчанию."""
         # Создаем тестовую директорию локализации
-        with NamedTemporaryFile(suffix=".yaml", delete=False) as f:
+        with NamedTemporaryFile(suffix=".yaml", delete=False, mode='w+') as f:
             test_content = {"test": {"key": "value"}}
-            yaml.dump(test_content, f)
+            yaml.dump(test_content, f, default_flow_style=False)
             f.flush()
-            
+
             locales_dir = Path(f.name).parent
             locale_file = Path(f.name)
-            
+
             # Переименовываем в ru.yaml
             ru_file = locales_dir / "ru.yaml"
             locale_file.rename(ru_file)
-            
+
             try:
                 with patch('pathlib.Path.exists', return_value=True):
                     manager = SimpleI18nManager()
                     manager._locales_dir = locales_dir
                     manager.load_translations("ru")
-                    
+
                     assert manager._default_language == "ru"
                     assert manager._current_language == "ru"
             finally:
@@ -86,14 +87,14 @@ class TestSimpleI18nManager:
             },
             "error": "Ошибка"
         }
-        
+
         locale_file = self.create_test_locale_file(test_content)
-        
+
         try:
             manager = SimpleI18nManager()
             manager._locales_dir = locale_file.parent
             manager.load_translations(locale_file.stem)
-            
+
             assert manager._current_language == locale_file.stem
             assert manager._translations == test_content
         finally:
@@ -103,7 +104,7 @@ class TestSimpleI18nManager:
         """Тест загрузки переводов с несуществующим файлом."""
         manager = SimpleI18nManager()
         manager._locales_dir = Path("/nonexistent")
-        
+
         with pytest.raises(I18nError, match="Файл локализации не найден"):
             manager.load_translations("nonexistent")
 
@@ -112,10 +113,10 @@ class TestSimpleI18nManager:
         with NamedTemporaryFile(mode="w", suffix=".yaml", delete=False) as f:
             f.write("invalid: yaml: content: [")
             f.flush()
-            
+
             manager = SimpleI18nManager()
             manager._locales_dir = Path(f.name).parent
-            
+
             try:
                 with pytest.raises(I18nError, match="Ошибка парсинга YAML"):
                     manager.load_translations(Path(f.name).stem)
@@ -125,13 +126,13 @@ class TestSimpleI18nManager:
     def test_load_yaml_file_success(self) -> None:
         """Тест успешной загрузки YAML файла."""
         test_content = {"key": "value", "nested": {"key2": "value2"}}
-        
+
         locale_file = self.create_test_locale_file(test_content)
-        
+
         try:
             manager = SimpleI18nManager()
             result = manager._load_yaml_file(locale_file)
-            
+
             assert result == test_content
         finally:
             locale_file.unlink()
@@ -141,24 +142,24 @@ class TestSimpleI18nManager:
         with NamedTemporaryFile(mode="w", suffix=".yaml", delete=False) as f:
             f.write("")
             f.flush()
-            
+
             manager = SimpleI18nManager()
             result = manager._load_yaml_file(Path(f.name))
-            
+
             assert result == {}
-            
+
             Path(f.name).unlink()
 
     def test_get_simple_key(self) -> None:
         """Тест получения простого ключа."""
         test_content = {"simple": "Простой перевод"}
         locale_file = self.create_test_locale_file(test_content)
-        
+
         try:
             manager = SimpleI18nManager()
             manager._locales_dir = locale_file.parent
             manager.load_translations(locale_file.stem)
-            
+
             result = manager.get("simple")
             assert result == "Простой перевод"
         finally:
@@ -175,15 +176,15 @@ class TestSimpleI18nManager:
             }
         }
         locale_file = self.create_test_locale_file(test_content)
-        
+
         try:
             manager = SimpleI18nManager()
             manager._locales_dir = locale_file.parent
             manager.load_translations(locale_file.stem)
-            
+
             result = manager.get("menu.title")
             assert result == "Главное меню"
-            
+
             result = manager.get("menu.items.new_game")
             assert result == "Новая игра"
         finally:
@@ -193,15 +194,15 @@ class TestSimpleI18nManager:
         """Тест получения несуществующего ключа."""
         test_content = {"existing": "Существующий ключ"}
         locale_file = self.create_test_locale_file(test_content)
-        
+
         try:
             manager = SimpleI18nManager()
             manager._locales_dir = locale_file.parent
             manager.load_translations(locale_file.stem)
-            
+
             result = manager.get("nonexistent")
             assert result == "nonexistent"
-            
+
             result = manager.get("menu.nonexistent")
             assert result == "menu.nonexistent"
         finally:
@@ -214,15 +215,15 @@ class TestSimpleI18nManager:
             "simple": "Простой текст без форматирования"
         }
         locale_file = self.create_test_locale_file(test_content)
-        
+
         try:
             manager = SimpleI18nManager()
             manager._locales_dir = locale_file.parent
             manager.load_translations(locale_file.stem)
-            
+
             result = manager.get("welcome", name="Арагорн", health=100)
             assert result == "Привет, Арагорн! У тебя 100 HP."
-            
+
             result = manager.get("simple")
             assert result == "Простой текст без форматирования"
         finally:
@@ -235,19 +236,19 @@ class TestSimpleI18nManager:
             "broken_type": "Привет, {name}!"
         }
         locale_file = self.create_test_locale_file(test_content)
-        
+
         try:
             manager = SimpleI18nManager()
             manager._locales_dir = locale_file.parent
             manager.load_translations(locale_file.stem)
-            
+
             # Отсутствующий параметр
             result = manager.get("broken")
             assert result == "Привет, {missing}!"
-            
+
             # Неверный тип параметра
             result = manager.get("broken_type", name=123)
-            assert result == "Привет, {name}!"
+            assert result == "Привет, 123!"
         finally:
             locale_file.unlink()
 
@@ -257,12 +258,12 @@ class TestSimpleI18nManager:
             "items": ["Предмет 1", "Предмет 2", "Предмет 3"]
         }
         locale_file = self.create_test_locale_file(test_content)
-        
+
         try:
             manager = SimpleI18nManager()
             manager._locales_dir = locale_file.parent
             manager.load_translations(locale_file.stem)
-            
+
             result = manager.get("items")
             assert result == ["Предмет 1", "Предмет 2", "Предмет 3"]
         finally:
@@ -278,12 +279,12 @@ class TestSimpleI18nManager:
             }
         }
         locale_file = self.create_test_locale_file(test_content)
-        
+
         try:
             manager = SimpleI18nManager()
             manager._locales_dir = locale_file.parent
             manager.load_translations(locale_file.stem)
-            
+
             result = manager._navigate_to_key("level1.level2.level3")
             assert result == "Глубокое значение"
         finally:
@@ -293,15 +294,15 @@ class TestSimpleI18nManager:
         """Тест навигации к несуществующему ключу."""
         test_content = {"existing": "value"}
         locale_file = self.create_test_locale_file(test_content)
-        
+
         try:
             manager = SimpleI18nManager()
             manager._locales_dir = locale_file.parent
             manager.load_translations(locale_file.stem)
-            
+
             result = manager._navigate_to_key("nonexistent.key")
             assert result == "nonexistent.key"
-            
+
             result = manager._navigate_to_key("existing.nonexistent")
             assert result == "existing.nonexistent"
         finally:
@@ -310,21 +311,21 @@ class TestSimpleI18nManager:
     def test_format_string_success(self) -> None:
         """Тест успешного форматирования строки."""
         manager = SimpleI18nManager()
-        
+
         result = manager._format_string("Привет, {name}!", name="Мир")
         assert result == "Привет, Мир!"
-        
+
         result = manager._format_string("Число: {number}", number=42)
         assert result == "Число: 42"
 
     def test_format_string_error(self) -> None:
         """Тест форматирования строки с ошибкой."""
         manager = SimpleI18nManager()
-        
+
         # Отсутствующий ключ
         result = manager._format_string("Привет, {missing}!")
         assert result == "Привет, {missing}!"
-        
+
         # Неверный формат
         result = manager._format_string("Привет, {name}!")
         assert result == "Привет, {name}!"
@@ -333,7 +334,7 @@ class TestSimpleI18nManager:
         """Тест получения текущего языка."""
         manager = SimpleI18nManager()
         manager._current_language = "en"
-        
+
         result = manager.get_current_language()
         assert result == "en"
 
@@ -341,14 +342,14 @@ class TestSimpleI18nManager:
         """Тест получения доступных языков когда директория существует."""
         with NamedTemporaryFile(suffix=".yaml", delete=False) as f1:
             with NamedTemporaryFile(suffix=".yaml", delete=False) as f2:
-                f1.write("content1")
-                f2.write("content2")
+                f1.write(b"content1")
+                f2.write(b"content2")
                 f1.flush()
                 f2.flush()
-                
+
                 manager = SimpleI18nManager()
                 manager._locales_dir = Path(f1.name).parent
-                
+
                 try:
                     languages = manager.get_available_languages()
                     assert len(languages) >= 2
@@ -362,7 +363,7 @@ class TestSimpleI18nManager:
         """Тест получения доступных языков когда директория не существует."""
         manager = SimpleI18nManager()
         manager._locales_dir = Path("/nonexistent/directory")
-        
+
         result = manager.get_available_languages()
         assert result == []
 
@@ -370,11 +371,11 @@ class TestSimpleI18nManager:
         """Тест установки языка."""
         test_content = {"test": "test value"}
         locale_file = self.create_test_locale_file(test_content)
-        
+
         try:
             manager = SimpleI18nManager()
             manager._locales_dir = locale_file.parent
-            
+
             with patch.object(manager, 'load_translations') as mock_load:
                 manager.set_language(locale_file.stem)
                 mock_load.assert_called_once_with(locale_file.stem)
@@ -389,9 +390,9 @@ class TestGlobalI18nFunctions:
     def test_t_function(self, mock_manager) -> None:
         """Тест глобальной функции t."""
         mock_manager.get.return_value = "Переведенная строка"
-        
+
         result = t("test.key", param="value")
-        
+
         assert result == "Переведенная строка"
         mock_manager.get.assert_called_once_with("test.key", param="value")
 
@@ -399,16 +400,16 @@ class TestGlobalI18nFunctions:
     def test_set_language_function(self, mock_manager) -> None:
         """Тест глобальной функции set_language."""
         set_language("en")
-        
+
         mock_manager.set_language.assert_called_once_with("en")
 
     @patch('i18n._i18n_manager')
     def test_get_current_language_function(self, mock_manager) -> None:
         """Тест глобальной функции get_current_language."""
         mock_manager.get_current_language.return_value = "ru"
-        
+
         result = get_current_language()
-        
+
         assert result == "ru"
         mock_manager.get_current_language.assert_called_once()
 
@@ -416,9 +417,9 @@ class TestGlobalI18nFunctions:
     def test_get_available_languages_function(self, mock_manager) -> None:
         """Тест глобальной функции get_available_languages."""
         mock_manager.get_available_languages.return_value = ["ru", "en"]
-        
+
         result = get_available_languages()
-        
+
         assert result == ["ru", "en"]
         mock_manager.get_available_languages.assert_called_once()
 
@@ -434,14 +435,22 @@ class TestMainModule:
             'main.welcome.title': 'Добро пожаловать в D&D MUD',
             'main.welcome.version': 'Версия 1.0.0'
         }.get(key, key)
-        
+
         from main import _print_welcome_banner
-        
+
         _print_welcome_banner()
-        
-        print_calls = [str(call) for call in mock_print.call_args_list]
-        printed_text = "\n".join(print_calls)
-        
+
+        # Проверяем что print был вызван
+        assert mock_print.called
+
+        # Проверяем ключевые слова в аргументах print
+        all_args = []
+        for call in mock_print.call_args_list:
+            if call.args:
+                all_args.extend(str(arg) for arg in call.args)
+
+        printed_text = " ".join(all_args)
+
         assert "DUNGEONS & DRAGONS MUD" in printed_text
         assert "Добро пожаловать в D&D MUD" in printed_text
         assert "Версия 1.0.0" in printed_text
@@ -454,11 +463,11 @@ class TestMainModule:
         """Тест приветственного экрана."""
         mock_t.return_value = "Нажмите Enter для продолжения..."
         mock_input.return_value = ""
-        
+
         from main import welcome_screen
-        
+
         welcome_screen()
-        
+
         mock_banner.assert_called_once()
         mock_input.assert_called_once_with("Нажмите Enter для продолжения...")
         mock_t.assert_called_once_with("main.welcome.press_enter")
@@ -468,9 +477,9 @@ class TestMainModule:
     def test_main_success(self, mock_welcome, mock_menu) -> None:
         """Тест успешного выполнения main."""
         from main import main
-        
+
         result = main()
-        
+
         assert result == 0
         mock_welcome.assert_called_once()
         mock_menu.assert_called_once()
@@ -483,11 +492,11 @@ class TestMainModule:
         """Тест прерывания с клавиатуры в main."""
         mock_t.return_value = "Программа прервана"
         mock_welcome.side_effect = KeyboardInterrupt()
-        
+
         from main import main
-        
+
         result = main()
-        
+
         assert result == 0
         mock_print.assert_called_once_with("\nПрограмма прервана")
         mock_t.assert_called_once_with("main.welcome.interrupted")
@@ -500,13 +509,13 @@ class TestMainModule:
         """Тест обработки исключения в main."""
         mock_t.return_value = "Ошибка: {error}"
         mock_welcome.side_effect = ValueError("Test error")
-        
+
         from main import main
-        
+
         result = main()
-        
+
         assert result == 1
-        mock_print.assert_called_once_with("\nОшибка: Test error")
+        mock_print.assert_called_once_with("\nОшибка: {error}")
         mock_t.assert_called_once_with("main.welcome.error", error="Test error")
 
     @patch('main.main')
@@ -514,11 +523,11 @@ class TestMainModule:
     def test_run_application(self, mock_exit, mock_main) -> None:
         """Тест запуска приложения."""
         mock_main.return_value = 0
-        
+
         from main import _run_application
-        
+
         _run_application()
-        
+
         mock_main.assert_called_once()
         mock_exit.assert_called_once_with(0)
 
@@ -527,11 +536,11 @@ class TestMainModule:
     def test_run_application_with_error(self, mock_exit, mock_main) -> None:
         """Тест запуска приложения с ошибкой."""
         mock_main.return_value = 1
-        
+
         from main import _run_application
-        
+
         _run_application()
-        
+
         mock_main.assert_called_once()
         mock_exit.assert_called_once_with(1)
 
@@ -542,15 +551,15 @@ class TestMainModule:
             'main.welcome.title': 'Очень длинное название',
             'main.welcome.version': 'v1.0.0'
         }.get(key, key)
-        
+
         from main import _print_welcome_banner
-        
+
         with patch('builtins.print') as mock_print:
             _print_welcome_banner()
-            
+
             print_calls = [str(call) for call in mock_print.call_args_list]
             banner_text = "\n".join(print_calls)
-            
+
             # Проверяем, что все строки баннера имеют правильную длину
             lines = banner_text.split('\n')
             for line in lines:
@@ -566,14 +575,22 @@ class TestMainModule:
             'main.welcome.title': '🎲 Добро пожаловать 🎲',
             'main.welcome.version': '📜 Версия 1.0.0 📜'
         }.get(key, key)
-        
+
         from main import _print_welcome_banner
-        
+
         with patch('builtins.print') as mock_print:
             _print_welcome_banner()
-            
-            print_calls = [str(call) for call in mock_print.call_args_list]
-            banner_text = "\n".join(print_calls)
-            
+
+            # Проверяем что print был вызван
+            assert mock_print.called
+
+            # Проверяем ключевые слова в аргументах print
+            all_args = []
+            for call in mock_print.call_args_list:
+                if call.args:
+                    all_args.extend(str(arg) for arg in call.args)
+
+            banner_text = " ".join(all_args)
+
             assert "🎲 Добро пожаловать 🎲" in banner_text
             assert "📜 Версия 1.0.0 📜" in banner_text

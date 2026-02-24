@@ -5,9 +5,12 @@
 """
 
 from i18n import t
-from src.ui.entities.character import Character
-from src.ui.entities.race import Race, SubRace
-from src.ui.main_menu.ability_generation import generate_ability_scores
+from src.ui.adapters.updated_adapters import Character
+from src.ui.adapters.updated_adapters import Race as UpdatedRace
+from src.ui.adapters.updated_adapters import SubRace as UpdatedSubRace
+from src.ui.dto.character_dto import CharacterDTO
+from src.ui.factories.domain_factory import RaceFactory
+from src.utils.ui_helpers import display_error, get_numeric_choice
 
 
 def get_character_name() -> str:
@@ -30,7 +33,7 @@ def get_character_name() -> str:
         return name
 
 
-def display_races(races: dict[str, Race]) -> None:
+def display_races(races: dict[str, UpdatedRace]) -> None:
     """Отобразить список доступных рас.
 
     Args:
@@ -45,7 +48,7 @@ def display_races(races: dict[str, Race]) -> None:
         print()
 
 
-def select_race(races: dict[str, Race]) -> Race:
+def select_race(races: dict[str, UpdatedRace]) -> UpdatedRace:
     """Выбрать расу из списка.
 
     Args:
@@ -66,7 +69,9 @@ def select_race(races: dict[str, Race]) -> Race:
                 print(t("new_game.race_selection.error_number"))
                 continue
 
-            selected_race = Race.get_race_by_name(choice)
+            # Создаем фабрику и получаем расу
+            factory = RaceFactory()
+            selected_race = factory.get_race_by_name(choice)
             if selected_race:
                 return selected_race
             print(t("new_game.race_selection.error_not_found"))
@@ -75,7 +80,7 @@ def select_race(races: dict[str, Race]) -> Race:
             print(t("new_game.race_selection.error_invalid"))
 
 
-def display_race_details(race: Race) -> None:
+def display_race_details(race: UpdatedRace) -> None:
     """Отобразить подробную информацию о расе.
 
     Args:
@@ -84,7 +89,12 @@ def display_race_details(race: Race) -> None:
     title = t("new_game.race_details.title", race_name=race.name)
     print(f"\n{title}")
     print("=" * 50)
-    print(f"{t('new_game.race_details.description_label')} {race.description}")
+    print(
+        "{}: {}".format(
+            t("new_game.race_details.description_label"),
+            getattr(race, "description", "Нет описания"),
+        )
+    )
 
     print(f"\n{t('new_game.race_details.abilities_label')}")
     if race.ability_bonuses_description:
@@ -95,9 +105,12 @@ def display_race_details(race: Race) -> None:
     if race.features:
         print(f"\n{t('new_game.race_details.features_label')}")
         for feature in race.features:
-            feature_emoji = _get_feature_emoji(feature.name)
-            print(f"   • {feature_emoji} {feature.name}")
-            print(f"     {feature.description}")
+            # feature - это словарь, а не объект
+            feature_name = feature.get("name", "Без названия")
+            feature_description = feature.get("description", "Нет описания")
+            feature_emoji = _get_feature_emoji(feature_name)
+            print(f"   • {feature_emoji} {feature_name}")
+            print(f"     {feature_description}")
 
     print(f"\n{t('new_game.race_details.other_stats_label')}")
     size_name = race.size.get_localized_name()
@@ -113,7 +126,123 @@ def display_race_details(race: Race) -> None:
     )
 
 
-def select_subrace(race: Race) -> SubRace | None:
+def _create_subrace_options(
+    race: UpdatedRace,
+) -> tuple[list[tuple[str, UpdatedRace | None, str]], int]:
+    """Создать список опций выбора подрасы.
+
+    Returns:
+        (список опций, начальный номер)
+    """
+    options: list[tuple[str, UpdatedRace | None, str]] = []
+    start_number = 1
+
+    # Добавляем основную расу как вариант выбора
+    if race.allow_base_race_choice:
+        base_option = t(
+            "new_game.subrace_selection.base_race_option", race_name=race.name
+        )
+        options.append((str(base_option), None, "👤"))
+        start_number = 2
+
+    # Добавляем доступные подрасы
+    subrace_list = race.subraces
+    for _i, subrace in enumerate(subrace_list, start_number):
+        emoji = _get_subrace_emoji(subrace.name)
+        options.append((str(subrace.name), subrace, emoji))
+
+    return options, start_number
+
+
+def _display_subrace_options(
+    options: list[tuple[str, UpdatedSubRace | None, str]],
+) -> None:
+    """Отобразить опции выбора подрасы."""
+    for i, (name, _, emoji) in enumerate(options, 1):
+        print(f"{i}. {emoji} {name}")
+
+
+def _display_base_race_details(race: UpdatedRace) -> None:
+    """Отобразить детали базовой расы."""
+    if not race.allow_base_race_choice:
+        return
+
+    base_option = t(
+        "new_game.subrace_selection.base_race_option", race_name=race.name
+    )
+    base_desc = t(
+        "new_game.subrace_selection.base_race_description",
+        race_name=race.name,
+    )
+    print(f"\n1. 👤 {base_option}")
+    print(f"   {base_desc}")
+
+    if race.ability_bonuses_description:
+        abilities_label = t("new_game.details_section.abilities_label")
+        print(f"   {abilities_label} {race.ability_bonuses_description}")
+
+    if race.features:
+        features_label = t("new_game.details_section.features_label")
+        print(f"   {features_label}")
+        for feature in race.features:
+            # feature - это словарь, а не объект
+            feature_name = feature.get("name", "Без названия")
+            feature_description = feature.get("description", "Нет описания")
+            feature_emoji = _get_feature_emoji(feature_name)
+            print(f"      • {feature_emoji} {feature_name}")
+            print(f"        {feature_description}")
+
+
+def _display_subrace_details(
+    subrace_list: list[UpdatedRace], start_number: int
+) -> None:
+    """Отобразить детали подрас."""
+    for i, subrace in enumerate(subrace_list, start_number):
+        emoji = _get_subrace_emoji(subrace.name)
+        print(f"\n{i}. {emoji} {subrace.name}")
+        print(f"   {subrace._dto.description}")
+
+        if subrace.ability_bonuses_description:
+            abilities_label = t("new_game.details_section.abilities_label")
+            print(
+                f"   {abilities_label} {subrace.ability_bonuses_description}"
+            )
+
+        if subrace.features:
+            features_label = t("new_game.details_section.features_label")
+            print(f"   {features_label}")
+            for feature in subrace.features:
+                # feature - это словарь, а не объект
+                feature_name = feature.get("name", "Без названия")
+                feature_description = feature.get(
+                    "description", "Нет описания"
+                )
+                feature_emoji = _get_feature_emoji(feature_name)
+                print(f"      • {feature_emoji} {feature_name}")
+                print(f"        {feature_description}")
+
+
+def _handle_subrace_choice(
+    options: list[tuple[str, UpdatedRace | None, str]],
+) -> UpdatedRace | None:
+    """Обработать выбор подрасы.
+
+    Returns:
+        Выбранная подраса или None
+    """
+    try:
+        prompt = str(t("new_game.subrace_selection.prompt"))
+        choice_num = get_numeric_choice(len(options), prompt)
+
+        selected_option = options[choice_num - 1]
+        return selected_option[1]  # Возвращаем Race (SubRace как Race)
+    except (ValueError, IndexError):
+        error_msg = str(t("new_game.subrace_selection.error_invalid"))
+        display_error(error_msg)
+        return None
+
+
+def select_subrace(race: UpdatedRace) -> UpdatedRace | None:
     """Универсально выбрать подрасу для любой расы.
 
     Args:
@@ -129,96 +258,21 @@ def select_subrace(race: Race) -> SubRace | None:
     print(f"\n{title}")
     print("=" * 40)
 
-    # Создаём список опций выбора
-    options: list[tuple[str, SubRace | None, str]] = []
+    # Создаем опции и отображаем их
+    options, start_number = _create_subrace_options(race)
+    _display_subrace_options(options)
 
-    # Добавляем основную расу как вариант выбора только если разрешено
-    if race.allow_base_race_choice:
-        base_option = t(
-            "new_game.subrace_selection.base_race_option", race_name=race.name
-        )
-        options.append((str(base_option), None, "👤"))
-        print(f"1. 👤 {base_option}")
-        start_number = 2
-    else:
-        start_number = 1
-
-    # Добавляем доступные подрасы
-    subrace_list = list(race.subraces.values())
-    for i, subrace in enumerate(subrace_list, start_number):
-        emoji = _get_subrace_emoji(subrace.name)
-        options.append((str(subrace.name), subrace, emoji))
-        print(f"{i}. {emoji} {subrace.name}")
-
-    # Показываем подробности о всех опциях
+    # Показываем детали
     details_title = t("new_game.details_section.title")
     print(f"\n{details_title}")
     print("-" * 40)
 
-    # Детали базовой расы (только если разрешено выбирать)
-    if race.allow_base_race_choice:
-        base_option = t(
-            "new_game.subrace_selection.base_race_option", race_name=race.name
-        )
-        base_desc = t(
-            "new_game.subrace_selection.base_race_description",
-            race_name=race.name,
-        )
-        print(f"\n1. 👤 {base_option}")
-        print(f"   {base_desc}")
-        if race.ability_bonuses_description:
-            abilities_label = t("new_game.details_section.abilities_label")
-            print(f"   {abilities_label} {race.ability_bonuses_description}")
-        if race.features:
-            features_label = t("new_game.details_section.features_label")
-            print(f"   {features_label}")
-            for feature in race.features:
-                feature_emoji = _get_feature_emoji(feature.name)
-                print(f"      • {feature_emoji} {feature.name}")
-                print(f"        {feature.description}")
+    subrace_list = race.subraces
+    _display_base_race_details(race)
+    _display_subrace_details(subrace_list, start_number)
 
-    # Детали подрас
-    for i, subrace in enumerate(subrace_list, start_number):
-        emoji = _get_subrace_emoji(subrace.name)
-        print(f"\n{i}. {emoji} {subrace.name}")
-        print(f"   {subrace.description}")
-
-        if subrace.ability_bonuses_description:
-            abilities_label = t("new_game.details_section.abilities_label")
-            print(
-                f"   {abilities_label} "
-                f"{subrace.ability_bonuses_description}"
-            )
-
-        if subrace.features:
-            features_label = t("new_game.details_section.features_label")
-            print(f"   {features_label}")
-            for feature in subrace.features:
-                feature_emoji = _get_feature_emoji(feature.name)
-                print(f"      • {feature_emoji} {feature.name}")
-                print(f"        {feature.description}")
-
-    # Цикл выбора
-    while True:
-        try:
-            prompt = t(
-                "new_game.subrace_selection.prompt", race_name=race.name
-            )
-            choice = input(f"\n{prompt}").strip()
-
-            if choice.isdigit():
-                choice_num = int(choice)
-
-                if 1 <= choice_num <= len(options):
-                    selected_option = options[choice_num - 1]
-                    return selected_option[1]  # Возвращаем SubRace или None
-                else:
-                    print(t("new_game.subrace_selection.error_number"))
-            else:
-                print(t("new_game.subrace_selection.error_invalid"))
-
-        except ValueError:
-            print(t("new_game.subrace_selection.error_invalid"))
+    # Обрабатываем выбор
+    return _handle_subrace_choice(options)
 
 
 def _get_subrace_emoji(subrace_name: str) -> str:
@@ -259,24 +313,26 @@ def new_game() -> Character:
     """Новая игра.
 
     Returns:
-        Созданный персонаж.
+        Созданный персонаж
     """
     print(t("new_game.title"))
-    print(t("new_game.subtitle"))
+    print("=" * 50)
 
-    # 1. Присвоить имя персонажа
-    character = Character()
-    character.name = get_character_name()
+    # 1. Получить имя персонажа
+    character_name = get_character_name()
+    character = Character(character_dto=CharacterDTO(name=character_name))
     success_msg = t("new_game.character_name.success", name=character.name)
     print(success_msg)
 
     # 2. Получить список рас
-    races = Race.get_all_races()
+    factory = RaceFactory()
+    races = factory.get_all_races()
 
     # 3. Выбор из доступных рас
     display_races(races)
     selected_race = select_race(races)
-    character.race = selected_race
+    selected_race_dto = selected_race.get_dto()
+    character.update_race(selected_race_dto, None)
     race_success = t(
         "new_game.race_selection.success", race=selected_race.name
     )
@@ -288,7 +344,8 @@ def new_game() -> Character:
     # 4. Выбор подрасы, если есть
     selected_subrace = select_subrace(selected_race)
     if selected_subrace:
-        character.subrace = selected_subrace
+        selected_subrace_dto = selected_subrace.get_dto()
+        character.update_race(selected_race_dto, selected_subrace_dto)
         subrace_success = t(
             "new_game.subrace_selection.success", subrace=selected_subrace.name
         )
@@ -301,14 +358,53 @@ def new_game() -> Character:
     print(f"🎲 {t('ability_generation.title')} 🎲")
     print(f"{'='*50}")
 
-    # TODO: Добавить проверку на hardcore режим из настроек
-    hardcore_mode = False  # Временно выключен
+    # Используем новый Use Case для генерации характеристик
+    from src.use_cases.ability_generation import AbilityGenerationUseCase
 
-    character.ability_scores = generate_ability_scores(
-        selected_race, selected_subrace, hardcore_mode
+    ability_use_case = AbilityGenerationUseCase()
+
+    # Генерируем характеристики с учетом расовых бонусов
+    final_scores = ability_use_case.generate_with_race_bonuses(
+        selected_race, selected_subrace, method="standard"
     )
 
+    # Валидируем характеристики
+    validation_errors = ability_use_case.validate_scores(final_scores)
+    if validation_errors:
+        print("⚠️ Обнаружены ошибки в характеристиках:")
+        for error in validation_errors:
+            print(f"   • {error}")
+        print("📊 Используем скорректированные характеристики")
+
+    # Устанавливаем характеристики персонажу
+    character.set_ability_scores(final_scores)
+
+    # Показываем результат
     print(f"\n✅ {t('ability_generation.final.title')}")
     print(f"📊 {t('ability_generation.final.completed')}")
+
+    # Отображаем итоговые характеристики
+    print(f"\n{'='*30}")
+    print("📋 Итоговые характеристики:")
+    print(f"{'='*30}")
+    print(
+        f"💪 Сила: {final_scores.strength} ({final_scores.get_modifier('strength'):+d})"
+    )
+    print(
+        f"🏃 Ловкость: {final_scores.dexterity} ({final_scores.get_modifier('dexterity'):+d})"
+    )
+    print(
+        f"🛡️ Телосложение: {final_scores.constitution} ({final_scores.get_modifier('constitution'):+d})"
+    )
+    print(
+        f"🧠 Интеллект: {final_scores.intelligence} ({final_scores.get_modifier('intelligence'):+d})"
+    )
+    print(
+        f"�️ Мудрость: {final_scores.wisdom} ({final_scores.get_modifier('wisdom'):+d})"
+    )
+    print(
+        f"🗣️ Харизма: {final_scores.charisma} ({final_scores.get_modifier('charisma'):+d})"
+    )
+    print(f"{'='*30}")
 
     return character
