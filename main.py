@@ -1,48 +1,69 @@
-"""
-D&D MUD - Создание персонажей.
+"""D&D MUD - Создание персонажей.
 
 Простая программа для создания персонажей Dungeons & Dragons.
 Следует принципам KISS и YAGNI.
 """
 
 import sys
-from src.ui.main_menu.main import show_main_menu
+
+from typing import NoReturn
+
 from i18n import t
+from src.ui.main_menu.main import show_main_menu
+
+
+def _print_welcome_banner() -> None:
+    """Вывести приветственный баннер."""
+    banner_lines = [
+        "╔══════════════════════════════════════════════════════════════╗",
+        "║                                                              ║",
+        "║                 DUNGEONS & DRAGONS MUD                       ║",
+        "║                                                              ║",
+        "║    🎲──────────────────────────────────────────────────🎲    ║",
+        "║                                                              ║",
+        f"║                  📜 {t('main.welcome.title'):<41}║",
+        f"║                  🔢 {t('main.welcome.version'):<41}║",
+        "║                                                              ║",
+        "║         🗡️ Создайте своего героя и начните приключение! 🏰    ║",
+        "║                                                              ║",
+        "╚══════════════════════════════════════════════════════════════╝",
+    ]
+
+    print("\n".join(banner_lines))
 
 
 def welcome_screen() -> None:
     """Приветственный экран."""
-    welcome = f"""
-╔══════════════════════════════════════════════════════════════════════╗
-║                                                                      ║
-║    ████████╗███████╗██████╗ ███╗   ███╗██╗███╗   ██╗ █████╗ ██╗      ║
-║    ╚══██╔══╝██╔════╝██╔══██╗████╗ ████║██║████╗  ██║██╔══██╗██║      ║
-║       ██║   █████╗  ██████╔╝██╔████╔██║██║██╔██╗ ██║███████║██║      ║
-║       ██║   ██╔══╝  ██╔══██╗██║╚██╔╝██║██║██║╚██╗██║██╔══██║██║      ║
-║       ██║   ███████╗██║  ██║██║ ╚═╝ ██║██║██║ ╚████║██║  ██║███████  ║
-║       ╚═╝   ╚══════╝╚═╝  ╚═╝╚═╝     ╚═╝╚═╝╚═╝ ╚═══╝╚═╝  ╚═╝╚══════╝  ║
-║                                                                      ║
-║                          {t('main.welcome.title')}                                ║
-║                                                                      ║
-║                          {t('main.welcome.version')}                                ║
-║                                                                      ║
-╚══════════════════════════════════════════════════════════════════════╝    
-"""
-    
-    print(welcome)
-    input(t('main.welcome.press_enter'))
+    _print_welcome_banner()
+    input(t("main.welcome.press_enter"))
 
 
 def main() -> int:
-    """Основная функция."""
+    """Основная функция.
+
+    Returns:
+        Код завершения программы (0 при успехе).
+    """
     try:
         welcome_screen()
         show_main_menu()
     except KeyboardInterrupt:
-        print(t('main.welcome.interrupted'))
-    
+        print(
+            f"\n{t('main.welcome.interrupted')}"
+        )
+    except Exception as e:
+        print(
+            f"\n{t('main.welcome.error', error=str(e))}"
+        )
+        return 1
+
     return 0
 
 
+def _run_application() -> NoReturn:
+    """Запустить приложение с корректным выходом."""
+    sys.exit(main())
+
+
 if __name__ == "__main__":
-    main()
+    _run_application()

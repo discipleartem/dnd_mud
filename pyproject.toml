@@ -19,7 +19,9 @@ classifiers = [
     "Topic :: Games/Entertainment :: Role-Playing",
     "Topic :: Software Development :: Libraries :: Python Modules",
     "Environment :: Console",
+    "Operating System :: OS Independent",
 ]
+keywords = ["dnd", "mud", "character-creator", "tabletop", "rpg"]
 
 dependencies = [
     "PyYAML>=6.0",
@@ -28,12 +30,18 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = [
-    "pytest>=7.0",
+    "pytest>=8.0",
     "pytest-cov>=4.0",
-    "black>=23.0",
-    "flake8>=6.0",
-    "mypy>=1.0",
-    "pre-commit>=3.0",
+    "pytest-mock>=3.12.0",
+    "pytest-xdist>=3.0",
+    "pytest-html>=4.0",
+    "pytest-benchmark>=4.0",
+    "coverage>=7.0",
+    "hypothesis>=6.0",
+    "black>=24.0",
+    "ruff>=0.1.0",
+    "mypy>=1.8.0",
+    "pre-commit>=3.5.0",
 ]
 
 [project.urls]
@@ -49,6 +57,31 @@ dnd-mud = "main:main"
 where = ["."]
 include = ["src*"]
 
+[tool.ruff]
+line-length = 79
+target-version = "py312"
+
+[tool.ruff.lint]
+select = [
+    "E",  # pycodestyle errors
+    "W",  # pycodestyle warnings
+    "F",  # pyflakes
+    "I",  # isort
+    "B",  # flake8-bugbear
+    "C4", # flake8-comprehensions
+    "UP", # pyupgrade
+]
+ignore = [
+    "E501",  # line too long, handled by black
+    "B008",  # do not perform function calls in argument defaults
+    "C901",  # too complex
+]
+
+[tool.ruff.lint.per-file-ignores]
+"__init__.py" = ["F401"]
+
+"tests/*" = ["S101"]  # allow asserts in tests
+
 [tool.black]
 line-length = 79
 target-version = ['py312']
@@ -58,3 +91,76 @@ python_version = "3.12"
 warn_return_any = true
 warn_unused_configs = true
 disallow_untyped_defs = true
+disallow_incomplete_defs = true
+check_untyped_defs = true
+disallow_untyped_decorators = true
+no_implicit_optional = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+warn_no_return = true
+warn_unreachable = true
+strict_equality = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py", "*_test.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+minversion = "8.0"
+addopts = [
+    "--verbose",
+    "--tb=short",
+    "--strict-markers",
+    "--color=yes",
+    "--durations=10",
+]
+markers = [
+    "unit: Unit tests",
+    "integration: Integration tests", 
+    "slow: Slow tests",
+    "smoke: Smoke tests",
+    "regression: Regression tests",
+    "yaml: Tests related to YAML functionality",
+    "i18n: Tests related to internationalization",
+    "ui: Tests related to UI components",
+    "services: Tests related to service layer",
+    "entities: Tests related to domain entities",
+    "core: Tests related to core modules",
+    "main: Tests related to main application logic",
+]
+filterwarnings = [
+    "ignore::DeprecationWarning",
+    "ignore::PendingDeprecationWarning",
+    "ignore::UserWarning:yaml.*",
+    "ignore::UserWarning:babel.*",
+]
+
+[tool.coverage.run]
+source = ["src"]
+omit = [
+    "*/tests/*",
+    "*/test_*",
+    "*/__pycache__/*",
+    "*/venv/*",
+    "*/.venv/*",
+    "*/virtualenv/*",
+]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "if self.debug:",
+    "if settings.DEBUG",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if 0:",
+    "if __name__ == .__main__.:",
+    "class .*\\bProtocol\\):",
+    "@(abc\\.)?abstractmethod",
+]
+show_missing = true
+precision = 2
+
+[tool.coverage.html]
+directory = "htmlcov"
