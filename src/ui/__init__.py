@@ -1,11 +1,19 @@
 """Пользовательский интерфейс."""
 
-from .console import Console
-from .colors import ColorName
-from .screen_factory import DefaultScreenFactory
+from ui.colors import (
+    BLUE,
+    CYAN,
+    GREEN,
+    RED,
+    WHITE,
+)
+from ui.console import Console
 
 __all__ = [
     "Console",
-    "ColorName",
-    "DefaultScreenFactory",
+    "RED",
+    "GREEN",
+    "CYAN",
+    "WHITE",
+    "BLUE",
 ]

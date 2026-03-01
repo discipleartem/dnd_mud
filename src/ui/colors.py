@@ -1,25 +1,21 @@
 """Константы цветов для UI."""
 
-from enum import StrEnum
 from typing import Final
 
-
-class ColorName(StrEnum):
-    """Имена доступных цветов."""
-    RED = "RED"
-    GREEN = "GREEN"
-    CYAN = "CYAN"
-    WHITE = "WHITE"
-    BLUE = "BLUE"
-
+# Простые константы цветов (YAGNI - только необходимое)
+RED: Final[str] = "RED"
+GREEN: Final[str] = "GREEN"
+CYAN: Final[str] = "CYAN"
+WHITE: Final[str] = "WHITE"
+BLUE: Final[str] = "BLUE"
 
 # ANSI коды цветов (fallback если colorama недоступен)
 FALLBACK_COLOR_MAP: Final[dict[str, str]] = {
-    ColorName.RED: "\033[31m",
-    ColorName.GREEN: "\033[32m",
-    ColorName.CYAN: "\033[36m",
-    ColorName.WHITE: "\033[37m",
-    ColorName.BLUE: "\033[34m",
+    RED: "\033[31m",
+    GREEN: "\033[32m",
+    CYAN: "\033[36m",
+    WHITE: "\033[37m",
+    BLUE: "\033[34m",
 }
 
 # ANSI код для сброса цвета

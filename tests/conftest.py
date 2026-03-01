@@ -1,10 +1,11 @@
 """Конфигурация pytest для тестов."""
 
-import pytest
-import yaml
 import sys
 from pathlib import Path
 from unittest.mock import Mock
+
+import pytest
+import yaml
 
 # Добавляем src в Python path для всех тестов
 src_path = Path(__file__).parent.parent / "src"
@@ -49,7 +50,7 @@ def temp_yaml_file(tmp_path, sample_character_data):
     """Фикстура для временного YAML файла."""
     yaml_file = tmp_path / "test_character.yaml"
     with open(yaml_file, 'w', encoding='utf-8') as f:
-        yaml.dump(sample_character_data, f, default_flow_style=False, 
+        yaml.dump(sample_character_data, f, default_flow_style=False,
                  allow_unicode=True, indent=2)
     return yaml_file
 
@@ -57,36 +58,34 @@ def temp_yaml_file(tmp_path, sample_character_data):
 @pytest.fixture
 def mock_console():
     """Фикстура с моком консоли."""
-    from unittest.mock import Mock
     return Mock()
 
 
 @pytest.fixture(autouse=True)
 def mock_colorama():
     """Отключаем colorama для тестов."""
-    import sys
-    from unittest.mock import patch, Mock
-    
+    from unittest.mock import patch
+
     # Мокируем colorama полностью
     mock_colorama_module = Mock()
-    
+
     # Создаем моки для цветов, которые работают как функции
     def mock_color_func(text):
         return text
-    
+
     mock_colorama_module.Fore = Mock()
     mock_colorama_module.Fore.CYAN = mock_color_func
     mock_colorama_module.Fore.GREEN = mock_color_func
     mock_colorama_module.Fore.RED = mock_color_func
     mock_colorama_module.Fore.WHITE = mock_color_func
     mock_colorama_module.Fore.BLUE = mock_color_func
-    
+
     mock_colorama_module.Back = Mock()
     mock_colorama_module.Style = Mock()
     mock_colorama_module.Style.RESET_ALL = ""
     mock_colorama_module.Style.BRIGHT = ""
     mock_colorama_module.init = Mock()
-    
+
     with patch.dict('sys.modules', {
         'colorama': mock_colorama_module,
         'colorama.Fore': mock_colorama_module.Fore,

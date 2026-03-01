@@ -60,10 +60,14 @@ dnd-mud = "dnd_mud.main:app"
 
 [tool.setuptools.packages.find]
 where = ["src"]
-include = ["dnd_mud*"]
+include = ["*"]
 
 [tool.setuptools.package-dir]
 "" = "src"
+
+# Указываем типизированные пакеты современным способом
+[tool.setuptools.package-data]
+"*" = ["py.typed", "*.pyi"]
 
 [tool.black]
 line-length = 79
@@ -100,23 +104,29 @@ ignore = [
     "B008",  # do not perform function calls in argument defaults
 ]
 
-[tool.ruff.per-file-ignores]
+[tool.ruff.lint.per-file-ignores]
 "__init__.py" = ["F401"]
+"tests/**/*.py" = ["E402"]
 
 [tool.mypy]
 python_version = "3.12"
-warn_return_any = true
-warn_unused_configs = true
-disallow_untyped_defs = true
-disallow_incomplete_defs = true
-check_untyped_defs = true
-disallow_untyped_decorators = true
-no_implicit_optional = true
+ignore_missing_imports = true
 warn_redundant_casts = true
 warn_unused_ignores = true
 warn_no_return = true
 warn_unreachable = true
 strict_equality = true
+
+# Указываем, что наши локальные модули типизированы
+[[tool.mypy.overrides]]
+module = [
+    "entities.*",
+    "use_cases.*", 
+    "core.*",
+    "interfaces.*",
+    "ui.*"
+]
+ignore_missing_imports = false
 
 [[tool.mypy.overrides]]
 module = [

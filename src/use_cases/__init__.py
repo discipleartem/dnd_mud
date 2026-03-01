@@ -1,11 +1,7 @@
 """Use Cases модуль."""
 
-from .menu_navigation import (
-    HandleMenuChoiceUseCase,
-    ShowMenuUseCase,
-)
+from .game import GameUseCase
 
 __all__ = [
-    "HandleMenuChoiceUseCase",
-    "ShowMenuUseCase",
+    "GameUseCase",
 ]

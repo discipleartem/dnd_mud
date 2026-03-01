@@ -1,90 +1,91 @@
 """Тесты Use Cases после рефакторинга."""
 
-import pytest
 import sys
-from unittest.mock import Mock, patch
+from unittest.mock import Mock
 
 # Добавляем src в Python path для тестов
 sys.path.insert(0, 'src')
 
-from use_cases.menu_navigation import HandleMenuChoiceUseCase, ShowMenuUseCase
-from ui.screen_factory import DefaultScreenFactory
 from interfaces.user_interface import UserInterface
+from use_cases.game import GameUseCase
 
 
-def test_show_menu_use_case():
-    """Тест ShowMenuUseCase с dependency injection."""
+def test_game_use_case_menu_integration():
+    """Тест интеграции меню в GameUseCase (KISS)."""
     mock_ui = Mock(spec=UserInterface)
-    mock_factory = Mock(spec=DefaultScreenFactory)
-    mock_menu = Mock()
-    mock_menu.show.return_value = 3
-    
-    mock_factory.create_main_menu.return_value = mock_menu
-    
-    use_case = ShowMenuUseCase(mock_ui, mock_factory)
-    result = use_case.execute()
-    
-    mock_factory.create_main_menu.assert_called_once_with(mock_ui)
-    mock_menu.show.assert_called_once()
-    assert result == 3
+    mock_ui.get_int_input.return_value = 5  # EXIT
 
+    use_case = GameUseCase(mock_ui)
+    result = use_case.show_and_handle_menu()
 
-def test_handle_menu_choice_exit():
-    """Тест обработки выбора выхода."""
-    mock_ui = Mock(spec=UserInterface)
-    
-    use_case = HandleMenuChoiceUseCase(mock_ui)
-    result = use_case.execute(5)  # EXIT = 5
-    
-    mock_ui.print_success.assert_called_once_with("Спасибо за игру!")
+    # Проверяем, что меню было показано
+    mock_ui.clear.assert_called()
+    mock_ui.print_title.assert_called_with("D&D Text MUD")
+    mock_ui.print_separator.assert_called()
+    mock_ui.print_menu_item.assert_called_with(5, "Выход")
+
+    # Проверяем, что выход обработан правильно
+    mock_ui.print_success.assert_called_with("Спасибо за игру!")
     assert result is False
 
 
-def test_handle_menu_choice_valid_option():
-    """Тест обработки допустимой опции."""
+def test_game_use_case_new_game():
+    """Тест обработки новой игры."""
     mock_ui = Mock(spec=UserInterface)
-    
-    use_case = HandleMenuChoiceUseCase(mock_ui)
-    result = use_case.execute(1)  # NEW_GAME = 1
-    
-    mock_ui.print_info.assert_called_once_with("Выберите опцию:")
+    mock_ui.get_int_input.return_value = 1  # NEW_GAME
+    mock_ui.get_input.return_value = "Тестовый персонаж"
+
+    use_case = GameUseCase(mock_ui)
+    result = use_case.show_and_handle_menu()
+
+    # Проверяем, что персонаж создан
+    mock_ui.print_success.assert_called_with("Персонаж Тестовый персонаж создан!")
+    assert result is True
+    assert use_case.has_active_session()
+
+
+def test_game_use_case_invalid_choice():
+    """Тест обработки неверного выбора."""
+    mock_ui = Mock(spec=UserInterface)
+    mock_ui.get_int_input.return_value = 99  # Неверный выбор
+
+    use_case = GameUseCase(mock_ui)
+    result = use_case.show_and_handle_menu()
+
+    # Проверяем обработку ошибки
+    mock_ui.print_error.assert_called_with("Неверный выбор. Попробуйте снова.")
     assert result is True
 
 
-def test_handle_menu_choice_invalid_option():
-    """Тест обработки недопустимой опции."""
+def test_game_use_case_load_game():
+    """Тест обработки загрузки игры."""
     mock_ui = Mock(spec=UserInterface)
-    mock_ui.get_input.return_value = ""
-    
-    use_case = HandleMenuChoiceUseCase(mock_ui)
-    result = use_case.execute(99)  # Недопустимый выбор
-    
-    mock_ui.print_info.assert_called_once_with("Неверный выбор. Попробуйте снова.")
-    mock_ui.get_input.assert_called_once_with("нажмите Enter для продолжения...")
+    mock_ui.get_int_input.return_value = 2  # LOAD_GAME
+
+    use_case = GameUseCase(mock_ui)
+    result = use_case.show_and_handle_menu()
+
+    # Проверяем сообщение о недоступности
+    mock_ui.print_info.assert_called_with("Функция пока недоступна.")
     assert result is True
 
 
-def test_get_choice_message():
-    """Тест получения сообщения для выбора."""
+def test_game_use_case_session_management():
+    """Тест управления сессиями."""
     mock_ui = Mock(spec=UserInterface)
-    
-    use_case = HandleMenuChoiceUseCase(mock_ui)
-    
-    # Тест существующего выбора
-    message = use_case._get_choice_message(2)  # LOAD_GAME = 2
-    assert message == "Функция загрузки пока недоступна."
-    
-    # Тест несуществующего выбора
-    message = use_case._get_choice_message(99)
-    assert message == "Неверный выбор. Попробуйте снова."
 
+    use_case = GameUseCase(mock_ui)
 
-def test_get_valid_choices():
-    """Тест получения списка допустимых выборов."""
-    mock_ui = Mock(spec=UserInterface)
-    
-    use_case = HandleMenuChoiceUseCase(mock_ui)
-    choices = use_case._get_valid_choices()
-    
-    expected_choices = [1, 2, 3, 4]  # NEW_GAME, LOAD_GAME, SETTINGS, MODS
-    assert choices == expected_choices
+    # Изначально нет активной сессии
+    assert not use_case.has_active_session()
+    assert use_case.get_current_session() is None
+
+    # После создания персонажа есть сессия
+    mock_ui.get_int_input.return_value = 1  # NEW_GAME
+    mock_ui.get_input.return_value = "Тест"
+
+    use_case.show_and_handle_menu()
+
+    assert use_case.has_active_session()
+    assert use_case.get_current_session() is not None
+    assert use_case.get_current_session().player.name == "Тест"
