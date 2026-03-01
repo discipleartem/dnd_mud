@@ -1,0 +1,58 @@
+# English localization for backgrounds
+# Contains translations for all fields with *_key
+
+backgrounds:
+  acolyte:
+    name: "Acolyte"
+    description: "A servant of the temple"
+    feature: "Shelter of the Faithful"
+  
+  criminal:
+    name: "Criminal"
+    description: "A criminal with a dark past"
+    feature: "Criminal Contacts"
+  
+  soldier:
+    name: "Soldier"
+    description: "A veteran of military conflicts"
+    feature: "Military Rank"
+  
+  folk_hero:
+    name: "Folk Hero"
+    description: "A protector of the common people"
+    feature: "Rustic Hospitality"
+  
+  sage:
+    name: "Sage"
+    description: "A scholar devoted to knowledge"
+    feature: "Research"
+  
+  artisan:
+    name: "Artisan"
+    description: "A master of their craft"
+    feature: "Artisan Guild"
+  
+  noble:
+    name: "Noble"
+    description: "Born into a noble family"
+    feature: "Position of Privilege"
+  
+  hermit:
+    name: "Hermit"
+    description: "Living in seclusion"
+    feature: "Discovery"
+  
+  entertainer:
+    name: "Entertainer"
+    description: "A traveling artist"
+    feature: "By Default"
+  
+  sailor:
+    name: "Sailor"
+    description: "A seafarer"
+    feature: "Ship's Rank"
+  
+  charlatan:
+    name: "Charlatan"
+    description: "A master of deception and intrigue"
+    feature: "False Identity"

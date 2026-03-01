@@ -1,130 +1,144 @@
-"""Демонстрация работы системы i18n.
+#!/usr/bin/env python3
+"""Демо системы интернационализации."""
 
-Следует Zen Python:
-- Простое лучше сложного
-- Явное лучше неявного
-- Читаемость важна
-"""
-
+import sys
 from pathlib import Path
 
+# Добавляем src в PYTHONPATH
+sys.path.insert(0, str(Path(__file__).parent.parent))
+
+from use_cases.i18n_manager import I18nManagerImpl, I18nConfig
 from entities.character import Character
-from entities.i18n import I18nConfig
-from ui.console import Console
-from use_cases.i18n_manager import I18nManagerImpl
 
 
-def main() -> None:
-    """Демонстрация работы локализации."""
-    print("=== Демонстрация системы i18n ===\n")
-
+def main():
+    """Основная функция демо."""
+    print("🌍 Демо системы локализации D&D Text MUD")
+    print("=" * 50)
+    
     # Инициализация системы i18n
-    data_dir = Path(__file__).parent.parent.parent / "data"
-    manager = I18nManagerImpl(data_dir)
-
-    config = I18nConfig(
-        default_language="ru",
-        fallback_language="en",
-        cache_enabled=True,
-        auto_detect_language=False,  # Отключаем для демо
-    )
-
+    print("\n📦 Инициализация системы локализации...")
+    manager = I18nManagerImpl(Path("data"))
+    config = I18nConfig(default_language="ru", auto_detect_language=False)
     manager.initialize(config)
     manager.load_all_translations()
-
+    
+    # Получаем переводчик
     translator = manager.get_translator()
-
-    # Демонстрация интерфейса с локализацией
-    console = Console(translator)
-
-    # Показываем приветствие на разных языках
-    print("1. Приветствие на разных языках:")
-
-    # Русский
-    translator.set_language("ru")
-    console.print_title(console.t("ui.main_menu.title"))
-    console.print_info(console.t("welcome"))
-
-    # Английский
-    translator.set_language("en")
-    console.print_title(console.t("ui.main_menu.title"))
-    console.print_info(console.t("welcome"))
-
-    print("\n" + "="*50 + "\n")
-
+    
+    # Демонстрация UI переводов
+    print("\n🎨 UI переводы:")
+    ui_examples = [
+        ("ui.main_menu.title", "Главное меню"),
+        ("ui.main_menu.new_game", "Новая игра"),
+        ("ui.main_menu.load_game", "Загрузить игру"),
+        ("ui.main_menu.settings", "Настройки"),
+        ("ui.main_menu.exit", "Выход"),
+    ]
+    
+    for key, description in ui_examples:
+        translated = translator.translate(key)
+        print(f"  {description}: {translated}")
+    
+    # Демонстрация игровых данных
+    print("\n⚔️ Игровые данные:")
+    game_examples = [
+        ("races.human.name", "Человек"),
+        ("races.elf.name", "Эльф"),
+        ("races.dwarf.name", "Дварф"),
+        ("classes.fighter.name", "Воин"),
+        ("classes.wizard.name", "Волшебник"),
+        ("skills.athletics.name", "Атлетика"),
+        ("skills.stealth.name", "Скрытность"),
+        ("abilities.strength.name", "Сила"),
+        ("abilities.intelligence.name", "Интеллект"),
+        ("sizes.MEDIUM", "Средний"),
+        ("languages.common", "Общий"),
+        ("backgrounds.acolyte.name", "Послушник"),
+    ]
+    
+    for key, description in game_examples:
+        translated = translator.translate(key)
+        print(f"  {description}: {translated}")
+    
     # Демонстрация персонажа с локализацией
-    print("2. Локализованный персонаж:")
-
-    hero = Character("Арагорн", level=5, hit_points=45, max_hit_points=55)
-    hero.set_translator(translator)
-
-    translator.set_language("ru")
-    print(f"Русский: {hero}")
-    print(f"Статус: {hero.get_status()}")
-
-    translator.set_language("en")
-    print(f"English: {hero}")
-    print(f"Status: {hero.get_status()}")
-
-    print("\n" + "="*50 + "\n")
-
-    # Демонстрация меню с локализацией
-    print("3. Локализованное меню:")
-
-    translator.set_language("ru")
-    console.print_title(console.t("ui.main_menu.title"))
-    console.print_menu_item(1, console.t("ui.main_menu.new_game"))
-    console.print_menu_item(2, console.t("ui.main_menu.load_game"))
-    console.print_menu_item(3, console.t("ui.main_menu.settings"))
-    console.print_menu_item(4, console.t("ui.main_menu.exit"))
-
-    print("\n" + "-"*30 + "\n")
-
-    translator.set_language("en")
-    console.print_title(console.t("ui.main_menu.title"))
-    console.print_menu_item(1, console.t("ui.main_menu.new_game"))
-    console.print_menu_item(2, console.t("ui.main_menu.load_game"))
-    console.print_menu_item(3, console.t("ui.main_menu.settings"))
-    console.print_menu_item(4, console.t("ui.main_menu.exit"))
-
-    print("\n" + "="*50 + "\n")
-
-    # Демонстрация форматирования
-    print("4. Форматирование с параметрами:")
-
-    translator.set_language("ru")
-    character_created = console.t("ui.character_creation.success", name="Гэндальф")
-    console.print_success(character_created)
-
-    translator.set_language("en")
-    character_created = console.t("ui.character_creation.success", name="Gandalf")
-    console.print_success(character_created)
-
-    print("\n" + "="*50 + "\n")
-
-    # Демонстрация ошибок
-    print("5. Локализованные ошибки:")
-
-    translator.set_language("ru")
-    console.print_error(console.t("errors.number_expected"))
-    console.print_error(console.t("errors.range_error", min=1, max=10))
-
-    translator.set_language("en")
-    console.print_error(console.t("errors.number_expected"))
-    console.print_error(console.t("errors.range_error", min=1, max=10))
-
-    print("\n" + "="*50 + "\n")
-
+    print("\n👤 Персонаж с локализацией:")
+    character = Character(name="Воин", level=5)
+    character.set_translator(translator)
+    
+    # Устанавливаем разные статусы для демонстрации
+    statuses = [
+        ("character.status.dead", 0, 50),
+        ("character.status.healthy", 45, 50),
+        ("character.status.wounded", 25, 50),
+        ("character.status.heavily_wounded", 10, 50),
+    ]
+    
+    for status_key, hp, max_hp in statuses:
+        character.hit_points = hp
+        character.max_hit_points = max_hp
+        status = character.get_status()
+        print(f"  {status_key} ({hp}/{max_hp} HP): {status}")
+    
+    # Демонстрация простого UI с локализацией
+    print("\n🖥️ Интерфейс с локализацией:")
+    
+    class DemoUI:
+        def __init__(self):
+            self._translator = None
+        
+        def set_translator(self, translator):
+            self._translator = translator
+        
+        def t(self, key, **kwargs):
+            if self._translator:
+                return self._translator.translate(key, **kwargs)
+            return key
+    
+    ui = DemoUI()
+    ui.set_translator(translator)
+    
+    ui_elements = [
+        ("ui.main_menu.title", "Главное меню"),
+        ("ui.main_menu.new_game", "Новая игра"),
+        ("ui.main_menu.settings", "Настройки"),
+    ]
+    
+    for key, description in ui_elements:
+        localized = ui.t(key)
+        print(f"  {description}: {localized}")
+    
+    # Демонстрация без переводчика
+    print("\n❌ Без переводчика:")
+    ui_no_translator = DemoUI()
+    key = "ui.main_menu.title"
+    fallback = ui_no_translator.t(key)
+    print(f"  {key}: {fallback}")
+    
+    # Демонстрация переключения языков
+    print("\n🔄 Переключение языков:")
+    
+    # Русский
+    manager._i18n.set_language("ru")
+    ru_title = translator.translate("ui.main_menu.title")
+    print(f"  Русский: {ru_title}")
+    
+    # Английский
+    manager._i18n.set_language("en")
+    en_title = translator.translate("ui.main_menu.title")
+    print(f"  Английский: {en_title}")
+    
     # Статистика системы
-    print("6. Статистика системы i18n:")
+    print("\n📊 Статистика системы:")
     stats = manager.get_statistics()
-
-    translator.set_language("ru")
-    console.print_info(f"Текущий язык: {stats['current_language']}")
-    console.print_info(f"Размер кэша: {stats['size']}")
-    console.print_info(f"Доступных языков: {stats['available_languages']}")
-
-    print("\nДемонстрация завершена!")
+    print(f"  Текущий язык: {stats['current_language']}")
+    print(f"  Язык по умолчанию: {stats['config']['default_language']}")
+    print(f"  Fallback язык: {stats['config']['fallback_language']}")
+    print(f"  Кэш включен: {stats['config']['cache_enabled']}")
+    
+    print("\n" + "=" * 50)
+    print("✅ Демо завершено! Система локализации работает корректно.")
+    print("\n💡 Попробуйте изменить язык в системе или добавить новые переводы!")
 
 
 if __name__ == "__main__":

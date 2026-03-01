@@ -1,6 +1,5 @@
 """Тесты для сущности персонажа."""
 
-
 from src.entities.character import Character
 
 
@@ -29,20 +28,22 @@ class TestCharacter:
         """Тест получения статуса."""
         character = Character(name="Тест", hit_points=10, max_hit_points=10)
 
-        assert character.get_status() == "Здоров"
+        # Без переводчика должны возвращаться ключи
+        assert character.get_status() == "character.status.healthy"
 
         character.hit_points = 5
-        assert character.get_status() == "Ранен"
+        assert character.get_status() == "character.status.wounded"
 
         character.hit_points = 2
-        assert character.get_status() == "Тяжело ранен"
+        assert character.get_status() == "character.status.heavily_wounded"
 
         character.hit_points = 0
-        assert character.get_status() == "Погиб"
+        assert character.get_status() == "character.status.dead"
 
     def test_character_str(self) -> None:
         """Тест строкового представления."""
         character = Character(name="Тест", level=1, hit_points=10, max_hit_points=10)
 
-        expected = "Тест (Уровень 1, HP: 10/10)"
+        # Без переводчика должны возвращаться ключи
+        expected = "Тест (levels.novice, HP: 10/10)"
         assert str(character) == expected

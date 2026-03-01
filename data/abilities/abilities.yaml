@@ -1,0 +1,62 @@
+# Характеристики и навыки Dungeons & Dragons 5e
+
+# Значения перечисления Ability
+ability_values:
+  STRENGTH: "strength"
+  DEXTERITY: "dexterity"
+  CONSTITUTION: "constitution"
+  INTELLIGENCE: "intelligence"
+  WISDOM: "wisdom"
+  CHARISMA: "charisma"
+
+abilities:
+  strength:
+    name_key: "abilities.strength.name"
+    description_key: "abilities.strength.description"
+    skills:
+      athletics: "abilities.strength.skills.athletics"
+
+  dexterity:
+    name_key: "abilities.dexterity.name"
+    description_key: "abilities.dexterity.description"
+    skills:
+      acrobatics: "abilities.dexterity.skills.acrobatics"
+      sleight_of_hand: "abilities.dexterity.skills.sleight_of_hand"
+      stealth: "abilities.dexterity.skills.stealth"
+      expertise: "abilities.dexterity.skills.expertise"
+
+  constitution:
+    name_key: "abilities.constitution.name"
+    description_key: "abilities.constitution.description"
+    skills:
+      survival: "abilities.constitution.skills.survival"
+
+  intelligence:
+    name_key: "abilities.intelligence.name"
+    description_key: "abilities.intelligence.description"
+    skills:
+      arcana: "abilities.intelligence.skills.arcana"
+      history: "abilities.intelligence.skills.history"
+      investigation: "abilities.intelligence.skills.investigation"
+      nature: "abilities.intelligence.skills.nature"
+      religion: "abilities.intelligence.skills.religion"
+
+  wisdom:
+    name_key: "abilities.wisdom.name"
+    description_key: "abilities.wisdom.description"
+    skills:
+      animal_handling: "abilities.wisdom.skills.animal_handling"
+      insight: "abilities.wisdom.skills.insight"
+      medicine: "abilities.wisdom.skills.medicine"
+      perception: "abilities.wisdom.skills.perception"
+      survival: "abilities.wisdom.skills.survival"
+
+  charisma:
+    name_key: "abilities.charisma.name"
+    description_key: "abilities.charisma.description"
+    skills:
+      deception: "abilities.charisma.skills.deception"
+      intimidation: "abilities.charisma.skills.intimidation"
+      persuasion: "abilities.charisma.skills.persuasion"
+      performance: "abilities.charisma.skills.performance"
+

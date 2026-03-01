@@ -1,7 +1,7 @@
 # Makefile для D&D Text MUD
 # Простая версия - только самое необходимое
 
-.PHONY: help install test lint run demo clean
+.PHONY: help install test lint run clean
 
 PYTHON := python3
 VENV := .venv
@@ -28,9 +28,6 @@ lint: ## Проверить стиль кода
 
 run: ## Запустить приложение
 	PYTHONPATH=src $(VENV)/bin/python src/main.py
-
-demo: ## Запустить демо i18n
-	PYTHONPATH=src $(VENV)/bin/python src/examples/i18n_demo.py
 
 clean: ## Очистить временные файлы
 	find . -type d -name "__pycache__" -exec rm -rf {} + 2>/dev/null || true

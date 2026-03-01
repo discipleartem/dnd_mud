@@ -1,0 +1,105 @@
+# Русская локализация для классов (classes)
+# Содержит переводы всех полей с *_key
+
+classes:
+  fighter:
+    name: "Воин"
+    description: "Мастер оружия и доспехов, специалист по бою. Воины обучены сражаться с различными видами оружия и доспехов, владеют многими боевыми стилями и обладают превосходной физической подготовкой."
+    features:
+      fighting_style: "Боевой стиль"
+      fighting_style_description: "Выбор одного из боевых стилей: Дуэлянт, Защита, Стрельба, Большое оружие, Двуручное оружие, Защита от снарядов"
+      second_wind: "Восстановление"
+      second_wind_description: "Короткий отдых восстанавливает часть здоровья"
+      improved_critical: "Улучшенная критическая атака"
+      improved_critical_description: "Критические удары наносят дополнительный урон"
+      improved_second_wind: "Улучшенное восстановление"
+      improved_second_wind_description: "Увеличенное количество здоровья при восстановлении"
+      extra_attack: "Атака дополнительным действием"
+      extra_attack_description: "Возможность атаковать как дополнительное действие"
+    subclasses:
+      battle_master:
+        name: "Мастер боевых искусств (Battle Master)"
+        description: "Специалист в боевых маневрах, контролирующих поле боя"
+        features:
+          battle_maneuvers: "Боевые маневры"
+          battle_maneuvers_description: "Изучение боевых маневров для контроля поля боя"
+          improved_battle_maneuvers: "Улучшенные боевые маневры"
+          improved_battle_maneuvers_description: "Дополнительные использования боевых маневров"
+          superiority_dice: "Боевой мастер"
+          superiority_dice_description: "Увеличение количества использований маневров"
+      eldritch_knight:
+        name: "Рыцарь-заклинатель (Eldritch Knight)"
+        description: "Воин, изучивший магию для усиления боевых способностей"
+        features:
+          spells: "Заклинания"
+          spells_description: "Доступ к заклинаниям волшебника"
+          weapon_bond: "Связь с оружием"
+          weapon_bond_description: "Магическая связь с оружием"
+          eldritch_strike: "Таинственный удар"
+          eldritch_strike_description: "Атака с дополнительным уроном"
+  
+  wizard:
+    name: "Волшебник"
+    description: "Учёный маг, изучающий тайны вселенной через заклинания и исследования"
+    features:
+      arcane_recovery: "Восстановление магии"
+      arcane_recovery_description: "Восстановление магических сил во время короткого отдыха"
+      spell_mastery: "Мастерство заклинаний"
+      spell_mastery_description: "Усиление эффективности определённых заклинаний"
+    subclasses:
+      evocation:
+        name: "Призывание (Evocation)"
+        description: "Специалист по созданию магических эффектов и атак"
+        features:
+          sculpt_spells: "Формирование заклинаний"
+          sculpt_spells_description: "Создание безопасных зон в своих заклинаниях"
+      abjuration:
+        name: "Ограждение (Abjuration)"
+        description: "Защитник, специализирующийся на защитных заклинаниях"
+        features:
+          arcane_ward: "Магическая защита"
+          arcane_ward_description: "Создание защитного барьера"
+  
+  rogue:
+    name: "Плут"
+    description: "Мастер скрытности, ловкости и обмана, эксперт в обходе ловушек и взломе замков"
+    features:
+      sneak_attack: "Скрытая атака"
+      sneak_attack_description: "Дополнительный урон при атаке из скрытности"
+      thieves_cant: "Воровский жаргон"
+      thieves_cant_description: "Знание секретного языка воров"
+    subclasses:
+      assassin:
+        name: "Ассасин (Assassin)"
+        description: "Смертельный убийца, специализирующийся на скрытных атаках"
+        features:
+          assassinate: "Убийство"
+          assassinate_description: "Автоматический критический удар по удивлённым целям"
+      thief:
+        name: "Вор (Thief)"
+        description: "Мастер взлома и карманных краж"
+        features:
+          second_story_work: "Работа на втором этаже"
+          second_story_work_description: "Лазание и другие акробатические трюки"
+  
+  cleric:
+    name: "Жрец"
+    description: "Слуга божественного, использующий божественную магию для исцеления и защиты"
+    features:
+      divine_domain: "Божественный домен"
+      divine_domain_description: "Выбор домена определяет доступные заклинания и способности"
+    subclasses:
+      life_domain:
+        name: "Домен жизни (Life Domain)"
+        description: "Целитель и защитник жизни"
+        features:
+          spells: "Заклинания жизни"
+          spells_description: "Доступ к заклинаниям лечения и защиты"
+          greater_healing: "Великий целитель"
+          greater_healing_description: "Максимальная эффективность лечения"
+      light_domain:
+        name: "Домен света (Light Domain)"
+        description: "Несущий свет во тьму"
+        features:
+          warding_flare: "Световая вспышка"
+          warding_flare_description: "Создание ослепляющего света"

@@ -24,7 +24,7 @@ from interfaces.i18n_api import (
 
 
 class YamlI18nLoader(I18nLoader):
-    """Загрузчик переводов из YAML файлов."""
+    """Загрузчик переводов из YAML файлов с поддержкой модульной архитектуры."""
 
     def __init__(self, data_dir: Path) -> None:
         """Инициализировать загрузчик.
@@ -39,19 +39,23 @@ class YamlI18nLoader(I18nLoader):
         """Загрузить переводы для языка."""
         translations = {}
 
-        # Основной файл языка
+        # Основной UI файл
         main_file = self._i18n_dir / f"{language_code}.yaml"
         if main_file.exists():
             translations.update(self._load_yaml_file(main_file))
 
-        # Дополнительные файлы
-        for yaml_file in self._i18n_dir.glob("*.yaml"):
-            if yaml_file.name != f"{language_code}.yaml":
-                file_translations = self._load_yaml_file(yaml_file)
-                if file_translations:
-                    # Используем имя файла как корневой ключ
-                    root_key = yaml_file.stem
-                    translations[root_key] = file_translations
+        # Загружаем модульные файлы локализации
+        for module_dir in self._data_dir.iterdir():
+            if module_dir.is_dir() and module_dir.name != "i18n":
+                module_lang_file = module_dir / f"{language_code}.yaml"
+                if module_lang_file.exists():
+                    module_translations = self._load_yaml_file(module_lang_file)
+                    if module_translations:
+                        # Используем имя модуля как корневой ключ
+                        # Но убираем двойную вложенность, если она есть
+                        if module_dir.name in module_translations:
+                            module_translations = module_translations[module_dir.name]
+                        translations[module_dir.name] = module_translations
 
         return translations
 

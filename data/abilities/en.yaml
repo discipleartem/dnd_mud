@@ -1,0 +1,718 @@
+# English localization for D&D Text MUD
+
+# Welcome and general messages
+welcome: "Welcome to D&D Text MUD!"
+press_enter: "Press Enter to continue..."
+goodbye: "Goodbye!"
+thanks_for_playing: "Thanks for playing!"
+not_available: "Feature not available yet."
+
+# Main menu
+ui:
+  main_menu:
+    title: "D&D Text MUD"
+    new_game: "New Game"
+    load_game: "Load Game"
+    settings: "Settings"
+    exit: "Exit"
+    prompt: "Your choice: "
+  
+  character_creation:
+    title: "Character Creation"
+    name_prompt: "Enter character name: "
+    error_empty_name: "Name cannot be empty"
+    success: "Character {name} created!"
+    error: "Error creating character: {error}"
+    
+    race_selection:
+      title: "Select Race"
+      prompt: "Select race: "
+      human: "Human"
+      elf: "Elf"
+      dwarf: "Dwarf"
+      halfling: "Halfling"
+      gnome: "Gnome"
+      half_elf: "Half-Elf"
+      half_orc: "Half-Orc"
+      dragonborn: "Dragonborn"
+      tiefling: "Tiefling"
+    
+    class_selection:
+      title: "Select Class"
+      prompt: "Select class: "
+      fighter: "Fighter"
+      wizard: "Wizard"
+      rogue: "Rogue"
+      cleric: "Cleric"
+      druid: "Druid"
+      monk: "Monk"
+      paladin: "Paladin"
+      ranger: "Ranger"
+      sorcerer: "Sorcerer"
+      warlock: "Warlock"
+      barbarian: "Barbarian"
+      bard: "Bard"
+      artificer: "Artificer"
+  
+  game:
+    title: "Game"
+    character_info: "Character Info"
+    inventory: "Inventory"
+    abilities: "Abilities"
+    spells: "Spells"
+    rest: "Rest"
+    save_game: "Save Game"
+    quit: "Quit to Menu"
+    
+  settings:
+    title: "Settings"
+    language: "Language"
+    sound: "Sound"
+    graphics: "Graphics"
+    controls: "Controls"
+    back: "Back"
+
+# Error messages
+errors:
+  invalid_input: "Invalid input"
+  number_expected: "Number expected"
+  range_error: "Value must be between {min} and {max}"
+  file_not_found: "File not found"
+  permission_denied: "Permission denied"
+
+# Character status
+character:
+  status:
+    alive: "Alive"
+    dead: "Dead"
+    healthy: "Healthy"
+    wounded: "Wounded"
+    heavily_wounded: "Heavily Wounded"
+    dying: "Dying"
+  
+  attributes:
+    strength: "Strength"
+    dexterity: "Dexterity"
+    constitution: "Constitution"
+    intelligence: "Intelligence"
+    wisdom: "Wisdom"
+    charisma: "Charisma"
+  
+  skills:
+    athletics: "Athletics"
+    acrobatics: "Acrobatics"
+    stealth: "Stealth"
+    investigation: "Investigation"
+    perception: "Perception"
+    survival: "Survival"
+    medicine: "Medicine"
+    history: "History"
+    nature: "Nature"
+    religion: "Religion"
+    arcana: "Arcana"
+    deception: "Deception"
+    intimidation: "Intimidation"
+    performance: "Performance"
+    persuasion: "Persuasion"
+    insight: "Insight"
+    sleight_of_hand: "Sleight of Hand"
+
+# Combat actions
+combat:
+  attack: "Attack"
+  defend: "Defend"
+  use_ability: "Use Ability"
+  use_item: "Use Item"
+  run_away: "Run Away"
+  
+  damage_types:
+    acid: "Acid"
+    bludgeoning: "Bludgeoning"
+    cold: "Cold"
+    fire: "Fire"
+    force: "Force"
+    lightning: "Lightning"
+    necrotic: "Necrotic"
+    piercing: "Piercing"
+    poison: "Poison"
+    psychic: "Psychic"
+    radiant: "Radiant"
+    slashing: "Slashing"
+    thunder: "Thunder"
+
+# Items
+items:
+  weapon: "Weapon"
+  armor: "Armor"
+  shield: "Shield"
+  potion: "Potion"
+  scroll: "Scroll"
+  wand: "Wand"
+  staff: "Staff"
+  rod: "Rod"
+  orb: "Orb"
+  amulet: "Amulet"
+  ring: "Ring"
+  belt: "Belt"
+  boots: "Boots"
+  gloves: "Gloves"
+  helmet: "Helmet"
+  cloak: "Cloak"
+
+# Currency
+currency:
+  gold: "Gold Pieces"
+  silver: "Silver Pieces"
+  copper: "Copper Pieces"
+  platinum: "Platinum Pieces"
+  electrum: "Electrum Pieces"
+  
+  short:
+    gp: "gp"
+    sp: "sp"
+    cp: "cp"
+    pp: "pp"
+    ep: "ep"
+
+# Time
+time:
+  morning: "Morning"
+  afternoon: "Afternoon"
+  evening: "Evening"
+  night: "Night"
+  dawn: "Dawn"
+  dusk: "Dusk"
+  
+  days:
+    monday: "Monday"
+    tuesday: "Tuesday"
+    wednesday: "Wednesday"
+    thursday: "Thursday"
+    friday: "Friday"
+    saturday: "Saturday"
+    sunday: "Sunday"
+
+# Directions
+directions:
+  north: "North"
+  south: "South"
+  east: "East"
+  west: "West"
+  northeast: "Northeast"
+  northwest: "Northwest"
+  southeast: "Southeast"
+  southwest: "Southwest"
+  up: "Up"
+  down: "Down"
+
+# Common commands
+commands:
+  look: "look"
+  go: "go"
+  take: "take"
+  drop: "drop"
+  use: "use"
+  talk: "talk"
+  fight: "fight"
+  inventory: "inventory"
+  status: "status"
+  help: "help"
+  quit: "quit"
+  save: "save"
+  load: "load"
+
+# Hints
+hints:
+  movement: "Use 'go [direction]' to move"
+  examination: "Use 'look [item]' to examine objects"
+  interaction: "Use 'take [item]' to pick up items"
+  combat: "In combat, use 'attack [target]' to attack"
+
+# Abilities
+abilities:
+  strength:
+    name: "Strength"
+    description: "Physical power, athletics, carrying capacity"
+    skills:
+      athletics: "Athletics - swimming, climbing, jumping"
+  
+  dexterity:
+    name: "Dexterity"
+    description: "Agility, reflexes, balance"
+    skills:
+      acrobatics: "Acrobatics - balancing, dodging"
+      sleight_of_hand: "Sleight of Hand - lockpicking, traps"
+      stealth: "Stealth - moving unnoticed"
+      expertise: "Expertise - tool work"
+  
+  constitution:
+    name: "Constitution"
+    description: "Stamina, health, damage resistance"
+    skills:
+      survival: "Survival - finding food, navigation"
+  
+  intelligence:
+    name: "Intelligence"
+    description: "Reasoning, memory, knowledge"
+    skills:
+      arcana: "Arcana - magical knowledge"
+      history: "History - historical knowledge"
+      investigation: "Investigation - finding clues, analysis"
+      nature: "Nature - knowledge of living things"
+      religion: "Religion - knowledge of gods and divinity"
+  
+  wisdom:
+    name: "Wisdom"
+    description: "Perception, intuition, willpower"
+    skills:
+      animal_handling: "Animal Handling - training, communicating with animals"
+      insight: "Insight - reading intentions, detecting lies"
+      medicine: "Medicine - first aid, diagnosis"
+      perception: "Perception - noticing hidden things, hearing"
+      survival: "Survival - surviving in the wild"
+  
+  charisma:
+    name: "Charisma"
+    description: "Leadership, charm, confidence"
+    skills:
+      deception: "Deception - lying, disguise"
+      intimidation: "Intimidation - threats, inspiring fear"
+      persuasion: "Persuasion - argumentation, influence"
+      performance: "Performance - entertainment, tricks"
+
+# Backgrounds
+backgrounds:
+  acolyte:
+    name: "Acolyte"
+    description: "Servant of a temple"
+    feature: "Shelter of the Faithful"
+  
+  criminal:
+    name: "Criminal"
+    description: "Someone with a criminal past"
+    feature: "Criminal Contact"
+  
+  soldier:
+    name: "Soldier"
+    description: "Veteran of military conflicts"
+    feature: "Military Rank"
+  
+  folk_hero:
+    name: "Folk Hero"
+    description: "Protector of the common people"
+    feature: "Rustic Hospitality"
+  
+  sage:
+    name: "Sage"
+    description: "Scholar dedicated to knowledge"
+    feature: "Researcher"
+  
+  artisan:
+    name: "Artisan"
+    description: "Master of a craft"
+    feature: "Guild Membership"
+  
+  noble:
+    name: "Noble"
+    description: "Born to a noble family"
+    feature: "Position of Privilege"
+  
+  hermit:
+    name: "Hermit"
+    description: "Living in seclusion"
+    feature: "Discovery"
+  
+  entertainer:
+    name: "Entertainer"
+    description: "Wandering performer"
+    feature: "By Popular Demand"
+  
+  sailor:
+    name: "Sailor"
+    description: "Seafaring traveler"
+    feature: "Ship's Passage"
+  
+  charlatan:
+    name: "Charlatan"
+    description: "Master of deception and intrigue"
+    feature: "False Identity"
+
+# Classes
+classes:
+  fighter:
+    name: "Fighter"
+    description: "Master of weapons and armor, combat specialist. Fighters are trained to fight with various types of weapons and armor, master many combat styles, and possess excellent physical conditioning."
+    features:
+      fighting_style: "Fighting Style"
+      second_wind: "Second Wind"
+      improved_critical: "Improved Critical"
+      improved_second_wind: "Improved Second Wind"
+      extra_attack: "Extra Attack"
+    
+    subclasses:
+      battle_master: "Battle Master"
+      eldritch_knight: "Eldritch Knight"
+      champion: "Champion"
+  
+  rogue:
+    name: "Rogue"
+    description: "Master of stealth, agility, and precise strikes. Rogues excel at infiltrating secure places, disarming traps, and delivering precise strikes to vulnerable enemy locations."
+    features:
+      expertise: "Expertise"
+      sneak_attack: "Sneak Attack"
+      thieves_cant: "Thieves' Cant"
+      cunning_action: "Cunning Action"
+      improved_sneak_attack: "Improved Sneak Attack"
+      uncanny_dodge: "Uncanny Dodge"
+    
+    subclasses:
+      assassin: "Assassin"
+      phantom: "Phantom"
+      thief: "Thief"
+  
+  cleric:
+    name: "Cleric"
+    description: "Servant of a deity, using divine magic. Clerics serve higher powers, receive divine magic from them, and serve as conduits for their gods' will in the mortal world."
+    features:
+      divine_domain: "Divine Domain"
+      ritual_casting: "Ritual Casting"
+      spell_recovery: "Spell Recovery"
+      divine_focus: "Divine Focus"
+      destroy_undead: "Destroy Undead"
+      divine_intervention: "Divine Intervention"
+    
+    subclasses:
+      life_domain: "Life Domain"
+      light_domain: "Light Domain"
+      war_domain: "War Domain"
+      forge_domain: "Forge Domain"
+  
+  bard:
+    name: "Bard"
+    description: "Inspiring storyteller and music magician. Bards use music and words to create magical effects, inspire allies, and influence the minds of those around them."
+    features:
+      bardic_inspiration: "Bardic Inspiration"
+      jack_of_all_trades: "Jack of All Trades"
+      song_of_rest: "Song of Rest"
+      expertise_bard: "Expertise"
+      inspiring_mantle: "Inspiring Mantle"
+      improved_inspiration: "Improved Inspiration"
+      magical_secrets: "Magical Secrets"
+    
+    subclasses:
+      lore_college: "College of Lore"
+      valor_college: "College of Valor"
+      glamour_college: "College of Glamour"
+
+# Races
+races:
+  human:
+    name: "Human"
+    description: "Humanity - the most diverse and ambitious race"
+    ability_bonuses_description: "All abilities +1"
+    
+    subraces:
+      variant_human:
+        name: "Human (Variant)"
+        description: "Alternative human variant with ability score, skill, and feat choices"
+        ability_bonuses_description: "2 abilities +1"
+  
+  elf:
+    name: "Elf"
+    description: "Elves are graceful and long-lived beings with keen senses. Features: Keen Senses, Darkvision, Fey Ancestry, Weapon Training, Trance"
+    ability_bonuses_description: "Dexterity +2"
+    
+    subraces:
+      high_elf:
+        name: "High Elf"
+        description: "High elves value knowledge and magic, possessing sharp minds and elegance"
+        ability_bonuses_description: "Intelligence +1"
+      
+      wood_elf:
+        name: "Wood Elf"
+        description: "Wood elves live in harmony with nature, possessing exceptional agility and speed"
+        ability_bonuses_description: "Wisdom +1"
+  
+  half_orc:
+    name: "Half-Orc"
+    description: "Half-orcs are strong and resilient warriors"
+    ability_bonuses_description: "Strength +2, Constitution +1"
+  
+  dwarf:
+    name: "Dwarf"
+    description: "Dwarves are sturdy and resilient miners"
+    ability_bonuses_description: "Constitution +2"
+  
+  halfling:
+    name: "Halfling"
+    description: "Halflings are small and agile beings"
+    ability_bonuses_description: "Dexterity +2"
+  
+  gnome:
+    name: "Gnome"
+    description: "Gnomes are intelligent and inventive beings"
+    ability_bonuses_description: "Intelligence +2"
+  
+  dragonborn:
+    name: "Dragonborn"
+    description: "Dragonborn are proud warriors with draconic blood"
+    ability_bonuses_description: "Strength +2, Charisma +1"
+  
+  tiefling:
+    name: "Tiefling"
+    description: "Tieflings are beings with infernal blood"
+    ability_bonuses_description: "Intelligence +1, Charisma +2"
+  
+  half_elf:
+    name: "Half-Elf"
+    description: "Half-elves are hybrids of humans and elves"
+    ability_bonuses_description: "Charisma +2, two abilities +1"
+
+# Skills
+skills:
+  acrobatics:
+    name: "Acrobatics"
+    description: "Maintaining balance, dodging, gymnastic tricks"
+    examples:
+      - "Jumping over obstacles"
+      - "Disarming wire traps"
+      - "Maintaining balance on slippery surfaces"
+      - "Avoiding pushes in crowds"
+  
+  animal_handling:
+    name: "Animal Handling"
+    description: "Communicating with animals, training, caring for them"
+    examples:
+      - "Calming a frightened animal"
+      - "Training a horse or dog"
+      - "Determining an animal's mood"
+      - "Understanding wild animals' intentions"
+  
+  arcana:
+    name: "Arcana"
+    description: "Knowledge of magic, magical items, spells"
+    examples:
+      - "Identifying spell type"
+      - "Recognizing magical item"
+      - "Understanding magical runes"
+      - "Recalling information about magical beings"
+  
+  athletics:
+    name: "Athletics"
+    description: "Physical strength, swimming, jumping, climbing"
+    examples:
+      - "Lifting heavy objects"
+      - "Swimming against current"
+      - "Climbing walls or cliffs"
+      - "Jumping far"
+  
+  deception:
+    name: "Deception"
+    description: "Lying, disguise, creating false impressions"
+    examples:
+      - "Lying about intentions"
+      - "Creating false alibi"
+      - "Disguising as another person"
+      - "Hiding the truth"
+  
+  history:
+    name: "History"
+    description: "Knowledge of past, historical events, personalities"
+    examples:
+      - "Recalling historical event"
+      - "Determining artifact's age"
+      - "Knowing about ancient kingdoms"
+      - "Recognizing historical personality"
+  
+  insight:
+    name: "Insight"
+    description: "Reading intentions, detecting lies, understanding motives"
+    examples:
+      - "Determining if someone is lying"
+      - "Understanding true intentions"
+      - "Noticing hidden emotions"
+      - "Recognizing deception"
+  
+  intimidation:
+    name: "Intimidation"
+    description: "Threats, inspiring fear, psychological pressure"
+    examples:
+      - "Threat of physical violence"
+      - "Psychological pressure"
+      - "Inspiring fear with a look"
+      - "Forcing information disclosure"
+  
+  investigation:
+    name: "Investigation"
+    description: "Finding clues, analyzing information, logical deductions"
+    examples:
+      - "Finding hidden clues"
+      - "Analyzing tracks"
+      - "Solving riddles and puzzles"
+      - "Understanding complex mechanisms"
+  
+  medicine:
+    name: "Medicine"
+    description: "First aid, diagnosis, treating wounds"
+    examples:
+      - "Providing first aid"
+      - "Diagnosing illness"
+      - "Stabilizing wounded person"
+      - "Identifying poison type"
+  
+  nature:
+    name: "Nature"
+    description: "Knowledge of living nature, animals, plants"
+    examples:
+      - "Identifying plant type"
+      - "Knowing animal behaviors"
+      - "Finding edible plants"
+      - "Understanding ecosystems"
+  
+  perception:
+    name: "Perception"
+    description: "Noticing hidden things, hearing, smelling, touching"
+    examples:
+      - "Noticing hidden enemy"
+      - "Hearing footsteps behind door"
+      - "Discovering secret door"
+      - "Sensing danger"
+  
+  performance:
+    name: "Performance"
+    description: "Music, dance, acting, oratory"
+    examples:
+      - "Playing musical instrument"
+      - "Dancing or singing"
+      - "Performing on stage"
+      - "Telling stories"
+  
+  persuasion:
+    name: "Persuasion"
+    description: "Argumentation, influence, negotiations, diplomacy"
+    examples:
+      - "Convincing of one's rightness"
+      - "Conducting negotiations"
+      - "Inspiring allies"
+      - "Changing someone's opinion"
+  
+  religion:
+    name: "Religion"
+    description: "Knowledge of gods, divine, religious practices"
+    examples:
+      - "Knowing about pantheon of gods"
+      - "Understanding religious rituals"
+      - "Recognizing sacred symbols"
+      - "Knowing about divine beings"
+  
+  sleight_of_hand:
+    name: "Sleight of Hand"
+    description: "Lockpicking, pickpocketing, manual dexterity"
+    examples:
+      - "Picking simple lock"
+      - "Taking wallet from pocket"
+      - "Hiding small object"
+      - "Manipulating cards"
+  
+  stealth:
+    name: "Stealth"
+    description: "Moving unnoticed, camouflage, shadow"
+    examples:
+      - "Sneaking past guards"
+      - "Hiding in shadows"
+      - "Moving silently"
+      - "Camouflaging as surroundings"
+  
+  survival:
+    name: "Survival"
+    description: "Navigation, finding food, surviving in wilderness"
+    examples:
+      - "Finding way in forest"
+      - "Hunting for game"
+      - "Finding clean water"
+      - "Determining weather"
+  
+  expertise:
+    name: "Expertise"
+    description: "Double bonus to selected skills, tool work"
+    examples:
+      - "Working with musical instruments"
+      - "Picking complex locks"
+      - "Crafting items"
+      - "Applying specialized knowledge"
+
+# Languages
+language:
+  common:
+    name: "Common"
+    description: "Main language of trade and communication between races"
+    speakers: "All races"
+  
+  elvish:
+    name: "Elvish"
+    description: "Graceful language of elves with ancient history"
+    speakers: "Elves, high elves"
+  
+  dwarvish:
+    name: "Dwarvish"
+    description: "Harsh and rough language of dwarves"
+    speakers: "Dwarves"
+  
+  orcish:
+    name: "Orcish"
+    description: "Harsh and aggressive language of orcs"
+    speakers: "Orcs, half-orcs"
+  
+  halfling:
+    name: "Halfling"
+    description: "Simple and melodic language of halflings"
+    speakers: "Halflings"
+  
+  draconic:
+    name: "Draconic"
+    description: "Ancient language of dragons and dragonborn"
+    speakers: "Dragons, dragonborn"
+  
+  gnomish:
+    name: "Gnomish"
+    description: "Complex and technical language of gnomes"
+    speakers: "Gnomes"
+  
+  abyssal:
+    name: "Abyssal"
+    description: "Language of demons and dark beings"
+    speakers: "Demons"
+  
+  celestial:
+    name: "Celestial"
+    description: "Language of angels and celestial beings"
+    speakers: "Angels"
+  
+  infernal:
+    name: "Infernal"
+    description: "Language of devils and lawful evil beings"
+    speakers: "Devils"
+  
+  primordial:
+    name: "Primordial"
+    description: "Ancient language of elementals"
+    speakers: "Elementals"
+  
+  sylvan:
+    name: "Sylvan"
+    description: "Language of forest beings and fey"
+    speakers: "Fey, dryads, centaurs"
+  
+  undercommon:
+    name: "Undercommon"
+    description: "Trade language of the Underdark"
+    speakers: "Drow, deep dwarves"
+
+# Sizes
+sizes:
+  TINY: "Tiny"
+  SMALL: "Small"
+  MEDIUM: "Medium"
+  LARGE: "Large"
+  HUGE: "Huge"
+  GARGANTUAN: "Gargantuan"
