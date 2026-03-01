@@ -1,2 +1,8 @@
-.venv
+.venv/
 __pycache__
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+dnd_mud.egg-info/
+dnd_text_mud.egg-info/
+.snapshots/

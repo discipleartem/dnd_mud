@@ -383,9 +383,6 @@ Mods/               # Моды пользователей
 ### Документация
 
 - [Python Documentation](https://docs.python.org/)
-- [Pydantic Documentation](https://pydantic-docs.helpmanual.io/)
-- [Rich Documentation](https://rich.readthedocs.io/)
-- [Typer Documentation](https://typer.tiangolo.com/)
 
 ### Инструменты
 
