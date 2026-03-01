@@ -1,4 +1,4 @@
-"""Персонаж D&D - основная бизнес-сущность.
+"""Персонаж D&D - простая бизнес-сущность.
 
 Следует Zen Python:
 - Простое лучше сложного
@@ -8,75 +8,66 @@
 
 from dataclasses import dataclass
 
+from interfaces.i18n_api import I18nTranslator
+
 
 @dataclass
 class Character:
     """Бизнес-сущность персонажа D&D.
 
-    Содержит только бизнес-правила игры.
+    Содержит только базовые поля для текущего этапа разработки.
     Никаких зависимостей от базы данных или UI.
     """
+
     name: str
     level: int = 1
     hit_points: int = 10
     max_hit_points: int = 10
+    _translator: I18nTranslator | None = None
 
-    def __post_init__(self) -> None:
-        """Валидация после инициализации."""
-        self._validate_character()
+    def set_translator(self, translator: I18nTranslator) -> None:
+        """Установить переводчик для локализации.
 
-    def _validate_character(self) -> None:
-        """Проверить корректность персонажа."""
-        if len(self.name) < 2:
-            raise ValueError("Имя слишком короткое")
-        if not (1 <= self.level <= 20):
-            raise ValueError("Неверный уровень")
-        if self.hit_points < 0:
-            raise ValueError("HP не могут быть отрицательными")
-        if self.max_hit_points < 1:
-            raise ValueError("Max HP должны быть положительными")
-
-    def take_damage(self, damage: int) -> None:
-        """Получить урон."""
-        if damage < 0:
-            raise ValueError("Урон не может быть отрицательным")
-
-        self.hit_points = max(0, self.hit_points - damage)
-
-    def heal(self, amount: int) -> None:
-        """Восстановить здоровье."""
-        if amount < 0:
-            raise ValueError("Лечение не может быть отрицательным")
-
-        self.hit_points = min(self.max_hit_points, self.hit_points + amount)
+        Args:
+            translator: Переводчик
+        """
+        self._translator = translator
 
     def is_alive(self) -> bool:
         """Проверить, жив ли персонаж."""
         return self.hit_points > 0
 
-    def level_up(self) -> None:
-        """Повысить уровень."""
-        if self.level >= 20:
-            raise ValueError("Максимальный уровень достигнут")
-
-        self.level += 1
-        # Простые правила D&D: +2 HP за уровень
-        self.max_hit_points += 2
-        self.hit_points += 2
-
     def get_status(self) -> str:
         """Получить статус персонажа."""
         if not self.is_alive():
-            return "Погиб"
+            return self._t("character.status.dead")
 
-        hp_ratio = self.hit_points / self.max_hit_points
-        if hp_ratio >= 0.8:
-            return "Здоров"
-        elif hp_ratio >= 0.4:
-            return "Ранен"
-        else:
-            return "Тяжело ранен"
+        hp_percentage = (self.hit_points / self.max_hit_points) * 100
+
+        if hp_percentage >= 80:
+            return self._t("character.status.healthy")
+        if hp_percentage >= 40:
+            return self._t("character.status.wounded")
+        return self._t("character.status.heavily_wounded")
+
+    def _t(self, key: str, **kwargs) -> str:
+        """Перевести строку.
+
+        Args:
+            key: Ключ перевода
+            **kwargs: Параметры для форматирования
+
+        Returns:
+            Переведенная строка или ключ если переводчик не доступен
+        """
+        if self._translator:
+            return self._translator.translate(key, **kwargs)
+        return key
 
     def __str__(self) -> str:
         """Строковое представление."""
-        return f"{self.name} (Уровень {self.level}, HP: {self.hit_points}/{self.max_hit_points})"
+        level_text = self._t("levels.novice") if self.level <= 5 else self._t("levels.adventurer")
+        return (
+            f"{self.name} ({level_text}, "
+            f"HP: {self.hit_points}/{self.max_hit_points})"
+        )

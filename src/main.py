@@ -6,7 +6,6 @@ from pathlib import Path
 # Добавляем src в Python path
 sys.path.insert(0, str(Path(__file__).parent))
 
-from core.exceptions import DnDMudError
 from core.game import Game
 from ui.console import Console
 
@@ -17,9 +16,6 @@ def main() -> None:
         console = Console()
         game = Game(console)
         game.run()
-    except DnDMudError as e:
-        print(f"Ошибка игры: {e}")
-        sys.exit(1)
     except KeyboardInterrupt:
         print("\nДо свидания!")
         sys.exit(0)

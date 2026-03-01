@@ -30,8 +30,8 @@ classifiers = [
 ]
 requires-python = ">=3.12"
 dependencies = [
-    "PyYAML>=6.0.1",
     "colorama>=0.4.6",
+    "PyYAML>=6.0.1",
 ]
 
 [project.optional-dependencies]
@@ -43,11 +43,6 @@ dev = [
     "mypy>=1.7.0",
     "pre-commit>=3.5.0",
 ]
-docs = [
-    "mkdocs>=1.5.0",
-    "mkdocs-material>=9.4.0",
-    "mkdocstrings[python]>=0.24.0",
-]
 
 [project.urls]
 Homepage = "https://github.com/discipleartem/dnd_mud"
@@ -56,7 +51,7 @@ Documentation = "https://github.com/discipleartem/dnd_mud/docs"
 "Bug Tracker" = "https://github.com/discipleartem/dnd_mud/issues"
 
 [project.scripts]
-dnd-mud = "dnd_mud.main:app"
+dnd-mud = "main:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]
@@ -64,10 +59,6 @@ include = ["*"]
 
 [tool.setuptools.package-dir]
 "" = "src"
-
-# Указываем типизированные пакеты современным способом
-[tool.setuptools.package-data]
-"*" = ["py.typed", "*.pyi"]
 
 [tool.black]
 line-length = 79
@@ -90,6 +81,8 @@ extend-exclude = '''
 [tool.ruff]
 target-version = "py312"
 line-length = 79
+
+[tool.ruff.lint]
 select = [
     "E",  # pycodestyle errors
     "W",  # pycodestyle warnings

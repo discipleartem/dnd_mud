@@ -1,0 +1,229 @@
+# English localization for D&D Text MUD
+
+# Welcome and general messages
+welcome: "Welcome to D&D Text MUD!"
+press_enter: "Press Enter to continue..."
+goodbye: "Goodbye!"
+thanks_for_playing: "Thanks for playing!"
+not_available: "Feature not available yet."
+
+# Main menu
+ui:
+  main_menu:
+    title: "D&D Text MUD"
+    new_game: "New Game"
+    load_game: "Load Game"
+    settings: "Settings"
+    exit: "Exit"
+    prompt: "Your choice: "
+  
+  character_creation:
+    title: "Character Creation"
+    name_prompt: "Enter character name: "
+    error_empty_name: "Name cannot be empty"
+    success: "Character {name} created!"
+    error: "Error creating character: {error}"
+    
+    race_selection:
+      title: "Select Race"
+      prompt: "Select race: "
+      human: "Human"
+      elf: "Elf"
+      dwarf: "Dwarf"
+      halfling: "Halfling"
+      gnome: "Gnome"
+      half_elf: "Half-Elf"
+      half_orc: "Half-Orc"
+      dragonborn: "Dragonborn"
+      tiefling: "Tiefling"
+    
+    class_selection:
+      title: "Select Class"
+      prompt: "Select class: "
+      fighter: "Fighter"
+      wizard: "Wizard"
+      rogue: "Rogue"
+      cleric: "Cleric"
+      druid: "Druid"
+      monk: "Monk"
+      paladin: "Paladin"
+      ranger: "Ranger"
+      sorcerer: "Sorcerer"
+      warlock: "Warlock"
+      barbarian: "Barbarian"
+      bard: "Bard"
+      artificer: "Artificer"
+  
+  game:
+    title: "Game"
+    character_info: "Character Info"
+    inventory: "Inventory"
+    abilities: "Abilities"
+    spells: "Spells"
+    rest: "Rest"
+    save_game: "Save Game"
+    quit: "Quit to Menu"
+    
+  settings:
+    title: "Settings"
+    language: "Language"
+    sound: "Sound"
+    graphics: "Graphics"
+    controls: "Controls"
+    back: "Back"
+
+# Error messages
+errors:
+  invalid_input: "Invalid input"
+  number_expected: "Number expected"
+  range_error: "Value must be between {min} and {max}"
+  file_not_found: "File not found"
+  permission_denied: "Permission denied"
+
+# Character status
+character:
+  status:
+    alive: "Alive"
+    dead: "Dead"
+    healthy: "Healthy"
+    wounded: "Wounded"
+    heavily_wounded: "Heavily Wounded"
+    dying: "Dying"
+  
+  attributes:
+    strength: "Strength"
+    dexterity: "Dexterity"
+    constitution: "Constitution"
+    intelligence: "Intelligence"
+    wisdom: "Wisdom"
+    charisma: "Charisma"
+  
+  skills:
+    athletics: "Athletics"
+    acrobatics: "Acrobatics"
+    stealth: "Stealth"
+    investigation: "Investigation"
+    perception: "Perception"
+    survival: "Survival"
+    medicine: "Medicine"
+    history: "History"
+    nature: "Nature"
+    religion: "Religion"
+    arcana: "Arcana"
+    deception: "Deception"
+    intimidation: "Intimidation"
+    performance: "Performance"
+    persuasion: "Persuasion"
+    insight: "Insight"
+    sleight_of_hand: "Sleight of Hand"
+
+# Combat actions
+combat:
+  attack: "Attack"
+  defend: "Defend"
+  use_ability: "Use Ability"
+  use_item: "Use Item"
+  run_away: "Run Away"
+  
+  damage_types:
+    acid: "Acid"
+    bludgeoning: "Bludgeoning"
+    cold: "Cold"
+    fire: "Fire"
+    force: "Force"
+    lightning: "Lightning"
+    necrotic: "Necrotic"
+    piercing: "Piercing"
+    poison: "Poison"
+    psychic: "Psychic"
+    radiant: "Radiant"
+    slashing: "Slashing"
+    thunder: "Thunder"
+
+# Items
+items:
+  weapon: "Weapon"
+  armor: "Armor"
+  shield: "Shield"
+  potion: "Potion"
+  scroll: "Scroll"
+  wand: "Wand"
+  staff: "Staff"
+  rod: "Rod"
+  orb: "Orb"
+  amulet: "Amulet"
+  ring: "Ring"
+  belt: "Belt"
+  boots: "Boots"
+  gloves: "Gloves"
+  helmet: "Helmet"
+  cloak: "Cloak"
+
+# Currency
+currency:
+  gold: "Gold Pieces"
+  silver: "Silver Pieces"
+  copper: "Copper Pieces"
+  platinum: "Platinum Pieces"
+  electrum: "Electrum Pieces"
+  
+  short:
+    gp: "gp"
+    sp: "sp"
+    cp: "cp"
+    pp: "pp"
+    ep: "ep"
+
+# Time
+time:
+  morning: "Morning"
+  afternoon: "Afternoon"
+  evening: "Evening"
+  night: "Night"
+  dawn: "Dawn"
+  dusk: "Dusk"
+  
+  days:
+    monday: "Monday"
+    tuesday: "Tuesday"
+    wednesday: "Wednesday"
+    thursday: "Thursday"
+    friday: "Friday"
+    saturday: "Saturday"
+    sunday: "Sunday"
+
+# Directions
+directions:
+  north: "North"
+  south: "South"
+  east: "East"
+  west: "West"
+  northeast: "Northeast"
+  northwest: "Northwest"
+  southeast: "Southeast"
+  southwest: "Southwest"
+  up: "Up"
+  down: "Down"
+
+# Common commands
+commands:
+  look: "look"
+  go: "go"
+  take: "take"
+  drop: "drop"
+  use: "use"
+  talk: "talk"
+  fight: "fight"
+  inventory: "inventory"
+  status: "status"
+  help: "help"
+  quit: "quit"
+  save: "save"
+  load: "load"
+
+# Hints
+hints:
+  movement: "Use 'go [direction]' to move"
+  examination: "Use 'look [item]' to examine objects"
+  interaction: "Use 'take [item]' to pick up items"
+  combat: "In combat, use 'attack [target]' to attack"

@@ -3,10 +3,14 @@
 Следует принципам:
 - KISS: Максимально простой класс
 - SRP: Только координация компонентов
-- DIP: Зависит от абстракций
+- DRY: Использует общие константы
 """
 
-from core.config import Config
+from core.constants import (
+    GOODBYE_MESSAGE,
+    PRESS_ENTER,
+    WELCOME_MESSAGE,
+)
 from interfaces.user_interface import UserInterface
 from use_cases.game import GameUseCase
 
@@ -20,7 +24,6 @@ class Game:
 
     def __init__(self, ui: UserInterface) -> None:
         """Инициализация игры."""
-        self.config = Config()
         self.ui = ui
         self.running = False
         self.game_use_case = GameUseCase(ui)
@@ -30,18 +33,21 @@ class Game:
         self.running = True
 
         # Показываем приветственный экран
-        self.ui.clear()
-        self.ui.print_info("Добро пожаловать в D&D Text MUD!")
-        self.ui.get_input("Нажмите Enter для продолжения...")
+        self._show_welcome_screen()
 
         # Главный игровой цикл (KISS - максимально простой)
         while self.running:
             try:
                 self.running = self.game_use_case.show_and_handle_menu()
-
             except KeyboardInterrupt:
-                self.ui.print_success("\nДо свидания!")
+                self.ui.print_success(f"\n{GOODBYE_MESSAGE}")
                 break
             except Exception as e:
                 self.ui.print_error(f"Ошибка: {e}")
-                self.ui.get_input("Нажмите Enter для продолжения...")
+                self.ui.get_input(PRESS_ENTER)
+
+    def _show_welcome_screen(self) -> None:
+        """Показать приветственный экран."""
+        self.ui.clear()
+        self.ui.print_info(WELCOME_MESSAGE)
+        self.ui.get_input(PRESS_ENTER)

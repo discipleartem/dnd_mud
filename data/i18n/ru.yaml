@@ -1,0 +1,229 @@
+# Русская локализация D&D Text MUD
+
+# Приветствие и общие сообщения
+welcome: "Добро пожаловать в D&D Text MUD!"
+press_enter: "Нажмите Enter для продолжения..."
+goodbye: "До свидания!"
+thanks_for_playing: "Спасибо за игру!"
+not_available: "Функция пока недоступна."
+
+# Главное меню
+ui:
+  main_menu:
+    title: "D&D Text MUD"
+    new_game: "Новая игра"
+    load_game: "Загрузить игру"
+    settings: "Настройки"
+    exit: "Выход"
+    prompt: "Ваш выбор: "
+  
+  character_creation:
+    title: "Создание персонажа"
+    name_prompt: "Введите имя персонажа: "
+    error_empty_name: "Имя не может быть пустым"
+    success: "Персонаж {name} создан!"
+    error: "Ошибка создания персонажа: {error}"
+    
+    race_selection:
+      title: "Выбор расы"
+      prompt: "Выберите расу: "
+      human: "Человек"
+      elf: "Эльф"
+      dwarf: "Дварф"
+      halfling: "Полурослик"
+      gnome: "Гном"
+      half_elf: "Полуэльф"
+      half_orc: "Получеловек"
+      dragonborn: "Драконорожденный"
+      tiefling: "Тифлинг"
+    
+    class_selection:
+      title: "Выбор класса"
+      prompt: "Выберите класс: "
+      fighter: "Воин"
+      wizard: "Волшебник"
+      rogue: "Плут"
+      cleric: "Жрец"
+      druid: "Друид"
+      monk: "Монах"
+      paladin: "Паладин"
+      ranger: "Следопыт"
+      sorcerer: "Чародей"
+      warlock: "Колдун"
+      barbarian: "Варвар"
+      bard: "Бард"
+      artificer: "Изобретатель"
+  
+  game:
+    title: "Игра"
+    character_info: "Информация о персонаже"
+    inventory: "Инвентарь"
+    abilities: "Способности"
+    spells: "Заклинания"
+    rest: "Отдых"
+    save_game: "Сохранить игру"
+    quit: "Выйти в меню"
+    
+  settings:
+    title: "Настройки"
+    language: "Язык"
+    sound: "Звук"
+    graphics: "Графика"
+    controls: "Управление"
+    back: "Назад"
+
+# Сообщения об ошибках
+errors:
+  invalid_input: "Некорректный ввод"
+  number_expected: "Ожидалось число"
+  range_error: "Значение должно быть от {min} до {max}"
+  file_not_found: "Файл не найден"
+  permission_denied: "Доступ запрещен"
+
+# Статусы персонажа
+character:
+  status:
+    alive: "Жив"
+    dead: "Погиб"
+    healthy: "Здоров"
+    wounded: "Ранен"
+    heavily_wounded: "Тяжело ранен"
+    dying: "Умирает"
+  
+  attributes:
+    strength: "Сила"
+    dexterity: "Ловкость"
+    constitution: "Телосложение"
+    intelligence: "Интеллект"
+    wisdom: "Мудрость"
+    charisma: "Харизма"
+  
+  skills:
+    athletics: "Атлетика"
+    acrobatics: "Акробатика"
+    stealth: "Скрытность"
+    investigation: "Расследование"
+    perception: "Восприятие"
+    survival: "Выживание"
+    medicine: "Медицина"
+    history: "История"
+    nature: "Природа"
+    religion: "Религия"
+    arcana: "Магия"
+    deception: "Обман"
+    intimidation: "Запугивание"
+    performance: "Выступление"
+    persuasion: "Убеждение"
+    insight: "Проницательность"
+    sleight_of_hand: "Ловкость рук"
+
+# Боевые действия
+combat:
+  attack: "Атака"
+  defend: "Защита"
+  use_ability: "Использовать способность"
+  use_item: "Использовать предмет"
+  run_away: "Сбежать"
+  
+  damage_types:
+    acid: "Кислотный"
+    bludgeoning: "Дробящий"
+    cold: "Холодовый"
+    fire: "Огненный"
+    force: "Силовой"
+    lightning: "Электрический"
+    necrotic: "Некротический"
+    piercing: "Колющий"
+    poison: "Ядовитый"
+    psychic: "Психический"
+    radiant: "Излучающий"
+    slashing: "Режущий"
+    thunder: "Громовой"
+
+# Предметы
+items:
+  weapon: "Оружие"
+  armor: "Броня"
+  shield: "Щит"
+  potion: "Зелье"
+  scroll: "Свиток"
+  wand: "Жезл"
+  staff: "Посох"
+  rod: "Жезл"
+  orb: "Сфера"
+  amulet: "Амулет"
+  ring: "Кольцо"
+  belt: "Пояс"
+  boots: "Сапоги"
+  gloves: "Перчатки"
+  helmet: "Шлем"
+  cloak: "Плащ"
+
+# Валюта
+currency:
+  gold: "Золотые монеты"
+  silver: "Серебряные монеты"
+  copper: "Медные монеты"
+  platinum: "Платиновые монеты"
+  electrum: "Электрумовые монеты"
+  
+  short:
+    gp: "з.м."
+    sp: "с.м."
+    cp: "м.м."
+    pp: "п.м."
+    ep: "э.м."
+
+# Время
+time:
+  morning: "Утро"
+  afternoon: "День"
+  evening: "Вечер"
+  night: "Ночь"
+  dawn: "Рассвет"
+  dusk: "Сумерки"
+  
+  days:
+    monday: "Понедельник"
+    tuesday: "Вторник"
+    wednesday: "Среда"
+    thursday: "Четверг"
+    friday: "Пятница"
+    saturday: "Суббота"
+    sunday: "Воскресенье"
+
+# Направления
+directions:
+  north: "Север"
+  south: "Юг"
+  east: "Восток"
+  west: "Запад"
+  northeast: "Северо-восток"
+  northwest: "Северо-запад"
+  southeast: "Юго-восток"
+  southwest: "Юго-запад"
+  up: "Вверх"
+  down: "Вниз"
+
+# Общие команды
+commands:
+  look: "осмотреть"
+  go: "идти"
+  take: "взять"
+  drop: "бросить"
+  use: "использовать"
+  talk: "говорить"
+  fight: "сражаться"
+  inventory: "инвентарь"
+  status: "статус"
+  help: "помощь"
+  quit: "выход"
+  save: "сохранить"
+  load: "загрузить"
+
+# Подсказки
+hints:
+  movement: "Используйте команды 'идти [направление]' для перемещения"
+  examination: "Используйте 'осмотреть [предмет]' для изучения"
+  interaction: "Используйте 'взять [предмет]' для подбора предметов"
+  combat: "В бою используйте 'атаковать [цель]' для атаки"

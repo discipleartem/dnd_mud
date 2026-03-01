@@ -2,88 +2,89 @@
 
 Следует принципам:
 - KISS: Максимально простой класс
-- SRP: Одна ответственность - управление игрой
+- SRP: Одна ответственность - управление меню
 - YAGNI: Только необходимая функциональность
+- DRY: Использует общие константы
 """
 
-
+from core.constants import (
+    CHARACTER_CREATED,
+    CHARACTER_NAME_PROMPT,
+    ERROR_CREATING_CHARACTER,
+    ERROR_EMPTY_NAME,
+    MAIN_MENU_TITLE,
+    MENU_ITEMS,
+    MENU_PROMPT,
+    NOT_AVAILABLE,
+    THANKS_FOR_PLAYING,
+)
 from entities.character import Character
-from entities.game_session import GameSession
 from interfaces.user_interface import UserInterface
 
 
 class GameUseCase:
-    """Основной Use Case для управления игрой.
-
-    Объединяет логику меню и обработки выбора
-    для максимального упрощения (KISS).
-    """
+    """Основной Use Case для управления игрой (KISS - максимально простой)."""
 
     def __init__(self, ui: UserInterface) -> None:
         """Инициализация Use Case."""
         self.ui = ui
-        self._session: GameSession | None = None
-
-    def show_and_handle_menu(self) -> bool:
-        """Показать меню и обработать выбор (KISS - один метод)."""
-        self.ui.clear()
-        self.ui.print_title("D&D Text MUD")
-        self.ui.print_separator()
-
-        # Простое меню без лишней сложности
-        menu_items = {
-            1: "Новая игра",
-            2: "Загрузить игру",
-            3: "Настройки",
-            4: "Моды",
-            5: "Выход"
+        self._character: Character | None = None
+        self._menu_handlers = {
+            1: self._create_new_character,
+            len(MENU_ITEMS): self._handle_exit,
         }
 
-        for number, text in menu_items.items():
+    def show_and_handle_menu(self) -> bool:
+        """Показать меню и обработать выбор (KISS - просто)."""
+        self.ui.clear()
+        self.ui.print_title(MAIN_MENU_TITLE)
+        self.ui.print_separator()
+
+        # Показываем пункты меню
+        for number, text in enumerate(MENU_ITEMS, 1):
             self.ui.print_menu_item(number, text)
 
         self.ui.print_separator()
-        choice = self.ui.get_int_input("Ваш выбор: ", 1, 5)
+        choice = self.ui.get_int_input(MENU_PROMPT, 1, len(MENU_ITEMS))
 
-        # Прямая обработка без лишней сложности
-        if choice == 5:
-            self.ui.print_success("Спасибо за игру!")
-            return False
-        elif choice == 1:
-            self._handle_new_game()
-        elif choice in (2, 3, 4):
-            self._show_message("Функция пока недоступна.")
-        else:
-            self.ui.print_error("Неверный выбор. Попробуйте снова.")
+        return self._handle_menu_choice(choice)
+
+    def _handle_menu_choice(self, choice: int) -> bool:
+        """Обработать выбор меню (KISS - просто)."""
+        handler = self._menu_handlers.get(choice, self._show_not_available)
+        return handler()
+
+    def _handle_exit(self) -> bool:
+        """Обработать выход из игры."""
+        self.ui.print_success(THANKS_FOR_PLAYING)
+        return False
+
+    def _show_not_available(self) -> bool:
+        """Показать сообщение о недоступности функции."""
+        self.ui.show_message_and_wait(NOT_AVAILABLE)
+        return True
+
+    def _create_new_character(self) -> bool:
+        """Создать нового персонажа (KISS - просто)."""
+        try:
+            name = self.ui.get_input(CHARACTER_NAME_PROMPT).strip()
+            if not name:
+                raise ValueError(ERROR_EMPTY_NAME)
+
+            self._character = Character(name=name)
+
+            self.ui.print_success(CHARACTER_CREATED.format(name=name))
+            self.ui.print_info(f"{self._character}")
+            self.ui.print_info(f"Статус: {self._character.get_status()}")
+        except ValueError as e:
+            self.ui.print_error(ERROR_CREATING_CHARACTER.format(error=e))
 
         return True
 
-    def _handle_new_game(self) -> None:
-        """Обработать новую игру."""
-        try:
-            # Создаём персонажа с простой валидацией
-            name = self.ui.get_input("Введите имя персонажа: ").strip()
-            character = Character(name=name)
+    def get_current_character(self) -> Character | None:
+        """Получить текущего персонажа."""
+        return self._character
 
-            # Создаём сессию
-            self._session = GameSession(player=character, session_name=f"Приключения {name}")
-
-            self.ui.print_success(f"Персонаж {name} создан!")
-            self.ui.print_info(f"{character}")
-            self.ui.print_info(f"Статус: {character.get_status()}")
-
-        except ValueError as e:
-            self.ui.print_error(f"Ошибка создания персонажа: {e}")
-
-    def _show_message(self, message: str) -> None:
-        """Показать сообщение и ждать ввода."""
-        self.ui.print_info(message)
-        self.ui.get_input("Нажмите Enter для продолжения...")
-
-    def get_current_session(self) -> GameSession | None:
-        """Получить текущую сессию."""
-        return self._session
-
-    def has_active_session(self) -> bool:
-        """Проверить, есть ли активная сессия."""
-        return self._session is not None
+    def has_active_character(self) -> bool:
+        """Проверить, есть ли активный персонаж."""
+        return self._character is not None

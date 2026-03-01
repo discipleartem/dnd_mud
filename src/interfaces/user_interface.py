@@ -2,6 +2,8 @@
 
 from abc import ABC, abstractmethod
 
+from interfaces.i18n_api import I18nTranslator
+
 
 class UserInterface(ABC):
     """Абстрактный интерфейс пользовательского интерфейса.
@@ -10,6 +12,14 @@ class UserInterface(ABC):
     Следует принципу Dependency Inversion - высокоуровневые модули
     зависят от абстракции, а не от конкретных реализаций.
     """
+
+    def __init__(self, translator: I18nTranslator | None = None) -> None:
+        """Инициализировать интерфейс с переводчиком.
+
+        Args:
+            translator: Переводчик для локализации
+        """
+        self._translator = translator
 
     @abstractmethod
     def clear(self) -> None:
@@ -37,8 +47,12 @@ class UserInterface(ABC):
         pass
 
     @abstractmethod
-    def get_int_input(self, prompt: str = "", min_val: int | None = None,
-                   max_val: int | None = None) -> int:
+    def get_int_input(
+        self,
+        prompt: str = "",
+        min_val: int | None = None,
+        max_val: int | None = None,
+    ) -> int:
         """Получить числовой ввод с валидацией."""
         pass
 
@@ -53,6 +67,36 @@ class UserInterface(ABC):
         pass
 
     @abstractmethod
-    def print_separator(self, length: int = 50, char: str = "=") -> None:
+    def print_separator(
+        self, length: int = 50, char: str = "="
+    ) -> None:
         """Напечатать разделитель."""
         pass
+
+    @abstractmethod
+    def show_message_and_wait(self, message: str) -> None:
+        """Показать сообщение и ждать ввода."""
+        pass
+
+    def t(self, key: str, context: str | None = None, **kwargs) -> str:
+        """Перевести строку.
+
+        Args:
+            key: Ключ перевода
+            context: Контекст перевода
+            **kwargs: Параметры для форматирования
+
+        Returns:
+            Переведенная строка или ключ если переводчик не доступен
+        """
+        if self._translator:
+            return self._translator.translate(key, context, **kwargs)
+        return key
+
+    def set_translator(self, translator: I18nTranslator) -> None:
+        """Установить переводчик.
+
+        Args:
+            translator: Переводчик
+        """
+        self._translator = translator

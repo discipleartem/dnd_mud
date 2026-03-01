@@ -7,10 +7,9 @@ __pycache__/
 .envrc
 src/dnd_mud.egg-info/
 dnd_mud.egg-info/
+dnd_text_mud.egg-info
 docs/*.pdf
 *.log
-.coverage
-mypy.ini
 .ruff_cache/
 .mypy_cache/
-data/PHB_D&D_2023_RUS.pdf
+.coverage

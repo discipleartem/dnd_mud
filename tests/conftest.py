@@ -1,11 +1,15 @@
-"""Конфигурация pytest для тестов."""
+"""Конфигурация pytest для тестов.
+
+Следует принципам:
+- KISS: Простые фикстуры без избыточности
+- YAGNI: Только необходимый функционал для текущего этапа
+"""
 
 import sys
 from pathlib import Path
 from unittest.mock import Mock
 
 import pytest
-import yaml
 
 # Добавляем src в Python path для всех тестов
 src_path = Path(__file__).parent.parent / "src"
@@ -15,44 +19,16 @@ if str(src_path) not in sys.path:
 
 @pytest.fixture
 def sample_character_data():
-    """Фикстура с тестовыми данными персонажа."""
+    """Фикстура с базовыми тестовыми данными персонажа.
+
+    Только необходимые поля для текущего этапа разработки.
+    """
     return {
         "name": "Тестовый персонаж",
-        "race": "human",
-        "class": "fighter",
         "level": 1,
-        "abilities": {
-            "strength": 16,
-            "dexterity": 14,
-            "constitution": 15,
-            "intelligence": 12,
-            "wisdom": 13,
-            "charisma": 10
-        },
-        "hp": 12,
-        "max_hp": 12
+        "hit_points": 10,
+        "max_hit_points": 10,
     }
-
-
-@pytest.fixture
-def sample_config_data():
-    """Фикстура с тестовыми настройками."""
-    return {
-        "language": "ru",
-        "theme": "default",
-        "autosave": True,
-        "autosave_interval": 300
-    }
-
-
-@pytest.fixture
-def temp_yaml_file(tmp_path, sample_character_data):
-    """Фикстура для временного YAML файла."""
-    yaml_file = tmp_path / "test_character.yaml"
-    with open(yaml_file, 'w', encoding='utf-8') as f:
-        yaml.dump(sample_character_data, f, default_flow_style=False,
-                 allow_unicode=True, indent=2)
-    return yaml_file
 
 
 @pytest.fixture
@@ -86,10 +62,13 @@ def mock_colorama():
     mock_colorama_module.Style.BRIGHT = ""
     mock_colorama_module.init = Mock()
 
-    with patch.dict('sys.modules', {
-        'colorama': mock_colorama_module,
-        'colorama.Fore': mock_colorama_module.Fore,
-        'colorama.Back': mock_colorama_module.Back,
-        'colorama.Style': mock_colorama_module.Style
-    }):
+    with patch.dict(
+        "sys.modules",
+        {
+            "colorama": mock_colorama_module,
+            "colorama.Fore": mock_colorama_module.Fore,
+            "colorama.Back": mock_colorama_module.Back,
+            "colorama.Style": mock_colorama_module.Style,
+        },
+    ):
         yield
