@@ -1,0 +1,89 @@
+# Профессии (backgrounds)
+backgrounds:
+  acolyte:
+    name: "Аколит"
+    description: "Служитель храма"
+    skills: ["insight", "religion"]
+    tools: ["нет"]
+    equipment: ["молитвенник", "5 палочек благовоний", "одеяние", "символ веры"]
+    feature: "Убежище верующих"
+
+  criminal:
+    name: "Уголовник"
+    description: "Преступник с тёмным прошлым"
+    skills: ["deception", "sleight_of_hand"]
+    tools: ["набор вора", "игральные кости"]
+    equipment: ["костяной нож", "карты", "одежда из тёмной ткани"]
+    feature: "Криминальные связи"
+
+  soldier:
+    name: "Солдат"
+    description: "Ветеран военных конфликтов"
+    skills: ["athletics", "intimidation"]
+    tools: ["игральные кости", "наземное транспортное средство"]
+    equipment: ["знак воинского звания", "трофей от врага", "игральные кости", "одежда"]
+    feature: "Военный ранг"
+
+  folk_hero:
+    name: "Народный герой"
+    description: "Защитник простых людей"
+    skills: ["perception", "survival"]
+    tools: ["набор ремесленника", "наземное транспортное средство"]
+    equipment: ["набор ремесленника", "одежда простолюдина", "наземное транспортное средство"]
+    feature: "Общинный защитник"
+
+  sage:
+    name: "Мудрец"
+    description: "Учёный, посвятивший себя знаниям"
+    skills: ["arcana", "history"]
+    tools: ["нет"]
+    equipment: ["чёрнильница", "перо", "пергамент", "книги"]
+    feature: "Исследование"
+
+  artisan:
+    name: "Ремесленник"
+    description: "Мастер своего дела"
+    skills: ["expertise", "perception"]
+    tools: ["набор ремесленника"]
+    equipment: ["набор ремесленника", "одежда рабочего"]
+    feature: "Гильдия ремесленников"
+
+  noble:
+    name: "Благородный"
+    description: "Рождённый в знатной семье"
+    skills: ["history", "persuasion"]
+    tools: ["один игровой набор"]
+    equipment: ["одежда благородного", "кольцо с гербом", "кошельёк с золотом"]
+    feature: "Положение в обществе"
+
+  hermit:
+    name: "Отшельник"
+    description: "Живущий в уединении"
+    skills: ["medicine", "religion"]
+    tools: ["набор травника"]
+    equipment: ["набор травника", "пергамент с записями", "одежда отшельника"]
+    feature: "Откровение"
+
+  entertainer:
+    name: "Бродяга"
+    description: "Странствующий артист"
+    skills: ["acrobatics", "persuasion"]
+    tools: ["музыкальный инструмент"]
+    equipment: ["музыкальный инструмент", "одежда бродяги", "кошельёк"]
+    feature: "По умолчанию"
+
+  sailor:
+    name: "Матрос"
+    description: "Мореплаватель"
+    skills: ["athletics", "perception"]
+    tools: ["навигационные инструменты"]
+    equipment: ["верёвка 50 футов", "любимая игральная карта", "одежда матроса"]
+    feature: "Судовой ранг"
+
+  charlatan:
+    name: "Шарлатан"
+    description: "Мастер обмана и интриг"
+    skills: ["deception", "sleight_of_hand"]
+    tools: ["набор отмычек", "один игровой набор"]
+    equipment: ["тонкая одежда", "набор отмычек", "игровой набор"]
+    feature: "Ложная личность"
