@@ -41,9 +41,9 @@ def main():
         menu_adapter.run()
         
     except KeyboardInterrupt:
-        print("\n\n👋 До свидания!")
+        print("\n\nДо свидания!")
     except Exception as e:
-        print(f"\n❌ Критическая ошибка: {e}")
+        print(f"\nКритическая ошибка: {e}")
         print("Приложение будет закрыто.")
 
 
