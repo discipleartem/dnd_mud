@@ -14,18 +14,18 @@ src/
 Правила зависимостей:
 - Entities → не зависят ни от чего
 - Use Cases → зависят только от Entities
-- Interface Adapters → зависят от Use Cases и Entities  
+- Interface Adapters → зависят от Use Cases и Entities
 - Repositories & Console → зависят от всех внутренних слоев
 """
 
-import sys
 import os
+import sys
 
 # Добавляем текущую директорию в Python path
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-from src.use_cases.main_menu import MainMenuUseCase
 from src.console.main_menu_adapter import MainMenuAdapter
+from src.use_cases.main_menu import MainMenuUseCase
 
 
 def main():
@@ -33,13 +33,13 @@ def main():
     try:
         # Создание Use Case главного меню
         main_menu_use_case = MainMenuUseCase()
-        
+
         # Создание адаптера для консоли
         menu_adapter = MainMenuAdapter(main_menu_use_case)
-        
+
         # Запуск главного меню
         menu_adapter.run()
-        
+
     except KeyboardInterrupt:
         print("\n\nДо свидания!")
     except Exception as e:

@@ -1,6 +1,6 @@
 """Setup для D&D MUD."""
 
-from setuptools import setup, find_packages
+from setuptools import find_packages, setup
 
 setup(
     name="dnd_mud",
