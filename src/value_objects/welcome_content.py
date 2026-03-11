@@ -5,7 +5,7 @@
 
 from dataclasses import dataclass
 
-from .base_validatable import BaseValidatable
+from src.value_objects.base_validatable import BaseValidatable
 
 
 @dataclass(frozen=True)
@@ -21,9 +21,17 @@ class WelcomeContent:
 
     def __post_init__(self) -> None:
         """Валидация после инициализации."""
-        object.__setattr__(self, 'title', BaseValidatable.validate_title(self.title))
-        object.__setattr__(self, 'subtitle', BaseValidatable.validate_subtitle(self.subtitle))
-        object.__setattr__(self, 'description', BaseValidatable.validate_description(self.description))
+        object.__setattr__(
+            self, "title", BaseValidatable.validate_title(self.title)
+        )
+        object.__setattr__(
+            self, "subtitle", BaseValidatable.validate_subtitle(self.subtitle)
+        )
+        object.__setattr__(
+            self,
+            "description",
+            BaseValidatable.validate_description(self.description),
+        )
 
     def get_title(self) -> str:
         """Получить заголовок."""

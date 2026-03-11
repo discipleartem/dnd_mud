@@ -3,7 +3,7 @@
 Следует KISS и YAGNI - просто и без излишеств.
 """
 
-from ..constants import DEFAULT_LANGUAGE, SUPPORTED_LANGUAGES
+from src.constants import DEFAULT_LANGUAGE, SUPPORTED_LANGUAGES
 
 
 class Language:
@@ -57,6 +57,14 @@ class Language:
         if not isinstance(other, Language):
             return False
         return self._code == other._code
+
+    def is_supported(self) -> bool:
+        """Проверить, поддерживается ли язык."""
+        return self._code in SUPPORTED_LANGUAGES
+
+    def is_russian(self) -> bool:
+        """Проверить, является ли язык русским."""
+        return self._code == "ru"
 
     def __hash__(self) -> int:
         """Хеш объекта на основе значения."""

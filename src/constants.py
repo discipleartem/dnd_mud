@@ -17,6 +17,10 @@ MAX_ASCII_ART_LENGTH: Final[int] = 2000
 
 # Значения по умолчанию для контента
 DEFAULT_TITLE: Final[str] = "Добро пожаловать в D&D MUD"
-DEFAULT_SUBTITLE: Final[str] = "Текстовая игра по мотивам Dungeons & Dragons 5e"
-DEFAULT_DESCRIPTION: Final[str] = "Приготовьтесь к эпическому приключению в мире фэнтези!"
+DEFAULT_SUBTITLE: Final[str] = (
+    "Текстовая игра по мотивам Dungeons & Dragons 5e"
+)
+DEFAULT_DESCRIPTION: Final[str] = (
+    "Приготовьтесь к эпическому приключению в мире фэнтези!"
+)
 DEFAULT_PRESS_ENTER: Final[str] = "Нажмите Enter для продолжения..."

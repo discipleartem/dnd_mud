@@ -5,7 +5,7 @@
 
 from dataclasses import dataclass
 
-from .base_validatable import BaseValidatable
+from src.value_objects.base_validatable import BaseValidatable
 
 
 @dataclass(frozen=True)
@@ -19,7 +19,9 @@ class AsciiArt:
 
     def __post_init__(self) -> None:
         """Валидация после инициализации."""
-        object.__setattr__(self, 'value', BaseValidatable.validate_ascii_art(self.value))
+        object.__setattr__(
+            self, "value", BaseValidatable.validate_ascii_art(self.value)
+        )
 
     def is_empty(self) -> bool:
         """Проверить, является ли ASCII-арт пустым."""
@@ -44,6 +46,14 @@ class AsciiArt:
             "             ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝  ╚═════╝ ╚═╝  ╚═══╝╚══════╝"
         )
         return cls(value=logo)
+
+    def get_value(self) -> str:
+        """Получить значение ASCII-арта."""
+        return self.value
+
+    def get_line_count(self) -> int:
+        """Получить количество строк в ASCII-арте."""
+        return len(self.value.splitlines()) if self.value else 0
 
     def __str__(self) -> str:
         """Строковое представление."""

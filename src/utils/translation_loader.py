@@ -8,7 +8,9 @@ from pathlib import Path
 from typing import Any, Final
 
 # Путь к файлам переводов
-TRANSLATIONS_DIR: Final[Path] = Path(__file__).parent.parent.parent / "data" / "translations"
+TRANSLATIONS_DIR: Final[Path] = (
+    Path(__file__).parent.parent.parent / "data" / "translations"
+)
 
 
 class TranslationLoader:
@@ -35,7 +37,7 @@ class TranslationLoader:
         for file_path in TRANSLATIONS_DIR.glob("*.json"):
             language_code = file_path.stem
             try:
-                with open(file_path, encoding='utf-8') as f:
+                with open(file_path, encoding="utf-8") as f:
                     cls._translations[language_code] = json.load(f)
             except (FileNotFoundError, json.JSONDecodeError) as error:
                 print(f"Ошибка загрузки переводов {language_code}: {error}")
@@ -44,7 +46,9 @@ class TranslationLoader:
         return cls._translations
 
     @classmethod
-    def get_translation(cls, language_code: str, key: str, default: str | None = None) -> str | None:
+    def get_translation(
+        cls, language_code: str, key: str, default: str | None = None
+    ) -> str | None:
         """Получить перевод по ключу.
 
         Args:
@@ -58,7 +62,7 @@ class TranslationLoader:
         translations = cls.load_translations()
 
         # Разбираем вложенный ключ (например, "welcome.title")
-        keys = key.split('.')
+        keys = key.split(".")
         current = translations.get(language_code, {})
 
         for k in keys:
@@ -68,3 +72,26 @@ class TranslationLoader:
                 return default
 
         return current if isinstance(current, str) else default
+
+    @classmethod
+    def is_language_supported(cls, language_code: str) -> bool:
+        """Проверить, поддерживается ли язык.
+
+        Args:
+            language_code: Код языка
+
+        Returns:
+            True если язык поддерживается
+        """
+        translations = cls.load_translations()
+        return language_code in translations
+
+    @classmethod
+    def get_supported_languages(cls) -> list[str]:
+        """Получить список поддерживаемых языков.
+
+        Returns:
+            Список кодов поддерживаемых языков
+        """
+        translations = cls.load_translations()
+        return list(translations.keys())

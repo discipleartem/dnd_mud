@@ -1,43 +1,47 @@
 """Главная точка входа в D&D Text MUD.
 
-Простая архитектура следуя принципам KISS, YAGNI и Zen Python.
-Без избыточных абстракций и сложного DI.
+Следует Clean Architecture - точка входа с Dependency Injection.
+Оркестрация всех компонентов через DI контейнер.
 """
 
 import sys
 
-from src.console.welcome_adapter import WelcomeScreenAdapter
-from src.welcome_dto import WelcomeScreenRequest
-from src.welcome_use_case import ShowWelcomeScreenUseCase
+from src.dependency_injection import ApplicationServices, get_container
+from src.dto.welcome_dto import WelcomeControllerRequest
+from src.frameworks.console.welcome_adapter import ConsoleWelcomeScreenAdapter
 
 
 class Application:
     """Основной класс приложения.
-
-    Следует принципу KISS - просто и понятно.
-    Минимум зависимостей, явная логика.
+    
+    Следует Clean Architecture - оркестрация Use Cases через
+    Dependency Injection контейнер.
     """
 
     def __init__(self) -> None:
         """Инициализация приложения."""
-        self.use_case = ShowWelcomeScreenUseCase()
-        self.adapter = WelcomeScreenAdapter()
+        self._services = ApplicationServices()
+        self._welcome_controller = self._services.welcome_controller
+        self._welcome_adapter = ConsoleWelcomeScreenAdapter()
 
     def run_welcome_screen(self) -> None:
         """Запустить приветственный экран."""
         print("Запуск приветственного экрана...")
 
-        # Создаем запрос с явными параметрами (Zen Python)
-        request = WelcomeScreenRequest(
+        # Создание запроса через контроллер
+        request = WelcomeControllerRequest(
             language="ru",
             show_ascii_art=True
         )
 
-        # Выполняем Use Case
-        response = self.use_case.execute(request)
+        # Выполнение через контроллер
+        response = self._welcome_controller.show_welcome(request)
 
-        # Отображаем через адаптер
-        self.adapter.display(response)
+        # Отображение через адаптер
+        if response.success and response.data:
+            self._welcome_adapter.display(response.data)
+        else:
+            print(f"Ошибка: {response.message}")
 
         print("Приветственный экран завершён")
 
@@ -45,10 +49,10 @@ class Application:
         """Запустить приложение."""
         try:
             self.run_welcome_screen()
-            print("Приложение успешно завершено")
+            print("\n🎉 Приложение успешно завершено")
 
         except KeyboardInterrupt:
-            print("Приложение прервано пользователем")
+            print("\nПриложение прервано пользователем")
         except Exception as error:
             print(f"Критическая ошибка приложения: {error}", file=sys.stderr)
             sys.exit(1)
@@ -56,8 +60,8 @@ class Application:
 
 def main() -> None:
     """Главная функция.
-
-    Простая точка входа без избыточности.
+    
+    Точка входа с proper dependency injection.
     """
     app = Application()
     app.run()
