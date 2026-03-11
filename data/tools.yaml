@@ -1,0 +1,125 @@
+tools:
+  thieves_tools:
+    - name: "Воровские инструменты"
+      cost: { value: 25, currency: gold }
+      weight: 1
+
+  gaming_sets:
+    - name: "Драконьи шахматы"
+      cost: { value: 1, currency: gold }
+      weight: 0.5
+    - name: "Карты"
+      cost: { value: 5, currency: silver }
+      weight: null
+    - name: "Кости"
+      cost: { value: 1, currency: silver }
+      weight: null
+    - name: "Ставка трех драконов"
+      cost: { value: 1, currency: gold }
+      weight: null
+
+  navigator_tools:
+    - name: "Инструменты навигатора"
+      cost: { value: 25, currency: gold }
+      weight: 2
+
+  poisoner_tools:
+    - name: "Инструменты отравителя"
+      cost: { value: 50, currency: gold }
+      weight: 2
+
+  artisans_tools:
+    - name: "Инструменты алхимика"
+      cost: { value: 50, currency: gold }
+      weight: 8
+    - name: "Инструменты гончара"
+      cost: { value: 10, currency: gold }
+      weight: 3
+    - name: "Инструменты жестящика"
+      cost: { value: 50, currency: gold }
+      weight: 10
+    - name: "Инструменты каллиграфа"
+      cost: { value: 10, currency: gold }
+      weight: 5
+    - name: "Инструменты каменщика"
+      cost: { value: 10, currency: gold }
+      weight: 8
+    - name: "Инструменты картографа"
+      cost: { value: 15, currency: gold }
+      weight: 6
+    - name: "Инструменты кожевника"
+      cost: { value: 5, currency: gold }
+      weight: 5
+    - name: "Инструменты кузнеца"
+      cost: { value: 20, currency: gold }
+      weight: 8
+    - name: "Инструменты пивовара"
+      cost: { value: 20, currency: gold }
+      weight: 9
+    - name: "Инструменты плотника"
+      cost: { value: 8, currency: gold }
+      weight: 6
+    - name: "Инструменты повара"
+      cost: { value: 1, currency: gold }
+      weight: 8
+    - name: "Инструменты резчика по дереву"
+      cost: { value: 1, currency: gold }
+      weight: 5
+    - name: "Инструменты сапожника"
+      cost: { value: 5, currency: gold }
+      weight: 5
+    - name: "Инструменты стеклодува"
+      cost: { value: 30, currency: gold }
+      weight: 5
+    - name: "Инструменты ткача"
+      cost: { value: 1, currency: gold }
+      weight: 5
+    - name: "Инструменты художника"
+      cost: { value: 10, currency: gold }
+      weight: 5
+    - name: "Инструменты ювелира"
+      cost: { value: 25, currency: gold }
+      weight: 2
+
+  musical_instruments:
+    - name: "Барабан"
+      cost: { value: 6, currency: gold }
+      weight: 3
+    - name: "Виола"
+      cost: { value: 30, currency: gold }
+      weight: 1
+    - name: "Волынка"
+      cost: { value: 30, currency: gold }
+      weight: 6
+    - name: "Лира"
+      cost: { value: 30, currency: gold }
+      weight: 2
+    - name: "Лютня"
+      cost: { value: 35, currency: gold }
+      weight: 2
+    - name: "Рожок"
+      cost: { value: 3, currency: gold }
+      weight: 2
+    - name: "Свирель"
+      cost: { value: 12, currency: gold }
+      weight: 2
+    - name: "Флейта"
+      cost: { value: 2, currency: gold }
+      weight: 1
+    - name: "Цимбалы"
+      cost: { value: 25, currency: gold }
+      weight: 10
+    - name: "Шалмей"
+      cost: { value: 2, currency: gold }
+      weight: 1
+
+  kits:
+    - name: "Набор для грима"
+      cost: { value: 25, currency: gold }
+      weight: 3
+    - name: "Набор для фальсификации"
+      cost: { value: 15, currency: gold }
+      weight: 5
+    - name: "Набор травинка"
+      cost: { value: 5, currency: gold }
+      weight: 3
