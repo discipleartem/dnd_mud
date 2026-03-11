@@ -1,0 +1,318 @@
+equipment:
+  ammunition:
+    - name: "Арбалетные болты"
+      quantity: 20
+      cost: { value: 1, currency: gold }
+      weight: 1.5
+    - name: "Иглы для трубки"
+      quantity: 50
+      cost: { value: 1, currency: gold }
+      weight: 1
+    - name: "Снаряды для пращи"
+      quantity: 20
+      cost: { value: 4, currency: copper }
+      weight: 1.5
+    - name: "Стрелы"
+      quantity: 20
+      cost: { value: 1, currency: gold }
+      weight: 1
+
+  arcane_focus:
+    - name: "Волшебная палочка"
+      cost: { value: 10, currency: gold }
+      weight: 1
+    - name: "Жезл"
+      cost: { value: 10, currency: gold }
+      weight: 2
+    - name: "Кристалл"
+      cost: { value: 10, currency: gold }
+      weight: 1
+    - name: "Посох"
+      cost: { value: 5, currency: gold }
+      weight: 4
+    - name: "Сфера"
+      cost: { value: 20, currency: gold }
+      weight: 3
+
+  druidic_focus:
+    - name: "Веточка омелы"
+      cost: { value: 1, currency: gold }
+      weight: null
+    - name: "Деревянный посох"
+      cost: { value: 5, currency: gold }
+      weight: 4
+    - name: "Тисовая палочка"
+      cost: { value: 10, currency: gold }
+      weight: 1
+    - name: "Тотем"
+      cost: { value: 1, currency: gold }
+      weight: null
+
+  holy_symbol:
+    - name: "Амулет"
+      cost: { value: 5, currency: gold }
+      weight: 1
+    - name: "Реликварий"
+      cost: { value: 5, currency: gold }
+      weight: 2
+    - name: "Эмблема"
+      cost: { value: 5, currency: gold }
+      weight: null
+
+  tools_and_kits:
+    - name: "Абак"
+      cost: { value: 2, currency: gold }
+      weight: 2
+    - name: "Алхимический огонь (фляга)"
+      cost: { value: 50, currency: gold }
+      weight: 1
+    - name: "Блок и лебедка"
+      cost: { value: 1, currency: gold }
+      weight: 5
+    - name: "Бочка"
+      cost: { value: 2, currency: gold }
+      weight: 70
+    - name: "Бумага (один лист)"
+      cost: { value: 2, currency: silver }
+      weight: null
+    - name: "Бурдюк"
+      cost: { value: 2, currency: silver }
+      full_weight: 5
+      empty_weight: 1
+    - name: "Бутылка, стеклянная"
+      cost: { value: 2, currency: gold }
+      weight: 2
+    - name: "Ведро"
+      cost: { value: 5, currency: copper }
+      weight: 2
+    - name: "Верёвка пеньковая (50 футов)"
+      cost: { value: 1, currency: gold }
+      weight: 10
+    - name: "Верёвка шёлковая (50 футов)"
+      cost: { value: 10, currency: gold }
+      weight: 5
+    - name: "Весы торговые"
+      cost: { value: 5, currency: gold }
+      weight: 3
+    - name: "Воск"
+      cost: { value: 5, currency: silver }
+      weight: null
+    - name: "Горшок железный"
+      cost: { value: 2, currency: gold }
+      weight: 10
+    - name: "Духи (флакон)"
+      cost: { value: 5, currency: gold }
+      weight: null
+    - name: "Замок"
+      cost: { value: 10, currency: gold }
+      weight: 1
+    - name: "Зелье лечения"
+      cost: { value: 50, currency: gold }
+      weight: 0.5
+    - name: "Зеркало стальное"
+      cost: { value: 5, currency: gold }
+      weight: 0.5
+    - name: "Калтропы"
+      quantity: 20
+      cost: { value: 1, currency: gold }
+      weight: 2
+    - name: "Кандалы"
+      cost: { value: 2, currency: gold }
+      weight: 6
+    - name: "Кирка горняцкая"
+      cost: { value: 2, currency: gold }
+      weight: 10
+    - name: "Кислота (флакон)"
+      cost: { value: 25, currency: gold }
+      weight: 1
+    - name: "Книга"
+      cost: { value: 25, currency: gold }
+      weight: 5
+    - name: "Книга заклинаний"
+      cost: { value: 50, currency: gold }
+      weight: 3
+    - name: "Колокольчик"
+      cost: { value: 1, currency: gold }
+      weight: null
+    - name: "Колчан"
+      cost: { value: 1, currency: gold }
+      weight: 1
+    - name: "Кольцо-печатка"
+      cost: { value: 5, currency: gold }
+      weight: null
+    - name: "Комплект для лазания"
+      cost: { value: 25, currency: gold }
+      weight: 12
+    - name: "Комплект для рыбалки"
+      cost: { value: 1, currency: gold }
+      weight: 4
+    - name: "Комплект целителя"
+      cost: { value: 5, currency: gold }
+      weight: 3
+    - name: "Контейнер для арбалетных болтов"
+      cost: { value: 1, currency: gold }
+      weight: 1
+    - name: "Контейнер для карт и свитков"
+      cost: { value: 1, currency: gold }
+      weight: 1
+    - name: "Корзина"
+      cost: { value: 4, currency: silver }
+      weight: 2
+    - name: "Кошель"
+      cost: { value: 5, currency: silver }
+      weight: 1
+    - name: "Крюк-кошка"
+      cost: { value: 2, currency: gold }
+      weight: 4
+    - name: "Кувшин или графин"
+      cost: { value: 2, currency: copper }
+      weight: 4
+    - name: "Лампа"
+      cost: { value: 5, currency: silver }
+      weight: 1
+    - name: "Лестница (10 футов)"
+      cost: { value: 1, currency: silver }
+      weight: 25
+    - name: "Ломик"
+      cost: { value: 2, currency: gold }
+      weight: 5
+    - name: "Лопата"
+      cost: { value: 2, currency: gold }
+      weight: 5
+    - name: "Масло (фляга)"
+      cost: { value: 1, currency: silver }
+      weight: 1
+    - name: "Мех"
+      cost: { value: 1, currency: gold }
+      weight: 5
+    - name: "Металлические шарики"
+      quantity: 100
+      cost: { value: 1, currency: gold }
+      weight: 2
+    - name: "Мешок"
+      cost: { value: 1, currency: silver }
+      weight: 0.5
+    - name: "Мешочек с компонентами"
+      cost: { value: 25, currency: gold }
+      weight: 2
+    - name: "Молот кузнечный"
+      cost: { value: 2, currency: gold }
+      weight: 10
+    - name: "Молоток"
+      cost: { value: 1, currency: gold }
+      weight: 3
+    - name: "Мыло"
+      cost: { value: 2, currency: silver }
+      weight: null
+    - name: "Одежда дорожная"
+      cost: { value: 2, currency: gold }
+      weight: 4
+    - name: "Одежда костюм"
+      cost: { value: 5, currency: gold }
+      weight: 4
+    - name: "Одежда обычная"
+      cost: { value: 5, currency: silver }
+      weight: 3
+    - name: "Одежда отличная"
+      cost: { value: 15, currency: gold }
+      weight: 6
+    - name: "Одеяло"
+      cost: { value: 1, currency: silver }
+      weight: 3
+    - name: "Охотничий капкан"
+      cost: { value: 5, currency: gold }
+      weight: 25
+    - name: "Палатка двухместная"
+      cost: { value: 2, currency: gold }
+      weight: 20
+    - name: "Пергамент"
+      cost: { value: 1, currency: silver }
+      weight: null
+    - name: "Песочные часы"
+      cost: { value: 25, currency: gold }
+      weight: 1
+    - name: "Писчее перо"
+      cost: { value: 2, currency: copper }
+      weight: null
+    - name: "Подзорная труба"
+      cost: { value: 1000, currency: gold }
+      weight: 1
+    - name: "Противоядие (флакон)"
+      cost: { value: 50, currency: gold }
+      weight: null
+    - name: "Рационы (1 день)"
+      cost: { value: 5, currency: silver }
+      weight: 2
+    - name: "Рюкзак"
+      cost: { value: 2, currency: gold }
+      weight: 5
+    - name: "Ряса"
+      cost: { value: 1, currency: gold }
+      weight: 4
+    - name: "Свеча"
+      cost: { value: 1, currency: copper }
+      weight: null
+    - name: "Святая вода (фляга)"
+      cost: { value: 25, currency: gold }
+      weight: 1
+    - name: "Сигнальный свисток"
+      cost: { value: 5, currency: copper }
+      weight: null
+    - name: "Спальник"
+      cost: { value: 1, currency: gold }
+      weight: 7
+    - name: "Столовый набор"
+      cost: { value: 2, currency: silver }
+      weight: 1
+    - name: "Сундук"
+      cost: { value: 5, currency: gold }
+      weight: 25
+    - name: "Таран портативный"
+      cost: { value: 4, currency: gold }
+      weight: 35
+    - name: "Тонильный камень"
+      cost: { value: 1, currency: copper }
+      weight: 0.5
+    - name: "Трутница"
+      cost: { value: 5, currency: silver }
+      weight: 1
+    - name: "Увеличительное стекло"
+      cost: { value: 100, currency: gold }
+      weight: null
+    - name: "Факел"
+      cost: { value: 1, currency: copper }
+      weight: 1
+    - name: "Флакон"
+      cost: { value: 1, currency: gold }
+      weight: null
+    - name: "Фляга или большая кружка"
+      cost: { value: 2, currency: copper }
+      weight: 1
+    - name: "Фонарь закрытый"
+      cost: { value: 10, currency: gold }
+      weight: 2
+    - name: "Фонарь направленный"
+      cost: { value: 5, currency: gold }
+      weight: 2
+    - name: "Цепь"
+      length: 10
+      cost: { value: 5, currency: gold }
+      weight: 10
+    - name: "Чернила"
+      usage: 700
+      cost: { value: 10, currency: gold }
+      weight: null
+    - name: "Шест"
+      length: 10
+      cost: { value: 5, currency: copper }
+      weight: 7
+    - name: "Шипы железные"
+      quantity: 10
+      cost: { value: 1, currency: gold }
+      weight: 5
+    - name: "Шлямбур"
+      cost: { value: 1, currency: gold }
+      weight: 5
+    - name: "Яд простой"
+      cost: { value: 100, currency: gold }
+      weight: null
