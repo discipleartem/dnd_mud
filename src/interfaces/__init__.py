@@ -4,12 +4,15 @@
 """
 
 # Импорты из подпапок
-from .services.translation_service_interface import TranslationService, TranslationError
-from .services.ascii_art_service import AsciiArtService, AsciiArtError
+from .services.ascii_art_service import AsciiArtError, AsciiArtService
+from .services.translation_service_interface import (
+    TranslationError,
+    TranslationService,
+)
 
 __all__ = [
-    'TranslationService',
-    'TranslationError', 
-    'AsciiArtService',
-    'AsciiArtError'
+    "TranslationService",
+    "TranslationError",
+    "AsciiArtService",
+    "AsciiArtError",
 ]

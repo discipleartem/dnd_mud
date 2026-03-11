@@ -5,16 +5,16 @@
 """
 
 from abc import ABC, abstractmethod
-from typing import List, Optional, Dict, Any
 from datetime import datetime
+from typing import Any
 
 
 class SaveGame:
     """Сохранение игры.
-    
+
     Представляет одно сохранение с метаданными.
     """
-    
+
     def __init__(
         self,
         save_id: str,
@@ -25,10 +25,10 @@ class SaveGame:
         slot_number: int,
         game_version: str = "1.0.0",
         playtime_minutes: int = 0,
-        location: str = "Начало пути"
+        location: str = "Начало пути",
     ) -> None:
         """Инициализация сохранения.
-        
+
         Args:
             save_id: Уникальный идентификатор сохранения
             character_name: Имя персонажа
@@ -49,10 +49,10 @@ class SaveGame:
         self.game_version = game_version
         self.playtime_minutes = playtime_minutes
         self.location = location
-    
-    def to_dict(self) -> Dict[str, Any]:
+
+    def to_dict(self) -> dict[str, Any]:
         """Преобразовать в словарь.
-        
+
         Returns:
             Словарь с данными сохранения
         """
@@ -65,16 +65,16 @@ class SaveGame:
             "slot_number": self.slot_number,
             "game_version": self.game_version,
             "playtime_minutes": self.playtime_minutes,
-            "location": self.location
+            "location": self.location,
         }
-    
+
     @classmethod
-    def from_dict(cls, data: Dict[str, Any]) -> "SaveGame":
+    def from_dict(cls, data: dict[str, Any]) -> "SaveGame":
         """Создать из словаря.
-        
+
         Args:
             data: Словарь с данными сохранения
-            
+
         Returns:
             Объект SaveGame
         """
@@ -88,112 +88,112 @@ class SaveGame:
             slot_number=data["slot_number"],
             game_version=data.get("game_version", "1.0.0"),
             playtime_minutes=data.get("playtime_minutes", 0),
-            location=data.get("location", "Начало пути")
+            location=data.get("location", "Начало пути"),
         )
 
 
 class SaveGameRepository(ABC):
     """Интерфейс репозитория сохранений игр.
-    
+
     Следует Clean Architecture - определяет контракт для работы
     с сохранениями без привязки к конкретному хранилищу.
     """
-    
+
     @abstractmethod
-    def save(self, save_game: SaveGame, game_data: Dict[str, Any]) -> SaveGame:
+    def save(self, save_game: SaveGame, game_data: dict[str, Any]) -> SaveGame:
         """Сохранить игру.
-        
+
         Args:
             save_game: Метаданные сохранения
             game_data: Полные данные игры для сохранения
-            
+
         Returns:
             Сохранённая игра с ID
-            
+
         Raises:
             RepositoryError: Ошибка сохранения
         """
         pass
-    
+
     @abstractmethod
-    def load(self, save_id: str) -> Optional[Dict[str, Any]]:
+    def load(self, save_id: str) -> dict[str, Any] | None:
         """Загрузить игру.
-        
+
         Args:
             save_id: ID сохранения
-            
+
         Returns:
             Данные игры или None если не найдено
-            
+
         Raises:
             RepositoryError: Ошибка загрузки
         """
         pass
-    
+
     @abstractmethod
-    def find_by_id(self, save_id: str) -> Optional[SaveGame]:
+    def find_by_id(self, save_id: str) -> SaveGame | None:
         """Найти сохранение по ID.
-        
+
         Args:
             save_id: ID сохранения
-            
+
         Returns:
             Сохранение или None если не найдено
-            
+
         Raises:
             RepositoryError: Ошибка поиска
         """
         pass
-    
+
     @abstractmethod
-    def find_by_slot(self, slot_number: int) -> Optional[SaveGame]:
+    def find_by_slot(self, slot_number: int) -> SaveGame | None:
         """Найти сохранение по номеру слота.
-        
+
         Args:
             slot_number: Номер слота сохранения
-            
+
         Returns:
             Сохранение или None если не найдено
-            
+
         Raises:
             RepositoryError: Ошибка поиска
         """
         pass
-    
+
     @abstractmethod
-    def find_all(self) -> List[SaveGame]:
+    def find_all(self) -> list[SaveGame]:
         """Получить все сохранения.
-        
+
         Returns:
             Список всех сохранений
-            
+
         Raises:
             RepositoryError: Ошибка получения
         """
         pass
-    
+
     @abstractmethod
     def delete(self, save_id: str) -> bool:
         """Удалить сохранение.
-        
+
         Args:
             save_id: ID сохранения
-            
+
         Returns:
             True если удалено успешно
-            
+
         Raises:
             RepositoryError: Ошибка удаления
         """
         pass
-    
+
     @abstractmethod
-    def validate_save_format(self, game_data: Dict[str, Any]) -> bool:
+    def validate_save_format(self, game_data: dict[str, Any]) -> bool:
         """Валидировать формат сохранения.
-        
+
         Args:
             game_data: Данные игры для валидации
-            
+
         Returns:
             True если формат корректен
         """
@@ -202,4 +202,5 @@ class SaveGameRepository(ABC):
 
 class RepositoryError(Exception):
     """Ошибка репозитория."""
+
     pass

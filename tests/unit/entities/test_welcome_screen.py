@@ -20,7 +20,7 @@ class TestWelcomeScreen:
             description="Создайте персонажа",
             ascii_art="ASCII LOGO",
             language="ru",
-            press_enter_text="Нажмите Enter"
+            press_enter_text="Нажмите Enter",
         )
 
         assert screen.title == "Добро пожаловать"
@@ -33,9 +33,7 @@ class TestWelcomeScreen:
     def test_create_welcome_screen_with_defaults(self) -> None:
         """Тест создания сущности с параметрами по умолчанию."""
         screen = WelcomeScreen(
-            title="Welcome",
-            subtitle="Game",
-            description="Description"
+            title="Welcome", subtitle="Game", description="Description"
         )
 
         assert screen.title == "Welcome"
@@ -51,7 +49,7 @@ class TestWelcomeScreen:
             title="Title",
             subtitle="Subtitle",
             description="Description",
-            ascii_art="Some ASCII art"
+            ascii_art="Some ASCII art",
         )
 
         assert screen.has_ascii_art() is True
@@ -62,7 +60,7 @@ class TestWelcomeScreen:
             title="Title",
             subtitle="Subtitle",
             description="Description",
-            ascii_art=""
+            ascii_art="",
         )
 
         assert screen.has_ascii_art() is False
@@ -73,7 +71,7 @@ class TestWelcomeScreen:
             title="Title",
             subtitle="Subtitle",
             description="Description",
-            ascii_art="   \n\t  "
+            ascii_art="   \n\t  ",
         )
 
         assert screen.has_ascii_art() is False
@@ -84,7 +82,7 @@ class TestWelcomeScreen:
             title="Title",
             subtitle="Subtitle",
             description="Description",
-            ascii_art=None
+            ascii_art=None,
         )
 
         assert screen.has_ascii_art() is False
@@ -96,7 +94,7 @@ class TestWelcomeScreen:
             subtitle="Game",
             description="Description",
             ascii_art="Logo",
-            language="en"
+            language="en",
         )
 
         str_repr = str(screen)
@@ -108,9 +106,9 @@ class TestWelcomeScreen:
         """Тест строкового представления без ASCII-арта."""
         screen = WelcomeScreen(
             title="D&D MUD",
-            subtitle="Game", 
+            subtitle="Game",
             description="Description",
-            language="ru"
+            language="ru",
         )
 
         str_repr = str(screen)
@@ -121,9 +119,7 @@ class TestWelcomeScreen:
     def test_immutability_of_fields(self) -> None:
         """Тест что поля dataclass доступны для изменения (dataclass не immutable)."""
         screen = WelcomeScreen(
-            title="Original",
-            subtitle="Original",
-            description="Original"
+            title="Original", subtitle="Original", description="Original"
         )
 
         # dataclass по умолчанию mutable
@@ -138,16 +134,16 @@ class TestWelcomeScreen:
             description="Description",
             ascii_art="ASCII",
             language="ru",
-            press_enter_text="Press"
+            press_enter_text="Press",
         )
-        
+
         screen2 = WelcomeScreen(
             title="Title",
             subtitle="Subtitle",
             description="Description",
             ascii_art="ASCII",
             language="ru",
-            press_enter_text="Press"
+            press_enter_text="Press",
         )
 
         assert screen1 == screen2
@@ -155,15 +151,11 @@ class TestWelcomeScreen:
     def test_difference_in_title(self) -> None:
         """Тест различия в заголовке."""
         screen1 = WelcomeScreen(
-            title="Title1",
-            subtitle="Subtitle",
-            description="Description"
+            title="Title1", subtitle="Subtitle", description="Description"
         )
-        
+
         screen2 = WelcomeScreen(
-            title="Title2",
-            subtitle="Subtitle",
-            description="Description"
+            title="Title2", subtitle="Subtitle", description="Description"
         )
 
         assert screen1 != screen2
@@ -174,14 +166,14 @@ class TestWelcomeScreen:
             title="Title",
             subtitle="Subtitle",
             description="Description",
-            ascii_art="ASCII1"
+            ascii_art="ASCII1",
         )
-        
+
         screen2 = WelcomeScreen(
             title="Title",
             subtitle="Subtitle",
             description="Description",
-            ascii_art="ASCII2"
+            ascii_art="ASCII2",
         )
 
         assert screen1 != screen2
@@ -192,14 +184,14 @@ class TestWelcomeScreen:
             title="Title",
             subtitle="Subtitle",
             description="Description",
-            ascii_art=None
+            ascii_art=None,
         )
-        
+
         screen2 = WelcomeScreen(
             title="Title",
             subtitle="Subtitle",
             description="Description",
-            ascii_art=""
+            ascii_art="",
         )
 
         assert screen1 != screen2
@@ -213,7 +205,7 @@ class TestWelcomeScreen:
             title="Title",
             subtitle="Subtitle",
             description="Description",
-            ascii_art="A" * 10000  # Большой ASCII-арт
+            ascii_art="A" * 10000,  # Большой ASCII-арт
         )
 
         # Метод должен работать быстро даже с большими данными
@@ -228,7 +220,7 @@ class TestWelcomeScreen:
             subtitle="B" * 1000,
             description="C" * 1000,
             ascii_art="D" * 1000,
-            language="test"
+            language="test",
         )
 
         str_repr = str(screen)
@@ -238,18 +230,16 @@ class TestWelcomeScreen:
     def test_entity_contains_only_business_data(self) -> None:
         """Тест что сущность содержит только бизнес-данные без логики."""
         screen = WelcomeScreen(
-            title="Title",
-            subtitle="Subtitle",
-            description="Description"
+            title="Title", subtitle="Subtitle", description="Description"
         )
 
         # Проверяем что у сущности есть только данные и простые методы
-        assert hasattr(screen, 'title')
-        assert hasattr(screen, 'subtitle')
-        assert hasattr(screen, 'description')
-        assert hasattr(screen, 'has_ascii_art')
-        assert hasattr(screen, '__str__')
-        
+        assert hasattr(screen, "title")
+        assert hasattr(screen, "subtitle")
+        assert hasattr(screen, "description")
+        assert hasattr(screen, "has_ascii_art")
+        assert hasattr(screen, "__str__")
+
         # Нет внешних зависимостей, нет сложной бизнес-логики
         assert callable(screen.has_ascii_art)
         assert callable(screen.__str__)
@@ -262,7 +252,7 @@ class TestWelcomeScreen:
             title="Title",
             subtitle="Subtitle",
             description="Description",
-            language="invalid_language_code"
+            language="invalid_language_code",
         )
 
         # Entity просто хранит данные

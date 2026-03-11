@@ -3,14 +3,14 @@
 Следует Clean Architecture - тестируем адаптеры в изоляции.
 """
 
-import pytest
 from unittest.mock import Mock, patch
 
-from src.adapters.translation_service_adapter import TranslationServiceAdapter
-from src.adapters.welcome_screen_factory_adapter import (
-    WelcomeScreenFactoryAdapter,
+import pytest
+
+from src.frameworks.console.welcome_adapter import ConsoleWelcomeScreenAdapter
+from src.frameworks.services.translation_service_adapter import (
+    TranslationServiceAdapter,
 )
-from src.dto.welcome_dto import WelcomeScreenRequest
 
 
 class TestTranslationServiceAdapter:
@@ -18,34 +18,34 @@ class TestTranslationServiceAdapter:
 
     @pytest.mark.timeout(5)
     def test_get_translation_delegates_to_loader(self) -> None:
-        """Тест делегирования в TranslationLoader."""
+        """Тест делегирования загрузчику переводов."""
+        mock_loader = Mock()
+        mock_loader.get_translation.return_value = "Test translation"
+
         with patch(
-            "src.adapters.translation_service_adapter.TranslationLoader"
+            "src.frameworks.services.translation_service_adapter.TranslationLoader"
         ) as mock_loader_class:
-            mock_loader = Mock()
             mock_loader_class.return_value = mock_loader
-            mock_loader.get_translation.return_value = "Переведенный текст"
 
             adapter = TranslationServiceAdapter()
 
-            result = adapter.get_translation(
-                "ru", "welcome.title", "Добро пожаловать"
-            )
+            result = adapter.get_translation("ru", "test.key", "Default")
 
-            assert result == "Переведенный текст"
+            assert result == "Test translation"
             mock_loader.get_translation.assert_called_once_with(
-                "ru", "welcome.title", "Добро пожаловать"
+                "ru", "test.key", "Default"
             )
 
     @pytest.mark.timeout(5)
     def test_is_language_supported_delegates_to_loader(self) -> None:
-        """Тест делегирования проверки языка."""
+        """Тест делегирования проверки поддержки языка."""
+        mock_loader = Mock()
+        mock_loader.is_language_supported.return_value = True
+
         with patch(
-            "src.adapters.translation_service_adapter.TranslationLoader"
+            "src.frameworks.services.translation_service_adapter.TranslationLoader"
         ) as mock_loader_class:
-            mock_loader = Mock()
             mock_loader_class.return_value = mock_loader
-            mock_loader.is_language_supported.return_value = True
 
             adapter = TranslationServiceAdapter()
 
@@ -55,136 +55,61 @@ class TestTranslationServiceAdapter:
             mock_loader.is_language_supported.assert_called_once_with("ru")
 
 
-class TestWelcomeScreenFactoryAdapter:
-    """Тесты для WelcomeScreenFactoryAdapter."""
+class TestConsoleWelcomeScreenAdapter:
+    """Тесты для ConsoleWelcomeScreenAdapter."""
 
-    @patch(
-        "src.adapters.welcome_screen_factory_adapter.TranslationServiceAdapter"
-    )
     @pytest.mark.timeout(5)
-    def test_create_screen_with_ascii_art(
-        self, mock_translation_service_class
-    ) -> None:
-        """Тест создания экрана с ASCII-артом."""
-        mock_translation_service = Mock()
-        mock_translation_service_class.return_value = mock_translation_service
+    def test_adapter_initialization(self) -> None:
+        """Тест инициализации адаптера."""
+        adapter = ConsoleWelcomeScreenAdapter()
 
-        # Настраиваем моки для переводов
-        mock_translation_service.get_translation.side_effect = (
-            lambda lang, key, default: {
-                (
-                    "ru",
-                    "welcome.title",
-                    "Default Title",
-                ): "Добро пожаловать в D&D MUD",
-                (
-                    "ru",
-                    "welcome.subtitle",
-                    "Default Subtitle",
-                ): "Текстовая MUD игра",
-                (
-                    "ru",
-                    "welcome.description",
-                    "Default Description",
-                ): "Описание игры",
-                (
-                    "ru",
-                    "welcome.press_enter",
-                    "Default Press",
-                ): "Нажмите Enter для продолжения...",
-                ("en", "welcome.title", "Default Title"): "Welcome to D&D MUD",
-                (
-                    "en",
-                    "welcome.subtitle",
-                    "Default Subtitle",
-                ): "Text MUD game",
-                (
-                    "en",
-                    "welcome.description",
-                    "Default Description",
-                ): "Game description",
-                (
-                    "en",
-                    "welcome.press_enter",
-                    "Default Press",
-                ): "Press Enter to continue...",
-            }.get((lang, key, default), default)
-        )
+        assert adapter is not None
+        assert adapter._ui is not None
+        assert adapter._main_menu_adapter is not None
+        assert adapter._use_main_menu is False
 
-        factory = WelcomeScreenFactoryAdapter()
-
-        request = WelcomeScreenRequest(language="ru", show_ascii_art=True)
-
-        screen = factory.create_screen(request)
-
-        assert screen.content.get_title() is not None
-        assert screen.content.get_subtitle() is not None
-        assert screen.content.get_description() is not None
-        assert screen.ascii_art is not None
-        assert screen.language.get_code() == "ru"
-        assert screen.press_enter_text is not None
-        assert screen.has_ascii_art() is True
-
-    @patch(
-        "src.adapters.welcome_screen_factory_adapter.TranslationServiceAdapter"
-    )
     @pytest.mark.timeout(5)
-    def test_create_screen_without_ascii_art(
-        self, mock_translation_service_class
-    ) -> None:
-        """Тест создания экрана без ASCII-арта."""
-        mock_translation_service = Mock()
-        mock_translation_service_class.return_value = mock_translation_service
+    def test_adapter_with_colors(self) -> None:
+        """Тест инициализации с цветами."""
+        adapter = ConsoleWelcomeScreenAdapter(use_colors=False)
 
-        mock_translation_service.get_translation.side_effect = (
-            lambda lang, key, default: {
-                ("en", "welcome.title", "Default Title"): "Welcome to D&D MUD",
-                (
-                    "en",
-                    "welcome.subtitle",
-                    "Default Subtitle",
-                ): "Text MUD game",
-                (
-                    "en",
-                    "welcome.description",
-                    "Default Description",
-                ): "Game description",
-                (
-                    "en",
-                    "welcome.press_enter",
-                    "Default Press",
-                ): "Press Enter to continue...",
-            }.get((lang, key, default), default)
-        )
+        assert adapter is not None
+        assert adapter._use_main_menu is False
 
-        factory = WelcomeScreenFactoryAdapter()
-
-        request = WelcomeScreenRequest(language="en", show_ascii_art=False)
-
-        screen = factory.create_screen(request)
-
-        assert screen.ascii_art is None
-        assert screen.has_ascii_art() is False
-        assert screen.language.get_code() == "en"
-
-    @patch(
-        "src.adapters.welcome_screen_factory_adapter.TranslationServiceAdapter"
-    )
     @pytest.mark.timeout(5)
-    def test_get_supported_languages(
-        self, mock_translation_service_class
-    ) -> None:
-        """Тест получения поддерживаемых языков."""
-        mock_translation_service = Mock()
-        mock_translation_service_class.return_value = mock_translation_service
-        mock_translation_service.get_supported_languages.return_value = [
-            "ru",
-            "en",
-        ]
+    def test_main_menu_toggle(self) -> None:
+        """Тест переключения режима главного меню."""
+        adapter = ConsoleWelcomeScreenAdapter()
 
-        factory = WelcomeScreenFactoryAdapter()
+        # По умолчанию выключено
+        assert adapter.is_main_menu_enabled() is False
 
-        languages = factory.get_supported_languages()
+        # Включаем
+        adapter.enable_main_menu()
+        assert adapter.is_main_menu_enabled() is True
 
-        assert languages == ["ru", "en"]
-        mock_translation_service.get_supported_languages.assert_called_once()
+        # Выключаем
+        adapter.disable_main_menu()
+        assert adapter.is_main_menu_enabled() is False
+
+    @pytest.mark.timeout(5)
+    def test_clear_screen(self) -> None:
+        """Тест очистки экрана."""
+        adapter = ConsoleWelcomeScreenAdapter()
+
+        # Просто проверяем что метод не вызывает ошибок
+        adapter.clear_screen()
+
+        # С включенным главным меню
+        adapter.enable_main_menu()
+        adapter.clear_screen()
+
+    @pytest.mark.timeout(5)
+    def test_display_message(self) -> None:
+        """Тест отображения сообщения."""
+        adapter = ConsoleWelcomeScreenAdapter()
+
+        # Просто проверяем что метод не вызывает ошибок
+        adapter.display_message("Test message", "info")
+        adapter.display_message("Warning message", "warning")
+        adapter.display_message("Error message", "error")

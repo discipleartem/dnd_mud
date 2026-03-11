@@ -6,8 +6,4 @@
 from .character_repository import CharacterRepository, RepositoryError
 from .welcome_repository import WelcomeRepository
 
-__all__ = [
-    "CharacterRepository",
-    "WelcomeRepository", 
-    "RepositoryError"
-]
+__all__ = ["CharacterRepository", "WelcomeRepository", "RepositoryError"]

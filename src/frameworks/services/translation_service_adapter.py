@@ -3,7 +3,9 @@
 Следует Clean Architecture - реализация интерфейса для работы с файлами переводов.
 """
 
-from src.interfaces.services.translation_service_interface import TranslationService
+from src.interfaces.services.translation_service_interface import (
+    TranslationService,
+)
 from src.utils.translation_loader import TranslationLoader
 
 

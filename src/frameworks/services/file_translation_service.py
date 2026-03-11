@@ -6,87 +6,96 @@
 
 import json
 import os
-from typing import Dict, List
 
 from src.interfaces.services.translation_service_interface import (
+    TranslationError,
     TranslationService,
-    TranslationError
 )
 
 
 class FileTranslationService(TranslationService):
     """Реализация сервиса переводов на основе JSON файлов.
-    
+
     Следует Clean Architecture - конкретная реализация
     для загрузки переводов из JSON файлов.
     """
-    
-    def __init__(self, translations_dir: str = None) -> None:
+
+    def __init__(self, translations_dir: str | None = None) -> None:
         """Инициализация сервиса.
-        
+
         Args:
             translations_dir: Директория с файлами переводов
         """
         if translations_dir is None:
             # По умолчанию ищем в data/translations
             current_dir = os.path.dirname(os.path.abspath(__file__))
-            project_root = os.path.dirname(os.path.dirname(os.path.dirname(current_dir)))
-            translations_dir = os.path.join(project_root, "data", "translations")
-        
+            project_root = os.path.dirname(
+                os.path.dirname(os.path.dirname(current_dir))
+            )
+            translations_dir = os.path.join(
+                project_root, "data", "translations"
+            )
+
         self._translations_dir = translations_dir
-        self._translations: Dict[str, Dict[str, str]] = {}
-        self._supported_languages: List[str] = []
-        
+        self._translations: dict[str, dict[str, str]] = {}
+        self._supported_languages: list[str] = []
+
         self._load_translations()
-    
-    def get_translation(self, language_code: str, key: str, default: str) -> str:
+
+    def get_translation(
+        self, language_code: str, key: str, default: str
+    ) -> str:
         """Получить перевод.
-        
+
         Args:
             language_code: Код языка
             key: Ключ перевода
             default: Значение по умолчанию
-            
+
         Returns:
             Переведённый текст или default
         """
         try:
             if language_code not in self._translations:
                 return default
-            
+
             if key not in self._translations[language_code]:
                 return default
-            
+
             return self._translations[language_code][key]
-            
+
         except Exception as e:
-            raise TranslationError(f"Ошибка получения перевода: {str(e)}")
-    
-    def get_supported_languages(self) -> List[str]:
+            raise TranslationError(
+                f"Ошибка получения перевода: {str(e)}"
+            ) from e
+
+    def get_supported_languages(self) -> list[str]:
         """Получить список поддерживаемых языков.
-        
+
         Returns:
             Список кодов поддерживаемых языков
         """
         try:
             return self._supported_languages.copy()
         except Exception as e:
-            raise TranslationError(f"Ошибка получения языков: {str(e)}")
-    
+            raise TranslationError(f"Ошибка получения языков: {str(e)}") from e
+
     def is_language_supported(self, language_code: str) -> bool:
         """Проверить поддержку языка.
-        
+
         Args:
             language_code: Код языка
-            
+
         Returns:
             True если язык поддерживается
         """
         try:
             return language_code in self._translations
         except Exception as e:
-            raise TranslationError(f"Ошибка проверки поддержки языка: {str(e)}")
-    
+            raise TranslationError(
+                f"Ошибка проверки поддержки языка: {str(e)}"
+            ) from e
+
     def _load_translations(self) -> None:
         """Загрузить переводы из файлов."""
         try:
@@ -94,32 +103,36 @@ class FileTranslationService(TranslationService):
                 # Создаём базовые переводы если директории нет
                 self._create_default_translations()
                 return
-            
+
             # Загрузка всех JSON файлов
             for filename in os.listdir(self._translations_dir):
-                if filename.endswith('.json'):
+                if filename.endswith(".json"):
                     language_code = filename[:-5]  # Убираем .json
                     file_path = os.path.join(self._translations_dir, filename)
-                    
+
                     try:
-                        with open(file_path, 'r', encoding='utf-8') as f:
+                        with open(file_path, encoding="utf-8") as f:
                             translations = json.load(f)
-                            
+
                         if isinstance(translations, dict):
                             self._translations[language_code] = translations
                             self._supported_languages.append(language_code)
-                            
-                    except (json.JSONDecodeError, IOError) as e:
-                        print(f"Предупреждение: не удалось загрузить файл {filename}: {e}")
+
+                    except (OSError, json.JSONDecodeError) as e:
+                        print(
+                            f"Предупреждение: не удалось загрузить файл {filename}: {e}"
+                        )
                         continue
-            
+
             # Если нет переводов, создаём базовые
             if not self._translations:
                 self._create_default_translations()
-                
+
         except Exception as e:
-            raise TranslationError(f"Ошибка загрузки переводов: {str(e)}")
-    
+            raise TranslationError(
+                f"Ошибка загрузки переводов: {str(e)}"
+            ) from e
+
     def _create_default_translations(self) -> None:
         """Создать переводы по умолчанию."""
         default_translations = {
@@ -139,7 +152,7 @@ class FileTranslationService(TranslationService):
                 "proficiency_bonus": "Бонус мастерства",
                 "abilities": "Характеристики",
                 "saving_throws": "Спасброски",
-                "status": "Статус"
+                "status": "Статус",
             },
             "en": {
                 "welcome_title": "Welcome to D&D MUD",
@@ -157,32 +170,34 @@ class FileTranslationService(TranslationService):
                 "proficiency_bonus": "Proficiency Bonus",
                 "abilities": "Abilities",
                 "saving_throws": "Saving Throws",
-                "status": "Status"
-            }
+                "status": "Status",
+            },
         }
-        
+
         self._translations = default_translations
         self._supported_languages = list(default_translations.keys())
-    
+
     def reload_translations(self) -> None:
         """Перезагрузить переводы.
-        
+
         Полезно для обновления без перезапуска приложения.
         """
         self._translations.clear()
         self._supported_languages.clear()
         self._load_translations()
-    
-    def get_all_translations(self, language_code: str) -> Dict[str, str]:
+
+    def get_all_translations(self, language_code: str) -> dict[str, str]:
         """Получить все переводы для языка.
-        
+
         Args:
             language_code: Код языка
-            
+
         Returns:
             Словарь всех переводов
         """
         try:
             return self._translations.get(language_code, {}).copy()
         except Exception as e:
-            raise TranslationError(f"Ошибка получения всех переводов: {str(e)}")
+            raise TranslationError(
+                f"Ошибка получения всех переводов: {str(e)}"
+            ) from e

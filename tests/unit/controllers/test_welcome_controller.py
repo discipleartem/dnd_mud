@@ -4,12 +4,17 @@
 с использованием моков для Use Cases.
 """
 
-import pytest
 from unittest.mock import Mock
 
-from src.controllers.welcome_controller import WelcomeController, WelcomeControllerRequest, WelcomeControllerResponse
-from src.use_cases.welcome_user import WelcomeUserUseCase
+import pytest
+
+from src.controllers.welcome_controller import (
+    WelcomeController,
+    WelcomeControllerRequest,
+    WelcomeControllerResponse,
+)
 from src.dto.welcome_dto import WelcomeRequest, WelcomeResponse
+from src.use_cases.welcome_user import WelcomeUserUseCase
 
 
 class TestWelcomeController:
@@ -18,7 +23,9 @@ class TestWelcomeController:
     def setup_method(self) -> None:
         """Настройка тестов."""
         self.mock_use_case = Mock(spec=WelcomeUserUseCase)
-        self.controller = WelcomeController(welcome_use_case=self.mock_use_case)
+        self.controller = WelcomeController(
+            welcome_use_case=self.mock_use_case
+        )
 
     def test_show_welcome_success(self) -> None:
         """Тест успешного отображения приветствия."""
@@ -29,12 +36,14 @@ class TestWelcomeController:
             description="Создайте персонажа и исследуйте мир",
             ascii_art="ASCII LOGO",
             language="ru",
-            press_enter_text="Нажмите Enter для продолжения..."
+            press_enter_text="Нажмите Enter для продолжения...",
         )
         self.mock_use_case.execute.return_value = expected_use_case_response
 
         # Выполнение
-        controller_request = WelcomeControllerRequest(language="ru", show_ascii_art=True)
+        controller_request = WelcomeControllerRequest(
+            language="ru", show_ascii_art=True
+        )
         response = self.controller.show_welcome(controller_request)
 
         # Проверки
@@ -43,10 +52,16 @@ class TestWelcomeController:
         assert response.data is not None
         assert response.data["title"] == "Добро пожаловать в D&D MUD"
         assert response.data["subtitle"] == "Текстовая MUD игра"
-        assert response.data["description"] == "Создайте персонажа и исследуйте мир"
+        assert (
+            response.data["description"]
+            == "Создайте персонажа и исследуйте мир"
+        )
         assert response.data["ascii_art"] == "ASCII LOGO"
         assert response.data["language"] == "ru"
-        assert response.data["press_enter_text"] == "Нажмите Enter для продолжения..."
+        assert (
+            response.data["press_enter_text"]
+            == "Нажмите Enter для продолжения..."
+        )
 
         # Проверка вызова Use Case
         self.mock_use_case.execute.assert_called_once()
@@ -63,11 +78,13 @@ class TestWelcomeController:
             description="Create a character and explore",
             ascii_art=None,
             language="en",
-            press_enter_text="Press Enter to continue..."
+            press_enter_text="Press Enter to continue...",
         )
         self.mock_use_case.execute.return_value = expected_use_case_response
 
-        controller_request = WelcomeControllerRequest(language="en", show_ascii_art=False)
+        controller_request = WelcomeControllerRequest(
+            language="en", show_ascii_art=False
+        )
         response = self.controller.show_welcome(controller_request)
 
         assert response.success is True
@@ -79,21 +96,27 @@ class TestWelcomeController:
         """Тест обработки исключения от Use Case."""
         self.mock_use_case.execute.side_effect = Exception("Use Case error")
 
-        controller_request = WelcomeControllerRequest(language="ru", show_ascii_art=True)
+        controller_request = WelcomeControllerRequest(
+            language="ru", show_ascii_art=True
+        )
         response = self.controller.show_welcome(controller_request)
 
         assert response.success is False
-        assert response.error is not None
-        assert "Use Case error" in response.error
+        assert response.message is not None
+        assert "Use Case error" in response.message
         assert response.data is None
 
     def test_transform_request_data(self) -> None:
         """Тест преобразования данных запроса."""
-        controller_request = WelcomeControllerRequest(language="en", show_ascii_art=False)
-        
+        controller_request = WelcomeControllerRequest(
+            language="en", show_ascii_art=False
+        )
+
         # Вызываем внутренний метод напрямую для тестирования
-        use_case_request = self.controller._transform_request_data(controller_request)
-        
+        use_case_request = self.controller._transform_request(
+            controller_request
+        )
+
         assert isinstance(use_case_request, WelcomeRequest)
         assert use_case_request.language == "en"
         assert use_case_request.show_ascii_art is False
@@ -106,19 +129,21 @@ class TestWelcomeController:
             description="Test Description",
             ascii_art="Test ASCII",
             language="test",
-            press_enter_text="Test Press"
+            press_enter_text="Test Press",
         )
-        
+
         # Вызываем внутренний метод напрямую для тестирования
-        controller_response_data = self.controller._transform_response_data(use_case_response)
-        
-        assert isinstance(controller_response_data, dict)
-        assert controller_response_data["title"] == "Test Title"
-        assert controller_response_data["subtitle"] == "Test Subtitle"
-        assert controller_response_data["description"] == "Test Description"
-        assert controller_response_data["ascii_art"] == "Test ASCII"
-        assert controller_response_data["language"] == "test"
-        assert controller_response_data["press_enter_text"] == "Test Press"
+        controller_response = self.controller._transform_response(
+            use_case_response
+        )
+
+        assert isinstance(controller_response, WelcomeControllerResponse)
+        assert controller_response.data["title"] == "Test Title"
+        assert controller_response.data["subtitle"] == "Test Subtitle"
+        assert controller_response.data["description"] == "Test Description"
+        assert controller_response.data["ascii_art"] == "Test ASCII"
+        assert controller_response.data["language"] == "test"
+        assert controller_response.data["press_enter_text"] == "Test Press"
 
     def test_transform_response_data_with_none_ascii(self) -> None:
         """Тест преобразования ответа с None ASCII."""
@@ -128,74 +153,74 @@ class TestWelcomeController:
             description="Test Description",
             ascii_art=None,
             language="test",
-            press_enter_text="Test Press"
+            press_enter_text="Test Press",
         )
-        
-        controller_response_data = self.controller._transform_response_data(use_case_response)
-        
-        assert controller_response_data["ascii_art"] is None
+
+        controller_response = self.controller._transform_response(
+            use_case_response
+        )
+
+        assert controller_response.data["ascii_art"] is None
 
     def test_controller_request_dataclass(self) -> None:
         """Тест DTO запроса контроллера."""
         request = WelcomeControllerRequest(language="ru", show_ascii_art=True)
-        
+
         assert request.language == "ru"
         assert request.show_ascii_art is True
 
     def test_controller_response_dataclass_success(self) -> None:
         """Тест DTO ответа контроллера при успехе."""
         response = WelcomeControllerResponse(
-            success=True,
-            data={"title": "Test"},
-            error=None
+            success=True, message="Success", data={"title": "Test"}
         )
-        
+
         assert response.success is True
         assert response.data == {"title": "Test"}
-        assert response.error is None
+        assert response.message == "Success"
 
     def test_controller_response_dataclass_error(self) -> None:
         """Тест DTO ответа контроллера при ошибке."""
         response = WelcomeControllerResponse(
-            success=False,
-            data=None,
-            error="Error message"
+            success=False, message="Error occurred", data=None
         )
-        
+
         assert response.success is False
+        assert response.message == "Error occurred"
         assert response.data is None
-        assert response.error == "Error message"
 
     def test_controller_depends_only_on_use_case(self) -> None:
         """Тест что контроллер зависит только от Use Case."""
         # Контроллер должен зависеть только от Use Case
         # и не должен зависеть от внешних сервисов напрямую
-        assert hasattr(self.controller, '_welcome_use_case')
+        assert hasattr(self.controller, "_welcome_use_case")
         assert self.controller._welcome_use_case == self.mock_use_case
-        
+
         # Нет прямых зависимостей от TranslationService, AsciiArtService и т.д.
-        assert not hasattr(self.controller, '_translation_service')
-        assert not hasattr(self.controller, '_ascii_art_service')
+        assert not hasattr(self.controller, "_translation_service")
+        assert not hasattr(self.controller, "_ascii_art_service")
 
     def test_controller_transforms_data_correctly(self) -> None:
         """Тест правильности преобразования данных."""
         # Тестируем полный цикл преобразования
-        controller_request = WelcomeControllerRequest(language="test", show_ascii_art=True)
-        
+        controller_request = WelcomeControllerRequest(
+            language="test", show_ascii_art=True
+        )
+
         # Use Case ответ
         use_case_response = WelcomeResponse(
             title="Original Title",
-            subtitle="Original Subtitle", 
+            subtitle="Original Subtitle",
             description="Original Description",
             ascii_art="Original ASCII",
             language="original",
-            press_enter_text="Original Press"
+            press_enter_text="Original Press",
         )
         self.mock_use_case.execute.return_value = use_case_response
-        
+
         # Выполняем контроллер
         response = self.controller.show_welcome(controller_request)
-        
+
         # Проверяем что данные преобразованы корректно
         assert response.success is True
         assert response.data["title"] == "Original Title"
@@ -210,21 +235,19 @@ class TestWelcomeController:
             description="Description",
             ascii_art=None,
             language="ru",
-            press_enter_text="Press"
+            press_enter_text="Press",
         )
-        
+
         request = WelcomeControllerRequest(language="ru", show_ascii_art=False)
         response = self.controller.show_welcome(request)
-        
+
         assert response is not None
         assert response.success is True
 
     def test_controller_handles_none_use_case_response(self) -> None:
         """Тест обработки None ответа от Use Case."""
         self.mock_use_case.execute.return_value = None
-        
-        request = WelcomeControllerRequest(language="ru", show_ascii_art=False)
-        
+
         # Должен обработать ошибку
         with pytest.raises(AttributeError):
             # Это должно вызвать ошибку, т.к. None не имеет атрибутов
@@ -234,10 +257,12 @@ class TestWelcomeController:
         """Тест валидации запроса контроллера."""
         # Контроллер не должен валидировать данные - это задача Use Case
         # Он должен только передавать данные дальше
-        
-        invalid_request = WelcomeControllerRequest(language="", show_ascii_art=True)
-        use_case_request = self.controller._transform_request_data(invalid_request)
-        
+
+        invalid_request = WelcomeControllerRequest(
+            language="", show_ascii_art=True
+        )
+        use_case_request = self.controller._transform_request(invalid_request)
+
         # Данные передаются как есть
         assert use_case_request.language == ""
         assert use_case_request.show_ascii_art is True

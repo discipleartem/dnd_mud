@@ -5,13 +5,12 @@
 """
 
 from dataclasses import dataclass
-from typing import Optional
 
 
 @dataclass
 class WelcomeScreen:
     """Бизнес-сущность приветственного экрана.
-    
+
     Следует Clean Architecture - содержит только данные.
     Вся бизнес-логика вынесена в Use Cases.
     """
@@ -19,7 +18,7 @@ class WelcomeScreen:
     title: str
     subtitle: str
     description: str
-    ascii_art: Optional[str] = None
+    ascii_art: str | None = None
     language: str = "ru"
     press_enter_text: str = "Нажмите Enter для продолжения..."
 

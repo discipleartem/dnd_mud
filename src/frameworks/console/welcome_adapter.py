@@ -4,11 +4,9 @@
 Содержит только координацию, без бизнес-логики.
 """
 
-from typing import Optional, Dict, Any
-
-from src.frameworks.drivers.ui.console_welcome_ui import ConsoleWelcomeUI
-from src.frameworks.console.main_menu_adapter import MainMenuAdapter
 from src.dto.menu_dto import MenuControllerResponse
+from src.frameworks.console.main_menu_adapter import MainMenuAdapter
+from src.frameworks.drivers.ui.console_welcome_ui import ConsoleWelcomeUI
 
 
 class ConsoleWelcomeScreenAdapter:
@@ -37,7 +35,7 @@ class ConsoleWelcomeScreenAdapter:
                 success=True,
                 message="Главное меню",
                 menu_state=response_data["menu_state"],
-                data=response_data
+                data=response_data,
             )
             self._main_menu_adapter.display_main_menu(menu_response)
         else:
@@ -54,7 +52,7 @@ class ConsoleWelcomeScreenAdapter:
 
     def is_main_menu_enabled(self) -> bool:
         """Проверить, включен ли режим главного меню.
-        
+
         Returns:
             True если главное меню включено
         """
@@ -62,7 +60,7 @@ class ConsoleWelcomeScreenAdapter:
 
     def display_main_menu(self, menu_response: MenuControllerResponse) -> None:
         """Отобразить главное меню.
-        
+
         Args:
             menu_response: Ответ контроллера меню
         """
@@ -70,7 +68,7 @@ class ConsoleWelcomeScreenAdapter:
 
     def get_user_input(self) -> str:
         """Получить ввод пользователя.
-        
+
         Returns:
             Введенная строка
         """
@@ -93,9 +91,11 @@ class ConsoleWelcomeScreenAdapter:
             # Простая очистка для старого режима
             print("\n" * 50)
 
-    def display_message(self, message: str, message_type: str = "info") -> None:
+    def display_message(
+        self, message: str, message_type: str = "info"
+    ) -> None:
         """Отобразить сообщение.
-        
+
         Args:
             message: Текст сообщения
             message_type: Тип сообщения
@@ -111,7 +111,9 @@ class ConsoleWelcomeScreenAdapter:
             context = self._main_menu_adapter._prepare_render_context(
                 self._main_menu_adapter._current_menu_state
             )
-            rendered_menu = self._main_menu_adapter.renderer.render_menu(context)
+            rendered_menu = self._main_menu_adapter.renderer.render_menu(
+                context
+            )
             self._main_menu_adapter.clear_screen()
             print(rendered_menu)
             self._main_menu_adapter._show_input_prompt()

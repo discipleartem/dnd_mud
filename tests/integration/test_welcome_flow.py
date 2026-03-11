@@ -4,8 +4,10 @@
 """
 
 import pytest
-from src.controllers.welcome_controller import WelcomeController, WelcomeControllerRequest
-from src.use_cases.welcome_user import WelcomeUserUseCase
+
+from src.controllers.welcome_controller import (
+    WelcomeControllerRequest,
+)
 from src.dependency_injection import ApplicationServices
 
 
@@ -35,7 +37,9 @@ class TestWelcomeFlowIntegration:
 
         # Проверяем наличие ожидаемых строк
         assert response.data["language"] == "ru"
-        assert response.data["ascii_art"] is not None  # ASCII-арт должен быть непустым
+        assert (
+            response.data["ascii_art"] is not None
+        )  # ASCII-арт должен быть непустым
 
     @pytest.mark.timeout(10)
     def test_full_welcome_flow_english(self) -> None:
@@ -65,9 +69,13 @@ class TestWelcomeFlowIntegration:
         assert "en" in languages
 
         # Проверяем получение переводов
-        ru_title = translation_service.get_translation("ru", "welcome_title", "Default")
-        en_title = translation_service.get_translation("en", "welcome_title", "Default")
-        
+        ru_title = translation_service.get_translation(
+            "ru", "welcome_title", "Default"
+        )
+        en_title = translation_service.get_translation(
+            "en", "welcome_title", "Default"
+        )
+
         assert ru_title is not None
         assert en_title is not None
         # В текущей реализации переводы могут быть одинаковыми, если ключ не найден
@@ -91,7 +99,9 @@ class TestWelcomeFlowIntegration:
         controller = app_services.welcome_controller
 
         # Тестируем с некорректными данными
-        request = WelcomeControllerRequest(language="invalid", show_ascii_art=True)
+        request = WelcomeControllerRequest(
+            language="invalid", show_ascii_art=True
+        )
 
         response = controller.show_welcome(request)
 
@@ -108,6 +118,7 @@ class TestWelcomeFlowIntegration:
 
         # Тестируем разные комбинации параметров
         from src.use_cases.welcome_user import WelcomeRequest
+
         test_cases = [
             {"language": "ru", "show_ascii_art": True},
             {"language": "ru", "show_ascii_art": False},

@@ -6,7 +6,7 @@
 from abc import ABC, abstractmethod
 from typing import Final
 
-from src.dto.welcome_dto import WelcomeScreenRequest
+from src.dto.welcome_dto import WelcomeControllerRequest
 from src.entities.welcome_screen import WelcomeScreen
 
 
@@ -18,7 +18,9 @@ class WelcomeScreenFactory(ABC):
     """
 
     @abstractmethod
-    def create_screen(self, request: WelcomeScreenRequest) -> WelcomeScreen:
+    def create_screen(
+        self, request: WelcomeControllerRequest
+    ) -> WelcomeScreen:
         """Создать приветственный экран на основе запроса.
 
         Args:
@@ -40,7 +42,7 @@ class WelcomeScreenFactory(ABC):
 
 
 # Константы для значений по умолчанию
-DEFAULT_REQUEST: Final[WelcomeScreenRequest] = WelcomeScreenRequest(
+DEFAULT_REQUEST: Final[WelcomeControllerRequest] = WelcomeControllerRequest(
     language="ru",
     show_ascii_art=True,
 )

@@ -8,12 +8,12 @@ from .welcome_dto import (
     WelcomeControllerRequest,
     WelcomeControllerResponse,
     WelcomeRequest,
-    WelcomeResponse
+    WelcomeResponse,
 )
 
 __all__ = [
     "WelcomeControllerRequest",
-    "WelcomeControllerResponse", 
+    "WelcomeControllerResponse",
     "WelcomeRequest",
-    "WelcomeResponse"
+    "WelcomeResponse",
 ]
