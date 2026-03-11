@@ -1,0 +1,33 @@
+{
+  "welcome": {
+    "title": "D&D Text MUD",
+    "subtitle": "Однопользовательская консольная игра",
+    "description": "Добро пожаловать в мир Dungeons & Dragons!",
+    "press_enter": "Нажмите Enter для продолжения...",
+    "loading": "Загрузка...",
+    "error": "Ошибка",
+    "menu": {
+      "new_game": "Новая игра",
+      "continue": "Продолжить",
+      "settings": "Настройки",
+      "exit": "Выход"
+    }
+  },
+  "common": {
+    "yes": "Да",
+    "no": "Нет",
+    "cancel": "Отмена",
+    "confirm": "Подтвердить",
+    "back": "Назад",
+    "next": "Далее",
+    "previous": "Предыдущий"
+  },
+  "character": {
+    "name": "Имя",
+    "class": "Класс",
+    "race": "Раса",
+    "level": "Уровень",
+    "hit_points": "Очки здоровья",
+    "experience": "Опыт"
+  }
+}

@@ -3,7 +3,7 @@ requires = ["setuptools>=61.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "dnd-text-mud"
+name = "dnd-text-mud-5e"
 version = "0.1.0"
 description = "Однопользовательская консольная текстовая игра по мотивам Dungeons & Dragons 5e"
 readme = "README.md"
@@ -51,7 +51,7 @@ Documentation = "https://github.com/discipleartem/dnd_mud/docs"
 "Bug Tracker" = "https://github.com/discipleartem/dnd_mud/issues"
 
 [project.scripts]
-dnd-mud = "main:main"
+dnd-mud-5e = "main:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]

@@ -1,0 +1,33 @@
+{
+  "welcome": {
+    "title": "D&D Text MUD",
+    "subtitle": "Single-player console game",
+    "description": "Welcome to the world of Dungeons & Dragons!",
+    "press_enter": "Press Enter to continue...",
+    "loading": "Loading...",
+    "error": "Error",
+    "menu": {
+      "new_game": "New Game",
+      "continue": "Continue",
+      "settings": "Settings",
+      "exit": "Exit"
+    }
+  },
+  "common": {
+    "yes": "Yes",
+    "no": "No",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous"
+  },
+  "character": {
+    "name": "Name",
+    "class": "Class",
+    "race": "Race",
+    "level": "Level",
+    "hit_points": "Hit Points",
+    "experience": "Experience"
+  }
+}
