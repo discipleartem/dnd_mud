@@ -1,24 +1,41 @@
 # Makefile для DnD MUD проекта
 # Поддержка виртуального окружения и стандартных операций
 
-.PHONY: help check test clean
+.PHONY: help check test clean coverage install
 
 # Переменные
 PYTHON := python3
 VENV := .venv
 VENV_PYTHON := $(VENV)/bin/python
-VENV_PIP := $(VENV)/bin/pip
+PYTEST := $(VENV_PYTHON) -m pytest
 
 # Цвета для вывода
 GREEN := \033[0;32m
 BLUE := \033[0;34m
 RED := \033[0;31m
-NC := \033[0m # No Color
+YELLOW := \033[1;33m
+NC := \033[0m  # No Color
+
+# Директории для очистки
+CLEAN_DIRS := __pycache__ *.egg-info *.egg .pytest_cache .mypy_cache .ruff_cache htmlcov
+CLEAN_FILES := *.pyc *.pyo *.pyd *.py~ .coverage
 
 help: ## Показать доступные команды
 	@echo "$(BLUE)DnD MUD - Makefile команды:$(NC)"
 	@echo ""
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "$(GREEN)%-20s$(NC) %s\n", $$1, $$2}'
+
+install: ## Установить зависимости в виртуальное окружение
+	@echo "$(BLUE)Установка зависимостей...$(NC)"
+	@if [ ! -d "$(VENV)" ]; then \
+		echo "$(YELLOW)Создание виртуального окружения...$(NC)"; \
+		$(PYTHON) -m venv $(VENV); \
+	fi
+	@echo "$(BLUE)Обновление pip...$(NC)"
+	@$(VENV_PYTHON) -m pip install --upgrade pip
+	@echo "$(BLUE)Установка зависимостей...$(NC)"
+	@$(VENV_PYTHON) -m pip install -e .
+	@echo "$(GREEN)Установка завершена$(NC)"
 
 check: ## Проверка black, ruff, mypy
 	@echo "$(BLUE)Проверка кода...$(NC)"
@@ -31,20 +48,19 @@ check: ## Проверка black, ruff, mypy
 	@echo "$(GREEN)Проверка завершена$(NC)"
 
 test: ## Запустить все тесты
-	@echo "$(BLUE)Запуск тестов...$(NC)"
-	@$(VENV_PYTHON) -m pytest tests/ -v
+	@echo "$(BLUE)Запуск всех тестов...$(NC)"
+	@$(PYTEST) tests/ -v
+
+coverage: ## Запустить тесты с покрытием
+	@echo "$(BLUE)Запуск тестов с покрытием...$(NC)"
+	@$(VENV_PYTHON) -m pytest tests/ --cov=src --cov-report=html --cov-report=term
 
 clean: ## Очистить временные файлы
 	@echo "$(BLUE)Очистка...$(NC)"
-	@find . -type d -name "__pycache__" -exec rm -rf {} + 2>/dev/null || true
-	@find . -type f -name "*.pyc" -delete
-	@find . -type f -name "*.pyo" -delete
-	@find . -type f -name "*.pyd" -delete
-	@find . -type f -name "*.py~" -delete
-	@find . -type f -name ".coverage" -delete
-	@find . -type d -name "*.egg-info" -exec rm -rf {} + 2>/dev/null || true
-	@find . -type d -name "*.egg" -exec rm -rf {} + 2>/dev/null || true
-	@find . -type d -name ".pytest_cache" -exec rm -rf {} + 2>/dev/null || true
-	@find . -type d -name ".mypy_cache" -exec rm -rf {} + 2>/dev/null || true
-	@find . -type d -name ".ruff_cache" -exec rm -rf {} + 2>/dev/null || true
+	@for dir in $(CLEAN_DIRS); do \
+		find . -type d -name "$$dir" -exec rm -rf {} + 2>/dev/null || true; \
+	done
+	@for file in $(CLEAN_FILES); do \
+		find . -type f -name "$$file" -delete; \
+	done
 	@echo "$(GREEN)Очистка завершена$(NC)"

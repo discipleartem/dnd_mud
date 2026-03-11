@@ -117,7 +117,10 @@ module = [
     "use_cases.*", 
     "core.*",
     "interfaces.*",
-    "ui.*"
+    "ui.*",
+    "adapters.*",
+    "dtos.*",
+    "console.*"
 ]
 ignore_missing_imports = false
 
@@ -134,6 +137,16 @@ addopts = "-v --tb=short --capture=no --disable-warnings"
 filterwarnings = [
     "ignore::UserWarning",
     "ignore::DeprecationWarning"
+]
+# Маркеры для группировки тестов
+markers = [
+    "unit: Unit тесты (быстрые, изолированные)",
+    "integration: Интеграционные тесты (медленные, с зависимостями)",
+    "race_data_loader: Тесты загрузчика данных о расах",
+    "race_repository: Тесты репозитория рас",
+    "race_selection: Тесты сервиса выбора расы",
+    "race_bonus_applier: Тесты сервиса применения бонусов",
+    "race_adapter: Тесты консольного адаптера",
 ]
 
 [tool.coverage.run]
