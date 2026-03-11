@@ -1,0 +1,26 @@
+{
+  "saves": [
+    {
+      "save_id": "b851809e-8d4f-4154-8111-4dfe0b35c66d",
+      "character_name": "Элдар Воин",
+      "character_level": 3,
+      "character_class": "Воин",
+      "save_time": "2026-03-11T23:36:29.724572",
+      "slot_number": 2,
+      "game_version": "1.0.0",
+      "playtime_minutes": 0,
+      "location": "Лес"
+    },
+    {
+      "save_id": "8ca1f1c2-a18b-4fbc-9ccd-c9aa7cffee3c",
+      "character_name": "Тестовый воин",
+      "character_level": 1,
+      "character_class": "Воин",
+      "save_time": "2026-03-11T23:35:31.471305",
+      "slot_number": 1,
+      "game_version": "1.0.0",
+      "playtime_minutes": 0,
+      "location": "Начало пути"
+    }
+  ]
+}

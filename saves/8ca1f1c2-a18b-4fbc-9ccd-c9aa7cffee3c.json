@@ -1,0 +1,33 @@
+{
+  "metadata": {
+    "save_id": "8ca1f1c2-a18b-4fbc-9ccd-c9aa7cffee3c",
+    "character_name": "Тестовый воин",
+    "character_level": 1,
+    "character_class": "Воин",
+    "save_time": "2026-03-11T23:35:31.471305",
+    "slot_number": 1,
+    "game_version": "1.0.0",
+    "playtime_minutes": 0,
+    "location": "Начало пути"
+  },
+  "game_data": {
+    "character": {
+      "name": "Тестовый воин",
+      "level": 1,
+      "class": "Воин",
+      "race": "Человек",
+      "abilities": {
+        "strength": 16
+      }
+    },
+    "game_state": {
+      "current_location": "Начало пути",
+      "playtime_minutes": 0,
+      "quests_completed": [],
+      "current_objectives": []
+    },
+    "version": "1.0.0",
+    "saved_at": "2026-03-11T23:35:31.471315"
+  },
+  "saved_at": "2026-03-11T23:35:31.471405"
+}

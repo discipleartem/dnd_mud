@@ -7,12 +7,24 @@
 from typing import Dict, Any, Optional
 
 from src.use_cases.welcome_user import WelcomeUserUseCase
+from src.use_cases.menu_navigation_use_case import MenuNavigationUseCase
+from src.use_cases.settings_use_case import SettingsUseCase
+from src.use_cases.save_game_use_case import SaveGameUseCase
 from src.controllers.welcome_controller import WelcomeController
+from src.controllers.main_menu_controller import MainMenuController
+from src.controllers.settings_controller import SettingsController
+from src.controllers.save_game_controller import SaveGameController
 from src.interfaces.services.translation_service_interface import TranslationService
 from src.interfaces.services.ascii_art_service import AsciiArtService
+from src.interfaces.services.menu_service_interface import MenuServiceInterface
+from src.interfaces.services.settings_service_interface import SettingsServiceInterface
+from src.interfaces.repositories.save_game_repository import SaveGameRepository
 from src.frameworks.services.file_translation_service import FileTranslationService
 from src.frameworks.services.simple_ascii_art_service import SimpleAsciiArtService
 from src.frameworks.services.translation_service_adapter import TranslationServiceAdapter
+from src.services.menu_service import MenuService
+from src.services.settings_service import FileSettingsService
+from src.frameworks.repositories.file_save_game_repository import FileSaveGameRepository
 
 
 class DIContainer:
@@ -33,12 +45,21 @@ class DIContainer:
         # Framework Layer - конкретные реализации
         self._services["translation_service"] = lambda: TranslationServiceAdapter()
         self._services["ascii_art_service"] = lambda: SimpleAsciiArtService()
+        self._services["menu_service"] = lambda: MenuService()
+        self._services["settings_service"] = lambda: FileSettingsService()
+        self._services["save_game_repository"] = lambda: FileSaveGameRepository()
         
         # Use Cases - бизнес-логика
         self._services["welcome_use_case"] = self._create_welcome_use_case
+        self._services["menu_use_case"] = self._create_menu_use_case
+        self._services["settings_use_case"] = self._create_settings_use_case
+        self._services["save_game_use_case"] = self._create_save_game_use_case
         
         # Controllers - адаптеры интерфейсов
         self._services["welcome_controller"] = self._create_welcome_controller
+        self._services["main_menu_controller"] = self._create_main_menu_controller
+        self._services["settings_controller"] = self._create_settings_controller
+        self._services["save_game_controller"] = self._create_save_game_controller
     
     def get(self, service_name: str) -> Any:
         """Получить сервис из контейнера.
@@ -90,6 +111,60 @@ class DIContainer:
         """
         welcome_use_case = self.get("welcome_use_case")
         return WelcomeController(welcome_use_case)
+    
+    def _create_menu_use_case(self) -> MenuNavigationUseCase:
+        """Создать Use Case меню.
+        
+        Returns:
+            Use Case меню
+        """
+        menu_service = self.get("menu_service")
+        return MenuNavigationUseCase(menu_service)
+    
+    def _create_main_menu_controller(self) -> MainMenuController:
+        """Создать контроллер главного меню.
+        
+        Returns:
+            Контроллер главного меню
+        """
+        menu_use_case = self.get("menu_use_case")
+        return MainMenuController(menu_use_case)
+    
+    def _create_settings_use_case(self) -> SettingsUseCase:
+        """Создать Use Case настроек.
+        
+        Returns:
+            Use Case настроек
+        """
+        settings_service = self.get("settings_service")
+        return SettingsUseCase(settings_service)
+    
+    def _create_settings_controller(self) -> SettingsController:
+        """Создать контроллер настроек.
+        
+        Returns:
+            Контроллер настроек
+        """
+        settings_use_case = self.get("settings_use_case")
+        return SettingsController(settings_use_case)
+    
+    def _create_save_game_use_case(self) -> SaveGameUseCase:
+        """Создать Use Case сохранений.
+        
+        Returns:
+            Use Case сохранений
+        """
+        save_game_repository = self.get("save_game_repository")
+        return SaveGameUseCase(save_game_repository)
+    
+    def _create_save_game_controller(self) -> SaveGameController:
+        """Создать контроллер сохранений.
+        
+        Returns:
+            Контроллер сохранений
+        """
+        save_game_use_case = self.get("save_game_use_case")
+        return SaveGameController(save_game_use_case)
     
     def register_singleton(self, service_name: str, instance: Any) -> None:
         """Зарегистрировать синглтон.
@@ -173,6 +248,33 @@ class ApplicationServices:
             Контроллер приветствия
         """
         return self._container.get("welcome_controller")
+    
+    @property
+    def main_menu_controller(self) -> MainMenuController:
+        """Получить контроллер главного меню.
+        
+        Returns:
+            Контроллер главного меню
+        """
+        return self._container.get("main_menu_controller")
+    
+    @property
+    def settings_controller(self) -> SettingsController:
+        """Получить контроллер настроек.
+        
+        Returns:
+            Контроллер настроек
+        """
+        return self._container.get("settings_controller")
+    
+    @property
+    def save_game_controller(self) -> SaveGameController:
+        """Получить контроллер сохранений.
+        
+        Returns:
+            Контроллер сохранений
+        """
+        return self._container.get("save_game_controller")
     
     @property
     def translation_service(self) -> TranslationService:

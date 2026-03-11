@@ -13,6 +13,24 @@
       "exit": "Выход"
     }
   },
+  "main_menu": {
+    "title": "Главное меню",
+    "new_game": "Новая игра",
+    "create_character": "Создать персонажа",
+    "load_game": "Загрузить игру",
+    "settings": "Настройки",
+    "mods": "Моды",
+    "exit": "Выход",
+    "navigation_help": "↑↓ - Навигация, Enter - Выбрать",
+    "input_prompt": "Ваш выбор: ",
+    "messages": {
+      "new_game_hint": "Начать новое приключение",
+      "create_character_hint": "Создать нового героя",
+      "load_game_hint": "Продолжить сохраненную игру",
+      "settings_hint": "Настроить параметры игры",
+      "exit_hint": "Выйти из игры"
+    }
+  },
   "common": {
     "yes": "Да",
     "no": "Нет",
