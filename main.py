@@ -13,6 +13,7 @@ from src.dto.settings_dto import SettingsControllerRequest
 from src.dto.save_game_dto import SaveGameRequest
 from src.frameworks.console.welcome_adapter import ConsoleWelcomeScreenAdapter
 from src.frameworks.console.load_game_adapter import LoadGameMenuAdapter
+from src.controllers.race_selection_controller import RaceSelectionController
 
 
 class Application:
@@ -29,6 +30,7 @@ class Application:
         self._main_menu_controller = self._services.main_menu_controller
         self._settings_controller = self._services.settings_controller
         self._save_game_controller = self._services.save_game_controller
+        self._race_selection_controller = RaceSelectionController(self._services)
         self._welcome_adapter = ConsoleWelcomeScreenAdapter(use_colors=True)
         self._load_game_adapter = LoadGameMenuAdapter(use_colors=True)
         
@@ -70,7 +72,7 @@ class Application:
                     continue
                 
                 # Обрабатываем специальные команды
-                if user_input.lower() in ["exit", "quit"]:
+                if user_input.lower() in ["exit", "quit", "6"]:
                     print("Выход из игры...")
                     break
                 
@@ -186,12 +188,30 @@ class Application:
 
     def _handle_create_character(self) -> None:
         """Обработать выбор 'Создать персонажа'."""
-        # Заглушка - будет реализовано в следующих этапах
-        self._welcome_adapter.display_message(
-            "Функция 'Создать персонажа' будет реализована в следующих этапах", 
-            "info"
-        )
-        input("Нажмите Enter для продолжения...")
+        try:
+            # Используем наш новый RaceSelectionController
+            result = self._race_selection_controller.show_race_selection()
+            
+            if result:
+                # Сохраняем результат выбора расы
+                print(f"\n🎉 Раса выбрана: {result.race_name}")
+                if result.subrace_name:
+                    print(f"🎯 Подраса: {result.subrace_name}")
+                
+                print(f"\n📊 Итоговые характеристики:")
+                for ability, value in result.final_abilities.items():
+                    print(f"  {ability.capitalize()}: {value}")
+                
+                # Здесь будет интеграция со следующим этапом (генерация характеристик)
+                print("\n✅ Выбор расы завершён. Переходим к следующему этапу...")
+                input("Нажмите Enter для продолжения...")
+            else:
+                print("\n❌ Выбор расы отменён")
+                
+        except KeyboardInterrupt:
+            print("\n👋 Возврат в главное меню...")
+        except Exception as e:
+            print(f"\n❌ Ошибка при выборе расы: {e}")
 
     def _handle_load_game(self) -> None:
         """Обработать выбор 'Загрузить игру'."""

@@ -1,0 +1,15 @@
+{
+  "saves": [
+    {
+      "save_id": "ebf3c438-9084-4b99-a608-3312359ed6ca",
+      "character_name": "Тестовый персонаж",
+      "character_level": 1,
+      "character_class": "Воин",
+      "save_time": "2026-03-14T22:25:09.581528",
+      "slot_number": 1,
+      "game_version": "1.0.0",
+      "playtime_minutes": 0,
+      "location": "Таверна 'Серый Волк'"
+    }
+  ]
+}

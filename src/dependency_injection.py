@@ -26,6 +26,7 @@ from src.interfaces.services.translation_service_interface import (
 )
 from src.services.menu_service import MenuService
 from src.services.settings_service import FileSettingsService
+from src.services.race_service import RaceService
 from src.use_cases.menu_navigation_use_case import MenuNavigationUseCase
 from src.use_cases.save_game_use_case import SaveGameUseCase
 from src.use_cases.settings_use_case import SettingsUseCase
@@ -54,6 +55,7 @@ class DIContainer:
         self._services["ascii_art_service"] = lambda: SimpleAsciiArtService()
         self._services["menu_service"] = lambda: MenuService()
         self._services["settings_service"] = lambda: FileSettingsService()
+        self._services["race_service"] = lambda: RaceService()
         self._services["save_game_repository"] = (
             lambda: FileSaveGameRepository()
         )
@@ -310,3 +312,21 @@ class ApplicationServices:
             Сервис ASCII art
         """
         return self._container.get("ascii_art_service")
+
+    @property
+    def race_service(self) -> RaceService:
+        """Получить сервис рас.
+
+        Returns:
+            Сервис рас
+        """
+        return self._container.get("race_service")
+
+    @property
+    def menu_service(self) -> MenuService:
+        """Получить сервис меню.
+
+        Returns:
+            Сервис меню
+        """
+        return self._container.get("menu_service")
