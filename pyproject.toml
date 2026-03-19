@@ -131,42 +131,17 @@ module = [
 ignore_missing_imports = true
 
 [tool.pytest.ini_options]
-testpaths = ["tests"]
+testpaths = ["src"]
 python_paths = ["src"]
-addopts = "-v --tb=short --capture=no --disable-warnings"
-filterwarnings = [
-    "ignore::UserWarning",
-    "ignore::DeprecationWarning"
-]
-# Маркеры для группировки тестов
-markers = [
-    "unit: Unit тесты (быстрые, изолированные)",
-    "integration: Интеграционные тесты (медленные, с зависимостями)",
-    "race_data_loader: Тесты загрузчика данных о расах",
-    "race_repository: Тесты репозитория рас",
-    "race_selection: Тесты сервиса выбора расы",
-    "race_bonus_applier: Тесты сервиса применения бонусов",
-    "race_adapter: Тесты консольного адаптера",
-]
+addopts = "-v --tb=short"
 
 [tool.coverage.run]
 source = ["src"]
-omit = [
-    "*/tests/*",
-    "*/test_*",
-    "*/__pycache__/*",
-]
 
 [tool.coverage.report]
 exclude_lines = [
     "pragma: no cover",
     "def __repr__",
-    "if self.debug:",
-    "if settings.DEBUG",
-    "raise AssertionError",
     "raise NotImplementedError",
-    "if 0:",
     "if __name__ == .__main__.:",
-    "class .*\\bProtocol\\):",
-    "@(abc\\.)?abstractmethod",
 ]

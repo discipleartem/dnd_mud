@@ -1,29 +1,3 @@
 {
-  "language": {
-    "key": "language",
-    "title": "Язык интерфейса",
-    "description": "Язык текста в игре",
-    "type": "language",
-    "default_value": "ru",
-    "current_value": "ru",
-    "min_value": null,
-    "max_value": null,
-    "options": {
-      "ru": "Русский",
-      "en": "English"
-    },
-    "requires_restart": false
-  },
-  "hardcore_mode": {
-    "key": "hardcore_mode",
-    "title": "Хардкор режим",
-    "description": "Включить повышенную сложность игры",
-    "type": "boolean",
-    "default_value": false,
-    "current_value": false,
-    "min_value": null,
-    "max_value": null,
-    "options": null,
-    "requires_restart": false
-  }
+  "hardcore_mode": false
 }
