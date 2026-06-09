@@ -1,0 +1,295 @@
+weapons:
+
+  simple_melee:
+    - name: "Боевой посох"
+      cost: { value: 2, currency: silver }
+      damage: { dice: "1d6", type: "bludgeoning" }
+      weight: 4
+      properties:
+        versatile: "1d8"
+
+    - name: "Булава"
+      cost: { value: 5, currency: gold }
+      damage: { dice: "1d6", type: "bludgeoning" }
+      weight: 4
+      properties: {}
+
+    - name: "Дубинка"
+      cost: { value: 1, currency: silver }
+      damage: { dice: "1d4", type: "bludgeoning" }
+      weight: 2
+      properties:
+        light: true
+
+    - name: "Кинжал"
+      cost: { value: 2, currency: gold }
+      damage: { dice: "1d4", type: "piercing" }
+      weight: 1
+      properties:
+        light: true
+        thrown: { normal: 20, long: 60 }
+        finesse: true
+
+    - name: "Копьё"
+      cost: { value: 1, currency: gold }
+      damage: { dice: "1d6", type: "piercing" }
+      weight: 3
+      properties:
+        thrown: { normal: 20, long: 60 }
+        versatile: "1d8"
+
+    - name: "Лёгкий молот"
+      cost: { value: 2, currency: gold }
+      damage: { dice: "1d4", type: "bludgeoning" }
+      weight: 2
+      properties:
+        light: true
+        thrown: { normal: 20, long: 60 }
+
+    - name: "Метательное копьё"
+      cost: { value: 5, currency: silver }
+      damage: { dice: "1d6", type: "piercing" }
+      weight: 2
+      properties:
+        thrown: { normal: 30, long: 120 }
+
+    - name: "Палица"
+      cost: { value: 2, currency: gold }
+      damage: { dice: "1d8", type: "bludgeoning" }
+      weight: 10
+      properties:
+        two_handed: true
+
+    - name: "Ручной топор"
+      cost: { value: 5, currency: gold }
+      damage: { dice: "1d6", type: "slashing" }
+      weight: 2
+      properties:
+        light: true
+        thrown: { normal: 20, long: 60 }
+
+    - name: "Серп"
+      cost: { value: 1, currency: gold }
+      damage: { dice: "1d4", type: "slashing" }
+      weight: 2
+      properties:
+        light: true
+
+
+  simple_ranged:
+    - name: "Арбалет лёгкий"
+      cost: { value: 25, currency: gold }
+      damage: { dice: "1d8", type: "piercing" }
+      weight: 5
+      properties:
+        ammunition: { normal: 80, long: 320 }
+        two_handed: true
+        loading: true
+
+    - name: "Дротик"
+      cost: { value: 5, currency: silver }
+      damage: { dice: "1d4", type: "piercing" }
+      weight: 0.25
+      properties:
+        thrown: { normal: 20, long: 60 }
+        finesse: true
+
+    - name: "Короткий лук"
+      cost: { value: 25, currency: gold }
+      damage: { dice: "1d6", type: "piercing" }
+      weight: 2
+      properties:
+        ammunition: { normal: 80, long: 320 }
+        two_handed: true
+
+    - name: "Праща"
+      cost: { value: 1, currency: silver }
+      damage: { dice: "1d4", type: "bludgeoning" }
+      weight: null
+      properties:
+        ammunition: { normal: 30, long: 120 }
+
+
+  martial_melee:
+    - name: "Алебарда"
+      cost: { value: 20, currency: gold }
+      damage: { dice: "1d10", type: "slashing" }
+      weight: 6
+      properties:
+        two_handed: true
+        reach: true
+        heavy: true
+
+    - name: "Боевая кирка"
+      cost: { value: 5, currency: gold }
+      damage: { dice: "1d8", type: "piercing" }
+      weight: 2
+      properties: {}
+
+    - name: "Боевой молот"
+      cost: { value: 15, currency: gold }
+      damage: { dice: "1d8", type: "bludgeoning" }
+      weight: 2
+      properties:
+        versatile: "1d10"
+
+    - name: "Боевой топор"
+      cost: { value: 10, currency: gold }
+      damage: { dice: "1d8", type: "slashing" }
+      weight: 4
+      properties:
+        versatile: "1d10"
+
+    - name: "Глефа"
+      cost: { value: 20, currency: gold }
+      damage: { dice: "1d10", type: "slashing" }
+      weight: 6
+      properties:
+        two_handed: true
+        reach: true
+        heavy: true
+
+    - name: "Двуручный меч"
+      cost: { value: 50, currency: gold }
+      damage: { dice: "2d6", type: "slashing" }
+      weight: 6
+      properties:
+        two_handed: true
+        heavy: true
+
+    - name: "Длинное копьё"
+      cost: { value: 10, currency: gold }
+      damage: { dice: "1d12", type: "piercing" }
+      weight: 6
+      properties:
+        reach: true
+        special: true
+
+    - name: "Длинный меч"
+      cost: { value: 15, currency: gold }
+      damage: { dice: "1d8", type: "slashing" }
+      weight: 3
+      properties:
+        versatile: "1d10"
+
+    - name: "Кнут"
+      cost: { value: 2, currency: gold }
+      damage: { dice: "1d4", type: "slashing" }
+      weight: 3
+      properties:
+        reach: true
+        finesse: true
+
+    - name: "Короткий меч"
+      cost: { value: 10, currency: gold }
+      damage: { dice: "1d6", type: "piercing" }
+      weight: 2
+      properties:
+        light: true
+        finesse: true
+
+    - name: "Молот"
+      cost: { value: 10, currency: gold }
+      damage: { dice: "2d6", type: "bludgeoning" }
+      weight: 10
+      properties:
+        two_handed: true
+        heavy: true
+
+    - name: "Моргенштерн"
+      cost: { value: 15, currency: gold }
+      damage: { dice: "1d8", type: "piercing" }
+      weight: 4
+      properties: {}
+
+    - name: "Пика"
+      cost: { value: 5, currency: gold }
+      damage: { dice: "1d10", type: "piercing" }
+      weight: 18
+      properties:
+        two_handed: true
+        reach: true
+        heavy: true
+
+    - name: "Рапира"
+      cost: { value: 25, currency: gold }
+      damage: { dice: "1d8", type: "piercing" }
+      weight: 2
+      properties:
+        finesse: true
+
+    - name: "Секира"
+      cost: { value: 30, currency: gold }
+      damage: { dice: "1d12", type: "slashing" }
+      weight: 7
+      properties:
+        two_handed: true
+        heavy: true
+
+    - name: "Скимитар"
+      cost: { value: 25, currency: gold }
+      damage: { dice: "1d6", type: "slashing" }
+      weight: 3
+      properties:
+        light: true
+        finesse: true
+
+    - name: "Трезубец"
+      cost: { value: 5, currency: gold }
+      damage: { dice: "1d6", type: "piercing" }
+      weight: 4
+      properties:
+        thrown: { normal: 20, long: 60 }
+        versatile: "1d8"
+
+    - name: "Цеп"
+      cost: { value: 10, currency: gold }
+      damage: { dice: "1d8", type: "bludgeoning" }
+      weight: 2
+      properties: {}
+
+
+  martial_ranged:
+    - name: "Арбалет ручной"
+      cost: { value: 75, currency: gold }
+      damage: { dice: "1d6", type: "piercing" }
+      weight: 3
+      properties:
+        ammunition: { normal: 30, long: 120 }
+        light: true
+        loading: true
+
+    - name: "Арбалет тяжёлый"
+      cost: { value: 50, currency: gold }
+      damage: { dice: "1d10", type: "piercing" }
+      weight: 18
+      properties:
+        ammunition: { normal: 100, long: 400 }
+        two_handed: true
+        heavy: true
+        loading: true
+
+    - name: "Длинный лук"
+      cost: { value: 50, currency: gold }
+      damage: { dice: "1d8", type: "piercing" }
+      weight: 2
+      properties:
+        ammunition: { normal: 150, long: 600 }
+        two_handed: true
+        heavy: true
+
+    - name: "Духовая трубка"
+      cost: { value: 10, currency: gold }
+      damage: { dice: "1", type: "piercing" }
+      weight: 1
+      properties:
+        ammunition: { normal: 25, long: 100 }
+        loading: true
+
+    - name: "Сеть"
+      cost: { value: 1, currency: gold }
+      damage: null
+      weight: 3
+      properties:
+        thrown: { normal: 5, long: 15 }
+        special: true

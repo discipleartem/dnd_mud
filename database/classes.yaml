@@ -1,0 +1,635 @@
+# Классы Dungeons & Dragons 5e - Оптимизированная структура
+# Базовые классы из Player's Handbook с детализацией особенностей
+
+classes:
+  fighter:
+    name: "Воин"
+    description: "Мастер оружия и доспехов, специалист по бою. Воины обучены сражаться с различными видами оружия и доспехов, владеют многими боевыми стилями и обладают превосходной физической подготовкой."
+    hit_dice: 10
+    prime_abilities: ["strength", "dexterity"]
+    saving_throws: ["strength", "constitution"]
+    skill_choices: [
+      "acrobatics", "animal_handling", "athletics", "history", 
+      "insight", "intimidation", "perception", "survival"
+    ]
+    skill_choices_count: 2
+    equipment:
+      weapons: ["все простые", "все воинские"]
+      armor: ["все доспехи", "щиты"]
+      tools: ["нет"]
+    
+    features:
+      - id: "fighting_style"
+        name: "Боевой стиль"
+        description: "Выбор одного из боевых стилей: Дуэлянт, Защита, Стрельба, Большое оружие, Двуручное оружие, Защита от снарядов"
+        level: 1
+        feature_type: "passive"
+        requires_action: false
+        
+      - id: "second_wind"
+        name: "Восстановление"
+        description: "Короткий отдых восстанавливает часть здоровья"
+        level: 1
+        feature_type: "active"
+        uses_per_rest: 1
+        requires_action: true
+        bonus_action: true
+        
+      - id: "improved_critical"
+        name: "Улучшенная критическая атака"
+        description: "Критические удары наносят дополнительный урон"
+        level: 3
+        feature_type: "passive"
+        requires_action: false
+        
+      - id: "improved_second_wind"
+        name: "Улучшенное восстановление"
+        description: "Увеличенное количество здоровья при восстановлении"
+        level: 5
+        feature_type: "passive"
+        requires_action: false
+        
+      - id: "extra_attack"
+        name: "Атака дополнительным действием"
+        description: "Возможность атаковать как дополнительное действие"
+        level: 11
+        feature_type: "active"
+        requires_action: true
+
+    
+    subclasses:
+      - id: "battle_master"
+        name: "Мастер боевых искусств (Battle Master)"
+        description: "Специалист в боевых маневрах, контролирующих поле боя"
+        parent_class: "fighter"
+        features:
+          - id: "battle_maneuvers"
+            name: "Боевые маневры"
+            description: "Изучение боевых маневров для контроля поля боя"
+            level: 3
+            feature_type: "active"
+            uses_per_rest: 4
+            requires_action: true
+            bonus_action: true
+            
+          - id: "improved_battle_maneuvers"
+            name: "Улучшенные боевые маневры"
+            description: "Дополнительные использования боевых маневров"
+            level: 7
+            feature_type: "passive"
+            requires_action: false
+            
+          - id: "battle_master"
+            name: "Боевой мастер"
+            description: "Увеличение количества использований маневров"
+            level: 10
+            feature_type: "passive"
+            requires_action: false
+            
+
+      
+      - id: "eldritch_knight"
+        name: "Рыцарь-заклинатель (Eldritch Knight)"
+        description: "Воин, изучивший магию для усиления боевых способностей"
+        parent_class: "fighter"
+        features:
+          - id: "spells"
+            name: "Заклинания"
+            description: "Доступ к заклинаниям волшебника"
+            level: 3
+            feature_type: "spell"
+            requires_action: true
+            
+          - id: "weapon_bond"
+            name: "Волшебный удар"
+            description: "Возможность накладывать чары на оружие"
+            level: 7
+            feature_type: "active"
+            requires_action: true
+            
+          - id: "improved_weapon_bond"
+            name: "Улучшенный волшебный удар"
+            description: "Усиление зачарованного оружия"
+            level: 10
+            feature_type: "passive"
+            requires_action: false
+            
+
+      
+      - id: "champion"
+        name: "Чемпион (Champion)"
+        description: "Мастер боевого искусства, стремящийся к совершенству в бою"
+        parent_class: "fighter"
+        features:
+          - id: "improved_critical_champion"
+            name: "Улучшенная критическая атака"
+            description: "Расширение диапазона критических ударов"
+            level: 3
+            feature_type: "passive"
+            requires_action: false
+            
+          - id: "remarkable_athlete"
+            name: "Атлетизм"
+            description: "Бонусы к атлетическим проверкам"
+            level: 7
+            feature_type: "passive"
+            requires_action: false
+            
+
+
+  rogue:
+    name: "Плут"
+    description: "Мастер скрытности, ловкости и точных ударов. Плуты превосходно справляются с проникновением в защищенные места, обезвреживанием ловушек и нанесением точных ударов по уязвимым местам противника."
+    hit_dice: 8
+    prime_abilities: ["dexterity"]
+    saving_throws: ["dexterity", "intelligence"]
+    skill_choices: [
+      "acrobatics", "athletics", "deception", "insight", 
+      "intimidation", "investigation", "sleight_of_hand", "stealth", 
+      "expertise", "performance"
+    ]
+    skill_choices_count: 4
+    equipment:
+      weapons: ["простые", "ручные арбалеты", "длинные мечи", "рапиры", "короткие мечи"]
+      armor: ["лёгкие"]
+      tools: ["набор вора", "набор отмычек"]
+    
+    features:
+      - id: "expertise"
+        name: "Экспертиза"
+        description: "Выбор двух навыков для удвоения бонуса мастерства"
+        level: 1
+        feature_type: "passive"
+        requires_action: false
+        
+      - id: "sneak_attack"
+        name: "Скрытая атака"
+        description: "Дополнительный урон при атаке с преимуществом или когда противник рядом с союзником"
+        level: 1
+        feature_type: "passive"
+        requires_action: false
+        
+      - id: "thieves_cant"
+        name: "Воровской жаргон"
+        description: "Понимание секретных языков и знаков"
+        level: 1
+        feature_type: "passive"
+        requires_action: false
+        
+      - id: "cunning_action"
+        name: "Коварная атака"
+        description: "Использование бонусного действия для атаки или уклонения"
+        level: 2
+        feature_type: "active"
+        requires_action: false
+        bonus_action: true
+        
+      - id: "improved_sneak_attack"
+        name: "Улучшенная скрытая атака"
+        description: "Увеличение урона скрытой атаки"
+        level: 3
+        feature_type: "passive"
+        requires_action: false
+        
+      - id: "uncanny_dodge"
+        name: "Улучшенная коварная атака"
+        description: "Дополнительная атака при коварной атаке"
+        level: 9
+        feature_type: "active"
+        reaction: true
+        
+
+    
+    subclasses:
+      - id: "assassin"
+        name: "Ассасин (Assassin)"
+        description: "Специалист по устранению целей с ядом и скрытностью"
+        parent_class: "rogue"
+        features:
+          - id: "assassinate"
+            name: "Убийца"
+            description: "Преимущество при атаке на не готовых противников"
+            level: 3
+            feature_type: "active"
+            requires_action: true
+            
+          - id: "infiltration"
+            name: "Инфильтрация"
+            description: "Маскировка и проникновение"
+            level: 9
+            feature_type: "passive"
+            requires_action: false
+            
+
+      
+      - id: "phantom"
+        name: "Призрачный разбойник (Phantom)"
+        description: "Разведчик, использующий знания о жизни и смерти"
+        parent_class: "rogue"
+        features:
+          - id: "whispers_of_the_dead"
+            name: "Окружение призраков"
+            description: "Получение знаний от умерших"
+            level: 3
+            feature_type: "passive"
+            requires_action: false
+            
+          - id: "ghost_sight"
+            name: "Проницательность призраков"
+            description: "Видение духов и невидимых существ"
+            level: 9
+            feature_type: "passive"
+            requires_action: false
+            
+
+      
+      - id: "thief"
+        name: "Теневой плут (Thief)"
+        description: "Мастер воровства и быстрых действий"
+        parent_class: "rogue"
+        features:
+          - id: "fast_hands"
+            name: "Быстрые руки"
+            description: "Использование навыков как бонусное действие"
+            level: 3
+            feature_type: "active"
+            bonus_action: true
+            requires_action: false
+            
+          - id: "second_story_work"
+            name: "Воровская ловкость"
+            description: "Ускоренное движение и лазание"
+            level: 9
+            feature_type: "passive"
+            requires_action: false
+            
+
+
+  cleric:
+    name: "Жрец"
+    description: "Слуга божества, использующий божественную магию. Жрецы служат высшим силам, получают от них божественную магию и служат проводниками воли своих богов в мире смертных."
+    hit_dice: 8
+    prime_abilities: ["wisdom"]
+    saving_throws: ["wisdom", "charisma"]
+    skill_choices: [
+      "history", "insight", "medicine", "investigation", 
+      "religion", "persuasion"
+    ]
+    skill_choices_count: 2
+    equipment:
+      weapons: ["простые"]
+      armor: ["лёгкие", "средние", "щиты"]
+      tools: ["нет"]
+    
+    features:
+      - id: "divine_domain"
+        name: "Божественный домен"
+        description: "Выбор домена, определяющего заклинания и способности"
+        level: 1
+        feature_type: "passive"
+        requires_action: false
+        
+      - id: "ritual_casting"
+        name: "Заклинание ритуала"
+        description: "Возможность колдовать заклинания как ритуалы"
+        level: 1
+        feature_type: "passive"
+        requires_action: false
+        
+      - id: "spell_recovery"
+        name: "Восстановление заклинаний"
+        description: "Восстановление части заклинаний после короткого отдыха"
+        level: 1
+        feature_type: "active"
+        uses_per_rest: 1
+        requires_action: true
+        
+      - id: "divine_focus"
+        name: "Божественная фокусировка"
+        description: "Усиление заклинаний домена"
+        level: 2
+        feature_type: "passive"
+        requires_action: false
+        
+      - id: "destroy_undead"
+        name: "Уничтожение нежити"
+        description: "Способность наносить дополнительный урон нежити"
+        level: 5
+        feature_type: "active"
+        requires_action: true
+        
+      - id: "divine_intervention"
+        name: "Божественное вмешательство"
+        description: "Просьба к божеству о прямом вмешательстве"
+        level: 10
+        feature_type: "active"
+        uses_per_day: 1
+        requires_action: true
+        
+
+    
+    subclasses:
+      - id: "life_domain"
+        name: "Домен жизни (Life Domain)"
+        description: "Целитель и защитник жизни"
+        parent_class: "cleric"
+        features:
+          - id: "bonus_spell_life"
+            name: "Бонусное заклинание"
+            description: "Дополнительные заклинания лечения"
+            level: 1
+            feature_type: "spell"
+            requires_action: true
+            
+          - id: "discipline_life"
+            name: "Дисциплина"
+            description: "Усиление заклинаний лечения"
+            level: 1
+            feature_type: "passive"
+            requires_action: false
+            
+          - id: "preserve_life"
+            name: "Укрепление жизни"
+            description: "Массовое лечение союзников"
+            level: 6
+            feature_type: "active"
+            uses_per_rest: 1
+            requires_action: true
+            
+          - id: "greater_healing"
+            name: "Великий целитель"
+            description: "Максимальное эффективность лечения"
+            level: 10
+            feature_type: "passive"
+            requires_action: false
+            
+
+      
+      - id: "light_domain"
+        name: "Домен света (Light Domain)"
+        description: "Несущий свет во тьму"
+        parent_class: "cleric"
+        features:
+          - id: "bonus_spell_light"
+            name: "Бонусное заклинание"
+            description: "Заклинания света и огня"
+            level: 1
+            feature_type: "spell"
+            requires_action: true
+            
+          - id: "warding_flare"
+            name: "Сияние"
+            description: "Ослепление противников"
+            level: 1
+            feature_type: "active"
+            reaction: true
+            
+          - id: "improved_flare"
+            name: "Усиление света"
+            description: "Расширение области сияния"
+            level: 6
+            feature_type: "passive"
+            requires_action: false
+            
+          - id: "corporal_luminosity"
+            name: "Светоносная корпореальность"
+            description: "Защита от ослепления и невидимость в темноте"
+            level: 10
+            feature_type: "passive"
+            requires_action: false
+            
+
+      
+      - id: "war_domain"
+        name: "Домен войны (War Domain)"
+        description: "Воин божественного призыва"
+        parent_class: "cleric"
+        features:
+          - id: "bonus_spell_war"
+            name: "Бонусное заклинание"
+            description: "Военные заклинания"
+            level: 1
+            feature_type: "spell"
+            requires_action: true
+            
+          - id: "war_priest"
+            name: "Воинственное благословение"
+            description: "Атака как бонусное действие"
+            level: 1
+            feature_type: "active"
+            bonus_action: true
+            uses_per_turn: 1
+            
+          - id: "warlord"
+            name: "Властелин войны"
+            description: "Дополнительная атака"
+            level: 6
+            feature_type: "active"
+            requires_action: true
+            
+          - id: "weapon_master"
+            name: "Властелин оружия"
+            description: "Мастерство владения оружием"
+            level: 10
+            feature_type: "passive"
+            requires_action: false
+
+      
+      - id: "forge_domain"
+        name: "Домен кузницы (Forge Domain)"
+        description: "Мастер ремесла и создания"
+        parent_class: "cleric"
+        features:
+          - id: "bonus_spell_forge"
+            name: "Бонусное заклинание"
+            description: "Заклинания создания и защиты"
+            level: 1
+            feature_type: "spell"
+            requires_action: true
+            
+          - id: "artisans_blessing"
+            name: "Благословение кузнеца"
+            description: "Мастерство ремесленных инструментов"
+            level: 1
+            feature_type: "passive"
+            requires_action: false
+            
+          - id: "soul_of_forgery"
+            name: "Владение кузницей"
+            description: "Защита от огня и яда"
+            level: 6
+            feature_type: "passive"
+            requires_action: false
+            
+          - id: "divine_forgery"
+            name: "Душа кузнеца"
+            description: "Создание магических предметов"
+            level: 10
+            feature_type: "active"
+            requires_action: true
+
+
+  bard:
+    name: "Бард"
+    description: "Вдохновляющий рассказчик и маг музыки. Барды используют музыку и слова для создания магических эффектов, вдохновляют союзников и влияют на умы окружающих."
+    hit_dice: 8
+    prime_abilities: ["charisma"]
+    saving_throws: ["dexterity", "charisma"]
+    skill_choices: [
+      "acrobatics", "animal_handling", "arcana", "athletics", 
+      "deception", "history", "insight", "intimidation", "investigation", 
+      "medicine", "nature", "perception", "persuasion", "religion", 
+      "sleight_of_hand", "stealth", "survival"
+    ]
+    skill_choices_count: 3
+    equipment:
+      weapons: ["простые", "ручные арбалеты", "длинные мечи", "рапиры", "короткие мечи"]
+      armor: ["лёгкие"]
+      tools: ["три музыкальных инструмента"]
+    
+    features:
+      - id: "bardic_inspiration"
+        name: "Вдохновение барда"
+        description: "Возможность давать другим игрокам дополнительный кубик для броска"
+        level: 1
+        feature_type: "active"
+        uses_per_rest: 1
+        bonus_action: true
+        requires_action: false
+        
+      - id: "jack_of_all_trades"
+        name: "Джек всех мастеров"
+        description: "Выбор любых трёх навыков"
+        level: 1
+        feature_type: "passive"
+        requires_action: false
+        
+      - id: "song_of_rest"
+        name: "Песнь отдыха"
+        description: "Лечение союзников во время короткого отдыха"
+        level: 2
+        feature_type: "passive"
+        requires_action: false
+        
+      - id: "expertise_bard"
+        name: "Экспертиза"
+        description: "Удвоение бонуса мастерства для двух навыков"
+        level: 3
+        feature_type: "passive"
+        requires_action: false
+        
+      - id: "inspiring_mantle"
+        name: "Вдохновляющая защитная мантия"
+        description: "Сопротивление урону и преимущества спасбросков для союзников"
+        level: 6
+        feature_type: "active"
+        uses_per_rest: 1
+        requires_action: true
+        
+      - id: "improved_inspiration"
+        name: "Улучшенное вдохновение"
+        description: "Использование вдохновения несколько раз"
+        level: 9
+        feature_type: "passive"
+        requires_action: false
+        
+      - id: "magical_secrets"
+        name: "Магические тайны"
+        description: "Изучение заклинаний из любого списка"
+        level: 10
+        feature_type: "spell"
+        requires_action: true
+
+    
+    subclasses:
+      - id: "lore_college"
+        name: "Коллегия знания (College of Lore)"
+        description: "Хранитель знаний и тайн"
+        parent_class: "bard"
+        features:
+          - id: "bonus_spells_lore"
+            name: "Бонусные заклинания"
+            description: "Дополнительные заклинания знаний"
+            level: 3
+            feature_type: "spell"
+            requires_action: true
+            
+          - id: "cutting_words"
+            name: "Разрезающая острота"
+            description: "Использование вдохновения для помехи противникам"
+            level: 3
+            feature_type: "active"
+            reaction: true
+            
+          - id: "additional_magical_secrets"
+            name: "Дополнительные магические тайны"
+            description: "Больше заклинаний из других классов"
+            level: 6
+            feature_type: "spell"
+            requires_action: true
+            
+
+      
+      - id: "valor_college"
+        name: "Коллегия доблести (College of Valor)"
+        description: "Боевой бард, вдохновляющий в битве"
+        parent_class: "bard"
+        features:
+          - id: "bonus_spells_valor"
+            name: "Бонусные заклинания"
+            description: "Боевые заклинания"
+            level: 3
+            feature_type: "spell"
+            requires_action: true
+            
+          - id: "medium_armor"
+            name: "Средние доспехи"
+            description: "Доступ к средним доспехам и щитам"
+            level: 3
+            feature_type: "passive"
+            requires_action: false
+            
+          - id: "combat_inspiration"
+            name: "Боевой вдохновитель"
+            description: "Вдохновение для боевых действий"
+            level: 3
+            feature_type: "active"
+            bonus_action: true
+            requires_action: false
+            
+          - id: "improved_combat_magic"
+            name: "Улучшенная боевая магия"
+            description: "Атака и заклинание в одном действии"
+            level: 6
+            feature_type: "active"
+            requires_action: true
+            
+
+      
+      - id: "glamour_college"
+        name: "Коллегия совести (College of Glamour)"
+        description: "Мастер очарования и влияния"
+        parent_class: "bard"
+        features:
+          - id: "bonus_spells_glamour"
+            name: "Бонусные заклинания"
+            description: "Заклинания очарования и иллюзий"
+            level: 3
+            feature_type: "spell"
+            requires_action: true
+            
+          - id: "mantle_inspiration"
+            name: "Мантия вдохновения"
+            description: "Временные хиты и перемещение"
+            level: 3
+            feature_type: "active"
+            bonus_action: true
+            requires_action: false
+            
+          - id: "enchanting_voice"
+            name: "Властелин очарования"
+            description: "Усиление заклинаний очарования"
+            level: 6
+            feature_type: "passive"
+            requires_action: false
+            

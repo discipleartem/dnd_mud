@@ -1,0 +1,111 @@
+armor:
+  light:
+    - name: "Стёганный"
+      cost: {value: 5, currency: gold}
+      armor_class: 11
+      max_dex_modifier: null
+      modifier_bonus: DEX
+      strength_requirement: null
+      stealth_disadvantage: true
+      weight: 8
+
+    - name: "Кожаный"
+      cost: {value: 10, currency: gold}
+      armor_class: 11
+      max_dex_modifier: null
+      modifier_bonus: DEX
+      strength_requirement: null
+      stealth_disadvantage: false
+      weight: 10
+
+    - name: "Проклёпанная кожа"
+      cost: {value: 45, currency: gold}
+      armor_class: 12
+      max_dex_modifier: null
+      modifier_bonus: DEX
+      strength_requirement: null
+      stealth_disadvantage: false
+      weight: 13
+
+  medium:
+    - name: "Шкурный"
+      cost: {value: 10, currency: gold}
+      armor_class: 12
+      max_dex_modifier: 2
+      modifier_bonus: DEX
+      strength_requirement: null
+      stealth_disadvantage: false
+      weight: 12
+
+    - name: "Кольчужная рубаха"
+      cost: {value: 50, currency: gold}
+      armor_class: 13
+      max_dex_modifier: 2
+      modifier_bonus: DEX
+      strength_requirement: null
+      stealth_disadvantage: false
+      weight: 20
+
+    - name: "Чешуйчатый"
+      cost: {value: 50, currency: gold}
+      armor_class: 14
+      max_dex_modifier: 2
+      modifier_bonus: DEX
+      strength_requirement: null
+      stealth_disadvantage: true
+      weight: 45
+
+    - name: "Кираса"
+      cost: {value: 400, currency: gold}
+      armor_class: 14
+      max_dex_modifier: 2
+      modifier_bonus: DEX
+      strength_requirement: null
+      stealth_disadvantage: false
+      weight: 20
+
+    - name: "Полулаты"
+      cost: {value: 750, currency: gold}
+      armor_class: 15
+      max_dex_modifier: 2
+      modifier_bonus: DEX
+      strength_requirement: null
+      stealth_disadvantage: true
+      weight: 40
+
+  heavy:
+    - name: "Колечный"
+      cost: {value: 30, currency: gold}
+      armor_class: 14
+      strength_requirement: null
+      stealth_disadvantage: true
+      weight: 40
+
+    - name: "Кольчуга"
+      cost: {value: 75, currency: gold}
+      armor_class: 16
+      strength_requirement: 13
+      stealth_disadvantage: true
+      weight: 55
+
+    - name: "Наборный"
+      cost: {value: 200, currency: gold}
+      armor_class: 17
+      strength_requirement: 15
+      stealth_disadvantage: true
+      weight: 60
+
+    - name: "Латы"
+      cost: {value: 1500, currency: gold}
+      armor_class: 18
+      strength_requirement: 15
+      stealth_disadvantage: true
+      weight: 65
+
+shield:
+  - name: "Щит"
+    cost: {value: 10, currency: gold}
+    armor_class_bonus: 2
+    strength_requirement: null
+    stealth_disadvantage: false
+    weight: 6
