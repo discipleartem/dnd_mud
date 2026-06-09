@@ -4,7 +4,7 @@ backgrounds:
     name: "Аколит"
     description: "Служитель храма"
     skills: ["insight", "religion"]
-    tools: ["нет"]
+    tools: []
     equipment: ["молитвенник", "5 палочек благовоний", "одеяние", "символ веры"]
     feature: "Убежище верующих"
 
@@ -36,7 +36,7 @@ backgrounds:
     name: "Мудрец"
     description: "Учёный, посвятивший себя знаниям"
     skills: ["arcana", "history"]
-    tools: ["нет"]
+    tools: []
     equipment: ["чёрнильница", "перо", "пергамент", "книги"]
     feature: "Исследование"
 

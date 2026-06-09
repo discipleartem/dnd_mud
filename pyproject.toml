@@ -1,0 +1,73 @@
+[build-system]
+requires = ["setuptools>=68.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "dnd_mud"
+version = "0.1.0"
+description = "Текстовая MUD-игра по мотивам Dungeons & Dragons 5e"
+readme = "README.md"
+license = {text = "MIT"}
+requires-python = ">=3.12"
+keywords = ["mud", "dnd", "text-game", "rpg"]
+classifiers = [
+    "Development Status :: 2 - Pre-Alpha",
+    "Environment :: Console",
+    "Intended Audience :: End Users/Desktop",
+    "License :: OSI Approved :: MIT License",
+    "Natural Language :: Russian",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Games/Entertainment :: Role-Playing",
+    "Topic :: Terminals",
+]
+
+dependencies = [
+    "colorama>=0.4.6",
+    "PyYAML>=6.0",
+    "babel>=2.14",
+]
+
+[project.urls]
+Homepage = "https://github.com/discipleartem/dnd_mud"
+Repository = "https://github.com/discipleartem/dnd_mud.git"
+Bug_Tracker = "https://github.com/discipleartem/dnd_mud/issues"
+
+[project.scripts]
+dnd_mud = "main:main"
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "pytest-cov>=4.1",
+    "mypy>=1.8",
+    "ruff>=0.1",
+    "black>=24.0",
+]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["core*", "ui*", "database*", "adventures_scripts*", "mods*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+addopts = "-v --tb=short"
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+ignore_missing_imports = true
+warn_unreachable = true
+disallow_untyped_defs = false
+
+[tool.ruff]
+target-version = "py312"
+line-length = 79
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "N", "UP", "B", "SIM"]
+
+[tool.black]
+target-version = ["py312"]
+line-length = 79

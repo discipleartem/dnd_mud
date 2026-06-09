@@ -6,7 +6,7 @@ classes:
     name: "Воин"
     description: "Мастер оружия и доспехов, специалист по бою. Воины обучены сражаться с различными видами оружия и доспехов, владеют многими боевыми стилями и обладают превосходной физической подготовкой."
     hit_dice: 10
-    prime_abilities: ["strength", "dexterity"]
+    prime_ability: "strength"
     saving_throws: ["strength", "constitution"]
     skill_choices: [
       "acrobatics", "animal_handling", "athletics", "history", 
@@ -141,7 +141,7 @@ classes:
     name: "Плут"
     description: "Мастер скрытности, ловкости и точных ударов. Плуты превосходно справляются с проникновением в защищенные места, обезвреживанием ловушек и нанесением точных ударов по уязвимым местам противника."
     hit_dice: 8
-    prime_abilities: ["dexterity"]
+    prime_ability: "dexterity"
     saving_throws: ["dexterity", "intelligence"]
     skill_choices: [
       "acrobatics", "athletics", "deception", "insight", 
@@ -269,7 +269,7 @@ classes:
     name: "Жрец"
     description: "Слуга божества, использующий божественную магию. Жрецы служат высшим силам, получают от них божественную магию и служат проводниками воли своих богов в мире смертных."
     hit_dice: 8
-    prime_abilities: ["wisdom"]
+    prime_ability: "wisdom"
     saving_throws: ["wisdom", "charisma"]
     skill_choices: [
       "history", "insight", "medicine", "investigation", 
@@ -473,7 +473,7 @@ classes:
     name: "Бард"
     description: "Вдохновляющий рассказчик и маг музыки. Барды используют музыку и слова для создания магических эффектов, вдохновляют союзников и влияют на умы окружающих."
     hit_dice: 8
-    prime_abilities: ["charisma"]
+    prime_ability: "charisma"
     saving_throws: ["dexterity", "charisma"]
     skill_choices: [
       "acrobatics", "animal_handling", "arcana", "athletics", 
