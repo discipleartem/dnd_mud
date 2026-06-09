@@ -1,0 +1,25 @@
+# English interface localization
+welcome:
+  title: "TEXT GAME BASED ON D&D 5 EDITION"
+  subtitle: "Welcome to the text-based adventure game based on Dungeons and Dragons 5 edition"
+  version: "Version: {version}"
+
+menu:
+  caption: "MAIN MENU"
+  new_game: "New Game"
+  load_game: "Load Game"
+  create_character: "Create Character"
+  settings: "Settings"
+  languages: "Languages"
+  mods: "Modifications"
+  adventures: "Adventures"
+  exit: "Exit"
+  prompt: "Choose option [{min}-{max}]: "
+
+errors:
+  invalid_input: "Error: enter a number from {min} to {max}"
+  invalid_number: "Error: enter a number from {min} to {max}"
+  not_implemented: "This section is not yet implemented"
+
+info:
+  goodbye: "Goodbye! Exiting the game..."

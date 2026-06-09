@@ -1,0 +1,19 @@
+# Доступные приключения
+adventures:
+  - id: tutorial
+    name:
+      ru: "Обучение"
+      en: "Tutorial"
+    description: "Короткое обучение основам игры"
+    type: training
+    difficulty: easy
+    script_file: "adventures_scripts/tutorial.yaml"
+
+  - id: lost_mine
+    name:
+      ru: "Затеряные рудники Фанделвера"
+      en: "Lost Mine of Phandelver"
+    description: "Классическое приключение для начинающих искателей приключений"
+    type: adventure
+    difficulty: normal
+    script_file: "adventures_scripts/lost_mine.yaml"

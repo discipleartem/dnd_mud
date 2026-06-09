@@ -1,0 +1,25 @@
+# Русская локализация интерфейса
+welcome:
+  title: "D&D MUD"
+  subtitle: "Добро пожаловать в текстовую игру по мотивам Dungeons and Dragons 5 edition"
+  version: "Версия: {version}"
+
+menu:
+  caption: "ГЛАВНОЕ МЕНЮ"
+  new_game: "Новая игра"
+  load_game: "Загрузить игру"
+  create_character: "Создать персонажа"
+  settings: "Настройки"
+  languages: "Languages"
+  mods: "Модификации"
+  adventures: "Приключения"
+  exit: "Выход"
+  prompt: "Выберите пункт [{min}-{max}]: "
+
+errors:
+  invalid_input: "Ошибка: введите число от {min} до {max}"
+  invalid_number: "Ошибка: введите число от {min} до {max}"
+  not_implemented: "Этот раздел ещё в разработке"
+
+info:
+  goodbye: "До встречи! Выход из игры..."
