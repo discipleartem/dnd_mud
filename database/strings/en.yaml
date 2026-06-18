@@ -12,15 +12,15 @@ menu:
   settings: "Settings"
   languages: "Languages"
   exit: "Exit"
-  prompt: "Choose option [1-{max}, 0-Back]: "
+  prompt: "Choose option: "
 
 character:
   creation_caption: "CHARACTER CREATION"
   name_prompt: "Enter character name (at least 2 characters): "
   name_empty: "Name must be at least 2 characters long"
   name_exists: "Character '{name}' already exists. Choose another name."
-  race_prompt: "Choose race (1-{count}): "
-  class_prompt: "Choose class (1-{count}): "
+  race_prompt: "Choose race: "
+  class_prompt: "Choose class: "
   class_desc: "Class: {name} — {desc}"
   stats_title: "STATS"
   stat_line: "{stat}: {value}"
@@ -28,7 +28,7 @@ character:
   save_success: "Character '{name}' created successfully!"
   no_characters: "No saved characters. Create one first."
   select_caption: "SELECT CHARACTER"
-  select_prompt: "Choose character (1-{count}), 0 — cancel: "
+  select_prompt: "Choose character: "
   character_line: "{name} — lvl {level} {race}/{class_name}"
   back: "Back"
 
@@ -41,15 +41,15 @@ settings:
   hardcore_prompt: "Hard Core mode (1-{count}): "
   hardcore_changed: "Hard Core mode: {value}"
   back: "Back"
-  prompt: "Choose action (1-{count}): "
+  prompt: "Choose action: "
   settings_option_hardcore: "Toggle Hard Core"
   settings_option_back: "Return to main menu"
 
 languages:
   caption: "LANGUAGE SELECTION"
   available: "Available languages:"
-  current: "Current language: {lang}"
-  prompt: "Choose language (1-{count}), 0 — Back: "
+  current: "Current language:"
+  prompt: "Choose language: "
   changed: "Language changed to: {name}"
   back: "Back"
   lang_en: "English"
@@ -64,7 +64,7 @@ mods:
   mod_enabled: "[ON]"
   mod_disabled: "[OFF]"
   mod_status: "{name}: {status}"
-  prompt: "Choose mod to toggle (1-{count}), 0 — exit: "
+  prompt: "Choose mod to toggle: "
   toggle_success: "Mod '{name}' {'enabled' if enabled else 'disabled'}"
   back: "Back"
 
@@ -72,21 +72,21 @@ adventures:
   caption: "ADVENTURES"
   header: "Available adventures:"
   no_adventures: "No adventures available."
-  prompt: "Choose adventure (1-{count}), 0 — cancel: "
+  prompt: "Choose adventure: "
   adventure_line: "{name} ({difficulty}) — {desc}"
   not_implemented: "This adventure is not yet implemented"
   back: "Back"
 
 choose_character:
   caption: "NEW GAME"
-  prompt: "Choose character (1-{count}), 0 — create new: "
+  prompt: "Choose character (1-{count}), 0 — Back: "
   line: "{name} — lvl {level} {race}/{class_name}"
   no_characters: "No saved characters. Redirecting to creation..."
   back: "Back"
 
 difficulty:
   caption: "SELECT DIFFICULTY"
-  prompt: "Choose difficulty (1-{count}), 0 — Back: "
+  prompt: "Choose difficulty: "
   normal: "Normal"
   hardcore: "HardCore"
   selected: "Difficulty: {mode}"
@@ -94,21 +94,21 @@ difficulty:
 
 new_game:
   caption: "NEW GAME"
-  prompt: "Choose character (1-{count}), 0 — Back: "
+  prompt: "Choose character: "
   line: "{name} — lvl {level} {race}/{class_name}"
   no_characters: "No saved characters. Create one first."
   back: "Back"
 
 load_game:
   caption: "LOAD GAME"
-  prompt: "Choose save (1-{count}), 0 — Back: "
+  prompt: "Choose save: "
   line: "{name} — {date}"
   no_saves: "No saves available."
   back: "Back"
 
 create_character:
   caption: "CREATE CHARACTER"
-  prompt: "Choose difficulty for character (1-{count}), 0 — Back: "
+  prompt: "Choose difficulty for character: "
   back: "Back"
 
 errors:

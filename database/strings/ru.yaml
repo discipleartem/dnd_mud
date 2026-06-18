@@ -12,15 +12,15 @@ menu:
   settings: "Настройки"
   languages: "Languages"
   exit: "Выход"
-  prompt: "Выберите пункт [1-{max}, 0-Выход]: "
+  prompt: "Выберите пункт: "
 
 character:
   creation_caption: "СОЗДАНИЕ ПЕРСОНАЖА"
   name_prompt: "Введите имя персонажа (не менее 2 символов): "
   name_empty: "Имя должно содержать не менее 2 символов"
   name_exists: "Персонаж с именем '{name}' уже существует. Выберите другое имя."
-  race_prompt: "Выберите расу (1-{count}): "
-  class_prompt: "Выберите класс (1-{count}): "
+  race_prompt: "Выберите расу: "
+  class_prompt: "Выберите класс: "
   class_desc: "Класс: {name} — {desc}"
   stats_title: "ХАРАКТЕРИСТИКИ"
   stat_line: "{stat}: {value}"
@@ -28,7 +28,7 @@ character:
   save_success: "Персонаж '{name}' успешно создан!"
   no_characters: "Нет сохранённых персонажей. Сначала создайте персонажа."
   select_caption: "ВЫБОР ПЕРСОНАЖА"
-  select_prompt: "Выберите персонажа (1-{count}), 0 — отмена: "
+  select_prompt: "Выберите персонажа: "
   character_line: "{name} — ур. {level} {race}/{class_name}"
   back: "Назад"
 
@@ -41,15 +41,15 @@ settings:
   hardcore_prompt: "Режим Hard Core (1-{count}): "
   hardcore_changed: "Режим Hard Core: {value}"
   back: "Назад"
-  prompt: "Выберите действие (1-{count}): "
+  prompt: "Выберите действие: "
   settings_option_hardcore: "Переключить Hard Core"
   settings_option_back: "Вернуться в главное меню"
 
 languages:
   caption: "ВЫБОР ЯЗЫКА"
   available: "Доступные языки:"
-  current: "Текущий язык: {lang}"
-  prompt: "Выберите язык (1-{count}), 0 — Назад: "
+  current: "Текущий язык:"
+  prompt: "Выберите язык: "
   changed: "Язык изменён на: {name}"
   back: "Назад"
   lang_en: "English"
@@ -68,25 +68,16 @@ mods:
   toggle_success: "Мод '{name}' {'включён' if enabled else 'выключен'}"
   back: "Назад"
 
-adventures:
-  caption: "ПРИКЛЮЧЕНИЯ"
-  header: "Список доступных приключений:"
-  no_adventures: "Нет доступных приключений."
-  prompt: "Выберите приключение (1-{count}), 0 — отмена: "
-  adventure_line: "{name} ({difficulty}) — {desc}"
-  not_implemented: "Это приключение ещё не реализовано"
-  back: "Назад"
-
 choose_character:
   caption: "НОВАЯ ИГРА"
-  prompt: "Выберите персонажа (1-{count}), 0 — создать нового: "
+  prompt: "Выберите персонажа (1-{count}), 0 — Назад: "
   line: "{name} — ур. {level} {race}/{class_name}"
   no_characters: "Нет сохранённых персонажей. Переход к созданию..."
   back: "Назад"
 
 difficulty:
   caption: "ВЫБОР СЛОЖНОСТИ"
-  prompt: "Выберите сложность (1-{count}), 0 — Назад: "
+  prompt: "Выберите сложность: "
   normal: "Нормальная"
   hardcore: "HardCore"
   selected: "Сложность: {mode}"
@@ -94,7 +85,7 @@ difficulty:
 
 new_game:
   caption: "НОВАЯ ИГРА"
-  prompt: "Выберите персонажа (1-{count}), 0 — Назад: "
+  prompt: "Выберите персонажа: "
   line: "{name} — ур. {level} {race}/{class_name}"
   no_characters: "Нет сохранённых персонажей. Сначала создайте персонажа."
   back: "Назад"
@@ -108,17 +99,18 @@ load_game:
 
 create_character:
   caption: "СОЗДАТЬ ПЕРСОНАЖА"
-  prompt: "Выберите сложность для персонажа (1-{count}), 0 — Назад: "
+  prompt: "Выберите сложность для персонажа: "
   back: "Назад"
 
 adventures:
   caption: "ПРИКЛЮЧЕНИЯ"
   header: "Список доступных приключений:"
   no_adventures: "Нет доступных приключений."
-  prompt: "Выберите приключение (1-{count}), 0 — Назад: "
+  prompt: "Выберите приключение: "
   adventure_line: "{name} ({difficulty}) — {desc}"
   not_implemented: "Это приключение ещё не реализовано"
   back: "Назад"
+
 
 errors:
   invalid_input: "Ошибка: введите число от {min} до {max}"

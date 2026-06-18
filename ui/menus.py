@@ -1,18 +1,15 @@
 """Отрисовка экранов меню (приветствие, главное меню, настройки, языки, сложность, flows)."""
 
 import os
-from datetime import datetime
 from typing import Any
-
 from colorama import Fore, Style
-
-from core.localization import get_string
+from core.adventure import load_adventures
 from core.character import (
+    character_exists,
     load_characters,
     save_character,
-    character_exists,
 )
-from core.adventure import load_adventures
+from core.localization import get_string, load_strings
 from ui.input_handler import get_choice, get_int_input, get_str_input
 
 SEPARATOR = f"{Fore.YELLOW}{'=' * 78}{Style.RESET_ALL}"
@@ -105,11 +102,19 @@ def select_difficulty(strings: dict[str, Any], settings: dict[str, Any]) -> str 
             get_string(strings, "difficulty.normal"),
             get_string(strings, "difficulty.hardcore"),
         ]
+        for idx, opt in enumerate(options, 1):
+            marker = " " * 4
+            if current_idx == idx:
+                marker = f"{Fore.GREEN} * {Style.RESET_ALL}"
+            print(f"{marker}{Fore.YELLOW}{idx}{Style.RESET_ALL}. {opt}")
+        print()
+        print(f"  {Fore.YELLOW}0{Style.RESET_ALL}. {get_string(strings, 'difficulty.back')}")
+        print()
 
-        choice = get_choice(
-            options,
+        choice = get_int_input(
             get_string(strings, "difficulty.prompt", count=len(options)),
-            default_index=current_idx - 1,
+            0,
+            len(options),
         )
 
         if choice == 0:
@@ -162,6 +167,8 @@ def _select_character(strings: dict[str, Any]) -> dict[str, Any] | None:
         print(f"  {Fore.YELLOW}{idx}{Style.RESET_ALL}. {line}")
 
     print()
+    print(f"  {Fore.YELLOW}0{Style.RESET_ALL}. {get_string(strings, 'new_game.back')}")
+    print()
     choice = get_int_input(
         get_string(strings, "new_game.prompt", count=len(characters)),
         0,
@@ -212,6 +219,8 @@ def _select_adventure(strings: dict[str, Any]) -> dict[str, Any] | None:
         )
         print(f"  {Fore.YELLOW}{idx}{Style.RESET_ALL}. {line}")
 
+    print()
+    print(f"  {Fore.YELLOW}0{Style.RESET_ALL}. {get_string(strings, 'adventures.back')}")
     print()
     choice = get_int_input(
         get_string(strings, "adventures.prompt", count=len(adventures)),
@@ -296,11 +305,15 @@ def show_create_character_flow(
     for idx, race in enumerate(races, 1):
         print(f"  {Fore.YELLOW}{idx}{Style.RESET_ALL}. {race.get('name', '?')}")
     print()
+    print(f"  {Fore.YELLOW}0{Style.RESET_ALL}. {get_string(strings, 'character.back')}")
+    print()
     race_idx = get_int_input(
         get_string(strings, "character.race_prompt", count=len(races)),
-        1,
+        0,
         len(races),
     )
+    if race_idx == 0:
+        return None
     race = races[race_idx - 1]
 
     # Выбор класса
@@ -310,11 +323,15 @@ def show_create_character_flow(
     for idx, cls in enumerate(classes, 1):
         print(f"  {Fore.YELLOW}{idx}{Style.RESET_ALL}. {cls.get('name', '?')}")
     print()
+    print(f"  {Fore.YELLOW}0{Style.RESET_ALL}. {get_string(strings, 'character.back')}")
+    print()
     class_idx = get_int_input(
         get_string(strings, "character.class_prompt", count=len(classes)),
-        1,
+        0,
         len(classes),
     )
+    if class_idx == 0:
+        return None
     cls = classes[class_idx - 1]
 
     character = save_character(
@@ -378,25 +395,32 @@ def show_languages_menu(
         lang_name = get_string(
             strings, f"languages.lang_{current}", default=current
         )
-        print(f"  {get_string(strings, 'languages.current')}: {lang_name}")
+        print(f"  {get_string(strings, 'languages.current')} {lang_name}")
         print()
 
         options = [
             get_string(strings, "languages.lang_en"),
             get_string(strings, "languages.lang_ru"),
-            get_string(strings, "languages.back"),
         ]
+        for idx, opt in enumerate(options, 1):
+            marker = f"  {Fore.YELLOW}{idx}{Style.RESET_ALL}. "
+            print(f"{marker}{opt}")
+        print()
+        print(f"  {Fore.YELLOW}0{Style.RESET_ALL}. {get_string(strings, 'languages.back')}")
+        print()
 
-        choice = get_choice(
-            options,
-            get_string(strings, "languages.prompt", count=len(options) - 1),
+        choice = get_int_input(
+            get_string(strings, "languages.prompt", count=len(options)),
+            0,
+            len(options),
         )
 
-        if choice == 3:
+        if choice == 0:
             break
 
         new_lang = "en" if choice == 1 else "ru"
         settings["language"] = new_lang
+        strings = load_strings(new_lang)
         msg = get_string(
             strings,
             "languages.changed",
@@ -442,37 +466,25 @@ def show_settings(
 
         options = [
             get_string(strings, "settings.settings_option_hardcore"),
-            get_string(strings, "settings.settings_option_back"),
         ]
+        for idx, opt in enumerate(options, 1):
+            marker = f"  {Fore.YELLOW}{idx}{Style.RESET_ALL}. "
+            print(f"{marker}{opt}")
+        print()
+        print(f"  {Fore.YELLOW}0{Style.RESET_ALL}. {get_string(strings, 'settings.back')}")
+        print()
 
-        choice = get_choice(
-            options,
+        choice = get_int_input(
             get_string(strings, "settings.prompt", count=len(options)),
+            0,
+            len(options),
         )
 
-        if choice == 2:
+        if choice == 0:
             break
 
         if choice == 1:
-            _clear_screen()
-            print(SEPARATOR)
-            print(
-                f"{Fore.YELLOW}"
-                f"{get_string(strings, 'settings.hardcore').center(78)}"
-                f"{Style.RESET_ALL}"
-            )
-            print(SEPARATOR)
-            print()
-
-            hc_choice = get_choice(
-                [
-                    get_string(strings, "settings.hardcore_options.off"),
-                    get_string(strings, "settings.hardcore_options.on"),
-                ],
-                get_string(strings, "settings.hardcore_prompt", count=2),
-            )
-
-            settings["hardcore"] = hc_choice == 2
+            settings["hardcore"] = not settings.get("hardcore", False)
             msg = get_string(
                 strings,
                 "settings.hardcore_changed",
