@@ -16,10 +16,81 @@ menu:
   exit: "Выход"
   prompt: "Выберите пункт [{min}-{max}]: "
 
+character:
+  creation_caption: "СОЗДАНИЕ ПЕРСОНАЖА"
+  name_prompt: "Введите имя персонажа (не менее 2 символов): "
+  name_empty: "Имя должно содержать не менее 2 символов"
+  name_exists: "Персонаж с именем '{name}' уже существует. Выберите другое имя."
+  race_prompt: "Выберите расу (1-{count}): "
+  class_prompt: "Выберите класс (1-{count}): "
+  class_desc: "Класс: {name} — {desc}"
+  stats_title: "ХАРАКТЕРИСТИКИ"
+  stat_line: "{stat}: {value}"
+  total_stats: "Сумма характеристик: {total}"
+  save_success: "Персонаж '{name}' успешно создан!"
+  no_characters: "Нет сохранённых персонажей. Сначала создайте персонажа."
+  select_caption: "ВЫБОР ПЕРСОНАЖА"
+  select_prompt: "Выберите персонажа (1-{count}), 0 — отмена: "
+  character_line: "{name} — ур. {level} {race}/{class_name}"
+  back: "Назад"
+
+settings:
+  caption: "НАСТРОЙКИ"
+  hardcore: "Режим Hard Core"
+  hardcore_options:
+    off: "Выключен"
+    on: "Включён"
+  hardcore_prompt: "Режим Hard Core (1-{count}): "
+  hardcore_changed: "Режим Hard Core: {value}"
+  back: "Назад"
+  prompt: "Выберите действие (1-{count}): "
+  settings_option_hardcore: "Переключить Hard Core"
+  settings_option_back: "Вернуться в главное меню"
+
+languages:
+  caption: "ВЫБОР ЯЗЫКА"
+  available: "Доступные языки:"
+  current: "Текущий язык: {lang}"
+  prompt: "Выберите язык (1-{count}), 0 — отмена: "
+  changed: "Язык изменён на: {name}"
+  back: "Назад"
+  lang_en: "English"
+  lang_ru: "Русский"
+
+mods:
+  caption: "МОДИФИКАЦИИ"
+  header: "Список доступных модификаций:"
+  no_mods: "Модификации не найдены. Поместите .yaml файлы в папку mods/"
+  no_mods_dir: "Папка mods/ не существует. Создайте её для использования модификаций."
+  mod_line: "{name} v{version} ({type}) — {desc}"
+  mod_enabled: "[ВКЛ]"
+  mod_disabled: "[ВЫКЛ]"
+  mod_status: "{name}: {status}"
+  prompt: "Выберите мод для переключения (1-{count}), 0 — выход: "
+  toggle_success: "Мод '{name}' {'включён' if enabled else 'выключен'}"
+  back: "Назад"
+
+adventures:
+  caption: "ПРИКЛЮЧЕНИЯ"
+  header: "Список доступных приключений:"
+  no_adventures: "Нет доступных приключений."
+  prompt: "Выберите приключение (1-{count}), 0 — отмена: "
+  adventure_line: "{name} ({difficulty}) — {desc}"
+  not_implemented: "Это приключение ещё не реализовано"
+  back: "Назад"
+
+choose_character:
+  caption: "НОВАЯ ИГРА"
+  prompt: "Выберите персонажа (1-{count}), 0 — создать нового: "
+  line: "{name} — ур. {level} {race}/{class_name}"
+  no_characters: "Нет сохранённых персонажей. Переход к созданию..."
+  back: "Назад"
+
 errors:
   invalid_input: "Ошибка: введите число от {min} до {max}"
   invalid_number: "Ошибка: введите число от {min} до {max}"
   not_implemented: "Этот раздел ещё в разработке"
+  invalid_choice: "Неверный выбор. Попробуйте снова."
 
 info:
   goodbye: "До встречи! Выход из игры..."

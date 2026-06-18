@@ -1,87 +1,82 @@
-"""Модуль локализации: загрузка YAML-словарей, переключение языка."""
+"""Загрузка и получение строк интерфейса на разных языках.
+
+Строки хранятся в YAML-файлах в папке database/strings/.
+Язык по умолчанию — русский, если нет — английский (запасной).
+"""
 
 from pathlib import Path
-from typing import Any
 
 import yaml
 
+STRINGS_DIR = Path("database/strings")
 
-class Localization:
-    """Загрузка и хранение строк интерфейса для выбранного языка.
 
-    Пример использования:
-        loc = Localization('ru')
-        loc('menu.new_game')  # -> "Новая игра"
-        loc('menu.exit')      # -> "Выход"
+def load_strings(language: str) -> dict:
+    """Загрузить строки для указанного языка.
+
+    Сначала пытается загрузить файл language.yaml.
+    Если его нет — загружает en.yaml как запасной вариант.
+
+    Args:
+        language: Код языка ('ru', 'en' и т.д.)
+
+    Returns:
+        Словарь со строками
     """
+    strings_path = STRINGS_DIR / f"{language}.yaml"
+    fallback_path = STRINGS_DIR / "en.yaml"
 
-    def __init__(self, language: str = 'ru') -> None:
-        self._language: str = language
-        self._strings: dict[str, Any] = {}
-        self._fallback: dict[str, Any] = {}
-        self.load(language)
+    strings = {}
+    fallback = {}
 
-    @property
-    def language(self) -> str:
-        """Текущий язык."""
-        return self._language
+    if strings_path.exists():
+        with open(strings_path, encoding="utf-8") as f:
+            strings = yaml.safe_load(f) or {}
 
-    def load(self, language: str) -> None:
-        """Загрузить YAML-словарь для указанного языка."""
-        self._language = language
-        strings_path = Path('database/strings') / f'{language}.yaml'
-        if strings_path.exists():
-            with open(strings_path, encoding='utf-8') as f:
-                self._strings = yaml.safe_load(f) or {}
+    if fallback_path.exists():
+        with open(fallback_path, encoding="utf-8") as f:
+            fallback = yaml.safe_load(f) or {}
+
+    # Склеиваем: свои строки поверх запасных
+    result = fallback.copy()
+    result.update(strings)
+    return result
+
+
+def get_string(strings: dict, key: str, **kwargs) -> str:
+    """Получить строку по ключу с поддержкой вложенности через точку.
+
+    Пример:
+        get_string(strings, "menu.new_game")  # -> "Новая игра"
+        get_string(strings, "info.welcome", name="Томас")  # -> "Привет, Томас!"
+
+    Args:
+        strings: Словарь со строками
+        key: Ключ вида "menu.new_game"
+        **kwargs: Параметры для подстановки в строку
+
+    Returns:
+        Строка или ключ, если строка не найдена
+    """
+    parts = key.split(".")
+
+    # Ищем значение во вложенном словаре
+    value = strings
+    for part in parts:
+        if isinstance(value, dict) and part in value:
+            value = value[part]
         else:
-            self._strings = {}
-
-        # fallback — всегда английский
-        fallback_path = Path('database/strings/en.yaml')
-        if fallback_path.exists():
-            with open(fallback_path, encoding='utf-8') as f:
-                self._fallback = yaml.safe_load(f) or {}
-
-    def get(self, key: str, **kwargs: Any) -> str:
-        """Получить строку по ключу (поддержка вложенных ключей через точку).
-
-        Args:
-            key: Ключ вида 'menu.new_game'
-            **kwargs: Параметры для форматирования строки
-
-        Returns:
-            Переведённая строка или ключ, если перевод не найден
-        """
-        parts = key.split('.')
-
-        # Поиск в текущем языке
-        value = self._deep_get(self._strings, parts)
-        if value is None:
-            # Fallback на английский
-            value = self._deep_get(self._fallback, parts)
-
-        if value is None:
             return key
 
-        if isinstance(value, str) and kwargs:
-            try:
-                return value.format(**kwargs)
-            except KeyError:
-                return value
-
+    # Если нашли не строку — возвращаем как есть
+    if not isinstance(value, str):
         return str(value) if value is not None else key
 
-    def __call__(self, key: str, **kwargs: Any) -> str:
-        """Сокращённый вызов: loc('key', param=val)."""
-        return self.get(key, **kwargs)
+    # Подставляем параметры, если нужно
+    if kwargs:
+        try:
+            return value.format(**kwargs)
+        except KeyError:
+            return value
 
-    @staticmethod
-    def _deep_get(d: dict[str, Any], parts: list[str]) -> Any | None:
-        """Достать значение из вложенного словаря по списку ключей."""
-        current: Any = d
-        for part in parts:
-            if isinstance(current, dict):
-                current = current.get(part)
-            else:
-                return None
-        return current
+    return value

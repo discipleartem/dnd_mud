@@ -1,0 +1,18 @@
+# Сценарий обучения (Tutorial)
+# Заглушка для Pre-Alpha
+
+scenario:
+  id: tutorial
+  start_node: welcome
+  
+  nodes:
+    welcome:
+      description:
+        ru: "Добро пожаловать в обучение! Этот сценарий пока не реализован."
+        en: "Welcome to the tutorial! This scenario is not yet implemented."
+      choices:
+        - text:
+            ru: "Вернуться"
+            en: "Go back"
+          next: null
+          action: exit
