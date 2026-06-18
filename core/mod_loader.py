@@ -10,7 +10,7 @@ from typing import Any
 import yaml
 
 MODS_DIR = Path("mods")
-MODS_STATE_FILE = Path("database/mods_state.yaml")
+MODS_STATE_FILE = Path("database/content/mods_state.yaml")
 
 
 def scan_mods() -> list[dict[str, Any]]:

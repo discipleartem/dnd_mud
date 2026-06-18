@@ -8,12 +8,14 @@ from typing import Any
 
 import yaml
 
-SETTINGS_PATH = Path("database/settings.yaml")
+SETTINGS_PATH = Path("database/core/settings.yaml")
 DEFAULT_LANGUAGE = "ru"
 
 
 def load_settings() -> dict[str, Any]:
     """Загрузить настройки из YAML-файла.
+
+    Настройки хранятся в YAML-файле database/core/settings.yaml.
 
     Returns:
         Словарь с настройками: {"language": "ru", "hardcore": False}

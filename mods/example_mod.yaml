@@ -3,7 +3,7 @@ version: "1.0"
 type: "addon"
 description: "Добавляет расу Dragonborn"
 files:
-  - target: "database/races.yaml"
+  - target: "database/races/races.yaml"
     action: "append"
     data:
       - id: dragonborn

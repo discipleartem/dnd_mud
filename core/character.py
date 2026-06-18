@@ -24,9 +24,9 @@ STAT_NAMES = [
     "charisma",
 ]
 
-CHARACTERS_FILE = Path("database/characters.yaml")
-RACES_FILE = Path("database/races.yaml")
-CLASSES_FILE = Path("database/classes.yaml")
+CHARACTERS_FILE = Path("database/progression/characters.yaml")
+RACES_FILE = Path("database/races/races.yaml")
+CLASSES_FILE = Path("database/classes/classes.yaml")
 
 # Русские названия характеристик (если нет локализации)
 STAT_NAMES_RU = {

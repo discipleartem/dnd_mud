@@ -8,7 +8,7 @@ from typing import Any
 
 import yaml
 
-ADVENTURES_FILE = Path("database/adventures.yaml")
+ADVENTURES_FILE = Path("database/content/adventures.yaml")
 
 # Названия сложностей на разных языках
 DIFFICULTY_NAMES = {
