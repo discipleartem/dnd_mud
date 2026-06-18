@@ -1,65 +1,117 @@
-"""Отрисовка экранов приветствия и главного меню."""
+"""Отрисовка экранов меню (приветствие, главное меню, настройки)."""
 
-from typing import Any
+import os
 
 from colorama import Fore, Style
 
-from ui.input_handler import get_int_input
-from ui.window_manager import get_terminal_width, print_header, print_wrapped
+from ui.input_handler import get_choice, get_int_input
+from core.localization import get_string
 
 
-def show_welcome_screen(version: str, loc: Any) -> None:
-    """Отобразить приветственный экран с ASCII-рамкой и версией.
+SEPARATOR = f"{Fore.YELLOW}{'=' * 78}{Style.RESET_ALL}"
+
+
+def show_welcome_screen(version: str, strings: dict) -> None:
+    """Показать приветственный экран.
 
     Args:
-        version: Строка версии (из pyproject.toml)
-        loc: Объект локализации
+        version: Версия игры
+        strings: Словарь со строками интерфейса
     """
-    width = get_terminal_width() - 2
-    title = loc('welcome.title')
-    subtitle = loc('welcome.subtitle')
-    version_text = loc('welcome.version', version=version)
-
     print()
-    print_header(title, width=width, fill_char='=')
-
+    print(SEPARATOR)
+    print(f"{Fore.YELLOW}{get_string(strings, 'welcome.title').center(78)}{Style.RESET_ALL}")
+    print(SEPARATOR)
     print()
-    print_wrapped(subtitle, color=Fore.GREEN, width=width)
-    print_wrapped(version_text, color=Fore.CYAN, width=width)
+    print(f"{Fore.GREEN}{get_string(strings, 'welcome.subtitle')}{Style.RESET_ALL}")
+    print(f"{Fore.CYAN}{get_string(strings, 'welcome.version', version=version)}{Style.RESET_ALL}")
     print()
 
 
-def show_main_menu(loc: Any) -> int:
-    """Отобразить главное меню и получить выбор пользователя.
+def _clear_screen() -> None:
+    """Очистить экран терминала."""
+    os.system("cls" if os.name == "nt" else "clear")
+
+
+def show_main_menu(strings: dict) -> int:
+    """Показать главное меню и получить выбор.
+
+    Args:
+        strings: Словарь со строками интерфейса
 
     Returns:
-        Номер выбранного пункта (1-8)
+        Номер выбранного пункта (1-2)
     """
-    width = get_terminal_width() - 2
-    separator = Fore.YELLOW + '=' * width + Style.RESET_ALL
-
-    # Заголовок
-    print_header(loc('menu.caption'), width=width, fill_char='-')
+    print(f"{Fore.YELLOW}{'-' * 78}{Style.RESET_ALL}")
+    print(f"{Fore.YELLOW}{get_string(strings, 'menu.caption').center(78)}{Style.RESET_ALL}")
+    print(f"{Fore.YELLOW}{'-' * 78}{Style.RESET_ALL}")
     print()
 
-    # Пункты меню
     menu_items = [
-        ('1', loc('menu.new_game')),
-        ('2', loc('menu.load_game')),
-        ('3', loc('menu.create_character')),
-        ('4', loc('menu.settings')),
-        ('5', loc('menu.languages')),
-        ('6', loc('menu.mods')),
-        ('7', loc('menu.adventures')),
-        ('8', loc('menu.exit')),
+        ("1", get_string(strings, "menu.settings")),
+        ("2", get_string(strings, "menu.exit")),
     ]
-
     for num, label in menu_items:
-        print(f'  {Fore.YELLOW}{num}{Style.RESET_ALL}. {label}')
+        print(f"  {Fore.YELLOW}{num}{Style.RESET_ALL}. {label}")
 
     print()
-    print(separator)
+    print(SEPARATOR)
     print()
 
-    prompt = loc('menu.prompt', min=1, max=8)
-    return get_int_input(prompt, 1, 8, loc)
+    prompt = get_string(strings, "menu.prompt", min=1, max=2)
+    return get_int_input(prompt, 1, 2)
+
+
+def show_settings(strings: dict, settings: dict) -> dict:
+    """Экран настроек.
+
+    Позволяет переключить режим Hard Core.
+
+    Args:
+        strings: Словарь со строками интерфейса
+        settings: Текущие настройки {"language": str, "hardcore": bool}
+
+    Returns:
+        Обновлённый словарь настроек
+    """
+    _clear_screen()
+
+    while True:
+        print(SEPARATOR)
+        print(f"{Fore.YELLOW}{get_string(strings, 'settings.caption').center(78)}{Style.RESET_ALL}")
+        print(SEPARATOR)
+        print()
+
+        hardcore = settings.get("hardcore", False)
+        print(f'  {get_string(strings, "settings.hardcore")}: {hardcore}')
+        print()
+
+        # Показываем опции: переключить Hard Core, Назад
+        choice = get_choice([
+            get_string(strings, "settings.settings_option_hardcore"),
+            get_string(strings, "settings.settings_option_back"),
+        ], get_string(strings, "settings.prompt", count=2))
+
+        if choice == 2:  # Назад
+            break
+
+        if choice == 1:  # Переключить Hard Core
+            _clear_screen()
+            print(SEPARATOR)
+            print(f"{Fore.YELLOW}{get_string(strings, 'settings.hardcore').center(78)}{Style.RESET_ALL}")
+            print(SEPARATOR)
+            print()
+
+            hc_choice = get_choice([
+                get_string(strings, "settings.hardcore_options.off"),
+                get_string(strings, "settings.hardcore_options.on"),
+            ], get_string(strings, "settings.hardcore_prompt", count=2))
+
+            settings["hardcore"] = (hc_choice == 2)
+            print(f"{Fore.GREEN}{get_string(strings, 'settings.hardcore_changed', value=str(settings['hardcore']))}{Style.RESET_ALL}")
+            print()
+            input(f"{Fore.CYAN}[Enter]{Style.RESET_ALL}")
+
+        _clear_screen()
+
+    return settings

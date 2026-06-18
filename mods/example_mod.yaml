@@ -1,0 +1,15 @@
+name: "Новая раса - Драконорожденный"
+version: "1.0"
+type: "addon"
+description: "Добавляет расу Dragonborn"
+files:
+  - target: "database/races.yaml"
+    action: "append"
+    data:
+      - id: dragonborn
+        name:
+          ru: "Драконорожденный"
+          en: "Dragonborn"
+        ability_bonuses:
+          str: 2
+          cha: 1

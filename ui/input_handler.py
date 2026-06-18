@@ -1,82 +1,75 @@
-"""Валидация пользовательского ввода с повторным запросом."""
-
-from collections.abc import Callable
-from typing import Any
+"""Ввод от пользователя с проверкой и повторным запросом при ошибке."""
 
 from colorama import Fore, Style
 
-from ui.window_manager import print_wrapped
 
+def get_choice(options: list[str], prompt: str = "> ") -> int:
+    """Показать нумерованный список и получить выбор пользователя.
 
-def get_int_input(
-    prompt: str,
-    min_val: int,
-    max_val: int,
-    loc: Any | None = None,
-) -> int:
-    """Запросить у пользователя целое число в диапазоне [min_val, max_val].
+    Выводит опции с номерами (1, 2, 3...), ждёт ввод числа.
+    Если введено неправильное число — просит повторить.
 
     Args:
-        prompt: Приглашение для ввода
-        min_val: Минимальное допустимое значение
-        max_val: Максимальное допустимое значение
-        loc: Объект локализации (для сообщений об ошибках)
+        options: Список строк-опций
+        prompt: Текст перед полем ввода
 
     Returns:
-        Корректно введённое число
+        Номер выбранной опции (1, 2, 3...)
+    """
+    for i, option in enumerate(options, start=1):
+        print(f"  {Fore.YELLOW}{i}{Style.RESET_ALL}. {option}")
+
+    print()
+
+    while True:
+        try:
+            raw = input(f"{Fore.CYAN}{prompt}{Style.RESET_ALL}")
+            value = int(raw.strip())
+            if 1 <= value <= len(options):
+                return value
+            print(f"{Fore.RED}Ошибка: введите число от 1 до {len(options)}{Style.RESET_ALL}")
+        except ValueError:
+            print(f"{Fore.RED}Ошибка: введите число{Style.RESET_ALL}")
+
+
+def get_int_input(prompt: str, min_val: int, max_val: int) -> int:
+    """Запросить целое число в заданном диапазоне.
+
+    Args:
+        prompt: Текст перед полем ввода
+        min_val: Минимальное допустимое значение
+        max_val: Максимальное допустимое значение
+
+    Returns:
+        Введённое число
     """
     while True:
         try:
-            raw = input(f'{Fore.CYAN}{prompt}{Style.RESET_ALL}')
+            raw = input(f"{Fore.CYAN}{prompt}{Style.RESET_ALL}")
             value = int(raw.strip())
             if min_val <= value <= max_val:
                 return value
-
-            error_msg = (
-                loc('errors.invalid_input', min=min_val, max=max_val)
-                if loc
-                else f'Ошибка: введите число от {min_val} до {max_val}'
-            )
-            print_wrapped(error_msg, color=Fore.RED)
+            print(f"{Fore.RED}Ошибка: введите число от {min_val} до {max_val}{Style.RESET_ALL}")
         except ValueError:
-            error_msg = (
-                loc('errors.invalid_number', min=min_val, max=max_val)
-                if loc
-                else f'Ошибка: введите число от {min_val} до {max_val}'
-            )
-            print_wrapped(error_msg, color=Fore.RED)
+            print(f"{Fore.RED}Ошибка: введите число{Style.RESET_ALL}")
 
 
-def get_str_input(
-    prompt: str,
-    min_length: int = 1,
-    validator: Callable[[str], bool] | None = None,
-    error_msg: str = 'Ошибка: некорректный ввод',
-) -> str:
-    """Запросить у пользователя строку с валидацией.
+def get_str_input(prompt: str, min_length: int = 1) -> str:
+    """Запросить строку минимальной длины.
 
     Args:
-        prompt: Приглашение для ввода
-        min_length: Минимальная длина строки
-        validator: Дополнительная функция-валидатор (возвращает True если OK)
-        error_msg: Сообщение об ошибке при некорректном вводе
+        prompt: Текст перед полем ввода
+        min_length: Минимальное количество символов
 
     Returns:
-        Корректно введённая строка
+        Введённая строка (без лишних пробелов по краям)
     """
     while True:
-        raw = input(f'{Fore.CYAN}{prompt}{Style.RESET_ALL}')
+        raw = input(f"{Fore.CYAN}{prompt}{Style.RESET_ALL}")
         value = raw.strip()
 
         if len(value) < min_length:
-            print_wrapped(
-                f'Ошибка: минимум {min_length} символа(ов)',
-                color=Fore.RED,
-            )
-            continue
-
-        if validator is not None and not validator(value):
-            print_wrapped(error_msg, color=Fore.RED)
+            print(f"{Fore.RED}Ошибка: минимум {min_length} символа(ов){Style.RESET_ALL}")
             continue
 
         return value

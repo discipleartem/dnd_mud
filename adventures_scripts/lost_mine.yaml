@@ -1,0 +1,18 @@
+# Сценарий "Затеряные рудники Фанделвера"
+# Заглушка для Pre-Alpha
+
+scenario:
+  id: lost_mine
+  start_node: start
+  
+  nodes:
+    start:
+      description:
+        ru: "Вы прибываете в Фанделвер. Приключение ещё не реализовано."
+        en: "You arrive in Phandalin. This adventure is not yet implemented."
+      choices:
+        - text:
+            ru: "Вернуться"
+            en: "Go back"
+          next: null
+          action: exit

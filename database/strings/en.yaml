@@ -16,10 +16,81 @@ menu:
   exit: "Exit"
   prompt: "Choose option [{min}-{max}]: "
 
+character:
+  creation_caption: "CHARACTER CREATION"
+  name_prompt: "Enter character name (at least 2 characters): "
+  name_empty: "Name must be at least 2 characters long"
+  name_exists: "Character '{name}' already exists. Choose another name."
+  race_prompt: "Choose race (1-{count}): "
+  class_prompt: "Choose class (1-{count}): "
+  class_desc: "Class: {name} — {desc}"
+  stats_title: "STATS"
+  stat_line: "{stat}: {value}"
+  total_stats: "Total stats: {total}"
+  save_success: "Character '{name}' created successfully!"
+  no_characters: "No saved characters. Create one first."
+  select_caption: "SELECT CHARACTER"
+  select_prompt: "Choose character (1-{count}), 0 — cancel: "
+  character_line: "{name} — lvl {level} {race}/{class_name}"
+  back: "Back"
+
+settings:
+  caption: "SETTINGS"
+  hardcore: "Hard Core mode"
+  hardcore_options:
+    off: "Off"
+    on: "On"
+  hardcore_prompt: "Hard Core mode (1-{count}): "
+  hardcore_changed: "Hard Core mode: {value}"
+  back: "Back"
+  prompt: "Choose action (1-{count}): "
+  settings_option_hardcore: "Toggle Hard Core"
+  settings_option_back: "Return to main menu"
+
+languages:
+  caption: "LANGUAGE SELECTION"
+  available: "Available languages:"
+  current: "Current language: {lang}"
+  prompt: "Choose language (1-{count}), 0 — cancel: "
+  changed: "Language changed to: {name}"
+  back: "Back"
+  lang_en: "English"
+  lang_ru: "Русский"
+
+mods:
+  caption: "MODIFICATIONS"
+  header: "Available modifications:"
+  no_mods: "No modifications found. Place .yaml files in the mods/ folder"
+  no_mods_dir: "The mods/ folder does not exist. Create it to use modifications."
+  mod_line: "{name} v{version} ({type}) — {desc}"
+  mod_enabled: "[ON]"
+  mod_disabled: "[OFF]"
+  mod_status: "{name}: {status}"
+  prompt: "Choose mod to toggle (1-{count}), 0 — exit: "
+  toggle_success: "Mod '{name}' {'enabled' if enabled else 'disabled'}"
+  back: "Back"
+
+adventures:
+  caption: "ADVENTURES"
+  header: "Available adventures:"
+  no_adventures: "No adventures available."
+  prompt: "Choose adventure (1-{count}), 0 — cancel: "
+  adventure_line: "{name} ({difficulty}) — {desc}"
+  not_implemented: "This adventure is not yet implemented"
+  back: "Back"
+
+choose_character:
+  caption: "NEW GAME"
+  prompt: "Choose character (1-{count}), 0 — create new: "
+  line: "{name} — lvl {level} {race}/{class_name}"
+  no_characters: "No saved characters. Redirecting to creation..."
+  back: "Back"
+
 errors:
   invalid_input: "Error: enter a number from {min} to {max}"
   invalid_number: "Error: enter a number from {min} to {max}"
   not_implemented: "This section is not yet implemented"
+  invalid_choice: "Invalid choice. Please try again."
 
 info:
   goodbye: "Goodbye! Exiting the game..."
