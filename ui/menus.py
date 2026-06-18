@@ -418,14 +418,16 @@ def _select_subrace(
     for subrace_id, subrace_info in subraces.items():
         choices.append((str(subrace_id), subrace_info))
 
-    for idx, (_, subrace_info) in enumerate(choices, 1):
+    for idx, (subrace_id, subrace_info) in enumerate(choices, 1):
         print()
         print(
             f"  {Fore.YELLOW}{idx}{Style.RESET_ALL}. "
             f"{Fore.CYAN}{subrace_info.get('name', '?')}"
             f"{Style.RESET_ALL}"
         )
-        _print_race_info(subrace_info, strings)
+        # Skip printing info for base race choice (already printed above)
+        if not (subrace_id is None and idx == 1):
+            _print_race_info(subrace_info, strings)
 
     print()
     print(
