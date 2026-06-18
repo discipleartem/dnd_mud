@@ -1,6 +1,5 @@
 # База данных рас D&D 5e
 # Стандартный формат: словарь рас с id в качестве ключа
-# Переиспользуемые особенности вынесены в features.yaml
 
 races:
   human:
@@ -18,7 +17,12 @@ races:
       wisdom: 1
       charisma: 1
     features:
-      - ref: "additional_language"
+      - name: "Дополнительный язык"
+        description: "Вы можете говорить, читать и писать на одном дополнительном языке на ваш выбор"
+        type: "language"
+        mechanics:
+          count: 1
+          choice: true
     allow_base_race_choice: true
     subraces:
       variant_human:
@@ -28,9 +32,28 @@ races:
         inherit_base_features: false
         ability_bonuses: {}
         features:
-          - ref: "ability_score_increase_choice"
-          - ref: "skill_proficiency_choice"
-          - ref: "feat_choice"
+          - name: "Увеличение характеристик"
+            description: "Значение двух характеристик на ваш выбор увеличивается на 1"
+            type: "ability_bonus"
+            mechanics:
+              count: 2
+              value: 1
+              choice: true
+              allow_duplicates: false
+          - name: "Навыки"
+            description: "Вы получаете владение одним навыком на ваш выбор"
+            type: "skill_proficiency"
+            mechanics:
+              count: 1
+              choice: true
+              from_list: "all"
+          - name: "Черта"
+            description: "Вы получаете одну черту на ваш выбор"
+            type: "feat"
+            mechanics:
+              count: 1
+              choice: true
+              from_list: "all"
 
   elf:
     name: "Эльф"
@@ -42,10 +65,28 @@ races:
     ability_bonuses:
       dexterity: 2
     features:
-      - ref: "keen_senses"
-      - ref: "darkvision_60"
-      - ref: "fey_ancestry"
-      - ref: "trance"
+      - name: "Обострённые чувства"
+        description: "Вы владеете навыком Внимательность"
+        type: "skill_proficiency"
+        mechanics:
+          skills: ["perception"]
+      - name: "Тёмное зрение"
+        description: "Можете видеть в условиях слабого освещения на расстоянии 60 футов как в ярком освещении"
+        type: "darkvision"
+        mechanics:
+          range: 60
+      - name: "Наследие фей"
+        description: "Преимущество при спасбросках от очарования"
+        type: "advantage"
+        mechanics:
+          save: "charisma"
+          effect: "charm"
+      - name: "Транс"
+        description: "Медитация вместо сна. 4 часа медитации дают тот же отдых, что и 8 часов сна"
+        type: "rest"
+        mechanics:
+          duration: 4
+          effect: "full_rest"
     allow_base_race_choice: false
     subraces:
       high_elf:
@@ -54,9 +95,25 @@ races:
         ability_bonuses:
           intelligence: 1
         features:
-          - ref: "elf_weapon_training"
-          - ref: "additional_language"
-          - ref: "high_elf_cantrip"
+          - name: "Эльфийская боевая подготовка"
+            description: "Владение длинными мечами, рапирами, короткими мечами, длинными и короткими луками"
+            type: "weapon_proficiency"
+            mechanics:
+              weapons: ["longsword", "rapier", "shortsword", "longbow", "shortbow"]
+          - name: "Дополнительный язык"
+            description: "Вы можете говорить, читать и писать на одном дополнительном языке на ваш выбор"
+            type: "language"
+            mechanics:
+              count: 1
+              choice: true
+          - name: "Заговор высшего эльфа"
+            description: "Вы знаете один заговор из списка волшебника"
+            type: "cantrip"
+            mechanics:
+              source: "wizard"
+              ability: "intelligence"
+              count: 1
+              choice: true
 
       wood_elf:
         name: "Лесной эльф"
@@ -65,9 +122,22 @@ races:
           wisdom: 1
         speed: 35
         features:
-          - ref: "elf_weapon_training"
-          - ref: "fleet_of_foot"
-          - ref: "mask_of_the_wild"
+          - name: "Эльфийская боевая подготовка"
+            description: "Владение длинными мечами, рапирами, короткими мечами, длинными и короткими луками"
+            type: "weapon_proficiency"
+            mechanics:
+              weapons: ["longsword", "rapier", "shortsword", "longbow", "shortbow"]
+          - name: "Быстрота"
+            description: "Базовая скорость передвижения 35 футов"
+            type: "speed_bonus"
+            mechanics:
+              value: 35
+          - name: "Маскировка лесного эльфа"
+            description: "Преимущество при проверках Ловкости (Скрытность) в лесистой местности"
+            type: "advantage"
+            mechanics:
+              skill: "stealth"
+              terrain: "forest"
 
       dark_elf_drow:
         name: "Дроу"
@@ -75,9 +145,34 @@ races:
         ability_bonuses:
           charisma: 1
         features:
-          - ref: "drow_magic"
-          - ref: "drow_weapon_training"
-          - ref: "sunlight_sensitivity"
+          - name: "Магия дроу"
+            description: "Вы знаете магию дроу"
+            type: "spellcasting"
+            mechanics:
+              spells:
+                - name: "dancing_lights"
+                  level: 0
+                  uses: "at_will"
+                - name: "faerie_fire"
+                  level: 1
+                  uses: 1
+                  recharge: "long_rest"
+                - name: "darkness"
+                  level: 2
+                  uses: 1
+                  recharge: "long_rest"
+              ability: "charisma"
+          - name: "Боевая подготовка дроу"
+            description: "Владение рапирами, короткими мечами и арбалетами"
+            type: "weapon_proficiency"
+            mechanics:
+              weapons: ["rapier", "shortsword", "hand_crossbow"]
+          - name: "Чувствительность к солнечному свету"
+            description: "Недостаток при атаках и проверках Мудрости (Внимательность) при прямом солнечном свете"
+            type: "disadvantage"
+            mechanics:
+              condition: "direct_sunlight"
+              affected: ["attacks", "perception_checks"]
 
   dwarf:
     name: "Дварф"
@@ -89,10 +184,29 @@ races:
     ability_bonuses:
       constitution: 2
     features:
-      - ref: "darkvision_60"
-      - ref: "dwarven_resilience"
-      - ref: "stonecunning"
-      - ref: "dwarven_combat_training"
+      - name: "Тёмное зрение"
+        description: "Можете видеть в условиях слабого освещения на расстоянии 60 футов как в ярком освещении"
+        type: "darkvision"
+        mechanics:
+          range: 60
+      - name: "Дварфская стойкость"
+        description: "Вы имеете преимущество при спасбросках от яда и сопротивление урону ядом"
+        type: "resistance"
+        mechanics:
+          damage_types: ["poison"]
+          advantage_saves: ["poison"]
+      - name: "Камнерезание"
+        description: "При проверке Интеллекта (История) о происхождении каменных конструкций вы добавляете преимущество"
+        type: "skill_bonus"
+        mechanics:
+          skill: "history"
+          context: "stone_structures"
+          advantage: true
+      - name: "Дварфская боевая подготовка"
+        description: "Владение боевым топором, ручным топором, лёгким молотом и боевым молотом"
+        type: "weapon_proficiency"
+        mechanics:
+          weapons: ["battleaxe", "handaxe", "light_hammer", "warhammer"]
     allow_base_race_choice: false
     subraces:
       hill_dwarf:
@@ -101,7 +215,12 @@ races:
         ability_bonuses:
           wisdom: 1
         features:
-          - ref: "dwarven_toughness"
+          - name: "Дварфская выносливость"
+            description: "Увеличенные хиты на каждом уровне"
+            type: "hit_point_bonus"
+            mechanics:
+              value: 1
+              per_level: true
 
       mountain_dwarf:
         name: "Горный дварф"
@@ -109,7 +228,11 @@ races:
         ability_bonuses:
           strength: 2
         features:
-          - ref: "dwarven_armor_training"
+          - name: "Дварфская броневая подготовка"
+            description: "Владение лёгкими и средними доспехами"
+            type: "armor_proficiency"
+            mechanics:
+              armor_types: ["light_armor", "medium_armor"]
 
   half_orc:
     name: "Полуорк"
@@ -122,6 +245,16 @@ races:
       strength: 2
       constitution: 1
     features:
-      - ref: "relentless_endurance"
-      - ref: "savage_attacks"
+      - name: "Непреклонность"
+        description: "Когда урон снижает ваши хиты до 0, вы остаётесь с 1 хитом"
+        type: "persistent_endurance"
+        mechanics:
+          trigger: "damage_reduces_to_zero"
+          effect: "remain_at_1_hp"
+      - name: "Дикие атаки"
+        description: "Когда вы наносите критический удар оружием, вы можете перебросить один из кубиков урона"
+        type: "damage_bonus"
+        mechanics:
+          trigger: "critical_hit"
+          effect: "reroll_one_damage_die"
     allow_base_race_choice: true
