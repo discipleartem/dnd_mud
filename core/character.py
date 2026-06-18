@@ -39,7 +39,9 @@ STAT_NAMES_RU = {
 }
 
 
-def create_character(name: str, race_id: str, class_id: str) -> dict[str, Any]:
+def save_character(
+    name: str, race_id: str, class_id: str, difficulty: str = "normal"
+) -> dict[str, Any]:
     """Создать нового персонажа и сохранить в YAML.
 
     Персонаж получает:
@@ -67,6 +69,7 @@ def create_character(name: str, race_id: str, class_id: str) -> dict[str, Any]:
         "stats": stats,
         "current_hp": hp,
         "experience": 0,
+        "difficulty": difficulty,
     }
 
     # Сохраняем

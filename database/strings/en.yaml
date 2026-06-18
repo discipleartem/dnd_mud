@@ -11,10 +11,8 @@ menu:
   create_character: "Create Character"
   settings: "Settings"
   languages: "Languages"
-  mods: "Modifications"
-  adventures: "Adventures"
   exit: "Exit"
-  prompt: "Choose option [{min}-{max}]: "
+  prompt: "Choose option [1-{max}, 0-Back]: "
 
 character:
   creation_caption: "CHARACTER CREATION"
@@ -51,7 +49,7 @@ languages:
   caption: "LANGUAGE SELECTION"
   available: "Available languages:"
   current: "Current language: {lang}"
-  prompt: "Choose language (1-{count}), 0 — cancel: "
+  prompt: "Choose language (1-{count}), 0 — Back: "
   changed: "Language changed to: {name}"
   back: "Back"
   lang_en: "English"
@@ -84,6 +82,33 @@ choose_character:
   prompt: "Choose character (1-{count}), 0 — create new: "
   line: "{name} — lvl {level} {race}/{class_name}"
   no_characters: "No saved characters. Redirecting to creation..."
+  back: "Back"
+
+difficulty:
+  caption: "SELECT DIFFICULTY"
+  prompt: "Choose difficulty (1-{count}), 0 — Back: "
+  normal: "Normal"
+  hardcore: "HardCore"
+  selected: "Difficulty: {mode}"
+  back: "Back"
+
+new_game:
+  caption: "NEW GAME"
+  prompt: "Choose character (1-{count}), 0 — Back: "
+  line: "{name} — lvl {level} {race}/{class_name}"
+  no_characters: "No saved characters. Create one first."
+  back: "Back"
+
+load_game:
+  caption: "LOAD GAME"
+  prompt: "Choose save (1-{count}), 0 — Back: "
+  line: "{name} — {date}"
+  no_saves: "No saves available."
+  back: "Back"
+
+create_character:
+  caption: "CREATE CHARACTER"
+  prompt: "Choose difficulty for character (1-{count}), 0 — Back: "
   back: "Back"
 
 errors:

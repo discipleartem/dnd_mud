@@ -11,10 +11,8 @@ menu:
   create_character: "Создать персонажа"
   settings: "Настройки"
   languages: "Languages"
-  mods: "Модификации"
-  adventures: "Приключения"
   exit: "Выход"
-  prompt: "Выберите пункт [{min}-{max}]: "
+  prompt: "Выберите пункт [1-{max}, 0-Выход]: "
 
 character:
   creation_caption: "СОЗДАНИЕ ПЕРСОНАЖА"
@@ -51,7 +49,7 @@ languages:
   caption: "ВЫБОР ЯЗЫКА"
   available: "Доступные языки:"
   current: "Текущий язык: {lang}"
-  prompt: "Выберите язык (1-{count}), 0 — отмена: "
+  prompt: "Выберите язык (1-{count}), 0 — Назад: "
   changed: "Язык изменён на: {name}"
   back: "Назад"
   lang_en: "English"
@@ -86,11 +84,48 @@ choose_character:
   no_characters: "Нет сохранённых персонажей. Переход к созданию..."
   back: "Назад"
 
+difficulty:
+  caption: "ВЫБОР СЛОЖНОСТИ"
+  prompt: "Выберите сложность (1-{count}), 0 — Назад: "
+  normal: "Нормальная"
+  hardcore: "HardCore"
+  selected: "Сложность: {mode}"
+  back: "Назад"
+
+new_game:
+  caption: "НОВАЯ ИГРА"
+  prompt: "Выберите персонажа (1-{count}), 0 — Назад: "
+  line: "{name} — ур. {level} {race}/{class_name}"
+  no_characters: "Нет сохранённых персонажей. Сначала создайте персонажа."
+  back: "Назад"
+
+load_game:
+  caption: "ЗАГРУЗИТЬ ИГРУ"
+  prompt: "Выберите сохранение (1-{count}), 0 — Назад: "
+  line: "{name} — {date}"
+  no_saves: "Нет сохранений."
+  back: "Назад"
+
+create_character:
+  caption: "СОЗДАТЬ ПЕРСОНАЖА"
+  prompt: "Выберите сложность для персонажа (1-{count}), 0 — Назад: "
+  back: "Назад"
+
+adventures:
+  caption: "ПРИКЛЮЧЕНИЯ"
+  header: "Список доступных приключений:"
+  no_adventures: "Нет доступных приключений."
+  prompt: "Выберите приключение (1-{count}), 0 — Назад: "
+  adventure_line: "{name} ({difficulty}) — {desc}"
+  not_implemented: "Это приключение ещё не реализовано"
+  back: "Назад"
+
 errors:
   invalid_input: "Ошибка: введите число от {min} до {max}"
   invalid_number: "Ошибка: введите число от {min} до {max}"
   not_implemented: "Этот раздел ещё в разработке"
   invalid_choice: "Неверный выбор. Попробуйте снова."
+  load_not_implemented: "Загрузка игры ещё не реализована"
 
 info:
   goodbye: "До встречи! Выход из игры..."
