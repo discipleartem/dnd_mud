@@ -8,12 +8,12 @@ import sys
 
 from colorama import Fore, Style, init
 
-from core.localization import load_strings, get_string
+from core.localization import get_string, load_strings
 from core.settings import load_settings, save_settings
 from ui.menus import (
-    show_welcome_screen,
     show_main_menu,
     show_settings,
+    show_welcome_screen,
 )
 
 # Версия игры
@@ -44,7 +44,10 @@ def main() -> int:
         choice = show_main_menu(strings)
 
         if choice == 2:
-            print(f"{Fore.GREEN}{get_string(strings, 'info.goodbye')}{Style.RESET_ALL}")
+            print(
+                f"{Fore.GREEN}{get_string(strings, 'info.goodbye')}"
+                f"{Style.RESET_ALL}"
+            )
             running = False
 
         elif choice == 1:

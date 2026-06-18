@@ -11,7 +11,7 @@ if str(PROJECT_ROOT) not in sys.path:
 
 def test_localization():
     """Тест локализации: загрузка строк и получение по ключу."""
-    from core.localization import load_strings, get_string
+    from core.localization import get_string, load_strings
 
     # Загружаем английский
     strings_en = load_strings("en")
@@ -69,7 +69,7 @@ if __name__ == "__main__":
 
     for test in tests:
         try:
-            test()
+            test()  # type: ignore[no-untyped-call]
             passed += 1
         except AssertionError as e:
             print(f"✗ {test.__name__}: {e}")

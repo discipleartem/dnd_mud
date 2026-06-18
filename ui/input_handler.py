@@ -27,7 +27,10 @@ def get_choice(options: list[str], prompt: str = "> ") -> int:
             value = int(raw.strip())
             if 1 <= value <= len(options):
                 return value
-            print(f"{Fore.RED}Ошибка: введите число от 1 до {len(options)}{Style.RESET_ALL}")
+            print(
+                f"{Fore.RED}Ошибка: введите число от 1 до "
+                f"{len(options)}{Style.RESET_ALL}"
+            )
         except ValueError:
             print(f"{Fore.RED}Ошибка: введите число{Style.RESET_ALL}")
 
@@ -49,7 +52,10 @@ def get_int_input(prompt: str, min_val: int, max_val: int) -> int:
             value = int(raw.strip())
             if min_val <= value <= max_val:
                 return value
-            print(f"{Fore.RED}Ошибка: введите число от {min_val} до {max_val}{Style.RESET_ALL}")
+            print(
+                f"{Fore.RED}Ошибка: введите число от {min_val} до "
+                f"{max_val}{Style.RESET_ALL}"
+            )
         except ValueError:
             print(f"{Fore.RED}Ошибка: введите число{Style.RESET_ALL}")
 
@@ -69,7 +75,10 @@ def get_str_input(prompt: str, min_length: int = 1) -> str:
         value = raw.strip()
 
         if len(value) < min_length:
-            print(f"{Fore.RED}Ошибка: минимум {min_length} символа(ов){Style.RESET_ALL}")
+            print(
+                f"{Fore.RED}Ошибка: минимум {min_length} "
+                f"символа(ов){Style.RESET_ALL}"
+            )
             continue
 
         return value

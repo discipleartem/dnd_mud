@@ -44,7 +44,9 @@ def roll_d20(advantage: bool = False, disadvantage: bool = False) -> int:
         ValueError: Если указаны и advantage, и disadvantage одновременно
     """
     if advantage and disadvantage:
-        raise ValueError("Нельзя бросать с преимуществом и помехой одновременно")
+        raise ValueError(
+            "Нельзя бросать с преимуществом и помехой одновременно"
+        )
 
     if not advantage and not disadvantage:
         return random.randint(1, 20)
@@ -64,7 +66,7 @@ def roll_with_mods(
     modifier: int = 0,
     advantage: bool = False,
     disadvantage: bool = False,
-):
+) -> tuple[int, list[int]]:
     """Бросок кубиков с подробным результатом.
 
     Возвращает не только сумму, но и список выпавших значений.
@@ -116,7 +118,7 @@ def ability_modifier(score: int) -> int:
     return (score - 10) // 2
 
 
-def critical_hit(extra_dice: int = 0):
+def critical_hit(extra_dice: int = 0) -> tuple[int, list[int]]:
     """Симулировать критическое попадание.
 
     При критическом попадании все кубики урона удваиваются.

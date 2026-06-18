@@ -4,10 +4,14 @@
 возвращает текстовые ответы для отображения.
 """
 
-from core.dice import roll_d20, ability_modifier
+from typing import Any
+
+from core.dice import ability_modifier, roll_d20
 
 
-def run_game_loop(character: dict, adventure: dict) -> None:
+def run_game_loop(
+    character: dict[str, Any], adventure: dict[str, Any]
+) -> None:
     """Запустить основной игровой цикл.
 
     Пока что это заглушка — просто показывает, что игра началась,
@@ -38,12 +42,12 @@ def run_game_loop(character: dict, adventure: dict) -> None:
 
 
 def ability_check(
-    character: dict,
+    character: dict[str, Any],
     ability: str,
     dc: int = 10,
     advantage: bool = False,
     disadvantage: bool = False,
-):
+) -> tuple[bool, int, str]:
     """Проверка характеристики (ability check).
 
     Бросает к20, добавляет модификатор характеристики,
@@ -89,7 +93,7 @@ def _get_help_text() -> str:
     )
 
 
-def _get_stats_text(character: dict) -> str:
+def _get_stats_text(character: dict[str, Any]) -> str:
     """Собрать текст с характеристиками персонажа.
 
     Args:

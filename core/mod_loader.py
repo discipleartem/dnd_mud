@@ -5,6 +5,7 @@
 """
 
 from pathlib import Path
+from typing import Any
 
 import yaml
 
@@ -12,7 +13,7 @@ MODS_DIR = Path("mods")
 MODS_STATE_FILE = Path("database/mods_state.yaml")
 
 
-def scan_mods() -> list[dict]:
+def scan_mods() -> list[dict[str, Any]]:
     """Найти все YAML-файлы модов в папке mods/.
 
     Returns:
@@ -36,7 +37,7 @@ def scan_mods() -> list[dict]:
     return mods
 
 
-def load_mods_state() -> dict:
+def load_mods_state() -> dict[str, bool]:
     """Загрузить состояния включения/выключения модов.
 
     Returns:
@@ -48,12 +49,15 @@ def load_mods_state() -> dict:
     try:
         with open(MODS_STATE_FILE, encoding="utf-8") as f:
             data = yaml.safe_load(f) or {}
-        return data.get("mods", {})
+        result = data.get("mods", {})
+        if isinstance(result, dict):
+            return result
+        return {}
     except (yaml.YAMLError, OSError):
         return {}
 
 
-def save_mods_state(state: dict) -> None:
+def save_mods_state(state: dict[str, bool]) -> None:
     """Сохранить состояния включения/выключения модов.
 
     Args:
@@ -61,7 +65,9 @@ def save_mods_state(state: dict) -> None:
     """
     MODS_STATE_FILE.parent.mkdir(parents=True, exist_ok=True)
     with open(MODS_STATE_FILE, "w", encoding="utf-8") as f:
-        yaml.dump({"mods": state}, f, allow_unicode=True, default_flow_style=False)
+        yaml.dump(
+            {"mods": state}, f, allow_unicode=True, default_flow_style=False
+        )
 
 
 def toggle_mod(mod_name: str) -> bool:
@@ -74,7 +80,8 @@ def toggle_mod(mod_name: str) -> bool:
         Новое состояние: True — включён, False — выключен
     """
     state = load_mods_state()
-    state[mod_name] = not state.get(mod_name, False)
+    current = state.get(mod_name, False)
+    state[mod_name] = not current
     save_mods_state(state)
     return state[mod_name]
 
@@ -89,4 +96,4 @@ def is_mod_enabled(mod_name: str) -> bool:
         True если мод включён
     """
     state = load_mods_state()
-    return state.get(mod_name, False)
+    return bool(state.get(mod_name, False))

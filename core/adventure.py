@@ -4,6 +4,7 @@
 """
 
 from pathlib import Path
+from typing import Any
 
 import yaml
 
@@ -26,7 +27,7 @@ DIFFICULTY_NAMES = {
 }
 
 
-def load_adventures() -> list[dict]:
+def load_adventures() -> list[dict[str, Any]]:
     """Загрузить список приключений из YAML-файла.
 
     Returns:
@@ -38,12 +39,15 @@ def load_adventures() -> list[dict]:
     try:
         with open(ADVENTURES_FILE, encoding="utf-8") as f:
             data = yaml.safe_load(f) or {}
-        return data.get("adventures", [])
+        result = data.get("adventures", [])
+        if isinstance(result, list):
+            return result
+        return []
     except (yaml.YAMLError, OSError):
         return []
 
 
-def get_adventure_name(adventure: dict, language: str = "ru") -> str:
+def get_adventure_name(adventure: dict[str, Any], language: str = "ru") -> str:
     """Получить название приключения на нужном языке.
 
     В YAML название может быть словарём {"ru": "...", "en": "..."}.
@@ -57,7 +61,7 @@ def get_adventure_name(adventure: dict, language: str = "ru") -> str:
     """
     name = adventure.get("name", "")
     if isinstance(name, dict):
-        return name.get(language, name.get("en", str(name)))
+        return str(name.get(language, name.get("en", str(name))))
     return str(name)
 
 

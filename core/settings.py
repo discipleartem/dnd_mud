@@ -4,6 +4,7 @@
 """
 
 from pathlib import Path
+from typing import Any
 
 import yaml
 
@@ -11,7 +12,7 @@ SETTINGS_PATH = Path("database/settings.yaml")
 DEFAULT_LANGUAGE = "ru"
 
 
-def load_settings() -> dict:
+def load_settings() -> dict[str, Any]:
     """Загрузить настройки из YAML-файла.
 
     Returns:

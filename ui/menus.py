@@ -1,17 +1,17 @@
 """Отрисовка экранов меню (приветствие, главное меню, настройки)."""
 
 import os
+from typing import Any
 
 from colorama import Fore, Style
 
-from ui.input_handler import get_choice, get_int_input
 from core.localization import get_string
-
+from ui.input_handler import get_choice, get_int_input
 
 SEPARATOR = f"{Fore.YELLOW}{'=' * 78}{Style.RESET_ALL}"
 
 
-def show_welcome_screen(version: str, strings: dict) -> None:
+def show_welcome_screen(version: str, strings: dict[str, Any]) -> None:
     """Показать приветственный экран.
 
     Args:
@@ -20,11 +20,22 @@ def show_welcome_screen(version: str, strings: dict) -> None:
     """
     print()
     print(SEPARATOR)
-    print(f"{Fore.YELLOW}{get_string(strings, 'welcome.title').center(78)}{Style.RESET_ALL}")
+    print(
+        f"{Fore.YELLOW}"
+        f"{get_string(strings, 'welcome.title').center(78)}"
+        f"{Style.RESET_ALL}"
+    )
     print(SEPARATOR)
     print()
-    print(f"{Fore.GREEN}{get_string(strings, 'welcome.subtitle')}{Style.RESET_ALL}")
-    print(f"{Fore.CYAN}{get_string(strings, 'welcome.version', version=version)}{Style.RESET_ALL}")
+    print(
+        f"{Fore.GREEN}{get_string(strings, 'welcome.subtitle')}"
+        f"{Style.RESET_ALL}"
+    )
+    print(
+        f"{Fore.CYAN}"
+        f"{get_string(strings, 'welcome.version', version=version)}"
+        f"{Style.RESET_ALL}"
+    )
     print()
 
 
@@ -33,7 +44,7 @@ def _clear_screen() -> None:
     os.system("cls" if os.name == "nt" else "clear")
 
 
-def show_main_menu(strings: dict) -> int:
+def show_main_menu(strings: dict[str, Any]) -> int:
     """Показать главное меню и получить выбор.
 
     Args:
@@ -43,7 +54,11 @@ def show_main_menu(strings: dict) -> int:
         Номер выбранного пункта (1-2)
     """
     print(f"{Fore.YELLOW}{'-' * 78}{Style.RESET_ALL}")
-    print(f"{Fore.YELLOW}{get_string(strings, 'menu.caption').center(78)}{Style.RESET_ALL}")
+    print(
+        f"{Fore.YELLOW}"
+        f"{get_string(strings, 'menu.caption').center(78)}"
+        f"{Style.RESET_ALL}"
+    )
     print(f"{Fore.YELLOW}{'-' * 78}{Style.RESET_ALL}")
     print()
 
@@ -62,7 +77,9 @@ def show_main_menu(strings: dict) -> int:
     return get_int_input(prompt, 1, 2)
 
 
-def show_settings(strings: dict, settings: dict) -> dict:
+def show_settings(
+    strings: dict[str, Any], settings: dict[str, Any]
+) -> dict[str, Any]:
     """Экран настроек.
 
     Позволяет переключить режим Hard Core.
@@ -78,7 +95,11 @@ def show_settings(strings: dict, settings: dict) -> dict:
 
     while True:
         print(SEPARATOR)
-        print(f"{Fore.YELLOW}{get_string(strings, 'settings.caption').center(78)}{Style.RESET_ALL}")
+        print(
+            f"{Fore.YELLOW}"
+            f"{get_string(strings, 'settings.caption').center(78)}"
+            f"{Style.RESET_ALL}"
+        )
         print(SEPARATOR)
         print()
 
@@ -87,10 +108,13 @@ def show_settings(strings: dict, settings: dict) -> dict:
         print()
 
         # Показываем опции: переключить Hard Core, Назад
-        choice = get_choice([
-            get_string(strings, "settings.settings_option_hardcore"),
-            get_string(strings, "settings.settings_option_back"),
-        ], get_string(strings, "settings.prompt", count=2))
+        choice = get_choice(
+            [
+                get_string(strings, "settings.settings_option_hardcore"),
+                get_string(strings, "settings.settings_option_back"),
+            ],
+            get_string(strings, "settings.prompt", count=2),
+        )
 
         if choice == 2:  # Назад
             break
@@ -98,17 +122,29 @@ def show_settings(strings: dict, settings: dict) -> dict:
         if choice == 1:  # Переключить Hard Core
             _clear_screen()
             print(SEPARATOR)
-            print(f"{Fore.YELLOW}{get_string(strings, 'settings.hardcore').center(78)}{Style.RESET_ALL}")
+            print(
+                f"{Fore.YELLOW}"
+                f"{get_string(strings, 'settings.hardcore').center(78)}"
+                f"{Style.RESET_ALL}"
+            )
             print(SEPARATOR)
             print()
 
-            hc_choice = get_choice([
-                get_string(strings, "settings.hardcore_options.off"),
-                get_string(strings, "settings.hardcore_options.on"),
-            ], get_string(strings, "settings.hardcore_prompt", count=2))
+            hc_choice = get_choice(
+                [
+                    get_string(strings, "settings.hardcore_options.off"),
+                    get_string(strings, "settings.hardcore_options.on"),
+                ],
+                get_string(strings, "settings.hardcore_prompt", count=2),
+            )
 
-            settings["hardcore"] = (hc_choice == 2)
-            print(f"{Fore.GREEN}{get_string(strings, 'settings.hardcore_changed', value=str(settings['hardcore']))}{Style.RESET_ALL}")
+            settings["hardcore"] = hc_choice == 2
+            msg = get_string(
+                strings,
+                "settings.hardcore_changed",
+                value=str(settings["hardcore"]),
+            )
+            print(f"{Fore.GREEN}{msg}{Style.RESET_ALL}")
             print()
             input(f"{Fore.CYAN}[Enter]{Style.RESET_ALL}")
 

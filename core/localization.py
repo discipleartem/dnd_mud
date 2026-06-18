@@ -5,13 +5,14 @@
 """
 
 from pathlib import Path
+from typing import Any
 
 import yaml
 
 STRINGS_DIR = Path("database/strings")
 
 
-def load_strings(language: str) -> dict:
+def load_strings(language: str) -> dict[str, Any]:
     """Загрузить строки для указанного языка.
 
     Сначала пытается загрузить файл language.yaml.
@@ -26,8 +27,8 @@ def load_strings(language: str) -> dict:
     strings_path = STRINGS_DIR / f"{language}.yaml"
     fallback_path = STRINGS_DIR / "en.yaml"
 
-    strings = {}
-    fallback = {}
+    strings: dict[str, Any] = {}
+    fallback: dict[str, Any] = {}
 
     if strings_path.exists():
         with open(strings_path, encoding="utf-8") as f:
@@ -43,12 +44,14 @@ def load_strings(language: str) -> dict:
     return result
 
 
-def get_string(strings: dict, key: str, **kwargs) -> str:
+def get_string(strings: dict[str, Any], key: str, **kwargs: Any) -> str:
     """Получить строку по ключу с поддержкой вложенности через точку.
 
     Пример:
         get_string(strings, "menu.new_game")  # -> "Новая игра"
-        get_string(strings, "info.welcome", name="Томас")  # -> "Привет, Томас!"
+        get_string(
+            strings, "info.welcome", name="Томас"
+        )  # -> "Привет, Томас!"
 
     Args:
         strings: Словарь со строками
@@ -61,16 +64,20 @@ def get_string(strings: dict, key: str, **kwargs) -> str:
     parts = key.split(".")
 
     # Ищем значение во вложенном словаре
-    value = strings
+    value: Any = strings
     for part in parts:
         if isinstance(value, dict) and part in value:
             value = value[part]
         else:
             return key
 
-    # Если нашли не строку — возвращаем как есть
+    # Если None — возвращаем ключ
+    if value is None:
+        return key
+
+    # Если не строка — приводим к строке
     if not isinstance(value, str):
-        return str(value) if value is not None else key
+        return str(value)
 
     # Подставляем параметры, если нужно
     if kwargs:
