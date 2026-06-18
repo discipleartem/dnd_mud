@@ -1,26 +1,18 @@
 """Ввод от пользователя с проверкой и повторным запросом при ошибке."""
 
+import locale
 import sys
-import io
 
 from colorama import Fore, Style
 
 # Устанавливаем UTF-8 кодировку для stdin/stdout
 # для корректной работы с кириллицей в терминале
-if sys.platform == 'win32':
-    import locale
-    locale.setlocale(locale.LC_ALL, '')
+if sys.platform == "win32":
+    locale.setlocale(locale.LC_ALL, "")
 else:
-    sys.stdin = io.TextIOWrapper(
-        sys.stdin.buffer,
-        encoding='utf-8',
-        errors='replace'
-    )
-    sys.stdout = io.TextIOWrapper(
-        sys.stdout.buffer,
-        encoding='utf-8',
-        errors='replace'
-    )
+    for stream in (sys.stdin, sys.stdout):
+        if hasattr(stream, "reconfigure"):
+            stream.reconfigure(encoding="utf-8", errors="replace")
 
 
 def get_choice(options: list[str], prompt: str = "> ") -> int:

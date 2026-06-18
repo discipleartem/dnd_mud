@@ -8,7 +8,10 @@ from colorama import Fore, Style
 
 from core.adventure import load_adventures
 from core.character import (
+    load_classes,
     load_characters,
+    load_race_full,
+    load_races,
     save_character,
 )
 from core.localization import get_string, load_strings
@@ -272,45 +275,60 @@ def show_new_game_flow(
     strings: dict[str, Any], settings: dict[str, Any]
 ) -> None:
     """Flow «Новая игра»: сложность → персонаж → приключение."""
-    difficulty = select_difficulty(strings, settings)
-    if difficulty is None:
-        return
-
-    characters = load_characters()
-    if characters:
-        character = _select_character(strings)
-        if character is None:
-            return
-    else:
-        character = show_create_character_flow(
-            strings, settings, difficulty=difficulty
-        )
-        if character is None:
+    while True:
+        difficulty = select_difficulty(strings, settings)
+        if difficulty is None:
             return
 
-    adventure = _select_adventure(strings)
-    if adventure is None:
-        return
+        while True:
+            characters = load_characters()
+            if characters:
+                character = _select_character(strings)
+            else:
+                character = show_create_character_flow(
+                    strings, settings, difficulty=difficulty
+                )
 
-    print()
-    print(
-        f"{Fore.GREEN}"
-        f"Запуск приключения '{adventure.get_name()}' "
-        f"с персонажем '{character.get('name', '?')}' "
-        f"(сложность: {difficulty})"
-        f"{Style.RESET_ALL}"
-    )
-    print()
-    input(f"{Fore.CYAN}[Enter]{Style.RESET_ALL}")
+            if character is None:
+                break
+
+            adventure = _select_adventure(strings)
+            if adventure is None:
+                continue
+
+            print()
+            print(
+                f"{Fore.GREEN}"
+                f"Запуск приключения '{adventure.get_name()}' "
+                f"с персонажем '{character.get('name', '?')}' "
+                f"(сложность: {difficulty})"
+                f"{Style.RESET_ALL}"
+            )
+            print()
+            input(f"{Fore.CYAN}[Enter]{Style.RESET_ALL}")
+            return
 
 
 def _print_race_info(
     info: dict[str, Any], strings: dict[str, Any]
 ) -> None:
-    """Print race or subrace details: description, bonuses, features."""
+    """Вывести подробности расы или подрасы."""
     desc = info.get("description", "")
     if desc:
         print(get_string(strings, "character.race_description", desc=desc))
+
+    speed = info.get("speed")
+    if speed:
+        print(f"  {Fore.MAGENTA}Скорость:{Style.RESET_ALL} {speed} футов")
+
+    languages = info.get("languages", [])
+    if languages:
+        language_line = ", ".join(str(lang) for lang in languages)
+        print(
+            f"  {Fore.MAGENTA}Языки:{Style.RESET_ALL} "
+            f"{language_line}"
+        )
+
     bonuses = info.get("ability_bonuses", {})
     if bonuses:
         bonus_parts = []
@@ -328,11 +346,133 @@ def _print_race_info(
     if features:
         print(get_string(strings, "character.features_label"))
         for feat in features:
+            description = feat.get("description", "")
             print(
                 get_string(
-                    strings, "character.feature_line", name=feat.get("name", "")
+                    strings,
+                    "character.feature_line",
+                    name=feat.get("name", ""),
+                    desc=description,
                 )
             )
+
+
+def _select_subrace(
+    strings: dict[str, Any], race_id: str
+) -> tuple[bool, str | None]:
+    """Показать описание расы и выбрать подрасу.
+
+    Returns:
+        Кортеж (успешно_выбрано, id_подрасы). Для базовой расы id_подрасы
+        равен None. Если пользователь нажал «Назад», успешно_выбрано=False.
+    """
+    race_full = load_race_full(race_id)
+    subraces = race_full.get("subraces", {})
+    allow_base = bool(race_full.get("allow_base_race_choice", False))
+
+    _clear_screen()
+    print(SEPARATOR)
+    print(
+        f"{Fore.YELLOW}"
+        f"{get_string(strings, 'character.subrace_caption').center(78)}"
+        f"{Style.RESET_ALL}"
+    )
+    print(SEPARATOR)
+    print()
+
+    race_name = race_full.get("name", race_id)
+    print(f"{Fore.CYAN}{race_name}{Style.RESET_ALL}")
+    _print_race_info(race_full, strings)
+    print()
+
+    if not subraces:
+        if allow_base:
+            print(get_string(strings, "character.no_subraces"))
+            print()
+            print(
+                f"  {Fore.YELLOW}1{Style.RESET_ALL}. "
+                f"{Fore.CYAN}{race_name}{Style.RESET_ALL}"
+            )
+            print(
+                f"  {Fore.YELLOW}0{Style.RESET_ALL}."
+                f" {get_string(strings, 'character.back')}"
+            )
+            print()
+            choice = get_int_input(
+                get_string(strings, "character.subrace_prompt"),
+                0,
+                1,
+            )
+            if choice == 0:
+                return False, None
+            return True, None
+        return False, None
+
+    print(get_string(strings, "character.subraces_label"))
+    choices: list[tuple[str | None, dict[str, Any]]] = []
+    if allow_base:
+        base_info = dict(race_full)
+        base_info["name"] = race_full.get("base_choice_name", race_name)
+        choices.append((None, base_info))
+
+    for subrace_id, subrace_info in subraces.items():
+        choices.append((str(subrace_id), subrace_info))
+
+    for idx, (_, subrace_info) in enumerate(choices, 1):
+        print()
+        print(
+            f"  {Fore.YELLOW}{idx}{Style.RESET_ALL}. "
+            f"{Fore.CYAN}{subrace_info.get('name', '?')}"
+            f"{Style.RESET_ALL}"
+        )
+        _print_race_info(subrace_info, strings)
+
+    print()
+    print(
+        f"  {Fore.YELLOW}0{Style.RESET_ALL}."
+        f" {get_string(strings, 'character.back')}"
+    )
+    print()
+    choice = get_int_input(
+        get_string(strings, "character.subrace_prompt"),
+        0,
+        len(choices),
+    )
+    if choice == 0:
+        return False, None
+
+    subrace_id, _ = choices[choice - 1]
+    return True, subrace_id
+
+
+def _select_class(strings: dict[str, Any]) -> dict[str, Any] | None:
+    """Выбрать класс персонажа или вернуться назад."""
+    classes = load_classes()
+    _clear_screen()
+    print(SEPARATOR)
+    print(
+        f"{Fore.YELLOW}"
+        f"{get_string(strings, 'character.class_prompt').center(78)}"
+        f"{Style.RESET_ALL}"
+    )
+    print(SEPARATOR)
+    print()
+    for idx, cls in enumerate(classes, 1):
+        print(f"  {Fore.YELLOW}{idx}{Style.RESET_ALL}. {cls.get('name', '?')}")
+    print()
+    print(
+        f"  {Fore.YELLOW}0{Style.RESET_ALL}."
+        f" {get_string(strings, 'character.back')}"
+    )
+    print()
+    class_idx = get_int_input(
+        get_string(strings, "character.class_prompt", count=len(classes)),
+        0,
+        len(classes),
+    )
+    if class_idx == 0:
+        return None
+    return classes[class_idx - 1]
 
 
 def show_create_character_flow(
@@ -370,122 +510,65 @@ def show_create_character_flow(
         only_letters=True,
     )
 
-    # Выбор расы/подрасы
-    from core.character import load_races, load_race_full
-
-    races = load_races()
-    # Собираем плоский список вариантов: базовая раса + её подрасы
-    race_options: list[dict[str, Any]] = []
-    subrace_options_by_race: dict[str, list[dict[str, Any]]] = {}
-    for race in races:
-        race_id = race.get("id") or race.get("name")
-        race_options.append(
-            {
-                "type": "race",
-                "race_id": race_id,
-                "subrace_id": None,
-                "name": race.get("name", "?"),
-            }
+    while True:
+        # Выбор основной расы
+        races = load_races()
+        _clear_screen()
+        print(SEPARATOR)
+        print(
+            f"{Fore.YELLOW}"
+            f"{get_string(strings, 'character.race_caption').center(78)}"
+            f"{Style.RESET_ALL}"
         )
-        subraces_for_race: list[dict[str, Any]] = []
-        race_full = load_race_full(race_id)
-        subraces = race_full.get("subraces", {})
-        if subraces:
-            for subrace_id, subrace_info in subraces.items():
-                subraces_for_race.append(
-                    {
-                        "type": "subrace",
-                        "race_id": race_id,
-                        "subrace_id": subrace_id,
-                        "name": subrace_info.get("name", subrace_id),
-                    }
-                )
-        subrace_options_by_race[race_id] = subraces_for_race
-
-    _clear_screen()
-    print(SEPARATOR)
-    print(
-        f"{Fore.YELLOW}"
-        f"{get_string(strings, 'character.race_caption').center(78)}"
-        f"{Style.RESET_ALL}"
-    )
-    print(SEPARATOR)
-    print()
-
-    base_num = 0
-    for option in race_options:
-        if option["type"] == "race":
-            base_num += 1
-            marker = f"  {Fore.YELLOW}{base_num}{Style.RESET_ALL}."
-        else:
-            continue
-        print(f"{marker} {option['name']}")
-        race_full = load_race_full(option["race_id"])
-        _print_race_info(race_full or {}, strings)
-
-        subraces_list = subrace_options_by_race.get(option["race_id"], [])
-        if subraces_list:
-            print(f"  {Fore.MAGENTA}Подрасы:{Style.RESET_ALL}")
-            for sub in subraces_list:
-                print(f"     {Fore.CYAN}{sub['name']}{Style.RESET_ALL}")
-                race_full = load_race_full(sub["race_id"])
-                subraces = race_full.get("subraces", {}) if race_full else {}
-                subrace_info = subraces.get(sub["subrace_id"], {})
-                _print_race_info(subrace_info, strings)
+        print(SEPARATOR)
         print()
 
-    print(
-        f"  {Fore.YELLOW}0{Style.RESET_ALL}."
-        f" {get_string(strings, 'character.back')}"
-    )
-    print()
-    choice = get_int_input(
-        get_string(strings, "character.race_prompt", count=len(race_options)),
-        0,
-        len(race_options),
-    )
-    if choice == 0:
-        return None
-    selected = race_options[choice - 1]
-    race_id = selected["race_id"]
-    subrace_id = selected.get("subrace_id")
+        for idx, race in enumerate(races, 1):
+            print(
+                f"  {Fore.YELLOW}{idx}{Style.RESET_ALL}. "
+                f"{race.get('name', '?')}"
+            )
 
-    # Выбор класса
-    from core.character import load_classes
+        print(
+            f"  {Fore.YELLOW}0{Style.RESET_ALL}."
+            f" {get_string(strings, 'character.back')}"
+        )
+        print()
+        choice = get_int_input(
+            get_string(strings, "character.race_prompt", count=len(races)),
+            0,
+            len(races),
+        )
+        if choice == 0:
+            return None
 
-    classes = load_classes()
-    for idx, cls in enumerate(classes, 1):
-        print(f"  {Fore.YELLOW}{idx}{Style.RESET_ALL}. {cls.get('name', '?')}")
-    print()
-    print(
-        f"  {Fore.YELLOW}0{Style.RESET_ALL}."
-        f" {get_string(strings, 'character.back')}"
-    )
-    print()
-    class_idx = get_int_input(
-        get_string(strings, "character.class_prompt", count=len(classes)),
-        0,
-        len(classes),
-    )
-    if class_idx == 0:
-        return None
-    cls = classes[class_idx - 1]
+        selected = races[choice - 1]
+        race_id = str(selected.get("id") or selected.get("name"))
 
-    class_id = cls.get("id") or cls.get("name")
-    character = save_character(
-        name=name,
-        race_id=str(race_id),
-        class_id=str(class_id),
-        difficulty=difficulty,
-        subrace_id=str(subrace_id) if subrace_id else None,
-    )
+        while True:
+            subrace_selected, subrace_id = _select_subrace(strings, race_id)
+            if not subrace_selected:
+                break
 
-    msg = get_string(strings, "character.save_success", name=name)
-    print(f"{Fore.GREEN}{msg}{Style.RESET_ALL}")
-    print()
-    input(f"{Fore.CYAN}[Enter]{Style.RESET_ALL}")
+            cls = _select_class(strings)
+            if cls is None:
+                continue
 
-    return character
+            class_id = cls.get("id") or cls.get("name")
+            character = save_character(
+                name=name,
+                race_id=str(race_id),
+                class_id=str(class_id),
+                difficulty=difficulty,
+                subrace_id=str(subrace_id) if subrace_id else None,
+            )
+
+            msg = get_string(strings, "character.save_success", name=name)
+            print(f"{Fore.GREEN}{msg}{Style.RESET_ALL}")
+            print()
+            input(f"{Fore.CYAN}[Enter]{Style.RESET_ALL}")
+
+            return character
 
 
 def show_load_game_flow(strings: dict[str, Any]) -> None:

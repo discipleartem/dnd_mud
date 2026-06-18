@@ -124,12 +124,20 @@ def _get_race_bonuses(
             data = yaml.safe_load(f) or {}
         races = data.get("races", {})
         race_info = races.get(race_id, {})
-        base_bonuses = race_info.get("ability_bonuses", {})
-        if isinstance(base_bonuses, dict):
-            bonuses.update(base_bonuses)
         if subrace_id:
             subraces = race_info.get("subraces", {})
             subrace_info = subraces.get(subrace_id, {})
+            inherit_base = subrace_info.get("inherit_base_bonuses", True)
+        else:
+            subrace_info = {}
+            inherit_base = True
+
+        if inherit_base:
+            base_bonuses = race_info.get("ability_bonuses", {})
+            if isinstance(base_bonuses, dict):
+                bonuses.update(base_bonuses)
+
+        if subrace_id:
             sub_bonuses = subrace_info.get("ability_bonuses", {})
             if isinstance(sub_bonuses, dict):
                 for stat, val in sub_bonuses.items():

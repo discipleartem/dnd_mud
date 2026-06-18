@@ -4,6 +4,7 @@
 races:
   human:
     name: "Человек"
+    base_choice_name: "Человек (обычный)"
     description: "Человечество — самая разнообразная и амбициозная раса"
     age_range: [16, 100]
     size: "medium"
@@ -23,7 +24,7 @@ races:
         mechanics:
           count: 1
           choice: true
-    allow_base_race_choice: false
+    allow_base_race_choice: true
     subraces:
       variant_human:
         name: "Человек (вариант)"
@@ -184,39 +185,53 @@ races:
     ability_bonuses:
       constitution: 2
     features:
+      - name: "Скорость дварфа"
+        description: "Ношение тяжёлых доспехов не снижает вашу скорость"
+        type: "speed_ignore_penalty"
+        mechanics:
+          armor_types: ["heavy_armor"]
       - name: "Тёмное зрение"
-        description: "Можете видеть в условиях слабого освещения на расстоянии 60 футов как в ярком освещении"
+        description: "На расстоянии в 60 футов вы при тусклом освещении можете видеть так, как будто это яркое освещение, и в темноте так, как будто это тусклое освещение. В темноте вы не можете различать цвета, только оттенки серого"
         type: "darkvision"
         mechanics:
           range: 60
-      - name: "Дварфская стойкость"
-        description: "Вы имеете преимущество при спасбросках от яда и сопротивление урону ядом"
+          color_vision: false
+      - name: "Дварфская устойчивость"
+        description: "Вы совершаете с преимуществом спасброски от яда, и вы получаете сопротивление к урону ядом"
         type: "resistance"
         mechanics:
           damage_types: ["poison"]
           advantage_saves: ["poison"]
-      - name: "Камнерезание"
-        description: "При проверке Интеллекта (История) о происхождении каменных конструкций вы добавляете преимущество"
-        type: "skill_bonus"
-        mechanics:
-          skill: "history"
-          context: "stone_structures"
-          advantage: true
       - name: "Дварфская боевая подготовка"
         description: "Владение боевым топором, ручным топором, лёгким молотом и боевым молотом"
         type: "weapon_proficiency"
         mechanics:
           weapons: ["battleaxe", "handaxe", "light_hammer", "warhammer"]
+      - name: "Владение инструментами"
+        description: "Вы владеете ремесленными инструментами на ваш выбор: инструменты кузнеца, пивовара или каменщика"
+        type: "tool_proficiency"
+        mechanics:
+          count: 1
+          choice: true
+          tools: ["smith_tools", "brewer_tools", "mason_tools"]
+      - name: "Знание камня"
+        description: "Если вы совершаете проверку Интеллекта (История), связанную с происхождением работы по камню, вы считаетесь владеющим навыком История, и добавляете к проверке удвоенный бонус мастерства вместо обычного"
+        type: "skill_bonus"
+        mechanics:
+          skill: "history"
+          context: "stonework_origin"
+          grants_proficiency: true
+          expertise: true
     allow_base_race_choice: false
     subraces:
       hill_dwarf:
         name: "Холмовой дварф"
-        description: "Холмовые дварфы обладают мудростью и выносливостью"
+        description: "Будучи холмовым дварфом вы обладаете обострёнными чувствами, развитой интуицией и замечательной стойкостью"
         ability_bonuses:
           wisdom: 1
         features:
-          - name: "Дварфская выносливость"
-            description: "Увеличенные хиты на каждом уровне"
+          - name: "Дварфская выдержка"
+            description: "Максимальное значение ваших хитов увеличивается на 1, и вы получаете 1 дополнительный хит с каждым новым уровнем"
             type: "hit_point_bonus"
             mechanics:
               value: 1
@@ -224,11 +239,11 @@ races:
 
       mountain_dwarf:
         name: "Горный дварф"
-        description: "Горные дварфы — сильные воины"
+        description: "Будучи горным дварфом, вы являетесь сильным и выносливым, приспособленным к жизни в суровой местности"
         ability_bonuses:
           strength: 2
         features:
-          - name: "Дварфская броневая подготовка"
+          - name: "Владение доспехами дварфов"
             description: "Владение лёгкими и средними доспехами"
             type: "armor_proficiency"
             mechanics:
