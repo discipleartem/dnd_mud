@@ -55,6 +55,22 @@ def main() -> int:
     # Инициализация цветного вывода в терминале
     init(autoreset=True)
 
+    # Устанавливаем UTF-8 для ввода/вывода.
+    # На Windows сначала пробуем UTF-8 (Windows 10+ поддерживает),
+    # при неудаче — откат на cp1251 (кириллический стандарт).
+    _encoding = "utf-8"
+    if sys.platform == "win32":
+        try:
+            sys.stdout.reconfigure(encoding=_encoding)
+            sys.stdin.reconfigure(encoding=_encoding)
+        except (ValueError, LookupError):
+            _encoding = "cp1251"
+            try:
+                sys.stdout.reconfigure(encoding=_encoding)
+                sys.stdin.reconfigure(encoding=_encoding)
+            except (ValueError, LookupError):
+                pass
+
     # Загружаем настройки
     settings = load_settings()
 

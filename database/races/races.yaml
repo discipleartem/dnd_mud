@@ -23,7 +23,7 @@ races:
         mechanics:
           count: 1
           choice: true
-    allow_base_race_choice: true
+    allow_base_race_choice: false
     subraces:
       variant_human:
         name: "Человек (вариант)"

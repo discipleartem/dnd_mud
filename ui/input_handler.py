@@ -1,6 +1,26 @@
 """Ввод от пользователя с проверкой и повторным запросом при ошибке."""
 
+import sys
+import io
+
 from colorama import Fore, Style
+
+# Устанавливаем UTF-8 кодировку для stdin/stdout
+# для корректной работы с кириллицей в терминале
+if sys.platform == 'win32':
+    import locale
+    locale.setlocale(locale.LC_ALL, '')
+else:
+    sys.stdin = io.TextIOWrapper(
+        sys.stdin.buffer,
+        encoding='utf-8',
+        errors='replace'
+    )
+    sys.stdout = io.TextIOWrapper(
+        sys.stdout.buffer,
+        encoding='utf-8',
+        errors='replace'
+    )
 
 
 def get_choice(options: list[str], prompt: str = "> ") -> int:
@@ -60,12 +80,13 @@ def get_int_input(prompt: str, min_val: int, max_val: int) -> int:
             print(f"{Fore.RED}Ошибка: введите число{Style.RESET_ALL}")
 
 
-def get_str_input(prompt: str, min_length: int = 1) -> str:
+def get_str_input(prompt: str, min_length: int = 1, only_letters: bool = False) -> str:
     """Запросить строку минимальной длины.
 
     Args:
         prompt: Текст перед полем ввода
         min_length: Минимальное количество символов
+        only_letters: Если True, разрешены только буквы (кириллица/латиница)
 
     Returns:
         Введённая строка (без лишних пробелов по краям)
@@ -73,6 +94,13 @@ def get_str_input(prompt: str, min_length: int = 1) -> str:
     while True:
         raw = input(f"{Fore.CYAN}{prompt}{Style.RESET_ALL}")
         value = raw.strip()
+
+        if only_letters and not value.isalpha():
+            print(
+                f"{Fore.RED}Ошибка: имя может содержать только "
+                f"буквы (кириллица или латиница){Style.RESET_ALL}"
+            )
+            continue
 
         if len(value) < min_length:
             print(

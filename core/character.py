@@ -30,7 +30,11 @@ CLASSES_FILE = Path("database/classes/classes.yaml")
 
 
 def save_character(
-    name: str, race_id: str, class_id: str, difficulty: str = "normal"
+    name: str,
+    race_id: str,
+    class_id: str,
+    difficulty: str = "normal",
+    subrace_id: str | None = None,
 ) -> dict[str, Any]:
     """Создать нового персонажа и сохранить в YAML.
 
@@ -42,11 +46,13 @@ def save_character(
         name: Имя персонажа
         race_id: ID расы (например, 'human', 'elf')
         class_id: ID класса (например, 'fighter', 'wizard')
+        difficulty: Сложность игры
+        subrace_id: ID подрасы (опционально)
 
     Returns:
         Словарь с данными нового персонажа
     """
-    stats = _generate_stats(race_id)
+    stats = _generate_stats(race_id, subrace_id)
     hit_dice = _get_class_hit_dice(class_id)
     con_mod = ability_modifier(stats.get("constitution", 10))
     hp = hit_dice + con_mod
@@ -54,6 +60,7 @@ def save_character(
     character = {
         "name": name,
         "race": race_id,
+        "subrace": subrace_id,
         "class": class_id,
         "level": 1,
         "stats": stats,
@@ -70,15 +77,18 @@ def save_character(
     return character
 
 
-def _generate_stats(race_id: str) -> dict[str, int]:
+def _generate_stats(
+    race_id: str, subrace_id: str | None = None
+) -> dict[str, int]:
     """Сгенерировать характеристики: массив + расовые бонусы.
 
     Берём стандартный массив [15, 14, 13, 12, 10, 8],
     сортируем по убыванию, назначаем всем шести характеристикам,
-    потом добавляем расовые бонусы.
+    потом добавляем расовые и подрасовые бонусы.
 
     Args:
         race_id: ID расы
+        subrace_id: ID подрасы (опционально)
 
     Returns:
         Словарь {название_характеристики: значение}
@@ -86,7 +96,7 @@ def _generate_stats(race_id: str) -> dict[str, int]:
     sorted_array = sorted(STANDARD_ARRAY, reverse=True)
     stats = dict(zip(STAT_NAMES, sorted_array, strict=True))
 
-    bonuses = _get_race_bonuses(race_id)
+    bonuses = _get_race_bonuses(race_id, subrace_id)
     for stat_name, bonus in bonuses.items():
         if stat_name in stats:
             stats[stat_name] += bonus
@@ -94,28 +104,39 @@ def _generate_stats(race_id: str) -> dict[str, int]:
     return stats
 
 
-def _get_race_bonuses(race_id: str) -> dict[str, int]:
-    """Получить расовые бонусы к характеристикам.
+def _get_race_bonuses(
+    race_id: str, subrace_id: str | None = None
+) -> dict[str, int]:
+    """Получить расовые и подрасовые бонусы к характеристикам.
 
     Например, для дварфа: +2 к Телосложению.
 
     Args:
         race_id: ID расы
+        subrace_id: ID подрасы (опционально)
 
     Returns:
         Словарь {название_характеристики: бонус}
     """
+    bonuses: dict[str, int] = {}
     try:
         with open(RACES_FILE, encoding="utf-8") as f:
             data = yaml.safe_load(f) or {}
         races = data.get("races", {})
         race_info = races.get(race_id, {})
-        bonuses = race_info.get("ability_bonuses", {})
-        if isinstance(bonuses, dict):
-            return bonuses
-        return {}
+        base_bonuses = race_info.get("ability_bonuses", {})
+        if isinstance(base_bonuses, dict):
+            bonuses.update(base_bonuses)
+        if subrace_id:
+            subraces = race_info.get("subraces", {})
+            subrace_info = subraces.get(subrace_id, {})
+            sub_bonuses = subrace_info.get("ability_bonuses", {})
+            if isinstance(sub_bonuses, dict):
+                for stat, val in sub_bonuses.items():
+                    bonuses[stat] = bonuses.get(stat, 0) + val
     except (yaml.YAMLError, OSError):
-        return {}
+        pass
+    return bonuses
 
 
 def _get_class_hit_dice(class_id: str) -> int:
@@ -172,19 +193,6 @@ def _save_characters(characters: list[dict[str, Any]]) -> None:
         yaml.dump(data, f, allow_unicode=True, default_flow_style=False)
 
 
-def character_exists(name: str) -> bool:
-    """Проверить, существует ли персонаж с таким именем.
-
-    Args:
-        name: Имя персонажа
-
-    Returns:
-        True если персонаж с таким именем уже есть
-    """
-    characters = load_characters()
-    return any(c.get("name", "").lower() == name.lower() for c in characters)
-
-
 def load_races() -> list[dict[str, Any]]:
     """Загрузить список всех доступных рас.
 
@@ -209,6 +217,30 @@ def load_races() -> list[dict[str, Any]]:
         return result
     except (yaml.YAMLError, OSError):
         return []
+
+
+def load_race_full(race_id: str) -> dict[str, Any]:
+    """Загрузить полные данные расы по ID.
+
+    Args:
+        race_id: Идентификатор расы
+
+    Returns:
+        Словарь с полными данными расы или пустой словарь
+    """
+    if not RACES_FILE.exists():
+        return {}
+
+    try:
+        with open(RACES_FILE, encoding="utf-8") as f:
+            data = yaml.safe_load(f) or {}
+        races = data.get("races", {})
+        race_info = races.get(race_id, {})
+        if isinstance(race_info, dict):
+            return race_info
+        return {}
+    except (yaml.YAMLError, OSError):
+        return {}
 
 
 def load_classes() -> list[dict[str, Any]]:
