@@ -18,10 +18,15 @@ def load_settings() -> dict[str, Any]:
     Настройки хранятся в YAML-файле database/core/settings.yaml.
 
     Returns:
-        Словарь с настройками: {"language": "ru", "hardcore": False, "difficulty": "normal"}
+        Словарь с настройками:
+        {"language": "ru", "hardcore": False, "difficulty": "normal"}
     """
     if not SETTINGS_PATH.exists():
-        return {"language": DEFAULT_LANGUAGE, "hardcore": False, "difficulty": "normal"}
+        return {
+            "language": DEFAULT_LANGUAGE,
+            "hardcore": False,
+            "difficulty": "normal",
+        }
 
     try:
         with open(SETTINGS_PATH, encoding="utf-8") as f:
@@ -32,7 +37,11 @@ def load_settings() -> dict[str, Any]:
             "difficulty": data.get("difficulty", "normal"),
         }
     except (yaml.YAMLError, OSError):
-        return {"language": DEFAULT_LANGUAGE, "hardcore": False, "difficulty": "normal"}
+        return {
+            "language": DEFAULT_LANGUAGE,
+            "hardcore": False,
+            "difficulty": "normal",
+        }
 
 
 def save_settings(

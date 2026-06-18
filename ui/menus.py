@@ -1,8 +1,11 @@
-"""Отрисовка экранов меню (приветствие, главное меню, настройки, языки, сложность, flows)."""
+"""Отрисовка экранов меню (приветствие, главное меню, настройки,
+языки, сложность, flows)."""
 
 import os
 from typing import Any
+
 from colorama import Fore, Style
+
 from core.adventure import load_adventures
 from core.character import (
     character_exists,
@@ -10,7 +13,8 @@ from core.character import (
     save_character,
 )
 from core.localization import get_string, load_strings
-from ui.input_handler import get_choice, get_int_input, get_str_input
+from core.models import Adventure
+from ui.input_handler import get_int_input, get_str_input
 
 SEPARATOR = f"{Fore.YELLOW}{'=' * 78}{Style.RESET_ALL}"
 
@@ -73,7 +77,9 @@ def show_main_menu(strings: dict[str, Any]) -> int:
     return get_int_input(prompt, 0, 5)
 
 
-def select_difficulty(strings: dict[str, Any], settings: dict[str, Any]) -> str | None:
+def select_difficulty(
+    strings: dict[str, Any], settings: dict[str, Any]
+) -> str | None:
     """Экран выбора сложности.
 
     Args:
@@ -108,7 +114,10 @@ def select_difficulty(strings: dict[str, Any], settings: dict[str, Any]) -> str 
                 marker = f"{Fore.GREEN} * {Style.RESET_ALL}"
             print(f"{marker}{Fore.YELLOW}{idx}{Style.RESET_ALL}. {opt}")
         print()
-        print(f"  {Fore.YELLOW}0{Style.RESET_ALL}. {get_string(strings, 'difficulty.back')}")
+        print(
+            f"  {Fore.YELLOW}0{Style.RESET_ALL}."
+            f" {get_string(strings, 'difficulty.back')}"
+        )
         print()
 
         choice = get_int_input(
@@ -167,7 +176,10 @@ def _select_character(strings: dict[str, Any]) -> dict[str, Any] | None:
         print(f"  {Fore.YELLOW}{idx}{Style.RESET_ALL}. {line}")
 
     print()
-    print(f"  {Fore.YELLOW}0{Style.RESET_ALL}. {get_string(strings, 'new_game.back')}")
+    print(
+        f"  {Fore.YELLOW}0{Style.RESET_ALL}."
+        f" {get_string(strings, 'new_game.back')}"
+    )
     print()
     choice = get_int_input(
         get_string(strings, "new_game.prompt", count=len(characters)),
@@ -181,13 +193,23 @@ def _select_character(strings: dict[str, Any]) -> dict[str, Any] | None:
     return characters[choice - 1]
 
 
-def _select_adventure(strings: dict[str, Any]) -> dict[str, Any] | None:
+def _print_character_info(
+    character: dict[str, Any], strings: dict[str, Any]
+) -> None:
+    name = character.get("name")
+    level = character.get("level", 1)
+    race = character.get("race")
+    cls = character.get("class")
+    print(f"  {name} — ур. {level} {race}/{cls}")
+
+
+def _select_adventure(strings: dict[str, Any]) -> Adventure | None:
     """Экран выбора приключения.
 
     Returns:
-        Выбранное приключение (dict) или None
+        Выбранное приключение (Adventure) или None
     """
-    adventures = load_adventures()
+    adventures: list[Adventure] = load_adventures()
 
     if not adventures:
         print(
@@ -213,14 +235,17 @@ def _select_adventure(strings: dict[str, Any]) -> dict[str, Any] | None:
         line = get_string(
             strings,
             "adventures.adventure_line",
-            name=adv.get("name", "?"),
-            difficulty=adv.get("difficulty", "?"),
-            desc=adv.get("description", ""),
+            name=adv.name if isinstance(adv.name, str) else adv.get_name(),
+            difficulty=adv.difficulty,
+            desc=adv.description,
         )
         print(f"  {Fore.YELLOW}{idx}{Style.RESET_ALL}. {line}")
 
     print()
-    print(f"  {Fore.YELLOW}0{Style.RESET_ALL}. {get_string(strings, 'adventures.back')}")
+    print(
+        f"  {Fore.YELLOW}0{Style.RESET_ALL}."
+        f" {get_string(strings, 'adventures.back')}"
+    )
     print()
     choice = get_int_input(
         get_string(strings, "adventures.prompt", count=len(adventures)),
@@ -253,8 +278,8 @@ def show_new_game_flow(
     print()
     print(
         f"{Fore.GREEN}"
-        f"Запуск приключения '{adventure.get('name')}' "
-        f"с персонажем '{character.get('name')}' "
+        f"Запуск приключения '{adventure.get_name()}' "
+        f"с персонажем '{character.get('name', '?')}' "
         f"(сложность: {difficulty})"
         f"{Style.RESET_ALL}"
     )
@@ -290,9 +315,7 @@ def show_create_character_flow(
     )
 
     if character_exists(name):
-        msg = get_string(
-            strings, "character.name_exists", name=name
-        )
+        msg = get_string(strings, "character.name_exists", name=name)
         print(f"{Fore.RED}{msg}{Style.RESET_ALL}")
         print()
         input(f"{Fore.CYAN}[Enter]{Style.RESET_ALL}")
@@ -303,9 +326,15 @@ def show_create_character_flow(
 
     races = load_races()
     for idx, race in enumerate(races, 1):
-        print(f"  {Fore.YELLOW}{idx}{Style.RESET_ALL}. {race.get('name', '?')}")
+        print(
+            f"  {Fore.YELLOW}{idx}{Style.RESET_ALL}."
+            f" {race.get('name', '?')}"
+        )
     print()
-    print(f"  {Fore.YELLOW}0{Style.RESET_ALL}. {get_string(strings, 'character.back')}")
+    print(
+        f"  {Fore.YELLOW}0{Style.RESET_ALL}."
+        f" {get_string(strings, 'character.back')}"
+    )
     print()
     race_idx = get_int_input(
         get_string(strings, "character.race_prompt", count=len(races)),
@@ -323,7 +352,10 @@ def show_create_character_flow(
     for idx, cls in enumerate(classes, 1):
         print(f"  {Fore.YELLOW}{idx}{Style.RESET_ALL}. {cls.get('name', '?')}")
     print()
-    print(f"  {Fore.YELLOW}0{Style.RESET_ALL}. {get_string(strings, 'character.back')}")
+    print(
+        f"  {Fore.YELLOW}0{Style.RESET_ALL}."
+        f" {get_string(strings, 'character.back')}"
+    )
     print()
     class_idx = get_int_input(
         get_string(strings, "character.class_prompt", count=len(classes)),
@@ -334,16 +366,16 @@ def show_create_character_flow(
         return None
     cls = classes[class_idx - 1]
 
+    race_id = race.get("id") or race.get("name")
+    class_id = cls.get("id") or cls.get("name")
     character = save_character(
         name=name,
-        race=race.get("id", race.get("name")),
-        class_name=cls.get("id", cls.get("name")),
+        race_id=str(race_id),
+        class_id=str(class_id),
         difficulty=difficulty,
     )
 
-    msg = get_string(
-        strings, "character.save_success", name=name
-    )
+    msg = get_string(strings, "character.save_success", name=name)
     print(f"{Fore.GREEN}{msg}{Style.RESET_ALL}")
     print()
     input(f"{Fore.CYAN}[Enter]{Style.RESET_ALL}")
@@ -406,7 +438,10 @@ def show_languages_menu(
             marker = f"  {Fore.YELLOW}{idx}{Style.RESET_ALL}. "
             print(f"{marker}{opt}")
         print()
-        print(f"  {Fore.YELLOW}0{Style.RESET_ALL}. {get_string(strings, 'languages.back')}")
+        print(
+            f"  {Fore.YELLOW}0{Style.RESET_ALL}."
+            f" {get_string(strings, 'languages.back')}"
+        )
         print()
 
         choice = get_int_input(
@@ -443,7 +478,8 @@ def show_settings(
 
     Args:
         strings: Словарь со строками интерфейса
-        settings: Текущие настройки {"language": str, "hardcore": bool, "difficulty": str}
+        settings: Текущие настройки
+        {"language": str, "hardcore": bool, "difficulty": str}
 
     Returns:
         Обновлённый словарь настроек
@@ -471,7 +507,10 @@ def show_settings(
             marker = f"  {Fore.YELLOW}{idx}{Style.RESET_ALL}. "
             print(f"{marker}{opt}")
         print()
-        print(f"  {Fore.YELLOW}0{Style.RESET_ALL}. {get_string(strings, 'settings.back')}")
+        print(
+            f"  {Fore.YELLOW}0{Style.RESET_ALL}."
+            f" {get_string(strings, 'settings.back')}"
+        )
         print()
 
         choice = get_int_input(

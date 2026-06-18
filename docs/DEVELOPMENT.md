@@ -202,7 +202,7 @@ menu:
 3. Использовать в коде:
 
 ```python
-loc('menu.my_new_item')
+get_string(strings, 'menu.my_new_item')
 ```
 
 Для форматирования с параметрами:
@@ -213,7 +213,7 @@ welcome:
 ```
 
 ```python
-loc('welcome.version', version='0.1.0')
+get_string(strings, 'welcome.version', version='0.1.0')
 ```
 
 ## Добавление новой расы/класса
@@ -236,13 +236,14 @@ races:
 ## Текущее состояние разработки
 
 ### Реализовано (core)
-- ✅ `core/character.py` — полная модель персонажа с dataclass
+- ✅ `core/models.py` — типизированные dataclass: Character, Adventure
+- ✅ `core/character.py` — создание, сохранение/загрузка персонажей
 - ✅ `core/dice.py` — все броски кубиков (d20, ndm, криты, adv/disadv)
 - ✅ `core/localization.py` — YAML-словари с fallback на английский
 - ✅ `core/settings.py` — настройки пользователя (язык, hardcore)
 - ✅ `core/mod_loader.py` — сканирование и переключение модов
 - ✅ `core/adventure.py` — загрузка приключений из YAML
-- ✅ `core/game_engine.py` — базовая структура игрового движка
+- ✅ `core/game_engine.py` — игровой цикл, ability checks (типизирован)
 
 ### Реализовано (ui)
 - ✅ `ui/input_handler.py` — валидация ввода (int, str, выбор из списка)
@@ -253,7 +254,7 @@ races:
 
 ### База данных
 - ✅ Основные файлы: races.yaml, classes.yaml, characters.yaml, adventures.yaml
-- ✅ Локализация: ru.yaml, en.yaml
+- ✅ Локализация: ru.yaml, en.yaml + stats/difficulty строки вынесены в YAML
 - ⏳ Заготовки: abilities.yaml, armor.yaml, backgrounds.yaml, constants.yaml, equipment.yaml, feats.yaml, features.yaml, languages.yaml, sizes.yaml, skills.yaml, tools.yaml, weapon.yaml — заполнены данными, но не используются в коде
 
 ### Не реализовано

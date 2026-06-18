@@ -119,3 +119,17 @@ errors:
 
 info:
   goodbye: "Goodbye! Exiting the game..."
+
+stats:
+  strength: "Strength"
+  dexterity: "Dexterity"
+  constitution: "Constitution"
+  intelligence: "Intelligence"
+  wisdom: "Wisdom"
+  charisma: "Charisma"
+
+difficulty:
+  easy: "easy"
+  normal: "normal"
+  hardcore: "hardcore"
+  training: "training"

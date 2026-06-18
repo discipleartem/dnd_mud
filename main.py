@@ -5,23 +5,45 @@
 """
 
 import sys
+from typing import Any
 
 from colorama import Fore, Style, init
 
 from core.localization import get_string, load_strings
 from core.settings import load_settings, save_settings
 from ui.menus import (
-    show_main_menu,
-    show_settings,
-    show_welcome_screen,
-    show_new_game_flow,
-    show_load_game_flow,
     show_create_character_flow,
     show_languages_menu,
+    show_load_game_flow,
+    show_main_menu,
+    show_new_game_flow,
+    show_settings,
+    show_welcome_screen,
 )
 
 # Версия игры
 VERSION = "0.1.0"
+
+
+def _save_and_reload_settings(
+    settings: dict[str, Any], strings: dict[str, Any]
+) -> tuple[dict[str, Any], dict[str, Any]]:
+    """Сохранить настройки и перезагрузить строки.
+
+    Args:
+        settings: Текущие настройки
+        strings: Текущие строки интерфейса
+
+    Returns:
+        Кортеж (обновлённые_настройки, обновлённые_строки)
+    """
+    save_settings(
+        language=settings.get("language", "ru"),
+        hardcore=settings.get("hardcore", False),
+        difficulty=settings.get("difficulty", "normal"),
+    )
+    strings = load_strings(settings["language"])
+    return settings, strings
 
 
 def main() -> int:
@@ -68,27 +90,13 @@ def main() -> int:
 
         elif choice == 4:
             # Настройки
-            new_settings = show_settings(strings, settings)
-            # Сохраняем изменения
-            save_settings(
-                language=new_settings.get("language", settings["language"]),
-                hardcore=new_settings.get("hardcore", settings["hardcore"]),
-                difficulty=new_settings.get("difficulty", settings.get("difficulty", "normal")),
-            )
-            settings = new_settings
-            # Перезагружаем строки, если язык мог измениться
-            strings = load_strings(settings["language"])
+            settings = show_settings(strings, settings)
+            settings, strings = _save_and_reload_settings(settings, strings)
 
         elif choice == 5:
             # Languages
-            new_settings = show_languages_menu(strings, settings)
-            settings = new_settings
-            save_settings(
-                language=settings.get("language", "ru"),
-                hardcore=settings.get("hardcore", False),
-                difficulty=settings.get("difficulty", "normal"),
-            )
-            strings = load_strings(settings["language"])
+            settings = show_languages_menu(strings, settings)
+            settings, strings = _save_and_reload_settings(settings, strings)
 
     return 0
 

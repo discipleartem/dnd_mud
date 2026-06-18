@@ -28,16 +28,6 @@ CHARACTERS_FILE = Path("database/progression/characters.yaml")
 RACES_FILE = Path("database/races/races.yaml")
 CLASSES_FILE = Path("database/classes/classes.yaml")
 
-# Русские названия характеристик (если нет локализации)
-STAT_NAMES_RU = {
-    "strength": "Сила",
-    "dexterity": "Ловкость",
-    "constitution": "Телосложение",
-    "intelligence": "Интеллект",
-    "wisdom": "Мудрость",
-    "charisma": "Харизма",
-}
-
 
 def save_character(
     name: str, race_id: str, class_id: str, difficulty: str = "normal"
@@ -251,26 +241,3 @@ def load_classes() -> list[dict[str, Any]]:
         return result
     except (yaml.YAMLError, OSError):
         return []
-
-
-def get_stat_name(stat_key: str, language: str = "ru") -> str:
-    """Получить название характеристики на нужном языке.
-
-    Args:
-        stat_key: Ключ характеристики ('strength', 'dexterity' и т.д.)
-        language: Код языка ('ru', 'en')
-
-    Returns:
-        Название характеристики
-    """
-    if language == "en":
-        english_names = {
-            "strength": "Strength",
-            "dexterity": "Dexterity",
-            "constitution": "Constitution",
-            "intelligence": "Intelligence",
-            "wisdom": "Wisdom",
-            "charisma": "Charisma",
-        }
-        return english_names.get(stat_key, stat_key)
-    return STAT_NAMES_RU.get(stat_key, stat_key)

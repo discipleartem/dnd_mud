@@ -4,14 +4,11 @@
 возвращает текстовые ответы для отображения.
 """
 
-from typing import Any
-
 from core.dice import ability_modifier, roll_d20
+from core.models import Adventure, Character
 
 
-def run_game_loop(
-    character: dict[str, Any], adventure: dict[str, Any]
-) -> None:
+def run_game_loop(character: Character, adventure: Adventure) -> None:
     """Запустить основной игровой цикл.
 
     Пока что это заглушка — просто показывает, что игра началась,
@@ -42,7 +39,7 @@ def run_game_loop(
 
 
 def ability_check(
-    character: dict[str, Any],
+    character: Character,
     ability: str,
     dc: int = 10,
     advantage: bool = False,
@@ -63,8 +60,7 @@ def ability_check(
     Returns:
         Кортеж (успех, итоговый_результат, описание_броска)
     """
-    stats = character.get("stats", {})
-    score = stats.get(ability, 10)
+    score = character.stats.get(ability, 10)
     mod = ability_modifier(score)
     roll = roll_d20(advantage=advantage, disadvantage=disadvantage)
     total = roll + mod
@@ -93,25 +89,24 @@ def _get_help_text() -> str:
     )
 
 
-def _get_stats_text(character: dict[str, Any]) -> str:
+def _get_stats_text(character: Character) -> str:
     """Собрать текст с характеристиками персонажа.
 
     Args:
-        character: Словарь с данными персонажа
+        character: Объект персонажа
 
     Returns:
         Отформатированные характеристики
     """
-    stats = character.get("stats", {})
     lines = [
-        f'Персонаж: {character.get("name", "???")}',
-        f'Уровень: {character.get("level", 1)}',
-        f'Раса: {character.get("race", "?")}',
-        f'Класс: {character.get("class", "?")}',
-        f'HP: {character.get("current_hp", 0)}',
+        f"Персонаж: {character.name}",
+        f"Уровень: {character.level}",
+        f"Раса: {character.race}",
+        f"Класс: {character.class_name}",
+        f"HP: {character.current_hp}",
         "",
         "Характеристики:",
     ]
-    for stat_key, value in stats.items():
+    for stat_key, value in character.stats.items():
         lines.append(f"  {stat_key}: {value}")
     return "\n".join(lines)
