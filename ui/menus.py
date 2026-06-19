@@ -335,10 +335,10 @@ def _difficulty_label(strings: dict[str, Any], difficulty: str) -> str:
 def _difficulty_color(difficulty: str) -> str:
     """Цвет для отображения режима сложности."""
     if difficulty == "hardcore":
-        return Fore.RED
+        return str(Fore.RED)
     if difficulty == "normal":
-        return Fore.GREEN
-    return Fore.CYAN
+        return str(Fore.GREEN)
+    return str(Fore.CYAN)
 
 
 def _character_race_label(char: Character) -> str:
