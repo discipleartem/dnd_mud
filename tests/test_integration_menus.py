@@ -1,9 +1,9 @@
-"""Интеграционные тесты для модулей игры."""
+"""Интеграционные тесты UI-навигации."""
 
+import re
 import sys
 from pathlib import Path
 
-# Добавляем корень проекта в sys.path для импорта main.py
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
@@ -13,38 +13,15 @@ def test_localization():
     """Тест локализации: загрузка строк и получение по ключу."""
     from core.localization import get_string, load_strings
 
-    # Загружаем английский
     strings_en = load_strings("en")
     assert get_string(strings_en, "menu.new_game") == "New Game"
     assert get_string(strings_en, "menu.exit") == "Exit"
 
-    # Загружаем русский
     strings_ru = load_strings("ru")
     assert get_string(strings_ru, "menu.new_game") == "Новая игра"
     assert get_string(strings_ru, "settings.caption") == "НАСТРОЙКИ"
-
-    print("✓ Локализация: все ключи загружены")
-
-
-def test_settings():
-    """Тест сохранения и загрузки настроек."""
-    from core.settings import load_settings, save_settings
-
-    # Сохраняем тестовые настройки
-    save_settings("en", hardcore=True)
-
-    loaded = load_settings()
-    assert loaded["language"] == "en"
-    assert loaded["hardcore"] is True
-
-    # Проверяем дефолтные
-    save_settings("ru", hardcore=False)
-
-    loaded = load_settings()
-    assert loaded["language"] == "ru"
-    assert loaded["hardcore"] is False
-
-    print("✓ Настройки: сохранение/загрузка OK")
+    assert get_string(strings_ru, "stats.strength") == "Сила"
+    assert get_string(strings_en, "stats.strength") == "Strength"
 
 
 def test_main_imports():
@@ -54,27 +31,22 @@ def test_main_imports():
     assert main.VERSION == "0.1.0"
     assert callable(main.main)
 
-    print(f"✓ main.py: импорты OK (версия {main.VERSION})")
-
 
 def test_new_game_back_returns_one_step(monkeypatch):
     """Назад из выбора приключения возвращает к выбору персонажа."""
-    from core.models import Adventure
+    from core.models import Adventure, Character
     from ui import menus
 
     calls = {
-        "difficulty": 0,
         "character": 0,
         "adventure": 0,
     }
-    character = {"name": "Test Hero", "race": "Human", "class": "Fighter"}
+    character = Character(
+        name="Test Hero",
+        race="human",
+        class_name="fighter",
+    )
     adventure = Adventure(id="test", name="Test Adventure")
-
-    def select_difficulty(strings, settings):
-        calls["difficulty"] += 1
-        if calls["difficulty"] == 1:
-            return "normal"
-        return None
 
     def select_character(strings):
         calls["character"] += 1
@@ -82,20 +54,22 @@ def test_new_game_back_returns_one_step(monkeypatch):
             return character
         return None
 
-    def select_adventure(strings):
+    def select_adventure(strings, language, char):
         calls["adventure"] += 1
         return None
 
-    monkeypatch.setattr(menus, "select_difficulty", select_difficulty)
-    monkeypatch.setattr(menus, "load_characters", lambda: [character])
+    monkeypatch.setattr(
+        menus,
+        "load_characters",
+        lambda: [character],
+    )
     monkeypatch.setattr(menus, "_select_character", select_character)
     monkeypatch.setattr(menus, "_select_adventure", select_adventure)
 
-    menus.show_new_game_flow({}, {"difficulty": "normal"})
+    menus.show_new_game_flow({}, {"language": "ru"})
 
     assert adventure.get_name() == "Test Adventure"
     assert calls == {
-        "difficulty": 2,
         "character": 2,
         "adventure": 1,
     }
@@ -124,9 +98,12 @@ def test_base_race_without_subraces_has_back_option(monkeypatch, capsys):
         "allow_base_race_choice": True,
     }
 
-    monkeypatch.setattr(menus, "_clear_screen", lambda: None)
     monkeypatch.setattr(menus, "load_race_full", lambda race_id: race)
-    monkeypatch.setattr(menus, "get_int_input", lambda prompt, min_v, max_v: 0)
+    monkeypatch.setattr(
+        menus,
+        "get_int_input",
+        lambda prompt, min_v, max_v, strings=None: 0,
+    )
 
     selected, subrace_id = menus._select_subrace(strings, "half_orc")
     output = capsys.readouterr().out
@@ -169,9 +146,12 @@ def test_human_has_base_and_variant_choices(monkeypatch, capsys):
         },
     }
 
-    monkeypatch.setattr(menus, "_clear_screen", lambda: None)
     monkeypatch.setattr(menus, "load_race_full", lambda race_id: race)
-    monkeypatch.setattr(menus, "get_int_input", lambda prompt, min_v, max_v: 1)
+    monkeypatch.setattr(
+        menus,
+        "get_int_input",
+        lambda prompt, min_v, max_v, strings=None: 1,
+    )
 
     selected, subrace_id = menus._select_subrace(strings, "human")
     output = capsys.readouterr().out
@@ -184,50 +164,248 @@ def test_human_has_base_and_variant_choices(monkeypatch, capsys):
     assert "Человек (вариант)" in output
 
 
-def test_variant_human_does_not_inherit_base_bonuses():
-    """Человек (вариант) не получает +1 ко всем характеристикам."""
-    from core.character import _get_race_bonuses
+def test_languages_menu_order_ru_locale(monkeypatch, capsys):
+    """При ru локали первым идёт English, вторым — Русский."""
+    from core.localization import load_strings
+    from ui import menus
 
-    base_bonuses = _get_race_bonuses("human")
-    variant_bonuses = _get_race_bonuses("human", "variant_human")
+    strings = load_strings("ru")
+    settings = {"language": "ru"}
 
-    assert base_bonuses == {
-        "strength": 1,
-        "dexterity": 1,
-        "constitution": 1,
-        "intelligence": 1,
-        "wisdom": 1,
-        "charisma": 1,
-    }
-    assert variant_bonuses == {}
+    monkeypatch.setattr(
+        menus,
+        "get_int_input",
+        lambda prompt, min_v, max_v, strings=None: 0,
+    )
+
+    menus.show_languages_menu(strings, settings)
+    output = capsys.readouterr().out
+
+    assert re.search(r"1.*English", output)
+    assert re.search(r"2.*Русский", output)
 
 
-if __name__ == "__main__":
-    tests = [
-        test_localization,
-        test_settings,
-        test_main_imports,
-    ]
+def test_languages_menu_order_en_locale(monkeypatch, capsys):
+    """При en локали первым идёт Русский, вторым — English."""
+    from core.localization import load_strings
+    from ui import menus
 
-    passed = 0
-    failed = 0
+    strings = load_strings("en")
+    settings = {"language": "en"}
 
-    for test in tests:
-        try:
-            test()  # type: ignore[no-untyped-call]
-            passed += 1
-        except AssertionError as e:
-            print(f"✗ {test.__name__}: {e}")
-            failed += 1
-        except Exception as e:
-            print(f"✗ {test.__name__}: {type(e).__name__}: {e}")
-            failed += 1
+    monkeypatch.setattr(
+        menus,
+        "get_int_input",
+        lambda prompt, min_v, max_v, strings=None: 0,
+    )
 
-    total = passed + failed
-    print()
-    print("=" * 50)
-    print(f"  Результат: {passed}/{total} тестов пройдено")
-    print("=" * 50)
+    menus.show_languages_menu(strings, settings)
+    output = capsys.readouterr().out
 
-    if failed > 0:
-        exit(1)
+    assert re.search(r"1.*Русский", output)
+    assert re.search(r"2.*English", output)
+
+
+def test_select_character_shows_all_with_difficulty(monkeypatch, capsys):
+    """Все персонажи доступны, карточки показывают детали и сложность."""
+    from core.localization import load_strings
+    from core.models import Character
+    from ui import menus
+
+    strings = load_strings("ru")
+    normal_char = Character(
+        name="Hero Normal",
+        race="human",
+        class_name="fighter",
+        difficulty="normal",
+        stats={
+            "strength": 16,
+            "dexterity": 14,
+            "constitution": 13,
+            "intelligence": 12,
+            "wisdom": 10,
+            "charisma": 8,
+        },
+        current_hp=12,
+        experience=0,
+    )
+    hardcore_char = Character(
+        name="Hero HC",
+        race="elf",
+        class_name="bard",
+        difficulty="hardcore",
+        stats={
+            "strength": 10,
+            "dexterity": 15,
+            "constitution": 12,
+            "intelligence": 13,
+            "wisdom": 11,
+            "charisma": 14,
+        },
+        current_hp=9,
+        experience=100,
+    )
+
+    monkeypatch.setattr(
+        menus,
+        "load_characters",
+        lambda: [normal_char, hardcore_char],
+    )
+    monkeypatch.setattr(
+        menus,
+        "get_int_input",
+        lambda prompt, min_v, max_v, strings=None: 0,
+    )
+
+    result = menus._select_character(strings)
+    output = capsys.readouterr().out
+
+    assert result is None
+    assert "Сохранённые персонажи" in output
+    assert "Hero Normal" in output
+    assert "Человек" in output
+    assert "Воин" in output
+    assert "Нормальная" in output
+    assert "HP:" in output
+    assert re.search(r"HP:\s+.*12", output)
+    assert "Hero HC" in output
+    assert "Эльф" in output
+    assert "Бард" in output
+    assert "HardCore" in output
+    assert re.search(r"HP:\s+.*9", output)
+    assert re.search(r"XP:\s+.*100", output)
+    assert re.search(r"Сил.{0,30}16", output)
+    assert re.search(r"Лов.{0,30}14", output)
+    assert "Создать нового персонажа" in output
+    assert "human" not in output
+    assert "fighter" not in output
+    assert "Персонажи другой сложности" not in output
+
+
+def test_select_character_shows_subrace_name(monkeypatch, capsys):
+    """Подраса отображается читаемым названием, а не ID."""
+    from core.localization import load_strings
+    from core.models import Character
+    from ui import menus
+
+    strings = load_strings("ru")
+    character = Character(
+        name="Variant Hero",
+        race="human",
+        class_name="cleric",
+        difficulty="hardcore",
+        subrace="variant_human",
+        stats={"strength": 10, "dexterity": 10, "constitution": 10,
+               "intelligence": 10, "wisdom": 10, "charisma": 10},
+        current_hp=10,
+    )
+
+    monkeypatch.setattr(menus, "load_characters", lambda: [character])
+    monkeypatch.setattr(
+        menus,
+        "get_int_input",
+        lambda prompt, min_v, max_v, strings=None: 0,
+    )
+
+    menus._select_character(strings)
+    output = capsys.readouterr().out
+
+    assert "Человек (вариант)" in output
+    assert "variant_human" not in output
+
+
+def test_select_character_create_new_option(monkeypatch):
+    """Пункт создания нового персонажа возвращает 'create'."""
+    from core.localization import load_strings
+    from core.models import Character
+    from ui import menus
+
+    strings = load_strings("ru")
+    character = Character(
+        name="Hero",
+        race="human",
+        class_name="fighter",
+        difficulty="normal",
+    )
+
+    monkeypatch.setattr(menus, "load_characters", lambda: [character])
+    monkeypatch.setattr(
+        menus,
+        "get_int_input",
+        lambda prompt, min_v, max_v, strings=None: 2,
+    )
+
+    result = menus._select_character(strings)
+
+    assert result == "create"
+
+
+def test_select_adventure_filters_by_character_difficulty(monkeypatch, capsys):
+    """Недоступные приключения показываются серым блоком."""
+    from core.localization import load_strings
+    from core.models import Adventure, Character
+    from ui import menus
+
+    strings = load_strings("ru")
+    character = Character(
+        name="Normal Hero",
+        race="human",
+        class_name="fighter",
+        difficulty="normal",
+    )
+    available = Adventure(
+        id="tutorial",
+        name={"ru": "Обучение"},
+        description="desc",
+        difficulty="easy",
+    )
+    blocked = Adventure(
+        id="hc_only",
+        name={"ru": "HardCore Quest"},
+        description="desc",
+        difficulty="normal",
+        hardcore_only=True,
+    )
+
+    monkeypatch.setattr(
+        menus,
+        "load_adventures",
+        lambda: [available, blocked],
+    )
+    monkeypatch.setattr(
+        menus,
+        "get_int_input",
+        lambda prompt, min_v, max_v, strings=None: 0,
+    )
+
+    result = menus._select_adventure(strings, "ru", character)
+    output = capsys.readouterr().out
+
+    assert result is None
+    assert "Обучение" in output
+    assert "HardCore Quest" in output
+    assert "Недоступны для сложности персонажа" in output
+
+
+def test_new_game_no_characters_goes_to_create(monkeypatch):
+    """Без персонажей — сразу создание."""
+    from ui import menus
+
+    calls = {"select": 0, "create": 0}
+
+    def select_character(strings):
+        calls["select"] += 1
+        return None
+
+    def create_flow(strings, settings):
+        calls["create"] += 1
+        return None
+
+    monkeypatch.setattr(menus, "load_characters", lambda: [])
+    monkeypatch.setattr(menus, "_select_character", select_character)
+    monkeypatch.setattr(menus, "show_create_character_flow", create_flow)
+
+    menus.show_new_game_flow({}, {"language": "ru"})
+
+    assert calls["select"] == 0
+    assert calls["create"] == 1

@@ -37,11 +37,7 @@ def _save_and_reload_settings(
     Returns:
         Кортеж (обновлённые_настройки, обновлённые_строки)
     """
-    save_settings(
-        language=settings.get("language", "ru"),
-        hardcore=settings.get("hardcore", False),
-        difficulty=settings.get("difficulty", "normal"),
-    )
+    save_settings(language=settings.get("language", "ru"))
     strings = load_strings(settings["language"])
     return settings, strings
 
@@ -54,22 +50,6 @@ def main() -> int:
     """
     # Инициализация цветного вывода в терминале
     init(autoreset=True)
-
-    # Устанавливаем UTF-8 для ввода/вывода.
-    # На Windows сначала пробуем UTF-8 (Windows 10+ поддерживает),
-    # при неудаче — откат на cp1251 (кириллический стандарт).
-    _encoding = "utf-8"
-    if sys.platform == "win32":
-        try:
-            sys.stdout.reconfigure(encoding=_encoding)
-            sys.stdin.reconfigure(encoding=_encoding)
-        except (ValueError, LookupError):
-            _encoding = "cp1251"
-            try:
-                sys.stdout.reconfigure(encoding=_encoding)
-                sys.stdin.reconfigure(encoding=_encoding)
-            except (ValueError, LookupError):
-                pass
 
     # Загружаем настройки
     settings = load_settings()
@@ -95,6 +75,7 @@ def main() -> int:
         elif choice == 1:
             # Новая игра
             show_new_game_flow(strings, settings)
+            settings, strings = _save_and_reload_settings(settings, strings)
 
         elif choice == 2:
             # Загрузить игру
@@ -103,6 +84,7 @@ def main() -> int:
         elif choice == 3:
             # Создать персонажа
             show_create_character_flow(strings, settings)
+            settings, strings = _save_and_reload_settings(settings, strings)
 
         elif choice == 4:
             # Настройки
