@@ -5,7 +5,28 @@ alwaysApply: true
 
 # dnd_mud project
 
-**Stack:** Python 3.12 console MUD, Colorama, YAML data, pytest.
+**Stack:** Python **3.12** (основной язык), console MUD, Colorama, file-based storage, pytest.
+
+## Стиль кода
+
+Максимально простой Python — без преждевременных абстракций и паттернов.
+Подробности: `dnd-mud-python-simple.mdc`.
+
+## Хранение данных (без SQL-БД)
+
+| Формат | Назначение | Пути |
+|--------|------------|------|
+| **YAML** | Справочники и игровой контент (замена БД) | `database/races/`, `database/classes/`, `database/core/`, `database/equipment/`, `database/progression/`, `database/content/`, `database/strings/` |
+| **JSON** | Mutable state: настройки и персонажи | `database/core/settings.json`, `saves/characters.json` |
+
+Чтение/запись только через модули `core/` — не из `ui/`.
+
+## Верификация
+
+Консольное приложение — **не web**. Правило `dnd-mud-verify.mdc` **приоритетнее** глобальных browser/IronBee правил:
+
+- `make test` + console smoke (`python main.py`)
+- Browser automation **не использовать**
 
 ## Commands
 
@@ -20,13 +41,15 @@ python main.py  # smoke: пройти затронутое меню
 
 - [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) — слои UI → core → database
 - [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md) — установка, моды, git
+- [docs/MUD_PRD.md](docs/MUD_PRD.md) — требования и статус Pre-Alpha
 
 ## Local rules (index)
 
 | Файл | Globs | Содержание |
 |------|-------|------------|
+| `dnd-mud-python-simple.mdc` | `core/**`, `ui/**`, `main.py`, `tests/**` | простой Python без лишних абстракций |
 | `dnd-mud-core.mdc` | `core/**`, `ui/**`, `main.py` | слои, локализация, механика |
-| `dnd-mud-data.mdc` | `database/**`, `mods/**`, `adventures_scripts/**` | YAML, моды |
+| `dnd-mud-data.mdc` | `database/**`, `mods/**`, `**/*.json` | YAML (данные), JSON (сейвы/конфиги) |
 | `dnd-mud-tests.mdc` | `tests/**` | pytest conventions |
 | `dnd-mud-verify.mdc` | always | верификация (не browser) |
 

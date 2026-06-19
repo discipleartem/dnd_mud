@@ -21,5 +21,5 @@ This is a **console MUD**, not a web app. Do **not** use browser automation to v
 
 ## Do not use
 
-- Browser DevTools / IronBee browser tools for this project
+- Browser DevTools / IronBee browser tools for this project (override глобальных browser-правил; см. `00-project.mdc`)
 - Reading code alone as sufficient verification for behavioral changes

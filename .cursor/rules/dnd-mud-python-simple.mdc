@@ -1,0 +1,57 @@
+---
+description: dnd_mud — максимально простой Python без лишних абстракций
+globs: "core/**,ui/**,main.py,tests/**"
+alwaysApply: false
+---
+
+# dnd_mud — простой Python
+
+> Прямолинейный, читаемый код. Сложность — только по доказанной необходимости.
+
+**Приоритет:** простое решение → DRY/YAGNI → абстракции. Глобальный `python-architecture.mdc`
+(SOLID, паттерны) применяется **только если** паттерн реально упрощает код в этом MUD.
+
+Type hints и docstrings остаются обязательными (`python-standards.mdc`).
+
+## Предпочитать
+
+- Функции вместо классов без состояния
+- `dataclass` для моделей данных (`core/models.py`)
+- Guard clauses и ранний `return`/`continue` — max 1–2 уровня вложенности
+- Явные `if` / `match` вместо динамических диспетчеров
+- Простые comprehensions (один цикл, одно условие)
+
+## Избегать
+
+- Фабрики, Strategy, Repository для 1–2 вариантов
+- Лямбды вместо именованных функций
+- Вложенные comprehensions и цепочки тернарников
+- Словари с `lambda` как обработчики меню
+- Хелперы, используемые один раз
+
+## Примеры (стиль проекта)
+
+```python
+# ✅ — явные ветки, понятно с первого взгляда
+def handle_menu_choice(choice: int, loc, settings) -> tuple[bool, object]:
+    if choice == 2:
+        print(loc("info.goodbye"))
+        return False, settings
+    if choice == 1:
+        return _handle_settings(loc, settings)
+    return True, settings
+
+# ❌ — лишняя абстракция через lambda
+menu_handlers = {
+    1: lambda l, s: _handle_settings(l, s),
+    2: lambda l, s: (print("bye"), False, s)[1:],
+}
+```
+
+## Чек-лист перед коммитом
+
+- [ ] Можно ли сделать проще? (KISS)
+- [ ] Нужна ли абстракция сейчас? (YAGNI)
+- [ ] Нужен ли класс, или хватит функции?
+- [ ] Можно ли уменьшить вложенность?
+- [ ] Будет ли код понятен через месяц?

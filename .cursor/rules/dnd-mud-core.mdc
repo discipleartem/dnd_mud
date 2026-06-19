@@ -1,22 +1,36 @@
 ---
-description: dnd_mud core/ui — слои, локализация, D&D механика
+description: dnd_mud core/ui — Python 3.12, слои, локализация, D&D механика
 globs: "core/**,ui/**,main.py"
 alwaysApply: false
 ---
 
 # dnd_mud core and UI
 
+Стиль кода: см. `dnd-mud-python-simple.mdc`.
+
+**Language:** Python 3.12 (`requires-python >= 3.12` in `pyproject.toml`).
+
 ## Layered architecture
 
 ```
-ui/  →  core/  →  database/ (YAML)
+ui/  →  core/  →  database/ (YAML) + saves/ (JSON)
 ```
 
 - **UI** (`ui/menus.py`, `ui/input_handler.py`) — отображение и ввод; без бизнес-логики
-- **Core** (`core/`) — модели, механика, локализация; не зависит от UI
-- **Data** (`database/`) — YAML; core читает через свои модули
+- **Core** (`core/`) — модели, механика, загрузчики; не зависит от UI
+- **Data** — YAML в `database/`, JSON в `database/core/` и `saves/`; core читает/пишет через свои модули
 
-UI must not access database files directly.
+UI must not read or write data files directly.
+
+## Data access in core
+
+| Format | Use in core | Paths |
+|--------|-------------|-------|
+| **YAML** | Статические справочники | `database/races/races.yaml`, `database/classes/classes.yaml`, `database/content/adventures.yaml`, `database/strings/*.yaml` |
+| **JSON** | Настройки и персонажи | `database/core/settings.json`, `saves/characters.json` |
+
+Use `yaml.safe_load` for YAML; `json.load` / `json.dump` for JSON.
+Always set `encoding="utf-8"` and handle `OSError` / parse errors explicitly.
 
 ## Localization
 
@@ -35,18 +49,13 @@ Keys use dot notation (`menu.new_game`). Update both `database/strings/ru.yaml` 
 ## D&D mechanics
 
 - Models in `core/models.py` — `dataclass` for `Character`, `Adventure`
-- Use `Enum` for character classes, not raw strings
-- Explicit condition checks; named constants from YAML (no magic numbers)
-- Effects apply/remove explicitly — no hidden state
-
-```python
-if character.character_class == CharacterClass.WARRIOR:  # ✅
-if character.class_name == "warrior":                    # ❌
-```
+- Сейчас `class_name: str`; `CharacterClass` Enum — целевой рефакторинг, не блокер
+- Game balance values from YAML — no magic numbers in Python
+- Explicit condition checks; effects apply/remove explicitly
 
 ## Pre-commit checklist
 
 - [ ] Strings localized in `ru.yaml` / `en.yaml`
+- [ ] New reference data in YAML; saves/configs in JSON
 - [ ] Type hints on public APIs
-- [ ] No duplicated damage/effect logic (DRY)
 - [ ] Docstrings on public functions

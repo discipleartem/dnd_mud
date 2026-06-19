@@ -1,39 +1,76 @@
 ---
-description: dnd_mud YAML data, mods, adventures — bilingual fields, no hardcoded game data
-globs: "database/**,mods/**,adventures_scripts/**"
+description: dnd_mud data — YAML как БД, JSON для сейвов и конфигов
+globs: "database/**,mods/**,adventures_scripts/**,saves/**,**/*.json"
 alwaysApply: false
 ---
 
 # dnd_mud data layer
 
-## YAML conventions
+Проект **не использует SQL-БД**. Данные — файлы YAML и JSON.
 
-- Game data lives in `database/` — races, classes, equipment, strings, etc.
-- User-facing text in `database/strings/{ru,en}.yaml` with matching keys
-- Entity names often bilingual: `name: { ru: "...", en: "..." }`
-- Do not hardcode game data in Python — add or extend YAML files
+## Когда какой формат
 
-## Mods (`mods/`)
+| Формат | Роль | Примеры |
+|--------|------|---------|
+| **YAML** | Справочники и контент (замена БД) | расы, классы, снаряжение, строки, каталог приключений, моды |
+| **JSON** | Сохранения и конфиги | персонажи, настройки пользователя, будущие слоты сохранений игры |
+
+**Правило:** новые справочники и игровой контент — в YAML. Mutable player state и конфиги — в JSON.
+
+## Канонические пути
+
+| Данные | Путь | Модуль |
+|--------|------|--------|
+| Расы | `database/races/races.yaml` | `core/character.py` |
+| Классы | `database/classes/classes.yaml` | `core/character.py` |
+| Приключения (каталог) | `database/content/adventures.yaml` | `core/adventure.py` |
+| Настройки | `database/core/settings.json` | `core/settings.py` |
+| Персонажи | `saves/characters.json` | `core/character.py` |
+| Локализация | `database/strings/{ru,en}.yaml` | `core/localization.py` |
+| Справочники Phase 2 | `database/_future/` | не загружаются |
+| Сценарии | `adventures_scripts/*.yaml` | `core/adventure.py` |
+
+## YAML conventions (`database/`, `mods/`, `adventures_scripts/`)
+
+- Human-editable reference data; bilingual fields where needed: `name: { ru: "...", en: "..." }`
+- User-facing UI strings: `database/strings/{ru,en}.yaml` with matching keys
+- Do not hardcode game data in Python — extend YAML under `database/`
 
 ```yaml
+# mods/example_mod.yaml
 name: "Mod title"
 version: "1.0"
-type: "addon"    # addon | mod
+type: "addon"
 files:
   - target: "database/races/races.yaml"
-    action: "append"   # append | replace | delete
+    action: "append"
     data: [...]
 ```
 
-State tracked in `database/content/mods_state.yaml` via `core/mod_loader.py`.
+## JSON conventions (saves and configs)
 
-## Adventures (`adventures_scripts/`)
+- UTF-8, pretty-print with `indent=2`
+- Поле `schema_version` при эволюции формата
+- `saves/` — в `.gitignore` (пользовательские данные)
+- Validate after load; explicit errors on corrupt files
 
-Scenario YAML referenced from `database/content/adventures.yaml`.
-Keep narrative and mechanics data in YAML, not in UI code.
+```json
+{
+  "schema_version": 1,
+  "language": "ru",
+  "difficulty": "normal"
+}
+```
+
+```json
+{
+  "schema_version": 1,
+  "characters": []
+}
+```
 
 ## When editing data
 
-1. Keep `ru` and `en` in sync for new keys
-2. Follow existing file structure under `database/`
-3. Run `make test` after data changes that affect loading
+1. Keep `ru` and `en` in sync for new localization keys
+2. YAML for new races/classes/items; JSON for new save/config shapes
+3. Run `make test` after changes that affect loading

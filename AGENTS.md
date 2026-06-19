@@ -21,9 +21,10 @@ Reference: `~/.cursor/docs/python-versions.md`
 
 | File | Scope | Content |
 |------|-------|---------|
-| `00-project.mdc` | always | Stack, commands, index |
+| `00-project.mdc` | always | Stack, commands, data paths, verify priority |
+| `dnd-mud-python-simple.mdc` | `core/**`, `ui/**`, `main.py`, `tests/**` | Simple Python without premature abstractions |
 | `dnd-mud-core.mdc` | `core/**`, `ui/**`, `main.py` | Layers, localization, mechanics |
-| `dnd-mud-data.mdc` | `database/**`, `mods/**`, `adventures_scripts/**` | YAML, mods |
+| `dnd-mud-data.mdc` | `database/**`, `mods/**`, `saves/**`, `**/*.json` | YAML (справочники), JSON (сейвы/конфиги) |
 | `dnd-mud-tests.mdc` | `tests/**` | pytest conventions |
 | `dnd-mud-verify.mdc` | always | `make test`, console smoke (no browser) |
 
@@ -31,13 +32,36 @@ Reference: `~/.cursor/docs/python-versions.md`
 
 - **2** global `alwaysApply` + **2** project `alwaysApply` (`00-project`, `dnd-mud-verify`)
 - Remaining rules activate by `globs` when matching files are open
-- Simple first → patterns only when they simplify
+- Simple first → patterns only when they simplify (`dnd-mud-python-simple.mdc`)
+- `dnd-mud-verify.mdc` overrides global browser rules for this console app
 
 ## Project docs
 
 - [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)
+- [docs/API.md](docs/API.md)
+- [docs/CHANGELOG.md](docs/CHANGELOG.md)
 - [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md)
 - [docs/MUD_PRD.md](docs/MUD_PRD.md)
+
+## Data storage
+
+- **Python 3.12** — основной язык проекта
+- **YAML** — справочники и игровой контент в `database/` (расы, классы, строки, приключения)
+- **JSON** — mutable state: `database/core/settings.json`, `saves/characters.json`
+
+Структура `database/`:
+
+```
+database/
+├── classes/classes.yaml
+├── content/adventures.yaml
+├── core/settings.json.example
+├── _future/                    # Phase 2 (не загружается runtime)
+├── races/races.yaml
+└── strings/{en,ru}.yaml
+```
+
+Доступ к файлам только через `core/`, не из `ui/`.
 
 ## Quick commands
 
