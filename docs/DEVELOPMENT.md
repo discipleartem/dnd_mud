@@ -10,17 +10,17 @@
 ### Установка
 
 ```bash
-# Клонировать репозиторий
 git clone git@github.com:discipleartem/dnd_mud.git
 cd dnd_mud
+make install   # venv + pip install -e ".[dev]"
+```
 
-# Создать виртуальное окружение
+Или вручную:
+
+```bash
 python3.12 -m venv .venv
 source .venv/bin/activate
-
-# Установить зависимости
-pip install -e .
-pip install -e ".[dev]"  # + dev-зависимости (pytest, ruff, black, mypy)
+pip install -e ".[dev]"
 ```
 
 ### Запуск
@@ -40,10 +40,9 @@ dnd_mud
 ### Тестирование
 
 ```bash
-source .venv/bin/activate
-pytest                  # Все тесты
-pytest -v               # Подробный вывод
-pytest --cov=.          # С coverage
+make test
+pytest -v
+pytest --cov=.
 ```
 
 ## Структура проекта
@@ -54,47 +53,37 @@ dnd_mud/
 ├── pyproject.toml           # Конфигурация проекта
 ├── README.md
 ├── core/                    # Игровое ядро
-│   ├── __init__.py
-│   ├── character.py         # Модель персонажа (dataclass)
+│   ├── models.py            # Dataclass: Character, Adventure
+│   ├── character.py         # CRUD персонажей, генерация характеристик
 │   ├── adventure.py         # Загрузка приключений из YAML
-│   ├── dice.py              # Броски кубиков (d20, ndm)
-│   ├── game_engine.py       # Игровой движок (базовая структура)
+│   ├── dice.py              # Броски кубиков
 │   ├── localization.py      # Локализация (YAML-словари)
-│   ├── mod_loader.py        # Моды (сканирование, включение/выключение)
-│   └── settings.py          # Настройки пользователя
+│   └── settings.py          # Настройки пользователя (JSON)
 ├── ui/                      # Пользовательский интерфейс
 │   ├── __init__.py
 │   ├── menus.py             # Меню (главное, настройки)
 │   └── input_handler.py     # Валидация ввода (числа, строки, выбор)
-├── database/                # YAML-данные D&D 5e
-│   ├── races.yaml           # Расы и подрасы
-│   ├── classes.yaml         # Классы персонажей
-│   ├── characters.yaml      # Сохранённые персонажи
-│   ├── adventures.yaml      # Список приключений
-│   ├── settings.yaml        # Настройки пользователя
-│   ├── mods_state.yaml      # Состояние модов
-│   ├── abilities.yaml       # Характеристики и навыки (заготовка)
-│   ├── armor.yaml           # Доспехи (заготовка)
-│   ├── backgrounds.yaml     # Предыстории (заготовка)
-│   ├── constants.yaml       # Константы (заготовка)
-│   ├── equipment.yaml       # Снаряжение (заготовка)
-│   ├── feats.yaml           # Фиты (заготовка)
-│   ├── features.yaml        # Особенности (заготовка)
-│   ├── languages.yaml       # Языки (заготовка)
-│   ├── sizes.yaml           # Размеры (заготовка)
-│   ├── skills.yaml          # Навыки (заготовка)
-│   ├── tools.yaml           # Инструменты (заготовка)
-│   ├── weapon.yaml          # Оружие (заготовка)
-│   └── strings/             # Локализация
+├── database/                # YAML-справочники D&D 5e
+│   ├── races/
+│   │   └── races.yaml       # Расы и подрасы
+│   ├── classes/
+│   │   └── classes.yaml     # Классы персонажей
+│   ├── content/adventures.yaml
+│   ├── core/settings.json.example
+│   ├── _future/               # Справочники Phase 2
+│   └── strings/
 │       ├── ru.yaml
 │       └── en.yaml
+├── saves/                   # Пользовательские данные (gitignored)
+│   └── characters.json      # Сохранённые персонажи
 ├── adventures_scripts/      # Сценарии приключений (заглушки)
 │   ├── tutorial.yaml
 │   └── lost_mine.yaml
-├── mods/                    # Пользовательские моды
-│   └── example_mod.yaml
-├── tests/                   # Тесты
-│   └── test_integration_menus.py  # 3 интеграционных теста
+├── mods/_examples/example_mod.yaml
+├── tests/
+│   ├── test_character.py
+│   ├── test_settings.py
+│   └── test_integration_menus.py  # 12 тестов всего
 └── docs/                    # Документация
     ├── MUD_PRD.md
     ├── ARCHITECTURE.md
@@ -106,19 +95,7 @@ dnd_mud/
 ## Линтинг и форматирование
 
 ```bash
-source .venv/bin/activate
-
-# Линтер
-ruff check .
-
-# Автофикс
-ruff check --fix .
-
-# Форматирование
-black .
-
-# Проверка типов
-mypy .
+make check   # lint + black --check + mypy
 ```
 
 ## Тестирование
@@ -127,8 +104,19 @@ mypy .
 
 ```python
 # tests/test_integration_menus.py
-"""Интеграционные тесты (3 теста): локализация, настройки, импорт main."""
+"""Интеграционные тесты UI; unit-тесты — test_character.py, test_settings.py."""
 ```
+
+Покрытие:
+- `test_localization` — ключи en/ru, имена характеристик
+- `test_settings` — save/load JSON, `schema_version`
+- `test_main_imports` — импорт `main`, VERSION
+- `test_new_game_back_returns_one_step` — навигация «Назад»
+- `test_base_race_without_subraces_has_back_option` — расы без подрас
+- `test_human_has_base_and_variant_choices` — human / variant_human
+- `test_variant_human_does_not_inherit_base_bonuses` — в `test_character.py`
+
+См. также `tests/test_character.py` (save/load Character, stats) и `tests/test_settings.py`.
 
 Запуск конкретного тестового файла:
 
@@ -167,7 +155,7 @@ version: "1.0"
 type: "addon"   # addon — добавляет новые данные, mod — изменяет
 description: "Добавляет расу Dragonborn"
 files:
-  - target: "database/races.yaml"
+  - target: "database/races/races.yaml"
     action: "append"   # append, replace, delete
     data:
       - id: dragonborn
@@ -218,7 +206,7 @@ get_string(strings, 'welcome.version', version='0.1.0')
 
 ## Добавление новой расы/класса
 
-1. Открыть `database/races.yaml` или `database/classes.yaml`
+1. Открыть `database/races/races.yaml` или `database/classes/classes.yaml`
 2. Добавить запись по образцу существующих
 3. Перезапустить игру
 
@@ -247,23 +235,51 @@ races:
 
 ### Реализовано (ui)
 - ✅ `ui/input_handler.py` — валидация ввода (int, str, выбор из списка)
-- ✅ `ui/menus.py` — главное меню (2 пункта) и экран настроек
+- ✅ `ui/menus.py` — главное меню (5 пунктов + Выход), настройки, languages
+- ✅ Flow «Новая игра» (сложность → персонаж → приключение)
+- ✅ Flow «Создать персонажа» (имя → раса → подраса → генерация характеристик → класс)
+- ✅ Flow «Загрузить игру» — заглушка (`errors.load_not_implemented`)
 
 ### Тестирование
-- ❌ Нет тестов для character.py, dice.py, localization.py, mod_loader.py, settings.py, adventure.py
+- ✅ 9 интеграционных тестов (см. выше)
+- ✅ Unit-тест `generate_stats_random` (регрессия API)
+- ❌ Нет UI-тестов экрана генерации характеристик
+- ❌ Нет unit-тестов для dice.py, mod_loader.py, adventure.py
+
+### Настройки: difficulty
+
+Спецификация режимов: [MUD_PRD.md §3.2.1](MUD_PRD.md#321-режимы-сложности-игры).
+
+| ID | UI (ru) | Статус |
+|----|---------|--------|
+| `normal` | Нормальная | Реализовано в UI |
+| `hardcore` | HardCore | Реализовано в UI |
+| `easy` | Лёгкая | Зарезервировано, не в UI |
+
+- `difficulty` выбирается в flow «Новая игра» / «Создать персонажа» (`select_difficulty`); сохраняется в `Character.difficulty`
+- `settings.json` → `difficulty` — предвыбор в меню; меню «Настройки» **отображает**, но не переключает
+- Поле `difficulty` в `adventures.yaml` — **уровень контента**, не режим игрока (не путать с `Character.difficulty`)
+- Миграция legacy `hardcore: true` → `difficulty: "hardcore"` (`core/settings.py`)
+
+### Генерация характеристик
+
+Спецификация UX (методы, HardCore, расовые бонусы, переквалификация): [MUD_PRD.md §3.4.5](MUD_PRD.md#345-генерация-характеристик-реализовано).  
+API: `core/character.py`, UI: `show_stats_generation_flow` в `ui/menus.py`.
 
 ### База данных
-- ✅ Основные файлы: races.yaml, classes.yaml, characters.yaml, adventures.yaml
-- ✅ Локализация: ru.yaml, en.yaml + stats/difficulty строки вынесены в YAML
-- ⏳ Заготовки: abilities.yaml, armor.yaml, backgrounds.yaml, constants.yaml, equipment.yaml, feats.yaml, features.yaml, languages.yaml, sizes.yaml, skills.yaml, tools.yaml, weapon.yaml — заполнены данными, но не используются в коде
+- ✅ Справочники: `races/races.yaml`, `classes/classes.yaml`, `content/adventures.yaml`
+- ✅ JSON: `database/core/settings.json`, `saves/characters.json` (с `schema_version: 1`)
+- ✅ Локализация: `strings/ru.yaml`, `strings/en.yaml`
+- ⏳ Заготовки в `core/`, `equipment/`, `progression/` — заполнены, но не используются в коде
 
 ### Не реализовано
+- ❌ Режим сложности «Лёгкая» (`easy`) в UI
+- ❌ Фильтрация приключений по режиму HardCore (`allowed_game_difficulties` в YAML)
+- ❌ Gating модов по режиму (`requires_game_difficulty` в метаданных мода)
+- ❌ Параметризация game_engine по режиму сложности
 - ❌ Полноценный цикл приключений в game_engine.py
 - ❌ Боевая система
-- ❌ Сохранение/загрузка состояния игры
-- ❌ Сценарии приключений (только заглушки)
-- ❌ Меню создания персонажа в ui/menus.py
-- ❌ Меню Languages в ui/menus.py
-- ❌ Меню Модификаций в ui/menus.py
-- ❌ Меню Приключений в ui/menus.py
+- ❌ Сохранение/загрузка состояния игры (flow «Загрузить игру»)
+- ❌ Сценарии приключений (только заглушки в `adventures_scripts/`)
+- ❌ Отдельные пункты меню «Модификации» / «Приключения» (приключения — внутри «Новая игра»)
 - ❌ Обработка модов во время выполнения

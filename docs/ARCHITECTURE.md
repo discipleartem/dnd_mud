@@ -2,8 +2,6 @@
 
 ## Общая архитектура
 
-Проект построен по слоёной архитектуре (layered architecture):
-
 ```
 ┌────────────────────────────────────┐
 │           UI Layer (ui/)           │
@@ -21,112 +19,83 @@
 
 ### 1. UI Layer (`ui/`)
 
-Отвечает за взаимодействие с пользователем.
-
 | Модуль | Назначение |
 |--------|-----------|
-| `ui/menus.py` | Отрисовка всех экранов меню (главное меню, настройки и т.д.) |
-| `ui/input_handler.py` | Валидация пользовательского ввода (числа, строки, выбор из списка) |
+| `ui/menus.py` | Отрисовка всех экранов меню |
+| `ui/input_handler.py` | Валидация ввода, UTF-8 для stdin/stdout |
 
-**Принцип:** UI не содержит бизнес-логики. Все вызовы идут к core через функции.
+UI не читает файлы данных напрямую — только через `core/`.
 
 ### 2. Core Layer (`core/`)
 
-Ядро игры. Не зависит от UI и БД.
-
 | Модуль | Назначение |
 |--------|-----------|
-| `core/models.py` | Типизированные dataclass: `Character`, `Adventure` |
-| `core/character.py` | Создание, сохранение/загрузка персонажей, раса/классы |
-| `core/adventure.py` | Загрузка приключений из YAML, отображаемые имена, сложность |
-| `core/dice.py` | Броски кубиков (d20, ndm), преимущество/помеха, модификаторы |
-| `core/game_engine.py` | Игровой движок, обработка команд, проверки характеристик (базовая структура) |
-| `core/localization.py` | Загрузка YAML-словарей, переключение языка, fallback на английский |
-| `core/mod_loader.py` | Сканирование папки `mods/`, включение/выключение модов |
-| `core/settings.py` | Класс `Settings` — загрузка/сохранение настроек пользователя |
+| `core/models.py` | `Character`, `Adventure` (dataclass) |
+| `core/character.py` | CRUD персонажей, генерация характеристик, справочники рас/классов |
+| `core/adventure.py` | `load_adventures()` |
+| `core/dice.py` | `roll()`, `roll_ability_score()`, `ability_modifier()` |
+| `core/localization.py` | `load_strings()`, `get_string()` |
+| `core/settings.py` | Настройки в `database/core/settings.json` |
 
-### 3. Data Layer (`database/`)
+### 3. Data Layer (`database/`, `saves/`)
 
-Хранилище данных в формате YAML.
+| Путь | Назначение | Формат | Модуль |
+|------|-----------|--------|--------|
+| `database/races/races.yaml` | Расы | YAML | `character.py` |
+| `database/classes/classes.yaml` | Классы | YAML | `character.py` |
+| `database/content/adventures.yaml` | Каталог приключений | YAML | `adventure.py` |
+| `database/core/settings.json` | Настройки | JSON | `settings.py` |
+| `saves/characters.json` | Персонажи | JSON | `character.py` |
+| `database/strings/*.yaml` | Локализация | YAML | `localization.py` |
+| `database/_future/` | Справочники Phase 2 (не загружаются) | YAML | — |
 
-| Файл | Назначение | Статус использования |
-|------|-----------|---------------------|
-| `database/races.yaml` | Расы, бонусы, подрасы | Используется `character.py` |
-| `database/classes.yaml` | Классы, хиты, особенности, подклассы | Используется `character.py` |
-| `database/characters.yaml` | Сохранённые персонажи | Используется `character.py` |
-| `database/adventures.yaml` | Список приключений | Используется `adventure.py` |
-| `database/settings.yaml` | Настройки пользователя (язык, hardcore) | Используется `settings.py` |
-| `database/mods_state.yaml` | Состояние модов (вкл/выкл) | Используется `mod_loader.py` |
-| `database/strings/ru.yaml` | Русская локализация | Используется `localization.py` |
-| `database/strings/en.yaml` | Английская локализация (fallback) | Используется `localization.py` |
-| `database/abilities.yaml` | Характеристики и привязанные навыки | Заготовка на будущее |
-| `database/armor.yaml` | Доспехи и щиты | Заготовка на будущее |
-| `database/backgrounds.yaml` | Предыстории персонажей | Заготовка на будущее |
-| `database/constants.yaml` | Константы (модификаторы, DC, hit dice) | Заготовка на будущее |
-| `database/equipment.yaml` | Снаряжение | Заготовка на будущее |
-| `database/feats.yaml` | Фиты | Заготовка на будущее |
-| `database/features.yaml` | Все особенности (фиты, классовые, расовые) | Заготовка на будущее |
-| `database/languages.yaml` | Языки | Заготовка на будущее |
-| `database/sizes.yaml` | Размеры существ | Заготовка на будущее |
-| `database/skills.yaml` | Навыки | Заготовка на будущее |
-| `database/tools.yaml` | Инструменты | Заготовка на будущее |
-| `database/weapon.yaml` | Оружие | Заготовка на будущее |
+### 4. Resources (`adventures_scripts/`, `mods/`)
 
-### 4. Resources Layer (`adventures_scripts/`, `mods/`)
-
-| Файл | Назначение |
+| Путь | Назначение |
 |------|-----------|
-| `adventures_scripts/tutorial.yaml` | Сценарий обучения (заглушка) |
-| `adventures_scripts/lost_mine.yaml` | Сценарий «Затеряные рудники Фанделвера» (заглушка) |
-| `mods/example_mod.yaml` | Пример мода (добавление расы Драконорожденный) |
+| `adventures_scripts/*.yaml` | Сценарии (заглушки) |
+| `mods/_examples/` | Пример формата мода (runtime не подключён) |
 
-## Поток данных (Data Flow)
+## Поток данных
 
 ```
-Пользователь
-    │
-    ▼
-main.py ──вызов──► ui/menus.py ──вызов──► core/character.py
-    │                                              │
-    │                                              ▼
-    │                                         database/races.yaml
-    │                                         database/classes.yaml
-    │                                         database/characters.yaml
-    │
-    │──► core/settings.py ──► database/settings.yaml
-    │
-    │──► core/mod_loader.py ──► mods/*.yaml
-    │                          database/mods_state.yaml
-    │
-    │──► core/adventure.py ──► database/adventures.yaml
-    │                          adventures_scripts/*.yaml
-    │
-    ▼                       ▼
-core/localization.py ◄──── database/strings/*.yaml
+main.py → ui/menus.py → core/character.py → saves/characters.json
+                      → core/settings.py → database/core/settings.json
+                      → core/adventure.py → database/content/adventures.yaml
+                      → core/localization.py → database/strings/*.yaml
 ```
 
-**Типичный сценарий «Новая игра» (планируемый):**
+**Сценарий «Новая игра»:** сложность → персонаж (`Character`) → приключение → сообщение о запуске (без game engine).
 
-1. `main.py` → `show_main_menu()` → пользователь выбирает пункт
-2. При выборе настроек → `show_settings()` → изменение `Settings` → сохранение в `database/settings.yaml`
-3. При выходе → завершение программы
+**Сценарий «Создать персонажа»:** сложность → имя → раса → подраса → генерация характеристик → класс → сохранение в `saves/characters.json`.
 
-**Текущее состояние главного меню:**
-- Пункт 1: Настройки (язык, hardcore)
-- Пункт 2: Выход
+- Оркестрация: `ui/menus.py` (`show_create_character_flow`, `show_stats_generation_flow`)
+- Генераторы: `core/character.py` (`generate_stats_*`, `get_race_bonuses`)
+- Броски 4d6: `core/dice.py` (`roll_ability_score`)
 
-Остальные экраны (создание персонажа, приключения, моды) будут добавлены в следующих итерациях.
+Подробная спецификация UX генерации характеристик: [MUD_PRD.md §3.4.5](MUD_PRD.md#345-генерация-характеристик-реализовано).
 
-## Ключевые решения
+## Режим сложности игры
 
-- **YAML вместо БД** — лёгкость модификации конечными пользователями
-- **Словари локализации** — YAML-словари, не `gettext` (проще для модов)
-- **`Settings` class** — инкапсуляция настроек, а не функции в `main.py`
-- **No GIL/no async** — одиночная текстовая игра, синхронный код достаточен
-- **Большая часть YAML-базы данных** (abilities, armor, backgrounds, etc.) — заготовки на будущее; в коде пока используются только основные файлы
+`Character.difficulty` проходит через flows «Новая игра» и «Создать персонажа»:
+
+```
+select_difficulty() → show_stats_generation_flow() → [будущее] фильтр приключений → [будущее] правила game_engine
+```
+
+| Режим | Реализовано сегодня | Запланировано |
+|-------|---------------------|---------------|
+| `normal` | 3 метода характеристик, переквалификация | Базовая механика engine |
+| `hardcore` | Авто-4d6×6, без переквалификации | Gating приключений/модов, полная механика D&D 5e |
+| `easy` | — | Упрощённая механика / обучение |
+
+HardCore — точка расширения для `core/adventure.py`, `core/mod_loader.py`, `core/game_engine.py`.  
+Спецификация: [MUD_PRD.md §3.2.1](MUD_PRD.md#321-режимы-сложности-игры).
+
+**Настройки:** `language`, `difficulty` в `settings.json`; сложность персонажа — в `Character.difficulty`. Меню «Настройки» только отображает `difficulty` по умолчанию.
 
 ## Связанные документы
 
-- [API Reference](API.md) — детальная документация всех публичных функций и классов
-- [Development Guide](DEVELOPMENT.md) — руководство по установке, запуску и разработке
-- [MUD_PRD.md](MUD_PRD.md) — Product Requirements Document
+- [API Reference](API.md)
+- [Development Guide](DEVELOPMENT.md)
+- [MUD_PRD.md](MUD_PRD.md)

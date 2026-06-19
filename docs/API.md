@@ -1,6 +1,11 @@
 # API Reference — dnd_mud Core
 
-## core.character — Модель персонажа
+Справочник публичного API модулей `core/` и точки входа `main.py`.  
+UI (`ui/`) обращается к данным только через `core/`.
+
+---
+
+## core.models — Модели данных
 
 ### Character
 
@@ -14,339 +19,300 @@ class Character:
     stats: dict[str, int] = field(default_factory=dict)
     current_hp: int = 0
     experience: int = 0
+    difficulty: str = "normal"
+    subrace: str | None = None
 ```
 
 **Методы:**
-- `to_dict() -> dict[str, Any]` — сериализация в словарь для YAML
-- `from_dict(data: dict[str, Any]) -> Character` — десериализация из словаря
-- `_calculate_hp() -> int` — расчёт хитов 1-го уровня (con_mod)
+- `to_dict() -> dict[str, Any]` — сериализация для JSON
+- `from_dict(data: dict[str, Any]) -> Character` — десериализация
+
+### Adventure
+
+```python
+@dataclass
+class Adventure:
+    id: str
+    name: dict[str, str] | str
+    description: str = ""
+    difficulty: str = "normal"  # content tier в YAML, НЕ режим игрока — см. ниже
+    author: str = ""
+    version: str = "1.0"
+```
+
+**Методы:**
+- `get_name(language: str = "ru") -> str` — локализованное название
+- `from_dict(data: dict[str, Any]) -> Adventure` — десериализация
+
+> Поле `Adventure.difficulty` загружается из `adventures.yaml` как **уровень контента** (`easy`, `normal`). Это не режим сложности игры (`Character.difficulty`). Целевое расширение YAML: `allowed_game_difficulties`, `hardcore_only` — см. [MUD_PRD.md §3.2.1](MUD_PRD.md#321-режимы-сложности-игры).
+
+---
+
+## core.character — Персонажи
 
 ### Константы
 
 ```python
-STANDARD_ARRAY = [15, 14, 13, 12, 10, 8]  # Стандартный массив D&D 5e
+STANDARD_ARRAY = [15, 14, 13, 12, 10, 8]
 STAT_NAMES = ["strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma"]
-CHARACTERS_FILE = Path("database/characters.yaml")
-RACES_FILE = Path("database/races.yaml")
-CLASSES_FILE = Path("database/classes.yaml")
+CHARACTERS_FILE = Path("saves/characters.json")
+RACES_FILE = Path("database/races/races.yaml")
+CLASSES_FILE = Path("database/classes/classes.yaml")
 ```
 
-### Функции
+### Сохранение и загрузка
 
 ```python
-# Создание и сохранение
-create_character(name, race_id, class_id) -> Character
-character_exists(name) -> bool
+save_character(
+    name: str,
+    race_id: str,
+    class_id: str,
+    difficulty: str = "normal",
+    subrace_id: str | None = None,
+    stats: dict[str, int] | None = None,
+) -> Character
 
-# Загрузка данных
 load_characters() -> list[Character]
-save_characters(characters: list[Character]) -> None
-load_races() -> list[dict]
-load_classes() -> list[dict]
+load_races() -> list[dict[str, Any]]
+load_race_full(race_id: str) -> dict[str, Any]
+load_classes() -> list[dict[str, Any]]
+get_race_bonuses(race_id: str, subrace_id: str | None = None) -> dict[str, int]
 
-# Характеристики
-get_race_bonuses(race_id) -> dict[str, int]
-generate_stats(race_id) -> dict[str, int]
-ability_modifier(score) -> int
-get_stat_display_name(stat_key, loc=None) -> str
+POINT_BUY_BUDGET = 27
+POINT_BUY_COSTS: dict[int, int]
+point_buy_cost(score: int) -> int
+remaining_standard_array_pool(used: list[int]) -> list[int]
+point_buy_total_cost(values: list[int]) -> int
+can_assign_point_buy_value(current: dict[str, int], stat: str, new_value: int) -> bool
 ```
 
-### Примеры
+`save_character` создаёт `Character` и сохраняет в `saves/characters.json`.
+
+### Генерация характеристик
+
+**Константы** (`core/character.py`):
 
 ```python
-# Создание
-char = create_character("Арагорн", "human", "fighter")
-print(char.name, char.stats)
-
-# Загрузка
-chars = load_characters()
-for c in chars:
-    print(c.name, c.level)
-
-# Проверка существования
-if character_exists("Арагорн"):
-    print("Персонаж существует")
-
-# Генерация характеристик с расовыми бонусами
-stats = generate_stats("elf")
-# {'strength': 8, 'dexterity': 17, 'constitution': 13, 'intelligence': 14, 'wisdom': 12, 'charisma': 10}
+STANDARD_ARRAY = [15, 14, 13, 12, 10, 8]
+STAT_NAMES = ["strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma"]
+POINT_BUY_BUDGET = 27
+POINT_BUY_COSTS = {8: 0, 9: 1, 10: 2, 11: 3, 12: 4, 13: 5, 14: 7, 15: 9}
 ```
 
----
+**Point-buy** (бюджет 27 очков):
 
-## core.dice — Броски кубиков
+| Значение | Стоимость |
+|----------|-----------|
+| 8 | 0 |
+| 9 | 1 |
+| 10 | 2 |
+| 11 | 3 |
+| 12 | 4 |
+| 13 | 5 |
+| 14 | 7 |
+| 15 | 9 |
 
-### Типы
+**Core-функции:**
 
 ```python
-DiceType = Literal[4, 6, 8, 10, 12, 20, 100]
+generate_stats_standard_array(selected_values: list[int], race_id: str, subrace_id: str | None = None) -> dict[str, int]
+generate_stats_point_buy(point_buy_values: list[int], race_id: str, subrace_id: str | None = None) -> dict[str, int]
+generate_stats_random(random_values: list[int], race_id: str, subrace_id: str | None = None) -> dict[str, int]
+generate_stats_hardcore(race_id: str, subrace_id: str | None = None) -> dict[str, int]
 ```
 
-### Функции
+Все функции возвращают словарь `{stat_name: value}` с **уже применёнными** расовыми бонусами.
+
+`roll_ability_score()` — в `core.dice` (4d6, убрать наименьший, сумма остальных трёх).
+
+**UI** (`ui/menus.py`):
 
 ```python
-roll(count=1, sides=20, modifier=0) -> int
-roll_d20(advantage=False, disadvantage=False) -> int
-roll_with_mods(count, sides, modifier, advantage, disadvantage) -> tuple[int, list[int]]
-ability_modifier(score) -> int
-critical_hit(extra_dice=0) -> tuple[int, list[int]]
+show_stats_generation_flow(
+    strings: dict[str, Any],
+    race_id: str,
+    subrace_id: str | None,
+    difficulty: str,
+) -> dict[str, int] | None
 ```
 
-### Исключения
+Поведение по `difficulty`:
+- `normal` — меню из 3 методов (standard array / point-buy / 4d6) + экран подтверждения с переквалификацией
+- `hardcore` — автоматический 4d6×6 по порядку `STAT_NAMES`, без выбора метода и без переквалификации
 
-- `ValueError` — если указаны и advantage, и disadvantage одновременно
+UX-детали (расовые бонусы до/после, экран подтверждения): [MUD_PRD.md §3.4.5](MUD_PRD.md#345-генерация-характеристик-реализовано).
 
-### Примеры
+### Формат saves/characters.json
 
-```python
-# Бросок 1к20
-result = roll_d20()
-print(f"Результат: {result}")
-
-# Бросок с преимуществом
-result = roll_d20(advantage=True)
-
-# Бросок 2к6+3
-result = roll(2, 6, 3)
-print(f"Урон: {result}")
-
-# Модификатор характеристики
-mod = ability_modifier(18)  # 4
-
-# Критическое попадание
-total, rolls = critical_hit(extra_dice=2)
-print(f"Крит: {total}, броски: {rolls}")
-
-# Детальный бросок с помехой
-total, rolls = roll_with_mods(1, 20, 0, disadvantage=True)
-```
-
----
-
-## core.adventure — Приключения
-
-### Константы
-
-```python
-ADVENTURES_FILE = Path("database/adventures.yaml")
-```
-
-### Функции
-
-```python
-load_adventures() -> list[dict]
-get_adventure_display_name(adventure, language='ru') -> str
-get_adventure_difficulty_name(difficulty, language='ru') -> str
-```
-
-### Примеры
-
-```python
-adventures = load_adventures()
-for adv in adventures:
-    name = get_adventure_display_name(adv, 'ru')
-    diff = get_adventure_difficulty_name(adv['difficulty'], 'ru')
-    print(f"{name} ({diff})")
+```json
+{
+  "schema_version": 1,
+  "characters": [
+    {
+      "name": "Арагорн",
+      "race": "human",
+      "subrace": "variant_human",
+      "class": "fighter",
+      "level": 1,
+      "stats": {
+        "strength": 16,
+        "dexterity": 14,
+        "constitution": 13,
+        "intelligence": 10,
+        "wisdom": 12,
+        "charisma": 8
+      },
+      "current_hp": 13,
+      "experience": 0,
+      "difficulty": "normal"
+    }
+  ]
+}
 ```
 
 ---
 
 ## core.localization — Локализация
 
-### Класс Localization
-
 ```python
-loc = Localization(language='ru')
-
-# Использование
-text = loc('menu.new_game')  # "Новая игра"
-text = loc('welcome.version', version='0.1.0')  # "Версия: 0.1.0"
-
-# Переключение языка
-loc.load('en')
-text = loc('menu.new_game')  # "New Game"
-
-# Свойства
-print(loc.language)  # 'en' — текущий язык
+load_strings(language: str) -> dict[str, Any]
+get_string(strings: dict[str, Any], key: str, **kwargs: Any) -> str
 ```
 
-**Методы:**
-- `load(language: str) -> None` — загрузить YAML-словарь для языка + fallback en
-- `get(key: str, **kwargs) -> str` — получить строку по ключу (точечная нотация)
-- `__call__(key: str, **kwargs) -> str` — сокращённый вызов
+- Файлы: `database/strings/{ru,en}.yaml`
+- Ключи в dot-notation: `menu.new_game`, `character.stats_confirm`
 
-**Формат ключей:** точечная нотация для вложенных словарей.
-
-```
-'database/strings/ru.yaml':
-  menu:
-    new_game: "Новая игра"
-    exit: "Выход"
-
-loc('menu.new_game') -> "Новая игра"
-```
-
-**Fallback:** если ключ не найден в текущем языке, поиск идёт в английском словаре. Если не найдено — возвращается сам ключ.
+Шаблон настроек: `database/core/settings.json.example`.
 
 ---
 
-## core.settings — Настройки
-
-### Класс Settings
+## core.settings — Настройки пользователя
 
 ```python
-settings = Settings()
-
-# Загрузка/сохранение
-settings.load()
-settings.save()
-
-# Удобный конструктор
-settings = Settings.from_file()
-
-# Доступ к полям
-settings.language = 'en'
-settings.hardcore = True
-
-# Преобразование
-data = settings.to_dict()  # {'language': 'en', 'hardcore': True}
+SETTINGS_PATH = Path("database/core/settings.json")
+load_settings() -> dict[str, Any]
+save_settings(language: str, difficulty: str = "normal") -> None
 ```
 
-**Поля:**
-- `language: str` — код языка ('ru' по умолчанию)
-- `hardcore: bool` — режим Hard Core (False по умолчанию)
-- `_loaded: bool` — флаг загрузки
+### Формат database/core/settings.json
 
-**Константы:**
-```python
-DEFAULT_LANGUAGE = "ru"
-SETTINGS_PATH: Path = Path.cwd().resolve() / "database" / "settings.yaml"
+```json
+{
+  "schema_version": 1,
+  "language": "ru",
+  "difficulty": "normal"
+}
 ```
+
+**Семантика полей:**
+- `language` — язык интерфейса (`ru` / `en`)
+- `difficulty` — сложность по умолчанию для flow (`normal` / `hardcore`)
+
+При загрузке старого JSON с полем `hardcore: true` выполняется миграция в `difficulty: "hardcore"`.
 
 ---
 
-## core.mod_loader — Моды
+## Режим сложности игры
 
-### Константы
+Единая модель выбора игрока. Подробности: [MUD_PRD.md §3.2.1](MUD_PRD.md#321-режимы-сложности-игры).
 
-```python
-MODS_DIR = Path("mods")
-MODS_STATE_FILE = Path("database/mods_state.yaml")
-```
+**Допустимые значения**
 
-### Функции
+| ID | UI (ru) | Статус |
+|----|---------|--------|
+| `normal` | Нормальная | Реализовано |
+| `hardcore` | HardCore | Реализовано |
+| `easy` | Лёгкая | Зарезервировано (не в UI) |
 
-```python
-scan_mods() -> list[dict]
-load_mods_state() -> dict[str, bool]
-save_mods_state(state: dict[str, bool]) -> None
-toggle_mod(mod_name) -> bool
-is_mod_enabled(mod_name) -> bool
-```
+**Где хранится и выбирается**
 
-### Формат мода
+| Место | Поле / функция | Назначение |
+|-------|----------------|------------|
+| `Character` | `difficulty: str` | Режим персонажа на всю сессию |
+| `settings.json` | `difficulty` | Предвыбор в меню (`select_difficulty`) |
+| `ui/menus.py` | `select_difficulty()` | Экран выбора в «Новая игра» / «Создать персонажа» |
 
-```yaml
-name: "Новая раса - Драконорожденный"
-version: "1.0"
-type: "addon"   # addon — добавляет новые данные, mod — изменяет
-description: "Добавляет расу Dragonborn"
-files:
-  - target: "database/races.yaml"
-    action: "append"   # append, replace, delete
-    data:
-      - id: dragonborn
-        name:
-          ru: "Драконорожденный"
-          en: "Dragonborn"
-        ability_bonuses:
-          str: 2
-          cha: 1
-```
+**Влияние на генерацию характеристик** (`show_stats_generation_flow`):
+
+| Режим | Поведение |
+|-------|-----------|
+| `normal` | 3 метода + экран подтверждения / переквалификация |
+| `hardcore` | Авто-4d6×6, без выбора метода и без переквалификации |
+
+**Запланированные hook'и (не реализованы)**
+
+- Фильтрация приключений по `allowed_game_difficulties` / `hardcore_only` в `adventures.yaml`
+- Проверка `requires_game_difficulty` в метаданных мода (`mod_loader`)
+- Параметризация правил в `game_engine` по режиму (HardCore = полная механика D&D 5e)
 
 ---
 
-## core.game_engine — Игровой движок
-
-### Класс GameEngine
+## core.adventure — Приключения
 
 ```python
-engine = GameEngine(character_dict, adventure_dict)
-
-engine.process_command("help")           # -> str
-engine.process_command("stats")          # -> str (характеристики)
-engine.process_command("exit")           # -> str, engine.running = False
-engine.ability_check("strength", dc=15)  # -> (success, total, desc)
+load_adventures() -> list[Adventure]
 ```
 
-**Поля:**
-- `character: dict[str, Any]` — данные персонажа (словарь)
-- `adventure: dict[str, Any]` — данные приключения
-- `running: bool` — флаг работы цикла
-- `current_node: str` — текущий узел сценария (по умолчанию "start")
-
-**Примечание:** Движок пока в базовой стадии. Полноценный цикл приключений будет добавлен в следующих версиях.
+Источник: `database/content/adventures.yaml`.  
+Отображаемое имя — через `Adventure.get_name(language)`.
 
 ---
 
-
----
-
-## ui.input_handler — Ввод
-
-### Функции
+## core.dice — Броски кубиков
 
 ```python
-get_int_input(prompt, min_val, max_val, loc=None) -> int
-get_str_input(prompt, min_length=1, validator=None, error_msg='') -> str
-get_choice(options, prompt, back_option=False, back_label='', loc=None) -> int
+roll(count=1, sides=20, modifier=0) -> int
+roll_ability_score() -> int
+ability_modifier(score: int) -> int
 ```
-
-### Примеры
-
-```python
-# Числовой ввод
-choice = get_int_input("Выберите [1-8]: ", 1, 8)
-
-# Строковый ввод
-name = get_str_input("Введите имя: ", min_length=2)
-
-# Выбор из списка
-idx = get_choice(["Да", "Нет"], "Ваш выбор: ")
-
-# Выбор с пунктом "Назад"
-idx = get_choice(["Опция A", "Опция B"], "Выберите: ", back_option=True, back_label="Назад")
-```
-
-**Возвращаемое значение `get_choice`:**
-- 0-based индекс выбранной опции (0 = первый элемент)
-- `-1` если `back_option=True` и пользователь выбрал пункт 0
 
 ---
 
 ## main.py — Точка входа
 
-### Константы
-
 ```python
 VERSION = "0.1.0"
+main() -> int
 ```
 
-### Функции
+**Главное меню (реализовано):**
+
+| № | Пункт | Обработчик |
+|---|-------|------------|
+| 1 | Новая игра | `show_new_game_flow` |
+| 2 | Загрузить игру | `show_load_game_flow` (заглушка) |
+| 3 | Создать персонажа | `show_create_character_flow` |
+| 4 | Настройки | `show_settings` |
+| 5 | Languages | `show_languages_menu` |
+| 0 | Выход | завершение |
+
+После изменения настроек или языка вызывается `_save_and_reload_settings`.
+
+---
+
+## ui.menus — Публичные flow-функции
 
 ```python
-main() -> int                                     # Запуск игры
-handle_menu_choice(choice, loc, settings)         # Обработка выбора меню
-_handle_settings(loc, settings)                   # Обработка настроек
+show_welcome_screen(version: str, strings: dict) -> None
+show_main_menu(strings: dict) -> int
+select_difficulty(strings: dict, settings: dict) -> str | None
+show_new_game_flow(strings: dict, settings: dict) -> None
+show_load_game_flow(strings: dict) -> None
+show_create_character_flow(strings: dict, settings: dict, difficulty: str | None = None) -> Character | None
+show_stats_generation_flow(strings: dict, race_id: str, subrace_id: str | None, difficulty: str) -> dict[str, int] | None
+show_settings(strings: dict, settings: dict) -> dict
+show_languages_menu(strings: dict, settings: dict) -> dict
 ```
 
-### Текущие пункты главного меню
+Создание персонажа: сложность → имя → раса/подраса → **генерация характеристик** → **класс** → сохранение.  
+Режимы сложности: `normal`, `hardcore` (в перспективе `easy`). HardCore — ключевой режим для механики, приключений и модов.  
+Подробности: [MUD_PRD.md §3.2.1](MUD_PRD.md#321-режимы-сложности-игры), [§3.4](MUD_PRD.md#34-flow-создать-персонажа).
 
-| № | Пункт | Описание |
-|---|-------|----------|
-| 1 | Настройки | Язык и Hard Core режим |
-| 2 | Выход | Завершение программы |
+---
 
-> **Примечание:** Пока реализованы только 2 пункта из 8 запланированных.
-> Остальные пункты (Новая игра, Создать персонажа, Languages, Модификации, Приключения)
-> будут добавлены в следующих итерациях.
+## ui.input_handler — Ввод
+
+```python
+get_int_input(prompt: str, min_val: int, max_val: int, strings: dict | None = None) -> int
+get_str_input(prompt: str, min_length: int = 1, only_letters: bool = False, strings: dict | None = None) -> str
+```
