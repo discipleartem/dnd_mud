@@ -1,64 +1,66 @@
 """Загрузка и сохранение настроек пользователя.
 
-Настройки хранятся в YAML-файле database/settings.yaml.
+Настройки хранятся в JSON-файле database/core/settings.json.
 """
 
+import json
 from pathlib import Path
 from typing import Any
 
-import yaml
-
-SETTINGS_PATH = Path("database/core/settings.yaml")
+SETTINGS_PATH = Path("database/core/settings.json")
 DEFAULT_LANGUAGE = "ru"
+SCHEMA_VERSION = 1
+
+
+def _default_settings() -> dict[str, Any]:
+    """Вернуть настройки по умолчанию."""
+    return {
+        "schema_version": SCHEMA_VERSION,
+        "language": DEFAULT_LANGUAGE,
+    }
+
+
+def _runtime_settings(data: dict[str, Any]) -> dict[str, Any]:
+    """Извлечь настройки для runtime."""
+    defaults = _default_settings()
+    return {
+        "language": data.get("language", defaults["language"]),
+    }
 
 
 def load_settings() -> dict[str, Any]:
-    """Загрузить настройки из YAML-файла.
-
-    Настройки хранятся в YAML-файле database/core/settings.yaml.
+    """Загрузить настройки из JSON-файла.
 
     Returns:
-        Словарь с настройками:
-        {"language": "ru", "hardcore": False, "difficulty": "normal"}
+        Словарь с настройками: language
     """
     if not SETTINGS_PATH.exists():
-        return {
-            "language": DEFAULT_LANGUAGE,
-            "hardcore": False,
-            "difficulty": "normal",
-        }
+        return _runtime_settings(_default_settings())
 
     try:
         with open(SETTINGS_PATH, encoding="utf-8") as f:
-            data = yaml.safe_load(f) or {}
-        return {
-            "language": data.get("language", DEFAULT_LANGUAGE),
-            "hardcore": data.get("hardcore", False),
-            "difficulty": data.get("difficulty", "normal"),
-        }
-    except (yaml.YAMLError, OSError):
-        return {
-            "language": DEFAULT_LANGUAGE,
-            "hardcore": False,
-            "difficulty": "normal",
-        }
+            data = json.load(f)
+        return _runtime_settings(data)
+    except (json.JSONDecodeError, OSError):
+        return _runtime_settings(_default_settings())
 
 
-def save_settings(
-    language: str, hardcore: bool, difficulty: str = "normal"
-) -> None:
-    """Сохранить настройки в YAML-файл.
+def _write_settings(data: dict[str, Any]) -> None:
+    """Записать настройки в JSON-файл."""
+    SETTINGS_PATH.parent.mkdir(parents=True, exist_ok=True)
+    with open(SETTINGS_PATH, "w", encoding="utf-8") as f:
+        json.dump(data, f, ensure_ascii=False, indent=2)
+
+
+def save_settings(language: str) -> None:
+    """Сохранить настройки в JSON-файл.
 
     Args:
         language: Код языка ('ru', 'en')
-        hardcore: Режим Hard Core
-        difficulty: Сложность ('normal' или 'hardcore')
     """
-    SETTINGS_PATH.parent.mkdir(parents=True, exist_ok=True)
-    data = {
-        "language": language,
-        "hardcore": hardcore,
-        "difficulty": difficulty,
-    }
-    with open(SETTINGS_PATH, "w", encoding="utf-8") as f:
-        yaml.dump(data, f, allow_unicode=True, default_flow_style=False)
+    _write_settings(
+        {
+            "schema_version": SCHEMA_VERSION,
+            "language": language,
+        }
+    )

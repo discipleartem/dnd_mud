@@ -1,6 +1,6 @@
 """Загрузка и работа с приключениями.
 
-Приключения хранятся в YAML-файле database/adventures.yaml.
+Каталог приключений: database/content/adventures.yaml.
 """
 
 from pathlib import Path

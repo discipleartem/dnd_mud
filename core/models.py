@@ -19,10 +19,11 @@ class Character:
     current_hp: int = 0
     experience: int = 0
     difficulty: str = "normal"
+    subrace: str | None = None
 
     def to_dict(self) -> dict[str, Any]:
-        """Сериализовать в словарь для сохранения в YAML."""
-        return {
+        """Сериализовать в словарь для сохранения в JSON."""
+        data: dict[str, Any] = {
             "name": self.name,
             "race": self.race,
             "class": self.class_name,
@@ -32,10 +33,14 @@ class Character:
             "experience": self.experience,
             "difficulty": self.difficulty,
         }
+        if self.subrace is not None:
+            data["subrace"] = self.subrace
+        return data
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> "Character":
         """Создать из словаря."""
+        subrace = data.get("subrace")
         return cls(
             name=data.get("name", ""),
             race=data.get("race", ""),
@@ -45,6 +50,7 @@ class Character:
             current_hp=data.get("current_hp", 0),
             experience=data.get("experience", 0),
             difficulty=data.get("difficulty", "normal"),
+            subrace=str(subrace) if subrace is not None else None,
         )
 
 
@@ -58,23 +64,14 @@ class Adventure:
     difficulty: str = "normal"
     author: str = ""
     version: str = "1.0"
+    allowed_game_difficulties: list[str] | None = None
+    hardcore_only: bool = False
 
     def get_name(self, language: str = "ru") -> str:
         """Получить название на нужном языке."""
         if isinstance(self.name, dict):
             return self.name.get(language, self.name.get("en", ""))
         return str(self.name)
-
-    def to_dict(self) -> dict[str, Any]:
-        """Сериализовать в словарь."""
-        return {
-            "id": self.id,
-            "name": self.name,
-            "description": self.description,
-            "difficulty": self.difficulty,
-            "author": self.author,
-            "version": self.version,
-        }
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> "Adventure":
@@ -86,4 +83,6 @@ class Adventure:
             difficulty=data.get("difficulty", "normal"),
             author=data.get("author", ""),
             version=data.get("version", "1.0"),
+            allowed_game_difficulties=data.get("allowed_game_difficulties"),
+            hardcore_only=bool(data.get("hardcore_only", False)),
         )
