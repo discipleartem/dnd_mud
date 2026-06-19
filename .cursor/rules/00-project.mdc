@@ -1,0 +1,33 @@
+---
+description: dnd_mud — console MUD, индекс локальных правил, команды
+alwaysApply: true
+---
+
+# dnd_mud project
+
+**Stack:** Python 3.12 console MUD, Colorama, YAML data, pytest.
+
+## Commands
+
+```bash
+make install    # venv + pip install -e ".[dev]"
+make test       # pytest
+make check      # ruff --fix + black + mypy
+python main.py  # smoke: пройти затронутое меню
+```
+
+## Docs
+
+- [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) — слои UI → core → database
+- [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md) — установка, моды, git
+
+## Local rules (index)
+
+| Файл | Globs | Содержание |
+|------|-------|------------|
+| `dnd-mud-core.mdc` | `core/**`, `ui/**`, `main.py` | слои, локализация, механика |
+| `dnd-mud-data.mdc` | `database/**`, `mods/**`, `adventures_scripts/**` | YAML, моды |
+| `dnd-mud-tests.mdc` | `tests/**` | pytest conventions |
+| `dnd-mud-verify.mdc` | always | верификация (не browser) |
+
+Глобальные правила: `~/.cursor/rules/` (см. `AGENTS.md`).

@@ -1,0 +1,39 @@
+---
+description: dnd_mud YAML data, mods, adventures — bilingual fields, no hardcoded game data
+globs: "database/**,mods/**,adventures_scripts/**"
+alwaysApply: false
+---
+
+# dnd_mud data layer
+
+## YAML conventions
+
+- Game data lives in `database/` — races, classes, equipment, strings, etc.
+- User-facing text in `database/strings/{ru,en}.yaml` with matching keys
+- Entity names often bilingual: `name: { ru: "...", en: "..." }`
+- Do not hardcode game data in Python — add or extend YAML files
+
+## Mods (`mods/`)
+
+```yaml
+name: "Mod title"
+version: "1.0"
+type: "addon"    # addon | mod
+files:
+  - target: "database/races/races.yaml"
+    action: "append"   # append | replace | delete
+    data: [...]
+```
+
+State tracked in `database/content/mods_state.yaml` via `core/mod_loader.py`.
+
+## Adventures (`adventures_scripts/`)
+
+Scenario YAML referenced from `database/content/adventures.yaml`.
+Keep narrative and mechanics data in YAML, not in UI code.
+
+## When editing data
+
+1. Keep `ru` and `en` in sync for new keys
+2. Follow existing file structure under `database/`
+3. Run `make test` after data changes that affect loading

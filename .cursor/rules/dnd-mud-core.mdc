@@ -1,0 +1,52 @@
+---
+description: dnd_mud core/ui — слои, локализация, D&D механика
+globs: "core/**,ui/**,main.py"
+alwaysApply: false
+---
+
+# dnd_mud core and UI
+
+## Layered architecture
+
+```
+ui/  →  core/  →  database/ (YAML)
+```
+
+- **UI** (`ui/menus.py`, `ui/input_handler.py`) — отображение и ввод; без бизнес-логики
+- **Core** (`core/`) — модели, механика, локализация; не зависит от UI
+- **Data** (`database/`) — YAML; core читает через свои модули
+
+UI must not access database files directly.
+
+## Localization
+
+All user-facing strings via localization — never hardcode:
+
+```python
+from core.localization import get_string, load_strings
+
+strings = load_strings(language)
+message = get_string(strings, "menu.new_game")  # ✅
+message = "New Game"                            # ❌
+```
+
+Keys use dot notation (`menu.new_game`). Update both `database/strings/ru.yaml` and `en.yaml`.
+
+## D&D mechanics
+
+- Models in `core/models.py` — `dataclass` for `Character`, `Adventure`
+- Use `Enum` for character classes, not raw strings
+- Explicit condition checks; named constants from YAML (no magic numbers)
+- Effects apply/remove explicitly — no hidden state
+
+```python
+if character.character_class == CharacterClass.WARRIOR:  # ✅
+if character.class_name == "warrior":                    # ❌
+```
+
+## Pre-commit checklist
+
+- [ ] Strings localized in `ru.yaml` / `en.yaml`
+- [ ] Type hints on public APIs
+- [ ] No duplicated damage/effect logic (DRY)
+- [ ] Docstrings on public functions

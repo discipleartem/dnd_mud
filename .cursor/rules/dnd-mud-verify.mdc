@@ -1,0 +1,25 @@
+---
+description: dnd_mud verification — pytest and console smoke, not browser
+alwaysApply: true
+---
+
+# dnd_mud verification
+
+This is a **console MUD**, not a web app. Do **not** use browser automation to verify changes.
+
+## Before finishing
+
+1. **`make test`** — required after any code or data change
+2. **`make check`** — when changing types, style, or public APIs (ruff + black + mypy)
+3. **Console smoke** — `python main.py` and navigate the affected menu flow
+
+## Workflow
+
+- Implement first, verify once at the end (not after every file edit)
+- If verification fails, fix and re-run tests
+- Skip runtime verification only for docs-only or comment-only changes
+
+## Do not use
+
+- Browser DevTools / IronBee browser tools for this project
+- Reading code alone as sufficient verification for behavioral changes

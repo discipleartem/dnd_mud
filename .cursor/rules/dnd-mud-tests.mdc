@@ -1,0 +1,36 @@
+---
+description: dnd_mud pytest — naming, integration style, full test implementation
+globs: "tests/**"
+alwaysApply: false
+---
+
+# dnd_mud tests
+
+**Runner:** pytest (`make test` or `pytest -v`)
+
+## Naming
+
+Descriptive names: `test_<what>_<condition>_<expected>`
+
+```python
+def test_localization_loads_ru_and_en_keys(): ...   # ✅
+def test_attack(): ...                               # ❌
+```
+
+## Style
+
+Follow [`tests/test_integration_menus.py`](tests/test_integration_menus.py):
+
+- Integration tests over heavy mocking where practical
+- Add `PROJECT_ROOT` to `sys.path` when importing from project root
+- Test real modules: `core.localization`, `core.settings`, `main` imports
+
+## Agent responsibility
+
+Write tests **fully** when adding or changing behavior. Cover:
+
+- Localization key loading (`get_string`, `load_strings`)
+- Settings save/load
+- New game mechanics or menu flows
+
+Run `make test` before considering the task complete.
