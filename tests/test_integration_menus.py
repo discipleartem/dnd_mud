@@ -295,8 +295,14 @@ def test_select_character_shows_subrace_name(monkeypatch, capsys):
         class_name="cleric",
         difficulty="hardcore",
         subrace="variant_human",
-        stats={"strength": 10, "dexterity": 10, "constitution": 10,
-               "intelligence": 10, "wisdom": 10, "charisma": 10},
+        stats={
+            "strength": 10,
+            "dexterity": 10,
+            "constitution": 10,
+            "intelligence": 10,
+            "wisdom": 10,
+            "charisma": 10,
+        },
         current_hp=10,
     )
 
