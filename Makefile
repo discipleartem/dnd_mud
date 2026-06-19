@@ -1,16 +1,9 @@
-.PHONY: help venv-recreate venv install reinstall clean check test
+.PHONY: help venv-recreate venv install reinstall clean lint format format-check typecheck check test
 
-# -------------------------------------------
-# Переменные
-# -------------------------------------------
 VENV      := .venv
 PYTHON    := python3.12
 PIP       := $(VENV)/bin/pip
 PYTHON_VENV := $(VENV)/bin/python
-
-# -------------------------------------------
-# Виртуальное окружение
-# -------------------------------------------
 
 $(VENV)/bin/python:
 	$(PYTHON) -m venv $(VENV)
@@ -23,10 +16,6 @@ venv-recreate:
 	rm -rf $(VENV)
 	$(PYTHON) -m venv $(VENV)
 
-# -------------------------------------------
-# Установка зависимостей
-# -------------------------------------------
-
 .PHONY: install
 install: venv
 	$(PIP) install -e ".[dev]"
@@ -38,10 +27,6 @@ reinstall:
 	$(PYTHON) -m venv $(VENV)
 	$(PIP) install -e ".[dev]"
 
-# -------------------------------------------
-# Очистка
-# -------------------------------------------
-
 .PHONY: clean
 clean:
 	rm -rf .mypy_cache .ruff_cache __pycache__
@@ -52,24 +37,28 @@ clean:
 	find . -type f -name '*.pyo' -delete 2>/dev/null || true
 	find . -type l -name '*.so' -delete 2>/dev/null || true
 
-# -------------------------------------------
-# Проверка кода
-# -------------------------------------------
+.PHONY: lint
+lint:
+	$(VENV)/bin/ruff check .
 
-.PHONY: check
-check: install
-	@echo "=== ruff (fix) ==="
-	$(VENV)/bin/ruff check --fix .
-	@echo ""
-	@echo "=== black ==="
+.PHONY: format
+format:
 	$(VENV)/bin/black .
-	@echo ""
-	@echo "=== mypy ==="
+
+.PHONY: format-check
+format-check:
+	$(VENV)/bin/black --check .
+
+.PHONY: typecheck
+typecheck:
 	$(VENV)/bin/mypy .
 
-# -------------------------------------------
-# Справка
-# -------------------------------------------
+.PHONY: check
+check: lint format-check typecheck
+
+.PHONY: test
+test:
+	$(VENV)/bin/pytest
 
 .PHONY: help
 help:
@@ -81,14 +70,6 @@ help:
 	@echo "  make install         — установить/обновить зависимости"
 	@echo "  make reinstall       — переустановить все зависимости (с удалением)"
 	@echo "  make clean           — очистить кеш и временные файлы"
-	@echo "  make check           — проверить и исправить код (ruff --fix + black + mypy)"
+	@echo "  make check           — полная проверка: ruff + black --check + mypy"
+	@echo "  make format          — применить black (исправить форматирование)"
 	@echo "  make test            — запустить тесты"
-
-
-# -------------------------------------------
-# Тесты
-# -------------------------------------------
-
-.PHONY: test
-test: install
-	$(VENV)/bin/pytest

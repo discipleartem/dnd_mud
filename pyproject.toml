@@ -25,7 +25,6 @@ classifiers = [
 dependencies = [
     "colorama>=0.4.6",
     "PyYAML>=6.0",
-    "babel>=2.14",
 ]
 
 [project.urls]
@@ -47,7 +46,7 @@ dev = [
 
 [tool.setuptools.packages.find]
 where = ["."]
-include = ["core*", "ui*", "database*", "adventures_scripts*", "mods*"]
+include = ["core*", "ui*", "mods*"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
