@@ -107,7 +107,7 @@ def main() -> int:
 
         elif choice == 3:
             # Создать персонажа
-            show_create_character_flow(strings)
+            show_create_character_flow(strings, settings.get("language", "ru"))
             settings, strings = _save_and_reload_settings(settings, strings)
 
         elif choice == 4:

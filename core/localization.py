@@ -35,7 +35,33 @@ def load_strings(language: str) -> dict[str, Any]:
     return result
 
 
-def get_string(strings: dict[str, Any], key: str, **kwargs: Any) -> str:
+def resolve_localized_text(
+    value: str | dict[str, Any] | None,
+    language: str,
+    *,
+    fallback: str = "",
+) -> str:
+    """Получить локализованный текст из строки или словаря {ru, en}."""
+    if isinstance(value, dict):
+        localized = value.get(language)
+        if localized is not None:
+            return str(localized)
+        for key in ("en", "ru"):
+            if key in value and value[key] is not None:
+                return str(value[key])
+        return fallback
+    if value is None:
+        return fallback
+    return str(value)
+
+
+def get_string(
+    strings: dict[str, Any],
+    key: str,
+    *,
+    default: str | None = None,
+    **kwargs: Any,
+) -> str:
     """Получить строку по ключу с поддержкой вложенности через точку.
 
     Пример:
@@ -47,10 +73,11 @@ def get_string(strings: dict[str, Any], key: str, **kwargs: Any) -> str:
     Args:
         strings: Словарь со строками
         key: Ключ вида "menu.new_game"
+        default: Значение при отсутствии ключа (если None — возвращается key)
         **kwargs: Параметры для подстановки в строку
 
     Returns:
-        Строка или ключ, если строка не найдена
+        Строка, default или ключ, если строка не найдена
     """
     parts = key.split(".")
 
@@ -59,10 +86,10 @@ def get_string(strings: dict[str, Any], key: str, **kwargs: Any) -> str:
         if isinstance(value, dict) and part in value:
             value = value[part]
         else:
-            return key
+            return default if default is not None else key
 
     if value is None:
-        return key
+        return default if default is not None else key
 
     if not isinstance(value, str):
         return str(value)

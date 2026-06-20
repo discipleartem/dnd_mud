@@ -5,6 +5,7 @@ import pytest
 from core.character import STAT_NAMES
 from ui import menus
 from ui.menus import _common, _deps, stats_flow
+from ui.menus.stats import stats_methods, stats_shared
 
 
 def test_method_menu_hides_race_bonuses(
@@ -80,7 +81,7 @@ def test_point_buy_finish_blocked_with_unspent_points(
         confirm_called.append(True)
         return "back"
 
-    monkeypatch.setattr(stats_flow, "_confirm_stats", fake_confirm)
+    monkeypatch.setattr(stats_shared, "_confirm_stats", fake_confirm)
     monkeypatch.setattr(_common, "_press_enter", fake_press_enter)
     patch_int_input(monkeypatch, menus, [0])
 
@@ -107,10 +108,10 @@ def test_point_buy_finish_allowed_when_budget_exhausted(
         return "back"
 
     monkeypatch.setattr(
-        stats_flow, "_prompt_point_buy_stat_value", fake_prompt
+        stats_methods, "_prompt_point_buy_stat_value", fake_prompt
     )
     patch_int_input(monkeypatch, menus, [1, 2, 3, 4, 5, 6, 0])
-    monkeypatch.setattr(stats_flow, "_confirm_stats", fake_confirm)
+    monkeypatch.setattr(stats_shared, "_confirm_stats", fake_confirm)
 
     stats_flow._select_stats_point_buy(ru_strings, "human", None)
 
@@ -125,7 +126,7 @@ def test_variant_human_standard_array_applies_choice_bonuses(
     base_stats = dict(zip(STAT_NAMES, [15, 14, 13, 12, 10, 8], strict=True))
 
     monkeypatch.setattr(
-        stats_flow,
+        stats_methods,
         "_assign_stats_from_pool",
         lambda *args, **kwargs: dict(base_stats),
     )
@@ -153,7 +154,7 @@ def test_variant_human_choice_cancel_redistributes(
             return dict(base_stats)
         return None
 
-    monkeypatch.setattr(stats_flow, "_assign_stats_from_pool", fake_assign)
+    monkeypatch.setattr(stats_methods, "_assign_stats_from_pool", fake_assign)
     patch_int_input(monkeypatch, menus, [0])
 
     result = stats_flow._select_stats_standard_array(
@@ -238,7 +239,8 @@ def test_show_stats_generation_flow_loops_on_method_back(
 
     patch_int_input(monkeypatch, menus, [1, 1])
     monkeypatch.setattr(
-        stats_flow, "_select_stats_standard_array", fake_standard_array
+        "ui.menus.stats.stats_flow._select_stats_standard_array",
+        fake_standard_array,
     )
 
     result = stats_flow.show_stats_generation_flow(

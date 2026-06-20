@@ -93,7 +93,7 @@ def apply_bonuses_to_stats(
     return final_stats
 
 
-def _apply_racial_bonuses_to_stats(
+def apply_racial_bonuses_to_stats(
     base_stats: dict[str, int], race_id: str, subrace_id: str | None = None
 ) -> dict[str, int]:
     """Применить расовые и подрасовые бонусы к базовым характеристикам."""
@@ -110,7 +110,7 @@ def _build_stats(
             f"Expected {len(STAT_NAMES)} values, got {len(values)}"
         )
     base_stats = dict(zip(STAT_NAMES, values, strict=True))
-    return _apply_racial_bonuses_to_stats(base_stats, race_id, subrace_id)
+    return apply_racial_bonuses_to_stats(base_stats, race_id, subrace_id)
 
 
 def generate_stats_standard_array(

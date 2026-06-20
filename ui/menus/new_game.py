@@ -7,14 +7,20 @@ from colorama import Fore, Style
 from core.difficulty import adventure_allows_difficulty
 from core.localization import get_string
 from core.models import Adventure, Character
-from ui.menus import _deps
-from ui.menus._common import _press_enter, _print_screen_header
+from ui.menus import _deps, character_flow
+from ui.menus._common import (
+    _press_enter,
+    _print_screen_header,
+    _run_numbered_menu,
+)
 from ui.menus._display import _print_character_card
 
 SelectCharacterResult = Character | Literal["create"] | None
 
 
-def _select_character(strings: dict[str, Any]) -> SelectCharacterResult:
+def _select_character(
+    strings: dict[str, Any], language: str = "ru"
+) -> SelectCharacterResult:
     """Экран выбора персонажа из списка сохранённых."""
     characters = _deps.load_characters()
 
@@ -27,7 +33,7 @@ def _select_character(strings: dict[str, Any]) -> SelectCharacterResult:
     print()
 
     for idx, char in enumerate(characters, 1):
-        _print_character_card(idx, char, strings)
+        _print_character_card(idx, char, strings, language)
 
     create_idx = len(characters) + 1
     enter_hint = get_string(strings, "common.press_enter")
@@ -128,20 +134,15 @@ def _select_adventure(
             )
             print(f"  {Fore.LIGHTBLACK_EX}— {line}{Style.RESET_ALL}")
 
-    print()
-    print(
-        f"  {Fore.YELLOW}0{Style.RESET_ALL}."
-        f" {get_string(strings, 'adventures.back')}"
-    )
-    print()
-    choice = _deps.get_int_input(
-        get_string(strings, "adventures.prompt", count=len(matching)),
-        0,
-        len(matching),
+    choice = _run_numbered_menu(
         strings,
+        [],
+        prompt_key="adventures.prompt",
+        back_label_key="adventures.back",
+        prompt_kwargs={"count": len(matching)},
     )
 
-    if choice == 0:
+    if choice is None:
         return None
 
     return matching[choice - 1]
@@ -151,20 +152,22 @@ def show_new_game_flow(
     strings: dict[str, Any], settings: dict[str, Any]
 ) -> None:
     """Flow «Новая игра»: персонаж → приключение."""
-    from ui.menus.character_flow import show_create_character_flow
-
     language = settings.get("language", "ru")
 
     while True:
         characters = _deps.load_characters()
         if not characters:
-            character = show_create_character_flow(strings)
+            character = character_flow.show_create_character_flow(
+                strings, language
+            )
         else:
-            result = _select_character(strings)
+            result = _select_character(strings, language)
             if result is None:
                 return
             if result == "create":
-                character = show_create_character_flow(strings)
+                character = character_flow.show_create_character_flow(
+                    strings, language
+                )
             else:
                 character = result
 

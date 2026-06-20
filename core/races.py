@@ -5,6 +5,7 @@ from pathlib import Path
 from typing import Any
 
 from core.io import load_yaml
+from core.localization import resolve_localized_text
 
 RACES_FILE = Path("database/races/races.yaml")
 
@@ -109,7 +110,37 @@ def get_effective_race_bonuses(
     return bonuses
 
 
-def load_races() -> list[dict[str, Any]]:
+def _localize_race_info(
+    race_info: dict[str, Any], language: str
+) -> dict[str, Any]:
+    """Резолвить локализованные поля name в данных расы."""
+    result = dict(race_info)
+    if "name" in result:
+        result["name"] = resolve_localized_text(result["name"], language)
+    if "base_choice_name" in result:
+        result["base_choice_name"] = resolve_localized_text(
+            result["base_choice_name"],
+            language,
+            fallback=str(result.get("name", "")),
+        )
+    subraces = result.get("subraces")
+    if isinstance(subraces, dict):
+        localized_subraces: dict[str, Any] = {}
+        for subrace_id, subrace_info in subraces.items():
+            if isinstance(subrace_info, dict):
+                sub = dict(subrace_info)
+                if "name" in sub:
+                    sub["name"] = resolve_localized_text(
+                        sub["name"], language, fallback=subrace_id
+                    )
+                localized_subraces[subrace_id] = sub
+            else:
+                localized_subraces[subrace_id] = subrace_info
+        result["subraces"] = localized_subraces
+    return result
+
+
+def load_races(language: str = "ru") -> list[dict[str, Any]]:
     """Загрузить список всех доступных рас."""
     result: list[dict[str, Any]] = []
     for race_id, race_info in _load_races_yaml().items():
@@ -117,15 +148,19 @@ def load_races() -> list[dict[str, Any]]:
             result.append(
                 {
                     "id": race_id,
-                    "name": race_info.get("name", race_id),
+                    "name": resolve_localized_text(
+                        race_info.get("name", race_id),
+                        language,
+                        fallback=race_id,
+                    ),
                 }
             )
     return result
 
 
-def load_race_full(race_id: str) -> dict[str, Any]:
+def load_race_full(race_id: str, language: str = "ru") -> dict[str, Any]:
     """Загрузить полные данные расы по ID."""
     race_info = _load_races_yaml().get(race_id, {})
     if isinstance(race_info, dict):
-        return race_info
+        return _localize_race_info(race_info, language)
     return {}

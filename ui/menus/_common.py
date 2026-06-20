@@ -5,6 +5,7 @@ from typing import Any
 from colorama import Fore, Style
 
 from core.localization import get_string
+from ui.menus import _deps
 
 SEPARATOR = f"{Fore.YELLOW}{'=' * 78}{Style.RESET_ALL}"
 
@@ -43,3 +44,34 @@ def _stats_total_line(strings: dict[str, Any]) -> str:
     """Заголовок итоговых характеристик."""
     total = get_string(strings, "character.stats_total")
     return f"{Fore.YELLOW}{total.center(78)}{Style.RESET_ALL}"
+
+
+def _run_numbered_menu(
+    strings: dict[str, Any],
+    options: list[str],
+    *,
+    prompt_key: str,
+    back_label_key: str = "common.back",
+    prompt_kwargs: dict[str, Any] | None = None,
+) -> int | None:
+    """Нумерованное меню: 1..N — опции, 0 — назад. None при выборе 0."""
+    for idx, label in enumerate(options, 1):
+        print(f"  {Fore.YELLOW}{idx}{Style.RESET_ALL}. {label}")
+    print()
+    print(
+        f"  {Fore.YELLOW}0{Style.RESET_ALL}."
+        f" {get_string(strings, back_label_key)}"
+    )
+    print()
+
+    kwargs = dict(prompt_kwargs or {})
+    kwargs.setdefault("count", len(options))
+    choice = _deps.get_int_input(
+        get_string(strings, prompt_key, **kwargs),
+        0,
+        len(options),
+        strings,
+    )
+    if choice == 0:
+        return None
+    return choice

@@ -54,16 +54,29 @@ dnd_mud/
 ├── README.md
 ├── core/                    # Игровое ядро
 │   ├── models.py            # Dataclass: Character, Adventure
-│   ├── character.py         # CRUD персонажей, генерация характеристик
+│   ├── character.py         # Фасад: re-export API персонажей
+│   ├── character_storage.py # CRUD персонажей (JSON в saves/)
+│   ├── slug.py              # make_save_slug — транслитерация имён
+│   ├── stats.py             # Генерация и валидация характеристик
+│   ├── races.py             # Справочник рас
+│   ├── classes.py           # Справочник классов
+│   ├── io.py                # load_yaml / load_json
 │   ├── adventure.py         # Загрузка приключений из YAML
 │   ├── difficulty.py        # Фильтр приключений по режиму сложности
 │   ├── dice.py              # Броски кубиков
-│   ├── localization.py      # Локализация (YAML-словари)
+│   ├── localization.py      # Локализация UI и resolve_localized_text
 │   └── settings.py          # Настройки пользователя (JSON)
 ├── ui/                      # Пользовательский интерфейс
-│   ├── __init__.py
-│   ├── menus.py             # Меню (главное, настройки)
-│   └── input_handler.py     # Валидация ввода (числа, строки, выбор)
+│   ├── input_handler.py     # Валидация ввода (числа, строки, выбор)
+│   └── menus/               # Пакет экранов меню
+│       ├── main_menu.py
+│       ├── new_game.py
+│       ├── character_flow.py
+│       ├── settings.py
+│       ├── stats/           # Генерация характеристик (подпакет)
+│       ├── _common.py       # SEPARATOR, _run_numbered_menu, …
+│       ├── _display.py
+│       └── _deps.py         # Seam для monkeypatch в тестах
 ├── database/                # YAML-справочники D&D 5e
 │   ├── races/
 │   │   └── races.yaml       # Расы и подрасы
@@ -82,17 +95,23 @@ dnd_mud/
 │   └── lost_mine.yaml
 ├── mods/_examples/example_mod.yaml
 ├── tests/
+│   ├── conftest.py
+│   ├── menus_helpers.py     # Re-export приватных функций меню для тестов
 │   ├── test_adventure.py
 │   ├── test_character.py
 │   ├── test_difficulty.py
 │   ├── test_dice.py
 │   ├── test_input_handler.py
+│   ├── test_io.py
 │   ├── test_localization.py
 │   ├── test_main.py
 │   ├── test_menus_character.py
+│   ├── test_menus_main.py
 │   ├── test_menus_stats.py
 │   ├── test_models.py
-│   └── test_settings.py     # 54 теста всего
+│   ├── test_races.py
+│   ├── test_settings.py
+│   └── test_stats.py        # 72 теста всего
 └── docs/                    # Документация
     ├── MUD_PRD.md
     ├── ARCHITECTURE.md
@@ -128,18 +147,22 @@ make check   # lint + black --check + mypy
 """Тесты UI: выбор персонажа, подрасы, new game, приключения."""
 ```
 
-Покрытие (54 теста в 11 файлах):
+Покрытие (72 теста в 15 файлах):
 - `test_adventure.py` — загрузка приключений, поля `hardcore_only`
 - `test_character.py` — save/load, генерация stats, variant human, slug
 - `test_difficulty.py` — `adventure_allows_difficulty()`
 - `test_dice.py` — `roll`, `roll_ability_score`, `ability_modifier`
 - `test_input_handler.py` — валидация int/str
-- `test_localization.py` — ключи en/ru, имена характеристик
+- `test_io.py` — `load_yaml` / `load_json`
+- `test_localization.py` — ключи en/ru, `resolve_localized_text`, `get_string` default
 - `test_main.py` — импорт `main`, VERSION
 - `test_menus_character.py` — подрасы, new game, фильтр приключений
+- `test_menus_main.py` — главное меню, select_difficulty
 - `test_menus_stats.py` — генерация характеристик (standard array, point-buy, 4d6, HardCore)
 - `test_models.py` — сериализация Character/Adventure
+- `test_races.py` — load_races, bilingual names
 - `test_settings.py` — save/load JSON, `schema_version`
+- `test_stats.py` — validate_point_buy_finish, point_buy_points_remaining
 
 Запуск конкретного тестового файла:
 
@@ -262,13 +285,14 @@ races:
 
 ### Реализовано (ui)
 - ✅ `ui/input_handler.py` — валидация ввода (int, str)
-- ✅ `ui/menus.py` — главное меню (5 пунктов + Выход), настройки, languages
+- ✅ `ui/menus/` — главное меню, настройки, languages, flows
+- ✅ `ui/menus/stats/` — генерация характеристик (standard / point-buy / random)
 - ✅ Flow «Новая игра» (персонаж → приключение с фильтром по режиму)
 - ✅ Flow «Создать персонажа» (сложность → имя → раса → подраса → генерация характеристик → класс)
 - ✅ Flow «Загрузить игру» — заглушка (`errors.load_not_implemented`)
 
 ### Тестирование
-- ✅ 54 теста в 11 файлах (см. выше)
+- ✅ 72 теста в 15 файлах (см. выше)
 - ⏳ Backlog (добавляются по необходимости, см. [философию](#философия) выше):
   - E2E smoke через `python main.py` (ручная проверка меню)
 
@@ -288,7 +312,7 @@ races:
 ### Генерация характеристик
 
 Спецификация UX (методы, HardCore, расовые бонусы, переквалификация): [MUD_PRD.md §3.4.5](MUD_PRD.md#345-генерация-характеристик-реализовано).  
-API: `core/character.py`, UI: `show_stats_generation_flow` в `ui/menus.py`.
+API: `core/character.py`, UI: `show_stats_generation_flow` в `ui/menus/stats/stats_flow.py`.
 
 ### База данных
 - ✅ Справочники: `races/races.yaml`, `classes/classes.yaml`, `content/adventures.yaml`

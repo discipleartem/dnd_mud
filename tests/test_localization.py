@@ -29,6 +29,24 @@ def test_get_string_missing_key_returns_key():
     assert get_string(strings, "menu.unknown") == "menu.unknown"
 
 
+def test_get_string_missing_key_returns_default():
+    """При отсутствии ключа возвращается default, если задан."""
+    strings = {"menu": {"exit": "Exit"}}
+
+    assert (
+        get_string(strings, "menu.unknown", default="fallback") == "fallback"
+    )
+
+
+def test_resolve_localized_text_from_dict() -> None:
+    """resolve_localized_text возвращает строку для языка."""
+    from core.localization import resolve_localized_text
+
+    value = {"ru": "Человек", "en": "Human"}
+    assert resolve_localized_text(value, "en") == "Human"
+    assert resolve_localized_text(value, "ru") == "Человек"
+
+
 def test_get_string_format_and_key_error_fallback():
     """format подставляет kwargs; при KeyError возвращает шаблон."""
     strings = {"info": {"welcome": "Hello, {name}!"}}

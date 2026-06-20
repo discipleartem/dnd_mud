@@ -6,8 +6,9 @@ from colorama import Fore, Style
 
 from core.localization import get_string
 from core.models import Character
+from core.stats import POINT_BUY_COSTS, STAT_NAMES
 from ui.menus import _deps
-from ui.menus._common import SEPARATOR, _ability_name
+from ui.menus._common import SEPARATOR, _ability_name, _stats_caption_line
 
 
 def _difficulty_label(strings: dict[str, Any], difficulty: str) -> str:
@@ -28,21 +29,23 @@ def _difficulty_color(difficulty: str) -> str:
     return str(Fore.CYAN)
 
 
-def _character_base_race_label(char: Character) -> str:
+def _character_base_race_label(char: Character, language: str = "ru") -> str:
     """Читаемое название базовой расы персонажа."""
-    race_full = _deps.load_race_full(char.race)
+    race_full = _deps.load_race_full(char.race, language)
     name = race_full.get("name")
     if name:
         return str(name)
     return char.race
 
 
-def _character_subrace_label(char: Character) -> str | None:
+def _character_subrace_label(
+    char: Character, language: str = "ru"
+) -> str | None:
     """Читаемое название подрасы или None, если подрасы нет."""
     if not char.subrace:
         return None
 
-    race_full = _deps.load_race_full(char.race)
+    race_full = _deps.load_race_full(char.race, language)
     subraces = race_full.get("subraces", {})
     if isinstance(subraces, dict):
         subrace_info = subraces.get(char.subrace, {})
@@ -69,9 +72,9 @@ def _print_labeled_field(
     )
 
 
-def _character_class_label(char: Character) -> str:
+def _character_class_label(char: Character, language: str = "ru") -> str:
     """Читаемое название класса персонажа."""
-    for cls in _deps.load_classes():
+    for cls in _deps.load_classes(language):
         if cls.get("id") == char.class_name:
             return str(cls.get("name", char.class_name))
     return char.class_name
@@ -85,7 +88,7 @@ def _format_character_stats_compact(
         return ""
 
     parts = []
-    for stat in _deps.STAT_NAMES:
+    for stat in STAT_NAMES:
         value = char.stats.get(stat)
         if value is None:
             continue
@@ -98,14 +101,17 @@ def _format_character_stats_compact(
 
 
 def _print_character_card(
-    idx: int, char: Character, strings: dict[str, Any]
+    idx: int,
+    char: Character,
+    strings: dict[str, Any],
+    language: str = "ru",
 ) -> None:
     """Вывести карточку персонажа в списке выбора."""
     mode = _difficulty_label(strings, char.difficulty)
     mode_color = _difficulty_color(char.difficulty)
-    base_race = _character_base_race_label(char)
-    subrace = _character_subrace_label(char)
-    class_label = _character_class_label(char)
+    base_race = _character_base_race_label(char, language)
+    subrace = _character_subrace_label(char, language)
+    class_label = _character_class_label(char, language)
     indent = "     "
 
     print(f"  {Fore.YELLOW}{idx}{Style.RESET_ALL}.")
@@ -329,12 +335,6 @@ def _print_stats_generation_header(
         print()
 
 
-def _stats_caption_line(strings: dict[str, Any]) -> str:
-    """Заголовок экрана генерации характеристик."""
-    caption = get_string(strings, "character.stats_generation_caption")
-    return f"{Fore.YELLOW}{caption.center(78)}{Style.RESET_ALL}"
-
-
 def _print_point_buy_cost_table(strings: dict[str, Any]) -> None:
     """Таблица стоимости значений характеристик (point-buy)."""
     title = get_string(strings, "character.stats_point_buy_price_table")
@@ -342,8 +342,8 @@ def _print_point_buy_cost_table(strings: dict[str, Any]) -> None:
     cost_hdr = get_string(strings, "character.stats_point_buy_price_cost")
     print(f"{Fore.GREEN}{title}{Style.RESET_ALL}")
     print(f"  {Fore.YELLOW}{value_hdr:>5}  {cost_hdr:>5}{Style.RESET_ALL}")
-    for value in sorted(_deps.POINT_BUY_COSTS):
-        cost = _deps.POINT_BUY_COSTS[value]
+    for value in sorted(POINT_BUY_COSTS):
+        cost = POINT_BUY_COSTS[value]
         print(
             f"  {Fore.CYAN}{value:>5}{Style.RESET_ALL}  "
             f"{Fore.CYAN}{cost:>5}{Style.RESET_ALL}"

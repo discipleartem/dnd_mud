@@ -1,57 +1,17 @@
 """Сохранение и загрузка персонажей в JSON."""
 
 import json
-import re
 from pathlib import Path
 
 from core.classes import get_class_hit_dice
 from core.dice import ability_modifier
 from core.models import Character
+from core.slug import make_save_slug
 from core.stats import (
     STANDARD_ARRAY,
     STAT_NAMES,
-    _apply_racial_bonuses_to_stats,
+    apply_racial_bonuses_to_stats,
 )
-
-SAVES_DIR = Path("saves")
-CHARACTERS_DIR = SAVES_DIR / "characters"
-CHARACTERS_SCHEMA_VERSION = 1
-
-_CYRILLIC_TO_LATIN: dict[str, str] = {
-    "а": "a",
-    "б": "b",
-    "в": "v",
-    "г": "g",
-    "д": "d",
-    "е": "e",
-    "ё": "yo",
-    "ж": "zh",
-    "з": "z",
-    "и": "i",
-    "й": "y",
-    "к": "k",
-    "л": "l",
-    "м": "m",
-    "н": "n",
-    "о": "o",
-    "п": "p",
-    "р": "r",
-    "с": "s",
-    "т": "t",
-    "у": "u",
-    "ф": "f",
-    "х": "kh",
-    "ц": "ts",
-    "ч": "ch",
-    "ш": "sh",
-    "щ": "shch",
-    "ъ": "",
-    "ы": "y",
-    "ь": "",
-    "э": "e",
-    "ю": "yu",
-    "я": "ya",
-}
 
 
 def save_character(
@@ -65,7 +25,7 @@ def save_character(
     """Создать нового персонажа и сохранить в JSON."""
     if stats is None:
         stats = dict(zip(STAT_NAMES, STANDARD_ARRAY, strict=False))
-        stats = _apply_racial_bonuses_to_stats(stats, race_id, subrace_id)
+        stats = apply_racial_bonuses_to_stats(stats, race_id, subrace_id)
 
     hit_dice = get_class_hit_dice(class_id)
     con_mod = ability_modifier(stats.get("constitution", 10))
@@ -89,27 +49,9 @@ def save_character(
     return character
 
 
-def _transliterate(text: str) -> str:
-    """Транслитерировать кириллицу в латиницу."""
-    result: list[str] = []
-    for char in text:
-        lower = char.lower()
-        if lower in _CYRILLIC_TO_LATIN:
-            mapped = _CYRILLIC_TO_LATIN[lower]
-            if char.isupper() and mapped:
-                mapped = mapped[0].upper() + mapped[1:]
-            result.append(mapped)
-        else:
-            result.append(char)
-    return "".join(result)
-
-
-def _slug_from_name(name: str) -> str:
-    """Построить slug из имени персонажа."""
-    transliterated = _transliterate(name).lower()
-    slug = re.sub(r"[^a-z0-9]+", "_", transliterated)
-    slug = slug.strip("_")
-    return slug or "character"
+SAVES_DIR = Path("saves")
+CHARACTERS_DIR = SAVES_DIR / "characters"
+CHARACTERS_SCHEMA_VERSION = 1
 
 
 def _existing_save_slugs() -> set[str]:
@@ -128,7 +70,7 @@ def _existing_save_slugs() -> set[str]:
 
 def _unique_save_slug(name: str) -> str:
     """Уникальный save_slug для нового персонажа."""
-    base = _slug_from_name(name)
+    base = make_save_slug(name)
     existing = _existing_save_slugs()
     if base not in existing:
         return base

@@ -6,7 +6,11 @@ from colorama import Fore, Style
 
 from core.localization import get_string
 from ui.menus import _deps
-from ui.menus._common import _press_enter, _print_screen_header
+from ui.menus._common import (
+    _press_enter,
+    _print_screen_header,
+    _run_numbered_menu,
+)
 
 
 def select_difficulty(strings: dict[str, Any]) -> str | None:
@@ -59,24 +63,14 @@ def show_languages_menu(
             get_string(strings, f"languages.lang_{code}")
             for code in lang_codes
         ]
-        for idx, opt in enumerate(options, 1):
-            marker = f"  {Fore.YELLOW}{idx}{Style.RESET_ALL}. "
-            print(f"{marker}{opt}")
-        print()
-        print(
-            f"  {Fore.YELLOW}0{Style.RESET_ALL}."
-            f" {get_string(strings, 'languages.back')}"
-        )
-        print()
-
-        choice = _deps.get_int_input(
-            get_string(strings, "languages.prompt", count=len(options)),
-            0,
-            len(options),
+        choice = _run_numbered_menu(
             strings,
+            options,
+            prompt_key="languages.prompt",
+            back_label_key="languages.back",
         )
 
-        if choice == 0:
+        if choice is None:
             break
 
         new_lang = lang_codes[choice - 1]

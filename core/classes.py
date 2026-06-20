@@ -5,6 +5,7 @@ from pathlib import Path
 from typing import Any
 
 from core.io import load_yaml
+from core.localization import resolve_localized_text
 
 CLASSES_FILE = Path("database/classes/classes.yaml")
 
@@ -30,7 +31,7 @@ def get_class_hit_dice(class_id: str) -> int:
     return 8
 
 
-def load_classes() -> list[dict[str, Any]]:
+def load_classes(language: str = "ru") -> list[dict[str, Any]]:
     """Загрузить список всех доступных классов."""
     result: list[dict[str, Any]] = []
     for class_id, class_info in _load_classes_yaml().items():
@@ -38,7 +39,11 @@ def load_classes() -> list[dict[str, Any]]:
             result.append(
                 {
                     "id": class_id,
-                    "name": class_info.get("name", class_id),
+                    "name": resolve_localized_text(
+                        class_info.get("name", class_id),
+                        language,
+                        fallback=class_id,
+                    ),
                     "description": class_info.get("description", ""),
                     "hit_dice": class_info.get("hit_dice", 8),
                     "prime_ability": class_info.get(

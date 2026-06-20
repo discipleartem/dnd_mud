@@ -27,13 +27,13 @@ def show_welcome_screen(version: str, strings: dict[str, Any]) -> None:
 
 def show_main_menu(strings: dict[str, Any]) -> int:
     """Показать главное меню и получить выбор."""
-    print(f"{Fore.YELLOW}{'-' * 78}{Style.RESET_ALL}")
+    print(SEPARATOR)
     print(
         f"{Fore.YELLOW}"
         f"{get_string(strings, 'menu.caption').center(78)}"
         f"{Style.RESET_ALL}"
     )
-    print(f"{Fore.YELLOW}{'-' * 78}{Style.RESET_ALL}")
+    print(SEPARATOR)
     print()
 
     menu_items = [
