@@ -7,7 +7,11 @@ from colorama import Fore, Style
 from core.localization import get_string
 from core.models import Character
 from ui.menus import _deps
-from ui.menus._common import _press_enter, _print_screen_header
+from ui.menus._common import (
+    _press_enter,
+    _print_screen_header,
+    _run_numbered_menu,
+)
 from ui.menus._display import _print_race_info
 from ui.menus.settings import select_difficulty
 from ui.menus.stats_flow import show_stats_generation_flow
@@ -97,23 +101,15 @@ def _select_class(
     """Выбрать класс персонажа или вернуться назад."""
     classes = _deps.load_classes(language)
     _print_screen_header(get_string(strings, "character.class_prompt"))
-    for idx, cls in enumerate(classes, 1):
-        print(f"  {Fore.YELLOW}{idx}{Style.RESET_ALL}. {cls.get('name', '?')}")
-    print()
-    print(
-        f"  {Fore.YELLOW}0{Style.RESET_ALL}."
-        f" {get_string(strings, 'character.back')}"
-    )
-    print()
-    class_idx = _deps.get_int_input(
-        get_string(strings, "character.class_prompt", count=len(classes)),
-        0,
-        len(classes),
+    choice = _run_numbered_menu(
         strings,
+        [cls.get("name", "?") for cls in classes],
+        prompt_key="character.class_prompt",
+        back_label_key="character.back",
     )
-    if class_idx == 0:
+    if choice is None:
         return None
-    return classes[class_idx - 1]
+    return classes[choice - 1]
 
 
 def show_create_character_flow(
@@ -137,24 +133,13 @@ def show_create_character_flow(
         races = _deps.load_races(language)
         _print_screen_header(get_string(strings, "character.race_caption"))
 
-        for idx, race in enumerate(races, 1):
-            print(
-                f"  {Fore.YELLOW}{idx}{Style.RESET_ALL}. "
-                f"{race.get('name', '?')}"
-            )
-
-        print(
-            f"  {Fore.YELLOW}0{Style.RESET_ALL}."
-            f" {get_string(strings, 'character.back')}"
-        )
-        print()
-        choice = _deps.get_int_input(
-            get_string(strings, "character.race_prompt", count=len(races)),
-            0,
-            len(races),
+        choice = _run_numbered_menu(
             strings,
+            [race.get("name", "?") for race in races],
+            prompt_key="character.race_prompt",
+            back_label_key="character.back",
         )
-        if choice == 0:
+        if choice is None:
             return None
 
         selected = races[choice - 1]
