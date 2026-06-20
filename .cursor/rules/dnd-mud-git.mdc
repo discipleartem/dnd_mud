@@ -22,15 +22,46 @@ alwaysApply: true
    ```bash
    git branch --show-current
    ```
-2. Обновить `dev` и создать task-ветку **до** первого edit:
+2. Обновить `dev`, проверить синхрон с `main`, создать task-ветку **до** первого edit:
    ```bash
-   git checkout dev && git pull
+   git fetch origin
+   git checkout dev && git pull origin dev
+   git log dev..origin/main --oneline   # должно быть пусто
    git checkout -b <type>/<short-kebab-name>
    ```
+   Если в `main` есть коммиты, которых нет в `dev` — сначала sync (см. ниже), потом ветка.
    Примеры: `feat/stats-menu`, `fix/point-buy-validation`, `refactor/split-menus`
 3. Если ветка уже создана пользователем — **не** работать на `dev`/`main`.
 
 **Запрещено:** накопить все изменения на `dev`/`main` и коммитить одним блоком в конце.
+
+## Синхронизация `dev` с `main`
+
+После squash merge PR `dev` → `main` история веток **расходится** (разные хеши, одинаковое дерево файлов). Это нормально.
+
+**Обновлять `dev` в повседневной работе:**
+
+```bash
+git checkout dev
+git pull origin dev
+```
+
+**Синхронизировать `dev` с `main`** (после merge в `main` или если `git log dev..origin/main` не пуст):
+
+```bash
+git fetch origin
+git checkout dev
+git merge origin/main
+git push origin dev
+```
+
+Альтернатива: `git pull --no-rebase origin main` — только на ветке `dev`, только для sync.
+
+**Запрещено:**
+
+- `git pull origin main` или `git pull --tags origin main` **без** `--no-rebase` / `--rebase` / `--ff-only` — Git откажет (*divergent branches*)
+- Менять `git config pull.rebase` глобально — указывать флаг в команде
+- Force-push в `dev` / `main` из-за расхождения после squash
 
 ## Во время работы
 
@@ -71,6 +102,9 @@ alwaysApply: true
 | План из 6 фаз, 0 коммитов до финиша | Commit после каждой фазы |
 | «Пользователь не просил commit» на task-ветке | На task-ветке коммит — часть workflow проекта |
 | Push/PR без запроса | Только по явной просьбе |
+| `git pull origin main` на `dev` без флага | `git merge origin/main` или `git pull --no-rebase origin main` |
+| Обновлять `dev` через pull из `main` | `git pull origin dev`; sync с `main` — отдельным merge |
+| Игнорировать `git log dev..origin/main` перед task-веткой | Сначала merge `origin/main` в `dev`, потом `git checkout -b ...` |
 
 ## PR (только по запросу пользователя)
 
