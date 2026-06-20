@@ -1,21 +1,12 @@
 """Тесты настроек."""
 
 import json
-import sys
-from pathlib import Path
 
-PROJECT_ROOT = Path(__file__).resolve().parent.parent
-if str(PROJECT_ROOT) not in sys.path:
-    sys.path.insert(0, str(PROJECT_ROOT))
+import core.settings as settings_mod
 
 
-def test_settings(tmp_path, monkeypatch):
-    """Тест сохранения и загрузки настроек."""
-    import core.settings as settings_mod
-
-    settings_file = tmp_path / "settings.json"
-    monkeypatch.setattr(settings_mod, "SETTINGS_PATH", settings_file)
-
+def test_settings_save_and_load(settings_file):
+    """save_settings и load_settings сохраняют язык."""
     settings_mod.save_settings("en")
 
     loaded = settings_mod.load_settings()
@@ -34,13 +25,8 @@ def test_settings(tmp_path, monkeypatch):
     assert "hardcore" not in saved
 
 
-def test_settings_ignores_legacy_difficulty(tmp_path, monkeypatch):
-    """Старое поле difficulty в JSON игнорируется."""
-    import core.settings as settings_mod
-
-    settings_file = tmp_path / "settings.json"
-    monkeypatch.setattr(settings_mod, "SETTINGS_PATH", settings_file)
-
+def test_settings_ignores_unknown_keys(settings_file):
+    """Неизвестные поля в JSON настроек игнорируются."""
     settings_file.write_text(
         json.dumps(
             {
