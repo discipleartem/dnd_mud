@@ -9,9 +9,10 @@ This is a **console MUD**, not a web app. Do **not** use browser automation to v
 
 ## Before finishing
 
-1. **`make test`** — required after any code or data change
-2. **`make check`** — when changing types, style, or public APIs (ruff + black + mypy)
-3. **Console smoke** — `python main.py` and navigate the affected menu flow
+1. **Git (см. `dnd-mud-git.mdc`)** — task-ветка (не `dev`/`main`), изменения закоммичены, для многофазных задач — атомарные коммиты
+2. **`make test`** — required after any code or data change
+3. **`make check`** — when changing types, style, or public APIs (ruff + black + mypy)
+4. **Console smoke** — `python main.py` and navigate the affected menu flow
 
 ## Workflow
 

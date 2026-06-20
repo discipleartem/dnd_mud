@@ -5,6 +5,9 @@
 """
 
 import sys
+import tomllib
+from importlib.metadata import PackageNotFoundError, version
+from pathlib import Path
 from typing import Any
 
 from colorama import Fore, Style, init
@@ -21,8 +24,29 @@ from ui.menus import (
     show_welcome_screen,
 )
 
-# Версия игры
-VERSION = "0.1.0"
+_PROJECT_ROOT = Path(__file__).resolve().parent
+
+
+def _read_version_from_pyproject() -> str:
+    """Версия из pyproject.toml — для запуска без pip install -e."""
+    with open(_PROJECT_ROOT / "pyproject.toml", "rb") as f:
+        data = tomllib.load(f)
+    project = data.get("project", {})
+    ver = project.get("version")
+    if isinstance(ver, str):
+        return ver
+    return "0.0.0"
+
+
+def _resolve_app_version() -> str:
+    """Версия из metadata пакета или fallback на pyproject.toml."""
+    try:
+        return version("dnd_mud")
+    except PackageNotFoundError:
+        return _read_version_from_pyproject()
+
+
+VERSION = _resolve_app_version()
 
 
 def _save_and_reload_settings(

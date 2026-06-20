@@ -5,8 +5,7 @@
 
 from pathlib import Path
 
-import yaml
-
+from core.io import load_yaml
 from core.models import Adventure
 
 ADVENTURES_FILE = Path("database/content/adventures.yaml")
@@ -18,13 +17,8 @@ def load_adventures() -> list[Adventure]:
     Returns:
         Список объектов Adventure
     """
-    if not ADVENTURES_FILE.exists():
+    data = load_yaml(ADVENTURES_FILE)
+    adventures = data.get("adventures", [])
+    if not isinstance(adventures, list):
         return []
-
-    try:
-        with open(ADVENTURES_FILE, encoding="utf-8") as f:
-            data = yaml.safe_load(f) or {}
-        adventures = data.get("adventures", [])
-        return [Adventure.from_dict(a) for a in adventures]
-    except (yaml.YAMLError, OSError):
-        return []
+    return [Adventure.from_dict(a) for a in adventures]
