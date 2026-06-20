@@ -44,9 +44,6 @@ Keys use dot notation (`menu.new_game`). Update both `database/strings/ru.yaml` 
 - Game balance values from YAML — no magic numbers in Python
 - Explicit condition checks; effects apply/remove explicitly
 
-## Pre-commit checklist
+## Pre-commit
 
-- [ ] Strings localized in `ru.yaml` / `en.yaml`
-- [ ] New reference data in YAML; saves/configs in JSON
-- [ ] Type hints on public APIs
-- [ ] Docstrings on public functions
+См. `dnd-mud-python-simple.mdc` (стиль) и `dnd-mud-data.mdc` (данные). Локализация: обновить `ru.yaml` и `en.yaml`.

@@ -149,7 +149,7 @@ pytest tests/test_menus_character.py -v
 
 ## Git Workflow
 
-Git workflow (dev/main, squash, автокоммит, push task-ветки после задачи, PR по запросу): [`~/.cursor/rules/01-operations.mdc`](~/.cursor/rules/01-operations.mdc). Для агентов dnd_mud: [`.cursor/rules/dnd-mud-git.mdc`](../.cursor/rules/dnd-mud-git.mdc), [`.cursor/rules/dnd-mud-verify.mdc`](../.cursor/rules/dnd-mud-verify.mdc).
+Git workflow (dev/main, squash, автокоммит, push task-ветки после задачи, PR по запросу): [`~/.cursor/rules/01-operations.mdc`](~/.cursor/rules/01-operations.mdc). Sync FAQ: [`~/.cursor/docs/git-dev-main-sync.md`](~/.cursor/docs/git-dev-main-sync.md). Агенты dnd_mud: [`.cursor/rules/dnd-mud-verify.mdc`](../.cursor/rules/dnd-mud-verify.mdc) (verify + git scope).
 
 Полный индекс правил агентов: [`AGENTS.md`](../AGENTS.md).
 

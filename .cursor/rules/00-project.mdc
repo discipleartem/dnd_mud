@@ -5,21 +5,9 @@ alwaysApply: true
 
 # dnd_mud project
 
-**Stack:** Python **3.12** (основной язык), console MUD, Colorama, file-based storage, pytest.
+**Stack:** Python **3.12**, console MUD, Colorama, file-based storage, pytest.
 
-## Стиль кода
-
-Максимально простой Python — без преждевременных абстракций и паттернов.
-Подробности: `dnd-mud-python-simple.mdc`.
-
-## Данные
-
-Пути, форматы YAML/JSON, моды — **единственный источник:** `dnd-mud-data.mdc`.
-Чтение/запись только через модули `core/` — не из `ui/`.
-
-## Верификация
-
-Console MUD — см. **`dnd-mud-verify.mdc`** (приоритетнее global browser-правил).
+Стиль: `dnd-mud-python-simple.mdc`. Данные: `dnd-mud-data.mdc` (единственный источник путей). Verify: `dnd-mud-verify.mdc`.
 
 ## Commands
 
@@ -32,19 +20,16 @@ python main.py  # smoke: пройти затронутое меню
 
 ## Docs
 
-- [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) — слои UI → core → database
-- [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md) — установка, моды, git
-- [docs/MUD_PRD.md](docs/MUD_PRD.md) — требования и статус Pre-Alpha
+- [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) · [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md) · [docs/MUD_PRD.md](docs/MUD_PRD.md)
 
 ## Local rules (index)
 
 | Файл | Globs | Содержание |
 |------|-------|------------|
-| `dnd-mud-python-simple.mdc` | `core/**`, `ui/**`, `main.py`, `tests/**` | простой Python без лишних абстракций |
+| `dnd-mud-verify.mdc` | always | verify, git scope, finish checklist |
+| `dnd-mud-python-simple.mdc` | `core/**`, `ui/**`, `main.py`, `tests/**` | простой Python |
 | `dnd-mud-core.mdc` | `core/**`, `ui/**`, `main.py` | слои, локализация, механика |
-| `dnd-mud-data.mdc` | `database/**`, `mods/**`, `**/*.json` | YAML (данные), JSON (сейвы/конфиги) |
-| `dnd-mud-tests.mdc` | `tests/**` | pytest — простые, необходимые тесты |
-| `dnd-mud-git.mdc` | always | scope и dnd_mud-артефакты (extends `01-operations.mdc`) |
-| `dnd-mud-verify.mdc` | always | верификация (не browser) |
+| `dnd-mud-data.mdc` | `database/**`, `mods/**`, `**/*.json` | YAML/JSON |
+| `dnd-mud-tests.mdc` | `tests/**` | pytest |
 
-Глобальные правила: `~/.cursor/rules/` (см. `AGENTS.md`, `~/.cursor/rules/00-global.mdc`).
+Global + AGENTS: `~/.cursor/rules/00-global.mdc`, [`AGENTS.md`](../AGENTS.md).

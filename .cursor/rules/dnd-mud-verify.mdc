@@ -1,36 +1,28 @@
 ---
-description: dnd_mud verification — pytest and console smoke, not browser
+description: dnd_mud verification, git scope, finish checklist — console MUD, not browser
 alwaysApply: true
 ---
 
 # dnd_mud verification
 
-## Rule priority (this project)
-
-Console MUD — browser/IronBee tools **forbidden**.
-Overrides: global `browser-automation.mdc`, any IronBee rules.
+Console MUD — browser/IronBee tools **forbidden** (overrides global `browser-automation.mdc`).
 Verification: `make test` + console smoke only.
+
+## Git scope
+
+Workflow, sync, commits, push, PR — [`01-operations.mdc`](~/.cursor/rules/01-operations.mdc).
+
+**Обязательно** commit/push для задач с изменением кода или данных (не docs-only / comments-only).
+
+**Не коммитить:** `.coverage`, `saves/` (персонажи и runtime state).
 
 ## Before finishing
 
-1. **Git**
-   - Git-старт: см. `01-operations.mdc` (pull `main` + `dev`, проверка что `dev` не отстаёт от `main`)
-   - После задачи: `git push -u origin HEAD` (обязательно)
-   - Workflow/sync: `~/.cursor/rules/01-operations.mdc`
-   - `git branch --show-current` — не `main` / `dev`
-   - `git status` — нет незакоммиченных изменений (кроме `.coverage`, `saves/`)
-   - `git log dev..HEAD --oneline` — для многофазных задач отдельные коммиты
-2. **`make test`** — required after any code or data change
-3. **`make check`** — when changing types, style, or public APIs (ruff + black + mypy)
-4. **Console smoke** — `python main.py` and navigate the affected menu flow
+1. **Git** — см. `01-operations.mdc` (Git-старт, sync); `git push -u origin HEAD` после задачи; не `main`/`dev`; clean working tree (кроме `.coverage`, `saves/`)
+2. **`make test`** — after any code or data change
+3. **`make check`** — when changing types, style, or public APIs
+4. **Console smoke** — `python main.py`, затронутое меню
 
-## Workflow
+Implement first, verify once at the end. Skip runtime verify for docs-only changes.
 
-- Implement first, verify once at the end (not after every file edit)
-- If verification fails, fix and re-run tests
-- Skip runtime verification only for docs-only or comment-only changes
-
-## Do not use
-
-- Browser DevTools / IronBee browser tools for this project
-- Reading code alone as sufficient verification for behavioral changes
+Do not use browser DevTools / IronBee. Do not treat reading code alone as sufficient verification.

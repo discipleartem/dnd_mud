@@ -50,5 +50,3 @@ def test_attack(): ...                               # ❌
 ## Agent responsibility
 
 Добавляй **минимально необходимые** тесты под изменённое поведение — не «полное покрытие» модуля.
-
-Run `make test` before considering the task complete.
