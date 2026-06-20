@@ -9,13 +9,22 @@ from core.adventure import load_adventures
 from core.character import (
     POINT_BUY_BUDGET,
     POINT_BUY_COSTS,
+    POINT_BUY_MAX,
+    POINT_BUY_MIN,
     STANDARD_ARRAY,
+    STANDARD_ARRAY_MAX,
+    STANDARD_ARRAY_MIN,
     STAT_NAMES,
+    apply_bonuses_to_stats,
+    build_bonuses_from_choices,
     can_assign_point_buy_value,
     generate_stats_point_buy,
     generate_stats_random,
     generate_stats_standard_array,
+    get_choice_ability_bonus_mechanics,
+    get_effective_race_bonuses,
     get_race_bonuses,
+    has_choice_ability_bonuses,
     load_characters,
     load_classes,
     load_race_full,
@@ -30,7 +39,6 @@ from core.models import Adventure, Character
 from ui.input_handler import get_int_input, get_str_input
 
 ConfirmStatsResult = Literal["accept", "reroll", "back"]
-PoolEntryMode = Literal["list", "manual"]
 SelectCharacterResult = Character | Literal["create"] | None
 
 SEPARATOR = f"{Fore.YELLOW}{'=' * 78}{Style.RESET_ALL}"
@@ -58,6 +66,21 @@ def _stats_caption_line(strings: dict[str, Any]) -> str:
     return f"{Fore.YELLOW}{caption.center(78)}{Style.RESET_ALL}"
 
 
+def _print_stats_generation_header(
+    strings: dict[str, Any],
+    race_id: str | None = None,
+    subrace_id: str | None = None,
+) -> None:
+    """Заголовок генерации характеристик и расовые бонусы."""
+    print(SEPARATOR)
+    print(_stats_caption_line(strings))
+    print(SEPARATOR)
+    print()
+    if race_id is not None:
+        _print_race_bonuses(strings, race_id, subrace_id)
+        print()
+
+
 def _stats_total_line(strings: dict[str, Any]) -> str:
     """Заголовок итоговых характеристик."""
     total = get_string(strings, "character.stats_total")
@@ -68,6 +91,9 @@ def _prompt_pool_value_manual(
     strings: dict[str, Any],
     stat_name: str,
     pool: list[int],
+    *,
+    value_min: int,
+    value_max: int,
 ) -> int | None:
     """Запросить значение из пула вручную; 0 — назад."""
     display_pool = sorted(pool, reverse=True)
@@ -79,9 +105,18 @@ def _prompt_pool_value_manual(
     while True:
         print(f"{Fore.YELLOW}{enter_msg} {back_hint}{Style.RESET_ALL}")
         print()
-        value = get_int_input(_choice_prompt(strings), 0, 15, strings)
+        value = get_int_input(_choice_prompt(strings), 0, value_max, strings)
         if value == 0:
             return None
+        if value < value_min:
+            err = get_string(
+                strings,
+                "character.stats_value_not_in_pool",
+                value=value,
+                values=display_pool,
+            )
+            print(f"{Fore.RED}{err}{Style.RESET_ALL}")
+            continue
         if value in pool:
             return value
         err = get_string(
@@ -107,7 +142,9 @@ def _prompt_point_buy_stat_value(
     while True:
         print(f"{Fore.YELLOW}{enter_msg}{Style.RESET_ALL}")
         print()
-        value = get_int_input(_choice_prompt(strings), 8, 15, strings)
+        value = get_int_input(
+            _choice_prompt(strings), POINT_BUY_MIN, POINT_BUY_MAX, strings
+        )
         if can_assign_point_buy_value(stats, stat, value):
             stats[stat] = value
             return
@@ -129,29 +166,19 @@ def _assign_stats_from_pool(
     strings: dict[str, Any],
     available: list[int],
     *,
+    value_min: int,
+    value_max: int,
     show_counts: bool = False,
-    entry_mode: PoolEntryMode = "list",
     race_id: str | None = None,
     subrace_id: str | None = None,
-    show_race_bonuses: bool = False,
 ) -> dict[str, int] | None:
     """Распределить значения из пула по характеристикам."""
     selected: dict[str, int] = {}
     pool = list(available)
-    print_bonuses = show_race_bonuses and race_id is not None
 
     for stat in STAT_NAMES:
         stat_name = _ability_name(strings, stat)
-        print(SEPARATOR)
-        print(_stats_caption_line(strings))
-        print(SEPARATOR)
-        print()
-
-        if print_bonuses:
-            assert race_id is not None
-            _print_race_bonuses(strings, race_id, subrace_id)
-            print()
-            print_bonuses = False
+        _print_stats_generation_header(strings, race_id, subrace_id)
 
         if selected:
             print(
@@ -173,57 +200,15 @@ def _assign_stats_from_pool(
         print(f"{Fore.CYAN}{avail_msg}{Style.RESET_ALL}")
         print()
 
-        if entry_mode == "manual":
-            selected_value = _prompt_pool_value_manual(
-                strings, stat_name, pool
-            )
-            if selected_value is None:
-                return None
-        else:
-            choose_msg = get_string(
-                strings, "character.stats_choose_value_for", stat=stat_name
-            )
-            print(f"{Fore.YELLOW}{choose_msg}{Style.RESET_ALL}")
-            print()
-
-            if show_counts:
-                unique_rolls = sorted(set(pool), reverse=True)
-                for idx, value in enumerate(unique_rolls, 1):
-                    count = pool.count(value)
-                    remain_msg = get_string(
-                        strings,
-                        "character.stats_value_remaining",
-                        value=value,
-                        count=count,
-                    )
-                    print(
-                        f"  {Fore.YELLOW}{idx}{Style.RESET_ALL}. {remain_msg}"
-                    )
-                max_choice = len(unique_rolls)
-            else:
-                sorted_avail = sorted(pool, reverse=True)
-                for idx, value in enumerate(sorted_avail, 1):
-                    print(f"  {Fore.YELLOW}{idx}{Style.RESET_ALL}. {value}")
-                max_choice = len(pool)
-
-            print(
-                f"  {Fore.YELLOW}0{Style.RESET_ALL}."
-                f" {get_string(strings, 'character.back')}"
-            )
-            print()
-
-            choice = get_int_input(
-                _choice_prompt(strings), 0, max_choice, strings
-            )
-            if choice == 0:
-                return None
-
-            if show_counts:
-                sorted_unique = sorted(set(pool), reverse=True)
-                selected_value = sorted_unique[choice - 1]
-            else:
-                sorted_avail = sorted(pool, reverse=True)
-                selected_value = sorted_avail[choice - 1]
+        selected_value = _prompt_pool_value_manual(
+            strings,
+            stat_name,
+            pool,
+            value_min=value_min,
+            value_max=value_max,
+        )
+        if selected_value is None:
+            return None
 
         selected[stat] = selected_value
         pool.remove(selected_value)
@@ -341,22 +326,45 @@ def _difficulty_color(difficulty: str) -> str:
     return str(Fore.CYAN)
 
 
-def _character_race_label(char: Character) -> str:
-    """Читаемое название расы или подрасы персонажа."""
+def _character_base_race_label(char: Character) -> str:
+    """Читаемое название базовой расы персонажа."""
     race_full = load_race_full(char.race)
-    if char.subrace:
-        subraces = race_full.get("subraces", {})
-        if isinstance(subraces, dict):
-            subrace_info = subraces.get(char.subrace, {})
-            if isinstance(subrace_info, dict):
-                name = subrace_info.get("name")
-                if name:
-                    return str(name)
-        return char.subrace
     name = race_full.get("name")
     if name:
         return str(name)
     return char.race
+
+
+def _character_subrace_label(char: Character) -> str | None:
+    """Читаемое название подрасы или None, если подрасы нет."""
+    if not char.subrace:
+        return None
+
+    race_full = load_race_full(char.race)
+    subraces = race_full.get("subraces", {})
+    if isinstance(subraces, dict):
+        subrace_info = subraces.get(char.subrace, {})
+        if isinstance(subrace_info, dict):
+            name = subrace_info.get("name")
+            if name:
+                name_str = str(name)
+                if "(" in name_str and name_str.endswith(")"):
+                    return name_str.split("(", maxsplit=1)[1].rstrip(")")
+                return name_str
+    return char.subrace
+
+
+def _print_labeled_field(
+    strings: dict[str, Any],
+    label_key: str,
+    value: str,
+    indent: str = "     ",
+) -> None:
+    """Вывести строку «подпись: значение» с цветной подписью."""
+    label = get_string(strings, label_key)
+    print(
+        f"{indent}" f"{Fore.LIGHTBLACK_EX}{label}{Style.RESET_ALL} " f"{value}"
+    )
 
 
 def _character_class_label(char: Character) -> str:
@@ -393,22 +401,44 @@ def _print_character_card(
     """Вывести карточку персонажа в списке выбора."""
     mode = _difficulty_label(strings, char.difficulty)
     mode_color = _difficulty_color(char.difficulty)
-    race_label = _character_race_label(char)
+    base_race = _character_base_race_label(char)
+    subrace = _character_subrace_label(char)
     class_label = _character_class_label(char)
+    indent = "     "
 
-    print(
-        f"  {Fore.YELLOW}{idx}{Style.RESET_ALL}. "
-        f"{Fore.CYAN}{Style.BRIGHT}{char.name}{Style.RESET_ALL}"
-    )
-    info_line = get_string(
+    print(f"  {Fore.YELLOW}{idx}{Style.RESET_ALL}.")
+
+    _print_labeled_field(
         strings,
-        "choose_character.info_line",
-        race=f"{Fore.CYAN}{race_label}{Style.RESET_ALL}",
-        class_name=f"{Fore.CYAN}{class_label}{Style.RESET_ALL}",
-        level=f"{Fore.YELLOW}{char.level}{Style.RESET_ALL}",
-        mode=f"{mode_color}{mode}{Style.RESET_ALL}",
+        "choose_character.field_name",
+        f"{Fore.CYAN}{Style.BRIGHT}{char.name}{Style.RESET_ALL}",
+        indent=indent,
     )
-    print(f"       {info_line}")
+    _print_labeled_field(
+        strings,
+        "choose_character.field_race",
+        f"{Fore.CYAN}{base_race}{Style.RESET_ALL}",
+        indent=indent,
+    )
+    if subrace:
+        _print_labeled_field(
+            strings,
+            "choose_character.field_subrace",
+            f"{Fore.CYAN}{subrace}{Style.RESET_ALL}",
+            indent=indent,
+        )
+    _print_labeled_field(
+        strings,
+        "choose_character.field_class",
+        f"{Fore.CYAN}{class_label}{Style.RESET_ALL}",
+        indent=indent,
+    )
+    _print_labeled_field(
+        strings,
+        "choose_character.field_level",
+        f"{Fore.YELLOW}{char.level}{Style.RESET_ALL}",
+        indent=indent,
+    )
 
     vitals_line = get_string(
         strings,
@@ -416,14 +446,21 @@ def _print_character_card(
         hp=f"{Fore.GREEN}{char.current_hp}{Style.RESET_ALL}",
         xp=f"{Fore.MAGENTA}{char.experience}{Style.RESET_ALL}",
     )
-    print(f"       {vitals_line}")
+    print(f"{indent}{vitals_line}")
 
     stats_compact = _format_character_stats_compact(char, strings)
     if stats_compact:
         stats_line = get_string(
             strings, "choose_character.stats_line", stats=stats_compact
         )
-        print(f"       {stats_line}")
+        print(f"{indent}{stats_line}")
+
+    _print_labeled_field(
+        strings,
+        "choose_character.field_difficulty",
+        f"{mode_color}{mode}{Style.RESET_ALL}",
+        indent=indent,
+    )
 
     print()
 
@@ -451,11 +488,12 @@ def _select_character(strings: dict[str, Any]) -> SelectCharacterResult:
         _print_character_card(idx, char, strings)
 
     create_idx = len(characters) + 1
+    enter_hint = get_string(strings, "common.press_enter")
     print()
     print(
         f"  {Fore.YELLOW}{create_idx}{Style.RESET_ALL}."
         f" {Fore.GREEN}{get_string(strings, 'choose_character.create_new')}"
-        f"{Style.RESET_ALL}"
+        f" {Fore.LIGHTBLACK_EX}{enter_hint}{Style.RESET_ALL}"
     )
     print()
     print(
@@ -469,6 +507,7 @@ def _select_character(strings: dict[str, Any]) -> SelectCharacterResult:
         0,
         create_idx,
         strings,
+        default=create_idx,
     )
 
     if choice == 0:
@@ -582,13 +621,13 @@ def show_new_game_flow(
     while True:
         characters = load_characters()
         if not characters:
-            character = show_create_character_flow(strings, settings)
+            character = show_create_character_flow(strings)
         else:
             result = _select_character(strings)
             if result is None:
                 return
             if result == "create":
-                character = show_create_character_flow(strings, settings)
+                character = show_create_character_flow(strings)
             else:
                 character = result
 
@@ -648,6 +687,30 @@ def _print_race_info(info: dict[str, Any], strings: dict[str, Any]) -> None:
                 strings, "character.ability_bonuses_label", bonuses=bonuses_str
             )
         )
+    else:
+        for feat in info.get("features", []):
+            if not isinstance(feat, dict):
+                continue
+            if feat.get("type") != "ability_bonus":
+                continue
+            mechanics = feat.get("mechanics", {})
+            if isinstance(mechanics, dict) and mechanics.get("choice"):
+                count = int(mechanics.get("count", 1))
+                value = int(mechanics.get("value", 1))
+                choice_info = get_string(
+                    strings,
+                    "character.stats_choice_bonus_subrace_info",
+                    count=count,
+                    value=value,
+                )
+                print(
+                    get_string(
+                        strings,
+                        "character.ability_bonuses_label",
+                        bonuses=choice_info,
+                    )
+                )
+                break
 
     features = info.get("features", [])
     if features:
@@ -781,7 +844,6 @@ def _select_class(strings: dict[str, Any]) -> dict[str, Any] | None:
 
 def show_create_character_flow(
     strings: dict[str, Any],
-    settings: dict[str, Any],
 ) -> Character | None:
     """Flow «Создать персонажа»: сложность → создание."""
     difficulty = select_difficulty(strings)
@@ -931,18 +993,15 @@ def _select_stats_standard_array(
     subrace_id: str | None,
 ) -> dict[str, int] | None:
     """Выбор характеристик из стандартного массива."""
-    show_bonuses = True
-
     while True:
         selected = _assign_stats_from_pool(
             strings,
             list(STANDARD_ARRAY),
-            entry_mode="manual",
+            value_min=STANDARD_ARRAY_MIN,
+            value_max=STANDARD_ARRAY_MAX,
             race_id=race_id,
             subrace_id=subrace_id,
-            show_race_bonuses=show_bonuses,
         )
-        show_bonuses = False
         if selected is None:
             return None
 
@@ -950,15 +1009,22 @@ def _select_stats_standard_array(
         stats = generate_stats_standard_array(
             selected_values, race_id, subrace_id
         )
+        finalized = _finalize_stats_with_race_bonuses(
+            strings, stats, race_id, subrace_id
+        )
+        if finalized is None:
+            continue
+        final_stats, race_bonuses = finalized
         result = _confirm_stats(
             strings,
-            stats,
+            final_stats,
             race_id,
             subrace_id,
             reroll_label_key="character.stats_reroll_redistribute",
+            race_bonuses=race_bonuses,
         )
         if result == "accept":
-            return stats
+            return final_stats
         if result == "back":
             return None
 
@@ -969,24 +1035,12 @@ def _select_stats_point_buy(
     subrace_id: str | None,
 ) -> dict[str, int] | None:
     """Система покупки очков (Point-buy)."""
-    show_bonuses = True
-
     while True:
-        print_race_bonuses = show_bonuses
-        show_bonuses = False
-
         stats = {stat: 8 for stat in STAT_NAMES}
 
         while True:
-            print(SEPARATOR)
-            print(_stats_caption_line(strings))
-            print(SEPARATOR)
-            print()
-
-            if print_race_bonuses:
-                _print_race_bonuses(strings, race_id, subrace_id)
-                print()
-                print_race_bonuses = False
+            _print_stats_generation_header(strings, race_id, subrace_id)
+            _print_point_buy_cost_table(strings)
 
             total_cost = point_buy_total_cost(
                 [stats[stat] for stat in STAT_NAMES]
@@ -1039,28 +1093,43 @@ def _select_stats_point_buy(
             choice = get_int_input(_choice_prompt(strings), 0, 6, strings)
 
             if choice == 0:
-                if points_available >= 0:
+                if points_available == 0:
                     stats_result = generate_stats_point_buy(
                         [stats[stat] for stat in STAT_NAMES],
                         race_id,
                         subrace_id,
                     )
+                    finalized = _finalize_stats_with_race_bonuses(
+                        strings, stats_result, race_id, subrace_id
+                    )
+                    if finalized is None:
+                        break
+                    final_stats, race_bonuses = finalized
                     result = _confirm_stats(
                         strings,
-                        stats_result,
+                        final_stats,
                         race_id,
                         subrace_id,
                         reroll_label_key="character.stats_reroll_redistribute",
+                        race_bonuses=race_bonuses,
                     )
                     if result == "accept":
-                        return stats_result
+                        return final_stats
                     if result == "back":
                         return None
                     break
-                overspent = get_string(
-                    strings, "character.stats_points_overspent"
-                )
-                print(f"{Fore.RED}{overspent}{Style.RESET_ALL}")
+                if points_available > 0:
+                    unspent = get_string(
+                        strings,
+                        "character.stats_points_unspent",
+                        remaining=points_available,
+                    )
+                    print(f"{Fore.RED}{unspent}{Style.RESET_ALL}")
+                else:
+                    overspent = get_string(
+                        strings, "character.stats_points_overspent"
+                    )
+                    print(f"{Fore.RED}{overspent}{Style.RESET_ALL}")
                 _press_enter(strings)
                 continue
 
@@ -1077,18 +1146,10 @@ def _select_stats_random_normal(
     subrace_id: str | None,
 ) -> dict[str, int] | None:
     """Случайный метод для Normal режима с распределением значений."""
-    show_bonuses = True
+    rolls: list[int] | None = None
 
     while True:
-        print(SEPARATOR)
-        print(_stats_caption_line(strings))
-        print(SEPARATOR)
-        print()
-
-        if show_bonuses:
-            _print_race_bonuses(strings, race_id, subrace_id)
-            print()
-            show_bonuses = False
+        _print_stats_generation_header(strings, race_id, subrace_id)
 
         print(
             f"{Fore.YELLOW}"
@@ -1097,8 +1158,9 @@ def _select_stats_random_normal(
         )
         print()
 
-        rolls = [roll_ability_score() for _ in range(6)]
-        rolls.sort(reverse=True)
+        if rolls is None:
+            rolls = [roll_ability_score() for _ in range(6)]
+            rolls.sort(reverse=True)
 
         print(
             f"{Fore.CYAN}"
@@ -1130,25 +1192,44 @@ def _select_stats_random_normal(
         if roll_choice == 0:
             return None
         if roll_choice == 2:
+            rolls = None
             continue
 
-        selected = _assign_stats_from_pool(strings, rolls, show_counts=True)
-        if selected is None:
-            continue
+        while True:
+            selected = _assign_stats_from_pool(
+                strings,
+                rolls,
+                value_min=min(rolls),
+                value_max=max(rolls),
+                show_counts=True,
+                race_id=race_id,
+                subrace_id=subrace_id,
+            )
+            if selected is None:
+                break
 
-        selected_values = [selected[stat] for stat in STAT_NAMES]
-        stats = generate_stats_random(selected_values, race_id, subrace_id)
-        result = _confirm_stats(
-            strings,
-            stats,
-            race_id,
-            subrace_id,
-            reroll_label_key="character.stats_reroll_regenerate",
-        )
-        if result == "accept":
-            return stats
-        if result == "back":
-            return None
+            selected_values = [selected[stat] for stat in STAT_NAMES]
+            stats = generate_stats_random(selected_values, race_id, subrace_id)
+            finalized = _finalize_stats_with_race_bonuses(
+                strings, stats, race_id, subrace_id
+            )
+            if finalized is None:
+                continue
+            final_stats, race_bonuses = finalized
+            result = _confirm_stats(
+                strings,
+                final_stats,
+                race_id,
+                subrace_id,
+                reroll_label_key="character.stats_reroll_regenerate",
+                race_bonuses=race_bonuses,
+            )
+            if result == "accept":
+                return final_stats
+            if result == "back":
+                return None
+            rolls = None
+            break
 
 
 def _select_stats_random_hardcore(
@@ -1157,50 +1238,153 @@ def _select_stats_random_hardcore(
     subrace_id: str | None,
 ) -> dict[str, int]:
     """Случайный метод для HardCore режима."""
-    race_bonuses = get_race_bonuses(race_id, subrace_id)
+    base_values = [roll_ability_score() for _ in STAT_NAMES]
 
-    print(SEPARATOR)
-    print(_stats_caption_line(strings))
-    print(SEPARATOR)
-    print()
-    _print_race_bonuses(strings, race_id, subrace_id)
-    print()
-    print(
-        f"{Fore.YELLOW}"
-        f"{get_string(strings, 'character.stats_hardcore_auto')}"
-        f"{Style.RESET_ALL}"
+    while True:
+        _print_stats_generation_header(strings, race_id, subrace_id)
+        print(
+            f"{Fore.YELLOW}"
+            f"{get_string(strings, 'character.stats_hardcore_auto')}"
+            f"{Style.RESET_ALL}"
+        )
+        print(
+            f"{Fore.YELLOW}"
+            f"{get_string(strings, 'character.stats_hardcore_method')}"
+            f"{Style.RESET_ALL}"
+        )
+        print()
+
+        for stat, roll in zip(STAT_NAMES, base_values, strict=True):
+            stat_name = _ability_name(strings, stat)
+            print(f"  {stat_name}: {Fore.YELLOW}{roll}{Style.RESET_ALL}")
+
+        print()
+        _press_enter(strings)
+
+        stats = generate_stats_random(base_values, race_id, subrace_id)
+        finalized = _finalize_stats_with_race_bonuses(
+            strings, stats, race_id, subrace_id
+        )
+        if finalized is None:
+            continue
+        final_stats, race_bonuses = finalized
+
+        print(SEPARATOR)
+        print(_stats_total_line(strings))
+        print(SEPARATOR)
+        print()
+
+        for stat in STAT_NAMES:
+            _print_final_stat_line(
+                strings, stat, final_stats[stat], race_bonuses
+            )
+
+        print()
+        _press_enter(strings)
+
+        return final_stats
+
+
+def _select_choice_ability_bonuses(
+    strings: dict[str, Any],
+    stats: dict[str, int],
+    race_id: str,
+    subrace_id: str | None,
+) -> dict[str, int] | None:
+    """Выбор характеристик для выборного расового бонуса."""
+    mechanics = get_choice_ability_bonus_mechanics(race_id, subrace_id)
+    if mechanics is None:
+        return {}
+
+    count = int(mechanics.get("count", 1))
+    value = int(mechanics.get("value", 1))
+    allow_duplicates = bool(mechanics.get("allow_duplicates", True))
+    chosen_stats: list[str] = []
+
+    for pick_num in range(1, count + 1):
+        print(SEPARATOR)
+        caption = get_string(strings, "character.stats_choice_bonus_caption")
+        print(f"{Fore.YELLOW}{caption.center(78)}{Style.RESET_ALL}")
+        print(SEPARATOR)
+        print()
+        prompt = get_string(
+            strings,
+            "character.stats_choice_bonus_prompt",
+            current=pick_num,
+            total=count,
+            value=value,
+        )
+        print(f"{Fore.CYAN}{prompt}{Style.RESET_ALL}")
+        print()
+
+        if chosen_stats:
+            print(
+                f"{Fore.GREEN}"
+                f"{get_string(strings, 'character.stats_selected_label')}"
+                f"{Style.RESET_ALL}"
+            )
+            for stat in chosen_stats:
+                print(f"  {_ability_name(strings, stat)} +{value}")
+            print()
+
+        available = list(STAT_NAMES)
+        if not allow_duplicates:
+            available = [s for s in STAT_NAMES if s not in chosen_stats]
+
+        print(
+            f"{Fore.YELLOW}"
+            f"{get_string(strings, 'character.stats_current')}"
+            f"{Style.RESET_ALL}"
+        )
+        for idx, stat in enumerate(available, 1):
+            stat_name = _ability_name(strings, stat)
+            stat_msg = get_string(
+                strings,
+                "character.stat_line",
+                stat=stat_name,
+                value=stats[stat],
+            )
+            print(f"  {Fore.YELLOW}{idx}{Style.RESET_ALL}. {stat_msg}")
+
+        print()
+        print(
+            f"  {Fore.YELLOW}0{Style.RESET_ALL}."
+            f" {get_string(strings, 'character.back')}"
+        )
+        print()
+
+        choice = get_int_input(
+            _choice_prompt(strings), 0, len(available), strings
+        )
+        if choice == 0:
+            return None
+
+        chosen_stats.append(available[choice - 1])
+
+    return build_bonuses_from_choices(chosen_stats, value)
+
+
+def _finalize_stats_with_race_bonuses(
+    strings: dict[str, Any],
+    stats: dict[str, int],
+    race_id: str,
+    subrace_id: str | None,
+) -> tuple[dict[str, int], dict[str, int]] | None:
+    """Применить выборные бонусы после генерации характеристик."""
+    if not has_choice_ability_bonuses(race_id, subrace_id):
+        return stats, get_race_bonuses(race_id, subrace_id)
+
+    choice_bonuses = _select_choice_ability_bonuses(
+        strings, stats, race_id, subrace_id
     )
-    print(
-        f"{Fore.YELLOW}"
-        f"{get_string(strings, 'character.stats_hardcore_method')}"
-        f"{Style.RESET_ALL}"
+    if choice_bonuses is None:
+        return None
+
+    final_stats = apply_bonuses_to_stats(stats, choice_bonuses)
+    effective_bonuses = get_effective_race_bonuses(
+        race_id, subrace_id, choice_bonuses
     )
-    print()
-
-    base_values: list[int] = []
-    for stat in STAT_NAMES:
-        roll = roll_ability_score()
-        base_values.append(roll)
-        stat_name = _ability_name(strings, stat)
-        print(f"  {stat_name}: {Fore.YELLOW}{roll}{Style.RESET_ALL}")
-
-    print()
-    _press_enter(strings)
-
-    stats = generate_stats_random(base_values, race_id, subrace_id)
-
-    print(SEPARATOR)
-    print(_stats_total_line(strings))
-    print(SEPARATOR)
-    print()
-
-    for stat in STAT_NAMES:
-        _print_final_stat_line(strings, stat, stats[stat], race_bonuses)
-
-    print()
-    _press_enter(strings)
-
-    return stats
+    return final_stats, effective_bonuses
 
 
 def _confirm_stats(
@@ -1210,9 +1394,11 @@ def _confirm_stats(
     subrace_id: str | None,
     *,
     reroll_label_key: str,
+    race_bonuses: dict[str, int] | None = None,
 ) -> ConfirmStatsResult:
     """Подтверждение выбранных характеристик."""
-    race_bonuses = get_race_bonuses(race_id, subrace_id)
+    if race_bonuses is None:
+        race_bonuses = get_race_bonuses(race_id, subrace_id)
 
     print(SEPARATOR)
     print(_stats_total_line(strings))
@@ -1248,6 +1434,22 @@ def _confirm_stats(
     return "accept"
 
 
+def _print_point_buy_cost_table(strings: dict[str, Any]) -> None:
+    """Таблица стоимости значений характеристик (point-buy)."""
+    title = get_string(strings, "character.stats_point_buy_price_table")
+    value_hdr = get_string(strings, "character.stats_point_buy_price_value")
+    cost_hdr = get_string(strings, "character.stats_point_buy_price_cost")
+    print(f"{Fore.GREEN}{title}{Style.RESET_ALL}")
+    print(f"  {Fore.YELLOW}{value_hdr:>5}  {cost_hdr:>5}{Style.RESET_ALL}")
+    for value in sorted(POINT_BUY_COSTS):
+        cost = POINT_BUY_COSTS[value]
+        print(
+            f"  {Fore.CYAN}{value:>5}{Style.RESET_ALL}  "
+            f"{Fore.CYAN}{cost:>5}{Style.RESET_ALL}"
+        )
+    print()
+
+
 def _print_race_bonuses(
     strings: dict[str, Any],
     race_id: str,
@@ -1255,6 +1457,23 @@ def _print_race_bonuses(
 ) -> None:
     """Вывести блок расовых бонусов."""
     bonuses = get_race_bonuses(race_id, subrace_id)
+    if bonuses:
+        print(_format_bonuses(bonuses, strings))
+        return
+
+    mechanics = get_choice_ability_bonus_mechanics(race_id, subrace_id)
+    if mechanics:
+        count = int(mechanics.get("count", 1))
+        value = int(mechanics.get("value", 1))
+        pending_msg = get_string(
+            strings,
+            "character.stats_choice_bonus_pending",
+            count=count,
+            value=value,
+        )
+        print(f"{Fore.CYAN}{pending_msg}{Style.RESET_ALL}")
+        return
+
     print(_format_bonuses(bonuses, strings))
 
 

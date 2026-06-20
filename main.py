@@ -83,7 +83,7 @@ def main() -> int:
 
         elif choice == 3:
             # Создать персонажа
-            show_create_character_flow(strings, settings)
+            show_create_character_flow(strings)
             settings, strings = _save_and_reload_settings(settings, strings)
 
         elif choice == 4:

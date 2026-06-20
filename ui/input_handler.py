@@ -46,11 +46,20 @@ def get_int_input(
     min_val: int,
     max_val: int,
     strings: dict[str, Any] | None = None,
+    *,
+    default: int | None = None,
 ) -> int:
-    """Запросить целое число в заданном диапазоне."""
+    """Запросить целое число в заданном диапазоне.
+
+    Пустой ввод (Enter) возвращает ``default``, если он задан и в диапазоне.
+    """
     while True:
         try:
             raw = input(f"{Fore.CYAN}{prompt}{Style.RESET_ALL}")
+            if not raw.strip():
+                if default is not None and min_val <= default <= max_val:
+                    return default
+                raise ValueError
             value = int(raw.strip())
             if min_val <= value <= max_val:
                 return value
