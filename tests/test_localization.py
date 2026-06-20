@@ -38,6 +38,15 @@ def test_get_string_missing_key_returns_default():
     )
 
 
+def test_resolve_localized_text_from_dict() -> None:
+    """resolve_localized_text возвращает строку для языка."""
+    from core.localization import resolve_localized_text
+
+    value = {"ru": "Человек", "en": "Human"}
+    assert resolve_localized_text(value, "en") == "Human"
+    assert resolve_localized_text(value, "ru") == "Человек"
+
+
 def test_get_string_format_and_key_error_fallback():
     """format подставляет kwargs; при KeyError возвращает шаблон."""
     strings = {"info": {"welcome": "Hello, {name}!"}}

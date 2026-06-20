@@ -31,7 +31,9 @@ def test_base_race_without_subraces_has_back_option(
         "allow_base_race_choice": True,
     }
 
-    monkeypatch.setattr(_deps, "load_race_full", lambda race_id: race)
+    monkeypatch.setattr(
+        _deps, "load_race_full", lambda race_id, language="ru": race
+    )
     patch_int_input(monkeypatch, menus, [0])
 
     selected, subrace_id = character_flow._select_subrace(strings, "half_orc")
@@ -74,7 +76,9 @@ def test_human_has_base_and_variant_choices(
         },
     }
 
-    monkeypatch.setattr(_deps, "load_race_full", lambda race_id: race)
+    monkeypatch.setattr(
+        _deps, "load_race_full", lambda race_id, language="ru": race
+    )
     patch_int_input(monkeypatch, menus, [1])
 
     selected, subrace_id = character_flow._select_subrace(strings, "human")
@@ -223,7 +227,7 @@ def test_new_game_no_characters_goes_to_create(monkeypatch):
     def select_character(strings):
         calls["select"] += 1
 
-    def create_flow(strings):
+    def create_flow(strings, language="ru"):
         calls["create"] += 1
 
     monkeypatch.setattr(_deps, "load_characters", lambda: [])
@@ -245,7 +249,7 @@ def test_new_game_back_returns_one_step(monkeypatch):
         class_name="fighter",
     )
 
-    def select_character(strings):
+    def select_character(strings, language="ru"):
         calls["character"] += 1
         return character if calls["character"] == 1 else None
 

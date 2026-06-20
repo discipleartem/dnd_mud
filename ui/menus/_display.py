@@ -28,21 +28,23 @@ def _difficulty_color(difficulty: str) -> str:
     return str(Fore.CYAN)
 
 
-def _character_base_race_label(char: Character) -> str:
+def _character_base_race_label(char: Character, language: str = "ru") -> str:
     """Читаемое название базовой расы персонажа."""
-    race_full = _deps.load_race_full(char.race)
+    race_full = _deps.load_race_full(char.race, language)
     name = race_full.get("name")
     if name:
         return str(name)
     return char.race
 
 
-def _character_subrace_label(char: Character) -> str | None:
+def _character_subrace_label(
+    char: Character, language: str = "ru"
+) -> str | None:
     """Читаемое название подрасы или None, если подрасы нет."""
     if not char.subrace:
         return None
 
-    race_full = _deps.load_race_full(char.race)
+    race_full = _deps.load_race_full(char.race, language)
     subraces = race_full.get("subraces", {})
     if isinstance(subraces, dict):
         subrace_info = subraces.get(char.subrace, {})
@@ -69,9 +71,9 @@ def _print_labeled_field(
     )
 
 
-def _character_class_label(char: Character) -> str:
+def _character_class_label(char: Character, language: str = "ru") -> str:
     """Читаемое название класса персонажа."""
-    for cls in _deps.load_classes():
+    for cls in _deps.load_classes(language):
         if cls.get("id") == char.class_name:
             return str(cls.get("name", char.class_name))
     return char.class_name
@@ -98,14 +100,17 @@ def _format_character_stats_compact(
 
 
 def _print_character_card(
-    idx: int, char: Character, strings: dict[str, Any]
+    idx: int,
+    char: Character,
+    strings: dict[str, Any],
+    language: str = "ru",
 ) -> None:
     """Вывести карточку персонажа в списке выбора."""
     mode = _difficulty_label(strings, char.difficulty)
     mode_color = _difficulty_color(char.difficulty)
-    base_race = _character_base_race_label(char)
-    subrace = _character_subrace_label(char)
-    class_label = _character_class_label(char)
+    base_race = _character_base_race_label(char, language)
+    subrace = _character_subrace_label(char, language)
+    class_label = _character_class_label(char, language)
     indent = "     "
 
     print(f"  {Fore.YELLOW}{idx}{Style.RESET_ALL}.")

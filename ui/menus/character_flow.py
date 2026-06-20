@@ -14,10 +14,10 @@ from ui.menus.stats_flow import show_stats_generation_flow
 
 
 def _select_subrace(
-    strings: dict[str, Any], race_id: str
+    strings: dict[str, Any], race_id: str, language: str = "ru"
 ) -> tuple[bool, str | None]:
     """Показать описание расы и выбрать подрасу."""
-    race_full = _deps.load_race_full(race_id)
+    race_full = _deps.load_race_full(race_id, language)
     subraces = race_full.get("subraces", {})
     allow_base = bool(race_full.get("allow_base_race_choice", False))
 
@@ -91,9 +91,11 @@ def _select_subrace(
     return True, subrace_id
 
 
-def _select_class(strings: dict[str, Any]) -> dict[str, Any] | None:
+def _select_class(
+    strings: dict[str, Any], language: str = "ru"
+) -> dict[str, Any] | None:
     """Выбрать класс персонажа или вернуться назад."""
-    classes = _deps.load_classes()
+    classes = _deps.load_classes(language)
     _print_screen_header(get_string(strings, "character.class_prompt"))
     for idx, cls in enumerate(classes, 1):
         print(f"  {Fore.YELLOW}{idx}{Style.RESET_ALL}. {cls.get('name', '?')}")
@@ -115,7 +117,7 @@ def _select_class(strings: dict[str, Any]) -> dict[str, Any] | None:
 
 
 def show_create_character_flow(
-    strings: dict[str, Any],
+    strings: dict[str, Any], language: str = "ru"
 ) -> Character | None:
     """Flow «Создать персонажа»: сложность → создание."""
     difficulty = select_difficulty(strings)
@@ -132,7 +134,7 @@ def show_create_character_flow(
     )
 
     while True:
-        races = _deps.load_races()
+        races = _deps.load_races(language)
         _print_screen_header(get_string(strings, "character.race_caption"))
 
         for idx, race in enumerate(races, 1):
@@ -159,7 +161,9 @@ def show_create_character_flow(
         race_id = str(selected.get("id") or selected.get("name"))
 
         while True:
-            subrace_selected, subrace_id = _select_subrace(strings, race_id)
+            subrace_selected, subrace_id = _select_subrace(
+                strings, race_id, language
+            )
             if not subrace_selected:
                 break
 
@@ -170,7 +174,7 @@ def show_create_character_flow(
                 if stats is None:
                     break
 
-                cls = _select_class(strings)
+                cls = _select_class(strings, language)
                 if cls is None:
                     continue
 

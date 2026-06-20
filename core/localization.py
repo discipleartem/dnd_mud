@@ -35,6 +35,26 @@ def load_strings(language: str) -> dict[str, Any]:
     return result
 
 
+def resolve_localized_text(
+    value: str | dict[str, Any] | None,
+    language: str,
+    *,
+    fallback: str = "",
+) -> str:
+    """Получить локализованный текст из строки или словаря {ru, en}."""
+    if isinstance(value, dict):
+        localized = value.get(language)
+        if localized is not None:
+            return str(localized)
+        for key in ("en", "ru"):
+            if key in value and value[key] is not None:
+                return str(value[key])
+        return fallback
+    if value is None:
+        return fallback
+    return str(value)
+
+
 def get_string(
     strings: dict[str, Any],
     key: str,

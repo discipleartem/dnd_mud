@@ -14,7 +14,9 @@ from ui.menus._display import _print_character_card
 SelectCharacterResult = Character | Literal["create"] | None
 
 
-def _select_character(strings: dict[str, Any]) -> SelectCharacterResult:
+def _select_character(
+    strings: dict[str, Any], language: str = "ru"
+) -> SelectCharacterResult:
     """Экран выбора персонажа из списка сохранённых."""
     characters = _deps.load_characters()
 
@@ -27,7 +29,7 @@ def _select_character(strings: dict[str, Any]) -> SelectCharacterResult:
     print()
 
     for idx, char in enumerate(characters, 1):
-        _print_character_card(idx, char, strings)
+        _print_character_card(idx, char, strings, language)
 
     create_idx = len(characters) + 1
     enter_hint = get_string(strings, "common.press_enter")
@@ -158,13 +160,13 @@ def show_new_game_flow(
     while True:
         characters = _deps.load_characters()
         if not characters:
-            character = show_create_character_flow(strings)
+            character = show_create_character_flow(strings, language)
         else:
-            result = _select_character(strings)
+            result = _select_character(strings, language)
             if result is None:
                 return
             if result == "create":
-                character = show_create_character_flow(strings)
+                character = show_create_character_flow(strings, language)
             else:
                 character = result
 

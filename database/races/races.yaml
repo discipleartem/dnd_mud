@@ -3,8 +3,12 @@
 
 races:
   human:
-    name: "Человек"
-    base_choice_name: "Человек (обычный)"
+    name:
+      ru: "Человек"
+      en: "Human"
+    base_choice_name:
+      ru: "Человек (обычный)"
+      en: "Human (standard)"
     description: "Человечество — самая разнообразная и амбициозная раса"
     age_range: [16, 100]
     size: "medium"
@@ -27,7 +31,9 @@ races:
     allow_base_race_choice: true
     subraces:
       variant_human:
-        name: "Человек (вариант)"
+        name:
+          ru: "Человек (вариант)"
+          en: "Human (variant)"
         description: "Альтернативный вариант создания человека"
         inherit_base_bonuses: false
         inherit_base_features: false
@@ -57,7 +63,9 @@ races:
               from_list: "all"
 
   elf:
-    name: "Эльф"
+    name:
+      ru: "Эльф"
+      en: "Elf"
     description: "Эльфы — изящные и долгоживущие существа с тонкими чувствами"
     age_range: [20, 750]
     size: "medium"
@@ -91,7 +99,9 @@ races:
     allow_base_race_choice: false
     subraces:
       high_elf:
-        name: "Высший эльф"
+        name:
+          ru: "Высший эльф"
+          en: "High Elf"
         description: "Высшие эльфы ценят знания и магию"
         ability_bonuses:
           intelligence: 1
@@ -117,7 +127,9 @@ races:
               choice: true
 
       wood_elf:
-        name: "Лесной эльф"
+        name:
+          ru: "Лесной эльф"
+          en: "Wood Elf"
         description: "Лесные эльфы живут в гармонии с природой"
         ability_bonuses:
           wisdom: 1
@@ -141,7 +153,9 @@ races:
               terrain: "forest"
 
       dark_elf_drow:
-        name: "Дроу"
+        name:
+          ru: "Дроу"
+          en: "Drow"
         description: "Тёмные эльфы подземелий"
         ability_bonuses:
           charisma: 1
@@ -176,7 +190,9 @@ races:
               affected: ["attacks", "perception_checks"]
 
   dwarf:
-    name: "Дварф"
+    name:
+      ru: "Дварф"
+      en: "Dwarf"
     description: "Дварфы — крепкие и выносливые мастера гор и ремёсел"
     age_range: [50, 350]
     size: "medium"
@@ -225,7 +241,9 @@ races:
     allow_base_race_choice: false
     subraces:
       hill_dwarf:
-        name: "Холмовой дварф"
+        name:
+          ru: "Холмовой дварф"
+          en: "Hill Dwarf"
         description: "Будучи холмовым дварфом вы обладаете обострёнными чувствами, развитой интуицией и замечательной стойкостью"
         ability_bonuses:
           wisdom: 1
@@ -238,7 +256,9 @@ races:
               per_level: true
 
       mountain_dwarf:
-        name: "Горный дварф"
+        name:
+          ru: "Горный дварф"
+          en: "Mountain Dwarf"
         description: "Будучи горным дварфом, вы являетесь сильным и выносливым, приспособленным к жизни в суровой местности"
         ability_bonuses:
           strength: 2
@@ -250,7 +270,9 @@ races:
               armor_types: ["light_armor", "medium_armor"]
 
   half_orc:
-    name: "Полуорк"
+    name:
+      ru: "Полуорк"
+      en: "Half-Orc"
     description: "Полуорки — сильные и выносливые воины"
     age_range: [14, 80]
     size: "medium"
