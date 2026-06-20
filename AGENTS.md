@@ -1,7 +1,16 @@
 # Agent rules — dnd_mud
 
 All agent rules live in [`.cursor/rules/`](.cursor/rules/).  
-Global rules: `~/.cursor/rules/` (apply to all projects).
+Global rules: `~/.cursor/rules/` (see [`README.md`](~/.cursor/rules/README.md)).
+
+## Rule priority
+
+1. Project `alwaysApply`: `00-project`, `dnd-mud-git`, `dnd-mud-verify`
+2. Project globs: `dnd-mud-*` (simple Python overrides global architecture for this MUD)
+3. Global rules: `~/.cursor/rules/`
+4. User Rules: commit/PR **protocol** only — workflow in `01-operations.mdc`
+
+Console MUD: `dnd-mud-verify.mdc` forbids browser tools (overrides global `browser-automation.mdc`).
 
 ## Rule map
 
@@ -21,20 +30,21 @@ Reference: `~/.cursor/docs/python-versions.md`
 
 | File | Scope | Content |
 |------|-------|---------|
-| `00-project.mdc` | always | Stack, commands, data paths, verify priority |
+| `00-project.mdc` | always | Stack, commands, local index |
 | `dnd-mud-python-simple.mdc` | `core/**`, `ui/**`, `main.py`, `tests/**` | Simple Python without premature abstractions |
 | `dnd-mud-core.mdc` | `core/**`, `ui/**`, `main.py` | Layers, localization, mechanics |
-| `dnd-mud-data.mdc` | `database/**`, `mods/**`, `saves/**`, `**/*.json` | YAML (справочники), JSON (сейвы/конфиги) |
+| `dnd-mud-data.mdc` | `database/**`, `mods/**`, `saves/**`, `**/*.json` | YAML/JSON paths and formats (single source) |
 | `dnd-mud-tests.mdc` | `tests/**` | pytest — простые, необходимые тесты |
 | `dnd-mud-git.mdc` | always | scope и dnd_mud-артефакты (extends global git) |
 | `dnd-mud-verify.mdc` | always | `make test`, console smoke (no browser) |
 
 ## Principle
 
-- **2** global `alwaysApply` + **3** project `alwaysApply` (`00-project`, `dnd-mud-git`, `dnd-mud-verify`)
+- **2** global `alwaysApply` + **3** project `alwaysApply`
 - Remaining rules activate by `globs` when matching files are open
 - Simple first → patterns only when they simplify (`dnd-mud-python-simple.mdc`)
-- `dnd-mud-verify.mdc` overrides global browser rules for this console app
+- Data paths and formats: **`dnd-mud-data.mdc` only**
+- Commands: **`00-project.mdc`**
 
 ## Project docs
 
@@ -43,32 +53,3 @@ Reference: `~/.cursor/docs/python-versions.md`
 - [docs/CHANGELOG.md](docs/CHANGELOG.md)
 - [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md)
 - [docs/MUD_PRD.md](docs/MUD_PRD.md)
-
-## Data storage
-
-- **Python 3.12** — основной язык проекта
-- **YAML** — справочники и игровой контент в `database/` (расы, классы, строки, приключения)
-- **JSON** — mutable state: `database/core/settings.json`, `saves/characters/*.json`
-
-Структура `database/`:
-
-```
-database/
-├── classes/classes.yaml
-├── content/adventures.yaml
-├── core/settings.json.example
-├── _future/                    # Phase 2: core/, equipment/, progression/, content/
-├── races/races.yaml
-└── strings/{en,ru}.yaml
-```
-
-Доступ к файлам только через `core/`, не из `ui/`.
-
-## Quick commands
-
-```bash
-make install
-make test
-make check
-python main.py
-```

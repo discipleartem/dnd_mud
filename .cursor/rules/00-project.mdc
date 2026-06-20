@@ -12,18 +12,14 @@ alwaysApply: true
 Максимально простой Python — без преждевременных абстракций и паттернов.
 Подробности: `dnd-mud-python-simple.mdc`.
 
-## Хранение данных (без SQL-БД)
+## Данные
 
-| Формат | Назначение | Пути |
-|--------|------------|------|
-| **YAML** | Справочники и игровой контент (замена БД) | `database/races/`, `database/classes/`, `database/core/`, `database/equipment/`, `database/progression/`, `database/content/`, `database/strings/` |
-| **JSON** | Mutable state: настройки и персонажи | `database/core/settings.json`, `saves/characters/*.json` |
-
+Пути, форматы YAML/JSON, моды — **единственный источник:** `dnd-mud-data.mdc`.
 Чтение/запись только через модули `core/` — не из `ui/`.
 
 ## Верификация
 
-Консольное приложение — **не web**. Правило `dnd-mud-verify.mdc` **приоритетнее** глобальных browser/IronBee правил:
+Консольное приложение — **не web**. Правило `dnd-mud-verify.mdc` **приоритетнее** глобальных browser-правил:
 
 - `make test` + console smoke (`python main.py`)
 - Browser automation **не использовать**
@@ -54,4 +50,4 @@ python main.py  # smoke: пройти затронутое меню
 | `dnd-mud-git.mdc` | always | scope и dnd_mud-артефакты (extends `01-operations.mdc`) |
 | `dnd-mud-verify.mdc` | always | верификация (не browser) |
 
-Глобальные правила: `~/.cursor/rules/` (см. `AGENTS.md`).
+Глобальные правила: `~/.cursor/rules/` (см. `AGENTS.md`, `~/.cursor/rules/README.md`).
