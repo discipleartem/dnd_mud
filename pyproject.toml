@@ -52,7 +52,7 @@ include = ["core*", "ui*", "mods*"]
 testpaths = ["tests"]
 python_files = ["test_*.py"]
 pythonpath = ["."]
-addopts = "-v --tb=short"
+addopts = "-v --tb=short --cov=core --cov=ui --cov-report=term-missing"
 
 [tool.mypy]
 python_version = "3.12"
@@ -67,6 +67,9 @@ line-length = 79
 
 [tool.ruff.lint]
 select = ["E", "F", "W", "I", "N", "UP", "B", "SIM"]
+
+[tool.ruff.lint.per-file-ignores]
+"ui/menus/_deps.py" = ["F401"]
 
 [tool.black]
 target-version = ["py312"]

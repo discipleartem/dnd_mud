@@ -34,10 +34,10 @@ def test_attack(): ...                               # ❌
 
 ## Style
 
-Follow [`tests/test_integration_menus.py`](tests/test_integration_menus.py):
+Следуй [`tests/test_menus_character.py`](tests/test_menus_character.py) и [`tests/test_menus_stats.py`](tests/test_menus_stats.py):
 
 - Integration tests over heavy mocking where practical
-- Add `PROJECT_ROOT` to `sys.path` when importing from project root
+- Monkeypatch через `ui.menus._deps` для core-зависимостей меню
 - Test real modules: `core.localization`, `core.settings`, `main` imports
 
 ## Чек-лист перед добавлением теста

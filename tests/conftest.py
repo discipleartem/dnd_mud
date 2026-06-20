@@ -27,10 +27,10 @@ def en_strings() -> dict[str, Any]:
 @pytest.fixture
 def characters_dir(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
     """Временная директория сохранений персонажей."""
-    import core.character as character_mod
+    import core.character_storage as storage_mod
 
     path = tmp_path / "characters"
-    monkeypatch.setattr(character_mod, "CHARACTERS_DIR", path)
+    monkeypatch.setattr(storage_mod, "CHARACTERS_DIR", path)
     return path
 
 
@@ -54,10 +54,13 @@ def patch_int_input():
         values: list[int],
     ) -> None:
         iterator = iter(values)
+
+        def fake_get_int_input(*args: object, **kwargs: object) -> int:
+            return next(iterator)
+
         monkeypatch.setattr(
-            module,
-            "get_int_input",
-            lambda *args, **kwargs: next(iterator),
+            "ui.menus._deps.get_int_input",
+            fake_get_int_input,
         )
 
     return _patch

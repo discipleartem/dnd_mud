@@ -7,7 +7,7 @@
 from pathlib import Path
 from typing import Any
 
-import yaml
+from core.io import load_yaml
 
 STRINGS_DIR = Path("database/strings")
 
@@ -27,18 +27,9 @@ def load_strings(language: str) -> dict[str, Any]:
     strings_path = STRINGS_DIR / f"{language}.yaml"
     fallback_path = STRINGS_DIR / "en.yaml"
 
-    strings: dict[str, Any] = {}
-    fallback: dict[str, Any] = {}
+    strings = load_yaml(strings_path)
+    fallback = load_yaml(fallback_path)
 
-    if strings_path.exists():
-        with open(strings_path, encoding="utf-8") as f:
-            strings = yaml.safe_load(f) or {}
-
-    if fallback_path.exists():
-        with open(fallback_path, encoding="utf-8") as f:
-            fallback = yaml.safe_load(f) or {}
-
-    # Склеиваем: свои строки поверх запасных
     result = fallback.copy()
     result.update(strings)
     return result
@@ -63,7 +54,6 @@ def get_string(strings: dict[str, Any], key: str, **kwargs: Any) -> str:
     """
     parts = key.split(".")
 
-    # Ищем значение во вложенном словаре
     value: Any = strings
     for part in parts:
         if isinstance(value, dict) and part in value:
@@ -71,15 +61,12 @@ def get_string(strings: dict[str, Any], key: str, **kwargs: Any) -> str:
         else:
             return key
 
-    # Если None — возвращаем ключ
     if value is None:
         return key
 
-    # Если не строка — приводим к строке
     if not isinstance(value, str):
         return str(value)
 
-    # Подставляем параметры, если нужно
     if kwargs:
         try:
             return value.format(**kwargs)

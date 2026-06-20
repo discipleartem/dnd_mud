@@ -7,6 +7,8 @@ import json
 from pathlib import Path
 from typing import Any
 
+from core.io import load_json
+
 SETTINGS_PATH = Path("database/core/settings.json")
 DEFAULT_LANGUAGE = "ru"
 SCHEMA_VERSION = 1
@@ -37,12 +39,8 @@ def load_settings() -> dict[str, Any]:
     if not SETTINGS_PATH.exists():
         return _runtime_settings(_default_settings())
 
-    try:
-        with open(SETTINGS_PATH, encoding="utf-8") as f:
-            data = json.load(f)
-        return _runtime_settings(data)
-    except (json.JSONDecodeError, OSError):
-        return _runtime_settings(_default_settings())
+    data = load_json(SETTINGS_PATH, _default_settings())
+    return _runtime_settings(data)
 
 
 def _write_settings(data: dict[str, Any]) -> None:

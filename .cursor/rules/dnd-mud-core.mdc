@@ -16,7 +16,7 @@ alwaysApply: false
 ui/  →  core/  →  database/ (YAML) + saves/ (JSON)
 ```
 
-- **UI** (`ui/menus.py`, `ui/input_handler.py`) — отображение и ввод; без бизнес-логики
+- **UI** (`ui/menus/`, `ui/input_handler.py`) — отображение и ввод; без бизнес-логики
 - **Core** (`core/`) — модели, механика, загрузчики; не зависит от UI
 - **Data** — YAML в `database/`, JSON в `database/core/` и `saves/`; core читает/пишет через свои модули
 
