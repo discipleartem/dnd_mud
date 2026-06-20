@@ -1,5 +1,6 @@
 .venv
 .idea
+.vscode
 dnd_mud.egg-info
 .clinerules
 .copilot/

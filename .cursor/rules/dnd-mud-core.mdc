@@ -27,7 +27,7 @@ UI must not read or write data files directly.
 | Format | Use in core | Paths |
 |--------|-------------|-------|
 | **YAML** | Статические справочники | `database/races/races.yaml`, `database/classes/classes.yaml`, `database/content/adventures.yaml`, `database/strings/*.yaml` |
-| **JSON** | Настройки и персонажи | `database/core/settings.json`, `saves/characters.json` |
+| **JSON** | Настройки и персонажи | `database/core/settings.json`, `saves/characters/*.json` |
 
 Use `yaml.safe_load` for YAML; `json.load` / `json.dump` for JSON.
 Always set `encoding="utf-8"` and handle `OSError` / parse errors explicitly.

@@ -1,5 +1,5 @@
 ---
-description: dnd_mud pytest — naming, integration style, full test implementation
+description: dnd_mud pytest — простые, необходимые тесты (KISS/YAGNI)
 globs: "tests/**"
 alwaysApply: false
 ---
@@ -7,6 +7,21 @@ alwaysApply: false
 # dnd_mud tests
 
 **Runner:** pytest (`make test` or `pytest -v`)
+
+> **Тесты — максимально простые и только необходимые:** один сценарий на изменение,
+> без лишних абстракций и без погони за покрытием.
+
+## Философия (KISS/YAGNI)
+
+| Делать | Не делать |
+|--------|-----------|
+| 1 тест = 1 поведение / регрессия | Тесты «на всякий случай» и тривиальные assert констант |
+| Минимум кода: `assert`, локальный импорт, `PROJECT_ROOT` в `sys.path` | Фабрики, базовые классы, `@pytest.mark.parametrize` на десятки кейсов без нужды |
+| Интеграционный тест реального модуля, если он проще моков | Тяжёлый mock там, где достаточно вызова `core.*` |
+| Тест только при изменении поведения или риске регрессии | Погоня за % coverage, дублирование unit + integration одного сценария |
+| Дополнять существующий файл (`test_character.py`, …) | Новый файл на 1–2 функции без причины |
+
+Эталон простого unit-теста: [`tests/test_difficulty.py`](tests/test_difficulty.py).
 
 ## Naming
 
@@ -25,12 +40,15 @@ Follow [`tests/test_integration_menus.py`](tests/test_integration_menus.py):
 - Add `PROJECT_ROOT` to `sys.path` when importing from project root
 - Test real modules: `core.localization`, `core.settings`, `main` imports
 
+## Чек-лист перед добавлением теста
+
+- Какую регрессию ловит этот тест?
+- Можно ли обойтись одним `assert`?
+- Нужен ли mock, или проще вызвать `core`/`ui` напрямую?
+- Не дублирует ли уже существующий тест?
+
 ## Agent responsibility
 
-Write tests **fully** when adding or changing behavior. Cover:
-
-- Localization key loading (`get_string`, `load_strings`)
-- Settings save/load
-- New game mechanics or menu flows
+Добавляй **минимально необходимые** тесты под изменённое поведение — не «полное покрытие» модуля.
 
 Run `make test` before considering the task complete.

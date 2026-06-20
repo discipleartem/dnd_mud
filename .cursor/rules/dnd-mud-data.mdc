@@ -1,6 +1,6 @@
 ---
 description: dnd_mud data — YAML как БД, JSON для сейвов и конфигов
-globs: "database/**,mods/**,adventures_scripts/**,saves/**,**/*.json"
+globs: "database/**,mods/**,adventures/**,saves/**,**/*.json"
 alwaysApply: false
 ---
 
@@ -25,12 +25,12 @@ alwaysApply: false
 | Классы | `database/classes/classes.yaml` | `core/character.py` |
 | Приключения (каталог) | `database/content/adventures.yaml` | `core/adventure.py` |
 | Настройки | `database/core/settings.json` | `core/settings.py` |
-| Персонажи | `saves/characters.json` | `core/character.py` |
+| Персонажи | `saves/characters/*.json` | `core/character.py` |
 | Локализация | `database/strings/{ru,en}.yaml` | `core/localization.py` |
 | Справочники Phase 2 | `database/_future/` | не загружаются |
-| Сценарии | `adventures_scripts/*.yaml` | `core/adventure.py` |
+| Сценарии | `adventures/*.yaml` | `core/adventure.py` |
 
-## YAML conventions (`database/`, `mods/`, `adventures_scripts/`)
+## YAML conventions (`database/`, `mods/`, `adventures/`)
 
 - Human-editable reference data; bilingual fields where needed: `name: { ru: "...", en: "..." }`
 - User-facing UI strings: `database/strings/{ru,en}.yaml` with matching keys
@@ -65,7 +65,15 @@ files:
 ```json
 {
   "schema_version": 1,
-  "characters": []
+  "save_slug": "hero",
+  "name": "Hero",
+  "race": "human",
+  "class": "fighter",
+  "level": 1,
+  "stats": {},
+  "current_hp": 12,
+  "experience": 0,
+  "difficulty": "normal"
 }
 ```
 
