@@ -19,10 +19,7 @@ alwaysApply: true
 
 ## Верификация
 
-Консольное приложение — **не web**. Правило `dnd-mud-verify.mdc` **приоритетнее** глобальных browser-правил:
-
-- `make test` + console smoke (`python main.py`)
-- Browser automation **не использовать**
+Console MUD — см. **`dnd-mud-verify.mdc`** (приоритетнее global browser-правил).
 
 ## Commands
 
