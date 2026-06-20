@@ -1,7 +1,7 @@
 # Agent rules — dnd_mud
 
 All agent rules live in [`.cursor/rules/`](.cursor/rules/).  
-Global rules: `~/.cursor/rules/` (see [`README.md`](~/.cursor/rules/README.md)).
+Global rules: `~/.cursor/rules/` (see [`00-global.mdc`](~/.cursor/rules/00-global.mdc)).
 
 ## Rule priority
 
