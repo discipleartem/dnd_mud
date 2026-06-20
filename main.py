@@ -5,6 +5,7 @@
 """
 
 import sys
+from importlib.metadata import version
 from typing import Any
 
 from colorama import Fore, Style, init
@@ -21,8 +22,7 @@ from ui.menus import (
     show_welcome_screen,
 )
 
-# Версия игры
-VERSION = "0.1.0"
+VERSION = version("dnd_mud")
 
 
 def _save_and_reload_settings(
