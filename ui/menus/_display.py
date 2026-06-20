@@ -6,6 +6,7 @@ from colorama import Fore, Style
 
 from core.localization import get_string
 from core.models import Character
+from core.stats import POINT_BUY_COSTS, STAT_NAMES
 from ui.menus import _deps
 from ui.menus._common import SEPARATOR, _ability_name, _stats_caption_line
 
@@ -87,7 +88,7 @@ def _format_character_stats_compact(
         return ""
 
     parts = []
-    for stat in _deps.STAT_NAMES:
+    for stat in STAT_NAMES:
         value = char.stats.get(stat)
         if value is None:
             continue
@@ -341,8 +342,8 @@ def _print_point_buy_cost_table(strings: dict[str, Any]) -> None:
     cost_hdr = get_string(strings, "character.stats_point_buy_price_cost")
     print(f"{Fore.GREEN}{title}{Style.RESET_ALL}")
     print(f"  {Fore.YELLOW}{value_hdr:>5}  {cost_hdr:>5}{Style.RESET_ALL}")
-    for value in sorted(_deps.POINT_BUY_COSTS):
-        cost = _deps.POINT_BUY_COSTS[value]
+    for value in sorted(POINT_BUY_COSTS):
+        cost = POINT_BUY_COSTS[value]
         print(
             f"  {Fore.CYAN}{value:>5}{Style.RESET_ALL}  "
             f"{Fore.CYAN}{cost:>5}{Style.RESET_ALL}"

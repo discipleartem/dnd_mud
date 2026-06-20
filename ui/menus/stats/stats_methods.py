@@ -5,6 +5,14 @@ from typing import Any
 from colorama import Fore, Style
 
 from core.localization import get_string
+from core.stats import (
+    POINT_BUY_BUDGET,
+    POINT_BUY_COSTS,
+    STANDARD_ARRAY,
+    STANDARD_ARRAY_MAX,
+    STANDARD_ARRAY_MIN,
+    STAT_NAMES,
+)
 from ui.menus import _common, _deps
 from ui.menus._common import _ability_name, _choice_prompt
 from ui.menus._display import (
@@ -31,16 +39,16 @@ def _select_stats_standard_array(
     while True:
         selected = _assign_stats_from_pool(
             strings,
-            list(_deps.STANDARD_ARRAY),
-            value_min=_deps.STANDARD_ARRAY_MIN,
-            value_max=_deps.STANDARD_ARRAY_MAX,
+            list(STANDARD_ARRAY),
+            value_min=STANDARD_ARRAY_MIN,
+            value_max=STANDARD_ARRAY_MAX,
             race_id=race_id,
             subrace_id=subrace_id,
         )
         if selected is None:
             return None
 
-        selected_values = [selected[stat] for stat in _deps.STAT_NAMES]
+        selected_values = [selected[stat] for stat in STAT_NAMES]
         stats = _deps.generate_stats_standard_array(
             selected_values, race_id, subrace_id
         )
@@ -63,20 +71,20 @@ def _select_stats_point_buy(
 ) -> dict[str, int] | None:
     """Система покупки очков (Point-buy)."""
     while True:
-        stats = {stat: 8 for stat in _deps.STAT_NAMES}
+        stats = {stat: 8 for stat in STAT_NAMES}
 
         while True:
             _print_stats_generation_header(strings, race_id, subrace_id)
             _print_point_buy_cost_table(strings)
 
-            stat_values = [stats[stat] for stat in _deps.STAT_NAMES]
+            stat_values = [stats[stat] for stat in STAT_NAMES]
             points_available = _deps.point_buy_points_remaining(stat_values)
 
             points_msg = get_string(
                 strings,
                 "character.stats_points_available",
                 available=points_available,
-                total=_deps.POINT_BUY_BUDGET,
+                total=POINT_BUY_BUDGET,
             )
             print(f"{Fore.CYAN}{points_msg}{Style.RESET_ALL}")
             print()
@@ -86,9 +94,9 @@ def _select_stats_point_buy(
                 f"{Style.RESET_ALL}"
             )
 
-            for idx, stat in enumerate(_deps.STAT_NAMES, 1):
+            for idx, stat in enumerate(STAT_NAMES, 1):
                 stat_name = _ability_name(strings, stat)
-                cost = _deps.POINT_BUY_COSTS[stats[stat]]
+                cost = POINT_BUY_COSTS[stats[stat]]
                 cost_msg = get_string(
                     strings, "character.stats_cost_points", cost=cost
                 )
@@ -148,7 +156,7 @@ def _select_stats_point_buy(
                 _common._press_enter(strings)
                 continue
 
-            stat_to_modify = _deps.STAT_NAMES[choice - 1]
+            stat_to_modify = STAT_NAMES[choice - 1]
             stat_name = _ability_name(strings, stat_to_modify)
             _prompt_point_buy_stat_value(
                 strings, stat_name, stats, stat_to_modify
@@ -225,7 +233,7 @@ def _select_stats_random_normal(
             if selected is None:
                 break
 
-            selected_values = [selected[stat] for stat in _deps.STAT_NAMES]
+            selected_values = [selected[stat] for stat in STAT_NAMES]
             stats = _deps.generate_stats_random(
                 selected_values, race_id, subrace_id
             )
@@ -248,7 +256,7 @@ def _select_stats_random_hardcore(
     subrace_id: str | None,
 ) -> dict[str, int]:
     """Случайный метод для HardCore режима."""
-    base_values = [_deps.roll_ability_score() for _ in _deps.STAT_NAMES]
+    base_values = [_deps.roll_ability_score() for _ in STAT_NAMES]
 
     while True:
         _print_stats_generation_header(strings, race_id, subrace_id)
@@ -264,7 +272,7 @@ def _select_stats_random_hardcore(
         )
         print()
 
-        for stat, roll in zip(_deps.STAT_NAMES, base_values, strict=True):
+        for stat, roll in zip(STAT_NAMES, base_values, strict=True):
             stat_name = _ability_name(strings, stat)
             print(f"  {stat_name}: {Fore.YELLOW}{roll}{Style.RESET_ALL}")
 
@@ -291,4 +299,4 @@ def _select_stats_random_hardcore(
             return final_stats
         if result == "back":
             continue
-        base_values = [_deps.roll_ability_score() for _ in _deps.STAT_NAMES]
+        base_values = [_deps.roll_ability_score() for _ in STAT_NAMES]
