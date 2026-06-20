@@ -94,6 +94,7 @@ dnd_mud/
 │   ├── character.py                 # CRUD персонажей, генерация характеристик
 │   ├── dice.py                      # Броски кубиков
 │   ├── adventure.py                 # Загрузка приключений из YAML
+│   ├── difficulty.py                # Фильтр приключений по режиму сложности
 │   ├── localization.py              # Локализация (YAML-словари)
 │   └── settings.py                  # Настройки пользователя (JSON)
 │
@@ -110,19 +111,27 @@ dnd_mud/
 │   ├── _future/                     # Справочники Phase 2 (не загружаются)
 │   └── strings/{ru,en}.yaml
 ├── saves/                           # Пользовательские данные (gitignored)
-│   └── characters.json
+│   └── characters/                  # Персонажи (по одному JSON на персонажа)
 │
-├── adventures_scripts/              # Сценарии приключений (YAML, заглушки)
+├── adventures/              # Сценарии приключений (YAML, заглушки)
 │   ├── tutorial.yaml                # Обучение
 │   └── lost_mine.yaml               # «Затерянные рудники Фанделвера»
 │
 ├── mods/                            # Примеры модов
 │   └── _examples/example_mod.yaml
 │
-├── tests/                           # Тесты (12)
+├── tests/                           # Тесты (54 в 11 файлах)
+│   ├── test_adventure.py
 │   ├── test_character.py
-│   ├── test_settings.py
-│   └── test_integration_menus.py
+│   ├── test_difficulty.py
+│   ├── test_dice.py
+│   ├── test_input_handler.py
+│   ├── test_localization.py
+│   ├── test_main.py
+│   ├── test_menus_character.py
+│   ├── test_menus_stats.py
+│   ├── test_models.py
+│   └── test_settings.py
 │
 └── docs/                            # Документация
     ├── MUD_PRD.md                   # Product Requirements Document
@@ -138,10 +147,10 @@ dnd_mud/
 
 | № | Пункт | Статус |
 |---|-------|--------|
-| 1 | Новая игра | Реализовано (flow без полного engine) |
+| 1 | Новая игра | Реализовано (персонаж → приключение; без полного engine) |
 | 2 | Загрузить игру | Заглушка |
 | 3 | Создать персонажа | Реализовано |
-| 4 | Настройки | Реализовано |
+| 4 | Настройки | Заглушка (только «Назад»; язык — в Languages) |
 | 5 | Languages | Реализовано |
 | 0 | Выход | Реализовано |
 
@@ -152,10 +161,10 @@ dnd_mud/
 ### Реализовано
 - [x] Приветственный экран (ASCII-art + colorama)
 - [x] Главное меню (5 пунктов + Выход)
-- [x] Экран настроек и Languages
+- [x] Экран настроек (заглушка) и Languages
 - [x] Flow «Создать персонажа» с генерацией характеристик (standard array, point-buy, 4d6, HardCore)
 - [x] Подрасы и variant human
-- [x] Модель персонажа (`Character` dataclass, JSON в `saves/characters.json`)
+- [x] Модель персонажа (`Character` dataclass, JSON в `saves/characters/*.json`)
 - [x] Броски кубиков, локализация, каталог приключений
 - [x] Валидация ввода
 
@@ -184,11 +193,11 @@ refactor: вынесена логика валидации ввода в input_h
 chore: обновлены зависимости в pyproject.toml
 ```
 
-**Правила Git:**
-- Запрещены прямые коммиты в `main`
-- Рабочие ветки: `feature/*`, `fix/*`, `refactor/*`, `chore/*`
-- Каждый коммит атомарен и работоспособен
-- Перед PR — `git rebase main`
+**Правила Git** (подробнее — [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md)):
+- Две базовые ветки: `main` (protected) и `dev` (интеграционная, не отстаёт от `main`)
+- Задача — ветка от `dev` с именем по сути; сложные задачи — commit на подзадачу
+- PR: task branch → `dev` → `main`; merge — squash (один коммит в целевой ветке)
+- Прямые коммиты в `main` и `dev` запрещены
 
 ### Линтинг и форматирование
 

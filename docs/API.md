@@ -21,6 +21,7 @@ class Character:
     experience: int = 0
     difficulty: str = "normal"
     subrace: str | None = None
+    save_slug: str | None = None
 ```
 
 **Методы:**
@@ -38,13 +39,15 @@ class Adventure:
     difficulty: str = "normal"  # content tier в YAML, НЕ режим игрока — см. ниже
     author: str = ""
     version: str = "1.0"
+    allowed_game_difficulties: list[str] | None = None
+    hardcore_only: bool = False
 ```
 
 **Методы:**
 - `get_name(language: str = "ru") -> str` — локализованное название
 - `from_dict(data: dict[str, Any]) -> Adventure` — десериализация
 
-> Поле `Adventure.difficulty` загружается из `adventures.yaml` как **уровень контента** (`easy`, `normal`). Это не режим сложности игры (`Character.difficulty`). Целевое расширение YAML: `allowed_game_difficulties`, `hardcore_only` — см. [MUD_PRD.md §3.2.1](MUD_PRD.md#321-режимы-сложности-игры).
+> Поле `Adventure.difficulty` — **уровень контента** (`easy`, `normal`). Это не режим сложности игры (`Character.difficulty`). Поля `allowed_game_difficulties` и `hardcore_only` загружаются из YAML и проверяются через `adventure_allows_difficulty()`; в текущем каталоге `adventures.yaml` они не заданы.
 
 ---
 
@@ -55,7 +58,7 @@ class Adventure:
 ```python
 STANDARD_ARRAY = [15, 14, 13, 12, 10, 8]
 STAT_NAMES = ["strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma"]
-CHARACTERS_FILE = Path("saves/characters.json")
+CHARACTERS_DIR = Path("saves/characters")
 RACES_FILE = Path("database/races/races.yaml")
 CLASSES_FILE = Path("database/classes/classes.yaml")
 ```
@@ -77,6 +80,15 @@ load_races() -> list[dict[str, Any]]
 load_race_full(race_id: str) -> dict[str, Any]
 load_classes() -> list[dict[str, Any]]
 get_race_bonuses(race_id: str, subrace_id: str | None = None) -> dict[str, int]
+apply_bonuses_to_stats(stats: dict[str, int], bonuses: dict[str, int]) -> dict[str, int]
+get_choice_ability_bonus_mechanics(race_id: str, subrace_id: str | None = None) -> dict[str, Any] | None
+has_choice_ability_bonuses(race_id: str, subrace_id: str | None = None) -> bool
+build_bonuses_from_choices(chosen_stats: list[str], value: int = 1) -> dict[str, int]
+get_effective_race_bonuses(
+    race_id: str,
+    subrace_id: str | None = None,
+    choice_bonuses: dict[str, int] | None = None,
+) -> dict[str, int]
 
 POINT_BUY_BUDGET = 27
 POINT_BUY_COSTS: dict[int, int]
@@ -86,7 +98,7 @@ point_buy_total_cost(values: list[int]) -> int
 can_assign_point_buy_value(current: dict[str, int], stat: str, new_value: int) -> bool
 ```
 
-`save_character` создаёт `Character` и сохраняет в `saves/characters.json`.
+`save_character` создаёт `Character` и сохраняет в `saves/characters/{save_slug}.json`.
 
 ### Генерация характеристик
 
@@ -118,7 +130,6 @@ POINT_BUY_COSTS = {8: 0, 9: 1, 10: 2, 11: 3, 12: 4, 13: 5, 14: 7, 15: 9}
 generate_stats_standard_array(selected_values: list[int], race_id: str, subrace_id: str | None = None) -> dict[str, int]
 generate_stats_point_buy(point_buy_values: list[int], race_id: str, subrace_id: str | None = None) -> dict[str, int]
 generate_stats_random(random_values: list[int], race_id: str, subrace_id: str | None = None) -> dict[str, int]
-generate_stats_hardcore(race_id: str, subrace_id: str | None = None) -> dict[str, int]
 ```
 
 Все функции возвращают словарь `{stat_name: value}` с **уже применёнными** расовыми бонусами.
@@ -142,33 +153,32 @@ show_stats_generation_flow(
 
 UX-детали (расовые бонусы до/после, экран подтверждения): [MUD_PRD.md §3.4.5](MUD_PRD.md#345-генерация-характеристик-реализовано).
 
-### Формат saves/characters.json
+### Формат saves/characters/{save_slug}.json
 
 ```json
 {
   "schema_version": 1,
-  "characters": [
-    {
-      "name": "Арагорн",
-      "race": "human",
-      "subrace": "variant_human",
-      "class": "fighter",
-      "level": 1,
-      "stats": {
-        "strength": 16,
-        "dexterity": 14,
-        "constitution": 13,
-        "intelligence": 10,
-        "wisdom": 12,
-        "charisma": 8
-      },
-      "current_hp": 13,
-      "experience": 0,
-      "difficulty": "normal"
-    }
-  ]
+  "save_slug": "aragorn",
+  "name": "Арагорн",
+  "race": "human",
+  "subrace": "variant_human",
+  "class": "fighter",
+  "level": 1,
+  "stats": {
+    "strength": 16,
+    "dexterity": 14,
+    "constitution": 13,
+    "intelligence": 10,
+    "wisdom": 12,
+    "charisma": 8
+  },
+  "current_hp": 13,
+  "experience": 0,
+  "difficulty": "normal"
 }
 ```
+
+Имя файла — транслитерированный slug имени (`aragorn.json`); при коллизии — `hero_2.json`, `hero_3.json` и т.д.
 
 ---
 
@@ -191,7 +201,7 @@ get_string(strings: dict[str, Any], key: str, **kwargs: Any) -> str
 ```python
 SETTINGS_PATH = Path("database/core/settings.json")
 load_settings() -> dict[str, Any]
-save_settings(language: str, difficulty: str = "normal") -> None
+save_settings(language: str) -> None
 ```
 
 ### Формат database/core/settings.json
@@ -199,16 +209,14 @@ save_settings(language: str, difficulty: str = "normal") -> None
 ```json
 {
   "schema_version": 1,
-  "language": "ru",
-  "difficulty": "normal"
+  "language": "ru"
 }
 ```
 
 **Семантика полей:**
 - `language` — язык интерфейса (`ru` / `en`)
-- `difficulty` — сложность по умолчанию для flow (`normal` / `hardcore`)
 
-При загрузке старого JSON с полем `hardcore: true` выполняется миграция в `difficulty: "hardcore"`.
+Режим сложности игры хранится в `Character.difficulty`, не в settings.
 
 ---
 
@@ -229,8 +237,7 @@ save_settings(language: str, difficulty: str = "normal") -> None
 | Место | Поле / функция | Назначение |
 |-------|----------------|------------|
 | `Character` | `difficulty: str` | Режим персонажа на всю сессию |
-| `settings.json` | `difficulty` | Предвыбор в меню (`select_difficulty`) |
-| `ui/menus.py` | `select_difficulty()` | Экран выбора в «Новая игра» / «Создать персонажа» |
+| `ui/menus.py` | `select_difficulty()` | Экран выбора в «Создать персонажа» |
 
 **Влияние на генерацию характеристик** (`show_stats_generation_flow`):
 
@@ -241,11 +248,19 @@ save_settings(language: str, difficulty: str = "normal") -> None
 
 **Запланированные hook'и (не реализованы)**
 
-- Фильтрация приключений по `allowed_game_difficulties` / `hardcore_only` в `adventures.yaml`
-- Проверка `requires_game_difficulty` в метаданных мода (`mod_loader`)
+- Ограничения в `adventures.yaml` (`allowed_game_difficulties`, `hardcore_only`) — парсинг и UI-фильтр есть, в каталоге поля не заданы
+- `mod_loader` и проверка `requires_game_difficulty` в метаданных мода
 - Параметризация правил в `game_engine` по режиму (HardCore = полная механика D&D 5e)
 
 ---
+
+## core.difficulty — Режим сложности и приключения
+
+```python
+adventure_allows_difficulty(adventure: Adventure, game_difficulty: str) -> bool
+```
+
+Проверяет `hardcore_only` и `allowed_game_difficulties` модели `Adventure`. Используется в `_select_adventure()` (`ui/menus.py`).
 
 ## core.adventure — Приключения
 
@@ -295,10 +310,10 @@ main() -> int
 ```python
 show_welcome_screen(version: str, strings: dict) -> None
 show_main_menu(strings: dict) -> int
-select_difficulty(strings: dict, settings: dict) -> str | None
+select_difficulty(strings: dict) -> str | None
 show_new_game_flow(strings: dict, settings: dict) -> None
 show_load_game_flow(strings: dict) -> None
-show_create_character_flow(strings: dict, settings: dict, difficulty: str | None = None) -> Character | None
+show_create_character_flow(strings: dict) -> Character | None
 show_stats_generation_flow(strings: dict, race_id: str, subrace_id: str | None, difficulty: str) -> dict[str, int] | None
 show_settings(strings: dict, settings: dict) -> dict
 show_languages_menu(strings: dict, settings: dict) -> dict

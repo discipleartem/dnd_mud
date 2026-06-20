@@ -25,7 +25,7 @@ Reference: `~/.cursor/docs/python-versions.md`
 | `dnd-mud-python-simple.mdc` | `core/**`, `ui/**`, `main.py`, `tests/**` | Simple Python without premature abstractions |
 | `dnd-mud-core.mdc` | `core/**`, `ui/**`, `main.py` | Layers, localization, mechanics |
 | `dnd-mud-data.mdc` | `database/**`, `mods/**`, `saves/**`, `**/*.json` | YAML (справочники), JSON (сейвы/конфиги) |
-| `dnd-mud-tests.mdc` | `tests/**` | pytest conventions |
+| `dnd-mud-tests.mdc` | `tests/**` | pytest — простые, необходимые тесты |
 | `dnd-mud-verify.mdc` | always | `make test`, console smoke (no browser) |
 
 ## Principle
@@ -47,7 +47,7 @@ Reference: `~/.cursor/docs/python-versions.md`
 
 - **Python 3.12** — основной язык проекта
 - **YAML** — справочники и игровой контент в `database/` (расы, классы, строки, приключения)
-- **JSON** — mutable state: `database/core/settings.json`, `saves/characters.json`
+- **JSON** — mutable state: `database/core/settings.json`, `saves/characters/*.json`
 
 Структура `database/`:
 
@@ -56,7 +56,7 @@ database/
 ├── classes/classes.yaml
 ├── content/adventures.yaml
 ├── core/settings.json.example
-├── _future/                    # Phase 2 (не загружается runtime)
+├── _future/                    # Phase 2: core/, equipment/, progression/, content/
 ├── races/races.yaml
 └── strings/{en,ru}.yaml
 ```

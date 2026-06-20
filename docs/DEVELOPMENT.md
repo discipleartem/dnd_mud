@@ -56,6 +56,7 @@ dnd_mud/
 │   ├── models.py            # Dataclass: Character, Adventure
 │   ├── character.py         # CRUD персонажей, генерация характеристик
 │   ├── adventure.py         # Загрузка приключений из YAML
+│   ├── difficulty.py        # Фильтр приключений по режиму сложности
 │   ├── dice.py              # Броски кубиков
 │   ├── localization.py      # Локализация (YAML-словари)
 │   └── settings.py          # Настройки пользователя (JSON)
@@ -75,15 +76,23 @@ dnd_mud/
 │       ├── ru.yaml
 │       └── en.yaml
 ├── saves/                   # Пользовательские данные (gitignored)
-│   └── characters.json      # Сохранённые персонажи
-├── adventures_scripts/      # Сценарии приключений (заглушки)
+│   └── characters/          # Сохранённые персонажи (по одному JSON на персонажа)
+├── adventures/      # Сценарии приключений (заглушки)
 │   ├── tutorial.yaml
 │   └── lost_mine.yaml
 ├── mods/_examples/example_mod.yaml
 ├── tests/
+│   ├── test_adventure.py
 │   ├── test_character.py
-│   ├── test_settings.py
-│   └── test_integration_menus.py  # 12 тестов всего
+│   ├── test_difficulty.py
+│   ├── test_dice.py
+│   ├── test_input_handler.py
+│   ├── test_localization.py
+│   ├── test_main.py
+│   ├── test_menus_character.py
+│   ├── test_menus_stats.py
+│   ├── test_models.py
+│   └── test_settings.py     # 54 теста всего
 └── docs/                    # Документация
     ├── MUD_PRD.md
     ├── ARCHITECTURE.md
@@ -102,46 +111,82 @@ make check   # lint + black --check + mypy
 
 Проект использует `pytest`. Тесты находятся в `tests/`.
 
+### Философия
+
+> **Тесты — максимально простые и только необходимые:** один сценарий на изменение,
+> без лишних абстракций и без погони за покрытием.
+
+- Тесты — инструмент регрессии, не цель сама по себе
+- При фиче или фиксе — минимальный diff в `tests/`: столько assert, сколько нужно для изменённого поведения
+- Эталоны стиля: `tests/test_difficulty.py` (короткий unit), `tests/test_menus_character.py` (интеграция UI без тяжёлых моков)
+- Не обязательно закрывать все пробелы из backlog Pre-Alpha — тест добавляется, когда есть реальное поведение, баг или риск регрессии
+
+Подробные правила для агентов: `.cursor/rules/dnd-mud-tests.mdc`.
+
 ```python
-# tests/test_integration_menus.py
-"""Интеграционные тесты UI; unit-тесты — test_character.py, test_settings.py."""
+# tests/test_menus_character.py
+"""Тесты UI: выбор персонажа, подрасы, new game, приключения."""
 ```
 
-Покрытие:
-- `test_localization` — ключи en/ru, имена характеристик
-- `test_settings` — save/load JSON, `schema_version`
-- `test_main_imports` — импорт `main`, VERSION
-- `test_new_game_back_returns_one_step` — навигация «Назад»
-- `test_base_race_without_subraces_has_back_option` — расы без подрас
-- `test_human_has_base_and_variant_choices` — human / variant_human
-- `test_variant_human_does_not_inherit_base_bonuses` — в `test_character.py`
-
-См. также `tests/test_character.py` (save/load Character, stats) и `tests/test_settings.py`.
+Покрытие (54 теста в 11 файлах):
+- `test_adventure.py` — загрузка приключений, поля `hardcore_only`
+- `test_character.py` — save/load, генерация stats, variant human, slug
+- `test_difficulty.py` — `adventure_allows_difficulty()`
+- `test_dice.py` — `roll`, `roll_ability_score`, `ability_modifier`
+- `test_input_handler.py` — валидация int/str
+- `test_localization.py` — ключи en/ru, имена характеристик
+- `test_main.py` — импорт `main`, VERSION
+- `test_menus_character.py` — подрасы, new game, фильтр приключений
+- `test_menus_stats.py` — генерация характеристик (standard array, point-buy, 4d6, HardCore)
+- `test_models.py` — сериализация Character/Adventure
+- `test_settings.py` — save/load JSON, `schema_version`
 
 Запуск конкретного тестового файла:
 
 ```bash
-pytest tests/test_integration_menus.py -v
+pytest tests/test_menus_character.py -v
 ```
 
 ## Git Workflow
 
+### Ветки
+
+- `main` — protected, стабильная, готова к релизу
+- `dev` — интеграционная; не отстаёт от `main` (после merge `dev` → `main` синхронизировать `dev` с `main`)
+
 ### Правила
 
-1. **Ветки:** `feature/*`, `fix/*`, `refactor/*`, `chore/*`
-2. **Коммиты:** Conventional Commits (`feat:`, `fix:`, `refactor:`, `chore:`)
-3. **Коммиты в `main` запрещены** — всегда через PR
-4. **Никакого squash** без явного указания
-5. **Каждый коммит должен проходить тесты**
+1. **Старт задачи:** обновить `dev`, создать ветку от `dev` с именем по сути задачи (kebab-case)
+2. **Коммиты:** Conventional Commits (`feat:`, `fix:`, `refactor:`, `chore:`); атомарные; каждый проходит тесты
+3. **Сложная задача:** разбить на подзадачи — **один commit на подзадачу**
+4. **Коммиты в `main` и `dev` запрещены** — только через PR
+5. **Merge в `dev` и `main`:** squash merge (один коммит в истории целевой ветки)
+6. **Перед PR:** rebase task-ветки на актуальный `dev`
+
+### Цикл PR
+
+1. Task branch → `dev` (squash merge через GitHub)
+2. `dev` → `main` (squash merge через GitHub)
+3. Sync `dev` с `main`
 
 ### Пример
 
 ```bash
+git checkout dev && git pull
 git checkout -b feat/add-combat-system
-# ... работа ...
-git commit -m "feat: add basic combat system with dice rolls"
-git push origin feat/add-combat-system
-# PR в main или dev
+
+# ... работа, коммиты по подзадачам ...
+git commit -m "feat: add dice roll helper"
+git commit -m "feat: add basic combat loop"
+
+git push -u origin feat/add-combat-system
+gh pr create --base dev --title "feat: add basic combat system"
+
+# После squash merge в dev и готовности релиза:
+gh pr create --base main --head dev --title "release: integrate dev into main"
+
+# После squash merge dev → main:
+git checkout dev && git merge main && git push
 ```
 
 ## Создание мода
@@ -226,25 +271,23 @@ races:
 ### Реализовано (core)
 - ✅ `core/models.py` — типизированные dataclass: Character, Adventure
 - ✅ `core/character.py` — создание, сохранение/загрузка персонажей
-- ✅ `core/dice.py` — все броски кубиков (d20, ndm, криты, adv/disadv)
+- ✅ `core/dice.py` — `roll`, `roll_ability_score`, `ability_modifier`
 - ✅ `core/localization.py` — YAML-словари с fallback на английский
-- ✅ `core/settings.py` — настройки пользователя (язык, hardcore)
-- ✅ `core/mod_loader.py` — сканирование и переключение модов
+- ✅ `core/settings.py` — настройки пользователя (язык)
 - ✅ `core/adventure.py` — загрузка приключений из YAML
-- ✅ `core/game_engine.py` — игровой цикл, ability checks (типизирован)
+- ✅ `core/difficulty.py` — `adventure_allows_difficulty()`; UI-фильтр в `_select_adventure()`
 
 ### Реализовано (ui)
-- ✅ `ui/input_handler.py` — валидация ввода (int, str, выбор из списка)
+- ✅ `ui/input_handler.py` — валидация ввода (int, str)
 - ✅ `ui/menus.py` — главное меню (5 пунктов + Выход), настройки, languages
-- ✅ Flow «Новая игра» (сложность → персонаж → приключение)
-- ✅ Flow «Создать персонажа» (имя → раса → подраса → генерация характеристик → класс)
+- ✅ Flow «Новая игра» (персонаж → приключение с фильтром по режиму)
+- ✅ Flow «Создать персонажа» (сложность → имя → раса → подраса → генерация характеристик → класс)
 - ✅ Flow «Загрузить игру» — заглушка (`errors.load_not_implemented`)
 
 ### Тестирование
-- ✅ 9 интеграционных тестов (см. выше)
-- ✅ Unit-тест `generate_stats_random` (регрессия API)
-- ❌ Нет UI-тестов экрана генерации характеристик
-- ❌ Нет unit-тестов для dice.py, mod_loader.py, adventure.py
+- ✅ 54 теста в 11 файлах (см. выше)
+- ⏳ Backlog (добавляются по необходимости, см. [философию](#философия) выше):
+  - E2E smoke через `python main.py` (ручная проверка меню)
 
 ### Настройки: difficulty
 
@@ -256,10 +299,8 @@ races:
 | `hardcore` | HardCore | Реализовано в UI |
 | `easy` | Лёгкая | Зарезервировано, не в UI |
 
-- `difficulty` выбирается в flow «Новая игра» / «Создать персонажа» (`select_difficulty`); сохраняется в `Character.difficulty`
-- `settings.json` → `difficulty` — предвыбор в меню; меню «Настройки» **отображает**, но не переключает
+- `difficulty` выбирается в flow «Создать персонажа» (`select_difficulty`); сохраняется в `Character.difficulty` и используется в «Новая игра»
 - Поле `difficulty` в `adventures.yaml` — **уровень контента**, не режим игрока (не путать с `Character.difficulty`)
-- Миграция legacy `hardcore: true` → `difficulty: "hardcore"` (`core/settings.py`)
 
 ### Генерация характеристик
 
@@ -268,18 +309,18 @@ API: `core/character.py`, UI: `show_stats_generation_flow` в `ui/menus.py`.
 
 ### База данных
 - ✅ Справочники: `races/races.yaml`, `classes/classes.yaml`, `content/adventures.yaml`
-- ✅ JSON: `database/core/settings.json`, `saves/characters.json` (с `schema_version: 1`)
+- ✅ JSON: `database/core/settings.json`, `saves/characters/*.json` (с `schema_version: 1`)
 - ✅ Локализация: `strings/ru.yaml`, `strings/en.yaml`
-- ⏳ Заготовки в `core/`, `equipment/`, `progression/` — заполнены, но не используются в коде
+- ⏳ Справочники Phase 2 в `database/_future/` — не загружаются runtime
 
 ### Не реализовано
 - ❌ Режим сложности «Лёгкая» (`easy`) в UI
-- ❌ Фильтрация приключений по режиму HardCore (`allowed_game_difficulties` в YAML)
+- ❌ Ограничения приключений в `adventures.yaml` (`allowed_game_difficulties`, `hardcore_only`); core/UI готовы
 - ❌ Gating модов по режиму (`requires_game_difficulty` в метаданных мода)
 - ❌ Параметризация game_engine по режиму сложности
 - ❌ Полноценный цикл приключений в game_engine.py
 - ❌ Боевая система
 - ❌ Сохранение/загрузка состояния игры (flow «Загрузить игру»)
-- ❌ Сценарии приключений (только заглушки в `adventures_scripts/`)
+- ❌ Сценарии приключений (только заглушки в `adventures/`)
 - ❌ Отдельные пункты меню «Модификации» / «Приключения» (приключения — внутри «Новая игра»)
 - ❌ Обработка модов во время выполнения
