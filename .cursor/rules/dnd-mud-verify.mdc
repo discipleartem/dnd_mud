@@ -14,6 +14,8 @@ Verification: `make test` + console smoke only.
 ## Before finishing
 
 1. **Git**
+   - Git-старт: см. `01-operations.mdc` (pull `main` + `dev`, проверка что `dev` не отстаёт от `main`)
+   - После задачи: `git push -u origin HEAD` (обязательно)
    - Workflow/sync: `~/.cursor/rules/01-operations.mdc`
    - `git branch --show-current` — не `main` / `dev`
    - `git status` — нет незакоммиченных изменений (кроме `.coverage`, `saves/`)

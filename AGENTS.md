@@ -5,10 +5,9 @@ Global rules: `~/.cursor/rules/` (see [`00-global.mdc`](~/.cursor/rules/00-globa
 
 ## Rule priority
 
-1. Project `alwaysApply`: `00-project`, `dnd-mud-git`, `dnd-mud-verify`
-2. Project globs: `dnd-mud-*` (simple Python overrides global architecture for this MUD)
-3. Global rules: `~/.cursor/rules/`
-4. User Rules: commit/PR **protocol** only — workflow in `01-operations.mdc`
+1. **User Rules** (Cursor Settings)
+2. Project `alwaysApply` + globs (this repo)
+3. Global `~/.cursor/rules/`
 
 Console MUD: `dnd-mud-verify.mdc` forbids browser tools (overrides global `browser-automation.mdc`).
 
@@ -19,7 +18,7 @@ Console MUD: `dnd-mud-verify.mdc` forbids browser tools (overrides global `brows
 | File | Scope | Content |
 |------|-------|---------|
 | `00-global.mdc` | always | META, KISS/DRY/YAGNI, language, Python mode, index |
-| `01-operations.mdc` | always | `.venv`, git workflow (dev/main, автокоммит, push/PR по запросу), secrets |
+| `01-operations.mdc` | always | `.venv`, git (pull main+dev, sync, автокоммит, push task-ветки, PR по запросу), secrets |
 | `python-standards.mdc` | `**/*.py` | Python 3.12+, types, PEP 8, tooling |
 | `python-architecture.mdc` | `**/*.py` | SOLID, design patterns |
 | `browser-automation.mdc` | web globs | Browser DevTools MCP (not used in dnd_mud) |

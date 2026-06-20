@@ -5,7 +5,7 @@ alwaysApply: true
 
 # dnd_mud — Git (extends global)
 
-> Workflow, sync, commits, push/PR — [`01-operations.mdc`](~/.cursor/rules/01-operations.mdc).
+> Workflow, sync, commits, push task-ветки после задачи, PR по запросу — [`01-operations.mdc`](~/.cursor/rules/01-operations.mdc).
 > Финиш-чеклист — [`dnd-mud-verify.mdc`](dnd-mud-verify.mdc).
 
 ## Когда обязательно
