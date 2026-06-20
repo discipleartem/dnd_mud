@@ -7,7 +7,7 @@ alwaysApply: true
 
 **Stack:** Python **3.12**, console MUD, Colorama, file-based storage, pytest.
 
-Стиль: `dnd-mud-python-simple.mdc`. Данные: `dnd-mud-data.mdc` (единственный источник путей). Verify: `dnd-mud-verify.mdc`.
+Стиль: `dnd-mud-python-simple.mdc`. Данные: `dnd-mud-data.mdc`.
 
 ## Commands
 
@@ -20,7 +20,11 @@ python main.py  # smoke: пройти затронутое меню
 
 ## Docs
 
-- [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) · [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md) · [docs/MUD_PRD.md](docs/MUD_PRD.md)
+- [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)
+- [docs/API.md](docs/API.md)
+- [docs/CHANGELOG.md](docs/CHANGELOG.md)
+- [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md)
+- [docs/MUD_PRD.md](docs/MUD_PRD.md)
 
 ## Local rules (index)
 
@@ -31,5 +35,3 @@ python main.py  # smoke: пройти затронутое меню
 | `dnd-mud-core.mdc` | `core/**`, `ui/**`, `main.py` | слои, локализация, механика |
 | `dnd-mud-data.mdc` | `database/**`, `mods/**`, `**/*.json` | YAML/JSON |
 | `dnd-mud-tests.mdc` | `tests/**` | pytest |
-
-Global + AGENTS: `~/.cursor/rules/00-global.mdc`, [`AGENTS.md`](../AGENTS.md).

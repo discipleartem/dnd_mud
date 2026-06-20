@@ -5,24 +5,17 @@ alwaysApply: true
 
 # dnd_mud verification
 
-Console MUD — browser/IronBee tools **forbidden** (overrides global `browser-automation.mdc`).
-Verification: `make test` + console smoke only.
+Console MUD — browser forbidden. Verify: `make test` + console smoke.
 
 ## Git scope
 
-Workflow, sync, commits, push, PR — [`01-operations.mdc`](~/.cursor/rules/01-operations.mdc).
+См. [`01-operations.mdc`](~/.cursor/rules/01-operations.mdc). Не коммитить: `.coverage`, `saves/`.
 
-**Обязательно** commit/push для задач с изменением кода или данных (не docs-only / comments-only).
-
-**Не коммитить:** `.coverage`, `saves/` (персонажи и runtime state).
+Обязательно commit/push — задачи с code/data (не docs-only).
 
 ## Before finishing
 
-1. **Git** — см. `01-operations.mdc` (Git-старт, sync); `git push -u origin HEAD` после задачи; не `main`/`dev`; clean working tree (кроме `.coverage`, `saves/`)
-2. **`make test`** — after any code or data change
-3. **`make check`** — when changing types, style, or public APIs
-4. **Console smoke** — `python main.py`, затронутое меню
+1. **Git** — `01-operations.mdc` (старт/sync/push); task-ветка; clean tree
+2. **Verify** — `make test` / `make check` / `python main.py` — см. [`00-project.mdc`](00-project.mdc) §Commands
 
-Implement first, verify once at the end. Skip runtime verify for docs-only changes.
-
-Do not use browser DevTools / IronBee. Do not treat reading code alone as sufficient verification.
+Implement once at end; skip runtime for docs-only.

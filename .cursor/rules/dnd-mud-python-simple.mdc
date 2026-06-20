@@ -6,12 +6,8 @@ alwaysApply: false
 
 # dnd_mud — простой Python
 
-> Прямолинейный, читаемый код. Сложность — только по доказанной необходимости.
-
-**Приоритет:** простое решение → DRY/YAGNI → абстракции. Глобальный `python-architecture.mdc`
-(SOLID, паттерны) применяется **только если** паттерн реально упрощает код в этом MUD.
-
-Type hints и docstrings остаются обязательными (`python-standards.mdc`).
+См. [`00-global.mdc`](~/.cursor/rules/00-global.mdc) (KISS/DRY/YAGNI) и `python-standards.mdc`.  
+`python-architecture.mdc` — только если паттерн реально упрощает код в этом MUD.
 
 ## Предпочитать
 
@@ -29,29 +25,24 @@ Type hints и docstrings остаются обязательными (`python-st
 - Словари с `lambda` как обработчики меню
 - Хелперы, используемые один раз
 
-## Примеры (стиль проекта)
+## Пример
 
 ```python
-# ✅ — явные ветки, понятно с первого взгляда
+# ✅ явные if/return
 def handle_menu_choice(choice: int, loc, settings) -> tuple[bool, object]:
     if choice == 2:
-        print(loc("info.goodbye"))
         return False, settings
     if choice == 1:
         return _handle_settings(loc, settings)
     return True, settings
 
-# ❌ — лишняя абстракция через lambda
-menu_handlers = {
-    1: lambda l, s: _handle_settings(l, s),
-    2: lambda l, s: (print("bye"), False, s)[1:],
-}
+# ❌ lambda-dispatch
+menu_handlers = {1: lambda l, s: _handle_settings(l, s), ...}
 ```
 
 ## Тесты
 
-Те же KISS/YAGNI, что и для prod-кода: один сценарий на изменение, прямой `assert`,
-без лишних фикстур и абстракций. Подробности: `dnd-mud-tests.mdc`.
+См. `dnd-mud-tests.mdc`.
 
 ## Чек-лист перед коммитом
 
