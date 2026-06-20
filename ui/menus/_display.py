@@ -7,7 +7,7 @@ from colorama import Fore, Style
 from core.localization import get_string
 from core.models import Character
 from ui.menus import _deps
-from ui.menus._common import SEPARATOR, _ability_name
+from ui.menus._common import SEPARATOR, _ability_name, _stats_caption_line
 
 
 def _difficulty_label(strings: dict[str, Any], difficulty: str) -> str:
@@ -327,12 +327,6 @@ def _print_stats_generation_header(
     if race_id is not None:
         _print_race_bonuses(strings, race_id, subrace_id)
         print()
-
-
-def _stats_caption_line(strings: dict[str, Any]) -> str:
-    """Заголовок экрана генерации характеристик."""
-    caption = get_string(strings, "character.stats_generation_caption")
-    return f"{Fore.YELLOW}{caption.center(78)}{Style.RESET_ALL}"
 
 
 def _print_point_buy_cost_table(strings: dict[str, Any]) -> None:

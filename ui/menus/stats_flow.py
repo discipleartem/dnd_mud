@@ -650,17 +650,16 @@ def _select_stats_random_hardcore(
             continue
         final_stats, race_bonuses = finalized
 
-        print(SEPARATOR)
-        print(_stats_total_line(strings))
-        print(SEPARATOR)
-        print()
-
-        for stat in STAT_NAMES:
-            _print_final_stat_line(
-                strings, stat, final_stats[stat], race_bonuses
-            )
-
-        print()
-        _common._press_enter(strings)
-
-        return final_stats
+        result = _confirm_stats(
+            strings,
+            final_stats,
+            race_id,
+            subrace_id,
+            reroll_label_key="character.stats_reroll_regenerate",
+            race_bonuses=race_bonuses,
+        )
+        if result == "accept":
+            return final_stats
+        if result == "back":
+            continue
+        base_values = [_deps.roll_ability_score() for _ in STAT_NAMES]

@@ -35,7 +35,13 @@ def load_strings(language: str) -> dict[str, Any]:
     return result
 
 
-def get_string(strings: dict[str, Any], key: str, **kwargs: Any) -> str:
+def get_string(
+    strings: dict[str, Any],
+    key: str,
+    *,
+    default: str | None = None,
+    **kwargs: Any,
+) -> str:
     """Получить строку по ключу с поддержкой вложенности через точку.
 
     Пример:
@@ -47,10 +53,11 @@ def get_string(strings: dict[str, Any], key: str, **kwargs: Any) -> str:
     Args:
         strings: Словарь со строками
         key: Ключ вида "menu.new_game"
+        default: Значение при отсутствии ключа (если None — возвращается key)
         **kwargs: Параметры для подстановки в строку
 
     Returns:
-        Строка или ключ, если строка не найдена
+        Строка, default или ключ, если строка не найдена
     """
     parts = key.split(".")
 
@@ -59,10 +66,10 @@ def get_string(strings: dict[str, Any], key: str, **kwargs: Any) -> str:
         if isinstance(value, dict) and part in value:
             value = value[part]
         else:
-            return key
+            return default if default is not None else key
 
     if value is None:
-        return key
+        return default if default is not None else key
 
     if not isinstance(value, str):
         return str(value)
