@@ -26,11 +26,12 @@ Reference: `~/.cursor/docs/python-versions.md`
 | `dnd-mud-core.mdc` | `core/**`, `ui/**`, `main.py` | Layers, localization, mechanics |
 | `dnd-mud-data.mdc` | `database/**`, `mods/**`, `saves/**`, `**/*.json` | YAML (справочники), JSON (сейвы/конфиги) |
 | `dnd-mud-tests.mdc` | `tests/**` | pytest — простые, необходимые тесты |
+| `dnd-mud-git.mdc` | always | Git workflow агента: task-ветка, атомарные коммиты |
 | `dnd-mud-verify.mdc` | always | `make test`, console smoke (no browser) |
 
 ## Principle
 
-- **2** global `alwaysApply` + **2** project `alwaysApply` (`00-project`, `dnd-mud-verify`)
+- **2** global `alwaysApply` + **3** project `alwaysApply` (`00-project`, `dnd-mud-git`, `dnd-mud-verify`)
 - Remaining rules activate by `globs` when matching files are open
 - Simple first → patterns only when they simplify (`dnd-mud-python-simple.mdc`)
 - `dnd-mud-verify.mdc` overrides global browser rules for this console app
