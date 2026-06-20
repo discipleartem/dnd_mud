@@ -20,7 +20,7 @@ from ui.menus.settings import (
     show_languages_menu,
     show_settings,
 )
-from ui.menus.stats_flow import (
+from ui.menus.stats import (
     _assign_stats_from_pool,
     _confirm_stats,
     _prompt_point_buy_stat_value,
