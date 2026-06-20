@@ -1,14 +1,14 @@
 ---
-description: dnd_mud — git workflow для AI-агентов (ветка, атомарные коммиты)
+description: dnd_mud — git scope и project-specific артефакты (extends global)
 alwaysApply: true
 ---
 
-# dnd_mud — Git workflow для агентов
+# dnd_mud — Git (extends global)
 
-> **Приоритет:** это правило **дополняет** глобальный `01-operations.mdc` для задач в этом репозитории.
-> На task-ветке агент **коммитит сам** после каждой логической подзадачи — не ждёт отдельной просьбы пользователя.
+> Workflow, sync, commits, push/PR — [`01-operations.mdc`](~/.cursor/rules/01-operations.mdc).
+> Финиш-чеклист — [`dnd-mud-verify.mdc`](dnd-mud-verify.mdc).
 
-## Когда правило обязательно
+## Когда обязательно
 
 Любая задача с **изменением кода или данных** (не docs-only / comments-only):
 
@@ -16,101 +16,6 @@ alwaysApply: true
 
 **Не обязательно** для: ответ на вопрос, code review без правок, правка только `.md` без поведения.
 
-## Старт задачи (до первого изменения файла)
+## Не коммитить (dnd_mud)
 
-1. Убедиться, что не на `main` / `dev`:
-   ```bash
-   git branch --show-current
-   ```
-2. Обновить `dev`, проверить синхрон с `main`, создать task-ветку **до** первого edit:
-   ```bash
-   git fetch origin
-   git checkout dev && git pull origin dev
-   git log dev..origin/main --oneline   # должно быть пусто
-   git checkout -b <type>/<short-kebab-name>
-   ```
-   Если в `main` есть коммиты, которых нет в `dev` — сначала sync (см. ниже), потом ветка.
-   Примеры: `feat/stats-menu`, `fix/point-buy-validation`, `refactor/split-menus`
-3. Если ветка уже создана пользователем — **не** работать на `dev`/`main`.
-
-**Запрещено:** накопить все изменения на `dev`/`main` и коммитить одним блоком в конце.
-
-## Синхронизация `dev` с `main`
-
-После squash merge PR `dev` → `main` история веток **расходится** (разные хеши, одинаковое дерево файлов). Это нормально.
-
-**Обновлять `dev` в повседневной работе:**
-
-```bash
-git checkout dev
-git pull origin dev
-```
-
-**Синхронизировать `dev` с `main`** (после merge в `main` или если `git log dev..origin/main` не пуст):
-
-```bash
-git fetch origin
-git checkout dev
-git merge origin/main
-git push origin dev
-```
-
-Альтернатива: `git pull --no-rebase origin main` — только на ветке `dev`, только для sync.
-
-**Запрещено:**
-
-- `git pull origin main` или `git pull --tags origin main` **без** `--no-rebase` / `--rebase` / `--ff-only` — Git откажет (*divergent branches*)
-- Менять `git config pull.rebase` глобально — указывать флаг в команде
-- Force-push в `dev` / `main` из-за расхождения после squash
-
-## Во время работы
-
-### Многошаговые задачи (план, несколько фаз, 3+ файлов)
-
-- **Один Conventional Commit на подзадачу/фазу** — сразу после завершения фазы, **до** перехода к следующей
-- Каждый коммит должен быть собираемым (логически цельный diff)
-- Сообщения: `feat:`, `fix:`, `refactor:`, `test:`, `chore:`, `docs:`
-
-### Одношаговые задачи
-
-- Один коммит в конце, **на task-ветке** (не на `dev`/`main`)
-
-### Коммиты
-
-- **Коммитить на task-ветке** — без явной просьбы пользователя
-- **Не коммитить** напрямую в `main` / `dev`
-- **Не push / не PR** — пока пользователь явно не попросит
-- Не коммитить `.coverage`, `.venv`, `saves/`, секреты
-
-## Финиш задачи (вместе с dnd-mud-verify.mdc)
-
-Перед сообщением «готово»:
-
-1. `git branch --show-current` — не `main` и не `dev`
-2. `git status` — нет незакоммиченных изменений по задаче (кроме игнорируемых артеfactов)
-3. `git log dev..HEAD --oneline` — для многофазной задачи видны **отдельные** коммиты, не один giant squash локально
-4. `make test` (+ `make check` при API/типах)
-5. Console smoke при изменении поведения
-
-Если ветку/коммиты пропустили — **исправить до отчёта**, не оставлять «можно закоммитить потом».
-
-## Типичные ошибки (не повторять)
-
-| Ошибка | Как правильно |
-|--------|----------------|
-| Вся работа на `dev`, один коммит в конце | `git checkout -b refactor/...` **до** первого edit |
-| План из 6 фаз, 0 коммитов до финиша | Commit после каждой фазы |
-| «Пользователь не просил commit» на task-ветке | На task-ветке коммит — часть workflow проекта |
-| Push/PR без запроса | Только по явной просьбе |
-| `git pull origin main` на `dev` без флага | `git merge origin/main` или `git pull --no-rebase origin main` |
-| Обновлять `dev` через pull из `main` | `git pull origin dev`; sync с `main` — отдельным merge |
-| Игнорировать `git log dev..origin/main` перед task-веткой | Сначала merge `origin/main` в `dev`, потом `git checkout -b ...` |
-
-## PR (только по запросу пользователя)
-
-```bash
-git push -u origin HEAD
-gh pr create --base dev --title "..." --body "..."
-```
-
-Rebase task-ветки на актуальный `dev` перед PR.
+`.coverage`, `saves/` (персонажи и runtime state)

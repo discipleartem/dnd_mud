@@ -51,7 +51,7 @@ python main.py  # smoke: пройти затронутое меню
 | `dnd-mud-core.mdc` | `core/**`, `ui/**`, `main.py` | слои, локализация, механика |
 | `dnd-mud-data.mdc` | `database/**`, `mods/**`, `**/*.json` | YAML (данные), JSON (сейвы/конфиги) |
 | `dnd-mud-tests.mdc` | `tests/**` | pytest — простые, необходимые тесты |
-| `dnd-mud-git.mdc` | always | git: task-ветка, атомарные коммиты агента |
+| `dnd-mud-git.mdc` | always | scope и dnd_mud-артефакты (extends `01-operations.mdc`) |
 | `dnd-mud-verify.mdc` | always | верификация (не browser) |
 
 Глобальные правила: `~/.cursor/rules/` (см. `AGENTS.md`).

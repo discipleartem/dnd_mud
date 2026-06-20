@@ -149,46 +149,19 @@ pytest tests/test_menus_character.py -v
 
 ## Git Workflow
 
-### Ветки
-
-- `main` — protected, стабильная, готова к релизу
-- `dev` — интеграционная; не отстаёт от `main` (после merge `dev` → `main` синхронизировать `dev` с `main`)
-
-### Правила
-
-1. **Старт задачи:** обновить `dev`, создать ветку от `dev` с именем по сути задачи (kebab-case) — **до первого изменения кода**
-2. **Коммиты:** Conventional Commits (`feat:`, `fix:`, `refactor:`, `chore:`); атомарные; каждый проходит тесты
-3. **Сложная задача:** разбить на подзадачи — **один commit на подзадачу** (сразу после фазы, не в конце всей работы)
-4. **Коммиты в `main` и `dev` запрещены** — только через PR
-5. **Merge в `dev` и `main`:** squash merge (один коммит в истории целевой ветки)
-6. **Перед PR:** rebase task-ветки на актуальный `dev`
-
-**AI-агенты:** подробный чеклист — [`.cursor/rules/dnd-mud-git.mdc`](../.cursor/rules/dnd-mud-git.mdc) (always apply).
-
-### Цикл PR
-
-1. Task branch → `dev` (squash merge через GitHub)
-2. `dev` → `main` (squash merge через GitHub)
-3. Sync `dev` с `main`
+Git workflow (dev/main, squash, автокоммит, push/PR по запросу): [`~/.cursor/rules/01-operations.mdc`](~/.cursor/rules/01-operations.mdc). Для агентов dnd_mud: [`.cursor/rules/dnd-mud-git.mdc`](../.cursor/rules/dnd-mud-git.mdc), [`.cursor/rules/dnd-mud-verify.mdc`](../.cursor/rules/dnd-mud-verify.mdc).
 
 ### Пример
 
 ```bash
-git checkout dev && git pull
+git fetch origin && git checkout dev && git pull origin dev
 git checkout -b feat/add-combat-system
 
 # ... работа, коммиты по подзадачам ...
 git commit -m "feat: add dice roll helper"
-git commit -m "feat: add basic combat loop"
 
-git push -u origin feat/add-combat-system
-gh pr create --base dev --title "feat: add basic combat system"
-
-# После squash merge в dev и готовности релиза:
-gh pr create --base main --head dev --title "release: integrate dev into main"
-
-# После squash merge dev → main:
-git checkout dev && git merge main && git push
+# push/PR — когда попросят:
+git push -u origin HEAD && gh pr create --base dev --title "feat: add basic combat system"
 ```
 
 ## Создание мода
