@@ -10,7 +10,7 @@ Global rules: `~/.cursor/rules/` (apply to all projects).
 | File | Scope | Content |
 |------|-------|---------|
 | `00-global.mdc` | always | META, KISS/DRY/YAGNI, language, Python mode, index |
-| `01-operations.mdc` | always | `.venv`, git safety, secrets |
+| `01-operations.mdc` | always | `.venv`, git workflow (dev/main, автокоммит, push/PR по запросу), secrets |
 | `python-standards.mdc` | `**/*.py` | Python 3.12+, types, PEP 8, tooling |
 | `python-architecture.mdc` | `**/*.py` | SOLID, design patterns |
 | `browser-automation.mdc` | web globs | Browser DevTools MCP (not used in dnd_mud) |
@@ -26,7 +26,7 @@ Reference: `~/.cursor/docs/python-versions.md`
 | `dnd-mud-core.mdc` | `core/**`, `ui/**`, `main.py` | Layers, localization, mechanics |
 | `dnd-mud-data.mdc` | `database/**`, `mods/**`, `saves/**`, `**/*.json` | YAML (справочники), JSON (сейвы/конфиги) |
 | `dnd-mud-tests.mdc` | `tests/**` | pytest — простые, необходимые тесты |
-| `dnd-mud-git.mdc` | always | Git workflow агента: task-ветка, атомарные коммиты |
+| `dnd-mud-git.mdc` | always | scope и dnd_mud-артефакты (extends global git) |
 | `dnd-mud-verify.mdc` | always | `make test`, console smoke (no browser) |
 
 ## Principle
