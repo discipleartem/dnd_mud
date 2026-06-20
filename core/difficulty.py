@@ -1,14 +1,10 @@
 """Проверки соответствия режима сложности игры.
 
 Режим сложности задаётся при создании персонажа (Character.difficulty)
-и проверяется при выборе приключений и модов.
+и проверяется при выборе приключений.
 """
 
-from typing import Any
-
 from core.models import Adventure
-
-VALID_GAME_DIFFICULTIES = ("normal", "hardcore")
 
 
 def adventure_allows_difficulty(
@@ -21,13 +17,3 @@ def adventure_allows_difficulty(
     if allowed is None:
         return True
     return game_difficulty in allowed
-
-
-def mod_allows_difficulty(
-    mod_meta: dict[str, Any], game_difficulty: str
-) -> bool:
-    """Проверить, доступен ли мод для режима персонажа."""
-    required = mod_meta.get("requires_game_difficulty")
-    if required is None:
-        return True
-    return game_difficulty == str(required)

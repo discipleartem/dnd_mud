@@ -1,19 +1,22 @@
 """Создание, сохранение и загрузка персонажей.
 
-Персонажи хранятся в JSON-файле saves/characters.json.
+Персонажи хранятся в отдельных JSON-файлах saves/characters/{save_slug}.json.
 Расы и классы — в database/races/races.yaml и database/classes/classes.yaml.
 """
 
 import json
+import re
 from pathlib import Path
 from typing import Any
 
 import yaml
 
-from core.dice import ability_modifier, roll_ability_score
+from core.dice import ability_modifier
 from core.models import Character
 
 STANDARD_ARRAY = [15, 14, 13, 12, 10, 8]
+STANDARD_ARRAY_MIN = min(STANDARD_ARRAY)
+STANDARD_ARRAY_MAX = max(STANDARD_ARRAY)
 
 STAT_NAMES = [
     "strength",
@@ -35,12 +38,50 @@ POINT_BUY_COSTS: dict[int, int] = {
     14: 7,
     15: 9,
 }
+POINT_BUY_MIN = min(POINT_BUY_COSTS)
+POINT_BUY_MAX = max(POINT_BUY_COSTS)
 
 SAVES_DIR = Path("saves")
-CHARACTERS_FILE = SAVES_DIR / "characters.json"
+CHARACTERS_DIR = SAVES_DIR / "characters"
 CHARACTERS_SCHEMA_VERSION = 1
 RACES_FILE = Path("database/races/races.yaml")
 CLASSES_FILE = Path("database/classes/classes.yaml")
+
+_CYRILLIC_TO_LATIN: dict[str, str] = {
+    "а": "a",
+    "б": "b",
+    "в": "v",
+    "г": "g",
+    "д": "d",
+    "е": "e",
+    "ё": "yo",
+    "ж": "zh",
+    "з": "z",
+    "и": "i",
+    "й": "y",
+    "к": "k",
+    "л": "l",
+    "м": "m",
+    "н": "n",
+    "о": "o",
+    "п": "p",
+    "р": "r",
+    "с": "s",
+    "т": "t",
+    "у": "u",
+    "ф": "f",
+    "х": "kh",
+    "ц": "ts",
+    "ч": "ch",
+    "ш": "sh",
+    "щ": "shch",
+    "ъ": "",
+    "ы": "y",
+    "ь": "",
+    "э": "e",
+    "ю": "yu",
+    "я": "ya",
+}
 
 
 def point_buy_cost(score: int) -> int:
@@ -101,27 +142,33 @@ def save_character(
         experience=0,
         difficulty=difficulty,
         subrace=subrace_id,
+        save_slug=_unique_save_slug(name),
     )
 
-    characters = load_characters()
-    characters.append(character)
-    _save_characters(characters)
+    _save_character_file(character)
 
     return character
 
 
-def _apply_racial_bonuses_to_stats(
-    base_stats: dict[str, int], race_id: str, subrace_id: str | None = None
+def apply_bonuses_to_stats(
+    stats: dict[str, int], bonuses: dict[str, int]
 ) -> dict[str, int]:
-    """Применить расовые и подрасовые бонусы к базовым характеристикам."""
-    final_stats = base_stats.copy()
-    bonuses = get_race_bonuses(race_id, subrace_id)
+    """Добавить бонусы к характеристикам."""
+    final_stats = stats.copy()
     for stat_name, bonus in bonuses.items():
         if stat_name in final_stats:
             final_stats[stat_name] += bonus
         else:
             final_stats[stat_name] = bonus
     return final_stats
+
+
+def _apply_racial_bonuses_to_stats(
+    base_stats: dict[str, int], race_id: str, subrace_id: str | None = None
+) -> dict[str, int]:
+    """Применить расовые и подрасовые бонусы к базовым характеристикам."""
+    bonuses = get_race_bonuses(race_id, subrace_id)
+    return apply_bonuses_to_stats(base_stats, bonuses)
 
 
 def _load_races_yaml() -> dict[str, Any]:
@@ -167,6 +214,68 @@ def get_race_bonuses(
     return bonuses
 
 
+def _race_info_for_features(
+    race_id: str, subrace_id: str | None = None
+) -> dict[str, Any]:
+    """Данные расы/подрасы для чтения features."""
+    races = _load_races_yaml()
+    race_info = races.get(race_id, {})
+    if not isinstance(race_info, dict):
+        return {}
+    if subrace_id:
+        subraces = race_info.get("subraces", {})
+        subrace_info = subraces.get(subrace_id, {})
+        if isinstance(subrace_info, dict):
+            return subrace_info
+    return race_info
+
+
+def get_choice_ability_bonus_mechanics(
+    race_id: str, subrace_id: str | None = None
+) -> dict[str, Any] | None:
+    """Механика выборного бонуса к характеристикам из features."""
+    info = _race_info_for_features(race_id, subrace_id)
+    for feat in info.get("features", []):
+        if not isinstance(feat, dict):
+            continue
+        if feat.get("type") != "ability_bonus":
+            continue
+        mechanics = feat.get("mechanics", {})
+        if isinstance(mechanics, dict) and mechanics.get("choice"):
+            return mechanics
+    return None
+
+
+def has_choice_ability_bonuses(
+    race_id: str, subrace_id: str | None = None
+) -> bool:
+    """Есть ли у расы/подрасы выборные бонусы к характеристикам."""
+    return get_choice_ability_bonus_mechanics(race_id, subrace_id) is not None
+
+
+def build_bonuses_from_choices(
+    chosen_stats: list[str], value: int = 1
+) -> dict[str, int]:
+    """Собрать словарь бонусов из списка выбранных характеристик."""
+    bonuses: dict[str, int] = {}
+    for stat in chosen_stats:
+        bonuses[stat] = bonuses.get(stat, 0) + value
+    return bonuses
+
+
+def get_effective_race_bonuses(
+    race_id: str,
+    subrace_id: str | None = None,
+    choice_bonuses: dict[str, int] | None = None,
+) -> dict[str, int]:
+    """Статические и выборные расовые бонусы для отображения."""
+    bonuses = get_race_bonuses(race_id, subrace_id)
+    if choice_bonuses:
+        for stat, val in choice_bonuses.items():
+            bonuses[stat] = bonuses.get(stat, 0) + val
+    return bonuses
+
+
 def _build_stats(
     values: list[int], race_id: str, subrace_id: str | None = None
 ) -> dict[str, int]:
@@ -206,14 +315,6 @@ def generate_stats_random(
     return _build_stats(random_values, race_id, subrace_id)
 
 
-def generate_stats_hardcore(
-    race_id: str, subrace_id: str | None = None
-) -> dict[str, int]:
-    """Сгенерировать характеристики для сложности HardCore."""
-    rolled_values = [roll_ability_score() for _ in range(len(STAT_NAMES))]
-    return _build_stats(rolled_values, race_id, subrace_id)
-
-
 def _get_class_hit_dice(class_id: str) -> int:
     """Получить кость здоровья класса."""
     if not CLASSES_FILE.exists():
@@ -231,35 +332,105 @@ def _get_class_hit_dice(class_id: str) -> int:
     return 8
 
 
-def load_characters() -> list[Character]:
-    """Загрузить список всех сохранённых персонажей."""
-    if not CHARACTERS_FILE.exists():
-        return []
-
-    try:
-        with open(CHARACTERS_FILE, encoding="utf-8") as f:
-            data = json.load(f)
-        result = data.get("characters", [])
-        if not isinstance(result, list):
-            return []
-        characters: list[Character] = []
-        for item in result:
-            if isinstance(item, dict) and item.get("name"):
-                characters.append(Character.from_dict(item))
-        return characters
-    except (json.JSONDecodeError, OSError):
-        return []
+def _transliterate(text: str) -> str:
+    """Транслитерировать кириллицу в латиницу."""
+    result: list[str] = []
+    for char in text:
+        lower = char.lower()
+        if lower in _CYRILLIC_TO_LATIN:
+            mapped = _CYRILLIC_TO_LATIN[lower]
+            if char.isupper() and mapped:
+                mapped = mapped[0].upper() + mapped[1:]
+            result.append(mapped)
+        else:
+            result.append(char)
+    return "".join(result)
 
 
-def _save_characters(characters: list[Character]) -> None:
-    """Сохранить список персонажей в JSON-файл."""
-    CHARACTERS_FILE.parent.mkdir(parents=True, exist_ok=True)
+def _slug_from_name(name: str) -> str:
+    """Построить slug из имени персонажа."""
+    transliterated = _transliterate(name).lower()
+    slug = re.sub(r"[^a-z0-9]+", "_", transliterated)
+    slug = slug.strip("_")
+    return slug or "character"
+
+
+def _existing_save_slugs() -> set[str]:
+    """Собрать save_slug из имён файлов и содержимого JSON."""
+    slugs: set[str] = set()
+    if not CHARACTERS_DIR.exists():
+        return slugs
+
+    for path in CHARACTERS_DIR.glob("*.json"):
+        slugs.add(path.stem)
+        character = _load_character_file(path)
+        if character is not None and character.save_slug:
+            slugs.add(character.save_slug)
+    return slugs
+
+
+def _unique_save_slug(name: str) -> str:
+    """Уникальный save_slug для нового персонажа."""
+    base = _slug_from_name(name)
+    existing = _existing_save_slugs()
+    if base not in existing:
+        return base
+
+    counter = 2
+    while f"{base}_{counter}" in existing:
+        counter += 1
+    return f"{base}_{counter}"
+
+
+def _character_file_path(save_slug: str) -> Path:
+    """Путь к JSON-файлу персонажа."""
+    return CHARACTERS_DIR / f"{save_slug}.json"
+
+
+def _save_character_file(character: Character) -> None:
+    """Сохранить одного персонажа в отдельный JSON-файл."""
+    if not character.save_slug:
+        raise ValueError("У персонажа должен быть save_slug")
+
+    CHARACTERS_DIR.mkdir(parents=True, exist_ok=True)
     data = {
         "schema_version": CHARACTERS_SCHEMA_VERSION,
-        "characters": [c.to_dict() for c in characters],
+        **character.to_dict(),
     }
-    with open(CHARACTERS_FILE, "w", encoding="utf-8") as f:
+    path = _character_file_path(character.save_slug)
+    with open(path, "w", encoding="utf-8") as f:
         json.dump(data, f, ensure_ascii=False, indent=2)
+
+
+def _load_character_file(path: Path) -> Character | None:
+    """Загрузить одного персонажа из JSON-файла."""
+    try:
+        with open(path, encoding="utf-8") as f:
+            data = json.load(f)
+        if not isinstance(data, dict) or not data.get("name"):
+            return None
+
+        character = Character.from_dict(data)
+        if not character.save_slug:
+            character.save_slug = path.stem
+        return character
+    except (json.JSONDecodeError, OSError):
+        return None
+
+
+def load_characters() -> list[Character]:
+    """Загрузить список всех сохранённых персонажей."""
+    if not CHARACTERS_DIR.exists():
+        return []
+
+    characters: list[Character] = []
+    for path in sorted(CHARACTERS_DIR.glob("*.json")):
+        character = _load_character_file(path)
+        if character is not None:
+            characters.append(character)
+
+    characters.sort(key=lambda c: c.name.lower())
+    return characters
 
 
 def load_races() -> list[dict[str, Any]]:
