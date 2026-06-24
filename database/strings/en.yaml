@@ -123,7 +123,7 @@ adventures:
 
 choose_character:
   caption: "NEW GAME"
-  prompt: "Choose character (1-{count}), Enter — create, 0 — Back: "
+  prompt: "Choose character (1-{count}), 0 — Back: "
   line: "{name} — lvl {level} {race}/{class_name} ({mode})"
   list_header: "Saved characters:"
   field_name: "Name:"

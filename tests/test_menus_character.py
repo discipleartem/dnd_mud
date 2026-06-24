@@ -163,10 +163,10 @@ def test_select_character_shows_subrace_name(
     assert "variant_human" not in output
 
 
-def test_select_character_create_via_menu_or_enter(
-    monkeypatch, capsys, ru_strings, patch_int_input
+def test_select_character_create_via_enter(
+    monkeypatch, capsys, ru_strings
 ):
-    """Пункт «Создать» и Enter без ввода возвращают 'create'."""
+    """Enter без ввода на пункте «Создать» возвращает 'create'."""
     character = Character(
         name="Hero",
         race="human",
@@ -175,15 +175,15 @@ def test_select_character_create_via_menu_or_enter(
     )
     monkeypatch.setattr(_deps, "load_characters", lambda: [character])
 
-    patch_int_input(monkeypatch, menus, [2])
-    assert new_game._select_character(ru_strings) == "create"
-
     from ui.input_handler import get_int_input
 
     monkeypatch.setattr(_deps, "get_int_input", get_int_input)
     monkeypatch.setattr("builtins.input", lambda prompt: "")
     assert new_game._select_character(ru_strings) == "create"
-    assert "[Enter]" in capsys.readouterr().out
+    output = capsys.readouterr().out
+    assert "[Enter]" in output
+    assert "Создать нового персонажа" in output
+    assert "2. Создать" not in output
 
 
 def test_select_adventure_filters_by_character_difficulty(
