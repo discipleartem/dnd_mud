@@ -1,54 +1,36 @@
 ---
-description: dnd_mud pytest — простые, необходимые тесты (KISS/YAGNI)
+description: dnd_mud pytest — минимально необходимые тесты
 globs: "tests/**"
 alwaysApply: false
 ---
 
 # dnd_mud tests
 
-**Runner:** pytest (`make test` or `pytest -v`)
+**Runner:** `make test` / `pytest -v`
 
-> **Тесты — максимально простые и только необходимые:** один сценарий на изменение,
-> без лишних абстракций и без погони за покрытием.
+Один тест на изменённое поведение или реальный риск регрессии. Код теста — так же простой, как прод-код (`dnd-mud-python-simple.mdc`).
 
-## Философия
+## Когда писать / не писать
 
-См. `dnd-mud-python-simple.mdc` §Тесты. Таблица ниже — специфика pytest в этом проекте.
+| Писать | Не писать |
+|--------|-----------|
+| Новое или изменённое поведение | Рефакторинг без смены поведения (`make test` достаточно) |
+| Риск регрессии (логика, сохранения, меню) | Косметика, уже покрытая соседним тестом |
+| Один сценарий = один тест | «На всякий случай», тривиальные константы, дубли |
+| Дополнять `test_character.py` и т.п. | Новый `test_*.py` на 1–2 функции |
+
+## Как писать
 
 | Делать | Не делать |
 |--------|-----------|
-| 1 тест = 1 поведение / регрессия | Тесты «на всякий случай» и тривиальные assert констант |
-| Минимум кода: `assert`, локальный импорт, `PROJECT_ROOT` в `sys.path` | Фабрики, базовые классы, `@pytest.mark.parametrize` на десятки кейсов без нужды |
-| Интеграционный тест реального модуля, если он проще моков | Тяжёлый mock там, где достаточно вызова `core.*` |
-| Тест только при изменении поведения или риске регрессии | Погоня за % coverage, дублирование unit + integration одного сценария |
-| Дополнять существующий файл (`test_character.py`, …) | Новый файл на 1–2 функции без причины |
+| `assert`, прямой вызов `core.*` / `ui.*` | Фабрики, базовые классы, тяжёлый mock |
+| Monkeypatch через `ui.menus._deps` для меню | `@pytest.mark.parametrize` на десятки кейсов без нужды |
+| Имя `test_<what>_<condition>_<expected>` | Погоня за % coverage; unit + integration одного сценария |
 
-Эталон простого unit-теста: [`tests/test_difficulty.py`](tests/test_difficulty.py).
+Эталоны: [`tests/test_difficulty.py`](tests/test_difficulty.py), [`tests/test_menus_character.py`](tests/test_menus_character.py).
 
-## Naming
+## Перед добавлением
 
-Descriptive names: `test_<what>_<condition>_<expected>`
-
-```python
-def test_localization_loads_ru_and_en_keys(): ...   # ✅
-def test_attack(): ...                               # ❌
-```
-
-## Style
-
-Следуй [`tests/test_menus_character.py`](tests/test_menus_character.py) и [`tests/test_menus_stats.py`](tests/test_menus_stats.py):
-
-- Integration tests over heavy mocking where practical
-- Monkeypatch через `ui.menus._deps` для core-зависимостей меню
-- Test real modules: `core.localization`, `core.settings`, `main` imports
-
-## Чек-лист перед добавлением теста
-
-- Какую регрессию ловит этот тест?
-- Можно ли обойтись одним `assert`?
-- Нужен ли mock, или проще вызвать `core`/`ui` напрямую?
-- Не дублирует ли уже существующий тест?
-
-## Agent responsibility
-
-Добавляй **минимально необходимые** тесты под изменённое поведение — не «полное покрытие» модуля.
+1. Какую регрессию ловит?
+2. Один `assert` без mock?
+3. Уже есть похожий тест?
