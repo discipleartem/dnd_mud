@@ -1,17 +1,14 @@
 ---
-description: dnd_mud core/ui — Python 3.12, слои, локализация, D&D механика
+description: dnd_mud core/ui — слои, локализация, D&D механика
 globs: "core/**,ui/**,main.py"
 alwaysApply: false
 ---
 
 # dnd_mud core and UI
 
-Стиль кода: см. `dnd-mud-python-simple.mdc`.
-Пути и форматы данных: см. `dnd-mud-data.mdc`.
+Стиль и тесты: `dnd-mud-python-simple.mdc`, `dnd-mud-tests.mdc`. Данные: `dnd-mud-data.mdc`.
 
-**Language:** Python 3.12 (`requires-python >= 3.12` in `pyproject.toml`).
-
-## Layered architecture
+## Слои
 
 ```
 ui/  →  core/  →  database/ (YAML) + saves/ (JSON)
@@ -21,11 +18,11 @@ ui/  →  core/  →  database/ (YAML) + saves/ (JSON)
 - **Core** (`core/`) — модели, механика, загрузчики; не зависит от UI
 - **Data** — core читает/пишет через свои модули (`core/io.py`, loaders)
 
-UI must not read or write data files directly.
+UI не читает и не пишет файлы данных напрямую.
 
-## Localization
+## Локализация
 
-All user-facing strings via localization — never hardcode:
+Все пользовательские строки — через локализацию:
 
 ```python
 from core.localization import get_string, load_strings
@@ -35,15 +32,11 @@ message = get_string(strings, "menu.new_game")  # ✅
 message = "New Game"                            # ❌
 ```
 
-Keys use dot notation (`menu.new_game`). Update both `database/strings/ru.yaml` and `en.yaml`.
+Ключи: dot notation (`menu.new_game`). Обновлять `database/strings/ru.yaml` и `en.yaml` синхронно.
 
-## D&D mechanics
+## D&D механика
 
-- Models in `core/models.py` — `dataclass` for `Character`, `Adventure`
-- Сейчас `class_name: str`; `CharacterClass` Enum — целевой рефакторинг, не блокер
-- Game balance values from YAML — no magic numbers in Python
-- Explicit condition checks; effects apply/remove explicitly
-
-## Pre-commit
-
-См. `dnd-mud-python-simple.mdc` (стиль) и `dnd-mud-data.mdc` (данные). Локализация: обновить `ru.yaml` и `en.yaml`.
+- Модели в `core/models.py` — `dataclass` для `Character`, `Adventure`
+- `class_name: str` сейчас; `CharacterClass` Enum — целевой рефакторинг, не блокер
+- Баланс из YAML — без magic numbers в Python
+- Явные проверки условий; эффекты apply/remove явно

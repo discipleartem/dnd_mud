@@ -8,7 +8,7 @@ menu:
   caption: "MAIN MENU"
   new_game: "New Game"
   load_game: "Load Game"
-  create_character: "Create Character"
+  characters: "Characters"
   settings: "Settings"
   languages: "Languages"
   exit: "Exit"
@@ -29,40 +29,26 @@ character:
   feature_line: "    • {name}: {desc}"
   subraces_label: "  Subraces:"
   no_subraces: "This race has no subraces. The base race will be selected."
-  subrace_bonuses: "      Bonuses: {bonuses}"
-  subrace_features: "      Features:"
-  subrace_feature_line: "        • {name}: {desc}"
   race_prompt: "Choose race: "
   subrace_prompt: "Choose subrace: "
   class_prompt: "Choose class: "
-  class_desc: "Class: {name} — {desc}"
   stats_generation_caption: "STAT GENERATION"
   stats_generation_method_prompt: "Choose stat generation method: "
   stats_standard_array: "Standard array [15, 14, 13, 12, 10, 8]"
   stats_point_buy: "Point Buy (27 points)"
   stats_random: "Random method (4d6 drop lowest)"
   stats_available: "Available values: {values}"
-  stats_selected: "Selected: {values}"
   stats_race_bonuses: "Race bonuses: {bonuses}"
   stats_total: "TOTAL STATS (with race bonuses)"
-  stats_confirm_prompt: "Stats assigned. Confirm? (1-Yes, 2-Reroll, 0-Back): "
   stats_reroll_redistribute: "Redistribute"
   stats_reroll_regenerate: "Regenerate"
   stats_confirm: "Accept stats"
-  stats_point_buy_points: "Points remaining: {points}"
-  stats_point_buy_total: "Total stats: {total}"
   stats_random_rolls: "Roll results (4d6 drop lowest):"
-  stats_random_distribute: "Distribute the obtained values among stats: "
-  stats_title: "STATS"
-  stat_line: "{stat}: {value}"
-  total_stats: "Total stats: {total}"
   stats_selected_label: "Selected:"
-  stats_choose_value_for: "Choose value for {stat}:"
   stats_enter_value_for: "Enter value for {stat}:"
   stats_enter_value_back_hint: "(0 — back)"
   stats_value_not_in_pool: "Value {value} is not available. Remaining: {values}"
   stats_enter_point_buy_value: "Enter value for {stat} (8–15):"
-  stats_choose_stat_edit: "Select stat to edit"
   stats_random_accept: "Accept rolls"
   stats_random_regenerate: "Regenerate"
   stats_point_buy_price_table: "Stat costs:"
@@ -79,7 +65,6 @@ character:
   stats_max_value_15: "Maximum value is 15!"
   stats_not_enough_points: "Not enough points! Reduce another stat."
   stats_generating_random: "Generating stats with 4d6 drop lowest..."
-  stats_value_remaining: "{value} (remaining: {count})"
   stats_hardcore_auto: "HardCore mode: automatic stat distribution"
   stats_hardcore_method: "Method: 4d6 drop lowest, assigned in order"
   stats_no_bonuses: "Race bonuses: none"
@@ -88,11 +73,8 @@ character:
   stats_choice_bonus_prompt: "Choose stat {current} of {total} (+{value}):"
   stats_choice_bonus_pending: "After distribution: choose {count} stats +{value}"
   stats_choice_bonus_subrace_info: "{count} stats of your choice +{value}"
+  stat_line: "{stat}: {value}"
   save_success: "Character '{name}' created successfully!"
-  no_characters: "No saved characters. Create one first."
-  select_caption: "SELECT CHARACTER"
-  select_prompt: "Choose character: "
-  character_line: "{name} — lvl {level} {race}/{class_name}"
   back: "Back"
 
 settings:
@@ -102,7 +84,6 @@ settings:
 
 languages:
   caption: "LANGUAGE SELECTION"
-  available: "Available languages:"
   current: "Current language:"
   prompt: "Choose language: "
   changed: "Language changed to: {name}"
@@ -112,7 +93,6 @@ languages:
 
 adventures:
   caption: "ADVENTURES"
-  header: "Available adventures:"
   no_adventures: "No adventures available."
   prompt: "Choose adventure (1-{count}), 0 — Back: "
   adventure_line: "{name} ({difficulty}) — {desc}"
@@ -124,7 +104,6 @@ adventures:
 choose_character:
   caption: "NEW GAME"
   prompt: "Choose character (1-{count}), 0 — Back: "
-  line: "{name} — lvl {level} {race}/{class_name} ({mode})"
   list_header: "Saved characters:"
   field_name: "Name:"
   field_race: "Race:"
@@ -135,7 +114,21 @@ choose_character:
   vitals_line: "HP: {hp}   XP: {xp}"
   stats_line: "{stats}"
   create_new: "Create new character"
-  no_characters: "No saved characters. Redirecting to creation..."
+  back: "Back"
+
+characters_menu:
+  caption: "CHARACTERS"
+  empty_list: "No saved characters."
+  create: "Create character"
+  delete_one: "Delete character"
+  delete_all: "Delete all characters"
+  prompt: "Choose action: "
+  select_prompt: "Choose character (1-{count}), 0 — Back: "
+  confirm_delete_one: "Delete character '{name}'? (1-Yes, 0-No): "
+  confirm_delete_all: "Delete all characters ({count})? This cannot be undone. (1-Yes, 0-No): "
+  delete_success: "Character '{name}' deleted."
+  delete_all_success: "Deleted characters: {count}."
+  cancelled: "Deletion cancelled."
   back: "Back"
 
 difficulty:
@@ -143,35 +136,19 @@ difficulty:
   prompt: "Choose difficulty: "
   normal: "Normal"
   hardcore: "HardCore"
-  selected: "Difficulty: {mode}"
-  back: "Back"
   easy: "easy"
   training: "training"
+  back: "Back"
 
 new_game:
-  caption: "NEW GAME"
-  prompt: "Choose character: "
-  line: "{name} — lvl {level} {race}/{class_name}"
-  no_characters: "No saved characters. Create one first."
-  back: "Back"
   launch: "Launching adventure '{adventure}' with '{name}' (difficulty: {difficulty})"
 
 load_game:
   caption: "LOAD GAME"
-  prompt: "Choose save: "
-  line: "{name} — {date}"
-  no_saves: "No saves available."
-  back: "Back"
-
-create_character:
-  caption: "CREATE CHARACTER"
-  prompt: "Choose difficulty for character: "
-  back: "Back"
 
 errors:
   invalid_input: "Error: enter a number from {min} to {max}"
   invalid_number: "Error: enter a number from {min} to {max}"
-  invalid_choice: "Invalid choice. Please try again."
   load_not_implemented: "Load game is not yet implemented"
 
 info:
@@ -188,4 +165,3 @@ stats:
   intelligence: "Intelligence"
   wisdom: "Wisdom"
   charisma: "Charisma"
-

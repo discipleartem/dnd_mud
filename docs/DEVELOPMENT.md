@@ -96,7 +96,6 @@ dnd_mud/
 ├── mods/_examples/example_mod.yaml
 ├── tests/
 │   ├── conftest.py
-│   ├── menus_helpers.py     # Re-export приватных функций меню для тестов
 │   ├── test_adventure.py
 │   ├── test_character.py
 │   ├── test_difficulty.py

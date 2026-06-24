@@ -160,6 +160,38 @@ def test_save_and_load_character(characters_dir):
     assert data["schema_version"] == 1
     assert data["save_slug"] == "hero"
     assert data["class"] == "fighter"
+    assert "created_at" in data
+
+
+def test_load_characters_sorted_by_creation_date(characters_dir):
+    """load_characters возвращает персонажей от старых к новым."""
+    old_data = {
+        "schema_version": 1,
+        "name": "Zeta",
+        "race": "human",
+        "class": "fighter",
+        "save_slug": "zeta",
+        "created_at": "2024-01-01T00:00:00+00:00",
+    }
+    new_data = {
+        "schema_version": 1,
+        "name": "Alpha",
+        "race": "elf",
+        "class": "rogue",
+        "save_slug": "alpha",
+        "created_at": "2024-06-01T00:00:00+00:00",
+    }
+    characters_dir.mkdir(parents=True, exist_ok=True)
+    (characters_dir / "alpha.json").write_text(
+        json.dumps(new_data), encoding="utf-8"
+    )
+    (characters_dir / "zeta.json").write_text(
+        json.dumps(old_data), encoding="utf-8"
+    )
+
+    loaded = character_mod.load_characters()
+
+    assert [c.name for c in loaded] == ["Zeta", "Alpha"]
 
 
 def test_slug_from_cyrillic_name(characters_dir):
@@ -191,3 +223,37 @@ def test_save_slug_collision(characters_dir):
     assert (characters_dir / "hero.json").exists()
     assert (characters_dir / "hero_2.json").exists()
     assert len(character_mod.load_characters()) == 2
+
+
+def test_delete_character(characters_dir):
+    """delete_character удаляет файл и персонаж пропадает из списка."""
+    saved = character_mod.save_character(
+        name="Hero",
+        race_id="human",
+        class_id="fighter",
+    )
+    assert saved.save_slug is not None
+    assert character_mod.delete_character(saved.save_slug) is True
+    assert len(character_mod.load_characters()) == 0
+    assert not (characters_dir / "hero.json").exists()
+    assert character_mod.delete_character("missing") is False
+
+
+def test_delete_all_characters(characters_dir):
+    """delete_all_characters удаляет всех персонажей."""
+    character_mod.save_character(
+        name="Hero",
+        race_id="human",
+        class_id="fighter",
+    )
+    character_mod.save_character(
+        name="Elf",
+        race_id="elf",
+        class_id="rogue",
+    )
+
+    deleted = character_mod.delete_all_characters()
+
+    assert deleted == 2
+    assert len(character_mod.load_characters()) == 0
+    assert list(characters_dir.glob("*.json")) == []

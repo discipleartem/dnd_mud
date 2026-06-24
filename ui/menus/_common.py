@@ -1,5 +1,6 @@
 """Общие UI-хелперы для экранов меню."""
 
+from collections.abc import Callable
 from typing import Any
 
 from colorama import Fore, Style
@@ -19,6 +20,44 @@ def _press_enter(strings: dict[str, Any]) -> None:
     """Ожидание нажатия Enter."""
     prompt = get_string(strings, "common.press_enter")
     input(f"{Fore.CYAN}{prompt}{Style.RESET_ALL}")
+
+
+def _confirm_yes_no(
+    strings: dict[str, Any], prompt_key: str, **kwargs: Any
+) -> bool:
+    """Подтвердить действие: 1 — да, 0 — нет."""
+    choice = _deps.get_int_input(
+        get_string(strings, prompt_key, **kwargs),
+        0,
+        1,
+        strings,
+    )
+    return choice == 1
+
+
+def _print_cancelled(
+    strings: dict[str, Any], key: str = "characters_menu.cancelled"
+) -> None:
+    """Сообщение об отмене действия и ожидание Enter."""
+    print(
+        f"{Fore.LIGHTBLACK_EX}"
+        f"{get_string(strings, key)}"
+        f"{Style.RESET_ALL}"
+    )
+    print()
+    _press_enter(strings)
+
+
+def _print_success_and_wait(
+    strings: dict[str, Any],
+    msg: str,
+    *,
+    color: str = Fore.GREEN,
+) -> None:
+    """Вывести сообщение об успехе и дождаться Enter."""
+    print(f"{color}{msg}{Style.RESET_ALL}")
+    print()
+    _press_enter(strings)
 
 
 def _choice_prompt(strings: dict[str, Any]) -> str:
@@ -53,10 +92,13 @@ def _run_numbered_menu(
     prompt_key: str,
     back_label_key: str = "common.back",
     prompt_kwargs: dict[str, Any] | None = None,
+    before_back: Callable[[], None] | None = None,
 ) -> int | None:
     """Нумерованное меню: 1..N — опции, 0 — назад. None при выборе 0."""
     for idx, label in enumerate(options, 1):
         print(f"  {Fore.YELLOW}{idx}{Style.RESET_ALL}. {label}")
+    if before_back is not None:
+        before_back()
     print()
     print(
         f"  {Fore.YELLOW}0{Style.RESET_ALL}."

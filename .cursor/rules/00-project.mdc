@@ -7,7 +7,7 @@ alwaysApply: true
 
 **Stack:** Python **3.12**, console MUD, Colorama, file-based storage, pytest.
 
-Стиль: `dnd-mud-python-simple.mdc`. Данные: `dnd-mud-data.mdc`.
+**Принцип:** максимально простой код, минимально необходимые тесты.
 
 ## Commands
 
@@ -28,10 +28,13 @@ python main.py  # smoke: пройти затронутое меню
 
 ## Local rules (index)
 
-| Файл | Globs | Содержание |
-|------|-------|------------|
-| `dnd-mud-verify.mdc` | always | verify, git scope, finish checklist |
+| Файл | Globs | Канон |
+|------|-------|-------|
+| `dnd-mud-verify.mdc` | always | verify, git scope, finish |
 | `dnd-mud-python-simple.mdc` | `core/**`, `ui/**`, `main.py`, `tests/**` | простой Python |
+| `dnd-mud-tests.mdc` | `tests/**` | pytest — только нужные тесты |
 | `dnd-mud-core.mdc` | `core/**`, `ui/**`, `main.py` | слои, локализация, механика |
 | `dnd-mud-data.mdc` | `database/**`, `mods/**`, `**/*.json` | YAML/JSON |
-| `dnd-mud-tests.mdc` | `tests/**` | pytest |
+| `ironbee-devtools-use.mdc` | off | отключён; см. `dnd-mud-verify` |
+
+Глобальные правила: [`00-global.mdc`](~/.cursor/rules/00-global.mdc) · git: [`01-operations.mdc`](~/.cursor/rules/01-operations.mdc)

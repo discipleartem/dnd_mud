@@ -1,21 +1,29 @@
 ---
-description: dnd_mud verification, git scope, finish checklist — console MUD, not browser
+description: dnd_mud verification, git scope, finish checklist — console MUD
 alwaysApply: true
 ---
 
 # dnd_mud verification
 
-Console MUD — browser forbidden. Verify: `make test` + console smoke.
+Console MUD — browser forbidden. Переопределяет `ironbee-devtools-use.mdc` и `browser-automation.mdc`.
+
+Git-flow: [`01-operations.mdc`](~/.cursor/rules/01-operations.mdc).
 
 ## Git scope
 
-См. [`01-operations.mdc`](~/.cursor/rules/01-operations.mdc). Не коммитить: `.coverage`, `saves/`.
+Не коммитить: `.coverage`, `saves/`.
 
-Обязательно commit/push — задачи с code/data (не docs-only).
+## Verify
+
+```bash
+make test       # обязательно при изменении кода
+make check      # при изменениях типов/импортов
+python main.py  # smoke при затронутом UI
+```
+
+Docs-only и правила (`.cursor/`, `AGENTS.md`) — runtime не нужен.
 
 ## Before finishing
 
-1. **Git** — `01-operations.mdc` (старт/sync/push); task-ветка; clean tree
-2. **Verify** — `make test` / `make check` / `python main.py` — см. [`00-project.mdc`](00-project.mdc) §Commands
-
-Implement once at end; skip runtime for docs-only.
+- **Plan-сессия:** git/push — `01-operations`; verify — команды выше
+- **Agent:** verify при затронутом коде/UI; один прогон в конце, не после каждого файла

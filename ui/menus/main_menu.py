@@ -39,7 +39,7 @@ def show_main_menu(strings: dict[str, Any]) -> int:
     menu_items = [
         ("1", get_string(strings, "menu.new_game")),
         ("2", get_string(strings, "menu.load_game")),
-        ("3", get_string(strings, "menu.create_character")),
+        ("3", get_string(strings, "menu.characters")),
         ("4", get_string(strings, "menu.settings")),
         ("5", get_string(strings, "menu.languages")),
         ("0", get_string(strings, "menu.exit")),

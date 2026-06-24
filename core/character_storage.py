@@ -1,17 +1,14 @@
 """Сохранение и загрузка персонажей в JSON."""
 
 import json
+from datetime import UTC, datetime
 from pathlib import Path
 
 from core.classes import get_class_hit_dice
 from core.dice import ability_modifier
 from core.models import Character
 from core.slug import make_save_slug
-from core.stats import (
-    STANDARD_ARRAY,
-    STAT_NAMES,
-    apply_racial_bonuses_to_stats,
-)
+from core.stats import STANDARD_ARRAY, generate_stats_standard_array
 
 
 def save_character(
@@ -24,8 +21,9 @@ def save_character(
 ) -> Character:
     """Создать нового персонажа и сохранить в JSON."""
     if stats is None:
-        stats = dict(zip(STAT_NAMES, STANDARD_ARRAY, strict=False))
-        stats = apply_racial_bonuses_to_stats(stats, race_id, subrace_id)
+        stats = generate_stats_standard_array(
+            list(STANDARD_ARRAY), race_id, subrace_id
+        )
 
     hit_dice = get_class_hit_dice(class_id)
     con_mod = ability_modifier(stats.get("constitution", 10))
@@ -42,6 +40,7 @@ def save_character(
         difficulty=difficulty,
         subrace=subrace_id,
         save_slug=_unique_save_slug(name),
+        created_at=datetime.now(UTC).isoformat(),
     )
 
     _save_character_file(character)
@@ -117,16 +116,49 @@ def _load_character_file(path: Path) -> Character | None:
         return None
 
 
+def _character_created_at_timestamp(character: Character, path: Path) -> float:
+    """Метка времени создания: из JSON или mtime для старых сохранений."""
+    if character.created_at:
+        try:
+            return datetime.fromisoformat(character.created_at).timestamp()
+        except ValueError:
+            pass
+    return path.stat().st_mtime
+
+
 def load_characters() -> list[Character]:
-    """Загрузить список всех сохранённых персонажей."""
+    """Загрузить список всех сохранённых персонажей (старые → новые)."""
     if not CHARACTERS_DIR.exists():
         return []
 
-    characters: list[Character] = []
-    for path in sorted(CHARACTERS_DIR.glob("*.json")):
+    entries: list[tuple[float, Character]] = []
+    for path in CHARACTERS_DIR.glob("*.json"):
         character = _load_character_file(path)
         if character is not None:
-            characters.append(character)
+            entries.append(
+                (_character_created_at_timestamp(character, path), character)
+            )
 
-    characters.sort(key=lambda c: c.name.lower())
-    return characters
+    entries.sort(key=lambda item: item[0])
+    return [character for _, character in entries]
+
+
+def delete_character(save_slug: str) -> bool:
+    """Удалить JSON-файл персонажа. False, если файла нет."""
+    path = _character_file_path(save_slug)
+    if not path.exists():
+        return False
+    path.unlink()
+    return True
+
+
+def delete_all_characters() -> int:
+    """Удалить всех персонажей. Возвращает число удалённых файлов."""
+    if not CHARACTERS_DIR.exists():
+        return 0
+
+    deleted = 0
+    for path in CHARACTERS_DIR.glob("*.json"):
+        path.unlink()
+        deleted += 1
+    return deleted
