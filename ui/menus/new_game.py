@@ -35,12 +35,12 @@ def _select_character(
     for idx, char in enumerate(characters, 1):
         _print_character_card(idx, char, strings, language)
 
-    create_idx = len(characters) + 1
+    char_count = len(characters)
+    create_idx = char_count + 1
     enter_hint = get_string(strings, "common.press_enter")
     print()
     print(
-        f"  {Fore.YELLOW}{create_idx}{Style.RESET_ALL}."
-        f" {Fore.GREEN}{get_string(strings, 'choose_character.create_new')}"
+        f"  {Fore.GREEN}{get_string(strings, 'choose_character.create_new')}"
         f" {Fore.LIGHTBLACK_EX}{enter_hint}{Style.RESET_ALL}"
     )
     print()
@@ -51,7 +51,7 @@ def _select_character(
     )
     print()
     choice = _deps.get_int_input(
-        get_string(strings, "choose_character.prompt", count=create_idx),
+        get_string(strings, "choose_character.prompt", count=char_count),
         0,
         create_idx,
         strings,

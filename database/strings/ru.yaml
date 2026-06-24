@@ -112,7 +112,7 @@ languages:
 
 choose_character:
   caption: "НОВАЯ ИГРА"
-  prompt: "Выберите персонажа (1-{count}), Enter — создать, 0 — Назад: "
+  prompt: "Выберите персонажа (1-{count}), 0 — Назад: "
   line: "{name} — ур. {level} {race}/{class_name} ({mode})"
   list_header: "Сохранённые персонажи:"
   field_name: "Имя:"
