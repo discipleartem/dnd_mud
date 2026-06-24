@@ -279,6 +279,24 @@ def _select_stats_random_hardcore(
             continue
         final_stats, race_bonuses = finalized
 
+        over_max = _deps.validate_final_stats(final_stats)
+        if over_max is not None:
+            stat_id, value = over_max
+            stat_name = _ability_name(strings, stat_id)
+            msg = get_string(
+                strings,
+                "character.stats_exceeds_max",
+                stat=stat_name,
+                value=value,
+                max=_deps.ABILITY_SCORE_MAX,
+            )
+            print(f"{Fore.RED}{msg}{Style.RESET_ALL}")
+            print()
+            base_values = [
+                _deps.roll_ability_score() for _ in _deps.STAT_NAMES
+            ]
+            continue
+
         result = _confirm_stats(
             strings,
             final_stats,

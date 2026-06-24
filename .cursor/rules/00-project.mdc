@@ -31,7 +31,7 @@ python main.py  # smoke: пройти затронутое меню
 
 | Файл | Globs | Канон |
 |------|-------|-------|
-| `dnd-mud-verify.mdc` | always | verify, git scope, finish |
+| `dnd-mud-verify.mdc` | always | verify, git scope, Plan→Build git-старт, finish |
 | `dnd-mud-python-simple.mdc` | `core/**`, `ui/**`, `main.py`, `tests/**` | простой Python |
 | `dnd-mud-tests.mdc` | `tests/**` | pytest — только нужные тесты |
 | `dnd-mud-core.mdc` | `core/**`, `ui/**`, `main.py` | слои, локализация, механика |

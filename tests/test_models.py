@@ -54,8 +54,10 @@ def test_adventure_from_dict_restrictions():
             "name": "HC",
             "hardcore_only": True,
             "allowed_game_difficulties": ["normal"],
+            "min_level": 3,
         }
     )
 
     assert adventure.hardcore_only is True
     assert adventure.allowed_game_difficulties == ["normal"]
+    assert adventure.min_level == 3

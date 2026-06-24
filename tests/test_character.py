@@ -129,6 +129,38 @@ def test_can_assign_point_buy_value():
     )
 
 
+def test_starting_max_hp_floor_and_max_hp_field(characters_dir):
+    """HP на 1 уровне: max(1, кость + CON), current_hp == max_hp."""
+    stats = {
+        "strength": 10,
+        "dexterity": 10,
+        "constitution": 8,
+        "intelligence": 10,
+        "wisdom": 10,
+        "charisma": 10,
+    }
+    saved = character_mod.save_character(
+        name="LowCon",
+        race_id="human",
+        class_id="bard",
+        stats=stats,
+    )
+
+    assert saved.max_hp == 7
+    assert saved.current_hp == saved.max_hp
+    assert saved.max_hp >= 1
+
+
+def test_validate_final_stats_rejects_over_20():
+    """Потолок 20 после всех бонусов."""
+    stats = dict.fromkeys(character_mod.STAT_NAMES, 10)
+    stats["strength"] = 21
+
+    assert character_mod.validate_final_stats(stats) == ("strength", 21)
+    ok_stats = dict.fromkeys(character_mod.STAT_NAMES, 20)
+    assert character_mod.validate_final_stats(ok_stats) is None
+
+
 def test_save_and_load_character(characters_dir):
     """save_character и load_characters работают с Character."""
     saved = character_mod.save_character(
@@ -160,6 +192,7 @@ def test_save_and_load_character(characters_dir):
     assert data["schema_version"] == 1
     assert data["save_slug"] == "hero"
     assert data["class"] == "fighter"
+    assert data["max_hp"] == saved.max_hp
     assert "created_at" in data
 
 

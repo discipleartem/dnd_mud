@@ -24,9 +24,9 @@
 максимум хитов = максимум кости хитов класса + модификатор Телосложения
 ```
 
-Пример: воин (к10), Телосложение 14 (+2) → 10 + 2 = **12 HP**.
+Пример: воин (к10), Телосложение 14 (+2) → 10 + 2 = **12 HP**. Минимум на 1 уровне — **1 HP** (`max(1, …)`).
 
-Текущие хиты не могут превышать максимум без особых эффектов.
+Текущие хиты не могут превышать максимум без особых эффектов (`max_hp` в модели `Character`).
 
 ### Бонус мастерства
 
@@ -70,11 +70,11 @@
 | Core | [`core/character_storage.py`](../../core/character_storage.py), [`core/stats.py`](../../core/stats.py), [`core/races.py`](../../core/races.py), [`core/classes.py`](../../core/classes.py) |
 | UI | [`ui/menus/character_flow.py`](../../ui/menus/character_flow.py), [`ui/menus/stats/`](../../ui/menus/stats/), [`ui/menus/settings.py`](../../ui/menus/settings.py) (`select_difficulty`) |
 | Режимы | Normal: 3 метода + confirm; HardCore: `_select_stats_random_hardcore` |
-| Заметки | Предыстория, снаряжение, мультикласс — не в flow; HP = `hit_dice + ability_modifier(CON)` |
+| Заметки | Предыстория, снаряжение, мультикласс — не в flow; HP = `starting_max_hp()`; потолок характеристик — `ABILITY_SCORE_MAX` (20) |
 
 ### Сохранение персонажа
 
-Путь: `saves/characters/{save_slug}.json`. Поля модели `Character`: `name`, `race`, `class_name`, `level`, `stats`, `current_hp`, `experience`, `difficulty`, `subrace`, `save_slug`, `created_at`.
+Путь: `saves/characters/{save_slug}.json`. Поля модели `Character`: `name`, `race`, `class_name`, `level`, `stats`, `current_hp`, `max_hp`, `experience`, `difficulty`, `subrace`, `save_slug`, `created_at`.
 
 ### Константы генерации (`core/stats.py`)
 
@@ -82,6 +82,7 @@
 STANDARD_ARRAY = [15, 14, 13, 12, 10, 8]
 POINT_BUY_BUDGET = 27
 POINT_BUY_COSTS = {8: 0, 9: 1, ..., 15: 9}
+ABILITY_SCORE_MAX = 20
 ```
 
 ### Не реализовано из главы 1

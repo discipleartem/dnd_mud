@@ -2,6 +2,13 @@
 
 ## [Unreleased]
 
+### Fixed
+- §11 PRD: HP 1 уровня `max(1, …)`, поле `max_hp`, потолок характеристик 20, `min_level` и gating приключений, CON → «Телосложение» в ru, README (bard)
+
+### Changed
+- Асимметричный gating: HardCore-персонаж доступен на приключениях без требования HardCore; недоступные — с причиной в UI
+- `adventures.yaml`: `min_level`, `allowed_game_difficulties`, `hardcore_only` для tutorial и lost_mine
+
 ### Added
 - Интерактивная генерация характеристик в создании персонажа (standard array, point-buy, 4d6, HardCore)
 - Локализация экрана генерации характеристик (en/ru)

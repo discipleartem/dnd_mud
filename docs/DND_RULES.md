@@ -54,12 +54,10 @@
 | Бонус мастерства | Proficiency bonus | — |
 | Преимущество / помеха | Advantage / disadvantage | — |
 | Кость хитов | Hit die | `hit_dice` в `classes.yaml` |
-| Хиты (HP) | Hit points | `current_hp` в `Character` |
+| Хиты (HP) | Hit points | `current_hp`, `max_hp` в `Character` |
 | Сл (Сложность) | DC (Difficulty Class) | — |
 | Владение | Proficiency | — |
 | Действие / бонусное действие / реакция | Action / bonus action / reaction | — |
-
-> **Расхождение UI:** в русской локализации MUD (`database/strings/ru.yaml`) CON отображается как «Выносливость»; в PHB и в этом справочнике — **Телосложение**. Канон правил — PHB; см. [MUD_PRD.md](MUD_PRD.md) §3.4.5.
 
 ## Модификатор характеристики
 

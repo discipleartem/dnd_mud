@@ -106,7 +106,7 @@ select_difficulty() → show_stats_generation_flow() → adventure_allows_diffic
 | `hardcore` | Авто-4d6×6, без переквалификации; фильтр приключений в UI | Gating модов, полная механика D&D 5e |
 | `easy` | — | Упрощённая механика / обучение |
 
-Фильтрация приключений: `core/difficulty.py` + `_select_adventure()` в `ui/menus/new_game.py`. В `adventures.yaml` ограничения (`allowed_game_difficulties`, `hardcore_only`) пока не заданы — все приключения доступны в обоих режимах.  
+Фильтрация приключений: `core/difficulty.py` (`adventure_unavailable_reason`) + `_select_adventure()` в `ui/menus/new_game.py`. Каталог `adventures.yaml` задаёт `min_level`, `allowed_game_difficulties`, `hardcore_only`; недоступные приключения — серым списком с причиной.  
 Спецификация: [MUD_PRD.md §3.2.1](MUD_PRD.md#321-режимы-сложности-игры).
 
 **Настройки:** только `language` в `settings.json`; режим сложности — в `Character.difficulty`. Имена рас и классов в YAML — bilingual `{ ru, en }`, резолв через `resolve_localized_text()` и параметр `language` в loaders.

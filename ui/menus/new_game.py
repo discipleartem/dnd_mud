@@ -4,7 +4,7 @@ from typing import Any, Literal
 
 from colorama import Fore, Style
 
-from core.difficulty import adventure_allows_difficulty
+from core.difficulty import adventure_unavailable_reason
 from core.localization import get_string
 from core.models import Adventure, Character
 from ui.menus import _deps, character_flow
@@ -80,18 +80,18 @@ def _select_adventure(
     matching = [
         adv
         for adv in adventures
-        if adventure_allows_difficulty(adv, character.difficulty)
+        if adventure_unavailable_reason(adv, character) is None
     ]
     other = [
-        adv
+        (adv, adventure_unavailable_reason(adv, character))
         for adv in adventures
-        if not adventure_allows_difficulty(adv, character.difficulty)
+        if adventure_unavailable_reason(adv, character) is not None
     ]
 
     if not matching:
         print(
             f"{Fore.YELLOW}"
-            f"{get_string(strings, 'adventures.none_for_difficulty')}"
+            f"{get_string(strings, 'adventures.none_available')}"
             f"{Style.RESET_ALL}"
         )
         print()
@@ -107,13 +107,20 @@ def _select_adventure(
             f"{get_string(strings, 'adventures.unavailable_header')}"
             f"{Style.RESET_ALL}"
         )
-        for adv in other:
+        for adv, reason_key in other:
+            assert reason_key is not None
+            reason = get_string(
+                strings,
+                reason_key,
+                min_level=adv.min_level,
+            )
             line = get_string(
                 strings,
                 "adventures.unavailable_line",
                 name=adv.get_name(language),
                 difficulty=adv.difficulty,
                 desc=adv.description,
+                reason=reason,
             )
             print(f"  {Fore.LIGHTBLACK_EX}— {line}{Style.RESET_ALL}")
 

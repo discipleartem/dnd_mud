@@ -323,7 +323,7 @@ API: `core/character.py`, UI: `show_stats_generation_flow` в `ui/menus/stats/st
 
 ### Не реализовано
 - ❌ Режим сложности «Лёгкая» (`easy`) в UI
-- ❌ Ограничения приключений в `adventures.yaml` (`allowed_game_difficulties`, `hardcore_only`); core/UI готовы
+- ✅ Ограничения приключений в `adventures.yaml` (`min_level`, `allowed_game_difficulties`, `hardcore_only`); gating модов — запланировано
 - ❌ Gating модов по режиму (`requires_game_difficulty` в метаданных мода)
 - ❌ Параметризация game_engine по режиму сложности
 - ❌ Полноценный цикл приключений в game_engine.py

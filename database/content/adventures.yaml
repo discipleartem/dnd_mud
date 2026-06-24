@@ -7,6 +7,8 @@ adventures:
     description: "Короткое обучение основам игры"
     type: training
     difficulty: easy
+    min_level: 1
+    allowed_game_difficulties: [normal, hardcore]
     script_file: "adventures/tutorial.yaml"
 
   - id: lost_mine
@@ -16,4 +18,6 @@ adventures:
     description: "Классическое приключение для начинающих искателей приключений"
     type: adventure
     difficulty: normal
+    min_level: 1
+    hardcore_only: true
     script_file: "adventures/lost_mine.yaml"

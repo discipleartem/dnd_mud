@@ -6,6 +6,7 @@
 
 from core.adventure import load_adventures
 from core.character import (
+    ABILITY_SCORE_MAX,
     apply_bonuses_to_stats,
     build_bonuses_from_choices,
     can_assign_point_buy_value,
@@ -24,6 +25,7 @@ from core.character import (
     load_races,
     point_buy_points_remaining,
     save_character,
+    validate_final_stats,
     validate_point_buy_finish,
 )
 from core.dice import roll_ability_score
@@ -41,6 +43,7 @@ from core.stats import (
 from ui.input_handler import get_int_input, get_str_input
 
 __all__ = [
+    "ABILITY_SCORE_MAX",
     "POINT_BUY_BUDGET",
     "POINT_BUY_COSTS",
     "POINT_BUY_MAX",
@@ -72,5 +75,6 @@ __all__ = [
     "point_buy_points_remaining",
     "roll_ability_score",
     "save_character",
+    "validate_final_stats",
     "validate_point_buy_finish",
 ]

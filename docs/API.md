@@ -18,6 +18,7 @@ class Character:
     level: int = 1
     stats: dict[str, int] = field(default_factory=dict)
     current_hp: int = 0
+    max_hp: int = 0
     experience: int = 0
     difficulty: str = "normal"
     subrace: str | None = None
@@ -41,13 +42,14 @@ class Adventure:
     version: str = "1.0"
     allowed_game_difficulties: list[str] | None = None
     hardcore_only: bool = False
+    min_level: int = 1
 ```
 
 **Методы:**
 - `get_name(language: str = "ru") -> str` — локализованное название
 - `from_dict(data: dict[str, Any]) -> Adventure` — десериализация
 
-> Поле `Adventure.difficulty` — **уровень контента** (`easy`, `normal`). Это не режим сложности игры (`Character.difficulty`). Поля `allowed_game_difficulties` и `hardcore_only` загружаются из YAML и проверяются через `adventure_allows_difficulty()`; в текущем каталоге `adventures.yaml` они не заданы.
+> Поле `Adventure.difficulty` — **уровень контента** (`easy`, `normal`). Это не режим сложности игры (`Character.difficulty`). Ограничения (`allowed_game_difficulties`, `hardcore_only`, `min_level`) загружаются из YAML и проверяются через `adventure_unavailable_reason()` в `_select_adventure()`. HardCore-персонаж не блокируется на приключениях без требования HardCore.
 
 ---
 
@@ -66,15 +68,8 @@ CLASSES_FILE = Path("database/classes/classes.yaml")
 ### Сохранение и загрузка
 
 ```python
-save_character(
-    name: str,
-    race_id: str,
-    class_id: str,
-    difficulty: str = "normal",
-    subrace_id: str | None = None,
-    stats: dict[str, int] | None = None,
-) -> Character
-
+save_character(...) -> Character
+starting_max_hp(class_id: str, stats: dict[str, int]) -> int
 load_characters() -> list[Character]
 load_races(language: str = "ru") -> list[dict[str, Any]]
 load_race_full(race_id: str, language: str = "ru") -> dict[str, Any]
@@ -99,9 +94,13 @@ point_buy_cost(score: int) -> int
 remaining_standard_array_pool(used: list[int]) -> list[int]
 point_buy_total_cost(values: list[int]) -> int
 can_assign_point_buy_value(current: dict[str, int], stat: str, new_value: int) -> bool
+validate_final_stats(stats: dict[str, int]) -> tuple[str, int] | None
+ABILITY_SCORE_MAX = 20
 ```
 
-`save_character` создаёт `Character` и сохраняет в `saves/characters/{save_slug}.json`.
+`save_character` создаёт `Character` (`current_hp` = `max_hp` = `starting_max_hp(...)`) и сохраняет в `saves/characters/{save_slug}.json`.  
+`starting_max_hp` — PHB: `max(1, hit_dice + ability_modifier(CON))`.  
+`validate_final_stats` — первое превышение потолка 20 после всех бонусов; UI вызывает при финализации характеристик.
 
 ### Генерация характеристик
 
@@ -274,7 +273,6 @@ save_settings(language: str) -> None
 
 **Запланированные hook'и (не реализованы)**
 
-- Ограничения в `adventures.yaml` (`allowed_game_difficulties`, `hardcore_only`) — парсинг и UI-фильтр есть, в каталоге поля не заданы
 - `mod_loader` и проверка `requires_game_difficulty` в метаданных мода
 - Параметризация правил в `game_engine` по режиму (HardCore = полная механика D&D 5e)
 
@@ -283,10 +281,12 @@ save_settings(language: str) -> None
 ## core.difficulty — Режим сложности и приключения
 
 ```python
+adventure_requires_hardcore(adventure: Adventure) -> bool
 adventure_allows_difficulty(adventure: Adventure, game_difficulty: str) -> bool
+adventure_unavailable_reason(adventure: Adventure, character: Character) -> str | None
 ```
 
-Проверяет `hardcore_only` и `allowed_game_difficulties` модели `Adventure`. Используется в `_select_adventure()` (`ui/menus/new_game.py`).
+`adventure_unavailable_reason` возвращает ключ локализации (`adventures.unavailable_reason_level` / `adventures.unavailable_reason_hardcore`) или `None`, если приключение доступно. Используется в `_select_adventure()` (`ui/menus/new_game.py`).
 
 ## core.adventure — Приключения
 
