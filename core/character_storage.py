@@ -1,6 +1,7 @@
 """Сохранение и загрузка персонажей в JSON."""
 
 import json
+from datetime import UTC, datetime
 from pathlib import Path
 
 from core.classes import get_class_hit_dice
@@ -42,6 +43,7 @@ def save_character(
         difficulty=difficulty,
         subrace=subrace_id,
         save_slug=_unique_save_slug(name),
+        created_at=datetime.now(UTC).isoformat(),
     )
 
     _save_character_file(character)
@@ -117,16 +119,49 @@ def _load_character_file(path: Path) -> Character | None:
         return None
 
 
+def _character_created_at_timestamp(character: Character, path: Path) -> float:
+    """Метка времени создания: из JSON или mtime файла для старых сохранений."""
+    if character.created_at:
+        try:
+            return datetime.fromisoformat(character.created_at).timestamp()
+        except ValueError:
+            pass
+    return path.stat().st_mtime
+
+
 def load_characters() -> list[Character]:
-    """Загрузить список всех сохранённых персонажей."""
+    """Загрузить список всех сохранённых персонажей (старые → новые)."""
     if not CHARACTERS_DIR.exists():
         return []
 
-    characters: list[Character] = []
-    for path in sorted(CHARACTERS_DIR.glob("*.json")):
+    entries: list[tuple[float, Character]] = []
+    for path in CHARACTERS_DIR.glob("*.json"):
         character = _load_character_file(path)
         if character is not None:
-            characters.append(character)
+            entries.append(
+                (_character_created_at_timestamp(character, path), character)
+            )
 
-    characters.sort(key=lambda c: c.name.lower())
-    return characters
+    entries.sort(key=lambda item: item[0])
+    return [character for _, character in entries]
+
+
+def delete_character(save_slug: str) -> bool:
+    """Удалить JSON-файл персонажа. False, если файла нет."""
+    path = _character_file_path(save_slug)
+    if not path.exists():
+        return False
+    path.unlink()
+    return True
+
+
+def delete_all_characters() -> int:
+    """Удалить всех персонажей. Возвращает число удалённых файлов."""
+    if not CHARACTERS_DIR.exists():
+        return 0
+
+    deleted = 0
+    for path in CHARACTERS_DIR.glob("*.json"):
+        path.unlink()
+        deleted += 1
+    return deleted

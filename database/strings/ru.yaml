@@ -9,6 +9,7 @@ menu:
   new_game: "Новая игра"
   load_game: "Загрузить игру"
   create_character: "Создать персонажа"
+  characters: "Персонажи"
   settings: "Настройки"
   languages: "Languages"
   exit: "Выход"
@@ -125,6 +126,21 @@ choose_character:
   stats_line: "{stats}"
   create_new: "Создать нового персонажа"
   no_characters: "Нет сохранённых персонажей. Переход к созданию..."
+  back: "Назад"
+
+characters_menu:
+  caption: "ПЕРСОНАЖИ"
+  empty_list: "Нет сохранённых персонажей."
+  create: "Создать персонажа"
+  delete_one: "Удалить персонажа"
+  delete_all: "Удалить всех персонажей"
+  prompt: "Выберите действие: "
+  select_prompt: "Выберите персонажа (1-{count}), 0 — Назад: "
+  confirm_delete_one: "Удалить персонажа '{name}'? (1-Да, 0-Нет): "
+  confirm_delete_all: "Удалить всех персонажей ({count})? Действие необратимо. (1-Да, 0-Нет): "
+  delete_success: "Персонаж '{name}' удалён."
+  delete_all_success: "Удалено персонажей: {count}."
+  cancelled: "Удаление отменено."
   back: "Назад"
 
 difficulty:

@@ -1,5 +1,6 @@
 """Общие UI-хелперы для экранов меню."""
 
+from collections.abc import Callable
 from typing import Any
 
 from colorama import Fore, Style
@@ -53,10 +54,13 @@ def _run_numbered_menu(
     prompt_key: str,
     back_label_key: str = "common.back",
     prompt_kwargs: dict[str, Any] | None = None,
+    before_back: Callable[[], None] | None = None,
 ) -> int | None:
     """Нумерованное меню: 1..N — опции, 0 — назад. None при выборе 0."""
     for idx, label in enumerate(options, 1):
         print(f"  {Fore.YELLOW}{idx}{Style.RESET_ALL}. {label}")
+    if before_back is not None:
+        before_back()
     print()
     print(
         f"  {Fore.YELLOW}0{Style.RESET_ALL}."

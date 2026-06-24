@@ -21,6 +21,7 @@ class Character:
     difficulty: str = "normal"
     subrace: str | None = None
     save_slug: str | None = None
+    created_at: str | None = None
 
     def to_dict(self) -> dict[str, Any]:
         """Сериализовать в словарь для сохранения в JSON."""
@@ -38,6 +39,8 @@ class Character:
             data["subrace"] = self.subrace
         if self.save_slug is not None:
             data["save_slug"] = self.save_slug
+        if self.created_at is not None:
+            data["created_at"] = self.created_at
         return data
 
     @classmethod
@@ -45,6 +48,7 @@ class Character:
         """Создать из словаря."""
         subrace = data.get("subrace")
         save_slug = data.get("save_slug")
+        created_at = data.get("created_at")
         return cls(
             name=data.get("name", ""),
             race=data.get("race", ""),
@@ -56,6 +60,7 @@ class Character:
             difficulty=data.get("difficulty", "normal"),
             subrace=str(subrace) if subrace is not None else None,
             save_slug=str(save_slug) if save_slug is not None else None,
+            created_at=str(created_at) if created_at is not None else None,
         )
 
 

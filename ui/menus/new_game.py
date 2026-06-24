@@ -105,19 +105,9 @@ def _select_adventure(
         _press_enter(strings)
         return None
 
-    _print_screen_header(get_string(strings, "adventures.caption"))
-
-    for idx, adv in enumerate(matching, 1):
-        line = get_string(
-            strings,
-            "adventures.adventure_line",
-            name=adv.get_name(language),
-            difficulty=adv.difficulty,
-            desc=adv.description,
-        )
-        print(f"  {Fore.YELLOW}{idx}{Style.RESET_ALL}. {line}")
-
-    if other:
+    def _print_unavailable() -> None:
+        if not other:
+            return
         print()
         print(
             f"{Fore.LIGHTBLACK_EX}"
@@ -134,12 +124,25 @@ def _select_adventure(
             )
             print(f"  {Fore.LIGHTBLACK_EX}— {line}{Style.RESET_ALL}")
 
+    options = [
+        get_string(
+            strings,
+            "adventures.adventure_line",
+            name=adv.get_name(language),
+            difficulty=adv.difficulty,
+            desc=adv.description,
+        )
+        for adv in matching
+    ]
+
+    _print_screen_header(get_string(strings, "adventures.caption"))
+
     choice = _run_numbered_menu(
         strings,
-        [],
+        options,
         prompt_key="adventures.prompt",
         back_label_key="adventures.back",
-        prompt_kwargs={"count": len(matching)},
+        before_back=_print_unavailable,
     )
 
     if choice is None:

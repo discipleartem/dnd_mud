@@ -3,7 +3,12 @@
 Фасад: re-export публичного API из подмодулей для обратной совместимости.
 """
 
-from core.character_storage import load_characters, save_character
+from core.character_storage import (
+    delete_all_characters,
+    delete_character,
+    load_characters,
+    save_character,
+)
 from core.classes import load_classes
 from core.races import (
     build_bonuses_from_choices,
@@ -48,6 +53,8 @@ __all__ = [
     "apply_racial_bonuses_to_stats",
     "build_bonuses_from_choices",
     "can_assign_point_buy_value",
+    "delete_all_characters",
+    "delete_character",
     "generate_stats_point_buy",
     "generate_stats_random",
     "generate_stats_standard_array",

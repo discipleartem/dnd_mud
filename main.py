@@ -15,7 +15,7 @@ from colorama import Fore, Style, init
 from core.localization import get_string, load_strings
 from core.settings import load_settings, save_settings
 from ui.menus import (
-    show_create_character_flow,
+    show_characters_menu,
     show_languages_menu,
     show_load_game_flow,
     show_main_menu,
@@ -106,8 +106,8 @@ def main() -> int:
             show_load_game_flow(strings)
 
         elif choice == 3:
-            # Создать персонажа
-            show_create_character_flow(strings, settings.get("language", "ru"))
+            # Персонажи
+            show_characters_menu(strings, settings.get("language", "ru"))
             settings, strings = _save_and_reload_settings(settings, strings)
 
         elif choice == 4:

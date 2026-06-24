@@ -7,15 +7,39 @@ alwaysApply: true
 
 Console MUD — browser forbidden. Verify: `make test` + console smoke.
 
+## Cursor modes (Plan / Agent)
+
+- **Plan mode** — только readonly: исследование, `CreatePlan`, уточнения.
+  Не применять: правки кода, shell (кроме readonly), finish-checklist, commit/push, console smoke.
+- **Agent mode после Build в Plan** — полный цикл ниже: git-flow + verify + finish-checklist.
+- **Agent mode напрямую** (сессия без предшествующего Plan) — только реализация и verify; **git-flow не применять**
+  (нет обязательного git-старта, task-ветки, auto-commit/push; коммит и push — только по явному запросу пользователя).
+- **Ask mode** — как Plan без создания плана реализации.
+
+Слово «план» в Agent-loop (`00-global`: анализ → план → действие) — **этап проектирования**, не режим Cursor Plan.
+
+### Приоритет верификации (console MUD)
+
+Этот файл **переопределяет** `ironbee-devtools-use.mdc` и глобальный `browser-automation.mdc`.
+Верификация: `make test` + при затронутом UI — `python main.py` (console smoke). Браузер запрещён.
+
 ## Git scope
 
-См. [`01-operations.mdc`](~/.cursor/rules/01-operations.mdc). Не коммитить: `.coverage`, `saves/`.
+Не коммитить: `.coverage`, `saves/`.
 
-Обязательно commit/push — задачи с code/data (не docs-only).
+- **Plan → Build → Agent** — git-flow по [`01-operations.mdc`](~/.cursor/rules/01-operations.mdc) §Task cycle;
+  для задач с code/data обязательны commit и push task-ветки.
+- **Agent напрямую** — git-flow не обязателен; коммит/push только по запросу пользователя.
 
 ## Before finishing
 
+### Plan → Build → Agent
+
 1. **Git** — `01-operations.mdc` (старт/sync/push); task-ветка; clean tree
 2. **Verify** — `make test` / `make check` / `python main.py` — см. [`00-project.mdc`](00-project.mdc) §Commands
+
+### Agent напрямую
+
+1. **Verify** — `make test` / `make check` / `python main.py` при затронутом коде/UI — см. [`00-project.mdc`](00-project.mdc) §Commands
 
 Implement once at end; skip runtime for docs-only.

@@ -5,6 +5,7 @@ import re
 from core.models import Adventure, Character
 from ui import menus
 from ui.menus import _deps, character_flow, new_game
+from ui.menus import characters_menu
 from ui.menus import settings as settings_menu
 
 
@@ -220,6 +221,31 @@ def test_select_adventure_filters_by_character_difficulty(
     assert "Недоступны для сложности персонажа" in output
 
 
+def test_select_adventure_choice_returns_adventure(
+    monkeypatch, ru_strings, patch_int_input
+):
+    """Выбор доступного приключения возвращает объект Adventure."""
+    character = Character(
+        name="Normal Hero",
+        race="human",
+        class_name="fighter",
+        difficulty="normal",
+    )
+    tutorial = Adventure(
+        id="tutorial",
+        name={"ru": "Обучение"},
+        description="desc",
+    )
+
+    monkeypatch.setattr(_deps, "load_adventures", lambda: [tutorial])
+    patch_int_input(monkeypatch, menus, [1])
+
+    result = new_game._select_adventure(ru_strings, "ru", character)
+
+    assert result is not None
+    assert result.id == "tutorial"
+
+
 def test_new_game_no_characters_goes_to_create(monkeypatch):
     """Без персонажей — сразу создание."""
     calls = {"select": 0, "create": 0}
@@ -283,3 +309,80 @@ def test_languages_menu_order_depends_on_locale(
     en_output = capsys.readouterr().out
     assert re.search(r"1.*Русский", en_output)
     assert re.search(r"2.*English", en_output)
+
+
+def test_characters_menu_shows_hub_options(
+    monkeypatch, capsys, ru_strings, patch_int_input
+):
+    """Hub «Персонажи» показывает список и пункты создания/удаления."""
+    character = Character(
+        name="Hero",
+        race="human",
+        class_name="fighter",
+        save_slug="hero",
+    )
+    monkeypatch.setattr(_deps, "load_characters", lambda: [character])
+    patch_int_input(monkeypatch, menus, [0])
+
+    characters_menu.show_characters_menu(ru_strings)
+    output = capsys.readouterr().out
+
+    assert "ПЕРСОНАЖИ" in output
+    assert "Hero" in output
+    assert "Создать персонажа" in output
+    assert "Удалить персонажа" in output
+    assert "Удалить всех персонажей" in output
+
+
+def test_characters_menu_delete_one_confirmed(
+    monkeypatch, ru_strings, patch_int_input
+):
+    """Удаление одного персонажа вызывает delete_character после подтверждения."""
+    character = Character(
+        name="Hero",
+        race="human",
+        class_name="fighter",
+        save_slug="hero",
+    )
+    deleted: list[str] = []
+
+    monkeypatch.setattr(_deps, "load_characters", lambda: [character])
+    monkeypatch.setattr(
+        _deps,
+        "delete_character",
+        lambda slug: deleted.append(slug) or True,
+    )
+    patch_int_input(monkeypatch, menus, [2, 1, 1, 0])
+    monkeypatch.setattr(characters_menu, "_press_enter", lambda strings: None)
+
+    characters_menu.show_characters_menu(ru_strings)
+
+    assert deleted == ["hero"]
+
+
+def test_characters_menu_delete_all_cancelled(
+    monkeypatch, capsys, ru_strings, patch_int_input
+):
+    """Отмена удаления всех персонажей не вызывает delete_all_characters."""
+    character = Character(
+        name="Hero",
+        race="human",
+        class_name="fighter",
+        save_slug="hero",
+    )
+    deleted_all_called: list[bool] = []
+
+    monkeypatch.setattr(_deps, "load_characters", lambda: [character])
+    monkeypatch.setattr(
+        _deps,
+        "delete_all_characters",
+        lambda: deleted_all_called.append(True) or 0,
+    )
+    patch_int_input(monkeypatch, menus, [3, 0, 0])
+    monkeypatch.setattr(characters_menu, "_press_enter", lambda strings: None)
+
+    characters_menu.show_characters_menu(ru_strings)
+    output = capsys.readouterr().out
+
+    assert deleted_all_called == []
+    assert "Удаление отменено" in output

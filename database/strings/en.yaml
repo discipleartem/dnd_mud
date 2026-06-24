@@ -9,6 +9,7 @@ menu:
   new_game: "New Game"
   load_game: "Load Game"
   create_character: "Create Character"
+  characters: "Characters"
   settings: "Settings"
   languages: "Languages"
   exit: "Exit"
@@ -136,6 +137,21 @@ choose_character:
   stats_line: "{stats}"
   create_new: "Create new character"
   no_characters: "No saved characters. Redirecting to creation..."
+  back: "Back"
+
+characters_menu:
+  caption: "CHARACTERS"
+  empty_list: "No saved characters."
+  create: "Create character"
+  delete_one: "Delete character"
+  delete_all: "Delete all characters"
+  prompt: "Choose action: "
+  select_prompt: "Choose character (1-{count}), 0 — Back: "
+  confirm_delete_one: "Delete character '{name}'? (1-Yes, 0-No): "
+  confirm_delete_all: "Delete all characters ({count})? This cannot be undone. (1-Yes, 0-No): "
+  delete_success: "Character '{name}' deleted."
+  delete_all_success: "Deleted characters: {count}."
+  cancelled: "Deletion cancelled."
   back: "Back"
 
 difficulty:
