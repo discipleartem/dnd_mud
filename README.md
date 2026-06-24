@@ -134,6 +134,8 @@ dnd_mud/
 │   └── test_settings.py
 │
 └── docs/                            # Документация
+    ├── DND_RULES.md                 # Правила D&D 5e (справочник по PHB)
+    ├── rules/                       # Главы справочника
     ├── MUD_PRD.md                   # Product Requirements Document
     ├── ARCHITECTURE.md              # Архитектура проекта
     ├── API.md                       # API Reference

@@ -20,6 +20,7 @@ python main.py  # smoke: пройти затронутое меню
 
 ## Docs
 
+- [docs/DND_RULES.md](docs/DND_RULES.md)
 - [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)
 - [docs/API.md](docs/API.md)
 - [docs/CHANGELOG.md](docs/CHANGELOG.md)

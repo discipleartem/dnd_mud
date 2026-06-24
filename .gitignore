@@ -14,6 +14,9 @@ __pycache__/
 .pytest_cache/
 .coverage
 
+# Локальная копия PHB (© WotC); не коммитить
+docs/*.pdf
+
 # IronBee extension may recreate this locally; console MUD does not use browser MCP
 .cursor/rules/ironbee-devtools-use.mdc
 
