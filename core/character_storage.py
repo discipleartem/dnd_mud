@@ -11,6 +11,13 @@ from core.slug import make_save_slug
 from core.stats import STANDARD_ARRAY, generate_stats_standard_array
 
 
+def starting_max_hp(class_id: str, stats: dict[str, int]) -> int:
+    """Максимум хитов на 1 уровне (PHB: max(1, кость + мод. Телосложения))."""
+    hit_dice = get_class_hit_dice(class_id)
+    con_mod = ability_modifier(stats.get("constitution", 10))
+    return max(1, hit_dice + con_mod)
+
+
 def save_character(
     name: str,
     race_id: str,
@@ -25,9 +32,7 @@ def save_character(
             list(STANDARD_ARRAY), race_id, subrace_id
         )
 
-    hit_dice = get_class_hit_dice(class_id)
-    con_mod = ability_modifier(stats.get("constitution", 10))
-    hp = hit_dice + con_mod
+    hp = starting_max_hp(class_id, stats)
 
     character = Character(
         name=name,
@@ -36,6 +41,7 @@ def save_character(
         level=1,
         stats=stats,
         current_hp=hp,
+        max_hp=hp,
         experience=0,
         difficulty=difficulty,
         subrace=subrace_id,

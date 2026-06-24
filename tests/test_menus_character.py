@@ -264,7 +264,8 @@ def test_select_adventure_filters_by_character_difficulty(
     assert result is None
     assert "Обучение" in output
     assert "HardCore Quest" in output
-    assert "Недоступны для сложности персонажа" in output
+    assert "Недоступные приключения" in output
+    assert "требуется режим HardCore" in output
 
 
 def test_select_adventure_choice_returns_adventure(

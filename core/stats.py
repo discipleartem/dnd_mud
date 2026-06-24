@@ -28,6 +28,7 @@ POINT_BUY_COSTS: dict[int, int] = {
 }
 POINT_BUY_MIN = min(POINT_BUY_COSTS)
 POINT_BUY_MAX = max(POINT_BUY_COSTS)
+ABILITY_SCORE_MAX = 20
 
 
 def point_buy_cost(score: int) -> int:
@@ -66,6 +67,19 @@ def validate_point_buy_finish(values: list[int]) -> str | None:
     if remaining > 0:
         return "character.stats_points_unspent"
     return "character.stats_points_overspent"
+
+
+def validate_final_stats(stats: dict[str, int]) -> tuple[str, int] | None:
+    """Проверить потолок характеристик после всех бонусов (PHB: 20).
+
+    Returns:
+        (stat_id, value) первого превышения или None
+    """
+    for stat in STAT_NAMES:
+        value = stats.get(stat, 0)
+        if value > ABILITY_SCORE_MAX:
+            return stat, value
+    return None
 
 
 def can_assign_point_buy_value(

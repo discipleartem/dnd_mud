@@ -23,7 +23,14 @@ python main.py  # smoke при затронутом UI
 
 Docs-only и правила (`.cursor/`, `AGENTS.md`) — runtime не нужен.
 
+## Plan → Build → Agent
+
+После подтверждения плана (**Build**) первый шаг реализации — **git-старт** ([`AGENTS.md`](AGENTS.md) §3, [`01-operations.mdc`](~/.cursor/rules/01-operations.mdc) §Task cycle). Запрещены правки кода до task-ветки от актуального `dev`.
+
+Завершение сессии: verify → auto-commit(ы) на task-ветке → `git push -u origin HEAD`.
+
 ## Before finishing
 
-- **Plan-сессия:** git/push — `01-operations`; verify — команды выше
-- **Agent:** verify при затронутом коде/UI; один прогон в конце, не после каждого файла
+- **Plan → Build → Agent:** git-старт в начале; verify в конце; push task-ветки обязателен
+- **Agent напрямую:** verify при затронутом коде/UI; commit/push — по запросу
+- Один прогон verify в конце, не после каждого файла

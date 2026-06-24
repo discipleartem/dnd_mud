@@ -219,6 +219,20 @@ def _run_stats_confirm_loop(
     if finalized is None:
         return "reroll"
     final_stats, race_bonuses = finalized
+    over_max = _deps.validate_final_stats(final_stats)
+    if over_max is not None:
+        stat_id, value = over_max
+        stat_name = _ability_name(strings, stat_id)
+        msg = get_string(
+            strings,
+            "character.stats_exceeds_max",
+            stat=stat_name,
+            value=value,
+            max=_deps.ABILITY_SCORE_MAX,
+        )
+        print(f"{Fore.RED}{msg}{Style.RESET_ALL}")
+        print()
+        return "reroll"
     result = _confirm_stats(
         strings,
         final_stats,

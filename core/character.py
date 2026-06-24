@@ -8,6 +8,7 @@ from core.character_storage import (
     delete_character,
     load_characters,
     save_character,
+    starting_max_hp,
 )
 from core.classes import load_classes
 from core.races import (
@@ -20,6 +21,7 @@ from core.races import (
     load_races,
 )
 from core.stats import (
+    ABILITY_SCORE_MAX,
     POINT_BUY_BUDGET,
     POINT_BUY_COSTS,
     POINT_BUY_MAX,
@@ -37,10 +39,12 @@ from core.stats import (
     point_buy_points_remaining,
     point_buy_total_cost,
     remaining_standard_array_pool,
+    validate_final_stats,
     validate_point_buy_finish,
 )
 
 __all__ = [
+    "ABILITY_SCORE_MAX",
     "POINT_BUY_BUDGET",
     "POINT_BUY_COSTS",
     "POINT_BUY_MAX",
@@ -70,5 +74,7 @@ __all__ = [
     "point_buy_total_cost",
     "remaining_standard_array_pool",
     "save_character",
+    "starting_max_hp",
+    "validate_final_stats",
     "validate_point_buy_finish",
 ]

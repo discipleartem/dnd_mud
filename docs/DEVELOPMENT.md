@@ -112,6 +112,8 @@ dnd_mud/
 │   ├── test_settings.py
 │   └── test_stats.py        # 72 теста всего
 └── docs/                    # Документация
+    ├── DND_RULES.md         # Правила D&D 5e (справочник по PHB)
+    ├── rules/               # Главы справочника
     ├── MUD_PRD.md
     ├── ARCHITECTURE.md
     ├── API.md
@@ -321,7 +323,7 @@ API: `core/character.py`, UI: `show_stats_generation_flow` в `ui/menus/stats/st
 
 ### Не реализовано
 - ❌ Режим сложности «Лёгкая» (`easy`) в UI
-- ❌ Ограничения приключений в `adventures.yaml` (`allowed_game_difficulties`, `hardcore_only`); core/UI готовы
+- ✅ Ограничения приключений в `adventures.yaml` (`min_level`, `allowed_game_difficulties`, `hardcore_only`); gating модов — запланировано
 - ❌ Gating модов по режиму (`requires_game_difficulty` в метаданных мода)
 - ❌ Параметризация game_engine по режиму сложности
 - ❌ Полноценный цикл приключений в game_engine.py

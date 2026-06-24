@@ -1,7 +1,11 @@
 """Тесты проверок режима сложности."""
 
-from core.difficulty import adventure_allows_difficulty
-from core.models import Adventure
+from core.difficulty import (
+    adventure_allows_difficulty,
+    adventure_requires_hardcore,
+    adventure_unavailable_reason,
+)
+from core.models import Adventure, Character
 
 
 def test_adventure_allows_all_when_no_restrictions():
@@ -18,7 +22,8 @@ def test_adventure_hardcore_only():
     assert adventure_allows_difficulty(adventure, "normal") is False
 
 
-def test_adventure_allowed_game_difficulties():
+def test_hardcore_character_allowed_on_normal_adventure():
+    """HardCore-персонаж доступен на приключениях без требования HardCore."""
     adventure = Adventure(
         id="normal_only",
         name="Normal",
@@ -26,4 +31,46 @@ def test_adventure_allowed_game_difficulties():
     )
 
     assert adventure_allows_difficulty(adventure, "normal") is True
-    assert adventure_allows_difficulty(adventure, "hardcore") is False
+    assert adventure_allows_difficulty(adventure, "hardcore") is True
+
+
+def test_adventure_requires_hardcore_from_allowed_list():
+    adventure = Adventure(
+        id="hc_list",
+        name="HC",
+        allowed_game_difficulties=["hardcore"],
+    )
+
+    assert adventure_requires_hardcore(adventure) is True
+    assert adventure_allows_difficulty(adventure, "hardcore") is True
+    assert adventure_allows_difficulty(adventure, "normal") is False
+
+
+def test_adventure_unavailable_reason_level():
+    adventure = Adventure(id="high", name="High", min_level=5)
+    character = Character(
+        name="Hero",
+        race="human",
+        class_name="fighter",
+        level=1,
+    )
+
+    assert (
+        adventure_unavailable_reason(adventure, character)
+        == "adventures.unavailable_reason_level"
+    )
+
+
+def test_adventure_unavailable_reason_hardcore():
+    adventure = Adventure(id="hc", name="HC", hardcore_only=True)
+    character = Character(
+        name="Hero",
+        race="human",
+        class_name="fighter",
+        difficulty="normal",
+    )
+
+    assert (
+        adventure_unavailable_reason(adventure, character)
+        == "adventures.unavailable_reason_hardcore"
+    )
