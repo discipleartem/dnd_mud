@@ -5,12 +5,6 @@ from typing import Any, Literal
 from colorama import Fore, Style
 
 from core.localization import get_string
-from core.stats import (
-    POINT_BUY_COSTS,
-    POINT_BUY_MAX,
-    POINT_BUY_MIN,
-    STAT_NAMES,
-)
 from ui.menus import _deps
 from ui.menus._common import (
     SEPARATOR,
@@ -89,14 +83,14 @@ def _prompt_point_buy_stat_value(
         print()
         value = _deps.get_int_input(
             _choice_prompt(strings),
-            POINT_BUY_MIN,
-            POINT_BUY_MAX,
+            _deps.POINT_BUY_MIN,
+            _deps.POINT_BUY_MAX,
             strings,
         )
         if _deps.can_assign_point_buy_value(stats, stat, value):
             stats[stat] = value
             return
-        if value not in POINT_BUY_COSTS:
+        if value not in _deps.POINT_BUY_COSTS:
             print(
                 f"{Fore.RED}"
                 f"{get_string(strings, 'character.stats_max_value_15')}"
@@ -124,7 +118,7 @@ def _assign_stats_from_pool(
     selected: dict[str, int] = {}
     pool = list(available)
 
-    for stat in STAT_NAMES:
+    for stat in _deps.STAT_NAMES:
         stat_name = _ability_name(strings, stat)
         _print_stats_generation_header(strings, race_id, subrace_id)
 
@@ -182,7 +176,7 @@ def _confirm_stats(
     print(SEPARATOR)
     print()
 
-    for stat in STAT_NAMES:
+    for stat in _deps.STAT_NAMES:
         _print_final_stat_line(
             strings, stat, stats.get(stat, 10), race_bonuses
         )

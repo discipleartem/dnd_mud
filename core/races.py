@@ -20,31 +20,58 @@ def _load_races_yaml() -> dict[str, Any]:
     return {}
 
 
+def _get_race_and_subrace(
+    race_id: str, subrace_id: str | None = None
+) -> tuple[dict[str, Any], dict[str, Any] | None]:
+    """Получить данные расы и подрасы из YAML."""
+    races = _load_races_yaml()
+    race_info = races.get(race_id, {})
+    if not isinstance(race_info, dict):
+        return {}, None
+    if not subrace_id:
+        return race_info, None
+    subraces = race_info.get("subraces", {})
+    if not isinstance(subraces, dict):
+        return race_info, None
+    subrace_info = subraces.get(subrace_id, {})
+    if isinstance(subrace_info, dict):
+        return race_info, subrace_info
+    return race_info, None
+
+
+def _merge_bonus_dicts(
+    base: dict[str, int], extra: dict[str, int]
+) -> dict[str, int]:
+    """Сложить два словаря бонусов к характеристикам."""
+    result = dict(base)
+    for stat, val in extra.items():
+        result[stat] = result.get(stat, 0) + val
+    return result
+
+
 def get_race_bonuses(
     race_id: str, subrace_id: str | None = None
 ) -> dict[str, int]:
     """Получить расовые и подрасовые бонусы к характеристикам."""
-    bonuses: dict[str, int] = {}
-    races = _load_races_yaml()
-    race_info = races.get(race_id, {})
-    if subrace_id:
-        subraces = race_info.get("subraces", {})
-        subrace_info = subraces.get(subrace_id, {})
+    race_info, subrace_info = _get_race_and_subrace(race_id, subrace_id)
+    if not race_info:
+        return {}
+
+    if subrace_id and subrace_info:
         inherit_base = subrace_info.get("inherit_base_bonuses", True)
     else:
-        subrace_info = {}
         inherit_base = True
 
+    bonuses: dict[str, int] = {}
     if inherit_base:
         base_bonuses = race_info.get("ability_bonuses", {})
         if isinstance(base_bonuses, dict):
             bonuses.update(base_bonuses)
 
-    if subrace_id:
+    if subrace_id and subrace_info:
         sub_bonuses = subrace_info.get("ability_bonuses", {})
         if isinstance(sub_bonuses, dict):
-            for stat, val in sub_bonuses.items():
-                bonuses[stat] = bonuses.get(stat, 0) + val
+            bonuses = _merge_bonus_dicts(bonuses, sub_bonuses)
     return bonuses
 
 
@@ -52,15 +79,9 @@ def _race_info_for_features(
     race_id: str, subrace_id: str | None = None
 ) -> dict[str, Any]:
     """Данные расы/подрасы для чтения features."""
-    races = _load_races_yaml()
-    race_info = races.get(race_id, {})
-    if not isinstance(race_info, dict):
-        return {}
-    if subrace_id:
-        subraces = race_info.get("subraces", {})
-        subrace_info = subraces.get(subrace_id, {})
-        if isinstance(subrace_info, dict):
-            return subrace_info
+    race_info, subrace_info = _get_race_and_subrace(race_id, subrace_id)
+    if subrace_id and subrace_info:
+        return subrace_info
     return race_info
 
 
@@ -93,7 +114,7 @@ def build_bonuses_from_choices(
     """Собрать словарь бонусов из списка выбранных характеристик."""
     bonuses: dict[str, int] = {}
     for stat in chosen_stats:
-        bonuses[stat] = bonuses.get(stat, 0) + value
+        bonuses = _merge_bonus_dicts(bonuses, {stat: value})
     return bonuses
 
 
@@ -105,8 +126,7 @@ def get_effective_race_bonuses(
     """Статические и выборные расовые бонусы для отображения."""
     bonuses = get_race_bonuses(race_id, subrace_id)
     if choice_bonuses:
-        for stat, val in choice_bonuses.items():
-            bonuses[stat] = bonuses.get(stat, 0) + val
+        bonuses = _merge_bonus_dicts(bonuses, choice_bonuses)
     return bonuses
 
 
@@ -160,7 +180,7 @@ def load_races(language: str = "ru") -> list[dict[str, Any]]:
 
 def load_race_full(race_id: str, language: str = "ru") -> dict[str, Any]:
     """Загрузить полные данные расы по ID."""
-    race_info = _load_races_yaml().get(race_id, {})
-    if isinstance(race_info, dict):
+    race_info, _ = _get_race_and_subrace(race_id)
+    if race_info:
         return _localize_race_info(race_info, language)
     return {}

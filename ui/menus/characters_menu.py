@@ -8,38 +8,13 @@ from core.localization import get_string
 from core.models import Character
 from ui.menus import _deps, character_flow
 from ui.menus._common import (
-    _press_enter,
+    _confirm_yes_no,
+    _print_cancelled,
     _print_screen_header,
+    _print_success_and_wait,
     _run_numbered_menu,
 )
-from ui.menus._display import _print_character_card
-
-
-def _confirm(strings: dict[str, Any], prompt_key: str, **kwargs: Any) -> bool:
-    """Подтвердить действие: 1 — да, 0 — нет."""
-    choice = _deps.get_int_input(
-        get_string(strings, prompt_key, **kwargs),
-        0,
-        1,
-        strings,
-    )
-    return choice == 1
-
-
-def _print_characters_list(
-    strings: dict[str, Any],
-    characters: list[Character],
-    language: str,
-) -> None:
-    """Вывести список сохранённых персонажей."""
-    print(
-        f"  {Fore.YELLOW}{Style.BRIGHT}"
-        f"{get_string(strings, 'choose_character.list_header')}"
-        f"{Style.RESET_ALL}"
-    )
-    print()
-    for idx, char in enumerate(characters, 1):
-        _print_character_card(idx, char, strings, language)
+from ui.menus._display import _print_characters_list
 
 
 def _select_character_to_delete(
@@ -81,18 +56,12 @@ def _delete_one_character(
     if character is None:
         return
 
-    if not _confirm(
+    if not _confirm_yes_no(
         strings,
         "characters_menu.confirm_delete_one",
         name=character.name,
     ):
-        print(
-            f"{Fore.LIGHTBLACK_EX}"
-            f"{get_string(strings, 'characters_menu.cancelled')}"
-            f"{Style.RESET_ALL}"
-        )
-        print()
-        _press_enter(strings)
+        _print_cancelled(strings)
         return
 
     if character.save_slug:
@@ -103,25 +72,17 @@ def _delete_one_character(
         "characters_menu.delete_success",
         name=character.name,
     )
-    print(f"{Fore.GREEN}{msg}{Style.RESET_ALL}")
-    print()
-    _press_enter(strings)
+    _print_success_and_wait(strings, msg)
 
 
 def _delete_all_characters(strings: dict[str, Any], count: int) -> None:
     """Удалить всех персонажей с подтверждением."""
-    if not _confirm(
+    if not _confirm_yes_no(
         strings,
         "characters_menu.confirm_delete_all",
         count=count,
     ):
-        print(
-            f"{Fore.LIGHTBLACK_EX}"
-            f"{get_string(strings, 'characters_menu.cancelled')}"
-            f"{Style.RESET_ALL}"
-        )
-        print()
-        _press_enter(strings)
+        _print_cancelled(strings)
         return
 
     deleted = _deps.delete_all_characters()
@@ -130,12 +91,12 @@ def _delete_all_characters(strings: dict[str, Any], count: int) -> None:
         "characters_menu.delete_all_success",
         count=deleted,
     )
-    print(f"{Fore.GREEN}{msg}{Style.RESET_ALL}")
-    print()
-    _press_enter(strings)
+    _print_success_and_wait(strings, msg)
 
 
-def show_characters_menu(strings: dict[str, Any], language: str = "ru") -> None:
+def show_characters_menu(
+    strings: dict[str, Any], language: str = "ru"
+) -> None:
     """Меню управления персонажами: список, создание, удаление."""
     while True:
         characters = _deps.load_characters()

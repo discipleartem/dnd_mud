@@ -2,11 +2,23 @@
 
 import re
 
+import pytest
+
 from core.models import Adventure, Character
-from ui import menus
-from ui.menus import _deps, character_flow, new_game
-from ui.menus import characters_menu
+from ui.menus import _deps, character_flow, characters_menu, new_game
 from ui.menus import settings as settings_menu
+
+
+def _patch_load_characters(
+    monkeypatch: pytest.MonkeyPatch, characters: list[Character]
+) -> None:
+    monkeypatch.setattr(_deps, "load_characters", lambda: characters)
+
+
+def _noop_press_enter(monkeypatch: pytest.MonkeyPatch) -> None:
+    from ui.menus import _common
+
+    monkeypatch.setattr(_common, "_press_enter", lambda strings: None)
 
 
 def test_base_race_without_subraces_has_back_option(
@@ -35,7 +47,7 @@ def test_base_race_without_subraces_has_back_option(
     monkeypatch.setattr(
         _deps, "load_race_full", lambda race_id, language="ru": race
     )
-    patch_int_input(monkeypatch, menus, [0])
+    patch_int_input(monkeypatch, [0])
 
     selected, subrace_id = character_flow._select_subrace(strings, "half_orc")
     output = capsys.readouterr().out
@@ -80,7 +92,7 @@ def test_human_has_base_and_variant_choices(
     monkeypatch.setattr(
         _deps, "load_race_full", lambda race_id, language="ru": race
     )
-    patch_int_input(monkeypatch, menus, [1])
+    patch_int_input(monkeypatch, [1])
 
     selected, subrace_id = character_flow._select_subrace(strings, "human")
     output = capsys.readouterr().out
@@ -89,6 +101,40 @@ def test_human_has_base_and_variant_choices(
     assert subrace_id is None
     assert "Человек (обычный)" in output
     assert "Человек (вариант)" in output
+
+
+def test_create_character_back_from_subrace_exits(
+    monkeypatch, ru_strings, patch_int_input
+):
+    """Назад с подрасы — к расе; повторный назад выходит из flow."""
+    monkeypatch.setattr(
+        character_flow,
+        "select_difficulty",
+        lambda strings: "normal",
+    )
+    monkeypatch.setattr(
+        _deps,
+        "get_str_input",
+        lambda *args, **kwargs: "Hero",
+    )
+    monkeypatch.setattr(
+        _deps,
+        "load_races",
+        lambda language="ru": [{"id": "human", "name": "Человек"}],
+    )
+    subrace_calls = {"n": 0}
+
+    def fake_subrace(strings, race_id, language="ru"):
+        subrace_calls["n"] += 1
+        return False, None
+
+    monkeypatch.setattr(character_flow, "_select_subrace", fake_subrace)
+    patch_int_input(monkeypatch, [1, 0])
+
+    result = character_flow.show_create_character_flow(ru_strings)
+
+    assert result is None
+    assert subrace_calls["n"] == 1
 
 
 def test_select_character_shows_cards_with_difficulty(
@@ -114,9 +160,11 @@ def test_select_character_shows_cards_with_difficulty(
     monkeypatch.setattr(
         _deps, "load_characters", lambda: [normal_char, hardcore_char]
     )
-    patch_int_input(monkeypatch, menus, [0])
+    patch_int_input(monkeypatch, [0])
 
-    result = new_game._select_character(ru_strings)
+    result = new_game._select_character(
+        ru_strings, [normal_char, hardcore_char]
+    )
     output = capsys.readouterr().out
 
     assert result is None
@@ -154,9 +202,9 @@ def test_select_character_shows_subrace_name(
     )
 
     monkeypatch.setattr(_deps, "load_characters", lambda: [character])
-    patch_int_input(monkeypatch, menus, [0])
+    patch_int_input(monkeypatch, [0])
 
-    new_game._select_character(ru_strings)
+    new_game._select_character(ru_strings, [character])
     output = capsys.readouterr().out
 
     assert "подраса:" in output
@@ -164,9 +212,7 @@ def test_select_character_shows_subrace_name(
     assert "variant_human" not in output
 
 
-def test_select_character_create_via_enter(
-    monkeypatch, capsys, ru_strings
-):
+def test_select_character_create_via_enter(monkeypatch, capsys, ru_strings):
     """Enter без ввода на пункте «Создать» возвращает 'create'."""
     character = Character(
         name="Hero",
@@ -180,7 +226,7 @@ def test_select_character_create_via_enter(
 
     monkeypatch.setattr(_deps, "get_int_input", get_int_input)
     monkeypatch.setattr("builtins.input", lambda prompt: "")
-    assert new_game._select_character(ru_strings) == "create"
+    assert new_game._select_character(ru_strings, [character]) == "create"
     output = capsys.readouterr().out
     assert "[Enter]" in output
     assert "Создать нового персонажа" in output
@@ -210,7 +256,7 @@ def test_select_adventure_filters_by_character_difficulty(
     )
 
     monkeypatch.setattr(_deps, "load_adventures", lambda: [available, blocked])
-    patch_int_input(monkeypatch, menus, [0])
+    patch_int_input(monkeypatch, [0])
 
     result = new_game._select_adventure(ru_strings, "ru", character)
     output = capsys.readouterr().out
@@ -238,7 +284,7 @@ def test_select_adventure_choice_returns_adventure(
     )
 
     monkeypatch.setattr(_deps, "load_adventures", lambda: [tutorial])
-    patch_int_input(monkeypatch, menus, [1])
+    patch_int_input(monkeypatch, [1])
 
     result = new_game._select_adventure(ru_strings, "ru", character)
 
@@ -275,7 +321,7 @@ def test_new_game_back_returns_one_step(monkeypatch):
         class_name="fighter",
     )
 
-    def select_character(strings, language="ru"):
+    def select_character(strings, characters, language="ru"):
         calls["character"] += 1
         return character if calls["character"] == 1 else None
 
@@ -293,19 +339,17 @@ def test_new_game_back_returns_one_step(monkeypatch):
 
 
 def test_languages_menu_order_depends_on_locale(
-    monkeypatch, capsys, patch_int_input
+    monkeypatch, capsys, ru_strings, en_strings, patch_int_input
 ):
     """Порядок языков в меню зависит от текущей локали."""
-    from core.localization import load_strings
+    patch_int_input(monkeypatch, [0, 0])
 
-    patch_int_input(monkeypatch, menus, [0, 0])
-
-    settings_menu.show_languages_menu(load_strings("ru"), {"language": "ru"})
+    settings_menu.show_languages_menu(ru_strings, {"language": "ru"})
     ru_output = capsys.readouterr().out
     assert re.search(r"1.*English", ru_output)
     assert re.search(r"2.*Русский", ru_output)
 
-    settings_menu.show_languages_menu(load_strings("en"), {"language": "en"})
+    settings_menu.show_languages_menu(en_strings, {"language": "en"})
     en_output = capsys.readouterr().out
     assert re.search(r"1.*Русский", en_output)
     assert re.search(r"2.*English", en_output)
@@ -321,8 +365,8 @@ def test_characters_menu_shows_hub_options(
         class_name="fighter",
         save_slug="hero",
     )
-    monkeypatch.setattr(_deps, "load_characters", lambda: [character])
-    patch_int_input(monkeypatch, menus, [0])
+    _patch_load_characters(monkeypatch, [character])
+    patch_int_input(monkeypatch, [0])
 
     characters_menu.show_characters_menu(ru_strings)
     output = capsys.readouterr().out
@@ -337,7 +381,7 @@ def test_characters_menu_shows_hub_options(
 def test_characters_menu_delete_one_confirmed(
     monkeypatch, ru_strings, patch_int_input
 ):
-    """Удаление одного персонажа вызывает delete_character после подтверждения."""
+    """Удаление персонажа вызывает delete_character после подтверждения."""
     character = Character(
         name="Hero",
         race="human",
@@ -346,14 +390,14 @@ def test_characters_menu_delete_one_confirmed(
     )
     deleted: list[str] = []
 
-    monkeypatch.setattr(_deps, "load_characters", lambda: [character])
-    monkeypatch.setattr(
-        _deps,
-        "delete_character",
-        lambda slug: deleted.append(slug) or True,
-    )
-    patch_int_input(monkeypatch, menus, [2, 1, 1, 0])
-    monkeypatch.setattr(characters_menu, "_press_enter", lambda strings: None)
+    def fake_delete(slug: str) -> bool:
+        deleted.append(slug)
+        return True
+
+    _patch_load_characters(monkeypatch, [character])
+    monkeypatch.setattr(_deps, "delete_character", fake_delete)
+    patch_int_input(monkeypatch, [2, 1, 1, 0])
+    _noop_press_enter(monkeypatch)
 
     characters_menu.show_characters_menu(ru_strings)
 
@@ -372,14 +416,14 @@ def test_characters_menu_delete_all_cancelled(
     )
     deleted_all_called: list[bool] = []
 
-    monkeypatch.setattr(_deps, "load_characters", lambda: [character])
-    monkeypatch.setattr(
-        _deps,
-        "delete_all_characters",
-        lambda: deleted_all_called.append(True) or 0,
-    )
-    patch_int_input(monkeypatch, menus, [3, 0, 0])
-    monkeypatch.setattr(characters_menu, "_press_enter", lambda strings: None)
+    def fake_delete_all() -> int:
+        deleted_all_called.append(True)
+        return 0
+
+    _patch_load_characters(monkeypatch, [character])
+    monkeypatch.setattr(_deps, "delete_all_characters", fake_delete_all)
+    patch_int_input(monkeypatch, [3, 0, 0])
+    _noop_press_enter(monkeypatch)
 
     characters_menu.show_characters_menu(ru_strings)
     output = capsys.readouterr().out

@@ -8,11 +8,7 @@ from core.classes import get_class_hit_dice
 from core.dice import ability_modifier
 from core.models import Character
 from core.slug import make_save_slug
-from core.stats import (
-    STANDARD_ARRAY,
-    STAT_NAMES,
-    apply_racial_bonuses_to_stats,
-)
+from core.stats import STANDARD_ARRAY, generate_stats_standard_array
 
 
 def save_character(
@@ -25,8 +21,9 @@ def save_character(
 ) -> Character:
     """Создать нового персонажа и сохранить в JSON."""
     if stats is None:
-        stats = dict(zip(STAT_NAMES, STANDARD_ARRAY, strict=False))
-        stats = apply_racial_bonuses_to_stats(stats, race_id, subrace_id)
+        stats = generate_stats_standard_array(
+            list(STANDARD_ARRAY), race_id, subrace_id
+        )
 
     hit_dice = get_class_hit_dice(class_id)
     con_mod = ability_modifier(stats.get("constitution", 10))
@@ -120,7 +117,7 @@ def _load_character_file(path: Path) -> Character | None:
 
 
 def _character_created_at_timestamp(character: Character, path: Path) -> float:
-    """Метка времени создания: из JSON или mtime файла для старых сохранений."""
+    """Метка времени создания: из JSON или mtime для старых сохранений."""
     if character.created_at:
         try:
             return datetime.fromisoformat(character.created_at).timestamp()

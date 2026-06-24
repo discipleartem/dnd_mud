@@ -30,7 +30,6 @@
 | `ui/menus/stats/stats_shared.py` | Пул, confirm, общие шаги |
 | `ui/menus/stats/stats_methods.py` | Standard array, point-buy, random |
 | `ui/menus/stats/stats_choice_bonuses.py` | Выборные расовые бонусы |
-| `ui/menus/stats_flow.py` | Re-export для обратной совместимости |
 | `ui/menus/settings.py` | Настройки, языки, выбор сложности |
 | `ui/menus/_common.py`, `_display.py`, `_deps.py` | Общие хелперы, отображение, зависимости от core |
 | `ui/input_handler.py` | Валидация ввода, UTF-8 для stdin/stdout |

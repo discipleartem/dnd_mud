@@ -48,11 +48,7 @@ def settings_file(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
 def patch_int_input():
     """Фабрика подмены get_int_input последовательностью значений."""
 
-    def _patch(
-        monkeypatch: pytest.MonkeyPatch,
-        module: Any,
-        values: list[int],
-    ) -> None:
+    def _patch(monkeypatch: pytest.MonkeyPatch, values: list[int]) -> None:
         iterator = iter(values)
 
         def fake_get_int_input(*args: object, **kwargs: object) -> int:

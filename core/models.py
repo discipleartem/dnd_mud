@@ -6,6 +6,8 @@
 from dataclasses import dataclass, field
 from typing import Any
 
+from core.localization import resolve_localized_text
+
 
 @dataclass
 class Character:
@@ -79,9 +81,7 @@ class Adventure:
 
     def get_name(self, language: str = "ru") -> str:
         """Получить название на нужном языке."""
-        if isinstance(self.name, dict):
-            return self.name.get(language, self.name.get("en", ""))
-        return str(self.name)
+        return resolve_localized_text(self.name, language)
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> "Adventure":

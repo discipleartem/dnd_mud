@@ -232,6 +232,7 @@ def test_delete_character(characters_dir):
         race_id="human",
         class_id="fighter",
     )
+    assert saved.save_slug is not None
     assert character_mod.delete_character(saved.save_slug) is True
     assert len(character_mod.load_characters()) == 0
     assert not (characters_dir / "hero.json").exists()

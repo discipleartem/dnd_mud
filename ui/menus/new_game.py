@@ -11,29 +11,22 @@ from ui.menus import _deps, character_flow
 from ui.menus._common import (
     _press_enter,
     _print_screen_header,
+    _print_success_and_wait,
     _run_numbered_menu,
 )
-from ui.menus._display import _print_character_card
+from ui.menus._display import _print_characters_list
 
 SelectCharacterResult = Character | Literal["create"] | None
 
 
 def _select_character(
-    strings: dict[str, Any], language: str = "ru"
+    strings: dict[str, Any],
+    characters: list[Character],
+    language: str = "ru",
 ) -> SelectCharacterResult:
     """Экран выбора персонажа из списка сохранённых."""
-    characters = _deps.load_characters()
-
     _print_screen_header(get_string(strings, "choose_character.caption"))
-    print(
-        f"  {Fore.YELLOW}{Style.BRIGHT}"
-        f"{get_string(strings, 'choose_character.list_header')}"
-        f"{Style.RESET_ALL}"
-    )
-    print()
-
-    for idx, char in enumerate(characters, 1):
-        _print_character_card(idx, char, strings, language)
+    _print_characters_list(strings, characters, language)
 
     char_count = len(characters)
     create_idx = char_count + 1
@@ -164,7 +157,7 @@ def show_new_game_flow(
                 strings, language
             )
         else:
-            result = _select_character(strings, language)
+            result = _select_character(strings, characters, language)
             if result is None:
                 return
             if result == "create":
@@ -190,7 +183,5 @@ def show_new_game_flow(
                 name=character.name,
                 difficulty=character.difficulty,
             )
-            print(f"{Fore.GREEN}{launch_msg}{Style.RESET_ALL}")
-            print()
-            _press_enter(strings)
+            _print_success_and_wait(strings, launch_msg)
             return

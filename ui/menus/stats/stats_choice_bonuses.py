@@ -5,7 +5,6 @@ from typing import Any
 from colorama import Fore, Style
 
 from core.localization import get_string
-from core.stats import STAT_NAMES
 from ui.menus import _deps
 from ui.menus._common import SEPARATOR, _ability_name, _choice_prompt
 
@@ -52,9 +51,9 @@ def _select_choice_ability_bonuses(
                 print(f"  {_ability_name(strings, stat)} +{value}")
             print()
 
-        available = list(STAT_NAMES)
+        available = list(_deps.STAT_NAMES)
         if not allow_duplicates:
-            available = [s for s in STAT_NAMES if s not in chosen_stats]
+            available = [s for s in _deps.STAT_NAMES if s not in chosen_stats]
 
         print(
             f"{Fore.YELLOW}"

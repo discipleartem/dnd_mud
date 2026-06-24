@@ -18,8 +18,6 @@ make check      # ruff --fix + black + mypy
 python main.py  # smoke: пройти затронутое меню
 ```
 
-Режимы Cursor — см. `dnd-mud-verify.mdc` §Cursor modes.
-
 ## Docs
 
 - [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)
@@ -32,7 +30,7 @@ python main.py  # smoke: пройти затронутое меню
 
 | Файл | Globs | Содержание |
 |------|-------|------------|
-| `dnd-mud-verify.mdc` | always | verify, git scope, finish checklist |
+| `dnd-mud-verify.mdc` | always | verify (console), git scope, finish checklist |
 | `dnd-mud-python-simple.mdc` | `core/**`, `ui/**`, `main.py`, `tests/**` | простой Python |
 | `dnd-mud-core.mdc` | `core/**`, `ui/**`, `main.py` | слои, локализация, механика |
 | `dnd-mud-data.mdc` | `database/**`, `mods/**`, `**/*.json` | YAML/JSON |

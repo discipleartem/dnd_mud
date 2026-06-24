@@ -1,6 +1,7 @@
 """Flow «Создать персонажа»: имя, раса, подраса, класс."""
 
-from typing import Any
+from dataclasses import dataclass
+from typing import Any, Literal
 
 from colorama import Fore, Style
 
@@ -8,13 +9,26 @@ from core.localization import get_string
 from core.models import Character
 from ui.menus import _deps
 from ui.menus._common import (
-    _press_enter,
     _print_screen_header,
+    _print_success_and_wait,
     _run_numbered_menu,
 )
 from ui.menus._display import _print_race_info
 from ui.menus.settings import select_difficulty
-from ui.menus.stats_flow import show_stats_generation_flow
+from ui.menus.stats import show_stats_generation_flow
+
+CreationStep = Literal["race", "subrace", "stats", "class"]
+
+
+@dataclass
+class _CreationState:
+    """Состояние пошагового создания персонажа."""
+
+    name: str
+    difficulty: str
+    race_id: str | None = None
+    subrace_id: str | None = None
+    stats: dict[str, int] | None = None
 
 
 def _select_subrace(
@@ -33,28 +47,19 @@ def _select_subrace(
     print()
 
     if not subraces:
-        if allow_base:
-            print(get_string(strings, "character.no_subraces"))
-            print()
-            print(
-                f"  {Fore.YELLOW}1{Style.RESET_ALL}. "
-                f"{Fore.CYAN}{race_name}{Style.RESET_ALL}"
-            )
-            print(
-                f"  {Fore.YELLOW}0{Style.RESET_ALL}."
-                f" {get_string(strings, 'character.back')}"
-            )
-            print()
-            choice = _deps.get_int_input(
-                get_string(strings, "character.subrace_prompt"),
-                0,
-                1,
-                strings,
-            )
-            if choice == 0:
-                return False, None
-            return True, None
-        return False, None
+        if not allow_base:
+            return False, None
+        print(get_string(strings, "character.no_subraces"))
+        print()
+        choice = _run_numbered_menu(
+            strings,
+            [str(race_name)],
+            prompt_key="character.subrace_prompt",
+            back_label_key="character.back",
+        )
+        if choice is None:
+            return False, None
+        return True, None
 
     print(get_string(strings, "character.subraces_label"))
     choices: list[tuple[str | None, dict[str, Any]]] = []
@@ -129,54 +134,67 @@ def show_create_character_flow(
         strings=strings,
     )
 
+    state = _CreationState(name=name, difficulty=difficulty)
+    step: CreationStep = "race"
+
     while True:
-        races = _deps.load_races(language)
-        _print_screen_header(get_string(strings, "character.race_caption"))
+        if step == "race":
+            races = _deps.load_races(language)
+            _print_screen_header(get_string(strings, "character.race_caption"))
+            choice = _run_numbered_menu(
+                strings,
+                [race.get("name", "?") for race in races],
+                prompt_key="character.race_prompt",
+                back_label_key="character.back",
+            )
+            if choice is None:
+                return None
+            selected = races[choice - 1]
+            state.race_id = str(selected.get("id") or selected.get("name"))
+            step = "subrace"
+            continue
 
-        choice = _run_numbered_menu(
-            strings,
-            [race.get("name", "?") for race in races],
-            prompt_key="character.race_prompt",
-            back_label_key="character.back",
-        )
-        if choice is None:
-            return None
-
-        selected = races[choice - 1]
-        race_id = str(selected.get("id") or selected.get("name"))
-
-        while True:
+        if step == "subrace":
+            assert state.race_id is not None
             subrace_selected, subrace_id = _select_subrace(
-                strings, race_id, language
+                strings, state.race_id, language
             )
             if not subrace_selected:
-                break
+                step = "race"
+                continue
+            state.subrace_id = subrace_id
+            step = "stats"
+            continue
 
-            while True:
-                stats = show_stats_generation_flow(
-                    strings, race_id, subrace_id, difficulty
-                )
-                if stats is None:
-                    break
+        if step == "stats":
+            assert state.race_id is not None
+            stats = show_stats_generation_flow(
+                strings, state.race_id, state.subrace_id, state.difficulty
+            )
+            if stats is None:
+                step = "subrace"
+                continue
+            state.stats = stats
+            step = "class"
+            continue
 
-                cls = _select_class(strings, language)
-                if cls is None:
-                    continue
+        assert state.race_id is not None
+        assert state.stats is not None
+        cls = _select_class(strings, language)
+        if cls is None:
+            step = "stats"
+            continue
 
-                class_id = cls.get("id") or cls.get("name")
+        class_id = cls.get("id") or cls.get("name")
+        character = _deps.save_character(
+            name=state.name,
+            race_id=str(state.race_id),
+            class_id=str(class_id),
+            difficulty=state.difficulty,
+            subrace_id=str(state.subrace_id) if state.subrace_id else None,
+            stats=state.stats,
+        )
 
-                character = _deps.save_character(
-                    name=name,
-                    race_id=str(race_id),
-                    class_id=str(class_id),
-                    difficulty=difficulty,
-                    subrace_id=str(subrace_id) if subrace_id else None,
-                    stats=stats,
-                )
-
-                msg = get_string(strings, "character.save_success", name=name)
-                print(f"{Fore.GREEN}{msg}{Style.RESET_ALL}")
-                print()
-                _press_enter(strings)
-
-                return character
+        msg = get_string(strings, "character.save_success", name=state.name)
+        _print_success_and_wait(strings, msg)
+        return character

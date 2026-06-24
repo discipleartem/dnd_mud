@@ -1,6 +1,28 @@
 """Тесты загрузки и получения строк локализации."""
 
+from typing import Any
+
 from core.localization import get_string, load_strings
+
+
+def _flatten_keys(data: dict[str, Any], prefix: str = "") -> set[str]:
+    """Собрать плоский набор ключей локализации (section.subkey)."""
+    keys: set[str] = set()
+    for key, value in data.items():
+        full_key = f"{prefix}.{key}" if prefix else str(key)
+        if isinstance(value, dict):
+            keys.update(_flatten_keys(value, full_key))
+        else:
+            keys.add(full_key)
+    return keys
+
+
+def test_en_ru_yaml_keys_match():
+    """ru.yaml и en.yaml содержат одинаковый набор ключей."""
+    ru_keys = _flatten_keys(load_strings("ru"))
+    en_keys = _flatten_keys(load_strings("en"))
+
+    assert ru_keys == en_keys
 
 
 def test_load_strings_ru_and_en_keys():
