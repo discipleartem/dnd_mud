@@ -1,18 +1,37 @@
 # Сценарий "Затеряные рудники Фанделвера"
-# Заглушка для Pre-Alpha
 
 scenario:
   id: lost_mine
   start_node: start
-  
+
   nodes:
     start:
       description:
-        ru: "Вы прибываете в Фанделвер. Приключение ещё не реализовано."
-        en: "You arrive in Phandalin. This adventure is not yet implemented."
+        ru: "Вы прибываете в Фанделвер. В таверне вас ждёт наставник по боевым архетипам."
+        en: "You arrive in Phandalin. A subclass mentor awaits at the tavern."
       choices:
+        - text:
+            ru: "Поговорить с наставником"
+            en: "Talk to the mentor"
+          next: mentor
         - text:
             ru: "Вернуться"
             en: "Go back"
-          next: null
           action: exit
+          next: null
+
+    mentor:
+      description:
+        ru: "Наставник готов обучить вас специализации класса."
+        en: "The mentor is ready to teach your class specialization."
+      choices:
+        - text:
+            ru: "Выбрать архетип"
+            en: "Choose subclass"
+          action: subclass_training
+          next: start
+        - text:
+            ru: "Уйти"
+            en: "Leave"
+          action: exit
+          next: null

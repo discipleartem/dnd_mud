@@ -12,10 +12,10 @@ from ui.menus import _deps, character_flow
 from ui.menus._common import (
     _press_enter,
     _print_screen_header,
-    _print_success_and_wait,
     _run_numbered_menu,
 )
 from ui.menus._display import _print_characters_list
+from ui.menus.scenario_flow import run_scenario
 
 SelectCharacterResult = Character | Literal["create"] | None
 
@@ -181,13 +181,5 @@ def show_new_game_flow(
             if adventure is None:
                 break
 
-            print()
-            launch_msg = get_string(
-                strings,
-                "new_game.launch",
-                adventure=adventure.get_name(language),
-                name=character.name,
-                difficulty=character.difficulty,
-            )
-            _print_success_and_wait(strings, launch_msg)
+            character = run_scenario(adventure, character, strings, language)
             return

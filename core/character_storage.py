@@ -4,19 +4,18 @@ import json
 from datetime import UTC, datetime
 from pathlib import Path
 
-from core.classes import get_class_hit_dice
-from core.dice import ability_modifier
+from core.levels import clamp_level
 from core.models import Character
+from core.progression import max_hp_for_level
 from core.slug import make_save_slug
 from core.stats import STANDARD_ARRAY, generate_stats_standard_array
+from core.subclasses import start_level_for_difficulty
 from core.types import GameDifficulty, StatMap
 
 
 def starting_max_hp(class_id: str, stats: StatMap) -> int:
     """Максимум хитов на 1 уровне (PHB: max(1, кость + мод. Телосложения))."""
-    hit_dice = get_class_hit_dice(class_id)
-    con_mod = ability_modifier(stats.get("constitution", 10))
-    return max(1, hit_dice + con_mod)
+    return max_hp_for_level(class_id, stats, 1)
 
 
 def save_character(
@@ -26,6 +25,8 @@ def save_character(
     difficulty: GameDifficulty = "normal",
     subrace_id: str | None = None,
     stats: StatMap | None = None,
+    subclass_id: str | None = None,
+    level: int | None = None,
 ) -> Character:
     """Создать нового персонажа и сохранить в JSON."""
     if stats is None:
@@ -33,19 +34,24 @@ def save_character(
             list(STANDARD_ARRAY), race_id, subrace_id
         )
 
-    hp = starting_max_hp(class_id, stats)
+    if level is None:
+        level = start_level_for_difficulty(difficulty)
+    level = clamp_level(level)
+
+    hp = max_hp_for_level(class_id, stats, level)
 
     character = Character(
         name=name,
         race=race_id,
         class_name=class_id,
-        level=1,
+        level=level,
         stats=stats,
         current_hp=hp,
         max_hp=hp,
         experience=0,
         difficulty=difficulty,
         subrace=subrace_id,
+        subclass_id=subclass_id,
         save_slug=_unique_save_slug(name),
         created_at=datetime.now(UTC).isoformat(),
     )
@@ -53,6 +59,12 @@ def save_character(
     _save_character_file(character)
 
     return character
+
+
+def update_character(character: Character) -> None:
+    """Обновить существующего персонажа в JSON."""
+    character.level = clamp_level(character.level)
+    _save_character_file(character)
 
 
 SAVES_DIR = Path("saves")

@@ -21,13 +21,21 @@ def select_difficulty(strings: StringsDict) -> GameDifficulty | None:
     """Экран выбора сложности при создании персонажа."""
     _print_screen_header(get_string(strings, "difficulty.caption"))
 
-    options = [
-        get_string(strings, "difficulty.normal"),
-        get_string(strings, "difficulty.hardcore"),
+    options: list[tuple[GameDifficulty, str, str]] = [
+        ("easy", get_string(strings, "difficulty.easy"), str(Fore.GREEN)),
+        ("normal", get_string(strings, "difficulty.normal"), str(Fore.YELLOW)),
+        (
+            "hardcore",
+            get_string(strings, "difficulty.hardcore"),
+            str(Fore.RED),
+        ),
     ]
-    for idx, opt in enumerate(options, 1):
+    for idx, (_, label, color) in enumerate(options, 1):
         marker = f"{Fore.GREEN}* {Style.RESET_ALL}" if idx == 1 else "  "
-        print(f"{marker}{Fore.YELLOW}{idx}{Style.RESET_ALL}. {opt}")
+        print(
+            f"{marker}{Fore.YELLOW}{idx}{Style.RESET_ALL}. "
+            f"{color}{label}{Style.RESET_ALL}"
+        )
     print()
     print(
         f"  {Fore.YELLOW}0{Style.RESET_ALL}."
@@ -45,7 +53,7 @@ def select_difficulty(strings: StringsDict) -> GameDifficulty | None:
     if choice == 0:
         return None
 
-    return "normal" if choice == 1 else "hardcore"
+    return options[choice - 1][0]
 
 
 def show_languages_menu(

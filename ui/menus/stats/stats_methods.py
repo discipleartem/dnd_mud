@@ -46,9 +46,11 @@ def _select_stats_standard_array(
             subrace_id,
             reroll_label_key="character.stats_reroll_redistribute",
         )
-        if result == "reroll":
-            continue
-        return result
+        if isinstance(result, dict):
+            return result
+        if result is None:
+            return None
+        continue
 
 
 def _select_stats_point_buy(
@@ -127,9 +129,11 @@ def _select_stats_point_buy(
                         subrace_id,
                         reroll_label_key="character.stats_reroll_redistribute",
                     )
-                    if result == "reroll":
-                        break
-                    return result
+                    if isinstance(result, dict):
+                        return result
+                    if result is None:
+                        return None
+                    break
                 if error_key == "character.stats_points_unspent":
                     unspent = get_string(
                         strings,
@@ -231,40 +235,56 @@ def _select_stats_random_normal(
                 subrace_id,
                 reroll_label_key="character.stats_reroll_regenerate",
             )
-            if result == "reroll":
-                rolls = None
+            if isinstance(result, dict):
+                return result
+            if result is None:
                 break
-            return result
+            rolls = None
+            break
 
 
 def _select_stats_random_hardcore(
     strings: StringsDict,
     race_id: str,
     subrace_id: str | None,
-) -> StatMap:
-    """Случайный метод для HardCore режима."""
-    base_values = [_deps.roll_ability_score() for _ in _deps.STAT_NAMES]
+    *,
+    hardcore_rolls: list[int] | None = None,
+) -> StatMap | None:
+    """Случайный метод для HardCore режима (без перегенерации)."""
+    stat_count = len(_deps.STAT_NAMES)
+    if hardcore_rolls is not None and len(hardcore_rolls) == stat_count:
+        base_values = list(hardcore_rolls)
+        rolls_shown = True
+    else:
+        base_values = [_deps.roll_ability_score() for _ in _deps.STAT_NAMES]
+        rolls_shown = False
+        if hardcore_rolls is not None:
+            hardcore_rolls[:] = base_values
 
     while True:
-        _print_stats_generation_header(strings, race_id, subrace_id)
-        print(
-            f"{Fore.YELLOW}"
-            f"{get_string(strings, 'character.stats_hardcore_auto')}"
-            f"{Style.RESET_ALL}"
-        )
-        print(
-            f"{Fore.YELLOW}"
-            f"{get_string(strings, 'character.stats_hardcore_method')}"
-            f"{Style.RESET_ALL}"
-        )
-        print()
+        if not rolls_shown:
+            _print_stats_generation_header(strings, race_id, subrace_id)
+            print(
+                f"{Fore.YELLOW}"
+                f"{get_string(strings, 'character.stats_hardcore_auto')}"
+                f"{Style.RESET_ALL}"
+            )
+            print(
+                f"{Fore.YELLOW}"
+                f"{get_string(strings, 'character.stats_hardcore_method')}"
+                f"{Style.RESET_ALL}"
+            )
+            print()
 
-        for stat, roll in zip(_deps.STAT_NAMES, base_values, strict=True):
-            stat_name = _ability_name(strings, stat)
-            print(f"  {stat_name}: {Fore.YELLOW}{roll}{Style.RESET_ALL}")
+            for stat, roll in zip(_deps.STAT_NAMES, base_values, strict=True):
+                stat_name = _ability_name(strings, stat)
+                print(f"  {stat_name}: {Fore.YELLOW}{roll}{Style.RESET_ALL}")
 
-        print()
-        _press_enter(strings)
+            print()
+            _press_enter(strings)
+            rolls_shown = True
+            if hardcore_rolls is not None:
+                hardcore_rolls[:] = base_values
 
         stats = _deps.generate_stats_random(base_values, race_id, subrace_id)
         result = _run_stats_confirm_loop(
@@ -274,12 +294,10 @@ def _select_stats_random_hardcore(
             subrace_id,
             reroll_label_key="character.stats_reroll_regenerate",
             choice_cancel="retry",
+            allow_reroll=False,
         )
+        if isinstance(result, dict):
+            return result
         if result is None:
-            continue
-        if result == "reroll":
-            base_values = [
-                _deps.roll_ability_score() for _ in _deps.STAT_NAMES
-            ]
-            continue
-        return result
+            return None
+        continue

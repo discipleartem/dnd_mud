@@ -8,7 +8,7 @@ adventures:
     type: training
     difficulty: easy
     min_level: 1
-    allowed_game_difficulties: [normal, hardcore]
+    allowed_game_difficulties: [easy, normal, hardcore]
     script_file: "adventures/tutorial.yaml"
 
   - id: lost_mine

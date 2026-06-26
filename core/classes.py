@@ -8,6 +8,7 @@ from core.io import load_yaml
 from core.localization import resolve_localized_text
 
 CLASSES_FILE = Path("database/classes/classes.yaml")
+DEFAULT_SUBCLASS_CHOICE_LEVEL = 3
 
 
 @lru_cache(maxsize=1)
@@ -31,24 +32,141 @@ def get_class_hit_dice(class_id: str) -> int:
     return 8
 
 
+def get_subclass_choice_level(class_id: str) -> int:
+    """Уровень класса, на котором выбирается подкласс (PHB / YAML)."""
+    class_info = _load_classes_yaml().get(class_id, {})
+    if not isinstance(class_info, dict):
+        return DEFAULT_SUBCLASS_CHOICE_LEVEL
+    level = class_info.get(
+        "subclass_choice_level", DEFAULT_SUBCLASS_CHOICE_LEVEL
+    )
+    if isinstance(level, int):
+        return level
+    return DEFAULT_SUBCLASS_CHOICE_LEVEL
+
+
+def _subclass_feature_ids_and_names(
+    class_info: dict[str, Any],
+) -> tuple[set[str], set[str]]:
+    """ID и имена умений подклассов — не дублировать в карточке класса."""
+    ids: set[str] = set()
+    names: set[str] = set()
+    raw_subclasses = class_info.get("subclasses", [])
+    if not isinstance(raw_subclasses, list):
+        return ids, names
+    for entry in raw_subclasses:
+        if not isinstance(entry, dict):
+            continue
+        raw_features = entry.get("features", [])
+        if not isinstance(raw_features, list):
+            continue
+        for feat in raw_features:
+            if not isinstance(feat, dict):
+                continue
+            fid = feat.get("id")
+            if fid is not None:
+                ids.add(str(fid))
+            fname = feat.get("name")
+            if fname is not None:
+                names.add(str(fname))
+    return ids, names
+
+
+def _class_features_only(class_info: dict[str, Any]) -> list[dict[str, Any]]:
+    """Умения класса без дублей из подклассов (по id или name)."""
+    raw_features = class_info.get("features", [])
+    if not isinstance(raw_features, list):
+        return []
+    subclass_ids, subclass_names = _subclass_feature_ids_and_names(class_info)
+    result: list[dict[str, Any]] = []
+    for feat in raw_features:
+        if not isinstance(feat, dict):
+            continue
+        fid = str(feat.get("id", ""))
+        fname = str(feat.get("name", ""))
+        if fid in subclass_ids or fname in subclass_names:
+            continue
+        result.append(feat)
+    return result
+
+
+def _normalize_class_dict(
+    class_id: str, class_info: dict[str, Any], language: str
+) -> dict[str, Any]:
+    """Собрать dict класса с локализованными полями для UI."""
+    return {
+        "id": class_id,
+        "name": resolve_localized_text(
+            class_info.get("name", class_id),
+            language,
+            fallback=class_id,
+        ),
+        "description": class_info.get("description", ""),
+        "hit_dice": class_info.get("hit_dice", 8),
+        "prime_ability": class_info.get("prime_ability", "strength"),
+        "subclass_choice_level": get_subclass_choice_level(class_id),
+        "saving_throws": class_info.get("saving_throws", []),
+        "skill_choices": class_info.get("skill_choices", []),
+        "skill_choices_count": class_info.get("skill_choices_count", 0),
+        "equipment": class_info.get("equipment", {}),
+        "features": _class_features_only(class_info),
+        "subclasses": class_info.get("subclasses", []),
+    }
+
+
 def load_classes(language: str = "ru") -> list[dict[str, Any]]:
     """Загрузить список всех доступных классов."""
     result: list[dict[str, Any]] = []
     for class_id, class_info in _load_classes_yaml().items():
         if isinstance(class_info, dict):
+            normalized = _normalize_class_dict(class_id, class_info, language)
             result.append(
                 {
-                    "id": class_id,
-                    "name": resolve_localized_text(
-                        class_info.get("name", class_id),
-                        language,
-                        fallback=class_id,
-                    ),
-                    "description": class_info.get("description", ""),
-                    "hit_dice": class_info.get("hit_dice", 8),
-                    "prime_ability": class_info.get(
-                        "prime_ability", "strength"
-                    ),
+                    "id": normalized["id"],
+                    "name": normalized["name"],
+                    "description": normalized["description"],
+                    "hit_dice": normalized["hit_dice"],
+                    "prime_ability": normalized["prime_ability"],
                 }
             )
+    return result
+
+
+def load_class_full(class_id: str, language: str = "ru") -> dict[str, Any]:
+    """Загрузить полные данные класса для экрана выбора."""
+    class_info = _load_classes_yaml().get(class_id, {})
+    if not isinstance(class_info, dict):
+        return {"id": class_id, "name": class_id}
+    return _normalize_class_dict(class_id, class_info, language)
+
+
+def load_subclasses(
+    class_id: str, language: str = "ru"
+) -> list[dict[str, Any]]:
+    """Загрузить подклассы класса с локализованными именами."""
+    class_info = _load_classes_yaml().get(class_id, {})
+    if not isinstance(class_info, dict):
+        return []
+
+    raw_subclasses = class_info.get("subclasses", [])
+    if not isinstance(raw_subclasses, list):
+        return []
+
+    result: list[dict[str, Any]] = []
+    for entry in raw_subclasses:
+        if not isinstance(entry, dict):
+            continue
+        sub_id = entry.get("id", "")
+        name = entry.get("name", sub_id)
+        if isinstance(name, dict):
+            name = resolve_localized_text(name, language, fallback=str(sub_id))
+        result.append(
+            {
+                "id": sub_id,
+                "name": str(name),
+                "description": entry.get("description", ""),
+                "parent_class": entry.get("parent_class", class_id),
+                "features": entry.get("features", []),
+            }
+        )
     return result

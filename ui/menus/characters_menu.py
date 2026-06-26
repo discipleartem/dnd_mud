@@ -4,7 +4,8 @@ from colorama import Fore, Style
 
 from core.localization import get_string
 from core.models import Character
-from core.types import StringsDict
+from core.subclasses import needs_subclass_npc
+from core.types import LanguageCode, StringsDict
 from ui.menus import _deps, character_flow
 from ui.menus._common import (
     _confirm_yes_no,
@@ -14,12 +15,60 @@ from ui.menus._common import (
     _run_numbered_menu,
 )
 from ui.menus._display import _print_characters_list
+from ui.menus.subclass_trainer import run_subclass_trainer
+
+
+def _select_character_for_trainer(
+    strings: StringsDict,
+    characters: list[Character],
+    language: LanguageCode,
+) -> Character | None:
+    """Выбор персонажа, которому нужен наставник по подклассу."""
+    needing = [c for c in characters if needs_subclass_npc(c)]
+    if not needing:
+        return None
+
+    _print_screen_header(
+        get_string(strings, "characters_menu.subclass_trainer_caption")
+    )
+    _print_characters_list(strings, needing, language)
+    print()
+    print(
+        f"  {Fore.YELLOW}0{Style.RESET_ALL}."
+        f" {get_string(strings, 'characters_menu.back')}"
+    )
+    print()
+    choice = _deps.get_int_input(
+        get_string(
+            strings,
+            "characters_menu.select_prompt",
+            count=len(needing),
+        ),
+        0,
+        len(needing),
+        strings,
+    )
+    if choice == 0:
+        return None
+    return needing[choice - 1]
+
+
+def _run_subclass_trainer_menu(
+    strings: StringsDict,
+    characters: list[Character],
+    language: LanguageCode,
+) -> None:
+    """Пункт меню: получить подкласс у наставника."""
+    character = _select_character_for_trainer(strings, characters, language)
+    if character is None:
+        return
+    run_subclass_trainer(strings, character, language)
 
 
 def _select_character_to_delete(
     strings: StringsDict,
     characters: list[Character],
-    language: str,
+    language: LanguageCode,
 ) -> Character | None:
     """Выбор персонажа для удаления."""
     _print_screen_header(get_string(strings, "characters_menu.caption"))
@@ -48,7 +97,7 @@ def _select_character_to_delete(
 def _delete_one_character(
     strings: StringsDict,
     characters: list[Character],
-    language: str,
+    language: LanguageCode,
 ) -> None:
     """Удалить одного персонажа с подтверждением."""
     character = _select_character_to_delete(strings, characters, language)
@@ -93,7 +142,9 @@ def _delete_all_characters(strings: StringsDict, count: int) -> None:
     _print_success_and_wait(strings, msg)
 
 
-def show_characters_menu(strings: StringsDict, language: str = "ru") -> None:
+def show_characters_menu(
+    strings: StringsDict, language: LanguageCode = "ru"
+) -> None:
     """Меню управления персонажами: список, создание, удаление."""
     while True:
         characters = _deps.load_characters()
@@ -113,6 +164,10 @@ def show_characters_menu(strings: StringsDict, language: str = "ru") -> None:
         print()
         options = [get_string(strings, "characters_menu.create")]
         if has_characters:
+            if any(needs_subclass_npc(c) for c in characters):
+                options.append(
+                    get_string(strings, "characters_menu.subclass_trainer")
+                )
             options.append(get_string(strings, "characters_menu.delete_one"))
             options.append(get_string(strings, "characters_menu.delete_all"))
 
@@ -125,13 +180,26 @@ def show_characters_menu(strings: StringsDict, language: str = "ru") -> None:
         if choice is None:
             return
 
-        if choice == 1:
+        option_create = 1
+        idx = option_create + 1
+        option_trainer: int | None = None
+        if has_characters and any(needs_subclass_npc(c) for c in characters):
+            option_trainer = idx
+            idx += 1
+        option_delete_one = idx if has_characters else None
+        option_delete_all = idx + 1 if has_characters else None
+
+        if choice == option_create:
             character_flow.show_create_character_flow(strings, language)
             continue
 
-        if has_characters and choice == 2:
+        if option_trainer is not None and choice == option_trainer:
+            _run_subclass_trainer_menu(strings, characters, language)
+            continue
+
+        if has_characters and choice == option_delete_one:
             _delete_one_character(strings, characters, language)
             continue
 
-        if has_characters and choice == 3:
+        if has_characters and choice == option_delete_all:
             _delete_all_characters(strings, len(characters))

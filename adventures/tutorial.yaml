@@ -1,18 +1,43 @@
 # Сценарий обучения (Tutorial)
-# Заглушка для Pre-Alpha
 
 scenario:
   id: tutorial
   start_node: welcome
-  
+
   nodes:
     welcome:
       description:
-        ru: "Добро пожаловать в обучение! Этот сценарий пока не реализован."
-        en: "Welcome to the tutorial! This scenario is not yet implemented."
+        ru: "Добро пожаловать в обучение! Пройдите тренировку, чтобы набрать опыт."
+        en: "Welcome to the tutorial! Complete training to gain experience."
+      choices:
+        - text:
+            ru: "Начать тренировку"
+            en: "Start training"
+          next: training
+
+    training:
+      description:
+        ru: "Вы завершаете базовую тренировку и получаете опыт."
+        en: "You complete basic training and gain experience."
+      action: grant_xp
+      amount: 900
+      next: subclass_trainer
+
+    subclass_trainer:
+      description:
+        ru: "Наставник предлагает выбрать боевой архетип (для HardCore без подкласса)."
+        en: "A mentor offers to choose your subclass (HardCore without one)."
+      action: subclass_training
+      message_key: scenario.subclass_not_ready
+      next: finish
+
+    finish:
+      description:
+        ru: "Обучение завершено."
+        en: "Tutorial complete."
       choices:
         - text:
             ru: "Вернуться"
             en: "Go back"
-          next: null
           action: exit
+          next: null

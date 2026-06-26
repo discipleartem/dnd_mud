@@ -15,8 +15,9 @@
 
 ### Уровень и опыт
 
-- Старт обычно с **1 уровня**, 0 опыта.
-- Повышение уровня — по таблице опыта после приключений (в MUD пока не реализовано).
+- Старт обычно с **1 уровня**, 0 опыта; режим **Лёгкая** (`easy`) — с **3 уровня**.
+- Повышение уровня — по таблице опыта PHB (уровни **1–10** в MUD); см. `core/progression.py`.
+- Потолок уровня в игре: **10** (`MAX_CHARACTER_LEVEL`).
 
 ### Хиты на 1 уровне
 
@@ -54,10 +55,11 @@
 
 ### Режимы создания в dnd_mud
 
-| Режим | Генерация характеристик | Подтверждение |
-|-------|-------------------------|---------------|
-| Normal | Выбор метода: массив / point-buy / 4d6 | Принять или переквалификация |
-| HardCore | Авто: по одному 4d6 на характеристику по порядку | Без переквалификации |
+| Режим | Генерация характеристик | Подтверждение | Старт / подкласс |
+|-------|-------------------------|---------------|------------------|
+| Normal | Выбор метода: массив / point-buy / 4d6 | Принять или переквалификация | 1 ур.; подкласс обязателен |
+| HardCore | Авто: по одному 4d6 на характеристику по порядку | Без переквалификации | 1 ур.; подкласс только при `subclass_choice_level ≤ 1` |
+| Easy | Как Normal | Как Normal | **3 ур.**; подкласс обязателен |
 
 Сложность (`Character.difficulty`) выбирается **до** имени и сохраняется в JSON персонажа.
 
@@ -65,16 +67,16 @@
 
 | Аспект | Значение |
 |--------|----------|
-| Статус | Реализовано: сложность → имя → раса → подраса → характеристики → класс → сохранение |
+| Статус | Реализовано: сложность → имя → раса → подраса → характеристики → класс → подкласс (по режиму) → сохранение |
 | YAML | [`database/races/races.yaml`](../../database/races/races.yaml), [`database/classes/classes.yaml`](../../database/classes/classes.yaml) |
-| Core | [`core/character_storage.py`](../../core/character_storage.py), [`core/stats.py`](../../core/stats.py), [`core/races.py`](../../core/races.py), [`core/classes.py`](../../core/classes.py) |
-| UI | [`ui/menus/character_flow.py`](../../ui/menus/character_flow.py), [`ui/menus/stats/`](../../ui/menus/stats/), [`ui/menus/settings.py`](../../ui/menus/settings.py) (`select_difficulty`) |
-| Режимы | Normal: 3 метода + confirm; HardCore: `_select_stats_random_hardcore` |
-| Заметки | Предыстория, снаряжение, мультикласс — не в flow; HP = `starting_max_hp()`; потолок характеристик — `ABILITY_SCORE_MAX` (20) |
+| Core | [`core/character_storage.py`](../../core/character_storage.py), [`core/stats.py`](../../core/stats.py), [`core/races.py`](../../core/races.py), [`core/classes.py`](../../core/classes.py), [`core/subclasses.py`](../../core/subclasses.py), [`core/progression.py`](../../core/progression.py) |
+| UI | [`ui/menus/character_flow.py`](../../ui/menus/character_flow.py), [`ui/menus/stats/`](../../ui/menus/stats/), [`ui/menus/settings.py`](../../ui/menus/settings.py) (`select_difficulty`), [`ui/menus/subclass_trainer.py`](../../ui/menus/subclass_trainer.py) |
+| Режимы | Normal / Easy: 3 метода + confirm; HardCore: `_select_stats_random_hardcore` |
+| Заметки | Предыстория, снаряжение, мультикласс — не в flow; HP = `max_hp_at_level()`; потолок характеристик — `ABILITY_SCORE_MAX` (20); потолок уровня — `MAX_CHARACTER_LEVEL` (10) |
 
 ### Сохранение персонажа
 
-Путь: `saves/characters/{save_slug}.json`. Поля модели `Character`: `name`, `race`, `class_name`, `level`, `stats`, `current_hp`, `max_hp`, `experience`, `difficulty`, `subrace`, `save_slug`, `created_at`.
+Путь: `saves/characters/{save_slug}.json`. Поля модели `Character`: `name`, `race`, `class_name`, `level`, `stats`, `current_hp`, `max_hp`, `experience`, `difficulty`, `subrace`, `subclass_id` (JSON: `"subclass"`), `save_slug`, `created_at`.
 
 ### Константы генерации (`core/stats.py`)
 
@@ -88,6 +90,5 @@ ABILITY_SCORE_MAX = 20
 ### Не реализовано из главы 1
 
 - Быстрое создание (готовые наборы класса)
-- Старт выше 1 уровня
 - Выбор предыстории и снаряжения
-- Прогрессия после 1 уровня (опыт, новые умения)
+- Применение умений класса/подкласса в бою

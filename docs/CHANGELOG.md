@@ -2,6 +2,14 @@
 
 ## [Unreleased]
 
+### Added
+- Выбор подкласса по режимам сложности (`easy` / `normal` / `hardcore`); UI класса и подкласса по образцу расы/подрасы
+- Режим «Лёгкая» (`easy`): старт с 3 уровня, обязательный подкласс
+- `MAX_CHARACTER_LEVEL = 10`, прогрессия XP (`core/progression.py`), `core/subclasses.py`, `core/scenario.py`
+- NPC-наставник: меню персонажей (`subclass_trainer`), действие `subclass_training` в сценариях
+- `subclass_choice_level` в `classes.yaml`; поле `subclass_id` в `Character`
+- Тесты: `test_subclasses`, `test_progression`, `test_scenario`; расширены `test_character`
+
 ### Fixed
 - §11 PRD: HP 1 уровня `max(1, …)`, поле `max_hp`, потолок характеристик 20, `min_level` и gating приключений, CON → «Телосложение» в ru, README (bard)
 

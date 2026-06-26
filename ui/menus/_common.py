@@ -17,6 +17,11 @@ def _ability_name(strings: StringsDict, stat_key: str) -> str:
     return get_string(strings, f"stats.{stat_key}")
 
 
+def _skill_name(strings: StringsDict, skill_key: str) -> str:
+    """Локализованное имя навыка."""
+    return get_string(strings, f"skills.{skill_key}")
+
+
 def _press_enter(strings: StringsDict) -> None:
     """Ожидание нажатия Enter."""
     prompt = get_string(strings, "common.press_enter")

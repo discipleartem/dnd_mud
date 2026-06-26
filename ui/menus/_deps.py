@@ -10,8 +10,9 @@ from core.character_storage import (
     delete_character,
     load_characters,
     save_character,
+    update_character,
 )
-from core.classes import load_classes
+from core.classes import load_class_full, load_classes, load_subclasses
 from core.dice import roll_ability_score
 from core.localization import load_strings
 from core.races import (
@@ -70,13 +71,16 @@ __all__ = [
     "get_str_input",
     "load_adventures",
     "load_characters",
+    "load_class_full",
     "load_classes",
+    "load_subclasses",
     "load_race_full",
     "load_races",
     "load_strings",
     "point_buy_points_remaining",
     "roll_ability_score",
     "save_character",
+    "update_character",
     "validate_final_stats",
     "validate_point_buy_finish",
 ]
