@@ -6,24 +6,25 @@ from typing import Any
 from colorama import Fore, Style
 
 from core.localization import get_string
+from core.types import StringsDict
 from ui.menus import _deps
 
 SEPARATOR = f"{Fore.YELLOW}{'=' * 78}{Style.RESET_ALL}"
 
 
-def _ability_name(strings: dict[str, Any], stat_key: str) -> str:
+def _ability_name(strings: StringsDict, stat_key: str) -> str:
     """Локализованное имя характеристики."""
     return get_string(strings, f"stats.{stat_key}")
 
 
-def _press_enter(strings: dict[str, Any]) -> None:
+def _press_enter(strings: StringsDict) -> None:
     """Ожидание нажатия Enter."""
     prompt = get_string(strings, "common.press_enter")
     input(f"{Fore.CYAN}{prompt}{Style.RESET_ALL}")
 
 
 def _confirm_yes_no(
-    strings: dict[str, Any], prompt_key: str, **kwargs: Any
+    strings: StringsDict, prompt_key: str, **kwargs: Any
 ) -> bool:
     """Подтвердить действие: 1 — да, 0 — нет."""
     choice = _deps.get_int_input(
@@ -36,7 +37,7 @@ def _confirm_yes_no(
 
 
 def _print_cancelled(
-    strings: dict[str, Any], key: str = "characters_menu.cancelled"
+    strings: StringsDict, key: str = "characters_menu.cancelled"
 ) -> None:
     """Сообщение об отмене действия и ожидание Enter."""
     print(
@@ -49,7 +50,7 @@ def _print_cancelled(
 
 
 def _print_success_and_wait(
-    strings: dict[str, Any],
+    strings: StringsDict,
     msg: str,
     *,
     color: str = Fore.GREEN,
@@ -60,7 +61,7 @@ def _print_success_and_wait(
     _press_enter(strings)
 
 
-def _choice_prompt(strings: dict[str, Any]) -> str:
+def _choice_prompt(strings: StringsDict) -> str:
     """Подсказка для числового выбора."""
     return get_string(strings, "common.choice_prompt")
 
@@ -73,20 +74,20 @@ def _print_screen_header(caption: str) -> None:
     print()
 
 
-def _stats_caption_line(strings: dict[str, Any]) -> str:
+def _stats_caption_line(strings: StringsDict) -> str:
     """Заголовок экрана генерации характеристик."""
     caption = get_string(strings, "character.stats_generation_caption")
     return f"{Fore.YELLOW}{caption.center(78)}{Style.RESET_ALL}"
 
 
-def _stats_total_line(strings: dict[str, Any]) -> str:
+def _stats_total_line(strings: StringsDict) -> str:
     """Заголовок итоговых характеристик."""
     total = get_string(strings, "character.stats_total")
     return f"{Fore.YELLOW}{total.center(78)}{Style.RESET_ALL}"
 
 
 def _run_numbered_menu(
-    strings: dict[str, Any],
+    strings: StringsDict,
     options: list[str],
     *,
     prompt_key: str,

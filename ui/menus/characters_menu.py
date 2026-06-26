@@ -1,11 +1,10 @@
 """Меню «Персонажи»: список, создание и удаление."""
 
-from typing import Any
-
 from colorama import Fore, Style
 
 from core.localization import get_string
 from core.models import Character
+from core.types import StringsDict
 from ui.menus import _deps, character_flow
 from ui.menus._common import (
     _confirm_yes_no,
@@ -18,7 +17,7 @@ from ui.menus._display import _print_characters_list
 
 
 def _select_character_to_delete(
-    strings: dict[str, Any],
+    strings: StringsDict,
     characters: list[Character],
     language: str,
 ) -> Character | None:
@@ -47,7 +46,7 @@ def _select_character_to_delete(
 
 
 def _delete_one_character(
-    strings: dict[str, Any],
+    strings: StringsDict,
     characters: list[Character],
     language: str,
 ) -> None:
@@ -75,7 +74,7 @@ def _delete_one_character(
     _print_success_and_wait(strings, msg)
 
 
-def _delete_all_characters(strings: dict[str, Any], count: int) -> None:
+def _delete_all_characters(strings: StringsDict, count: int) -> None:
     """Удалить всех персонажей с подтверждением."""
     if not _confirm_yes_no(
         strings,
@@ -94,9 +93,7 @@ def _delete_all_characters(strings: dict[str, Any], count: int) -> None:
     _print_success_and_wait(strings, msg)
 
 
-def show_characters_menu(
-    strings: dict[str, Any], language: str = "ru"
-) -> None:
+def show_characters_menu(strings: StringsDict, language: str = "ru") -> None:
     """Меню управления персонажами: список, создание, удаление."""
     while True:
         characters = _deps.load_characters()

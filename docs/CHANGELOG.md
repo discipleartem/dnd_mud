@@ -6,6 +6,8 @@
 - §11 PRD: HP 1 уровня `max(1, …)`, поле `max_hp`, потолок характеристик 20, `min_level` и gating приключений, CON → «Телосложение» в ru, README (bard)
 
 ### Changed
+- DRY/KISS: `_deps` импортирует leaf-модули core; один проход gating приключений; `_run_numbered_menu` / `_run_stats_confirm_loop` вместо дублирования; `stats/__init__` — только публичный API
+- Рефакторинг типов Python 3.12: `core/types.py` (PEP 695 `StatMap`, `StringsDict`, `GameDifficulty`; PEP 692 `RuntimeSettings`), `match/case` в главном меню и flow создания персонажа
 - Асимметричный gating: HardCore-персонаж доступен на приключениях без требования HardCore; недоступные — с причиной в UI
 - `adventures.yaml`: `min_level`, `allowed_game_difficulties`, `hardcore_only` для tutorial и lost_mine
 

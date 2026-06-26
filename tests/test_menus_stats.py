@@ -2,7 +2,7 @@
 
 import pytest
 
-from core.character import STAT_NAMES
+from core.stats import STAT_NAMES
 from ui.menus import _common, _deps
 from ui.menus import stats as stats_menu
 from ui.menus.stats import stats_methods, stats_shared
@@ -52,7 +52,7 @@ def test_prompt_pool_value_manual_rejects_invalid(
     """Standard array: отклоняет значение вне пула."""
     patch_int_input(monkeypatch, [99, 15])
 
-    result = stats_menu._prompt_pool_value_manual(
+    result = stats_shared._prompt_pool_value_manual(
         ru_strings,
         "Сила",
         [15, 14, 13, 12, 10, 8],
@@ -82,11 +82,11 @@ def test_point_buy_finish_blocked_with_unspent_points(
         return "back"
 
     monkeypatch.setattr(stats_shared, "_confirm_stats", fake_confirm)
-    monkeypatch.setattr(_common, "_press_enter", fake_press_enter)
+    monkeypatch.setattr(stats_methods, "_press_enter", fake_press_enter)
     patch_int_input(monkeypatch, [0])
 
     with pytest.raises(StopLoopError):
-        stats_menu._select_stats_point_buy(ru_strings, "human", None)
+        stats_methods._select_stats_point_buy(ru_strings, "human", None)
 
     output = capsys.readouterr().out
     assert "Распределите все очки! Осталось: 27." in output
@@ -113,7 +113,7 @@ def test_point_buy_finish_allowed_when_budget_exhausted(
     patch_int_input(monkeypatch, [1, 2, 3, 4, 5, 6, 0])
     monkeypatch.setattr(stats_shared, "_confirm_stats", fake_confirm)
 
-    stats_menu._select_stats_point_buy(ru_strings, "human", None)
+    stats_methods._select_stats_point_buy(ru_strings, "human", None)
 
     assert confirm_called == [True]
     assert list(build) == []
@@ -132,7 +132,7 @@ def test_variant_human_standard_array_applies_choice_bonuses(
     )
     patch_int_input(monkeypatch, [1, 1, 1])
 
-    result = stats_menu._select_stats_standard_array(
+    result = stats_methods._select_stats_standard_array(
         ru_strings, "human", "variant_human"
     )
 
@@ -157,7 +157,7 @@ def test_variant_human_choice_cancel_redistributes(
     monkeypatch.setattr(stats_methods, "_assign_stats_from_pool", fake_assign)
     patch_int_input(monkeypatch, [0])
 
-    result = stats_menu._select_stats_standard_array(
+    result = stats_methods._select_stats_standard_array(
         ru_strings, "human", "variant_human"
     )
 
@@ -187,11 +187,11 @@ def test_hardcore_race_bonus_back_preserves_rolls(
             raise StopLoopError
 
     monkeypatch.setattr(_deps, "roll_ability_score", fake_roll)
-    monkeypatch.setattr(_common, "_press_enter", fake_press_enter)
+    monkeypatch.setattr(stats_methods, "_press_enter", fake_press_enter)
     patch_int_input(monkeypatch, [0])
 
     with pytest.raises(StopLoopError):
-        stats_menu._select_stats_random_hardcore(
+        stats_methods._select_stats_random_hardcore(
             ru_strings, "human", "variant_human"
         )
 
@@ -211,7 +211,7 @@ def test_confirm_stats_shows_bonus_after_choice(
 
     patch_int_input(monkeypatch, [0])
 
-    stats_menu._confirm_stats(
+    stats_shared._confirm_stats(
         ru_strings,
         stats,
         "human",

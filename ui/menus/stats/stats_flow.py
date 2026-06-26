@@ -1,12 +1,11 @@
 """Оркестратор flow генерации характеристик."""
 
-from typing import Any
-
-from colorama import Fore, Style
-
 from core.localization import get_string
-from ui.menus import _deps
-from ui.menus._common import SEPARATOR, _stats_caption_line
+from core.types import GameDifficulty, StatMap, StringsDict
+from ui.menus._common import (
+    _print_screen_header,
+    _run_numbered_menu,
+)
 from ui.menus.stats.stats_methods import (
     _select_stats_point_buy,
     _select_stats_random_hardcore,
@@ -16,20 +15,19 @@ from ui.menus.stats.stats_methods import (
 
 
 def show_stats_generation_flow(
-    strings: dict[str, Any],
+    strings: StringsDict,
     race_id: str,
     subrace_id: str | None,
-    difficulty: str,
-) -> dict[str, int] | None:
+    difficulty: GameDifficulty,
+) -> StatMap | None:
     """Flow генерации характеристик с выбором метода."""
     if difficulty == "hardcore":
         return _select_stats_random_hardcore(strings, race_id, subrace_id)
 
     while True:
-        print(SEPARATOR)
-        print(_stats_caption_line(strings))
-        print(SEPARATOR)
-        print()
+        _print_screen_header(
+            get_string(strings, "character.stats_generation_caption")
+        )
 
         methods = [
             get_string(strings, "character.stats_standard_array"),
@@ -37,30 +35,20 @@ def show_stats_generation_flow(
             get_string(strings, "character.stats_random"),
         ]
 
-        for idx, method in enumerate(methods, 1):
-            print(f"  {Fore.YELLOW}{idx}{Style.RESET_ALL}. {method}")
-        print(
-            f"  {Fore.YELLOW}0{Style.RESET_ALL}."
-            f" {get_string(strings, 'character.back')}"
-        )
-        print()
-
-        choice = _deps.get_int_input(
-            get_string(strings, "character.stats_generation_method_prompt"),
-            0,
-            3,
+        choice = _run_numbered_menu(
             strings,
+            methods,
+            prompt_key="character.stats_generation_method_prompt",
+            back_label_key="character.back",
         )
-
-        if choice == 0:
+        if choice is None:
             return None
 
-        stats: dict[str, int] | None = None
         if choice == 1:
             stats = _select_stats_standard_array(strings, race_id, subrace_id)
         elif choice == 2:
             stats = _select_stats_point_buy(strings, race_id, subrace_id)
-        elif choice == 3:
+        else:
             stats = _select_stats_random_normal(strings, race_id, subrace_id)
 
         if stats is not None:

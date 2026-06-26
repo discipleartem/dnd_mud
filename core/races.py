@@ -6,6 +6,7 @@ from typing import Any
 
 from core.io import load_yaml
 from core.localization import resolve_localized_text
+from core.types import StatMap
 
 RACES_FILE = Path("database/races/races.yaml")
 
@@ -39,9 +40,7 @@ def _get_race_and_subrace(
     return race_info, None
 
 
-def _merge_bonus_dicts(
-    base: dict[str, int], extra: dict[str, int]
-) -> dict[str, int]:
+def _merge_bonus_dicts(base: StatMap, extra: StatMap) -> StatMap:
     """Сложить два словаря бонусов к характеристикам."""
     result = dict(base)
     for stat, val in extra.items():
@@ -49,9 +48,7 @@ def _merge_bonus_dicts(
     return result
 
 
-def get_race_bonuses(
-    race_id: str, subrace_id: str | None = None
-) -> dict[str, int]:
+def get_race_bonuses(race_id: str, subrace_id: str | None = None) -> StatMap:
     """Получить расовые и подрасовые бонусы к характеристикам."""
     race_info, subrace_info = _get_race_and_subrace(race_id, subrace_id)
     if not race_info:
@@ -62,7 +59,7 @@ def get_race_bonuses(
     else:
         inherit_base = True
 
-    bonuses: dict[str, int] = {}
+    bonuses: StatMap = {}
     if inherit_base:
         base_bonuses = race_info.get("ability_bonuses", {})
         if isinstance(base_bonuses, dict):
@@ -110,9 +107,9 @@ def has_choice_ability_bonuses(
 
 def build_bonuses_from_choices(
     chosen_stats: list[str], value: int = 1
-) -> dict[str, int]:
+) -> StatMap:
     """Собрать словарь бонусов из списка выбранных характеристик."""
-    bonuses: dict[str, int] = {}
+    bonuses: StatMap = {}
     for stat in chosen_stats:
         bonuses = _merge_bonus_dicts(bonuses, {stat: value})
     return bonuses
@@ -121,8 +118,8 @@ def build_bonuses_from_choices(
 def get_effective_race_bonuses(
     race_id: str,
     subrace_id: str | None = None,
-    choice_bonuses: dict[str, int] | None = None,
-) -> dict[str, int]:
+    choice_bonuses: StatMap | None = None,
+) -> StatMap:
     """Статические и выборные расовые бонусы для отображения."""
     bonuses = get_race_bonuses(race_id, subrace_id)
     if choice_bonuses:

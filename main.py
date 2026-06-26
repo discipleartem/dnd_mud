@@ -8,12 +8,12 @@ import sys
 import tomllib
 from importlib.metadata import PackageNotFoundError, version
 from pathlib import Path
-from typing import Any
 
 from colorama import Fore, Style, init
 
 from core.localization import get_string, load_strings
 from core.settings import load_settings, save_settings
+from core.types import RuntimeSettings, StringsDict
 from ui.menus import (
     show_characters_menu,
     show_languages_menu,
@@ -50,8 +50,8 @@ VERSION = _resolve_app_version()
 
 
 def _save_and_reload_settings(
-    settings: dict[str, Any], strings: dict[str, Any]
-) -> tuple[dict[str, Any], dict[str, Any]]:
+    settings: RuntimeSettings, strings: StringsDict
+) -> tuple[RuntimeSettings, StringsDict]:
     """Сохранить настройки и перезагрузить строки.
 
     Args:
@@ -61,7 +61,7 @@ def _save_and_reload_settings(
     Returns:
         Кортеж (обновлённые_настройки, обновлённые_строки)
     """
-    save_settings(language=settings.get("language", "ru"))
+    save_settings(language=settings["language"])
     strings = load_strings(settings["language"])
     return settings, strings
 
@@ -89,36 +89,35 @@ def main() -> int:
     while running:
         choice = show_main_menu(strings)
 
-        if choice == 0:
-            print(
-                f"{Fore.GREEN}{get_string(strings, 'info.goodbye')}"
-                f"{Style.RESET_ALL}"
-            )
-            running = False
-
-        elif choice == 1:
-            # Новая игра
-            show_new_game_flow(strings, settings)
-            settings, strings = _save_and_reload_settings(settings, strings)
-
-        elif choice == 2:
-            # Загрузить игру
-            show_load_game_flow(strings)
-
-        elif choice == 3:
-            # Персонажи
-            show_characters_menu(strings, settings.get("language", "ru"))
-            settings, strings = _save_and_reload_settings(settings, strings)
-
-        elif choice == 4:
-            # Настройки
-            settings = show_settings(strings, settings)
-            settings, strings = _save_and_reload_settings(settings, strings)
-
-        elif choice == 5:
-            # Languages
-            settings = show_languages_menu(strings, settings)
-            settings, strings = _save_and_reload_settings(settings, strings)
+        match choice:
+            case 0:
+                print(
+                    f"{Fore.GREEN}{get_string(strings, 'info.goodbye')}"
+                    f"{Style.RESET_ALL}"
+                )
+                running = False
+            case 1:
+                show_new_game_flow(strings, settings)
+                settings, strings = _save_and_reload_settings(
+                    settings, strings
+                )
+            case 2:
+                show_load_game_flow(strings)
+            case 3:
+                show_characters_menu(strings, settings["language"])
+                settings, strings = _save_and_reload_settings(
+                    settings, strings
+                )
+            case 4:
+                settings = show_settings(strings, settings)
+                settings, strings = _save_and_reload_settings(
+                    settings, strings
+                )
+            case 5:
+                settings = show_languages_menu(strings, settings)
+                settings, strings = _save_and_reload_settings(
+                    settings, strings
+                )
 
     return 0
 

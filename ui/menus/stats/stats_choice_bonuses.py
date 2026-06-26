@@ -1,20 +1,23 @@
 """Выборные расовые бонусы при генерации характеристик."""
 
-from typing import Any
-
 from colorama import Fore, Style
 
 from core.localization import get_string
+from core.types import StatMap, StringsDict
 from ui.menus import _deps
-from ui.menus._common import SEPARATOR, _ability_name, _choice_prompt
+from ui.menus._common import (
+    _ability_name,
+    _choice_prompt,
+    _print_screen_header,
+)
 
 
 def _select_choice_ability_bonuses(
-    strings: dict[str, Any],
-    stats: dict[str, int],
+    strings: StringsDict,
+    stats: StatMap,
     race_id: str,
     subrace_id: str | None,
-) -> dict[str, int] | None:
+) -> StatMap | None:
     """Выбор характеристик для выборного расового бонуса."""
     mechanics = _deps.get_choice_ability_bonus_mechanics(race_id, subrace_id)
     if mechanics is None:
@@ -26,11 +29,9 @@ def _select_choice_ability_bonuses(
     chosen_stats: list[str] = []
 
     for pick_num in range(1, count + 1):
-        print(SEPARATOR)
-        caption = get_string(strings, "character.stats_choice_bonus_caption")
-        print(f"{Fore.YELLOW}{caption.center(78)}{Style.RESET_ALL}")
-        print(SEPARATOR)
-        print()
+        _print_screen_header(
+            get_string(strings, "character.stats_choice_bonus_caption")
+        )
         prompt = get_string(
             strings,
             "character.stats_choice_bonus_prompt",
@@ -89,11 +90,11 @@ def _select_choice_ability_bonuses(
 
 
 def _finalize_stats_with_race_bonuses(
-    strings: dict[str, Any],
-    stats: dict[str, int],
+    strings: StringsDict,
+    stats: StatMap,
     race_id: str,
     subrace_id: str | None,
-) -> tuple[dict[str, int], dict[str, int]] | None:
+) -> tuple[StatMap, StatMap] | None:
     """Применить выборные бонусы после генерации характеристик."""
     if not _deps.has_choice_ability_bonuses(race_id, subrace_id):
         return stats, _deps.get_race_bonuses(race_id, subrace_id)

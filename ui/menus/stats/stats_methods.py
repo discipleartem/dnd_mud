@@ -1,32 +1,27 @@
 """Методы генерации характеристик: standard array, point-buy, random."""
 
-from typing import Any
-
 from colorama import Fore, Style
 
 from core.localization import get_string
-from ui.menus import _common, _deps
-from ui.menus._common import _ability_name, _choice_prompt
+from core.types import StatMap, StringsDict
+from ui.menus import _deps
+from ui.menus._common import _ability_name, _choice_prompt, _press_enter
 from ui.menus._display import (
     _print_point_buy_cost_table,
     _print_stats_generation_header,
 )
-from ui.menus.stats.stats_choice_bonuses import (
-    _finalize_stats_with_race_bonuses,
-)
 from ui.menus.stats.stats_shared import (
     _assign_stats_from_pool,
-    _confirm_stats,
     _prompt_point_buy_stat_value,
     _run_stats_confirm_loop,
 )
 
 
 def _select_stats_standard_array(
-    strings: dict[str, Any],
+    strings: StringsDict,
     race_id: str,
     subrace_id: str | None,
-) -> dict[str, int] | None:
+) -> StatMap | None:
     """Выбор характеристик из стандартного массива."""
     while True:
         selected = _assign_stats_from_pool(
@@ -57,10 +52,10 @@ def _select_stats_standard_array(
 
 
 def _select_stats_point_buy(
-    strings: dict[str, Any],
+    strings: StringsDict,
     race_id: str,
     subrace_id: str | None,
-) -> dict[str, int] | None:
+) -> StatMap | None:
     """Система покупки очков (Point-buy)."""
     while True:
         stats = {stat: 8 for stat in _deps.STAT_NAMES}
@@ -145,7 +140,7 @@ def _select_stats_point_buy(
                 else:
                     overspent = get_string(strings, error_key)
                     print(f"{Fore.RED}{overspent}{Style.RESET_ALL}")
-                _common._press_enter(strings)
+                _press_enter(strings)
                 continue
 
             stat_to_modify = _deps.STAT_NAMES[choice - 1]
@@ -156,10 +151,10 @@ def _select_stats_point_buy(
 
 
 def _select_stats_random_normal(
-    strings: dict[str, Any],
+    strings: StringsDict,
     race_id: str,
     subrace_id: str | None,
-) -> dict[str, int] | None:
+) -> StatMap | None:
     """Случайный метод для Normal режима с распределением значений."""
     rolls: list[int] | None = None
 
@@ -243,10 +238,10 @@ def _select_stats_random_normal(
 
 
 def _select_stats_random_hardcore(
-    strings: dict[str, Any],
+    strings: StringsDict,
     race_id: str,
     subrace_id: str | None,
-) -> dict[str, int]:
+) -> StatMap:
     """Случайный метод для HardCore режима."""
     base_values = [_deps.roll_ability_score() for _ in _deps.STAT_NAMES]
 
@@ -269,44 +264,22 @@ def _select_stats_random_hardcore(
             print(f"  {stat_name}: {Fore.YELLOW}{roll}{Style.RESET_ALL}")
 
         print()
-        _common._press_enter(strings)
+        _press_enter(strings)
 
         stats = _deps.generate_stats_random(base_values, race_id, subrace_id)
-        finalized = _finalize_stats_with_race_bonuses(
-            strings, stats, race_id, subrace_id
+        result = _run_stats_confirm_loop(
+            strings,
+            stats,
+            race_id,
+            subrace_id,
+            reroll_label_key="character.stats_reroll_regenerate",
+            choice_cancel="retry",
         )
-        if finalized is None:
+        if result is None:
             continue
-        final_stats, race_bonuses = finalized
-
-        over_max = _deps.validate_final_stats(final_stats)
-        if over_max is not None:
-            stat_id, value = over_max
-            stat_name = _ability_name(strings, stat_id)
-            msg = get_string(
-                strings,
-                "character.stats_exceeds_max",
-                stat=stat_name,
-                value=value,
-                max=_deps.ABILITY_SCORE_MAX,
-            )
-            print(f"{Fore.RED}{msg}{Style.RESET_ALL}")
-            print()
+        if result == "reroll":
             base_values = [
                 _deps.roll_ability_score() for _ in _deps.STAT_NAMES
             ]
             continue
-
-        result = _confirm_stats(
-            strings,
-            final_stats,
-            race_id,
-            subrace_id,
-            reroll_label_key="character.stats_reroll_regenerate",
-            race_bonuses=race_bonuses,
-        )
-        if result == "accept":
-            return final_stats
-        if result == "back":
-            continue
-        base_values = [_deps.roll_ability_score() for _ in _deps.STAT_NAMES]
+        return result

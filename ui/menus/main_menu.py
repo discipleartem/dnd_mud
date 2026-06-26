@@ -1,15 +1,14 @@
 """Приветствие, главное меню и заглушка загрузки игры."""
 
-from typing import Any
-
 from colorama import Fore, Style
 
 from core.localization import get_string
+from core.types import StringsDict
 from ui.menus import _deps
 from ui.menus._common import SEPARATOR, _press_enter, _print_screen_header
 
 
-def show_welcome_screen(version: str, strings: dict[str, Any]) -> None:
+def show_welcome_screen(version: str, strings: StringsDict) -> None:
     """Показать приветственный экран."""
     print()
     _print_screen_header(get_string(strings, "welcome.title"))
@@ -25,7 +24,7 @@ def show_welcome_screen(version: str, strings: dict[str, Any]) -> None:
     print()
 
 
-def show_main_menu(strings: dict[str, Any]) -> int:
+def show_main_menu(strings: StringsDict) -> int:
     """Показать главное меню и получить выбор."""
     print(SEPARATOR)
     print(
@@ -55,7 +54,7 @@ def show_main_menu(strings: dict[str, Any]) -> int:
     return _deps.get_int_input(prompt, 0, 5, strings)
 
 
-def show_load_game_flow(strings: dict[str, Any]) -> None:
+def show_load_game_flow(strings: StringsDict) -> None:
     """Flow «Загрузить игру»."""
     _print_screen_header(get_string(strings, "load_game.caption"))
     print(
