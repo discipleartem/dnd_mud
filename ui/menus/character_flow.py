@@ -1,24 +1,31 @@
-"""Flow «Создать персонажа»: имя, раса, подраса, класс."""
+"""Flow «Создать персонажа»: имя, раса, подраса, класс, архетип."""
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Any, Literal
 
 from colorama import Fore, Style
 
 from core.localization import get_string
 from core.models import Character
+from core.subclasses import subclass_offered_at_creation
 from core.types import GameDifficulty, StatMap, StringsDict
 from ui.menus import _deps
 from ui.menus._common import (
+    SEPARATOR,
     _print_screen_header,
     _print_success_and_wait,
     _run_numbered_menu,
 )
-from ui.menus._display import _print_race_info
+from ui.menus._display import (
+    _print_class_info,
+    _print_class_summary,
+    _print_race_info,
+    _print_subclass_info,
+)
 from ui.menus.settings import select_difficulty
 from ui.menus.stats import show_stats_generation_flow
 
-CreationStep = Literal["race", "subrace", "stats", "class"]
+CreationStep = Literal["race", "subrace", "stats", "class", "subclass"]
 
 
 @dataclass
@@ -30,6 +37,9 @@ class _CreationState:
     race_id: str | None = None
     subrace_id: str | None = None
     stats: StatMap | None = None
+    class_id: str | None = None
+    subclass_id: str | None = None
+    hardcore_rolls: list[int] = field(default_factory=list)
 
 
 def _select_subrace(
@@ -104,18 +114,116 @@ def _select_subrace(
 def _select_class(
     strings: StringsDict, language: str = "ru"
 ) -> dict[str, Any] | None:
-    """Выбрать класс персонажа или вернуться назад."""
+    """Выбрать класс персонажа (краткий обзор каждого класса)."""
     classes = _deps.load_classes(language)
-    _print_screen_header(get_string(strings, "character.class_prompt"))
-    choice = _run_numbered_menu(
-        strings,
-        [cls.get("name", "?") for cls in classes],
-        prompt_key="character.class_prompt",
-        back_label_key="character.back",
+    _print_screen_header(get_string(strings, "character.class_caption"))
+
+    class_details: list[dict[str, Any]] = []
+    for cls in classes:
+        class_id = str(cls.get("id") or cls.get("name"))
+        class_details.append(_deps.load_class_full(class_id, language))
+
+    for idx, class_info in enumerate(class_details, 1):
+        if idx > 1:
+            print(f"  {Fore.LIGHTBLACK_EX}{'─' * 74}{Style.RESET_ALL}")
+        print()
+        print(
+            f"  {Fore.YELLOW}{idx}{Style.RESET_ALL}. "
+            f"{Fore.CYAN}{Style.BRIGHT}"
+            f"{class_info.get('name', '?')}"
+            f"{Style.RESET_ALL}"
+        )
+        _print_class_summary(class_info, strings)
+
+    print()
+    print(
+        f"  {Fore.YELLOW}0{Style.RESET_ALL}."
+        f" {get_string(strings, 'character.back')}"
     )
-    if choice is None:
+    print()
+    choice = _deps.get_int_input(
+        get_string(strings, "character.class_prompt"),
+        0,
+        len(class_details),
+        strings,
+    )
+    if choice == 0:
         return None
-    return classes[choice - 1]
+    return class_details[choice - 1]
+
+
+def _select_subclass(
+    strings: StringsDict,
+    class_id: str,
+    language: str = "ru",
+) -> str | None:
+    """Выбрать подкласс (подробный обзор архетипов)."""
+    class_full = _deps.load_class_full(class_id, language)
+    subclasses = _deps.load_subclasses(class_id, language)
+
+    if not subclasses:
+        return None
+
+    _print_screen_header(get_string(strings, "character.subclass_caption"))
+
+    class_name = class_full.get("name", class_id)
+    print(f"{Fore.CYAN}{Style.BRIGHT}{class_name}{Style.RESET_ALL}")
+    _print_class_info(class_full, strings)
+    print()
+    print(SEPARATOR)
+    print()
+
+    subclasses_title = get_string(
+        strings, "character.subclasses_label"
+    ).strip()
+    print(f"{Fore.YELLOW}{Style.BRIGHT}{subclasses_title}{Style.RESET_ALL}")
+    for idx, sub_info in enumerate(subclasses, 1):
+        print()
+        if idx > 1:
+            print(f"  {Fore.LIGHTBLACK_EX}{'─' * 74}{Style.RESET_ALL}")
+            print()
+        print(
+            f"  {Fore.YELLOW}{idx}{Style.RESET_ALL}. "
+            f"{Fore.CYAN}{Style.BRIGHT}"
+            f"{sub_info.get('name', '?')}"
+            f"{Style.RESET_ALL}"
+        )
+        _print_subclass_info(sub_info, strings)
+
+    print()
+    print(
+        f"  {Fore.YELLOW}0{Style.RESET_ALL}."
+        f" {get_string(strings, 'character.back')}"
+    )
+    print()
+    choice = _deps.get_int_input(
+        get_string(strings, "character.subclass_prompt"),
+        0,
+        len(subclasses),
+        strings,
+    )
+    if choice == 0:
+        return None
+
+    selected = subclasses[choice - 1]
+    return str(selected.get("id", ""))
+
+
+def _save_created_character(state: _CreationState) -> Character:
+    """Сохранить персонажа из состояния создания."""
+    assert state.race_id is not None
+    assert state.stats is not None
+    assert state.class_id is not None
+
+    return _deps.save_character(
+        name=state.name,
+        race_id=str(state.race_id),
+        class_id=str(state.class_id),
+        difficulty=state.difficulty,
+        subrace_id=str(state.subrace_id) if state.subrace_id else None,
+        stats=state.stats,
+        subclass_id=state.subclass_id,
+    )
 
 
 def show_create_character_flow(
@@ -163,6 +271,8 @@ def show_create_character_flow(
                     strings, state.race_id, language
                 )
                 if not subrace_selected:
+                    if state.difficulty == "hardcore":
+                        state.hardcore_rolls.clear()
                     step = "race"
                     continue
                 state.subrace_id = subrace_id
@@ -170,11 +280,17 @@ def show_create_character_flow(
 
             case "stats":
                 assert state.race_id is not None
+                hardcore_rolls = (
+                    state.hardcore_rolls
+                    if state.difficulty == "hardcore"
+                    else None
+                )
                 stats = show_stats_generation_flow(
                     strings,
                     state.race_id,
                     state.subrace_id,
                     state.difficulty,
+                    hardcore_rolls=hardcore_rolls,
                 )
                 if stats is None:
                     step = "subrace"
@@ -190,18 +306,29 @@ def show_create_character_flow(
                     step = "stats"
                     continue
 
-                class_id = cls.get("id") or cls.get("name")
-                character = _deps.save_character(
-                    name=state.name,
-                    race_id=str(state.race_id),
-                    class_id=str(class_id),
-                    difficulty=state.difficulty,
-                    subrace_id=(
-                        str(state.subrace_id) if state.subrace_id else None
-                    ),
-                    stats=state.stats,
-                )
+                state.class_id = str(cls.get("id") or cls.get("name"))
+                if subclass_offered_at_creation(
+                    state.difficulty, state.class_id
+                ):
+                    step = "subclass"
+                else:
+                    character = _save_created_character(state)
+                    msg = get_string(
+                        strings, "character.save_success", name=state.name
+                    )
+                    _print_success_and_wait(strings, msg)
+                    return character
 
+            case "subclass":
+                assert state.class_id is not None
+                subclass_id = _select_subclass(
+                    strings, state.class_id, language
+                )
+                if subclass_id is None:
+                    step = "class"
+                    continue
+                state.subclass_id = subclass_id
+                character = _save_created_character(state)
                 msg = get_string(
                     strings, "character.save_success", name=state.name
                 )

@@ -22,7 +22,7 @@ from ui.menus.stats.stats_choice_bonuses import (
 )
 
 ConfirmStatsResult = Literal["accept", "reroll", "back"]
-StatsConfirmLoopResult = StatMap | None | Literal["reroll"]
+StatsConfirmLoopResult = StatMap | None | Literal["reroll", "retry_finalize"]
 
 
 def _prompt_pool_value_manual(
@@ -167,6 +167,7 @@ def _confirm_stats(
     *,
     reroll_label_key: str,
     race_bonuses: StatMap | None = None,
+    allow_reroll: bool = True,
 ) -> ConfirmStatsResult:
     """Подтверждение выбранных характеристик."""
     if race_bonuses is None:
@@ -187,17 +188,21 @@ def _confirm_stats(
         f"  {Fore.YELLOW}1{Style.RESET_ALL}. "
         f"{get_string(strings, 'character.stats_confirm')}"
     )
-    print(
-        f"  {Fore.YELLOW}2{Style.RESET_ALL}. "
-        f"{get_string(strings, reroll_label_key)}"
-    )
+    if allow_reroll:
+        print(
+            f"  {Fore.YELLOW}2{Style.RESET_ALL}. "
+            f"{get_string(strings, reroll_label_key)}"
+        )
     print(
         f"  {Fore.YELLOW}0{Style.RESET_ALL}."
         f" {get_string(strings, 'character.back')}"
     )
     print()
 
-    choice = _deps.get_int_input(_choice_prompt(strings), 0, 2, strings)
+    max_choice = 2 if allow_reroll else 1
+    choice = _deps.get_int_input(
+        _choice_prompt(strings), 0, max_choice, strings
+    )
 
     if choice == 0:
         return "back"
@@ -214,13 +219,16 @@ def _run_stats_confirm_loop(
     reroll_label_key: str,
     *,
     choice_cancel: Literal["reroll", "retry"] = "reroll",
+    allow_reroll: bool = True,
 ) -> StatsConfirmLoopResult:
     """Подтверждение характеристик: accept → stats, back → None, reroll."""
     finalized = _finalize_stats_with_race_bonuses(
         strings, stats, race_id, subrace_id
     )
     if finalized is None:
-        return None if choice_cancel == "retry" else "reroll"
+        if choice_cancel == "retry":
+            return "retry_finalize"
+        return "reroll"
     final_stats, race_bonuses = finalized
     over_max = _deps.validate_final_stats(final_stats)
     if over_max is not None:
@@ -235,7 +243,11 @@ def _run_stats_confirm_loop(
         )
         print(f"{Fore.RED}{msg}{Style.RESET_ALL}")
         print()
-        return "reroll"
+        if allow_reroll:
+            return "reroll"
+        if choice_cancel == "retry":
+            return "retry_finalize"
+        return None
     result = _confirm_stats(
         strings,
         final_stats,
@@ -243,6 +255,7 @@ def _run_stats_confirm_loop(
         subrace_id,
         reroll_label_key=reroll_label_key,
         race_bonuses=race_bonuses,
+        allow_reroll=allow_reroll,
     )
     if result == "accept":
         return final_stats

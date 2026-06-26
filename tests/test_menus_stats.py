@@ -176,28 +176,78 @@ def test_hardcore_race_bonus_back_preserves_rolls(
         roll_calls["count"] += 1
         return next(roll_sequence)
 
-    class StopLoopError(Exception):
-        pass
-
-    enter_count = {"n": 0}
-
-    def fake_press_enter(strings: object) -> None:
-        enter_count["n"] += 1
-        if enter_count["n"] >= 2:
-            raise StopLoopError
-
     monkeypatch.setattr(_deps, "roll_ability_score", fake_roll)
-    monkeypatch.setattr(stats_methods, "_press_enter", fake_press_enter)
-    patch_int_input(monkeypatch, [0])
+    monkeypatch.setattr(stats_methods, "_press_enter", lambda strings: None)
+    patch_int_input(monkeypatch, [0, 1, 1, 1])
 
-    with pytest.raises(StopLoopError):
-        stats_methods._select_stats_random_hardcore(
-            ru_strings, "human", "variant_human"
-        )
-
+    result = stats_methods._select_stats_random_hardcore(
+        ru_strings, "human", "variant_human"
+    )
     output = capsys.readouterr().out
+
+    assert result is not None
     assert roll_calls["count"] == 6
     assert "15" in output and "13" in output
+
+
+def test_hardcore_confirm_no_regenerate_option(
+    monkeypatch, capsys, ru_strings, patch_int_input
+):
+    """HardCore: на подтверждении нет пункта «Перегенерировать»."""
+    monkeypatch.setattr(_deps, "roll_ability_score", lambda: 12)
+    monkeypatch.setattr(stats_methods, "_press_enter", lambda strings: None)
+    patch_int_input(monkeypatch, [1])
+
+    stats_methods._select_stats_random_hardcore(ru_strings, "elf", None)
+    output = capsys.readouterr().out
+
+    assert "Принять характеристики" in output
+    assert "Перегенерировать" not in output
+
+
+def test_hardcore_back_from_confirm_exits_stats(
+    monkeypatch, ru_strings, patch_int_input
+):
+    """HardCore: «Назад» с подтверждения выходит из генерации."""
+    monkeypatch.setattr(_deps, "roll_ability_score", lambda: 12)
+    monkeypatch.setattr(stats_methods, "_press_enter", lambda strings: None)
+    patch_int_input(monkeypatch, [0])
+
+    result = stats_methods._select_stats_random_hardcore(
+        ru_strings, "elf", None
+    )
+
+    assert result is None
+
+
+def test_hardcore_reentry_reuses_stored_rolls(
+    monkeypatch, capsys, ru_strings, patch_int_input
+):
+    """HardCore: повторный вход сохраняет броски без переброса."""
+    roll_calls = {"count": 0}
+
+    def fake_roll() -> int:
+        roll_calls["count"] += 1
+        return 10
+
+    monkeypatch.setattr(_deps, "roll_ability_score", fake_roll)
+    monkeypatch.setattr(stats_methods, "_press_enter", lambda strings: None)
+
+    stored_rolls = [15, 13, 9, 9, 14, 14]
+    patch_int_input(monkeypatch, [1])
+
+    stats_methods._select_stats_random_hardcore(
+        ru_strings,
+        "elf",
+        None,
+        hardcore_rolls=stored_rolls,
+    )
+    output = capsys.readouterr().out
+
+    assert roll_calls["count"] == 0
+    assert stored_rolls == [15, 13, 9, 9, 14, 14]
+    assert "Метод: 4d6" not in output
+    assert "15" in output
 
 
 def test_confirm_stats_shows_bonus_after_choice(

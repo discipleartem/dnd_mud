@@ -129,6 +129,36 @@ def test_can_assign_point_buy_value():
     )
 
 
+def test_save_easy_starts_at_level_three(characters_dir):
+    """Режим easy: персонаж создаётся с 3 уровня."""
+    stats = dict.fromkeys(character_mod.STAT_NAMES, 12)
+    saved = character_mod.save_character(
+        name="EasyHero",
+        race_id="human",
+        class_id="fighter",
+        difficulty="easy",
+        stats=stats,
+        subclass_id="champion",
+    )
+    assert saved.level == 3
+    assert saved.subclass_id == "champion"
+    assert saved.max_hp > character_mod.starting_max_hp("fighter", stats)
+
+
+def test_save_with_subclass_persisted(characters_dir):
+    """subclass_id сохраняется в JSON."""
+    character_mod.save_character(
+        name="ClericHero",
+        race_id="human",
+        class_id="cleric",
+        difficulty="normal",
+        subclass_id="life_domain",
+        stats=dict.fromkeys(character_mod.STAT_NAMES, 10),
+    )
+    loaded = character_mod.load_characters()[-1]
+    assert loaded.subclass_id == "life_domain"
+
+
 def test_starting_max_hp_floor_and_max_hp_field(characters_dir):
     """HP на 1 уровне: max(1, кость + CON), current_hp == max_hp."""
     stats = {

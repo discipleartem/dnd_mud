@@ -9,8 +9,9 @@ from core.character_storage import (
     load_characters,
     save_character,
     starting_max_hp,
+    update_character,
 )
-from core.classes import load_classes
+from core.classes import load_class_full, load_classes, load_subclasses
 from core.races import (
     build_bonuses_from_choices,
     get_choice_ability_bonus_mechanics,
@@ -67,7 +68,9 @@ __all__ = [
     "get_race_bonuses",
     "has_choice_ability_bonuses",
     "load_characters",
+    "load_class_full",
     "load_classes",
+    "load_subclasses",
     "load_race_full",
     "load_races",
     "point_buy_points_remaining",
@@ -75,6 +78,7 @@ __all__ = [
     "remaining_standard_array_pool",
     "save_character",
     "starting_max_hp",
+    "update_character",
     "validate_final_stats",
     "validate_point_buy_finish",
 ]

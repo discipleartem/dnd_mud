@@ -22,7 +22,7 @@ def test_select_difficulty_returns_hardcore(
     ru_strings: dict[str, Any],
     patch_int_input: Any,
 ) -> None:
-    patch_int_input(monkeypatch, [2])
+    patch_int_input(monkeypatch, [3])
     assert settings_menu.select_difficulty(ru_strings) == "hardcore"
 
 

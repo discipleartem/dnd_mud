@@ -137,6 +137,129 @@ def test_create_character_back_from_subrace_exits(
     assert subrace_calls["n"] == 1
 
 
+def test_hardcore_back_from_stats_keeps_rolls(
+    monkeypatch, capsys, ru_strings, patch_int_input
+):
+    """HardCore: «Назад» с подтверждения сохраняет броски 4d6."""
+    from ui.menus.stats import stats_methods
+
+    monkeypatch.setattr(
+        character_flow,
+        "select_difficulty",
+        lambda strings: "hardcore",
+    )
+    monkeypatch.setattr(
+        _deps,
+        "get_str_input",
+        lambda *args, **kwargs: "Hero",
+    )
+    monkeypatch.setattr(
+        _deps,
+        "load_races",
+        lambda language="ru": [{"id": "elf", "name": "Эльф"}],
+    )
+    monkeypatch.setattr(
+        character_flow,
+        "_select_subrace",
+        lambda strings, race_id, language="ru": (True, "wood_elf"),
+    )
+    monkeypatch.setattr(
+        character_flow,
+        "_select_class",
+        lambda strings, language="ru": {"id": "bard"},
+    )
+    monkeypatch.setattr(
+        character_flow,
+        "_save_created_character",
+        lambda state: Character(name="Hero", race="elf", class_name="bard"),
+    )
+    monkeypatch.setattr(
+        character_flow,
+        "_print_success_and_wait",
+        lambda strings, message: None,
+    )
+    roll_sequence = iter([17, 12, 4, 11, 13, 9, 99, 99, 99, 99, 99, 99])
+    roll_calls = {"count": 0}
+
+    def fake_roll() -> int:
+        roll_calls["count"] += 1
+        return next(roll_sequence)
+
+    monkeypatch.setattr(_deps, "roll_ability_score", fake_roll)
+    monkeypatch.setattr(stats_methods, "_press_enter", lambda strings: None)
+    patch_int_input(monkeypatch, [1, 0, 1])
+
+    character_flow.show_create_character_flow(ru_strings)
+    output = capsys.readouterr().out
+
+    assert roll_calls["count"] == 6
+    assert "17" in output
+    assert "99" not in output
+
+
+def test_hardcore_back_to_race_clears_rolls(
+    monkeypatch, ru_strings, patch_int_input
+):
+    """HardCore: возврат к выбору расы сбрасывает сохранённые броски."""
+    from ui.menus.stats import stats_methods
+
+    monkeypatch.setattr(
+        character_flow,
+        "select_difficulty",
+        lambda strings: "hardcore",
+    )
+    monkeypatch.setattr(
+        _deps,
+        "get_str_input",
+        lambda *args, **kwargs: "Hero",
+    )
+    monkeypatch.setattr(
+        _deps,
+        "load_races",
+        lambda language="ru": [{"id": "elf", "name": "Эльф"}],
+    )
+    subrace_calls = {"n": 0}
+
+    def fake_subrace(strings, race_id, language="ru"):
+        subrace_calls["n"] += 1
+        if subrace_calls["n"] == 1:
+            return True, "wood_elf"
+        if subrace_calls["n"] == 2:
+            return False, None
+        return True, "wood_elf"
+
+    monkeypatch.setattr(character_flow, "_select_subrace", fake_subrace)
+    monkeypatch.setattr(
+        character_flow,
+        "_select_class",
+        lambda strings, language="ru": {"id": "fighter"},
+    )
+    monkeypatch.setattr(
+        character_flow,
+        "_save_created_character",
+        lambda state: Character(name="Hero", race="elf", class_name="fighter"),
+    )
+    monkeypatch.setattr(
+        character_flow,
+        "_print_success_and_wait",
+        lambda strings, message: None,
+    )
+    roll_sequence = iter([10, 10, 10, 10, 10, 10, 11, 11, 11, 11, 11, 11])
+    roll_calls = {"count": 0}
+
+    def fake_roll() -> int:
+        roll_calls["count"] += 1
+        return next(roll_sequence)
+
+    monkeypatch.setattr(_deps, "roll_ability_score", fake_roll)
+    monkeypatch.setattr(stats_methods, "_press_enter", lambda strings: None)
+    patch_int_input(monkeypatch, [1, 0, 1, 1])
+
+    character_flow.show_create_character_flow(ru_strings)
+
+    assert roll_calls["count"] == 12
+
+
 def test_select_character_shows_cards_with_difficulty(
     monkeypatch, capsys, ru_strings, patch_int_input
 ):
@@ -431,3 +554,36 @@ def test_characters_menu_delete_all_cancelled(
 
     assert deleted_all_called == []
     assert "Удаление отменено" in output
+
+
+def test_select_class_shows_description_and_features(
+    monkeypatch, capsys, ru_strings, patch_int_input
+):
+    """Экран выбора класса показывает описание и умения из YAML."""
+    patch_int_input(monkeypatch, [1])
+
+    result = character_flow._select_class(ru_strings, "ru")
+    output = capsys.readouterr().out
+
+    assert result is not None
+    assert result.get("id") == "fighter"
+    assert "Воин" in output
+    assert "Особенности" in output
+    assert "Атлетика" in output
+    assert "acrobatics" not in output
+
+
+def test_select_subclass_shows_subclass_features(
+    monkeypatch, capsys, ru_strings, patch_int_input
+):
+    """Экран выбора подкласса показывает архетипы и их умения."""
+    patch_int_input(monkeypatch, [1])
+
+    subclass_id = character_flow._select_subclass(ru_strings, "fighter", "ru")
+    output = capsys.readouterr().out
+
+    assert subclass_id == "battle_master"
+    assert "Архетипы" in output
+    assert "Мастер боевых искусств" in output
+    assert "Уровень 3:" in output
+    assert "Боевое превосходство" in output

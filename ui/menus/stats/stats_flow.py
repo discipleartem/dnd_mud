@@ -19,10 +19,17 @@ def show_stats_generation_flow(
     race_id: str,
     subrace_id: str | None,
     difficulty: GameDifficulty,
+    *,
+    hardcore_rolls: list[int] | None = None,
 ) -> StatMap | None:
     """Flow генерации характеристик с выбором метода."""
     if difficulty == "hardcore":
-        return _select_stats_random_hardcore(strings, race_id, subrace_id)
+        return _select_stats_random_hardcore(
+            strings,
+            race_id,
+            subrace_id,
+            hardcore_rolls=hardcore_rolls,
+        )
 
     while True:
         _print_screen_header(
