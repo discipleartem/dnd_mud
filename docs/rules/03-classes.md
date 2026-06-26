@@ -36,6 +36,15 @@
 
 На 1 уровне — максимум кости + модификатор Телосложения (см. [01-character-creation.md](01-character-creation.md)).
 
+#### Режимы в dnd_mud
+
+| Уровень | Normal / Easy | HardCore |
+|---------|---------------|----------|
+| 1 | `max(1, hit_dice + CON)` | бросок `hit_dice` + CON |
+| 2+ | среднее кости `(hit_dice // 2 + 1) + CON` | бросок `hit_dice` + CON |
+
+Среднее кости — PHB (для к10 → 6). Кость берётся из `hit_dice` в [`classes.yaml`](../../database/classes/classes.yaml).
+
 ### Заклинатели
 
 Бард, жрец, друид, следопыт (частично), чародей, колдун, волшебник — получают **ячейки заклинаний** по уровню. Механика — [10-spells.md](10-spells.md).
@@ -48,7 +57,7 @@
 
 | Аспект | Значение |
 |--------|----------|
-| Статус | Частично: 4 класса в YAML; выбор класса в UI; HP на 1 уровне |
+| Статус | Частично: 4 класса в YAML; выбор класса в UI; HP по режиму сложности |
 | YAML | [`database/classes/classes.yaml`](../../database/classes/classes.yaml) |
 | Core | [`core/classes.py`](../../core/classes.py): `load_classes()`, `get_class_hit_dice()` |
 | UI | [`ui/menus/character_flow.py`](../../ui/menus/character_flow.py) — шаг `_select_class` |
@@ -66,13 +75,16 @@
 
 Остальные 8 классов PHB — расширение каталога или моды.
 
-### Расчёт HP при создании
+### Расчёт HP
 
 ```python
-# core/character_storage.py
-hit_dice = get_class_hit_dice(class_id)
-hp = hit_dice + ability_modifier(stats["constitution"])
+# core/progression.py
+max_hp_for_level(class_id, stats, level, difficulty)
 ```
+
+- **Normal / Easy:** 1 ур. — `max(1, hit_dice + CON)`; 2+ — `(hit_dice // 2 + 1) + CON` за каждый уровень.
+- **HardCore:** на каждом уровне — `roll(1, hit_dice) + CON` (без пола на 1 ур.).
+- При левелапе HardCore прирост **добавляется** к текущему `max_hp` (`apply_experience`), не пересчитывается по среднему.
 
 ### Формат YAML (фрагмент)
 
