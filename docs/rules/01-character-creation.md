@@ -19,13 +19,19 @@
 - Повышение уровня — по таблице опыта PHB (уровни **1–10** в MUD); см. `core/progression.py`.
 - Потолок уровня в игре: **10** (`MAX_CHARACTER_LEVEL`).
 
-### Хиты на 1 уровне
+### Хиты на 1 уровне (Normal / Easy)
 
 ```
 максимум хитов = максимум кости хитов класса + модификатор Телосложения
 ```
 
 Пример: воин (к10), Телосложение 14 (+2) → 10 + 2 = **12 HP**. Минимум на 1 уровне — **1 HP** (`max(1, …)`).
+
+### Хиты в HardCore
+
+На **каждом** уровне (включая 1-й): бросок кости хитов класса + модификатор Телосложения. На 1 уровне **без** нижней границы `max(1, …)` — возможны отрицательные итоги при низком Телосложении.
+
+При повышении уровня прирост фиксируется в `max_hp` и не пересчитывается задним числом.
 
 Текущие хиты не могут превышать максимум без особых эффектов (`max_hp` в модели `Character`).
 
@@ -72,7 +78,7 @@
 | Core | [`core/character_storage.py`](../../core/character_storage.py), [`core/stats.py`](../../core/stats.py), [`core/races.py`](../../core/races.py), [`core/classes.py`](../../core/classes.py), [`core/subclasses.py`](../../core/subclasses.py), [`core/progression.py`](../../core/progression.py) |
 | UI | [`ui/menus/character_flow.py`](../../ui/menus/character_flow.py), [`ui/menus/stats/`](../../ui/menus/stats/), [`ui/menus/settings.py`](../../ui/menus/settings.py) (`select_difficulty`), [`ui/menus/subclass_trainer.py`](../../ui/menus/subclass_trainer.py) |
 | Режимы | Normal / Easy: 3 метода + confirm; HardCore: `_select_stats_random_hardcore` |
-| Заметки | Предыстория, снаряжение, мультикласс — не в flow; HP = `max_hp_at_level()`; потолок характеристик — `ABILITY_SCORE_MAX` (20); потолок уровня — `MAX_CHARACTER_LEVEL` (10) |
+| Заметки | Предыстория, снаряжение, мультикласс — не в flow; HP = `max_hp_for_level(..., difficulty)`; потолок характеристик — `ABILITY_SCORE_MAX` (20); потолок уровня — `MAX_CHARACTER_LEVEL` (10) |
 
 ### Сохранение персонажа
 

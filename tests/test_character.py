@@ -160,7 +160,7 @@ def test_save_with_subclass_persisted(characters_dir):
 
 
 def test_starting_max_hp_floor_and_max_hp_field(characters_dir):
-    """HP на 1 уровне: max(1, кость + CON), current_hp == max_hp."""
+    """HP на 1 уровне (normal): max(1, кость + CON), current_hp == max_hp."""
     stats = {
         "strength": 10,
         "dexterity": 10,
@@ -174,11 +174,51 @@ def test_starting_max_hp_floor_and_max_hp_field(characters_dir):
         race_id="human",
         class_id="bard",
         stats=stats,
+        difficulty="normal",
     )
 
     assert saved.max_hp == 7
     assert saved.current_hp == saved.max_hp
     assert saved.max_hp >= 1
+
+
+def test_hardcore_creation_uses_rolls(characters_dir, monkeypatch):
+    """HardCore: HP при создании — сумма бросков кости по уровням."""
+    stats = dict.fromkeys(character_mod.STAT_NAMES, 10)
+    stats["constitution"] = 14
+
+    rolls_level1 = iter([5])
+
+    monkeypatch.setattr(
+        "core.progression.roll",
+        lambda count, sides, modifier=0: next(rolls_level1) + modifier,
+    )
+    saved = character_mod.save_character(
+        name="HardHero",
+        race_id="human",
+        class_id="fighter",
+        difficulty="hardcore",
+        stats=stats,
+    )
+    assert saved.level == 1
+    assert saved.max_hp == 7
+
+    rolls_level3 = iter([5, 8, 3])
+    monkeypatch.setattr(
+        "core.progression.roll",
+        lambda count, sides, modifier=0: next(rolls_level3) + modifier,
+    )
+    saved_level3 = character_mod.save_character(
+        name="HardLvl3",
+        race_id="human",
+        class_id="fighter",
+        difficulty="hardcore",
+        level=3,
+        stats=stats,
+        subclass_id="champion",
+    )
+    assert saved_level3.level == 3
+    assert saved_level3.max_hp == 22
 
 
 def test_validate_final_stats_rejects_over_20():
