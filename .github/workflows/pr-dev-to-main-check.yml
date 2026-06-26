@@ -8,9 +8,15 @@ on:
 
 jobs:
   dev-sync-and-mergeable:
-    if: github.head_ref == 'dev'
     runs-on: ubuntu-latest
     steps:
+      - name: Только PR dev → main
+        run: |
+          if [ "${{ github.head_ref }}" != "dev" ]; then
+            echo "::error::Release PR checks — только dev → main. Этот PR: ${{ github.head_ref }} → main. Сначала merge в dev, затем gh pr create --base main --head dev"
+            exit 1
+          fi
+
       - uses: actions/checkout@v6
         with:
           fetch-depth: 0
