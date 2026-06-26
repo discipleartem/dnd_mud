@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+# Локальный pre-commit: make check + make test (не CI).
+set -euo pipefail
+
+ROOT="$(git rev-parse --show-toplevel)"
+cd "$ROOT"
+
+STAGED="$(git diff --cached --name-only --diff-filter=ACM)"
+if [[ -z "$STAGED" ]]; then
+  exit 0
+fi
+
+# Только docs/правила — без прогона тестов.
+if ! echo "$STAGED" | grep -qvE '^(docs/|\.cursor/|\.githooks/|AGENTS\.md|README\.md|\.github/|\.vscode/)'; then
+  exit 0
+fi
+
+if [[ ! -x .venv/bin/python ]]; then
+  echo "pre-commit: нет .venv. Запустите: make install" >&2
+  exit 1
+fi
+
+echo "pre-commit: make check..."
+make check
+
+echo "pre-commit: make test..."
+make test
