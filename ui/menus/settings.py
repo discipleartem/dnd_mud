@@ -1,10 +1,14 @@
 """Настройки, языки и выбор сложности."""
 
-from typing import Any
-
 from colorama import Fore, Style
 
 from core.localization import get_string
+from core.types import (
+    GameDifficulty,
+    LanguageCode,
+    RuntimeSettings,
+    StringsDict,
+)
 from ui.menus import _deps
 from ui.menus._common import (
     _press_enter,
@@ -13,7 +17,7 @@ from ui.menus._common import (
 )
 
 
-def select_difficulty(strings: dict[str, Any]) -> str | None:
+def select_difficulty(strings: StringsDict) -> GameDifficulty | None:
     """Экран выбора сложности при создании персонажа."""
     _print_screen_header(get_string(strings, "difficulty.caption"))
 
@@ -45,20 +49,22 @@ def select_difficulty(strings: dict[str, Any]) -> str | None:
 
 
 def show_languages_menu(
-    strings: dict[str, Any], settings: dict[str, Any]
-) -> dict[str, Any]:
+    strings: StringsDict, settings: RuntimeSettings
+) -> RuntimeSettings:
     """Меню выбора языка."""
     while True:
         _print_screen_header(get_string(strings, "languages.caption"))
 
-        current = settings.get("language", "ru")
+        current = settings["language"]
         lang_name = get_string(
             strings, f"languages.lang_{current}", default=current
         )
         print(f"  {get_string(strings, 'languages.current')} {lang_name}")
         print()
 
-        lang_codes = ["en", "ru"] if current == "ru" else ["ru", "en"]
+        lang_codes: list[LanguageCode] = (
+            ["en", "ru"] if current == "ru" else ["ru", "en"]
+        )
         options = [
             get_string(strings, f"languages.lang_{code}")
             for code in lang_codes
@@ -74,7 +80,7 @@ def show_languages_menu(
             break
 
         new_lang = lang_codes[choice - 1]
-        settings["language"] = new_lang
+        settings = {"language": new_lang}
         strings = _deps.load_strings(new_lang)
         msg = get_string(
             strings,
@@ -89,8 +95,8 @@ def show_languages_menu(
 
 
 def show_settings(
-    strings: dict[str, Any], settings: dict[str, Any]
-) -> dict[str, Any]:
+    strings: StringsDict, settings: RuntimeSettings
+) -> RuntimeSettings:
     """Экран настроек."""
     while True:
         _print_screen_header(get_string(strings, "settings.caption"))

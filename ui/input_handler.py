@@ -6,6 +6,8 @@ from typing import Any
 
 from colorama import Fore, Style
 
+from core.types import StringsDict
+
 if sys.platform == "win32":
     locale.setlocale(locale.LC_ALL, "")
     _encoding = "utf-8"
@@ -26,7 +28,7 @@ else:
 
 
 def _error(
-    strings: dict[str, Any] | None,
+    strings: StringsDict | None,
     key: str,
     default: str,
     **kwargs: Any,
@@ -45,7 +47,7 @@ def get_int_input(
     prompt: str,
     min_val: int,
     max_val: int,
-    strings: dict[str, Any] | None = None,
+    strings: StringsDict | None = None,
     *,
     default: int | None = None,
 ) -> int:
@@ -86,7 +88,7 @@ def get_str_input(
     prompt: str,
     min_length: int = 1,
     only_letters: bool = False,
-    strings: dict[str, Any] | None = None,
+    strings: StringsDict | None = None,
 ) -> str:
     """Запросить строку минимальной длины."""
     while True:

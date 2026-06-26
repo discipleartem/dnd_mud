@@ -9,9 +9,10 @@ from core.dice import ability_modifier
 from core.models import Character
 from core.slug import make_save_slug
 from core.stats import STANDARD_ARRAY, generate_stats_standard_array
+from core.types import GameDifficulty, StatMap
 
 
-def starting_max_hp(class_id: str, stats: dict[str, int]) -> int:
+def starting_max_hp(class_id: str, stats: StatMap) -> int:
     """Максимум хитов на 1 уровне (PHB: max(1, кость + мод. Телосложения))."""
     hit_dice = get_class_hit_dice(class_id)
     con_mod = ability_modifier(stats.get("constitution", 10))
@@ -22,9 +23,9 @@ def save_character(
     name: str,
     race_id: str,
     class_id: str,
-    difficulty: str = "normal",
+    difficulty: GameDifficulty = "normal",
     subrace_id: str | None = None,
-    stats: dict[str, int] | None = None,
+    stats: StatMap | None = None,
 ) -> Character:
     """Создать нового персонажа и сохранить в JSON."""
     if stats is None:

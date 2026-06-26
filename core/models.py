@@ -7,6 +7,7 @@ from dataclasses import dataclass, field
 from typing import Any
 
 from core.localization import resolve_localized_text
+from core.types import GameDifficulty, StatMap
 
 
 @dataclass
@@ -17,11 +18,11 @@ class Character:
     race: str
     class_name: str
     level: int = 1
-    stats: dict[str, int] = field(default_factory=dict)
+    stats: StatMap = field(default_factory=dict)
     current_hp: int = 0
     max_hp: int = 0
     experience: int = 0
-    difficulty: str = "normal"
+    difficulty: GameDifficulty = "normal"
     subrace: str | None = None
     save_slug: str | None = None
     created_at: str | None = None
@@ -56,6 +57,10 @@ class Character:
         current_hp = int(data.get("current_hp", 0))
         max_hp_raw = data.get("max_hp")
         max_hp = int(max_hp_raw) if max_hp_raw is not None else current_hp
+        difficulty_raw = data.get("difficulty", "normal")
+        difficulty: GameDifficulty = (
+            "hardcore" if difficulty_raw == "hardcore" else "normal"
+        )
         return cls(
             name=data.get("name", ""),
             race=data.get("race", ""),
@@ -65,7 +70,7 @@ class Character:
             current_hp=current_hp,
             max_hp=max_hp,
             experience=data.get("experience", 0),
-            difficulty=data.get("difficulty", "normal"),
+            difficulty=difficulty,
             subrace=str(subrace) if subrace is not None else None,
             save_slug=str(save_slug) if save_slug is not None else None,
             created_at=str(created_at) if created_at is not None else None,

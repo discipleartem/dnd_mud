@@ -1,16 +1,15 @@
 """Отображение карточек персонажей, рас и характеристик."""
 
-from typing import Any
-
 from colorama import Fore, Style
 
 from core.localization import get_string
 from core.models import Character
+from core.types import GameDifficulty, StatMap, StringsDict
 from ui.menus import _deps
 from ui.menus._common import SEPARATOR, _ability_name, _stats_caption_line
 
 
-def _difficulty_label(strings: dict[str, Any], difficulty: str) -> str:
+def _difficulty_label(strings: StringsDict, difficulty: GameDifficulty) -> str:
     """Локализованное название режима сложности."""
     mode_key = f"difficulty.{difficulty}"
     mode = get_string(strings, mode_key)
@@ -19,13 +18,13 @@ def _difficulty_label(strings: dict[str, Any], difficulty: str) -> str:
     return mode
 
 
-def _difficulty_color(difficulty: str) -> str:
+def _difficulty_color(difficulty: GameDifficulty) -> str:
     """Цвет для отображения режима сложности."""
-    if difficulty == "hardcore":
-        return str(Fore.RED)
-    if difficulty == "normal":
-        return str(Fore.GREEN)
-    return str(Fore.CYAN)
+    match difficulty:
+        case "hardcore":
+            return str(Fore.RED)
+        case "normal":
+            return str(Fore.GREEN)
 
 
 def _character_base_race_label(char: Character, language: str = "ru") -> str:
@@ -59,7 +58,7 @@ def _character_subrace_label(
 
 
 def _print_labeled_field(
-    strings: dict[str, Any],
+    strings: StringsDict,
     label_key: str,
     value: str,
     indent: str = "     ",
@@ -80,7 +79,7 @@ def _character_class_label(char: Character, language: str = "ru") -> str:
 
 
 def _format_character_stats_compact(
-    char: Character, strings: dict[str, Any]
+    char: Character, strings: StringsDict
 ) -> str:
     """Компактная строка характеристик: аббревиатура + значение."""
     if not char.stats:
@@ -100,7 +99,7 @@ def _format_character_stats_compact(
 
 
 def _print_characters_list(
-    strings: dict[str, Any],
+    strings: StringsDict,
     characters: list[Character],
     language: str,
 ) -> None:
@@ -118,7 +117,7 @@ def _print_characters_list(
 def _print_character_card(
     idx: int,
     char: Character,
-    strings: dict[str, Any],
+    strings: StringsDict,
     language: str = "ru",
 ) -> None:
     """Вывести карточку персонажа в списке выбора."""
@@ -188,7 +187,7 @@ def _print_character_card(
     print()
 
 
-def _print_race_info(info: dict[str, Any], strings: dict[str, Any]) -> None:
+def _print_race_info(info: StringsDict, strings: StringsDict) -> None:
     """Вывести подробности расы или подрасы."""
     desc = info.get("description", "")
     if desc:
@@ -262,7 +261,7 @@ def _print_race_info(info: dict[str, Any], strings: dict[str, Any]) -> None:
             )
 
 
-def _format_bonuses(bonuses: dict[str, int], strings: dict[str, Any]) -> str:
+def _format_bonuses(bonuses: StatMap, strings: StringsDict) -> str:
     """Отформатировать расовые бонусы для отображения."""
     if not bonuses:
         return (
@@ -291,7 +290,7 @@ def _format_bonuses(bonuses: dict[str, int], strings: dict[str, Any]) -> str:
 
 
 def _print_race_bonuses(
-    strings: dict[str, Any],
+    strings: StringsDict,
     race_id: str,
     subrace_id: str | None,
 ) -> None:
@@ -318,10 +317,10 @@ def _print_race_bonuses(
 
 
 def _print_final_stat_line(
-    strings: dict[str, Any],
+    strings: StringsDict,
     stat: str,
     value: int,
-    race_bonuses: dict[str, int],
+    race_bonuses: StatMap,
 ) -> None:
     """Вывести итоговую характеристику с пометкой расового бонуса (+N)."""
     stat_name = _ability_name(strings, stat)
@@ -336,7 +335,7 @@ def _print_final_stat_line(
 
 
 def _print_stats_generation_header(
-    strings: dict[str, Any],
+    strings: StringsDict,
     race_id: str | None = None,
     subrace_id: str | None = None,
 ) -> None:
@@ -350,7 +349,7 @@ def _print_stats_generation_header(
         print()
 
 
-def _print_point_buy_cost_table(strings: dict[str, Any]) -> None:
+def _print_point_buy_cost_table(strings: StringsDict) -> None:
     """Таблица стоимости значений характеристик (point-buy)."""
     title = get_string(strings, "character.stats_point_buy_price_table")
     value_hdr = get_string(strings, "character.stats_point_buy_price_value")
