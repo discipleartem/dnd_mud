@@ -1,0 +1,39 @@
+# PR dev → main: dev не должен отставать от main; пробный merge без конфликтов.
+name: Release PR checks
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  dev-sync-and-mergeable:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Fetch branches
+        run: git fetch origin main dev
+
+      - name: Dev must not be behind main
+        run: |
+          BEHIND=$(git rev-list --count origin/dev..origin/main)
+          if [ "$BEHIND" -gt 0 ]; then
+            echo "::error::dev отстаёт от main на ${BEHIND} коммит(ов). Сначала: git checkout dev && git merge origin/main && make test && git push origin dev"
+            git log --oneline origin/dev..origin/main | head -20
+            exit 1
+          fi
+          echo "dev содержит все коммиты main."
+
+      - name: Trial merge main into dev (conflict probe)
+        run: |
+          git checkout -B trial-merge origin/dev
+          if ! git merge origin/main --no-commit --no-ff; then
+            echo "::error::Конфликт при merge origin/main в dev. Разрешите в dev до release PR."
+            git diff --name-only --diff-filter=U || true
+            git merge --abort || true
+            exit 1
+          fi
+          git merge --abort
+          echo "Пробный merge прошёл без конфликтов."

@@ -1,0 +1,29 @@
+# После squash merge в main — подтянуть main в dev (шаг 9 Task cycle).
+# При конфликте job падает: merge origin/main в dev вручную, make test, push.
+name: Sync dev with main
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: dev
+
+      - name: Merge main into dev
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git fetch origin main
+          git merge origin/main -m "chore: sync dev with main"
+
+      - name: Push dev
+        run: git push origin dev
