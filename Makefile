@@ -1,4 +1,4 @@
-.PHONY: help venv-recreate venv install reinstall clean lint format format-check typecheck check test
+.PHONY: help venv-recreate venv install install-hooks reinstall clean lint format format-check typecheck check test
 
 VENV      := .venv
 PYTHON    := python3.12
@@ -19,6 +19,12 @@ venv-recreate:
 .PHONY: install
 install: venv
 	$(PIP) install -e ".[dev]"
+	$(MAKE) install-hooks
+
+.PHONY: install-hooks
+install-hooks:
+	chmod +x .githooks/pre-commit
+	git config core.hooksPath .githooks
 
 .PHONY: reinstall
 reinstall:
@@ -26,6 +32,7 @@ reinstall:
 	rm -rf $(VENV)
 	$(PYTHON) -m venv $(VENV)
 	$(PIP) install -e ".[dev]"
+	$(MAKE) install-hooks
 
 .PHONY: clean
 clean:
@@ -67,7 +74,8 @@ help:
 	@echo "  make help            — показать эту справку"
 	@echo "  make venv            — создать виртуальное окружение (если нет)"
 	@echo "  make venv-recreate   — пересоздать виртуальное окружение"
-	@echo "  make install         — установить/обновить зависимости"
+	@echo "  make install         — зависимости + git pre-commit (check + test)"
+	@echo "  make install-hooks   — подключить .githooks/pre-commit"
 	@echo "  make reinstall       — переустановить все зависимости (с удалением)"
 	@echo "  make clean           — очистить кеш и временные файлы"
 	@echo "  make check           — полная проверка: ruff + black --check + mypy"
