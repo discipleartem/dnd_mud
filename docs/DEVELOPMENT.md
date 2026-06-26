@@ -127,6 +127,16 @@ dnd_mud/
 make check   # lint + black --check + mypy
 ```
 
+### Pre-commit (локально)
+
+Перед коммитом с изменениями кода или данных хук запускает `make check` и `make test` (не GitHub Actions).
+
+```bash
+make install-hooks   # или make install — подключает .githooks/pre-commit
+```
+
+Коммиты только в `docs/`, `.cursor/`, `.githooks/`, `AGENTS.md`, `.github/`, `.vscode/` — без прогона. Обход: `git commit --no-verify` (только если осознанно).
+
 ## Тестирование
 
 Проект использует `pytest`. Тесты находятся в `tests/`.
