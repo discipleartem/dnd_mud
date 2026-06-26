@@ -1,0 +1,18 @@
+{
+  "githubPullRequests.defaultMergeMethod": "squash",
+  "githubPullRequests.createOnPublishBranch": "never",
+  "githubPullRequests.queries": [
+    {
+      "label": "Task → dev",
+      "query": "repo:${owner}/${repository} is:open is:pr base:dev"
+    },
+    {
+      "label": "Release dev → main",
+      "query": "repo:${owner}/${repository} is:open is:pr base:main head:dev"
+    }
+  ],
+  "github-actions.workflows.pinned.workflows": [
+    ".github/workflows/sync-dev-with-main.yml",
+    ".github/workflows/pr-dev-to-main-check.yml"
+  ]
+}

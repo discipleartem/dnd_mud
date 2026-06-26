@@ -1,6 +1,8 @@
 .venv
 .idea
-.vscode
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
 dnd_mud.egg-info
 .clinerules
 .copilot/
