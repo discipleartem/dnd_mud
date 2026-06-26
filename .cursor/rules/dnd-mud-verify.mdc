@@ -5,9 +5,17 @@ alwaysApply: true
 
 # dnd_mud verification
 
-Console MUD — browser forbidden. Переопределяет `ironbee-devtools-use.mdc` и `browser-automation.mdc`.
+Console MUD — browser forbidden. Переопределяет `ironbee-devtools-use.mdc` (`alwaysApply: false`) и `browser-automation.mdc`.
 
 Git-flow: [`01-operations.mdc`](~/.cursor/rules/01-operations.mdc) · полный цикл: [`AGENTS.md`](AGENTS.md) §3–6.
+
+## Переопределения глобальных правил
+
+| Глобально (`00-global`, `01-operations`, user rules) | В dnd_mud |
+|------------------------------------------------------|-----------|
+| Agent напрямую — git-flow не обязателен | **git-старт обязателен** для любых правок кода/docs/git |
+| IronBee / browser verify | **`make test`**, smoke `python main.py`; браузер запрещён |
+| Commit/push по запросу (Agent напрямую) | без изменений; Plan → Build → Agent — auto-commit/push |
 
 ## Git scope
 
@@ -70,6 +78,8 @@ gh pr create --base main --head dev
 | Workflow | Триггер | Назначение |
 |----------|---------|------------|
 | `sync-dev-with-main.yml` | push `main` | auto merge `main` → `dev` |
-| `pr-dev-to-main-check.yml` | PR → `main` | `dev` не отстаёт; пробный merge без конфликтов |
+| `pr-dev-to-main-check.yml` | PR `dev` → `main` (open/sync) | `dev` не отстаёт; пробный merge без конфликтов |
+
+Orphaned workflows на GitHub без файла в репо — отключить: `gh workflow disable "<name>"`.
 
 Статус — панель **GitHub Actions** в Cursor / на GitHub.

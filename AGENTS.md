@@ -14,6 +14,8 @@
 анализ → git-старт → план → действие → verify → PR (по запросу)
 ```
 
+> **Project override:** в dnd_mud git-старт обязателен всегда (строже глобального «Agent напрямую — git-flow не обязателен»). См. [`dnd-mud-verify.mdc`](.cursor/rules/dnd-mud-verify.mdc) §Переопределения.
+
 **Сессия Plan → Build → Agent** (план подтверждён, «Implement the plan» / прикреплён `.plan.md`):
 
 ```
