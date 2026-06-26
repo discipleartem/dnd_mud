@@ -171,9 +171,9 @@ classes:
     subclass_choice_level: 3
     prime_ability: "dexterity"
     skill_choices: [
-      "acrobatics", "athletics", "deception", "insight", 
-      "intimidation", "investigation", "sleight_of_hand", "stealth", 
-      "expertise", "performance"
+      "acrobatics", "athletics", "deception", "insight",
+      "intimidation", "investigation", "perception", "performance",
+      "persuasion", "sleight_of_hand", "stealth"
     ]
     skill_choices_count: 4
     equipment:
@@ -183,11 +183,25 @@ classes:
     
     features:
       - id: "expertise"
-        name: "Экспертиза"
-        description: "Выбор двух навыков для удвоения бонуса мастерства"
+        name: "Компетентность"
+        description: "На 1 уровне выберите два владения в навыках или одно владение навыком и владение воровскими инструментами; бонус мастерства удваивается для выбранных владений"
         level: 1
         feature_type: "passive"
         requires_action: false
+        expertise_mechanics:
+          grants:
+            - level: 1
+              pick: 2
+              pool: proficient_skills
+              alternatives:
+                - pick: 1
+                  pool: proficient_skills
+                - pick: 1
+                  pool: tools
+                  options: [thieves_tools]
+            - level: 6
+              pick: 2
+              pool: proficient_skills
         
       - id: "sneak_attack"
         name: "Скрытая атака"
@@ -503,7 +517,7 @@ classes:
       "acrobatics", "animal_handling", "arcana", "athletics", 
       "deception", "history", "insight", "intimidation", "investigation", 
       "medicine", "nature", "perception", "persuasion", "religion", 
-      "sleight_of_hand", "stealth", "survival"
+      "sleight_of_hand", "stealth", "survival", "performance"
     ]
     skill_choices_count: 3
     equipment:
@@ -541,6 +555,14 @@ classes:
         level: 3
         feature_type: "passive"
         requires_action: false
+        expertise_mechanics:
+          grants:
+            - level: 3
+              pick: 2
+              pool: proficient_skills
+            - level: 10
+              pick: 2
+              pool: proficient_skills
         
       - id: "font_of_inspiration"
         name: "Источник вдохновения"

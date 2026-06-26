@@ -170,6 +170,16 @@ def test_hardcore_back_from_stats_keeps_rolls(
     )
     monkeypatch.setattr(
         character_flow,
+        "select_creation_skills",
+        lambda *args, **kwargs: ["performance", "persuasion", "deception"],
+    )
+    monkeypatch.setattr(
+        character_flow,
+        "select_creation_expertise",
+        lambda *args, **kwargs: ([], []),
+    )
+    monkeypatch.setattr(
+        character_flow,
         "_save_created_character",
         lambda state: Character(name="Hero", race="elf", class_name="bard"),
     )
@@ -233,6 +243,16 @@ def test_hardcore_back_to_race_clears_rolls(
         character_flow,
         "_select_class",
         lambda strings, language="ru": {"id": "fighter"},
+    )
+    monkeypatch.setattr(
+        character_flow,
+        "select_creation_skills",
+        lambda *args, **kwargs: ["athletics", "intimidation"],
+    )
+    monkeypatch.setattr(
+        character_flow,
+        "select_creation_expertise",
+        lambda *args, **kwargs: ([], []),
     )
     monkeypatch.setattr(
         character_flow,
@@ -587,3 +607,34 @@ def test_select_subclass_shows_subclass_features(
     assert "Мастер боевых искусств" in output
     assert "Уровень 3:" in output
     assert "Боевое превосходство" in output
+
+
+def test_skill_pick_list_grays_proficient_skills(capsys, ru_strings):
+    """Занятые навыки отображаются с пометкой «уже владеете»."""
+    from core.skills import get_class_skill_config
+    from ui.menus.skills import _print_skill_pick_list
+
+    pool, _ = get_class_skill_config("fighter")
+    available = _print_skill_pick_list(ru_strings, pool, ["perception"])
+    output = capsys.readouterr().out
+
+    assert "уже владеете" in output
+    assert "Восприятие" in output
+    assert "perception" not in available
+    assert "athletics" in available
+
+
+def test_proficient_summary_shows_racial_source(capsys, ru_strings):
+    """Блок «Уже владеете» показывает навык и источник (раса)."""
+    from ui.menus.skills import _print_proficient_summary
+
+    _print_proficient_summary(
+        ru_strings,
+        ["perception"],
+        {"perception": "race"},
+    )
+    output = capsys.readouterr().out
+
+    assert "Уже владеете" in output
+    assert "Восприятие" in output
+    assert "раса" in output

@@ -1,13 +1,17 @@
-"""Flow «Создать персонажа»: имя, раса, подраса, класс, архетип."""
+"""Flow «Создать персонажа»: имя, раса, подраса, класс, архетип, навыки."""
 
 from dataclasses import dataclass, field
 from typing import Any, Literal
 
 from colorama import Fore, Style
 
+from core.expertise import expertise_step_required
 from core.localization import get_string
 from core.models import Character
-from core.subclasses import subclass_offered_at_creation
+from core.subclasses import (
+    start_level_for_difficulty,
+    subclass_offered_at_creation,
+)
 from core.types import GameDifficulty, StatMap, StringsDict
 from ui.menus import _deps
 from ui.menus._common import (
@@ -22,10 +26,14 @@ from ui.menus._display import (
     _print_race_info,
     _print_subclass_info,
 )
+from ui.menus.expertise import select_creation_expertise
 from ui.menus.settings import select_difficulty
+from ui.menus.skills import select_creation_skills
 from ui.menus.stats import show_stats_generation_flow
 
-CreationStep = Literal["race", "subrace", "stats", "class", "subclass"]
+CreationStep = Literal[
+    "race", "subrace", "stats", "class", "subclass", "skills", "expertise"
+]
 
 
 @dataclass
@@ -39,7 +47,28 @@ class _CreationState:
     stats: StatMap | None = None
     class_id: str | None = None
     subclass_id: str | None = None
+    skills: list[str] | None = None
+    skill_expertise: list[str] | None = None
+    tool_expertise: list[str] | None = None
     hardcore_rolls: list[int] = field(default_factory=list)
+
+
+def _back_step_from_skills(state: _CreationState) -> CreationStep:
+    """Куда вернуться с шага навыков."""
+    assert state.class_id is not None
+    if subclass_offered_at_creation(state.difficulty, state.class_id):
+        return "subclass"
+    return "class"
+
+
+def _finalize_creation(
+    strings: StringsDict, state: _CreationState
+) -> Character:
+    """Сохранить персонажа и показать сообщение об успехе."""
+    character = _save_created_character(state)
+    msg = get_string(strings, "character.save_success", name=state.name)
+    _print_success_and_wait(strings, msg)
+    return character
 
 
 def _select_subrace(
@@ -223,6 +252,9 @@ def _save_created_character(state: _CreationState) -> Character:
         subrace_id=str(state.subrace_id) if state.subrace_id else None,
         stats=state.stats,
         subclass_id=state.subclass_id,
+        skills=state.skills,
+        skill_expertise=state.skill_expertise,
+        tool_expertise=state.tool_expertise,
     )
 
 
@@ -312,12 +344,7 @@ def show_create_character_flow(
                 ):
                     step = "subclass"
                 else:
-                    character = _save_created_character(state)
-                    msg = get_string(
-                        strings, "character.save_success", name=state.name
-                    )
-                    _print_success_and_wait(strings, msg)
-                    return character
+                    step = "skills"
 
             case "subclass":
                 assert state.class_id is not None
@@ -328,9 +355,41 @@ def show_create_character_flow(
                     step = "class"
                     continue
                 state.subclass_id = subclass_id
-                character = _save_created_character(state)
-                msg = get_string(
-                    strings, "character.save_success", name=state.name
+                step = "skills"
+
+            case "skills":
+                assert state.race_id is not None
+                assert state.class_id is not None
+                skills = select_creation_skills(
+                    strings,
+                    state.race_id,
+                    state.subrace_id,
+                    state.class_id,
+                    language,
                 )
-                _print_success_and_wait(strings, msg)
-                return character
+                if skills is None:
+                    step = _back_step_from_skills(state)
+                    continue
+                state.skills = skills
+                start_level = start_level_for_difficulty(state.difficulty)
+                if expertise_step_required(state.class_id, start_level):
+                    step = "expertise"
+                else:
+                    return _finalize_creation(strings, state)
+
+            case "expertise":
+                assert state.class_id is not None
+                assert state.skills is not None
+                start_level = start_level_for_difficulty(state.difficulty)
+                result = select_creation_expertise(
+                    strings,
+                    state.class_id,
+                    start_level,
+                    state.skills,
+                    language,
+                )
+                if result is None:
+                    step = "skills"
+                    continue
+                state.skill_expertise, state.tool_expertise = result
+                return _finalize_creation(strings, state)
