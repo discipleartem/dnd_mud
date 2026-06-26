@@ -34,7 +34,7 @@
 | 3a. Подклассы | [rules/03-subclasses.md](rules/03-subclasses.md) | Phase 2; каталог — только `classes.yaml` |
 | 4. Личность и предыстория | [rules/04-backgrounds.md](rules/04-backgrounds.md) | Phase 2 |
 | 5. Снаряжение | [rules/05-equipment.md](rules/05-equipment.md) | Phase 2 |
-| 6. Мультикласс и черты | [rules/06-multiclass-feats.md](rules/06-multiclass-feats.md) | Phase 2 |
+| 6. Мультикласс и черты | [rules/06-multiclass-feats.md](rules/06-multiclass-feats.md) | Мультикласс: **запрещено**; черты: Phase 2 |
 | 7. Использование характеристик | [rules/07-ability-scores.md](rules/07-ability-scores.md) | Частично |
 | 8. Приключения | [rules/08-adventures.md](rules/08-adventures.md) | Запланировано (engine) |
 | 9. Сражение | [rules/09-combat.md](rules/09-combat.md) | Запланировано (engine) |
