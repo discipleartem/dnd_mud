@@ -62,7 +62,7 @@
 | Core | [`core/classes.py`](../../core/classes.py): `load_classes()`, `get_class_hit_dice()` |
 | UI | [`ui/menus/character_flow.py`](../../ui/menus/character_flow.py) — шаг `_select_class` |
 | Режимы | Класс не зависит от режима сложности |
-| Заметки | `features` и `subclasses` в YAML — справочные; runtime не применяет умения. **Подклассы:** реализуем только перечисленные в YAML (см. [03-subclasses.md](03-subclasses.md) §Политика MUD) |
+| Заметки | `features` и `subclasses` в YAML — справочные; runtime не применяет умения. **Мультикласс запрещён** — один класс на персонажа (см. [06-multiclass-feats.md](06-multiclass-feats.md)). **Подклассы:** реализуем только перечисленные в YAML (см. [03-subclasses.md](03-subclasses.md) §Политика MUD) |
 
 ### Классы в MUD (текущий каталог)
 

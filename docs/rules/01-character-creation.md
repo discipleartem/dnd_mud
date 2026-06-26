@@ -78,7 +78,7 @@
 | Core | [`core/character_storage.py`](../../core/character_storage.py), [`core/stats.py`](../../core/stats.py), [`core/races.py`](../../core/races.py), [`core/classes.py`](../../core/classes.py), [`core/subclasses.py`](../../core/subclasses.py), [`core/progression.py`](../../core/progression.py) |
 | UI | [`ui/menus/character_flow.py`](../../ui/menus/character_flow.py), [`ui/menus/stats/`](../../ui/menus/stats/), [`ui/menus/settings.py`](../../ui/menus/settings.py) (`select_difficulty`), [`ui/menus/subclass_trainer.py`](../../ui/menus/subclass_trainer.py) |
 | Режимы | Normal / Easy: 3 метода + confirm; HardCore: `_select_stats_random_hardcore` |
-| Заметки | Предыстория, снаряжение, мультикласс — не в flow; HP = `max_hp_for_level(..., difficulty)`; потолок характеристик — `ABILITY_SCORE_MAX` (20); потолок уровня — `MAX_CHARACTER_LEVEL` (10) |
+| Заметки | Предыстория, снаряжение — не в flow; **мультикласс запрещён** (один `class_name`); HP = `max_hp_for_level(..., difficulty)`; потолок характеристик — `ABILITY_SCORE_MAX` (20); потолок уровня — `MAX_CHARACTER_LEVEL` (10) |
 
 ### Сохранение персонажа
 
