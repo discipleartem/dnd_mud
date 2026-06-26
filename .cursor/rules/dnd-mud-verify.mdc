@@ -1,5 +1,5 @@
 ---
-description: dnd_mud verification, git scope, finish checklist — console MUD
+description: dnd_mud verification, git scope, task/release checklist — console MUD
 alwaysApply: true
 ---
 
@@ -7,11 +7,25 @@ alwaysApply: true
 
 Console MUD — browser forbidden. Переопределяет `ironbee-devtools-use.mdc` и `browser-automation.mdc`.
 
-Git-flow: [`01-operations.mdc`](~/.cursor/rules/01-operations.mdc).
+Git-flow: [`01-operations.mdc`](~/.cursor/rules/01-operations.mdc) · полный цикл: [`AGENTS.md`](AGENTS.md) §3–6.
 
 ## Git scope
 
 Не коммитить: `.coverage`, `saves/`.
+
+## Git-старт (любая задача с правками)
+
+**До** правок кода — sync веток и task-ветка от `dev` ([`AGENTS.md`](AGENTS.md) §3):
+
+```bash
+git fetch origin
+git checkout main && git pull origin main
+git checkout dev && git pull origin dev
+git log dev..origin/main --oneline   # must be empty; иначе merge origin/main в dev, push
+git checkout -b <task-branch>
+```
+
+**Запрещено:** task-ветка, если `main` впереди `dev`.
 
 ## Verify
 
@@ -21,16 +35,41 @@ make check      # при изменениях типов/импортов
 python main.py  # smoke при затронутом UI
 ```
 
-Docs-only и правила (`.cursor/`, `AGENTS.md`) — runtime не нужен.
+Docs-only, правила (`.cursor/`, `AGENTS.md`), workflows — runtime не нужен.
 
 ## Plan → Build → Agent
 
-После подтверждения плана (**Build**) первый шаг реализации — **git-старт** ([`AGENTS.md`](AGENTS.md) §3, [`01-operations.mdc`](~/.cursor/rules/01-operations.mdc) §Task cycle). Запрещены правки кода до task-ветки от актуального `dev`.
+После **Build** первый шаг — git-старт. Запрещены правки кода до task-ветки от актуального `dev`.
 
-Завершение сессии: verify → auto-commit(ы) на task-ветке → `git push -u origin HEAD`.
+Завершение: verify → auto-commit(ы) на task-ветке → `git push -u origin HEAD` → предложить PR task → `dev`.
 
-## Before finishing
+## Before finishing (task-ветка)
 
-- **Plan → Build → Agent:** git-старт в начале; verify в конце; push task-ветки обязателен
-- **Agent напрямую:** verify при затронутом коде/UI; commit/push — по запросу
-- Один прогон verify в конце, не после каждого файла
+- git-старт был в начале сессии
+- verify один раз в конце (не после каждого файла)
+- **Plan → Build → Agent:** push task-ветки обязателен; предложить PR → `dev`
+- **Agent напрямую:** commit/push — по запросу; после push — предложить PR → `dev`
+
+## Release checklist (`dev` → `main`)
+
+Перед PR `dev` → `main` (CI: [`.github/workflows/pr-dev-to-main-check.yml`](../.github/workflows/pr-dev-to-main-check.yml)):
+
+```bash
+git fetch origin
+git checkout dev && git pull origin dev
+git log dev..origin/main --oneline   # must be empty
+git merge origin/main --no-commit --no-ff && git merge --abort
+make test
+gh pr create --base main --head dev
+```
+
+После squash merge в `main` — sync `dev` ← `main` (Action [sync-dev-with-main.yml](../.github/workflows/sync-dev-with-main.yml) или вручную).
+
+## GitHub Actions
+
+| Workflow | Триггер | Назначение |
+|----------|---------|------------|
+| `sync-dev-with-main.yml` | push `main` | auto merge `main` → `dev` |
+| `pr-dev-to-main-check.yml` | PR → `main` | `dev` не отстаёт; пробный merge без конфликтов |
+
+Статус — панель **GitHub Actions** в Cursor / на GitHub.

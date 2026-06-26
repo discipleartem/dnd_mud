@@ -173,28 +173,50 @@ pytest tests/test_menus_character.py -v
 
 ## Git Workflow
 
-Git workflow (dev/main, squash, автокоммит, push task-ветки после задачи, PR по запросу): [`~/.cursor/rules/01-operations.mdc`](~/.cursor/rules/01-operations.mdc). Sync FAQ: [`~/.cursor/docs/git-dev-main-sync.md`](~/.cursor/docs/git-dev-main-sync.md). Агенты dnd_mud: [`.cursor/rules/dnd-mud-verify.mdc`](../.cursor/rules/dnd-mud-verify.mdc) (verify + git scope).
+Канон: [`~/.cursor/rules/01-operations.mdc`](~/.cursor/rules/01-operations.mdc) · [`AGENTS.md`](../AGENTS.md) §3–6 · [`dnd-mud-verify.mdc`](../.cursor/rules/dnd-mud-verify.mdc). Sync FAQ: [`~/.cursor/docs/git-dev-main-sync.md`](~/.cursor/docs/git-dev-main-sync.md).
 
-Полный индекс правил агентов: [`AGENTS.md`](../AGENTS.md).
+IDE: расширения **GitHub Pull Requests** и **GitHub Actions** — настройки [`.vscode/settings.json`](../.vscode/settings.json) (squash merge, фильтры PR).
 
-### Пример
+### Цикл задачи
+
+```
+git-старт → task-ветка → подзадачи (commits) → verify → push → PR task→dev
+→ (накопление в dev) → PR dev→main → Action sync dev←main
+```
+
+### Git-старт (перед работой)
 
 ```bash
 git fetch origin
 git checkout main && git pull origin main
 git checkout dev && git pull origin dev
 git log dev..origin/main --oneline   # must be empty
-git checkout -b feat/add-combat-system
-
-# ... работа, коммиты по подзадачам ...
-git commit -m "feat: add dice roll helper"
-
-# push — обязательно после завершения задачи:
-git push -u origin HEAD
-
-# PR — отдельно, по запросу:
-gh pr create --base dev --title "feat: add basic combat system"
+# если main впереди dev:
+git merge origin/main && make test && git push origin dev
+git checkout -b feat/my-task
 ```
+
+### Завершение task-ветки
+
+```bash
+make test
+git push -u origin HEAD
+gh pr create --base dev --title "feat: …"   # squash merge
+```
+
+### Release (`dev` → `main`)
+
+```bash
+git fetch origin && git checkout dev && git pull origin dev
+git log dev..origin/main --oneline   # must be empty
+git merge origin/main --no-commit --no-ff && git merge --abort
+make test
+gh pr create --base main --head dev --title "release: …"
+```
+
+CI: [`.github/workflows/pr-dev-to-main-check.yml`](../.github/workflows/pr-dev-to-main-check.yml). После merge в `main` — [`.github/workflows/sync-dev-with-main.yml`](../.github/workflows/sync-dev-with-main.yml).
+
+**GitHub (Settings → Branches):** на `main` — require status check **Release PR checks**; merge method — squash.
 
 ## Создание мода
 
