@@ -135,7 +135,7 @@ make check   # lint + black --check + mypy
 make install-hooks   # или make install — подключает .githooks/pre-commit
 ```
 
-Коммиты только в `docs/`, `.cursor/`, `AGENTS.md`, `.github/`, `.vscode/` — без прогона. Обход: `git commit --no-verify` (только если осознанно).
+Коммиты только в `docs/`, `.cursor/`, `.githooks/`, `AGENTS.md`, `.github/`, `.vscode/` — без прогона. Обход: `git commit --no-verify` (только если осознанно).
 
 ## Тестирование
 

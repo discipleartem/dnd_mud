@@ -11,7 +11,7 @@ if [[ -z "$STAGED" ]]; then
 fi
 
 # Только docs/правила — без прогона тестов.
-if ! echo "$STAGED" | grep -qvE '^(docs/|\.cursor/|AGENTS\.md|README\.md|\.github/|\.vscode/)'; then
+if ! echo "$STAGED" | grep -qvE '^(docs/|\.cursor/|\.githooks/|AGENTS\.md|README\.md|\.github/|\.vscode/)'; then
   exit 0
 fi
 
