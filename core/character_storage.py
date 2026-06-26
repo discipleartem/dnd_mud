@@ -30,6 +30,9 @@ def save_character(
     subrace_id: str | None = None,
     stats: StatMap | None = None,
     subclass_id: str | None = None,
+    skills: list[str] | None = None,
+    skill_expertise: list[str] | None = None,
+    tool_expertise: list[str] | None = None,
     level: int | None = None,
 ) -> Character:
     """Создать нового персонажа и сохранить в JSON."""
@@ -56,6 +59,9 @@ def save_character(
         difficulty=difficulty,
         subrace=subrace_id,
         subclass_id=subclass_id,
+        skills=list(skills) if skills else [],
+        skill_expertise=list(skill_expertise) if skill_expertise else [],
+        tool_expertise=list(tool_expertise) if tool_expertise else [],
         save_slug=_unique_save_slug(name),
         created_at=datetime.now(UTC).isoformat(),
     )

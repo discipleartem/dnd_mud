@@ -16,6 +16,7 @@ from ui.menus._common import (
     _skill_name,
     _stats_caption_line,
 )
+from ui.menus.expertise import format_expertise_display
 
 
 def _difficulty_label(strings: StringsDict, difficulty: GameDifficulty) -> str:
@@ -417,6 +418,28 @@ def _print_character_card(
             strings, "choose_character.stats_line", stats=stats_compact
         )
         print(f"{indent}{stats_line}")
+
+    if char.skills:
+        skills_line = ", ".join(
+            _skill_name(strings, skill_id) for skill_id in char.skills
+        )
+        _print_labeled_field(
+            strings,
+            "choose_character.field_skills",
+            f"{Fore.CYAN}{skills_line}{Style.RESET_ALL}",
+            indent=indent,
+        )
+
+    expertise_line = format_expertise_display(
+        strings, char.skill_expertise, char.tool_expertise
+    )
+    if expertise_line:
+        _print_labeled_field(
+            strings,
+            "choose_character.field_expertise",
+            f"{Fore.CYAN}{expertise_line}{Style.RESET_ALL}",
+            indent=indent,
+        )
 
     _print_labeled_field(
         strings,

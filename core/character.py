@@ -12,6 +12,10 @@ from core.character_storage import (
     update_character,
 )
 from core.classes import load_class_full, load_classes, load_subclasses
+from core.expertise import (
+    expertise_step_required,
+    get_expertise_grants,
+)
 from core.races import (
     build_bonuses_from_choices,
     get_choice_ability_bonus_mechanics,
@@ -20,6 +24,12 @@ from core.races import (
     has_choice_ability_bonuses,
     load_race_full,
     load_races,
+)
+from core.skills import (
+    PHB_SKILL_IDS,
+    apply_racial_proficiencies,
+    available_skills,
+    get_class_skill_config,
 )
 from core.stats import (
     ABILITY_SCORE_MAX,
@@ -64,6 +74,12 @@ __all__ = [
     "generate_stats_random",
     "generate_stats_standard_array",
     "get_choice_ability_bonus_mechanics",
+    "expertise_step_required",
+    "get_class_skill_config",
+    "get_expertise_grants",
+    "apply_racial_proficiencies",
+    "available_skills",
+    "PHB_SKILL_IDS",
     "get_effective_race_bonuses",
     "get_race_bonuses",
     "has_choice_ability_bonuses",
