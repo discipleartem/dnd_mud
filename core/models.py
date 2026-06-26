@@ -26,6 +26,9 @@ class Character:
     difficulty: GameDifficulty = "normal"
     subrace: str | None = None
     subclass_id: str | None = None
+    skills: list[str] = field(default_factory=list)
+    skill_expertise: list[str] = field(default_factory=list)
+    tool_expertise: list[str] = field(default_factory=list)
     save_slug: str | None = None
     created_at: str | None = None
 
@@ -46,6 +49,12 @@ class Character:
             data["subrace"] = self.subrace
         if self.subclass_id is not None:
             data["subclass"] = self.subclass_id
+        if self.skills:
+            data["skills"] = self.skills
+        if self.skill_expertise:
+            data["skill_expertise"] = self.skill_expertise
+        if self.tool_expertise:
+            data["tool_expertise"] = self.tool_expertise
         if self.save_slug is not None:
             data["save_slug"] = self.save_slug
         if self.created_at is not None:
@@ -57,6 +66,9 @@ class Character:
         """Создать из словаря."""
         subrace = data.get("subrace")
         subclass_raw = data.get("subclass")
+        skills_raw = data.get("skills", [])
+        skill_expertise_raw = data.get("skill_expertise", [])
+        tool_expertise_raw = data.get("tool_expertise", [])
         save_slug = data.get("save_slug")
         created_at = data.get("created_at")
         current_hp = int(data.get("current_hp", 0))
@@ -84,6 +96,21 @@ class Character:
             subrace=str(subrace) if subrace is not None else None,
             subclass_id=(
                 str(subclass_raw) if subclass_raw is not None else None
+            ),
+            skills=(
+                [str(s) for s in skills_raw]
+                if isinstance(skills_raw, list)
+                else []
+            ),
+            skill_expertise=(
+                [str(s) for s in skill_expertise_raw]
+                if isinstance(skill_expertise_raw, list)
+                else []
+            ),
+            tool_expertise=(
+                [str(t) for t in tool_expertise_raw]
+                if isinstance(tool_expertise_raw, list)
+                else []
             ),
             save_slug=str(save_slug) if save_slug is not None else None,
             created_at=str(created_at) if created_at is not None else None,

@@ -159,6 +159,36 @@ def test_save_with_subclass_persisted(characters_dir):
     assert loaded.subclass_id == "life_domain"
 
 
+def test_save_skills_and_expertise_persisted(characters_dir):
+    """Навыки и компетентность сохраняются в JSON."""
+    saved = character_mod.save_character(
+        name="RogueHero",
+        race_id="human",
+        class_id="rogue",
+        stats=dict.fromkeys(character_mod.STAT_NAMES, 10),
+        skills=["stealth", "perception", "athletics", "deception"],
+        skill_expertise=["stealth", "athletics"],
+        tool_expertise=[],
+    )
+    assert saved.skills == [
+        "stealth",
+        "perception",
+        "athletics",
+        "deception",
+    ]
+    assert saved.skill_expertise == ["stealth", "athletics"]
+
+    save_path = characters_dir / "roguehero.json"
+    with open(save_path, encoding="utf-8") as f:
+        data = json.load(f)
+    assert data["skills"] == saved.skills
+    assert data["skill_expertise"] == saved.skill_expertise
+
+    loaded = character_mod.load_characters()[-1]
+    assert loaded.skills == saved.skills
+    assert loaded.skill_expertise == saved.skill_expertise
+
+
 def test_starting_max_hp_floor_and_max_hp_field(characters_dir):
     """HP на 1 уровне (normal): max(1, кость + CON), current_hp == max_hp."""
     stats = {
