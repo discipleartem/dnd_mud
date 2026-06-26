@@ -86,8 +86,9 @@ CLASSES_FILE = Path("database/classes/classes.yaml")
 
 ```python
 save_character(...) -> Character
-starting_max_hp(class_id: str, stats: StatMap) -> int
-max_hp_at_level(class_id: str, stats: StatMap, level: int) -> int
+starting_max_hp(
+    class_id: str, stats: StatMap, difficulty: GameDifficulty = "normal"
+) -> int
 update_character(character: Character) -> Character
 load_characters() -> list[Character]
 load_races(language: str = "ru") -> list[dict[str, Any]]
@@ -117,9 +118,9 @@ validate_final_stats(stats: StatMap) -> tuple[str, int] | None
 ABILITY_SCORE_MAX = 20
 ```
 
-`save_character` создаёт `Character` (`current_hp` = `max_hp` = `max_hp_at_level(...)` с учётом режима сложности) и сохраняет в `saves/characters/{save_slug}.json`.  
-`starting_max_hp` — PHB: `max(1, hit_dice + ability_modifier(CON))` на 1 уровне.  
-`max_hp_at_level` — HP на заданном уровне (1–10).  
+`save_character` создаёт `Character` (`current_hp` = `max_hp` = `max_hp_for_level(..., difficulty)`) и сохраняет в `saves/characters/{save_slug}.json`.  
+`starting_max_hp` — HP на 1 уровне с учётом режима (Normal/Easy: `max(1, hit_dice + CON)`; HardCore: бросок + CON).  
+`max_hp_for_level` — см. `core.progression` (HP на уровне 1–10).  
 `update_character` — перезапись JSON после изменений (подкласс, XP и т.д.).
 `validate_final_stats` — первое превышение потолка 20 после всех бонусов; UI вызывает при финализации характеристик.
 
@@ -359,9 +360,22 @@ def effective_subclass_id(character: Character) -> str | None
 XP_THRESHOLDS: list[int]  # PHB, уровни 1–10
 
 def level_from_xp(experience: int) -> int
-def max_hp_for_level(class_id: str, stats: StatMap, level: int) -> int
+def hp_gain_for_level(
+    level: int,
+    hit_dice: int,
+    con_mod: int,
+    difficulty: GameDifficulty = "normal",
+) -> int
+def max_hp_for_level(
+    class_id: str,
+    stats: StatMap,
+    level: int,
+    difficulty: GameDifficulty = "normal",
+) -> int
 def apply_experience(character: Character, amount: int) -> Character
 ```
+
+**HP по режиму:** Normal/Easy — макс. кость на 1 ур., среднее на 2+; HardCore — бросок кости на каждом уровне. `apply_experience` для HardCore **добавляет** прирост за новые уровни, не пересчитывает `max_hp` по среднему.
 
 Re-export: `MAX_CHARACTER_LEVEL`, `clamp_level` из `core.levels`.
 

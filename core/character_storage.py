@@ -13,9 +13,13 @@ from core.subclasses import start_level_for_difficulty
 from core.types import GameDifficulty, StatMap
 
 
-def starting_max_hp(class_id: str, stats: StatMap) -> int:
-    """Максимум хитов на 1 уровне (PHB: max(1, кость + мод. Телосложения))."""
-    return max_hp_for_level(class_id, stats, 1)
+def starting_max_hp(
+    class_id: str,
+    stats: StatMap,
+    difficulty: GameDifficulty = "normal",
+) -> int:
+    """Максимум хитов на 1 уровне с учётом режима сложности."""
+    return max_hp_for_level(class_id, stats, 1, difficulty)
 
 
 def save_character(
@@ -38,7 +42,7 @@ def save_character(
         level = start_level_for_difficulty(difficulty)
     level = clamp_level(level)
 
-    hp = max_hp_for_level(class_id, stats, level)
+    hp = max_hp_for_level(class_id, stats, level, difficulty)
 
     character = Character(
         name=name,
