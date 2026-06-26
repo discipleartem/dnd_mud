@@ -5,6 +5,7 @@
 """
 
 from core.models import Adventure, Character
+from core.types import GameDifficulty
 
 
 def adventure_requires_hardcore(adventure: Adventure) -> bool:
@@ -20,7 +21,7 @@ def adventure_requires_hardcore(adventure: Adventure) -> bool:
 
 
 def adventure_allows_difficulty(
-    adventure: Adventure, game_difficulty: str
+    adventure: Adventure, game_difficulty: GameDifficulty
 ) -> bool:
     """Проверить, доступно ли приключение для режима персонажа.
 

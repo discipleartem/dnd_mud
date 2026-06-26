@@ -8,38 +8,45 @@ from pathlib import Path
 from typing import Any
 
 from core.io import load_json
+from core.types import LanguageCode, RuntimeSettings
 
 SETTINGS_PATH = Path("database/core/settings.json")
-DEFAULT_LANGUAGE = "ru"
+DEFAULT_LANGUAGE: LanguageCode = "ru"
 SCHEMA_VERSION = 1
 
 
-def _default_settings() -> dict[str, Any]:
-    """Вернуть настройки по умолчанию."""
+def _default_settings_file() -> dict[str, Any]:
+    """Вернуть содержимое settings.json по умолчанию."""
     return {
         "schema_version": SCHEMA_VERSION,
         "language": DEFAULT_LANGUAGE,
     }
 
 
-def _runtime_settings(data: dict[str, Any]) -> dict[str, Any]:
+def _parse_language(value: object) -> LanguageCode:
+    """Извлечь код языка из JSON."""
+    if value == "en":
+        return "en"
+    return "ru"
+
+
+def _runtime_settings(data: dict[str, Any]) -> RuntimeSettings:
     """Извлечь настройки для runtime."""
-    defaults = _default_settings()
     return {
-        "language": data.get("language", defaults["language"]),
+        "language": _parse_language(data.get("language", DEFAULT_LANGUAGE)),
     }
 
 
-def load_settings() -> dict[str, Any]:
+def load_settings() -> RuntimeSettings:
     """Загрузить настройки из JSON-файла.
 
     Returns:
-        Словарь с настройками: language
+        Runtime-настройки: language
     """
     if not SETTINGS_PATH.exists():
-        return _runtime_settings(_default_settings())
+        return _runtime_settings(_default_settings_file())
 
-    data = load_json(SETTINGS_PATH, _default_settings())
+    data = load_json(SETTINGS_PATH, _default_settings_file())
     return _runtime_settings(data)
 
 
@@ -50,7 +57,7 @@ def _write_settings(data: dict[str, Any]) -> None:
         json.dump(data, f, ensure_ascii=False, indent=2)
 
 
-def save_settings(language: str) -> None:
+def save_settings(language: LanguageCode) -> None:
     """Сохранить настройки в JSON-файл.
 
     Args:

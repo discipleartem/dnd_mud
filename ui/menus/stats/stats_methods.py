@@ -1,10 +1,9 @@
 """Методы генерации характеристик: standard array, point-buy, random."""
 
-from typing import Any
-
 from colorama import Fore, Style
 
 from core.localization import get_string
+from core.types import StatMap, StringsDict
 from ui.menus import _common, _deps
 from ui.menus._common import _ability_name, _choice_prompt
 from ui.menus._display import (
@@ -23,10 +22,10 @@ from ui.menus.stats.stats_shared import (
 
 
 def _select_stats_standard_array(
-    strings: dict[str, Any],
+    strings: StringsDict,
     race_id: str,
     subrace_id: str | None,
-) -> dict[str, int] | None:
+) -> StatMap | None:
     """Выбор характеристик из стандартного массива."""
     while True:
         selected = _assign_stats_from_pool(
@@ -57,10 +56,10 @@ def _select_stats_standard_array(
 
 
 def _select_stats_point_buy(
-    strings: dict[str, Any],
+    strings: StringsDict,
     race_id: str,
     subrace_id: str | None,
-) -> dict[str, int] | None:
+) -> StatMap | None:
     """Система покупки очков (Point-buy)."""
     while True:
         stats = {stat: 8 for stat in _deps.STAT_NAMES}
@@ -156,10 +155,10 @@ def _select_stats_point_buy(
 
 
 def _select_stats_random_normal(
-    strings: dict[str, Any],
+    strings: StringsDict,
     race_id: str,
     subrace_id: str | None,
-) -> dict[str, int] | None:
+) -> StatMap | None:
     """Случайный метод для Normal режима с распределением значений."""
     rolls: list[int] | None = None
 
@@ -243,10 +242,10 @@ def _select_stats_random_normal(
 
 
 def _select_stats_random_hardcore(
-    strings: dict[str, Any],
+    strings: StringsDict,
     race_id: str,
     subrace_id: str | None,
-) -> dict[str, int]:
+) -> StatMap:
     """Случайный метод для HardCore режима."""
     base_values = [_deps.roll_ability_score() for _ in _deps.STAT_NAMES]
 

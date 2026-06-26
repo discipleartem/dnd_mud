@@ -1,6 +1,7 @@
 """Генерация и валидация характеристик персонажа."""
 
 from core.races import get_race_bonuses
+from core.types import StatMap
 
 STANDARD_ARRAY = [15, 14, 13, 12, 10, 8]
 STANDARD_ARRAY_MIN = min(STANDARD_ARRAY)
@@ -69,7 +70,7 @@ def validate_point_buy_finish(values: list[int]) -> str | None:
     return "character.stats_points_overspent"
 
 
-def validate_final_stats(stats: dict[str, int]) -> tuple[str, int] | None:
+def validate_final_stats(stats: StatMap) -> tuple[str, int] | None:
     """Проверить потолок характеристик после всех бонусов (PHB: 20).
 
     Returns:
@@ -83,7 +84,7 @@ def validate_final_stats(stats: dict[str, int]) -> tuple[str, int] | None:
 
 
 def can_assign_point_buy_value(
-    current: dict[str, int], stat: str, new_value: int
+    current: StatMap, stat: str, new_value: int
 ) -> bool:
     """Проверить, допустимо ли новое значение (8–15, бюджет не превышен)."""
     if new_value not in POINT_BUY_COSTS:
@@ -94,9 +95,7 @@ def can_assign_point_buy_value(
     return point_buy_total_cost(values) <= POINT_BUY_BUDGET
 
 
-def apply_bonuses_to_stats(
-    stats: dict[str, int], bonuses: dict[str, int]
-) -> dict[str, int]:
+def apply_bonuses_to_stats(stats: StatMap, bonuses: StatMap) -> StatMap:
     """Добавить бонусы к характеристикам."""
     final_stats = stats.copy()
     for stat_name, bonus in bonuses.items():
@@ -108,8 +107,8 @@ def apply_bonuses_to_stats(
 
 
 def apply_racial_bonuses_to_stats(
-    base_stats: dict[str, int], race_id: str, subrace_id: str | None = None
-) -> dict[str, int]:
+    base_stats: StatMap, race_id: str, subrace_id: str | None = None
+) -> StatMap:
     """Применить расовые и подрасовые бонусы к базовым характеристикам."""
     bonuses = get_race_bonuses(race_id, subrace_id)
     return apply_bonuses_to_stats(base_stats, bonuses)
@@ -117,7 +116,7 @@ def apply_racial_bonuses_to_stats(
 
 def _build_stats(
     values: list[int], race_id: str, subrace_id: str | None = None
-) -> dict[str, int]:
+) -> StatMap:
     """Собрать характеристики из шести значений и применить бонусы расы."""
     if len(values) != len(STAT_NAMES):
         raise ValueError(
@@ -131,7 +130,7 @@ def generate_stats_standard_array(
     selected_values: list[int],
     race_id: str,
     subrace_id: str | None = None,
-) -> dict[str, int]:
+) -> StatMap:
     """Сгенерировать характеристики из стандартного массива."""
     return _build_stats(selected_values, race_id, subrace_id)
 
@@ -140,7 +139,7 @@ def generate_stats_point_buy(
     point_buy_values: list[int],
     race_id: str,
     subrace_id: str | None = None,
-) -> dict[str, int]:
+) -> StatMap:
     """Сгенерировать характеристики методом покупки очков."""
     return _build_stats(point_buy_values, race_id, subrace_id)
 
@@ -149,6 +148,6 @@ def generate_stats_random(
     random_values: list[int],
     race_id: str,
     subrace_id: str | None = None,
-) -> dict[str, int]:
+) -> StatMap:
     """Сгенерировать характеристики случайным методом."""
     return _build_stats(random_values, race_id, subrace_id)

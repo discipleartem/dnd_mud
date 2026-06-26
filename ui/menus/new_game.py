@@ -1,12 +1,13 @@
 """Flow «Новая игра»: выбор персонажа и приключения."""
 
-from typing import Any, Literal
+from typing import Literal
 
 from colorama import Fore, Style
 
 from core.difficulty import adventure_unavailable_reason
 from core.localization import get_string
 from core.models import Adventure, Character
+from core.types import RuntimeSettings, StringsDict
 from ui.menus import _deps, character_flow
 from ui.menus._common import (
     _press_enter,
@@ -20,7 +21,7 @@ SelectCharacterResult = Character | Literal["create"] | None
 
 
 def _select_character(
-    strings: dict[str, Any],
+    strings: StringsDict,
     characters: list[Character],
     language: str = "ru",
 ) -> SelectCharacterResult:
@@ -60,7 +61,7 @@ def _select_character(
 
 
 def _select_adventure(
-    strings: dict[str, Any],
+    strings: StringsDict,
     language: str,
     character: Character,
 ) -> Adventure | None:
@@ -152,10 +153,10 @@ def _select_adventure(
 
 
 def show_new_game_flow(
-    strings: dict[str, Any], settings: dict[str, Any]
+    strings: StringsDict, settings: RuntimeSettings
 ) -> None:
     """Flow «Новая игра»: персонаж → приключение."""
-    language = settings.get("language", "ru")
+    language = settings["language"]
 
     while True:
         characters = _deps.load_characters()

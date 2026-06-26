@@ -1,10 +1,9 @@
 """Оркестратор flow генерации характеристик."""
 
-from typing import Any
-
 from colorama import Fore, Style
 
 from core.localization import get_string
+from core.types import GameDifficulty, StatMap, StringsDict
 from ui.menus import _deps
 from ui.menus._common import SEPARATOR, _stats_caption_line
 from ui.menus.stats.stats_methods import (
@@ -16,11 +15,11 @@ from ui.menus.stats.stats_methods import (
 
 
 def show_stats_generation_flow(
-    strings: dict[str, Any],
+    strings: StringsDict,
     race_id: str,
     subrace_id: str | None,
-    difficulty: str,
-) -> dict[str, int] | None:
+    difficulty: GameDifficulty,
+) -> StatMap | None:
     """Flow генерации характеристик с выбором метода."""
     if difficulty == "hardcore":
         return _select_stats_random_hardcore(strings, race_id, subrace_id)
@@ -55,7 +54,7 @@ def show_stats_generation_flow(
         if choice == 0:
             return None
 
-        stats: dict[str, int] | None = None
+        stats: StatMap | None = None
         if choice == 1:
             stats = _select_stats_standard_array(strings, race_id, subrace_id)
         elif choice == 2:

@@ -1,10 +1,11 @@
 """Общие шаги flow генерации характеристик: пул, confirm."""
 
-from typing import Any, Literal
+from typing import Literal
 
 from colorama import Fore, Style
 
 from core.localization import get_string
+from core.types import StatMap, StringsDict
 from ui.menus import _deps
 from ui.menus._common import (
     SEPARATOR,
@@ -21,11 +22,11 @@ from ui.menus.stats.stats_choice_bonuses import (
 )
 
 ConfirmStatsResult = Literal["accept", "reroll", "back"]
-StatsConfirmLoopResult = dict[str, int] | None | Literal["reroll"]
+StatsConfirmLoopResult = StatMap | None | Literal["reroll"]
 
 
 def _prompt_pool_value_manual(
-    strings: dict[str, Any],
+    strings: StringsDict,
     stat_name: str,
     pool: list[int],
     *,
@@ -68,9 +69,9 @@ def _prompt_pool_value_manual(
 
 
 def _prompt_point_buy_stat_value(
-    strings: dict[str, Any],
+    strings: StringsDict,
     stat_name: str,
-    stats: dict[str, int],
+    stats: StatMap,
     stat: str,
 ) -> None:
     """Запросить новое значение point-buy для характеристики."""
@@ -105,7 +106,7 @@ def _prompt_point_buy_stat_value(
 
 
 def _assign_stats_from_pool(
-    strings: dict[str, Any],
+    strings: StringsDict,
     available: list[int],
     *,
     value_min: int,
@@ -113,9 +114,9 @@ def _assign_stats_from_pool(
     show_counts: bool = False,
     race_id: str | None = None,
     subrace_id: str | None = None,
-) -> dict[str, int] | None:
+) -> StatMap | None:
     """Распределить значения из пула по характеристикам."""
-    selected: dict[str, int] = {}
+    selected: StatMap = {}
     pool = list(available)
 
     for stat in _deps.STAT_NAMES:
@@ -159,13 +160,13 @@ def _assign_stats_from_pool(
 
 
 def _confirm_stats(
-    strings: dict[str, Any],
-    stats: dict[str, int],
+    strings: StringsDict,
+    stats: StatMap,
     race_id: str,
     subrace_id: str | None,
     *,
     reroll_label_key: str,
-    race_bonuses: dict[str, int] | None = None,
+    race_bonuses: StatMap | None = None,
 ) -> ConfirmStatsResult:
     """Подтверждение выбранных характеристик."""
     if race_bonuses is None:
@@ -206,8 +207,8 @@ def _confirm_stats(
 
 
 def _run_stats_confirm_loop(
-    strings: dict[str, Any],
-    stats: dict[str, int],
+    strings: StringsDict,
+    stats: StatMap,
     race_id: str,
     subrace_id: str | None,
     reroll_label_key: str,

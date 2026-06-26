@@ -5,6 +5,22 @@ UI (`ui/`) обращается к данным только через `core/`.
 
 ---
 
+## core.types — Псевдонимы типов (PEP 695 / 692)
+
+```python
+type StatMap = dict[str, int]
+type StringsDict = dict[str, Any]
+type GameDifficulty = Literal["normal", "hardcore"]
+type LanguageCode = Literal["ru", "en"]
+
+class RuntimeSettings(TypedDict):
+    language: LanguageCode
+```
+
+Re-export: `StatMap`, `StringsDict`, `GameDifficulty` из `core.character`. Справочник: [PYTHON_312.md](PYTHON_312.md).
+
+---
+
 ## core.models — Модели данных
 
 ### Character
@@ -16,11 +32,11 @@ class Character:
     race: str
     class_name: str
     level: int = 1
-    stats: dict[str, int] = field(default_factory=dict)
+    stats: StatMap = field(default_factory=dict)
     current_hp: int = 0
     max_hp: int = 0
     experience: int = 0
-    difficulty: str = "normal"
+    difficulty: GameDifficulty = "normal"
     subrace: str | None = None
     save_slug: str | None = None
 ```
@@ -69,32 +85,32 @@ CLASSES_FILE = Path("database/classes/classes.yaml")
 
 ```python
 save_character(...) -> Character
-starting_max_hp(class_id: str, stats: dict[str, int]) -> int
+starting_max_hp(class_id: str, stats: StatMap) -> int
 load_characters() -> list[Character]
 load_races(language: str = "ru") -> list[dict[str, Any]]
 load_race_full(race_id: str, language: str = "ru") -> dict[str, Any]
 load_classes(language: str = "ru") -> list[dict[str, Any]]
-get_race_bonuses(race_id: str, subrace_id: str | None = None) -> dict[str, int]
-apply_bonuses_to_stats(stats: dict[str, int], bonuses: dict[str, int]) -> dict[str, int]
+get_race_bonuses(race_id: str, subrace_id: str | None = None) -> StatMap
+apply_bonuses_to_stats(stats: StatMap, bonuses: StatMap) -> StatMap
 apply_racial_bonuses_to_stats(
-    base_stats: dict[str, int], race_id: str, subrace_id: str | None = None
-) -> dict[str, int]
+    base_stats: StatMap, race_id: str, subrace_id: str | None = None
+) -> StatMap
 get_choice_ability_bonus_mechanics(race_id: str, subrace_id: str | None = None) -> dict[str, Any] | None
 has_choice_ability_bonuses(race_id: str, subrace_id: str | None = None) -> bool
-build_bonuses_from_choices(chosen_stats: list[str], value: int = 1) -> dict[str, int]
+build_bonuses_from_choices(chosen_stats: list[str], value: int = 1) -> StatMap
 get_effective_race_bonuses(
     race_id: str,
     subrace_id: str | None = None,
-    choice_bonuses: dict[str, int] | None = None,
-) -> dict[str, int]
+    choice_bonuses: StatMap | None = None,
+) -> StatMap
 
 POINT_BUY_BUDGET = 27
 POINT_BUY_COSTS: dict[int, int]
 point_buy_cost(score: int) -> int
 remaining_standard_array_pool(used: list[int]) -> list[int]
 point_buy_total_cost(values: list[int]) -> int
-can_assign_point_buy_value(current: dict[str, int], stat: str, new_value: int) -> bool
-validate_final_stats(stats: dict[str, int]) -> tuple[str, int] | None
+can_assign_point_buy_value(current: StatMap, stat: str, new_value: int) -> bool
+validate_final_stats(stats: StatMap) -> tuple[str, int] | None
 ABILITY_SCORE_MAX = 20
 ```
 
@@ -129,9 +145,9 @@ POINT_BUY_COSTS = {8: 0, 9: 1, 10: 2, 11: 3, 12: 4, 13: 5, 14: 7, 15: 9}
 **Core-функции:**
 
 ```python
-generate_stats_standard_array(selected_values: list[int], race_id: str, subrace_id: str | None = None) -> dict[str, int]
-generate_stats_point_buy(point_buy_values: list[int], race_id: str, subrace_id: str | None = None) -> dict[str, int]
-generate_stats_random(random_values: list[int], race_id: str, subrace_id: str | None = None) -> dict[str, int]
+generate_stats_standard_array(selected_values: list[int], race_id: str, subrace_id: str | None = None) -> StatMap
+generate_stats_point_buy(point_buy_values: list[int], race_id: str, subrace_id: str | None = None) -> StatMap
+generate_stats_random(random_values: list[int], race_id: str, subrace_id: str | None = None) -> StatMap
 ```
 
 Все функции возвращают словарь `{stat_name: value}` с **уже применёнными** расовыми бонусами.
@@ -146,7 +162,7 @@ show_stats_generation_flow(
     race_id: str,
     subrace_id: str | None,
     difficulty: str,
-) -> dict[str, int] | None
+) -> StatMap | None
 ```
 
 Поведение по `difficulty`:
@@ -225,7 +241,7 @@ get_string(
 
 ```python
 SETTINGS_PATH = Path("database/core/settings.json")
-load_settings() -> dict[str, Any]
+load_settings() -> RuntimeSettings
 save_settings(language: str) -> None
 ```
 
@@ -261,7 +277,7 @@ save_settings(language: str) -> None
 
 | Место | Поле / функция | Назначение |
 |-------|----------------|------------|
-| `Character` | `difficulty: str` | Режим персонажа на всю сессию |
+| `Character` | `difficulty: GameDifficulty` | Режим персонажа на всю сессию |
 | `ui/menus/settings.py` | `select_difficulty()` | Экран выбора в «Создать персонажа» |
 
 **Влияние на генерацию характеристик** (`show_stats_generation_flow`):
@@ -282,7 +298,7 @@ save_settings(language: str) -> None
 
 ```python
 adventure_requires_hardcore(adventure: Adventure) -> bool
-adventure_allows_difficulty(adventure: Adventure, game_difficulty: str) -> bool
+adventure_allows_difficulty(adventure: Adventure, game_difficulty: GameDifficulty) -> bool
 adventure_unavailable_reason(adventure: Adventure, character: Character) -> str | None
 ```
 
@@ -340,7 +356,7 @@ select_difficulty(strings: dict) -> str | None
 show_new_game_flow(strings: dict, settings: dict) -> None
 show_load_game_flow(strings: dict) -> None
 show_create_character_flow(strings: dict, language: str = "ru") -> Character | None
-show_stats_generation_flow(strings: dict, race_id: str, subrace_id: str | None, difficulty: str) -> dict[str, int] | None
+show_stats_generation_flow(strings: StringsDict, race_id: str, subrace_id: str | None, difficulty: GameDifficulty) -> StatMap | None
 show_settings(strings: dict, settings: dict) -> dict
 show_languages_menu(strings: dict, settings: dict) -> dict
 ```
