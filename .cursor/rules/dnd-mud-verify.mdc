@@ -82,4 +82,6 @@ gh pr create --base main --head dev
 
 Orphaned workflows на GitHub без файла в репо — отключить: `gh workflow disable "<name>"`.
 
+Ruleset `main_rules`: required check — **`dev-sync-and-mergeable`** (job name), не имя файла workflow.
+
 Статус — панель **GitHub Actions** в Cursor / на GitHub.

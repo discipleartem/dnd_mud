@@ -216,7 +216,7 @@ gh pr create --base main --head dev --title "release: …"
 
 CI: [`.github/workflows/pr-dev-to-main-check.yml`](../.github/workflows/pr-dev-to-main-check.yml) (только PR `dev` → `main`, события open/sync). После merge в `main` — [`.github/workflows/sync-dev-with-main.yml`](../.github/workflows/sync-dev-with-main.yml).
 
-**GitHub (Settings → Branches):** на `main` — require status check **Release PR checks**; merge method — squash.
+**GitHub (Rules → `main_rules`):** required status check — **`dev-sync-and-mergeable`** (имя job, не имя workflow/файла); merge method — squash.
 
 ## Создание мода
 
