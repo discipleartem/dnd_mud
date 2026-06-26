@@ -4,9 +4,11 @@ name: Release PR checks
 on:
   pull_request:
     branches: [main]
+    types: [opened, synchronize, reopened, ready_for_review]
 
 jobs:
   dev-sync-and-mergeable:
+    if: github.head_ref == 'dev'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -32,8 +34,10 @@ jobs:
           if ! git merge origin/main --no-commit --no-ff; then
             echo "::error::Конфликт при merge origin/main в dev. Разрешите в dev до release PR."
             git diff --name-only --diff-filter=U || true
-            git merge --abort || true
+            git merge --abort 2>/dev/null || true
             exit 1
           fi
-          git merge --abort
+          if test -f .git/MERGE_HEAD; then
+            git merge --abort
+          fi
           echo "Пробный merge прошёл без конфликтов."

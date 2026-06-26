@@ -37,6 +37,6 @@ python main.py  # smoke: пройти затронутое меню
 | `dnd-mud-tests.mdc` | `tests/**` | pytest — только нужные тесты |
 | `dnd-mud-core.mdc` | `core/**`, `ui/**`, `main.py` | слои, локализация, механика |
 | `dnd-mud-data.mdc` | `database/**`, `mods/**`, `**/*.json` | YAML/JSON |
-| `ironbee-devtools-use.mdc` | off | отключён; см. `dnd-mud-verify` |
+| `ironbee-devtools-use.mdc` | off (`alwaysApply: false`) | отключён; verify — `dnd-mud-verify` |
 
 Глобальные правила: [`00-global.mdc`](~/.cursor/rules/00-global.mdc) · git: [`01-operations.mdc`](~/.cursor/rules/01-operations.mdc)
