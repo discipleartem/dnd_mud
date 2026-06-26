@@ -78,16 +78,14 @@ def _select_adventure(
         _press_enter(strings)
         return None
 
-    matching = [
-        adv
-        for adv in adventures
-        if adventure_unavailable_reason(adv, character) is None
-    ]
-    other = [
-        (adv, adventure_unavailable_reason(adv, character))
-        for adv in adventures
-        if adventure_unavailable_reason(adv, character) is not None
-    ]
+    matching: list[Adventure] = []
+    other: list[tuple[Adventure, str]] = []
+    for adv in adventures:
+        reason = adventure_unavailable_reason(adv, character)
+        if reason is None:
+            matching.append(adv)
+        else:
+            other.append((adv, reason))
 
     if not matching:
         print(

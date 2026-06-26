@@ -212,13 +212,15 @@ def _run_stats_confirm_loop(
     race_id: str,
     subrace_id: str | None,
     reroll_label_key: str,
+    *,
+    choice_cancel: Literal["reroll", "retry"] = "reroll",
 ) -> StatsConfirmLoopResult:
     """Подтверждение характеристик: accept → stats, back → None, reroll."""
     finalized = _finalize_stats_with_race_bonuses(
         strings, stats, race_id, subrace_id
     )
     if finalized is None:
-        return "reroll"
+        return None if choice_cancel == "retry" else "reroll"
     final_stats, race_bonuses = finalized
     over_max = _deps.validate_final_stats(final_stats)
     if over_max is not None:

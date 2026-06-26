@@ -5,7 +5,11 @@ from colorama import Fore, Style
 from core.localization import get_string
 from core.types import StatMap, StringsDict
 from ui.menus import _deps
-from ui.menus._common import SEPARATOR, _ability_name, _choice_prompt
+from ui.menus._common import (
+    _ability_name,
+    _choice_prompt,
+    _print_screen_header,
+)
 
 
 def _select_choice_ability_bonuses(
@@ -25,11 +29,9 @@ def _select_choice_ability_bonuses(
     chosen_stats: list[str] = []
 
     for pick_num in range(1, count + 1):
-        print(SEPARATOR)
-        caption = get_string(strings, "character.stats_choice_bonus_caption")
-        print(f"{Fore.YELLOW}{caption.center(78)}{Style.RESET_ALL}")
-        print(SEPARATOR)
-        print()
+        _print_screen_header(
+            get_string(strings, "character.stats_choice_bonus_caption")
+        )
         prompt = get_string(
             strings,
             "character.stats_choice_bonus_prompt",

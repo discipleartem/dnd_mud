@@ -8,12 +8,12 @@ from pathlib import Path
 from typing import Any
 
 from core.io import load_yaml
-from core.types import StringsDict
+from core.types import LanguageCode, StringsDict
 
 STRINGS_DIR = Path("database/strings")
 
 
-def load_strings(language: str) -> StringsDict:
+def load_strings(language: LanguageCode) -> StringsDict:
     """Загрузить строки для указанного языка.
 
     Сначала пытается загрузить файл language.yaml.

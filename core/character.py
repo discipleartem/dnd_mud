@@ -42,11 +42,9 @@ from core.stats import (
     validate_final_stats,
     validate_point_buy_finish,
 )
-from core.types import GameDifficulty, StatMap, StringsDict
 
 __all__ = [
     "ABILITY_SCORE_MAX",
-    "GameDifficulty",
     "POINT_BUY_BUDGET",
     "POINT_BUY_COSTS",
     "POINT_BUY_MAX",
@@ -55,8 +53,6 @@ __all__ = [
     "STANDARD_ARRAY_MAX",
     "STANDARD_ARRAY_MIN",
     "STAT_NAMES",
-    "StatMap",
-    "StringsDict",
     "apply_bonuses_to_stats",
     "apply_racial_bonuses_to_stats",
     "build_bonuses_from_choices",

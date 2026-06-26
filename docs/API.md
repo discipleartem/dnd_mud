@@ -17,7 +17,7 @@ class RuntimeSettings(TypedDict):
     language: LanguageCode
 ```
 
-Re-export: `StatMap`, `StringsDict`, `GameDifficulty` из `core.character`. Справочник: [PYTHON_312.md](PYTHON_312.md).
+Re-export типов: `core.types`. Фасад функций персонажа — `core.character`.
 
 ---
 
