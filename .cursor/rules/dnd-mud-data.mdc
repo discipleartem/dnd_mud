@@ -27,6 +27,8 @@ alwaysApply: false
 | Настройки | `database/core/settings.json` | `core/settings.py` |
 | Персонажи | `saves/characters/*.json` | `core/character.py` |
 | Локализация | `database/strings/{ru,en}.yaml` | `core/localization.py` |
+| Языки PHB | `database/core/languages.yaml` | `core/languages.py` |
+| Предыстории | `database/backgrounds/backgrounds.yaml` | `core/backgrounds.py` |
 | Справочники Phase 2 | `database/_future/` | не загружаются |
 | Сценарии | `adventures/*.yaml` | `core/adventure.py` |
 

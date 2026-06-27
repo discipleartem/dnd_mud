@@ -28,6 +28,7 @@ races:
         mechanics:
           count: 1
           choice: true
+          pool: common
     allow_base_race_choice: true
     subraces:
       variant_human:
@@ -117,6 +118,7 @@ races:
             mechanics:
               count: 1
               choice: true
+              pool: common
           - name: "Заговор высшего эльфа"
             description: "Вы знаете один заговор из списка волшебника"
             type: "cantrip"

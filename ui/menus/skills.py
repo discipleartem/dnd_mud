@@ -139,10 +139,14 @@ def select_creation_skills(
     subrace_id: str | None,
     class_id: str,
     language: str = "ru",
+    background_skills: list[str] | None = None,
 ) -> list[str] | None:
-    """Выбор навыков: классовые, затем расовые выборные; раса — сразу."""
+    """Выбор навыков: предыстория, класс, расовые."""
     proficient: list[str] = []
     sources: dict[str, SkillSource] = {}
+
+    for skill_id in background_skills or []:
+        _add_proficiency(proficient, sources, skill_id, "background")
 
     for skill_id, source in get_fixed_racial_proficiencies_with_source(
         race_id, subrace_id

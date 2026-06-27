@@ -1,4 +1,4 @@
-"""Flow «Создать персонажа»: имя, раса, подраса, класс, архетип, навыки."""
+"""Flow «Создать персонажа»: имя, раса, предыстория, языки, класс, навыки."""
 
 from dataclasses import dataclass, field
 from typing import Any, Literal
@@ -26,13 +26,23 @@ from ui.menus._display import (
     _print_race_info,
     _print_subclass_info,
 )
+from ui.menus.backgrounds import select_creation_background
 from ui.menus.expertise import select_creation_expertise
+from ui.menus.languages import select_creation_languages
 from ui.menus.settings import select_difficulty
 from ui.menus.skills import select_creation_skills
 from ui.menus.stats import show_stats_generation_flow
 
 CreationStep = Literal[
-    "race", "subrace", "stats", "class", "subclass", "skills", "expertise"
+    "race",
+    "subrace",
+    "languages",
+    "stats",
+    "background",
+    "class",
+    "subclass",
+    "skills",
+    "expertise",
 ]
 
 
@@ -44,7 +54,10 @@ class _CreationState:
     difficulty: GameDifficulty
     race_id: str | None = None
     subrace_id: str | None = None
+    languages: list[str] | None = None
     stats: StatMap | None = None
+    background_id: str | None = None
+    background_skills: list[str] = field(default_factory=list)
     class_id: str | None = None
     subclass_id: str | None = None
     skills: list[str] | None = None
@@ -252,6 +265,8 @@ def _save_created_character(state: _CreationState) -> Character:
         subrace_id=str(state.subrace_id) if state.subrace_id else None,
         stats=state.stats,
         subclass_id=state.subclass_id,
+        languages=state.languages,
+        background_id=state.background_id,
         skills=state.skills,
         skill_expertise=state.skill_expertise,
         tool_expertise=state.tool_expertise,
@@ -328,6 +343,32 @@ def show_create_character_flow(
                     step = "subrace"
                     continue
                 state.stats = stats
+                step = "background"
+
+            case "background":
+                bg_result = select_creation_background(strings, language)
+                if bg_result is None:
+                    step = "stats"
+                    continue
+                bg_id, bg_skills = bg_result
+                state.background_id = bg_id
+                state.background_skills = bg_skills
+                step = "languages"
+
+            case "languages":
+                assert state.race_id is not None
+                assert state.background_id is not None
+                langs = select_creation_languages(
+                    strings,
+                    state.race_id,
+                    state.subrace_id,
+                    state.background_id,
+                    language,
+                )
+                if langs is None:
+                    step = "background"
+                    continue
+                state.languages = langs
                 step = "class"
 
             case "class":
@@ -335,7 +376,7 @@ def show_create_character_flow(
                 assert state.stats is not None
                 cls = _select_class(strings, language)
                 if cls is None:
-                    step = "stats"
+                    step = "languages"
                     continue
 
                 state.class_id = str(cls.get("id") or cls.get("name"))
@@ -366,6 +407,7 @@ def show_create_character_flow(
                     state.subrace_id,
                     state.class_id,
                     language,
+                    background_skills=state.background_skills,
                 )
                 if skills is None:
                     step = _back_step_from_skills(state)
@@ -381,15 +423,15 @@ def show_create_character_flow(
                 assert state.class_id is not None
                 assert state.skills is not None
                 start_level = start_level_for_difficulty(state.difficulty)
-                result = select_creation_expertise(
+                expertise_result = select_creation_expertise(
                     strings,
                     state.class_id,
                     start_level,
                     state.skills,
                     language,
                 )
-                if result is None:
+                if expertise_result is None:
                     step = "skills"
                     continue
-                state.skill_expertise, state.tool_expertise = result
+                state.skill_expertise, state.tool_expertise = expertise_result
                 return _finalize_creation(strings, state)

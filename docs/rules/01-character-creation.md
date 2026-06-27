@@ -73,16 +73,16 @@
 
 | Аспект | Значение |
 |--------|----------|
-| Статус | Реализовано: сложность → имя → раса → подраса → характеристики → класс → подкласс (по режиму) → сохранение |
-| YAML | [`database/races/races.yaml`](../../database/races/races.yaml), [`database/classes/classes.yaml`](../../database/classes/classes.yaml) |
-| Core | [`core/character_storage.py`](../../core/character_storage.py), [`core/stats.py`](../../core/stats.py), [`core/races.py`](../../core/races.py), [`core/classes.py`](../../core/classes.py), [`core/subclasses.py`](../../core/subclasses.py), [`core/progression.py`](../../core/progression.py) |
-| UI | [`ui/menus/character_flow.py`](../../ui/menus/character_flow.py), [`ui/menus/stats/`](../../ui/menus/stats/), [`ui/menus/settings.py`](../../ui/menus/settings.py) (`select_difficulty`), [`ui/menus/subclass_trainer.py`](../../ui/menus/subclass_trainer.py) |
+| Статус | Реализовано: сложность → имя → раса → подраса → характеристики → **предыстория** → **языки** → класс → подкласс → **навыки** → (компетентность?) → сохранение |
+| YAML | [`database/races/races.yaml`](../../database/races/races.yaml), [`database/classes/classes.yaml`](../../database/classes/classes.yaml), [`database/core/languages.yaml`](../../database/core/languages.yaml), [`database/backgrounds/backgrounds.yaml`](../../database/backgrounds/backgrounds.yaml) |
+| Core | [`core/character_storage.py`](../../core/character_storage.py), [`core/stats.py`](../../core/stats.py), [`core/races.py`](../../core/races.py), [`core/classes.py`](../../core/classes.py), [`core/languages.py`](../../core/languages.py), [`core/backgrounds.py`](../../core/backgrounds.py), [`core/subclasses.py`](../../core/subclasses.py), [`core/skills.py`](../../core/skills.py), [`core/progression.py`](../../core/progression.py) |
+| UI | [`ui/menus/character_flow.py`](../../ui/menus/character_flow.py), [`ui/menus/languages.py`](../../ui/menus/languages.py), [`ui/menus/backgrounds.py`](../../ui/menus/backgrounds.py), [`ui/menus/skills.py`](../../ui/menus/skills.py), [`ui/menus/stats/`](../../ui/menus/stats/), [`ui/menus/settings.py`](../../ui/menus/settings.py), [`ui/menus/subclass_trainer.py`](../../ui/menus/subclass_trainer.py) |
 | Режимы | Normal / Easy: 3 метода + confirm; HardCore: `_select_stats_random_hardcore` |
-| Заметки | Предыстория, снаряжение — не в flow; **мультикласс запрещён** (один `class_name`); HP = `max_hp_for_level(..., difficulty)`; потолок характеристик — `ABILITY_SCORE_MAX` (20); потолок уровня — `MAX_CHARACTER_LEVEL` (10) |
+| Заметки | Снаряжение предыстории — не в flow; **мультикласс запрещён**; языки: common по умолчанию, exotic — только при явном `pool` в YAML |
 
 ### Сохранение персонажа
 
-Путь: `saves/characters/{save_slug}.json`. Поля модели `Character`: `name`, `race`, `class_name`, `level`, `stats`, `current_hp`, `max_hp`, `experience`, `difficulty`, `subrace`, `subclass_id` (JSON: `"subclass"`), `save_slug`, `created_at`.
+Путь: `saves/characters/{save_slug}.json`. Поля модели `Character`: `name`, `race`, `class_name`, `level`, `stats`, `current_hp`, `max_hp`, `experience`, `difficulty`, `subrace`, `subclass_id` (JSON: `"subclass"`), `languages`, `background_id` (JSON: `"background"`), `skills`, `skill_expertise`, `tool_expertise`, `save_slug`, `created_at`.
 
 ### Константы генерации (`core/stats.py`)
 
@@ -96,5 +96,5 @@ ABILITY_SCORE_MAX = 20
 ### Не реализовано из главы 1
 
 - Быстрое создание (готовые наборы класса)
-- Выбор предыстории и снаряжения
+- Стартовое снаряжение из класса и предыстории
 - Применение умений класса/подкласса в бою

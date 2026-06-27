@@ -18,23 +18,47 @@
 - владение **двумя навыками**;
 - владение **инструментами или языками**;
 - **снаряжение**;
-- особенность предыстории (например, «Приют для верных» у солдата).
+- особенность предыстории (например, «Приют для верующих» у прислужника).
 
-Примеры PHB: аколит, шарлатан, преступник, народный герой, отшельник, благородный, мудрец, матрос, солдат, чужеземец, гильдейский ремесленник.
+13 предысторий PHB: прислужник, шарлатан, преступник, артист, народный герой, гильдейский ремесленник, отшельник, благородный, чужеземец, мудрец, моряк, солдат, беспризорник.
 
 ## Для разработчиков
 
 | Аспект | Значение |
 |--------|----------|
-| Статус | **Phase 2** — не в flow создания персонажа |
-| YAML | [`database/_future/progression/backgrounds.yaml`](../../database/_future/progression/backgrounds.yaml) |
-| Core | — |
-| UI | — |
-| Режимы | — |
-| Заметки | Имя персонажа — единственный текстовый ввод в текущем flow |
+| Статус | **Частично** — выбор предыстории, навыки и языки в flow; personality/inspiration/equipment runtime — Phase 2 |
+| YAML | [`database/backgrounds/backgrounds.yaml`](../../database/backgrounds/backgrounds.yaml) |
+| Core | [`core/backgrounds.py`](../../core/backgrounds.py) |
+| UI | [`ui/menus/backgrounds.py`](../../ui/menus/backgrounds.py) |
+| Flow | После **характеристик**, до **класса**; языки — отдельный шаг после предыстории |
 
-### Планируемая интеграция
+### YAML-схема
 
-1. Расширить `Character` (поле `background` или traits).
-2. Загрузчик из `_future/progression/backgrounds.yaml`.
-3. Опциональный шаг в `character_flow` после класса или в отдельном меню.
+```yaml
+backgrounds:
+  acolyte:
+    name: { ru: "...", en: "..." }
+    description: { ru: "...", en: "..." }
+    skills: ["insight", "religion"]
+    languages: { count: 2, choice: true, pool: common }
+    tools: []
+    equipment: { ru: [...], en: [...] }
+    feature:
+      name: { ru: "...", en: "..." }
+      description: { ru: "...", en: "..." }
+```
+
+- `languages.pool`: `common` (по умолчанию), `exotic` или `any` — см. [`database/core/languages.yaml`](../../database/core/languages.yaml).
+- **Экзотические языки** доступны для выбора только при `pool: exotic` / `pool: any`.
+
+### Модель и сохранение
+
+- `Character.background_id` → JSON `"background"`.
+- Навыки предыстории входят в `Character.skills` с источником `background` при выборе классовых навыков.
+
+### Не реализовано
+
+- Таблицы personality (черты, идеалы, привязанности, изъяны) и Inspiration.
+- Выбор инструментов предыстории в UI.
+- Стартовое снаряжение предыстории в инвентаре.
+- Механика background feature в engine.

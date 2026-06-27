@@ -6,7 +6,7 @@ from typing import Any
 
 from core.io import load_yaml
 from core.models import Character
-from core.progression import apply_experience
+from core.progression import grant_experience, has_pending_level_up
 from core.subclasses import needs_subclass_npc
 
 
@@ -15,6 +15,7 @@ class ScenarioActionResult:
     """Результат action узла сценария для UI."""
 
     character: Character
+    level_up_pending: bool = False
     pick_subclass: bool = False
     message_key: str | None = None
 
@@ -37,8 +38,11 @@ def apply_scenario_action(
     """Выполнить action узла сценария без ввода/вывода."""
     if action == "grant_xp":
         amount = int(action_data.get("amount", 0))
-        updated = apply_experience(character, amount)
-        return ScenarioActionResult(character=updated)
+        updated = grant_experience(character, amount)
+        return ScenarioActionResult(
+            character=updated,
+            level_up_pending=has_pending_level_up(updated),
+        )
 
     if action == "subclass_training":
         if character.subclass_id is not None:

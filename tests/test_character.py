@@ -189,6 +189,30 @@ def test_save_skills_and_expertise_persisted(characters_dir):
     assert loaded.skill_expertise == saved.skill_expertise
 
 
+def test_save_languages_and_background_persisted(characters_dir):
+    """Языки и предыстория сохраняются в JSON."""
+    saved = character_mod.save_character(
+        name="SageHero",
+        race_id="human",
+        class_id="wizard",
+        stats=dict.fromkeys(character_mod.STAT_NAMES, 10),
+        languages=["common", "elvish", "dwarvish"],
+        background_id="sage",
+    )
+    assert saved.languages == ["common", "elvish", "dwarvish"]
+    assert saved.background_id == "sage"
+
+    save_path = characters_dir / "sagehero.json"
+    with open(save_path, encoding="utf-8") as f:
+        data = json.load(f)
+    assert data["languages"] == saved.languages
+    assert data["background"] == "sage"
+
+    loaded = character_mod.load_characters()[-1]
+    assert loaded.languages == saved.languages
+    assert loaded.background_id == saved.background_id
+
+
 def test_starting_max_hp_floor_and_max_hp_field(characters_dir):
     """HP на 1 уровне (normal): max(1, кость + CON), current_hp == max_hp."""
     stats = {
