@@ -15,6 +15,7 @@ from core.scenario_actions import (
 from core.types import LanguageCode, StringsDict
 from ui.menus import _deps
 from ui.menus._common import _press_enter, _print_screen_header
+from ui.menus.level_up import run_pending_level_ups
 from ui.menus.subclass_trainer import assign_subclass_from_menu
 
 
@@ -44,10 +45,15 @@ def _handle_action_result(
 ) -> Character:
     """Сохранить персонажа и обработать UI-побочные эффекты action."""
     character = result.character
+    if result.level_up_pending:
+        character = run_pending_level_ups(strings, character, language)
     if result.pick_subclass:
         updated = assign_subclass_from_menu(strings, character, language)
         if updated is not None:
             character = updated
+        else:
+            update_character(character)
+        _show_action_message(strings, result.message_key)
         return character
 
     update_character(character)

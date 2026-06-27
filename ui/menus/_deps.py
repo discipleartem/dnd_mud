@@ -5,6 +5,7 @@
 """
 
 from core.adventure import load_adventures
+from core.backgrounds import load_background_full, load_backgrounds
 from core.character_storage import (
     delete_all_characters,
     delete_character,
@@ -14,6 +15,7 @@ from core.character_storage import (
 )
 from core.classes import load_class_full, load_classes, load_subclasses
 from core.dice import roll_ability_score
+from core.languages import get_language_name, load_languages
 from core.localization import load_strings
 from core.races import (
     build_bonuses_from_choices,
@@ -70,9 +72,13 @@ __all__ = [
     "get_int_input",
     "get_str_input",
     "load_adventures",
+    "load_background_full",
+    "load_backgrounds",
     "load_characters",
     "load_class_full",
     "load_classes",
+    "get_language_name",
+    "load_languages",
     "load_subclasses",
     "load_race_full",
     "load_races",

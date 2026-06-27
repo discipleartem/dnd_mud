@@ -69,6 +69,12 @@ def _character_subrace_label(
     return char.subrace
 
 
+def _empty_field_value(strings: StringsDict) -> str:
+    """Плейсхолдер для пустого поля карточки персонажа."""
+    empty = get_string(strings, "choose_character.field_empty")
+    return f"{Fore.LIGHTBLACK_EX}{empty}{Style.RESET_ALL}"
+
+
 def _print_labeled_field(
     strings: StringsDict,
     label_key: str,
@@ -372,6 +378,32 @@ def _print_character_card(
             f"{Fore.CYAN}{subrace}{Style.RESET_ALL}",
             indent=indent,
         )
+    if char.languages:
+        lang_line = ", ".join(
+            _deps.get_language_name(lang_id, language)
+            for lang_id in char.languages
+        )
+        lang_display = f"{Fore.CYAN}{lang_line}{Style.RESET_ALL}"
+    else:
+        lang_display = _empty_field_value(strings)
+    _print_labeled_field(
+        strings,
+        "choose_character.field_languages",
+        lang_display,
+        indent=indent,
+    )
+    if char.background_id:
+        bg = _deps.load_background_full(char.background_id, language)
+        bg_name = bg.get("name", char.background_id)
+        bg_display = f"{Fore.CYAN}{bg_name}{Style.RESET_ALL}"
+    else:
+        bg_display = _empty_field_value(strings)
+    _print_labeled_field(
+        strings,
+        "choose_character.field_background",
+        bg_display,
+        indent=indent,
+    )
     _print_labeled_field(
         strings,
         "choose_character.field_class",
@@ -423,23 +455,30 @@ def _print_character_card(
         skills_line = ", ".join(
             _skill_name(strings, skill_id) for skill_id in char.skills
         )
-        _print_labeled_field(
-            strings,
-            "choose_character.field_skills",
-            f"{Fore.CYAN}{skills_line}{Style.RESET_ALL}",
-            indent=indent,
-        )
+        skills_display = f"{Fore.CYAN}{skills_line}{Style.RESET_ALL}"
+    else:
+        skills_display = _empty_field_value(strings)
+    _print_labeled_field(
+        strings,
+        "choose_character.field_skills",
+        skills_display,
+        indent=indent,
+    )
 
     expertise_line = format_expertise_display(
         strings, char.skill_expertise, char.tool_expertise
     )
-    if expertise_line:
-        _print_labeled_field(
-            strings,
-            "choose_character.field_expertise",
-            f"{Fore.CYAN}{expertise_line}{Style.RESET_ALL}",
-            indent=indent,
-        )
+    expertise_display = (
+        f"{Fore.CYAN}{expertise_line}{Style.RESET_ALL}"
+        if expertise_line
+        else _empty_field_value(strings)
+    )
+    _print_labeled_field(
+        strings,
+        "choose_character.field_expertise",
+        expertise_display,
+        indent=indent,
+    )
 
     _print_labeled_field(
         strings,

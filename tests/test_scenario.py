@@ -6,7 +6,7 @@ from ui.menus.scenario_flow import run_scenario
 
 
 def test_apply_scenario_action_grant_xp():
-    """grant_xp повышает уровень без UI."""
+    """grant_xp начисляет XP; повышение уровня — через UI."""
     character = Character(
         name="Hero",
         race="human",
@@ -18,15 +18,23 @@ def test_apply_scenario_action_grant_xp():
         difficulty="hardcore",
     )
     result = apply_scenario_action("grant_xp", {"amount": 900}, character)
-    assert result.character.level == 3
+    assert result.character.level == 1
     assert result.character.experience == 900
+    assert result.level_up_pending is True
     assert result.pick_subclass is False
 
 
 def test_run_scenario_grant_xp_levels_character(
     monkeypatch, ru_strings, patch_int_input
 ):
-    """grant_xp в сценарии повышает уровень персонажа."""
+    """grant_xp в сценарии открывает экраны повышения уровня."""
+    rolls = iter([8, 3])
+
+    def fake_roll(count: int, sides: int, modifier: int = 0) -> int:
+        return next(rolls) + modifier
+
+    monkeypatch.setattr("core.progression.roll", fake_roll)
+
     character = Character(
         name="Hero",
         race="human",
@@ -54,9 +62,14 @@ def test_run_scenario_grant_xp_levels_character(
         "ui.menus.scenario_flow.assign_subclass_from_menu",
         lambda *args, **kwargs: None,
     )
+    monkeypatch.setattr(
+        "ui.menus.level_up._press_enter",
+        lambda strings: None,
+    )
     patch_int_input(monkeypatch, [1, 1])
 
     result = run_scenario(adventure, character, ru_strings, "ru")
 
     assert result.level == 3
     assert result.experience == 900
+    assert result.max_hp == 27

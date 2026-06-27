@@ -1,5 +1,7 @@
 """Прогрессия персонажа: опыт и уровни (PHB, макс. 10 уровень)."""
 
+from dataclasses import replace
+
 from core.classes import get_class_hit_dice
 from core.dice import ability_modifier, roll
 from core.levels import MAX_CHARACTER_LEVEL, clamp_level
@@ -43,6 +45,24 @@ def hp_gain_for_level(
     return hit_dice // 2 + 1 + con_mod
 
 
+def roll_hp_gain_for_level_up(
+    class_id: str,
+    stats: StatMap,
+    new_level: int,
+    difficulty: GameDifficulty,
+) -> tuple[int, int | None]:
+    """Прирост HP за повышение до new_level.
+
+    Для HardCore возвращает также значение броска кости.
+    """
+    hit_dice = get_class_hit_dice(class_id)
+    con_mod = ability_modifier(stats.get("constitution", 10))
+    if difficulty == "hardcore":
+        dice = roll(1, hit_dice)
+        return dice + con_mod, dice
+    return hp_gain_for_level(new_level, hit_dice, con_mod, difficulty), None
+
+
 def max_hp_for_level(
     class_id: str,
     stats: StatMap,
@@ -59,48 +79,51 @@ def max_hp_for_level(
     return total
 
 
-def apply_experience(character: Character, amount: int) -> Character:
-    """Добавить опыт и пересчитать уровень и HP при повышении."""
+def grant_experience(character: Character, amount: int) -> Character:
+    """Добавить опыт без повышения уровня."""
     if amount <= 0:
         return character
+    return replace(character, experience=character.experience + amount)
 
-    old_level = character.level
-    new_xp = character.experience + amount
-    new_level = level_from_xp(new_xp)
 
-    hp_gain = 0
-    if new_level > old_level:
-        if character.difficulty == "hardcore":
-            hit_dice = get_class_hit_dice(character.class_name)
-            con_mod = ability_modifier(character.stats.get("constitution", 10))
-            for lvl in range(old_level + 1, new_level + 1):
-                hp_gain += hp_gain_for_level(
-                    lvl, hit_dice, con_mod, "hardcore"
-                )
-            new_max_hp = character.max_hp + hp_gain
-        else:
-            new_max_hp = max_hp_for_level(
-                character.class_name,
-                character.stats,
-                new_level,
-                character.difficulty,
-            )
-            hp_gain = new_max_hp - character.max_hp
-    else:
-        new_max_hp = character.max_hp
+def has_pending_level_up(character: Character) -> bool:
+    """Есть ли неприменённое повышение уровня по текущему XP."""
+    if character.level >= MAX_CHARACTER_LEVEL:
+        return False
+    return character.level < level_from_xp(character.experience)
 
-    return Character(
-        name=character.name,
-        race=character.race,
-        class_name=character.class_name,
+
+def apply_level_up(character: Character, hp_gain: int) -> Character:
+    """Повысить персонажа на один уровень с заданным приростом HP."""
+    if not has_pending_level_up(character):
+        return character
+    new_level = character.level + 1
+    return replace(
+        character,
         level=new_level,
-        stats=character.stats,
+        max_hp=character.max_hp + hp_gain,
         current_hp=character.current_hp + hp_gain,
-        max_hp=new_max_hp,
-        experience=new_xp,
-        difficulty=character.difficulty,
-        subrace=character.subrace,
-        subclass_id=character.subclass_id,
-        save_slug=character.save_slug,
-        created_at=character.created_at,
     )
+
+
+def resolve_pending_level_ups(character: Character) -> Character:
+    """Применить все ожидающие повышения без UI.
+
+    Для тестов и apply_experience.
+    """
+    char = character
+    while has_pending_level_up(char):
+        new_level = char.level + 1
+        gain, _ = roll_hp_gain_for_level_up(
+            char.class_name,
+            char.stats,
+            new_level,
+            char.difficulty,
+        )
+        char = apply_level_up(char, gain)
+    return char
+
+
+def apply_experience(character: Character, amount: int) -> Character:
+    """Добавить опыт и сразу применить все повышения уровня (без UI)."""
+    return resolve_pending_level_ups(grant_experience(character, amount))

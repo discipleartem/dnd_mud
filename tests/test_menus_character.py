@@ -165,6 +165,20 @@ def test_hardcore_back_from_stats_keeps_rolls(
     )
     monkeypatch.setattr(
         character_flow,
+        "select_creation_languages",
+        lambda *args, **kwargs: ["common", "elvish"],
+    )
+
+    def fake_background(*args, **kwargs):
+        return ("folk_hero", ["survival", "animal_handling"])
+
+    monkeypatch.setattr(
+        character_flow,
+        "select_creation_background",
+        fake_background,
+    )
+    monkeypatch.setattr(
+        character_flow,
         "_select_class",
         lambda strings, language="ru": {"id": "bard"},
     )
@@ -241,6 +255,20 @@ def test_hardcore_back_to_race_clears_rolls(
     monkeypatch.setattr(character_flow, "_select_subrace", fake_subrace)
     monkeypatch.setattr(
         character_flow,
+        "select_creation_languages",
+        lambda *args, **kwargs: ["common", "elvish"],
+    )
+
+    def fake_background(*args, **kwargs):
+        return ("soldier", ["athletics", "intimidation"])
+
+    monkeypatch.setattr(
+        character_flow,
+        "select_creation_background",
+        fake_background,
+    )
+    monkeypatch.setattr(
+        character_flow,
         "_select_class",
         lambda strings, language="ru": {"id": "fighter"},
     )
@@ -315,6 +343,10 @@ def test_select_character_shows_cards_with_difficulty(
     assert "Hero HC" in output
     assert "Человек" in output
     assert "Эльф" in output
+    assert output.count("языки:") == 2
+    assert output.count("предыстория:") == 2
+    assert output.count("навыки:") == 2
+    assert output.count("компетентность:") == 2
     assert "Сложность:" in output
     assert "HardCore" in output
     assert "Создать нового персонажа" in output

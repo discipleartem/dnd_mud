@@ -3,6 +3,13 @@
 ## [Unreleased]
 
 ### Added
+- Flow создания: шаги **языки** (раса/подраса) и **предыстория** (до класса); 13 PHB backgrounds
+- `database/core/languages.yaml`, `database/backgrounds/backgrounds.yaml`
+- `core/languages.py`, `core/backgrounds.py`; поля `Character.languages`, `Character.background_id`
+- UI: `ui/menus/languages.py`, `ui/menus/backgrounds.py`
+- Правило: экзотические языки только при `pool: exotic` / `pool: any` в YAML
+- Тесты: `test_languages.py`, `test_backgrounds.py`
+- Левелап: `grant_experience` / `apply_level_up` / `run_pending_level_ups`; экран повышения уровня в сценариях
 - Выбор подкласса по режимам сложности (`easy` / `normal` / `hardcore`); UI класса и подкласса по образцу расы/подрасы
 - Режим «Лёгкая» (`easy`): старт с 3 уровня, обязательный подкласс
 - `MAX_CHARACTER_LEVEL = 10`, прогрессия XP (`core/progression.py`), `core/subclasses.py`, `core/scenario.py`

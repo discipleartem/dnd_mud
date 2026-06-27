@@ -1,0 +1,97 @@
+# Языки PHB — обычные и экзотические (гл. 4)
+languages:
+  giant:
+    category: common
+    name: { ru: "Великаний", en: "Giant" }
+    script: { ru: "Великанья", en: "Giant" }
+    typical_speaker: { ru: "Огры, великаны", en: "Ogres, giants" }
+
+  gnomish:
+    category: common
+    name: { ru: "Гномий", en: "Gnomish" }
+    script: { ru: "Дварфская", en: "Dwarvish" }
+    typical_speaker: { ru: "Гномы", en: "Gnomes" }
+
+  goblin:
+    category: common
+    name: { ru: "Гоблинский", en: "Goblin" }
+    script: { ru: "Дварфская", en: "Dwarvish" }
+    typical_speaker: { ru: "Гоблиноиды", en: "Goblinoids" }
+
+  dwarvish:
+    category: common
+    name: { ru: "Дварфский", en: "Dwarvish" }
+    script: { ru: "Дварфская", en: "Dwarvish" }
+    typical_speaker: { ru: "Дварфы", en: "Dwarves" }
+
+  common:
+    category: common
+    name: { ru: "Общий", en: "Common" }
+    script: { ru: "Общая", en: "Common" }
+    typical_speaker: { ru: "Люди", en: "Humans" }
+
+  orcish:
+    category: common
+    name: { ru: "Орочий", en: "Orc" }
+    script: { ru: "Дварфская", en: "Dwarvish" }
+    typical_speaker: { ru: "Орки", en: "Orcs" }
+
+  halfling:
+    category: common
+    name: { ru: "Полуросликов", en: "Halfling" }
+    script: { ru: "Общая", en: "Common" }
+    typical_speaker: { ru: "Полурослики", en: "Halflings" }
+
+  elvish:
+    category: common
+    name: { ru: "Эльфийский", en: "Elvish" }
+    script: { ru: "Эльфийская", en: "Elvish" }
+    typical_speaker: { ru: "Эльфы", en: "Elves" }
+
+  abyssal:
+    category: exotic
+    name: { ru: "Бездны", en: "Abyssal" }
+    script: { ru: "Инфернальная", en: "Infernal" }
+    typical_speaker: { ru: "Демоны", en: "Demons" }
+
+  deep_speech:
+    category: exotic
+    name: { ru: "Глубинная речь", en: "Deep Speech" }
+    script: { ru: "—", en: "—" }
+    typical_speaker: { ru: "Иллитиды, злобоглазы", en: "Mind flayers, beholders" }
+
+  draconic:
+    category: exotic
+    name: { ru: "Драконий", en: "Draconic" }
+    script: { ru: "Драконья", en: "Draconic" }
+    typical_speaker: { ru: "Драконы, драконорождённые", en: "Dragons, dragonborn" }
+
+  infernal:
+    category: exotic
+    name: { ru: "Инфернальный", en: "Infernal" }
+    script: { ru: "Инфернальная", en: "Infernal" }
+    typical_speaker: { ru: "Дьяволы", en: "Devils" }
+
+  celestial:
+    category: exotic
+    name: { ru: "Небесный", en: "Celestial" }
+    script: { ru: "Небесная", en: "Celestial" }
+    typical_speaker: { ru: "Небожители", en: "Celestials" }
+
+  primordial:
+    category: exotic
+    name: { ru: "Первичный", en: "Primordial" }
+    script: { ru: "Дварфская", en: "Dwarvish" }
+    typical_speaker: { ru: "Элементали", en: "Elementals" }
+
+  undercommon:
+    category: exotic
+    name: { ru: "Подземный", en: "Undercommon" }
+    script: { ru: "Эльфийская", en: "Elvish" }
+    typical_speaker: { ru: "Купцы Подземья", en: "Underdark traders" }
+
+  sylvan:
+    category: exotic
+    name: { ru: "Сильван", en: "Sylvan" }
+    script: { ru: "Эльфийская", en: "Elvish" }
+    typical_speaker: { ru: "Фейские существа", en: "Fey creatures" }

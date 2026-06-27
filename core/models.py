@@ -26,6 +26,8 @@ class Character:
     difficulty: GameDifficulty = "normal"
     subrace: str | None = None
     subclass_id: str | None = None
+    languages: list[str] = field(default_factory=list)
+    background_id: str | None = None
     skills: list[str] = field(default_factory=list)
     skill_expertise: list[str] = field(default_factory=list)
     tool_expertise: list[str] = field(default_factory=list)
@@ -49,6 +51,10 @@ class Character:
             data["subrace"] = self.subrace
         if self.subclass_id is not None:
             data["subclass"] = self.subclass_id
+        if self.languages:
+            data["languages"] = self.languages
+        if self.background_id is not None:
+            data["background"] = self.background_id
         if self.skills:
             data["skills"] = self.skills
         if self.skill_expertise:
@@ -66,6 +72,8 @@ class Character:
         """Создать из словаря."""
         subrace = data.get("subrace")
         subclass_raw = data.get("subclass")
+        languages_raw = data.get("languages", [])
+        background_raw = data.get("background")
         skills_raw = data.get("skills", [])
         skill_expertise_raw = data.get("skill_expertise", [])
         tool_expertise_raw = data.get("tool_expertise", [])
@@ -96,6 +104,14 @@ class Character:
             subrace=str(subrace) if subrace is not None else None,
             subclass_id=(
                 str(subclass_raw) if subclass_raw is not None else None
+            ),
+            languages=(
+                [str(lang) for lang in languages_raw]
+                if isinstance(languages_raw, list)
+                else []
+            ),
+            background_id=(
+                str(background_raw) if background_raw is not None else None
             ),
             skills=(
                 [str(s) for s in skills_raw]
