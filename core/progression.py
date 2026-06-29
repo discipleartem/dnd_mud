@@ -214,11 +214,32 @@ def apply_level_up(character: Character, hp_gain: int) -> Character:
 def resolve_pending_level_ups(character: Character) -> Character:
     """Применить все ожидающие повышения без UI.
 
-    Для тестов и apply_experience.
+    Для тестов и apply_experience. На уровнях ASI — авто +2 к ключевой
+    характеристике класса.
     """
+    from core.asi import (
+        apply_asi_two_one,
+        auto_asi_bonus,
+        cap_stats,
+        con_hp_bonus_from_asi,
+        pending_asi_at_level,
+    )
+
     char = character
     while has_pending_level_up(char):
         new_level = char.level + 1
+        old_stats = char.stats.copy()
+        con_bonus = 0
+        tough_bonus = 0
+
+        if pending_asi_at_level(char, new_level):
+            prime = next(iter(auto_asi_bonus(char.class_name)))
+            stats = cap_stats(apply_asi_two_one(char.stats, prime))
+            con_bonus = con_hp_bonus_from_asi(old_stats, stats, char.level)
+            asi_choices = dict(char.asi_choices)
+            asi_choices[str(new_level)] = "asi"
+            char = replace(char, stats=stats, asi_choices=asi_choices)
+
         gain, _ = roll_hp_gain_for_level_up(
             char.class_name,
             char.stats,
@@ -228,7 +249,7 @@ def resolve_pending_level_ups(character: Character) -> Character:
             char.subrace,
             char.feat_ids,
         )
-        char = apply_level_up(char, gain)
+        char = apply_level_up(char, gain + con_bonus + tough_bonus)
     return char
 
 

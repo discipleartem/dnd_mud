@@ -35,6 +35,8 @@ class Character:
     armor_proficiencies: list[str] = field(default_factory=list)
     tool_proficiencies: list[str] = field(default_factory=list)
     feat_ids: list[str] = field(default_factory=list)
+    feat_choices: dict[str, dict[str, Any]] = field(default_factory=dict)
+    asi_choices: dict[str, str] = field(default_factory=dict)
     class_features_applied: bool = False
     save_slug: str | None = None
     created_at: str | None = None
@@ -74,6 +76,10 @@ class Character:
             data["tool_proficiencies"] = self.tool_proficiencies
         if self.feat_ids:
             data["feat_ids"] = self.feat_ids
+        if self.feat_choices:
+            data["feat_choices"] = self.feat_choices
+        if self.asi_choices:
+            data["asi_choices"] = self.asi_choices
         if self.class_features_applied:
             data["class_features_applied"] = True
         if self.save_slug is not None:
@@ -96,6 +102,8 @@ class Character:
         armor_prof_raw = data.get("armor_proficiencies", [])
         tool_prof_raw = data.get("tool_proficiencies", [])
         feat_ids_raw = data.get("feat_ids", [])
+        feat_choices_raw = data.get("feat_choices", {})
+        asi_choices_raw = data.get("asi_choices", {})
         class_features_applied = bool(
             data.get("class_features_applied", False)
         )
@@ -169,6 +177,20 @@ class Character:
                 [str(f) for f in feat_ids_raw]
                 if isinstance(feat_ids_raw, list)
                 else []
+            ),
+            feat_choices=(
+                {
+                    str(k): v
+                    for k, v in feat_choices_raw.items()
+                    if isinstance(v, dict)
+                }
+                if isinstance(feat_choices_raw, dict)
+                else {}
+            ),
+            asi_choices=(
+                {str(k): str(v) for k, v in asi_choices_raw.items()}
+                if isinstance(asi_choices_raw, dict)
+                else {}
             ),
             class_features_applied=class_features_applied,
             save_slug=str(save_slug) if save_slug is not None else None,

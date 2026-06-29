@@ -3,6 +3,7 @@
 import json
 from datetime import UTC, datetime
 from pathlib import Path
+from typing import Any
 
 from core.levels import clamp_level
 from core.models import Character
@@ -50,6 +51,8 @@ def save_character(
     armor_proficiencies: list[str] | None = None,
     tool_proficiencies: list[str] | None = None,
     feat_ids: list[str] | None = None,
+    feat_choices: dict[str, dict[str, Any]] | None = None,
+    asi_choices: dict[str, str] | None = None,
     level: int | None = None,
     class_features_applied: bool = False,
 ) -> Character:
@@ -58,6 +61,28 @@ def save_character(
         stats = generate_stats_standard_array(
             list(STANDARD_ARRAY), race_id, subrace_id
         )
+    if feat_ids:
+        from core.feats import (
+            apply_feats_to_stats,
+            get_feat_expertise_ids,
+            get_feat_language_ids,
+        )
+
+        stats = apply_feats_to_stats(stats, feat_ids, feat_choices)
+        feat_lang_ids = get_feat_language_ids(feat_ids, feat_choices)
+        if feat_lang_ids:
+            merged_langs = list(languages) if languages else []
+            for lang_id in feat_lang_ids:
+                if lang_id not in merged_langs:
+                    merged_langs.append(lang_id)
+            languages = merged_langs
+        feat_expertise = get_feat_expertise_ids(feat_ids, feat_choices)
+        if feat_expertise:
+            merged_expertise = list(skill_expertise) if skill_expertise else []
+            for skill_id in feat_expertise:
+                if skill_id not in merged_expertise:
+                    merged_expertise.append(skill_id)
+            skill_expertise = merged_expertise
 
     if level is None:
         level = start_level_for_difficulty(difficulty)
@@ -100,6 +125,8 @@ def save_character(
             list(tool_proficiencies) if tool_proficiencies else []
         ),
         feat_ids=list(feat_ids) if feat_ids else [],
+        feat_choices=dict(feat_choices) if feat_choices else {},
+        asi_choices=dict(asi_choices) if asi_choices else {},
         class_features_applied=class_features_applied,
         save_slug=_unique_save_slug(name),
         created_at=datetime.now(UTC).isoformat(),
