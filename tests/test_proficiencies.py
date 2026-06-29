@@ -95,3 +95,44 @@ def test_merge_proficiency_tokens_dedupes():
     """merge не дублирует токены."""
     merged = merge_proficiency_tokens(["simple"], ["martial", "simple"])
     assert merged == ["simple", "martial"]
+
+
+def test_dwarf_tool_choice_not_pre_granted():
+    """Дварф: один инструмент на выбор, не все три сразу."""
+    from core.proficiencies import get_racial_proficiency_tokens
+
+    _, _, tools, choices = get_racial_proficiency_tokens("dwarf", None)
+    assert tools == []
+    assert len(choices) == 1
+    assert choices[0].count == 1
+    assert set(choices[0].options or []) == {
+        "smith_tools",
+        "brewer_supplies",
+        "mason_tools",
+    }
+
+
+def test_dwarf_build_fixed_proficiencies_no_tools_until_picked():
+    """Дварф: fixed-владения без инструментов до выбора в UI."""
+    weapons, armors, tools = build_fixed_proficiencies(
+        "dwarf", None, "fighter", None, None, 1
+    )
+    assert "battleaxe" in weapons
+    assert tools == []
+
+
+def test_mountain_dwarf_armor_proficiency():
+    """Горный дварф — лёгкие и средние доспехи."""
+    _, armors, _ = build_fixed_proficiencies(
+        "dwarf", "mountain_dwarf", "fighter", None, None, 1
+    )
+    assert "light" in armors
+    assert "medium" in armors
+
+
+def test_has_tool_proficiency_by_pool_token():
+    """Токен artisans_tools покрывает конкретный ремесленный инструмент."""
+    from core.proficiencies import has_tool_proficiency
+
+    assert has_tool_proficiency(["artisans_tools"], "smith_tools")
+    assert not has_tool_proficiency(["smith_tools"], "brewer_supplies")

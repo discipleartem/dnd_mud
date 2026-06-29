@@ -18,6 +18,8 @@
 - Тесты: `test_subclasses`, `test_progression`, `test_scenario`; расширены `test_character`
 
 ### Fixed
+- Владения: выбор инструментов (`choice: true`) больше не начисляет все варианты пула сразу (дварф)
+- КД щита: +2 по PHB даётся без владения; помеха за невладение — через `armor_wearing_penalty`
 - §11 PRD: HP 1 уровня `max(1, …)`, поле `max_hp`, потолок характеристик 20, `min_level` и gating приключений, CON → «Телосложение» в ru, README (bard)
 
 ### Changed

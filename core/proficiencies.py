@@ -63,7 +63,7 @@ def _tokens_from_mechanics(
         raw = mechanics.get("armor_types", mechanics.get("armors", []))
         if isinstance(raw, list):
             armors.extend(_normalize_armor_token(str(a)) for a in raw)
-    if mtype == "tool_proficiency":
+    if mtype == "tool_proficiency" and not mechanics.get("choice"):
         raw = mechanics.get("tools", [])
         if isinstance(raw, list):
             tools.extend(str(t) for t in raw)

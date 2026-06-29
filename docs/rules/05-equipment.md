@@ -35,6 +35,26 @@
 | Core | [`core/equipment.py`](../../core/equipment.py), [`core/proficiencies.py`](../../core/proficiencies.py), [`core/combat.py`](../../core/combat.py) |
 | Заметки | На персонаже — **токены** владений; `armor_id`/`weapon_id` в combat API передаются явно |
 
+### Владение (PHB)
+
+| Источник | Поведение в MUD |
+|----------|-----------------|
+| Класс / раса / подкласс / предыстория | Фиксированные токены через `build_fixed_proficiencies()` |
+| Выбор инструментов (`choice: true` в YAML) | Только `ProficiencyChoice`; в fixed не попадают варианты пула (напр. дварф — 1 из 3 ремесленных) |
+| Оружие | `has_weapon_proficiency()` — конкретный id или категория `simple` / `martial` |
+| Доспех / щит | `has_armor_proficiency()` — категория `light` / `medium` / `heavy` / `shield` |
+| Инструмент | `has_tool_proficiency()` — id, категория или пул (`artisans_tools`, …) |
+
+**Атака оружием:** владение → +бонус мастерства (`attack_roll_modifier`).
+
+**Доспех без владения:** помеха на проверки/спасброски/атаки Str и Dex (`armor_wearing_penalty`); запрет заклинаний — Phase 2.
+
+**Щит:** +2 к КД всегда при `shield=True` в `compute_ac()`; без владения щитом `armor_wearing_penalty(character, "shield")` → `True`.
+
+**Инструменты:** +бонус мастерства к проверке (`tool_check_modifier`); wiring в `core/checks.py` — Phase 2.
+
+**Дубли владений** (PHB гл. 4: замена на другое того же вида) — Phase 2.
+
 ### Реализовано сейчас
 
 | Механика | Модуль |

@@ -336,7 +336,11 @@ compute_ac(character, armor_id=None, *, shield=False) -> int
 tool_check_modifier(character, tool_id, ability_mod) -> int
 ```
 
-`armor_wearing_penalty` — `True`, если доспех без владения (помеха на Str/Dex checks/saves/attacks по PHB).
+`armor_wearing_penalty` — `True`, если доспех или щит (`armor_id="shield"`) без владения: помеха на Str/Dex checks/saves/attacks по PHB. Запрет заклинаний — Phase 2.
+
+`compute_ac`: щит (`shield=True`) всегда даёт **+2 КД**; владение щитом на КД не влияет.
+
+`build_fixed_proficiencies`: инструменты с `choice: true` в YAML **не** попадают в fixed-список — только через `get_proficiency_choices()` и UI.
 
 ---
 
@@ -356,7 +360,7 @@ tool_check_modifier(character, tool_id, ability_mod) -> int
   "skills": ["survival", "animal_handling", "athletics", "intimidation"],
   "weapon_proficiencies": ["simple", "martial"],
   "armor_proficiencies": ["light", "medium", "heavy", "shield"],
-  "tool_proficiencies": ["vehicles_land"],
+  "tool_proficiencies": ["land_vehicles", "smith_tools"],
   "feat_ids": [],
   "level": 1,
   "stats": {
