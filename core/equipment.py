@@ -63,6 +63,16 @@ def _load_equipment_items() -> dict[str, Any]:
     return items if isinstance(items, dict) else {}
 
 
+def all_weapon_ids() -> list[str]:
+    """ID всего оружия из каталога."""
+    return sorted(_load_weapons().keys())
+
+
+def all_tool_ids() -> list[str]:
+    """ID всех инструментов из каталога."""
+    return sorted(_load_tools().keys())
+
+
 def load_weapon(weapon_id: str) -> dict[str, Any]:
     """Данные оружия по id."""
     info = _load_weapons().get(weapon_id, {})

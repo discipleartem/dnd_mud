@@ -23,6 +23,10 @@ def test_start_level_easy_is_three():
     assert start_level_for_difficulty("easy") == 3
 
 
+def test_start_level_normal_is_one():
+    assert start_level_for_difficulty("normal") == 1
+
+
 def test_subclass_offered_normal_always():
     assert subclass_offered_at_creation("normal", "fighter", 1) is True
 
@@ -58,6 +62,17 @@ def test_needs_subclass_npc_hardcore_fighter_level_three():
         difficulty="hardcore",
     )
     assert needs_subclass_npc(char) is True
+
+
+def test_needs_subclass_npc_hardcore_cleric_level_one():
+    char = Character(
+        name="Hero",
+        race="human",
+        class_name="cleric",
+        level=1,
+        difficulty="hardcore",
+    )
+    assert needs_subclass_npc(char) is False
 
 
 def test_features_up_to_level_filters_high_levels():

@@ -174,6 +174,177 @@ def test_max_hp_level_three_fighter_average():
     assert hp == 28
 
 
+def test_resolve_pending_level_ups_records_asi_at_level_four():
+    char = Character(
+        name="Hero",
+        race="human",
+        class_name="fighter",
+        level=3,
+        stats={"strength": 16, "constitution": 14},
+        current_hp=28,
+        max_hp=28,
+        experience=2700,
+        difficulty="normal",
+    )
+    updated = resolve_pending_level_ups(char)
+    assert updated.level == 4
+    assert updated.asi_choices.get("4") == "asi"
+    assert updated.stats["strength"] == 18
+
+
+def test_resolve_pending_level_ups_tough_retroactive_on_stored_feat(
+    monkeypatch,
+):
+    """Сохранённый выбор feat:tough даёт ретроактивный HP при авто-левелапе."""
+    char = Character(
+        name="Hero",
+        race="human",
+        class_name="fighter",
+        level=3,
+        stats={"constitution": 14, "strength": 16},
+        current_hp=28,
+        max_hp=28,
+        experience=2700,
+        difficulty="normal",
+        asi_choices={"4": "feat:tough"},
+    )
+
+    def fake_roll(count: int, sides: int, modifier: int = 0) -> int:
+        return 8 + modifier
+
+    monkeypatch.setattr("core.progression.roll", fake_roll)
+    updated = resolve_pending_level_ups(char)
+
+    assert updated.level == 4
+    assert updated.feat_ids == ["tough"]
+    # +8 за ур. 4 (d10+CON) + 8 ретроактивно от Tough
+    assert updated.max_hp == 44
+
+
+def test_resolve_pending_level_ups_ignores_malformed_feat_choice(monkeypatch):
+    """Повреждённый выбор feat: без ID не добавляется в feat_ids."""
+    char = Character(
+        name="Hero",
+        race="human",
+        class_name="fighter",
+        level=3,
+        stats={"constitution": 14, "intelligence": 10},
+        current_hp=28,
+        max_hp=28,
+        experience=2700,
+        difficulty="normal",
+        asi_choices={"4": "feat:"},
+    )
+
+    def fake_roll(count: int, sides: int, modifier: int = 0) -> int:
+        return 8 + modifier
+
+    monkeypatch.setattr("core.progression.roll", fake_roll)
+    updated = resolve_pending_level_ups(char)
+
+    assert updated.level == 4
+    assert updated.feat_ids == []
+    assert updated.stats["intelligence"] == 10
+
+
+def test_resolve_pending_level_ups_feat_ability_bonus_not_doubled(
+    monkeypatch,
+):
+    """Черта с +1 к характеристике не удваивает бонус при авто-левелапе."""
+    char = Character(
+        name="Hero",
+        race="human",
+        class_name="fighter",
+        level=3,
+        stats={"constitution": 14, "intelligence": 10},
+        current_hp=28,
+        max_hp=28,
+        experience=2700,
+        difficulty="normal",
+        asi_choices={
+            "4": "feat:observant",
+        },
+        feat_choices={
+            "observant": {"ability": "intelligence"},
+        },
+    )
+
+    def fake_roll(count: int, sides: int, modifier: int = 0) -> int:
+        return 8 + modifier
+
+    monkeypatch.setattr("core.progression.roll", fake_roll)
+    updated = resolve_pending_level_ups(char)
+
+    assert updated.level == 4
+    assert updated.feat_ids == ["observant"]
+    assert updated.stats["intelligence"] == 11
+
+
+def test_resolve_pending_level_ups_con_hp_from_stored_feat(monkeypatch):
+    """CON +1 от черты на ASI-уровне даёт ретроактивный бонус HP."""
+    char = Character(
+        name="Hero",
+        race="human",
+        class_name="fighter",
+        level=3,
+        stats={"constitution": 11, "strength": 16},
+        current_hp=28,
+        max_hp=28,
+        experience=2700,
+        difficulty="normal",
+        asi_choices={"4": "feat:resilient"},
+        feat_choices={"resilient": {"ability": "constitution"}},
+    )
+
+    def fake_roll(count: int, sides: int, modifier: int = 0) -> int:
+        return 8 + modifier
+
+    monkeypatch.setattr("core.progression.roll", fake_roll)
+    updated = resolve_pending_level_ups(char)
+
+    assert updated.level == 4
+    assert updated.stats["constitution"] == 12
+    assert updated.feat_ids == ["resilient"]
+    # d10 avg 6 + CON mod 1 = 7, +4 ретроактивно за CON 11→12 на 4 ур.
+    assert updated.max_hp == 39
+
+
+def test_resolve_pending_level_ups_applies_feat_skill_grants(monkeypatch):
+    """Черта Skilled при авто-левелапе добавляет навыки и инструменты."""
+    char = Character(
+        name="Hero",
+        race="human",
+        class_name="fighter",
+        level=3,
+        stats={"constitution": 14},
+        current_hp=28,
+        max_hp=28,
+        experience=2700,
+        difficulty="normal",
+        asi_choices={"4": "feat:skilled"},
+        feat_choices={
+            "skilled": {
+                "skills_tools": [
+                    {"type": "skill", "id": "athletics"},
+                    {"type": "skill", "id": "stealth"},
+                    {"type": "tool", "id": "thieves_tools"},
+                ]
+            }
+        },
+    )
+
+    def fake_roll(count: int, sides: int, modifier: int = 0) -> int:
+        return 8 + modifier
+
+    monkeypatch.setattr("core.progression.roll", fake_roll)
+    updated = resolve_pending_level_ups(char)
+
+    assert updated.level == 4
+    assert "athletics" in updated.skills
+    assert "stealth" in updated.skills
+    assert "thieves_tools" in updated.tool_proficiencies
+
+
 def test_apply_experience_levels_up_and_caps_hp():
     char = Character(
         name="Hero",

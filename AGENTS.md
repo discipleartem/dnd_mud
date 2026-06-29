@@ -10,7 +10,7 @@
 
 | Режим | Цикл |
 |-------|------|
-| Agent напрямую | анализ → git-старт → план → действие → verify → PR (по запросу) |
+| Agent напрямую | анализ → git-старт → план → действие → commit → **docs** → verify → PR (по запросу) |
 | Plan → Build → Agent | см. [`00-global.mdc`](~/.cursor/rules/00-global.mdc) §Cursor modes |
 
 **Project overrides:** [`dnd-mud-verify.mdc`](.cursor/rules/dnd-mud-verify.mdc) §Переопределения (git-старт всегда; verify без браузера).
@@ -27,7 +27,7 @@
 
 ### 2. Собрать контекст (readonly)
 
-Порядок: глобальные правила → `.cursor/rules/` → этот файл → skills → код/docs.
+Порядок: глобальные правила → `.cursor/rules/` → этот файл → [`.cursor/skills/`](.cursor/skills/) → код/docs.
 
 ### 3. Git-старт
 
@@ -35,29 +35,49 @@
 
 **Дополнительно для dnd_mud:**
 
-- при merge `origin/main` в `dev` — `make test`, если затронут код
+- при merge `origin/main` в `dev` — `make test`, если затронут код; процедура — skill `git-dev-main-sync`
 - IDE: расширения **GitHub Pull Requests** и **GitHub Actions**; squash merge — [`.vscode/settings.json`](.vscode/settings.json)
 
 ### 4. Подзадачи и коммиты
 
 Канон: [`01-operations.mdc`](~/.cursor/rules/01-operations.mdc) §Task cycle шаг 2, §Commits.
 
-**Коммиты** — автоматически после каждой подзадачи и в конце задачи (если остались правки).  
+**Коммиты** — автоматически после каждой подзадачи и в конце реализации (если остались правки).  
 **Agent напрямую:** push и PR — по запросу пользователя.
 
-### 5. Завершение task-ветки
+### 5. Документация
 
-1. Verify — [`dnd-mud-verify.mdc`](.cursor/rules/dnd-mud-verify.mdc) §Verify, §Before finishing
-2. Push и PR — [`01-operations.mdc`](~/.cursor/rules/01-operations.mdc) §Task cycle шаги 4–5
+Канон: [`01-operations.mdc`](~/.cursor/rules/01-operations.mdc) §Task cycle шаг 3 · skill [`dnd-mud-docs-after-task`](.cursor/skills/dnd-mud-docs-after-task/SKILL.md).
+
+После коммита основной задачи — обновить `docs/` по факту изменений; отдельный коммит `docs: …`, если docs не вошли в коммит реализации.
+
+### 6. Verify
+
+Канон: [`dnd-mud-verify.mdc`](.cursor/rules/dnd-mud-verify.mdc) §Verify · skill [`dnd-mud-verify`](.cursor/skills/dnd-mud-verify/SKILL.md).
+
+Один раз в конце (не после каждого файла): `make test` / `make check` / smoke `python main.py` по условиям.
+
+### 7. Завершение task-ветки
+
+1. Verify (шаг 6) выполнен
+2. Push и PR — [`01-operations.mdc`](~/.cursor/rules/01-operations.mdc) §Task cycle шаги 5–6
+3. **Plan → Build → Agent:** push обязателен; предложить PR → `dev`
+4. **Agent напрямую:** push — по запросу; после push — предложить PR → `dev`
 
 Панель **GitHub Pull Requests** → фильтр «Task → dev».
 
-### 6. Release (`dev` → `main`)
+### 8. Release (`dev` → `main`)
 
-Канон: [`dnd-mud-verify.mdc`](.cursor/rules/dnd-mud-verify.mdc) §Release checklist, §GitHub Actions.
+Канон: [`dnd-mud-verify.mdc`](.cursor/rules/dnd-mud-verify.mdc) §Release · skill [`dnd-mud-release`](.cursor/skills/dnd-mud-release/SKILL.md).
 
-Панель **GitHub Pull Requests** → фильтр «Release dev → main».
+Панель **GitHub Pull Requests** → фильтр «Release dev → main». Sync после merge — skill `git-dev-main-sync`.
 
-### 7. Verify
+## Skills (project)
 
-Канон: [`dnd-mud-verify.mdc`](.cursor/rules/dnd-mud-verify.mdc) §Verify.
+| Skill | Когда |
+|-------|-------|
+| [`dnd-mud-docs-after-task`](.cursor/skills/dnd-mud-docs-after-task/SKILL.md) | После commit реализации, перед verify |
+| [`dnd-mud-verify`](.cursor/skills/dnd-mud-verify/SKILL.md) | Перед push/PR, «проверь задачу» |
+| [`dnd-mud-release`](.cursor/skills/dnd-mud-release/SKILL.md) | Release PR `dev` → `main` |
+
+Personal: `git-dev-main-sync` (`~/.cursor/skills/git-dev-main-sync/`) — sync `dev` с `main`.

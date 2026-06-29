@@ -249,13 +249,16 @@ def get_background_tool_proficiencies(
 
 def get_feat_proficiency_tokens(
     feat_ids: list[str],
+    feat_choices: dict[str, dict[str, Any]] | None = None,
 ) -> tuple[list[str], list[str], list[str]]:
     """Владения из черт персонажа."""
+    feat_choices = feat_choices or {}
     weapons: list[str] = []
     armors: list[str] = []
     tools: list[str] = []
     for feat_id in feat_ids:
-        w, a, t, _skills = get_feat_proficiency_grants(feat_id)
+        choices = feat_choices.get(feat_id, {})
+        w, a, t, _skills = get_feat_proficiency_grants(feat_id, choices)
         weapons.extend(w)
         armors.extend(a)
         tools.extend(t)
@@ -311,6 +314,7 @@ def build_fixed_proficiencies(
     subclass_id: str | None,
     level: int,
     feat_ids: list[str] | None = None,
+    feat_choices: dict[str, dict[str, Any]] | None = None,
 ) -> tuple[list[str], list[str], list[str]]:
     """Собрать фиксированные владения без игровых выборов."""
     cw, ca, ct = get_class_proficiency_tokens(class_id)
@@ -321,7 +325,7 @@ def build_fixed_proficiencies(
     bg_tools: list[str] = []
     if background_id:
         bg_tools, _ = get_background_tool_proficiencies(background_id)
-    fw, fa, ft = get_feat_proficiency_tokens(feat_ids or [])
+    fw, fa, ft = get_feat_proficiency_tokens(feat_ids or [], feat_choices)
     weapons = merge_proficiency_tokens(cw, rw, sw, fw)
     armors = merge_proficiency_tokens(ca, ra, sa, fa)
     tools = merge_proficiency_tokens(ct, rt, st, bg_tools, ft)

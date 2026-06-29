@@ -128,6 +128,7 @@ ABILITY_SCORE_MAX = 20
 ```
 
 `save_character` создаёт `Character` (`current_hp` = `max_hp` = `max_hp_for_level(..., difficulty)`) и сохраняет в `saves/characters/{save_slug}.json`.  
+Параметр `apply_feat_stat_bonuses=False` — если `stats` уже содержат бонусы черт (flow создания после `select_creation_feats`).  
 `starting_max_hp` — HP на 1 уровне с учётом режима (Normal/Easy: `max(1, hit_dice + CON)`; HardCore: бросок + CON).  
 `max_hp_for_level` — см. `core.progression` (HP на уровне 1–10).  
 `update_character` — перезапись JSON после изменений (подкласс, XP и т.д.).
@@ -269,14 +270,33 @@ load_skill_info(skill_id: str) -> dict[str, Any]
 
 ---
 
-## core.feats — Черты (данные)
+## core.feats — Черты
 
-Источник: `database/progression/feats.yaml`. UI выбора черты при левелапе **не реализован**; `Character.feat_ids` — задел.
+Источник: `database/progression/feats.yaml`. Выбор при создании (variant human) и при левелапе (ASI или черта).
 
 ```python
 load_feats() -> list[dict[str, Any]]
 load_feat(feat_id: str) -> dict[str, Any]
-get_feat_proficiency_grants(feat_id: str) -> tuple[list[str], list[str], list[str]]
+race_feat_step_required(race_id, subrace_id) -> bool
+feat_meets_requirements(feat_id, ctx) -> bool
+resolve_feat_grants(feat_id, choices) -> tuple[weapons, armors, tools, skills]
+get_feat_skill_ids(feat_ids, feat_choices) -> list[str]
+apply_feats_to_stats(stats, feat_ids, feat_choices) -> StatMap
+apply_feat_grants_to_character(character, feat_id, choices) -> Character
+tough_hp_adjustment_on_acquire(level) -> int
+```
+
+`apply_feat_grants_to_character` — владения, навыки, языки и экспертиза одной черты; вызывается при левелапе (`level_up.py`, `resolve_pending_level_ups`).
+
+**Запланировано (Phase 2):** постоянная проверка требований — `feat_is_active`, `active_feat_ids`, `feat_requirement_context_from_character`; владение спасброском Resilient (`save_proficiency`); см. [`06-feats.md`](rules/06-feats.md) §«Запланировано».
+
+## core.asi — Увеличение характеристик
+
+```python
+class_grants_asi_at_level(class_id, level) -> bool
+pending_asi_at_level(character, new_level) -> bool
+apply_asi_two_one(stats, stat) -> StatMap
+con_hp_bonus_from_asi(old_stats, new_stats, level) -> int
 ```
 
 ---

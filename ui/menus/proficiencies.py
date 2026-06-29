@@ -1,5 +1,7 @@
 """Выбор владений снаряжением при создании персонажа."""
 
+from typing import Any
+
 from colorama import Fore, Style
 
 from core.equipment import get_tool_name, proficiency_token_label
@@ -137,6 +139,8 @@ def select_creation_proficiencies(
     subclass_id: str | None,
     difficulty: GameDifficulty,
     language: str = "ru",
+    feat_ids: list[str] | None = None,
+    feat_choices: dict[str, dict[str, Any]] | None = None,
 ) -> tuple[list[str], list[str], list[str]] | None:
     """Выбор владений; None — назад."""
     start_level = start_level_for_difficulty(difficulty)
@@ -155,6 +159,8 @@ def select_creation_proficiencies(
         background_id,
         subclass_id,
         start_level,
+        feat_ids=feat_ids,
+        feat_choices=feat_choices,
     )
     if not choices:
         return weapons, armors, tools

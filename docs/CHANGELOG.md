@@ -16,11 +16,15 @@
 - NPC-наставник: меню персонажей (`subclass_trainer`), действие `subclass_training` в сценариях
 - `subclass_choice_level` в `classes.yaml`; поле `subclass_id` в `Character`
 - Тесты: `test_subclasses`, `test_progression`, `test_scenario`; расширены `test_character`
+- Черты PHB: каталог `feats.yaml`, `core/feats.py`, `core/asi.py`; шаг черт при создании (variant human); ASI или черта при левелапе
+- Поля `Character.feat_ids`, `feat_choices`, `asi_choices`; UI `feats.py`, `asi.py`
 
 ### Fixed
 - Владения: выбор инструментов (`choice: true`) больше не начисляет все варианты пула сразу (дварф)
 - КД щита: +2 по PHB даётся без владения; помеха за невладение — через `armor_wearing_penalty`
 - §11 PRD: HP 1 уровня `max(1, …)`, поле `max_hp`, потолок характеристик 20, `min_level` и gating приключений, CON → «Телосложение» в ru, README (bard)
+- Черты: двойное применение бонусов к характеристикам при создании (`save_character` + `apply_feat_stat_bonuses`)
+- Черты: гранты (владения, навыки, языки) при взятии на левелапе через `apply_feat_grants_to_character`
 
 ### Changed
 - DRY/KISS: `_deps` импортирует leaf-модули core; один проход gating приключений; `_run_numbered_menu` / `_run_stats_confirm_loop` вместо дублирования; `stats/__init__` — только публичный API

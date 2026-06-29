@@ -21,7 +21,13 @@ Git-flow: [`01-operations.mdc`](~/.cursor/rules/01-operations.mdc) · оркес
 
 Не коммитить: `.coverage`, `saves/`.
 
+## Документация
+
+После коммита реализации — skill [`dnd-mud-docs-after-task`](../skills/dnd-mud-docs-after-task/SKILL.md). Канон: [`01-operations.mdc`](~/.cursor/rules/01-operations.mdc) §Task cycle шаг 3.
+
 ## Verify
+
+Процедура: skill [`dnd-mud-verify`](../skills/dnd-mud-verify/SKILL.md). Кратко:
 
 ```bash
 make test       # обязательно при изменении кода
@@ -29,43 +35,12 @@ make check      # при изменениях типов/импортов
 python main.py  # smoke при затронутом UI
 ```
 
-Docs-only, правила (`.cursor/`, `AGENTS.md`), workflows — runtime не нужен.
+Docs-only, правила (`.cursor/`, `AGENTS.md`), workflows — runtime не нужен. Verify — **один раз** в конце, после docs.
 
 ## Before finishing (task-ветка)
 
-- git-старт был в начале сессии ([`01-operations.mdc`](~/.cursor/rules/01-operations.mdc) §Task cycle шаг 1)
-- коммиты подзадач — по ходу работы ([`01-operations.mdc`](~/.cursor/rules/01-operations.mdc) §Commits)
-- verify один раз в конце (не после каждого файла)
-- **Plan → Build → Agent:** push обязателен; предложить PR → `dev`
-- **Agent напрямую:** push — по запросу; после push — предложить PR → `dev`
+Чеклист — в skill `dnd-mud-verify`. Политика: git-старт в начале; коммиты подзадач по ходу; push/PR — см. [`AGENTS.md`](../AGENTS.md) §7.
 
-## Release checklist (`dev` → `main`)
+## Release (`dev` → `main`)
 
-Перед PR `dev` → `main` (CI: [`.github/workflows/pr-dev-to-main-check.yml`](../.github/workflows/pr-dev-to-main-check.yml)):
-
-```bash
-git fetch origin
-git checkout dev && git pull origin dev
-git log dev..origin/main --oneline   # must be empty
-git merge origin/main --no-commit --no-ff && git merge --abort
-make test
-gh pr create --base main --head dev --title "release: …"
-```
-
-После squash merge в `main`:
-
-- Action [**Sync dev with main**](../.github/workflows/sync-dev-with-main.yml) подтягивает `main` → `dev`
-- при падении Action — вручную: [`git-dev-main-sync.md`](~/.cursor/docs/git-dev-main-sync.md)
-
-## GitHub Actions
-
-| Workflow | Триггер | Назначение |
-|----------|---------|------------|
-| `sync-dev-with-main.yml` | push `main` | auto merge `main` → `dev` |
-| `pr-dev-to-main-check.yml` | PR `dev` → `main` (open/sync) | `dev` не отстаёт; пробный merge без конфликтов |
-
-Orphaned workflows на GitHub без файла в репо — отключить: `gh workflow disable "<name>"`.
-
-Ruleset `main_rules`: required check — **`dev-sync-and-mergeable`** (job name), не имя файла workflow.
-
-Статус — панель **GitHub Actions** в Cursor / на GitHub.
+Процедура: skill [`dnd-mud-release`](../skills/dnd-mud-release/SKILL.md). Sync `dev` после merge — skill `git-dev-main-sync` или [`git-dev-main-sync.md`](~/.cursor/docs/git-dev-main-sync.md).

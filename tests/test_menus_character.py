@@ -688,3 +688,108 @@ def test_proficient_summary_shows_racial_source(capsys, ru_strings):
     assert "Уже владеете" in output
     assert "Восприятие" in output
     assert "раса" in output
+
+
+def test_normal_class_step_routes_to_subclass():
+    """Normal: после класса — экран выбора архетипа."""
+    from core.subclasses import subclass_offered_at_creation
+
+    state = character_flow._CreationState(
+        name="Hero",
+        difficulty="normal",
+        class_id="fighter",
+    )
+    assert subclass_offered_at_creation(state.difficulty, state.class_id or "")
+
+
+def test_feats_step_required_for_variant_human_state():
+    """Вариант человека требует шаг выбора черты после класса."""
+    state = character_flow._CreationState(
+        name="Hero",
+        difficulty="normal",
+        race_id="human",
+        subrace_id="variant_human",
+    )
+    assert character_flow._feats_step_required(state)
+
+    elf_state = character_flow._CreationState(
+        name="Hero",
+        difficulty="normal",
+        race_id="elf",
+        subrace_id="wood_elf",
+    )
+    assert not character_flow._feats_step_required(elf_state)
+
+
+def test_step_after_class_choice_routes_to_feats_for_variant_human():
+    state = character_flow._CreationState(
+        name="Hero",
+        difficulty="normal",
+        race_id="human",
+        subrace_id="variant_human",
+        class_id="fighter",
+    )
+    assert character_flow._step_after_class_choice(state) == "feats"
+
+
+def test_step_after_class_choice_skips_feats_for_elf():
+    state = character_flow._CreationState(
+        name="Hero",
+        difficulty="normal",
+        race_id="elf",
+        subrace_id="wood_elf",
+        class_id="fighter",
+    )
+    assert character_flow._step_after_class_choice(state) == "proficiencies"
+
+
+def test_back_from_proficiencies_returns_to_feats_when_required():
+    state = character_flow._CreationState(
+        name="Hero",
+        difficulty="normal",
+        race_id="human",
+        subrace_id="variant_human",
+        class_id="fighter",
+    )
+    assert character_flow._back_step_from_proficiencies(state) == "feats"
+
+
+def test_back_from_feats_returns_to_subclass_when_offered():
+    """Черты после класса/подкласса — назад на подкласс, не на предысторию."""
+    state = character_flow._CreationState(
+        name="Hero",
+        difficulty="normal",
+        race_id="human",
+        subrace_id="variant_human",
+        class_id="fighter",
+    )
+    assert character_flow._back_step_from_feats(state) == "subclass"
+
+
+def test_back_from_feats_returns_to_class_when_subclass_skipped():
+    """Без шага подкласса назад с черт — на выбор класса."""
+    state = character_flow._CreationState(
+        name="Hero",
+        difficulty="hardcore",
+        race_id="human",
+        subrace_id="variant_human",
+        class_id="fighter",
+    )
+    assert character_flow._back_step_from_feats(state) == "class"
+
+
+def test_merge_feat_languages_when_languages_empty():
+    """Языки из черты добавляются, даже если список языков пуст."""
+    state = character_flow._CreationState(
+        name="Hero",
+        difficulty="normal",
+        languages=None,
+        feat_ids=["linguist"],
+        feat_choices={
+            "linguist": {
+                "languages": ["elvish", "dwarvish", "draconic"],
+            },
+        },
+    )
+    character_flow._merge_feat_languages(state)
+    assert state.languages == ["elvish", "dwarvish", "draconic"]
