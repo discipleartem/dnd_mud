@@ -34,21 +34,27 @@
 
 ### YAML-схема
 
+Канон: [`docs/DATA_SCHEMA.md`](../DATA_SCHEMA.md). Механика — в `grants[]`; legacy поля (`skills`, `languages`, `tools`) loader нормализует через [`core/grants.py`](../../core/grants.py).
+
 ```yaml
 backgrounds:
   acolyte:
     name: { ru: "...", en: "..." }
     description: { ru: "...", en: "..." }
-    skills: ["insight", "religion"]
-    languages: { count: 2, choice: true, pool: common }
-    tools: []
+    grants:
+      - type: skill_proficiency
+        skills: [insight, religion]
+      - type: language
+        count: 2
+        choice: true
+        pool: common
     equipment: { ru: [...], en: [...] }
-    feature:
+    feature:   # flavor; не game engine
       name: { ru: "...", en: "..." }
       description: { ru: "...", en: "..." }
 ```
 
-- `languages.pool`: `common` (по умолчанию), `exotic` или `any` — см. [`database/core/languages.yaml`](../../database/core/languages.yaml).
+- `language` grant, поле `pool`: `common` (по умолчанию), `exotic` или `any` — см. [`database/core/languages.yaml`](../../database/core/languages.yaml).
 - **Экзотические языки** доступны для выбора только при `pool: exotic` / `pool: any`.
 
 ### Модель и сохранение

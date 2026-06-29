@@ -202,6 +202,20 @@ racial_languages_step_required(race_id: str, subrace_id: str | None = None) -> b
 
 **UI:** `select_creation_languages(strings, race_id, subrace_id, background_id, language) -> list[str] | None` (`ui/menus/languages.py`).
 
+### Расы (`core/races.py`)
+
+Каталог: `database/races/races.yaml` через `load_merged_catalog` (overlay модов). Схема: [`DATA_SCHEMA.md`](DATA_SCHEMA.md).
+
+```python
+resolve_subrace_id(race_id: str, subrace_id: str | None = None) -> str | None
+auto_select_subrace_id(race_id: str) -> str | None
+collect_race_grants(race_id: str, subrace_id: str | None = None) -> list[dict[str, Any]]
+clear_races_cache() -> None
+```
+
+`resolve_subrace_id` — fallback `human` + `subrace: null` → `standard`.  
+`auto_select_subrace_id` — единственная подраса (напр. `half_orc`) без экрана выбора.
+
 ### Предыстории (`core/backgrounds.py`)
 
 ```python
@@ -211,11 +225,52 @@ get_background_skills(background_id: str) -> list[str]
 get_background_language_choice(background_id: str) -> dict[str, Any] | None
 ```
 
-Каталог: `database/backgrounds/backgrounds.yaml` (13 PHB).
+Каталог: `database/backgrounds/backgrounds.yaml` (13 PHB); механика — `grants[]` (legacy поля нормализуются в loader).
 
 **UI:** `select_creation_background(strings, language) -> tuple[str, list[str]] | None` (`ui/menus/backgrounds.py`) — `(background_id, skills)`.
 
 **UI:** `select_creation_proficiencies(...)` (`ui/menus/proficiencies.py`) — выбор инструментов из пулов класса/предыстории/расы.
+
+---
+
+## core.grants — Нормализация grants
+
+Единый формат эффектов из YAML (`grants[]` или legacy `features`/`mechanics`). Схема типов: [`DATA_SCHEMA.md`](DATA_SCHEMA.md).
+
+```python
+inherit_flags(entity: dict[str, Any]) -> tuple[bool, bool]
+normalize_grant(raw: dict[str, Any]) -> dict[str, Any]
+feature_to_grants(feature: dict[str, Any]) -> list[dict[str, Any]]
+grants_from_entity(entity: dict[str, Any]) -> list[dict[str, Any]]
+merge_entity_grants(
+    parent: dict[str, Any] | None,
+    entity: dict[str, Any],
+    *,
+    use_parent: bool,
+) -> list[dict[str, Any]]
+grant_type(grant: dict[str, Any]) -> str
+grants_of_type(grants: list[dict[str, Any]], type_name: str) -> list[dict[str, Any]]
+```
+
+`inherit_flags` — `(ability_bonuses, grants)` из `inherit` или legacy `inherit_base_*`.  
+`merge_entity_grants` — grants подрасы с наследованием от базовой расы.
+
+---
+
+## core.mod_loader — Overlay модов
+
+```python
+MODS_DIR = Path("mods")
+MODS_STATE_FILE = Path("database/core/mods_state.json")
+
+load_merged_yaml(path: Path) -> dict[str, Any]
+load_merged_catalog(path_str: str, catalog_key: str) -> dict[str, Any]
+clear_mod_loader_cache() -> None
+```
+
+`load_merged_catalog` — deep-merge overlay включённых модов (`mods_state.json` → `manifest.yaml` → `overlay.yaml`) поверх базового YAML. Используется в `core/races.py`, `core/backgrounds.py`. Кэш: `@lru_cache` на `load_merged_catalog`.
+
+Формат мода: [`DATA_SCHEMA.md`](DATA_SCHEMA.md) § Mod overlay, [`DEVELOPMENT.md`](DEVELOPMENT.md) § Создание мода.
 
 ---
 
@@ -491,7 +546,7 @@ save_settings(language: str) -> None
 
 **Запланированные hook'и (не реализованы)**
 
-- `mod_loader` и проверка `requires_game_difficulty` в метаданных мода
+- Проверка `requires_game_difficulty` в метаданных мода (overlay каталогов — через `core/mod_loader.py`)
 - Параметризация правил в `game_engine` по режиму (HardCore = полная механика D&D 5e)
 
 ---

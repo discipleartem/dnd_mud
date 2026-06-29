@@ -2,6 +2,9 @@
 
 ## [Unreleased]
 
+### Changed
+- Документация синхронизирована с grants/mod overlay: API, ARCHITECTURE, backgrounds rules, README, DEVELOPMENT, MUD_PRD
+
 ### Added
 - YAML schema: [`docs/DATA_SCHEMA.md`](DATA_SCHEMA.md) — `grants[]`, единые `subraces`, mod overlay, Phase 2+ backlog
 - `core/grants.py` — нормализация grants и legacy `features`/`mechanics`

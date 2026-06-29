@@ -65,6 +65,8 @@ dnd_mud/
 │   ├── difficulty.py        # Фильтр приключений по режиму сложности
 │   ├── dice.py              # Броски кубиков
 │   ├── localization.py      # Локализация UI и resolve_localized_text
+│   ├── grants.py            # Нормализация grants[] из YAML
+│   ├── mod_loader.py        # Deep-merge overlay модов
 │   └── settings.py          # Настройки пользователя (JSON)
 ├── ui/                      # Пользовательский интерфейс
 │   ├── input_handler.py     # Валидация ввода (числа, строки, выбор)
@@ -82,8 +84,13 @@ dnd_mud/
 │   │   └── races.yaml       # Расы и подрасы
 │   ├── classes/
 │   │   └── classes.yaml     # Классы персонажей
+│   ├── backgrounds/
+│   │   └── backgrounds.yaml # Предыстории PHB (grants[])
 │   ├── content/adventures.yaml
-│   ├── core/settings.json.example
+│   ├── core/
+│   │   ├── settings.json.example
+│   │   ├── mods_state.json  # Включённые моды
+│   │   └── languages.yaml
 │   ├── _future/               # Справочники Phase 2
 │   └── strings/
 │       ├── ru.yaml
@@ -93,8 +100,10 @@ dnd_mud/
 ├── adventures/      # Сценарии приключений (заглушки)
 │   ├── tutorial.yaml
 │   └── lost_mine.yaml
-├── mods/_examples/example_mod.yaml
-├── tests/
+├── mods/
+│   ├── dragonborn_pack/     # Пример mod overlay (manifest + overlay.yaml)
+│   └── _examples/example_mod.yaml
+├── tests/                   # pytest (252 теста в 33 файлах)
 │   ├── conftest.py
 │   ├── test_adventure.py
 │   ├── test_character.py
@@ -110,8 +119,11 @@ dnd_mud/
 │   ├── test_models.py
 │   ├── test_races.py
 │   ├── test_settings.py
-│   └── test_stats.py        # 72 теста всего
+│   ├── test_stats.py
+│   ├── test_grants.py
+│   └── test_mod_loader.py
 └── docs/                    # Документация
+    ├── DATA_SCHEMA.md       # Схема YAML (grants, subraces, mods)
     ├── DND_RULES.md         # Правила D&D 5e (справочник по PHB)
     ├── rules/               # Главы справочника
     ├── MUD_PRD.md
@@ -158,7 +170,9 @@ make install-hooks   # или make install — подключает .githooks/pr
 """Тесты UI: выбор персонажа, подрасы, new game, приключения."""
 ```
 
-Покрытие (72 теста в 15 файлах):
+Покрытие (252 теста в 33 файлах; ключевые):
+- `test_grants.py` — нормализация grants, legacy features
+- `test_mod_loader.py` — deep-merge overlay модов
 - `test_adventure.py` — загрузка приключений, поля `hardcore_only`
 - `test_character.py` — save/load, генерация stats, variant human, slug
 - `test_difficulty.py` — `adventure_allows_difficulty()`
@@ -277,18 +291,22 @@ get_string(strings, 'welcome.version', version='0.1.0')
 ## Добавление новой расы/класса
 
 1. Открыть `database/races/races.yaml` или `database/classes/classes.yaml`
-2. Добавить запись по образцу существующих
+2. Добавить запись по образцу существующих (схема: [`DATA_SCHEMA.md`](DATA_SCHEMA.md))
 3. Перезапустить игру
 
 ```yaml
-# races.yaml
+# races.yaml — механика в subraces + grants[]
 races:
   new_race:
-    name: "Новая раса"
-    description: "..."
-    ability_bonuses:
-      str: 2
-      dex: 1
+    name: { ru: "Новая раса", en: "New Race" }
+    size: medium
+    speed: 30
+    subraces:
+      new_race:
+        ability_bonuses: { strength: 2, dexterity: 1 }
+        grants:
+          - type: language
+            languages: [common]
 ```
 
 ## Текущее состояние разработки
@@ -311,7 +329,7 @@ races:
 - ✅ Flow «Загрузить игру» — заглушка (`errors.load_not_implemented`)
 
 ### Тестирование
-- ✅ 72 теста в 15 файлах (см. выше)
+- ✅ 252 теста в 33 файлах (см. выше)
 - ⏳ Backlog (добавляются по необходимости, см. [философию](#философия) выше):
   - E2E smoke через `python main.py` (ручная проверка меню)
 
@@ -323,7 +341,7 @@ races:
 |----|---------|--------|
 | `normal` | Нормальная | Реализовано в UI |
 | `hardcore` | HardCore | Реализовано в UI |
-| `easy` | Лёгкая | Зарезервировано, не в UI |
+| `easy` | Лёгкая | Реализовано (старт 3 ур., обязательный подкласс) |
 
 - `difficulty` выбирается в flow «Создать персонажа» (`select_difficulty`); сохраняется в `Character.difficulty` и используется в «Новая игра»
 - Поле `difficulty` в `adventures.yaml` — **уровень контента**, не режим игрока (не путать с `Character.difficulty`)
@@ -340,9 +358,7 @@ API: `core/character.py`, UI: `show_stats_generation_flow` в `ui/menus/stats/st
 - ⏳ Справочники Phase 2 в `database/_future/` — не загружаются runtime
 
 ### Не реализовано
-- ❌ Режим сложности «Лёгкая» (`easy`) в UI
-- ✅ Ограничения приключений в `adventures.yaml` (`min_level`, `allowed_game_difficulties`, `hardcore_only`); gating модов — запланировано
-- ❌ Gating модов по режиму (`requires_game_difficulty` в метаданных мода)
+- ❌ Gating модов по режиму (`requires_game_difficulty` в manifest)
 - ❌ Параметризация game_engine по режиму сложности
 - ❌ Полноценный цикл приключений в game_engine.py
 - ❌ Боевая система

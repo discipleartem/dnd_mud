@@ -10,15 +10,15 @@
 
 ## Особенности
 
-- 🎲 **Генерация персонажа** — сложность → имя → раса → подраса → характеристики → класс. Три метода в Normal (стандартный массив `[15,14,13,12,10,8]`, point-buy 27 очков, 4d6 drop lowest) или авто-4d6×6 в HardCore. Расовые бонусы показываются до распределения; итог — с учётом бонусов. В Normal доступна переквалификация.
-- 🧝 **Расы и подрасы** — человек (базовый и вариант), эльф, дварф, полуорк и другие — с расовыми бонусами
-- ⚔️ **Классы** — воин, плут, бард, жрец и другие из SRD
-- 🛡️ **Экипировка** — YAML в `database/_future/equipment/` (Phase 2)
-- 📚 **Навыки и особенности** — YAML в `database/_future/` (Phase 2)
+- 🎲 **Генерация персонажа** — сложность → имя → раса → подраса → характеристики → предыстория → языки → класс → подкласс → владения → навыки. Три метода в Normal или авто-4d6×6 в HardCore; режим Easy — старт с 3 уровня.
+- 🧝 **Расы и подрасы** — человек (`standard` / `variant_human`), эльф, дварф, полуорк; единая модель `subraces` в YAML
+- ⚔️ **Классы** — воин, плут, бард, жрец и другие из SRD; подклассы, левелап, черты PHB
+- 🛡️ **Экипировка** — каталог в `database/equipment/`; боевое применение — Phase 2
+- 📚 **Предыстории и навыки** — 13 PHB backgrounds (`grants[]`), выбор навыков класса
 - 🌐 **Локализация** — поддержка русского и английского языков (YAML-словари)
-- ⚙️ **Модификации** — пример формата в `mods/_examples/` (runtime не подключён)
+- ⚙️ **Модификации** — overlay через `core/mod_loader.py`; пример `mods/dragonborn_pack/`; включение в `database/core/mods_state.json`
 - 🎨 **Цветной терминал** — адаптивный вывод с переносом текста под ширину окна
-- 🔧 **Режимы сложности** — Normal и HardCore (в перспективе Easy). HardCore — ключевой режим: авто-генерация характеристик, в будущем — gating приключений и модов, полная механика D&D 5e
+- 🔧 **Режимы сложности** — Normal, HardCore и Easy. HardCore — авто-генерация характеристик, gating приключений; Easy — старт с 3 уровня
 
 ---
 
@@ -91,7 +91,9 @@ dnd_mud/
 │
 ├── core/                            # Ядро игры
 │   ├── models.py                    # Dataclass: Character, Adventure
-│   ├── character.py                 # CRUD персонажей, генерация характеристик
+│   ├── character.py                 # Фасад: персонажи, stats, races/classes loaders
+│   ├── grants.py                    # Нормализация grants[] из YAML
+│   ├── mod_loader.py                # Deep-merge overlay модов
 │   ├── dice.py                      # Броски кубиков
 │   ├── adventure.py                 # Загрузка приключений из YAML
 │   ├── difficulty.py                # Фильтр приключений по режиму сложности
@@ -99,15 +101,16 @@ dnd_mud/
 │   └── settings.py                  # Настройки пользователя (JSON)
 │
 ├── ui/                              # Пользовательский интерфейс
-│   ├── __init__.py
-│   ├── menus.py                     # Отрисовка меню
-│   └── input_handler.py             # Валидация ввода (числа, строки, выбор)
+│   ├── input_handler.py             # Валидация ввода (числа, строки, выбор)
+│   └── menus/                       # Экраны меню (character_flow, stats, …)
 │
 ├── database/                        # База данных правил D&D 5e
 │   ├── races/races.yaml
 │   ├── classes/classes.yaml
+│   ├── backgrounds/backgrounds.yaml
 │   ├── content/adventures.yaml
-│   ├── core/settings.json.example   # Шаблон настроек
+│   ├── core/settings.json.example
+│   ├── core/mods_state.json         # Включённые моды
 │   ├── _future/                     # Справочники Phase 2 (не загружаются)
 │   └── strings/{ru,en}.yaml
 ├── saves/                           # Пользовательские данные (gitignored)
@@ -117,10 +120,11 @@ dnd_mud/
 │   ├── tutorial.yaml                # Обучение
 │   └── lost_mine.yaml               # «Затерянные рудники Фанделвера»
 │
-├── mods/                            # Примеры модов
+├── mods/                            # Моды (overlay YAML)
+│   ├── dragonborn_pack/             # Пример: manifest + overlay.yaml
 │   └── _examples/example_mod.yaml
 │
-├── tests/                           # Тесты (54 в 11 файлах)
+├── tests/                           # Тесты (252 в 33 файлах)
 │   ├── test_adventure.py
 │   ├── test_character.py
 │   ├── test_difficulty.py
@@ -134,6 +138,7 @@ dnd_mud/
 │   └── test_settings.py
 │
 └── docs/                            # Документация
+    ├── DATA_SCHEMA.md               # Схема YAML (grants, subraces, mods)
     ├── DND_RULES.md                 # Правила D&D 5e (справочник по PHB)
     ├── rules/                       # Главы справочника
     ├── MUD_PRD.md                   # Product Requirements Document
@@ -167,7 +172,8 @@ dnd_mud/
 - [x] Главное меню (5 пунктов + Выход)
 - [x] Экран настроек (заглушка) и Languages
 - [x] Flow «Создать персонажа» с генерацией характеристик (standard array, point-buy, 4d6, HardCore)
-- [x] Подрасы и variant human
+- [x] Подрасы, variant human, предыстории, языки, черты PHB
+- [x] Mod overlay (`core/mod_loader.py`, `mods/dragonborn_pack/`)
 - [x] Модель персонажа (`Character` dataclass, JSON в `saves/characters/*.json`)
 - [x] Броски кубиков, локализация, каталог приключений
 - [x] Валидация ввода
@@ -175,7 +181,7 @@ dnd_mud/
 ### В разработке
 - [ ] Flow «Загрузить игру» (заглушка)
 - [ ] Игровой цикл и сценарии приключений
-- [ ] Runtime-применение модов
+- [ ] UI включения модов; gating модов по режиму HardCore
 
 ---
 
