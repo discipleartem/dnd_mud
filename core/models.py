@@ -121,7 +121,7 @@ class Character:
             difficulty = "normal"
         level_raw = int(data.get("level", 1))
         level = clamp_level(level_raw)
-        class_id_raw = data.get("class_id") or ""
+        class_id_raw = data.get("class_id") or data.get("class") or ""
         return cls(
             name=data.get("name", ""),
             race=data.get("race", ""),
