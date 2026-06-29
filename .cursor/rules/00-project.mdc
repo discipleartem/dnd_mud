@@ -24,6 +24,7 @@ python main.py  # smoke: пройти затронутое меню
 ## Docs
 
 - [docs/DND_RULES.md](docs/DND_RULES.md)
+- [docs/DATA_SCHEMA.md](docs/DATA_SCHEMA.md)
 - [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)
 - [docs/API.md](docs/API.md)
 - [docs/CHANGELOG.md](docs/CHANGELOG.md)
@@ -34,7 +35,7 @@ python main.py  # smoke: пройти затронутое меню
 
 | Skill | Когда |
 |-------|-------|
-| [`dnd-mud-docs-after-task`](../skills/dnd-mud-docs-after-task/SKILL.md) | После commit реализации, перед verify |
+| [`dnd-mud-docs-after-task`](../skills/dnd-mud-docs-after-task/SKILL.md) | После commit реализации, перед verify; **автокоммит** `docs: …` |
 | [`dnd-mud-verify`](../skills/dnd-mud-verify/SKILL.md) | Перед push/PR |
 | [`dnd-mud-release`](../skills/dnd-mud-release/SKILL.md) | Release PR `dev` → `main` |
 

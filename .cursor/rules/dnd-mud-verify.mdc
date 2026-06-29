@@ -23,7 +23,7 @@ Git-flow: [`01-operations.mdc`](~/.cursor/rules/01-operations.mdc) · оркес
 
 ## Документация
 
-После коммита реализации — skill [`dnd-mud-docs-after-task`](../skills/dnd-mud-docs-after-task/SKILL.md). Канон: [`01-operations.mdc`](~/.cursor/rules/01-operations.mdc) §Task cycle шаг 3.
+После коммита реализации — skill [`dnd-mud-docs-after-task`](../skills/dnd-mud-docs-after-task/SKILL.md) (обновление docs + **автокоммит** `docs: …`). Канон: [`01-operations.mdc`](~/.cursor/rules/01-operations.mdc) §Task cycle шаг 3.
 
 ## Verify
 

@@ -49,7 +49,7 @@
 
 ### 5. Документация
 
-Канон: [`01-operations.mdc`](~/.cursor/rules/01-operations.mdc) §Task cycle шаг 3 · skill [`dnd-mud-docs-after-task`](.cursor/skills/dnd-mud-docs-after-task/SKILL.md).
+Канон: [`01-operations.mdc`](~/.cursor/rules/01-operations.mdc) §Task cycle шаг 3 · skill [`dnd-mud-docs-after-task`](.cursor/skills/dnd-mud-docs-after-task/SKILL.md) (после правок — **автокоммит** `docs: …`).
 
 После коммита основной задачи — обновить `docs/` по факту изменений; отдельный коммит `docs: …`, если docs не вошли в коммит реализации.
 
@@ -78,7 +78,7 @@
 
 | Skill | Когда |
 |-------|-------|
-| [`dnd-mud-docs-after-task`](.cursor/skills/dnd-mud-docs-after-task/SKILL.md) | После commit реализации, перед verify |
+| [`dnd-mud-docs-after-task`](.cursor/skills/dnd-mud-docs-after-task/SKILL.md) | После commit реализации, перед verify; **автокоммит** `docs: …` |
 | [`dnd-mud-verify`](.cursor/skills/dnd-mud-verify/SKILL.md) | Перед push/PR, «проверь задачу» |
 | [`dnd-mud-release`](.cursor/skills/dnd-mud-release/SKILL.md) | Release PR `dev` → `main` |
 
