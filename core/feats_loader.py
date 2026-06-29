@@ -1,0 +1,65 @@
+"""Загрузка каталога черт из YAML."""
+
+from dataclasses import dataclass
+from functools import lru_cache
+from pathlib import Path
+from typing import Any
+
+from core.io import load_yaml
+from core.types import StatMap
+
+FEATS_FILE = Path("database/progression/feats.yaml")
+
+
+@dataclass(frozen=True)
+class FeatGrant:
+    """Выборная черта от расы/подрасы."""
+
+    count: int
+    from_list: str
+    source: str
+
+
+@dataclass(frozen=True)
+class FeatRequirementContext:
+    """Контекст для проверки требований черты."""
+
+    stats: StatMap
+    weapon_tokens: list[str]
+    armor_tokens: list[str]
+    tool_tokens: list[str]
+    class_id: str | None = None
+    subclass_id: str | None = None
+    level: int = 1
+    has_spellcasting: bool = False
+
+
+@lru_cache(maxsize=1)
+def _load_feats_yaml() -> dict[str, Any]:
+    """Загрузить feats из YAML."""
+    data = load_yaml(FEATS_FILE)
+    feats = data.get("feats", {})
+    if isinstance(feats, dict):
+        return feats
+    return {}
+
+
+def load_feats() -> list[dict[str, Any]]:
+    """Список всех черт."""
+    result: list[dict[str, Any]] = []
+    for feat_id, info in _load_feats_yaml().items():
+        if isinstance(info, dict):
+            entry = dict(info)
+            entry["id"] = feat_id
+            result.append(entry)
+    return result
+
+
+def load_feat(feat_id: str) -> dict[str, Any]:
+    """Данные одной черты."""
+    info = _load_feats_yaml().get(feat_id, {})
+    if isinstance(info, dict):
+        entry = dict(info)
+        entry["id"] = feat_id
+        return entry
+    return {"id": feat_id}

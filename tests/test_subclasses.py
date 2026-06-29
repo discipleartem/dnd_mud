@@ -43,7 +43,7 @@ def test_subclass_pending_until_level_three():
     char = Character(
         name="Hero",
         race="human",
-        class_name="fighter",
+        class_id="fighter",
         level=1,
         subclass_id="champion",
         difficulty="normal",
@@ -57,7 +57,7 @@ def test_needs_subclass_npc_hardcore_fighter_level_three():
     char = Character(
         name="Hero",
         race="human",
-        class_name="fighter",
+        class_id="fighter",
         level=3,
         difficulty="hardcore",
     )
@@ -68,7 +68,7 @@ def test_needs_subclass_npc_hardcore_cleric_level_one():
     char = Character(
         name="Hero",
         race="human",
-        class_name="cleric",
+        class_id="cleric",
         level=1,
         difficulty="hardcore",
     )

@@ -14,7 +14,7 @@ def test_class_features_not_applied_at_normal_level_one():
     char = Character(
         name="Hero",
         race="elf",
-        class_name="bard",
+        class_id="bard",
         level=1,
         subclass_id="lore_college",
         difficulty="normal",
@@ -30,7 +30,7 @@ def test_needs_class_features_at_level_three_normal():
     char = Character(
         name="Hero",
         race="elf",
-        class_name="bard",
+        class_id="bard",
         level=3,
         subclass_id="lore_college",
         difficulty="normal",
@@ -44,7 +44,7 @@ def test_bard_expertise_pending_at_level_three():
     char = Character(
         name="Hero",
         race="elf",
-        class_name="bard",
+        class_id="bard",
         level=3,
         subclass_id="lore_college",
         skills=["arcana", "history", "performance"],
@@ -60,7 +60,7 @@ def test_subclass_training_triggers_class_features():
     char = Character(
         name="Hero",
         race="elf",
-        class_name="bard",
+        class_id="bard",
         level=3,
         subclass_id="lore_college",
         difficulty="normal",

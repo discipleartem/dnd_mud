@@ -3,6 +3,18 @@
 ## [Unreleased]
 
 ### Changed
+- Рефакторинг техдолга: `core/hp_bonuses.py` (разрыв цикла races↔feats); `class_name` → `class_id` (JSON-сейвы только `class_id`)
+- Декомпозиция: `ui/menus/_display/` (пакет), `core/feats_loader.py` + `feats_grants.py`, `ui/menus/_creation_steps.py` + `_selectors.py`
+- `ui/menus/_deps.py` — re-export из расширенного `core/character.py` (seam для тестов сохранён)
+- Удалены legacy JSON-ключи `class`/`class_name` и re-export в `character_flow.py`
+- Документация синхронизирована: `ARCHITECTURE`, `API`, `DEVELOPMENT`, scenario runner
+
+### Added
+- Тесты: `test_subclass_trainer`, `test_display`, расширен `test_main` (выход из меню)
+
+## [Unreleased — prior]
+
+### Changed
 - Rules DRY: `AGENTS.md` — оркестрация; `dnd-mud-verify.mdc` — overrides + ссылки на skills; `00-project.mdc` — stack/index без дубля skills
 - Человек: подрасы `standard` и `variant_human`; убраны `allow_base_race_choice` / `base_choice_name`
 - Полуорк: одна подраса `half_orc` (автовыбор в UI)

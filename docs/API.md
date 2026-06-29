@@ -30,7 +30,7 @@ Re-export типов: `core.types`. Фасад функций персонажа
 class Character:
     name: str
     race: str
-    class_name: str
+    class_id: str
     level: int = 1
     stats: StatMap = field(default_factory=dict)
     current_hp: int = 0
@@ -52,8 +52,8 @@ class Character:
 ```
 
 **Методы:**
-- `to_dict() -> dict[str, Any]` — сериализация для JSON
-- `from_dict(data: dict[str, Any]) -> Character` — десериализация
+- `to_dict() -> dict[str, Any]` — сериализация для JSON (ключ класса — `class_id`)
+- `from_dict(data: dict[str, Any]) -> Character` — десериализация; в JSON ожидается `class_id`
 
 ### Adventure
 
@@ -327,7 +327,7 @@ load_skill_info(skill_id: str) -> dict[str, Any]
 
 ## core.feats — Черты
 
-Источник: `database/progression/feats.yaml`. Выбор при создании (variant human) и при левелапе (ASI или черта).
+Источник: `database/progression/feats.yaml`. Загрузка — `core/feats_loader.py`, гранты — `core/feats_grants.py`; публичный API — `core/feats.py`. Выбор при создании (variant human) и при левелапе (ASI или черта).
 
 ```python
 load_feats() -> list[dict[str, Any]]
@@ -428,7 +428,7 @@ tool_check_modifier(character, tool_id, ability_mod) -> int
   "name": "Арагорн",
   "race": "human",
   "subrace": "variant_human",
-  "class": "fighter",
+  "class_id": "fighter",
   "subclass": "champion",
   "background": "folk_hero",
   "languages": ["common", "elvish"],
@@ -640,19 +640,39 @@ Re-export: `MAX_CHARACTER_LEVEL`, `clamp_level` из `core.levels`.
 
 ---
 
-## core.scenario — Минимальный сценарий
+## core.scenario_actions — Логика сценария (без UI)
+
+```python
+@dataclass
+class ScenarioActionResult:
+    character: Character
+    level_up_pending: bool = False
+    pick_subclass: bool = False
+    apply_class_features: bool = False
+    message_key: str | None = None
+
+def load_scenario(script_file: str) -> dict[str, Any]
+def apply_scenario_action(
+    action: str,
+    action_data: dict[str, Any],
+    character: Character,
+) -> ScenarioActionResult
+```
+
+Действия: `grant_xp`, `subclass_training`, `text`, `menu`. Источник узлов: `adventures/*.yaml`.
+
+## ui.menus.scenario_flow — Интерактивный runner
 
 ```python
 def run_scenario(
-    script_path: Path,
+    adventure: Adventure,
     character: Character,
     strings: StringsDict,
-    language: str = "ru",
-) -> Character | None
+    language: LanguageCode = "ru",
+) -> Character
 ```
 
-Действия в YAML: `grant_xp`, `subclass_training`, `text`, `menu`.  
-Источник: `adventures/*.yaml` (`Adventure.script_file`).
+Вызывает `apply_scenario_action`, затем UI: левелап (`level_up.py`), подкласс (`subclass_trainer`), особенности класса (`class_features.py`).
 
 ## core.adventure — Приключения
 

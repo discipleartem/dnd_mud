@@ -66,7 +66,7 @@ def apply_pending_class_features(
     if subclass_skill_picks_pending(character):
         updated_skills = add_subclass_skills_from_menu(
             strings,
-            character.class_name,
+            character.class_id,
             subclass_id,
             character.level,
             character.skills,

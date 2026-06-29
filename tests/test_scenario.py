@@ -10,7 +10,7 @@ def test_apply_scenario_action_grant_xp():
     character = Character(
         name="Hero",
         race="human",
-        class_name="fighter",
+        class_id="fighter",
         level=1,
         stats={"constitution": 14},
         current_hp=12,
@@ -38,7 +38,7 @@ def test_run_scenario_grant_xp_levels_character(
     character = Character(
         name="Hero",
         race="human",
-        class_name="fighter",
+        class_id="fighter",
         level=1,
         stats={"constitution": 14},
         current_hp=12,

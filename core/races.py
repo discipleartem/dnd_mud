@@ -4,13 +4,16 @@ from functools import lru_cache
 from pathlib import Path
 from typing import Any
 
-from core.feats import HpBonusSource, hit_point_bonus_sources_from_features
 from core.grants import (
     _ABILITY_INCREASE,
     grants_from_entity,
     grants_of_type,
     inherit_flags,
     merge_entity_grants,
+)
+from core.hp_bonuses import (
+    HpBonusSource,
+    hit_point_bonus_sources_from_features,
 )
 from core.localization import resolve_localized_text
 from core.mod_loader import load_merged_catalog
@@ -47,7 +50,7 @@ def resolve_subrace_id(race_id: str, subrace_id: str | None) -> str | None:
     return subrace_id
 
 
-def _get_race_and_subrace(
+def get_race_and_subrace(
     race_id: str, subrace_id: str | None = None
 ) -> tuple[dict[str, Any], dict[str, Any] | None]:
     """Получить данные расы и подрасы из YAML."""
@@ -77,7 +80,7 @@ def _merge_bonus_dicts(base: StatMap, extra: StatMap) -> StatMap:
 
 def get_race_bonuses(race_id: str, subrace_id: str | None = None) -> StatMap:
     """Получить расовые и подрасовые бонусы к характеристикам."""
-    race_info, subrace_info = _get_race_and_subrace(race_id, subrace_id)
+    race_info, subrace_info = get_race_and_subrace(race_id, subrace_id)
     if not race_info:
         return {}
 
@@ -102,7 +105,7 @@ def collect_race_grants(
     race_id: str, subrace_id: str | None = None
 ) -> list[dict[str, Any]]:
     """Grants расы и подрасы с учётом наследования."""
-    race_info, subrace_info = _get_race_and_subrace(race_id, subrace_id)
+    race_info, subrace_info = get_race_and_subrace(race_id, subrace_id)
     if not race_info:
         return []
     if subrace_info:
@@ -110,7 +113,7 @@ def collect_race_grants(
     return grants_from_entity(race_info)
 
 
-def _grants_as_features(grants: list[dict[str, Any]]) -> list[dict[str, Any]]:
+def grants_as_features(grants: list[dict[str, Any]]) -> list[dict[str, Any]]:
     """Legacy-вид features для существующих парсеров."""
     result: list[dict[str, Any]] = []
     for grant in grants:
@@ -130,11 +133,11 @@ def _grants_as_features(grants: list[dict[str, Any]]) -> list[dict[str, Any]]:
     return result
 
 
-def _collect_race_features(
+def collect_race_features(
     race_id: str, subrace_id: str | None = None
 ) -> list[dict[str, Any]]:
     """Особенности расы и подрасы (legacy features из grants)."""
-    return _grants_as_features(collect_race_grants(race_id, subrace_id))
+    return grants_as_features(collect_race_grants(race_id, subrace_id))
 
 
 def get_choice_ability_bonus_mechanics(
@@ -174,7 +177,7 @@ def get_racial_hp_bonus_sources(
 ) -> list[HpBonusSource]:
     """Именованные бонусы HP за уровень из особенностей расы/подрасы."""
     return hit_point_bonus_sources_from_features(
-        _collect_race_features(race_id, subrace_id)
+        collect_race_features(race_id, subrace_id)
     )
 
 
@@ -242,7 +245,7 @@ def load_races(language: str = "ru") -> list[dict[str, Any]]:
 
 def load_race_full(race_id: str, language: str = "ru") -> dict[str, Any]:
     """Загрузить полные данные расы по ID."""
-    race_info, _ = _get_race_and_subrace(race_id)
+    race_info, _ = get_race_and_subrace(race_id)
     if race_info:
         return _localize_race_info(race_info, language)
     return {}

@@ -55,7 +55,7 @@ def subclass_is_active(character: Character) -> bool:
     """Подкласс механически активен на текущем уровне."""
     if character.subclass_id is None:
         return False
-    return character.level >= get_subclass_choice_level(character.class_name)
+    return character.level >= get_subclass_choice_level(character.class_id)
 
 
 def needs_subclass_npc(character: Character) -> bool:
@@ -64,7 +64,7 @@ def needs_subclass_npc(character: Character) -> bool:
         return False
     if character.subclass_id is not None:
         return False
-    choice_level = get_subclass_choice_level(character.class_name)
+    choice_level = get_subclass_choice_level(character.class_id)
     if choice_level <= 1:
         return False
     return character.level >= choice_level

@@ -51,7 +51,7 @@ def test_adventure_unavailable_reason_level():
     character = Character(
         name="Hero",
         race="human",
-        class_name="fighter",
+        class_id="fighter",
         level=1,
     )
 
@@ -66,7 +66,7 @@ def test_adventure_unavailable_reason_hardcore():
     character = Character(
         name="Hero",
         race="human",
-        class_name="fighter",
+        class_id="fighter",
         difficulty="normal",
     )
 

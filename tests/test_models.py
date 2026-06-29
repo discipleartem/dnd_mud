@@ -8,7 +8,7 @@ def test_character_round_trip_with_subrace():
     original = Character(
         name="Test",
         race="human",
-        class_name="fighter",
+        class_id="fighter",
         subrace="variant_human",
         stats={"strength": 10},
         current_hp=12,
@@ -17,9 +17,17 @@ def test_character_round_trip_with_subrace():
     restored = Character.from_dict(original.to_dict())
 
     assert restored.subrace == "variant_human"
-    assert restored.class_name == "fighter"
+    assert restored.class_id == "fighter"
     assert restored.name == "Test"
     assert restored.save_slug == "test"
+
+
+def test_character_from_dict_requires_class_id():
+    """from_dict читает только ключ class_id."""
+    character = Character.from_dict(
+        {"name": "X", "race": "human", "class_id": "wizard"}
+    )
+    assert character.class_id == "wizard"
 
 
 def test_character_from_dict_defaults():
@@ -28,7 +36,7 @@ def test_character_from_dict_defaults():
 
     assert character.name == ""
     assert character.race == ""
-    assert character.class_name == ""
+    assert character.class_id == ""
     assert character.level == 1
     assert character.stats == {}
     assert character.difficulty == "normal"
