@@ -59,12 +59,14 @@
 
 | ID | PHB | Подрасы в YAML |
 |----|-----|----------------|
-| `human` | Человек | `variant_human` |
+| `human` | Человек | `standard`, `variant_human` |
 | `elf` | Эльф | несколько подрас |
 | `dwarf` | Дварф | несколько подрас |
-| `half_orc` | Полуорк | — |
+| `half_orc` | Полуорк | `half_orc` (автовыбор) |
 
-Отсутствуют в каталоге (можно добавить через моды): полурослик, драконорождённый, гном, полуэльф, тифлинг.
+Схема YAML: [`docs/DATA_SCHEMA.md`](../DATA_SCHEMA.md). Моды: `mods/<id>/` + `mods_state.json`.
+
+Отсутствуют в ядре (можно через моды): полурослик, гном, полуэльф, тифлинг; пример — `mods/dragonborn_pack/`.
 
 ### Ключевые функции
 
@@ -82,13 +84,21 @@
 ```yaml
 races:
   human:
-    ability_bonuses: { strength: 1, dexterity: 1, ... }
     subraces:
+      standard:
+        ability_bonuses: { strength: 1, ... }
+        grants:
+          - type: language
+            count: 1
+            choice: true
+            pool: common
       variant_human:
-        inherit_base_bonuses: false
-        features:
-          - type: ability_bonus
-            mechanics: { count: 2, value: 1, choice: true }
+        inherit: { ability_bonuses: false, grants: false }
+        grants:
+          - type: ability_increase
+            count: 2
+            amount: 1
+            choice: true
 ```
 
 UI выборных бонусов: [`ui/menus/stats/stats_choice_bonuses.py`](../../ui/menus/stats/stats_choice_bonuses.py).

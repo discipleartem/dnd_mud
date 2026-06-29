@@ -230,35 +230,21 @@ CI: [`.github/workflows/pr-dev-to-main-check.yml`](../.github/workflows/pr-dev-t
 
 ## Создание мода
 
-Моды — это YAML-файлы в папке `mods/`. Пример:
+Канон overlay и `grants`: [`DATA_SCHEMA.md`](DATA_SCHEMA.md) § Mod overlay.
+
+Моды — каталог `mods/<id>/` с `manifest.yaml` и фрагментами YAML. Включение: `database/core/mods_state.json` (`enabled: ["mod_id"]`).
+
+Пример:
 
 ```yaml
-# mods/my_mod.yaml
-name: "Новая раса - Драконорожденный"
-version: "1.0"
-type: "addon"   # addon — добавляет новые данные, mod — изменяет
-description: "Добавляет расу Dragonborn"
-files:
-  - target: "database/races/races.yaml"
-    action: "append"   # append, replace, delete
-    data:
-      - id: dragonborn
-        name:
-          ru: "Драконорожденный"
-          en: "Dragonborn"
-        ability_bonuses:
-          str: 2
-          cha: 1
+# mods/dragonborn_pack/manifest.yaml
+id: dragonborn_pack
+overlays:
+  - target: database/races/races.yaml
+    path: overlay.yaml
 ```
 
-**Типы модов:**
-- `addon` — добавляет новые расы, классы, приключения
-- `mod` — изменяет существующую логику
-
-**Действия (action):**
-- `append` — добавляет данные к существующим
-- `replace` — заменяет существующие данные
-- `delete` — удаляет данные
+Overlay-фрагмент (`overlay.yaml`) — partial YAML с ключом каталога (`races:`, …). Runtime: deep-merge через `core/mod_loader.py`.
 
 ## Добавление локализации
 

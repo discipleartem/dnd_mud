@@ -34,9 +34,12 @@ alwaysApply: false
 | Характеристики / навыки (мета) | `database/core/abilities.yaml`, `skills.yaml` | `core/abilities.py` |
 | Черты | `database/progression/feats.yaml` | `core/feats.py` |
 | Архив Phase 2 | `database/_future/` | см. `_future/README.md` |
+| Моды (состояние) | `database/core/mods_state.json` | `core/mod_loader.py` |
 | Сценарии | `adventures/*.yaml` | `core/adventure.py` |
 
 ## YAML conventions (`database/`, `mods/`, `adventures/`)
+
+Канон схемы: [`docs/DATA_SCHEMA.md`](../docs/DATA_SCHEMA.md) — `grants[]`, `subraces`, mod overlay.
 
 - Human-editable reference data; bilingual fields where needed: `name: { ru: "...", en: "..." }`
 - User-facing UI strings: `database/strings/{ru,en}.yaml` with matching keys
@@ -44,14 +47,11 @@ alwaysApply: false
 - Владения на персонаже — **токены** (`simple`, `martial`, `light`, `thieves_tools`, …), не развёрнутые списки предметов
 
 ```yaml
-# mods/example_mod.yaml
-name: "Mod title"
-version: "1.0"
-type: "addon"
-files:
-  - target: "database/races/races.yaml"
-    action: "append"
-    data: [...]
+# mods/dragonborn_pack/manifest.yaml
+id: dragonborn_pack
+overlays:
+  - target: database/races/races.yaml
+    path: overlay.yaml
 ```
 
 ## JSON conventions (saves and configs)
