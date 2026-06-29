@@ -19,3 +19,6 @@ __pycache__/
 # Локальная копия PHB (© WotC); не коммитить
 docs/*.pdf
 
+# IronBee extension перезаписывает файл; для dnd_mud канон — dnd-mud-verify.mdc
+.cursor/rules/ironbee-devtools-use.mdc
+
