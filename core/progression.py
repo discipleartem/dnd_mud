@@ -4,7 +4,8 @@ from dataclasses import dataclass, replace
 
 from core.classes import get_class_hit_dice
 from core.dice import ability_modifier, roll
-from core.feats import HpBonusSource, get_feat_hp_bonus_sources
+from core.feats import get_feat_hp_bonus_sources
+from core.hp_bonuses import HpBonusSource
 from core.levels import MAX_CHARACTER_LEVEL, clamp_level
 from core.models import Character
 from core.races import get_racial_hp_bonus_sources
@@ -243,7 +244,7 @@ def resolve_pending_level_ups(character: Character) -> Character:
         asi_value = ""
 
         if pending_asi_at_level(char, new_level):
-            prime = next(iter(auto_asi_bonus(char.class_name)))
+            prime = next(iter(auto_asi_bonus(char.class_id)))
             stats = cap_stats(apply_asi_two_one(char.stats, prime))
             con_bonus = con_hp_bonus_from_asi(old_stats, stats, new_level)
             asi_choices = dict(char.asi_choices)
@@ -281,7 +282,7 @@ def resolve_pending_level_ups(character: Character) -> Character:
             ]
 
         gain, _ = roll_hp_gain_for_level_up(
-            char.class_name,
+            char.class_id,
             char.stats,
             new_level,
             char.difficulty,

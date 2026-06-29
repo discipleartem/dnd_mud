@@ -6,7 +6,7 @@ from typing import Any, Literal
 
 from core.io import load_yaml
 from core.localization import resolve_localized_text
-from core.races import _get_race_and_subrace
+from core.races import get_race_and_subrace
 
 LANGUAGES_FILE = Path("database/core/languages.yaml")
 LanguagePool = Literal["common", "exotic", "any"]
@@ -52,7 +52,7 @@ def _collect_features(
     race_id: str, subrace_id: str | None
 ) -> list[dict[str, Any]]:
     """Особенности расы и подрасы для чтения language-механик."""
-    race_info, subrace_info = _get_race_and_subrace(race_id, subrace_id)
+    race_info, subrace_info = get_race_and_subrace(race_id, subrace_id)
     features: list[dict[str, Any]] = []
     for feat in race_info.get("features", []):
         if isinstance(feat, dict):
@@ -68,7 +68,7 @@ def get_fixed_racial_languages(
     race_id: str, subrace_id: str | None = None
 ) -> list[str]:
     """Фиксированные языки расы/подрасы из YAML."""
-    race_info, subrace_info = _get_race_and_subrace(race_id, subrace_id)
+    race_info, subrace_info = get_race_and_subrace(race_id, subrace_id)
     if not race_info:
         return []
 
@@ -96,7 +96,7 @@ def get_racial_language_choices(
 ) -> list[tuple[dict[str, Any], str]]:
     """Выборные языки из features: (mechanics, source)."""
     choices: list[tuple[dict[str, Any], str]] = []
-    race_info, subrace_info = _get_race_and_subrace(race_id, subrace_id)
+    race_info, subrace_info = get_race_and_subrace(race_id, subrace_id)
 
     for feat in race_info.get("features", []):
         if not isinstance(feat, dict) or feat.get("type") != "language":

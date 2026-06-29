@@ -36,7 +36,7 @@ def test_grant_experience_does_not_level_up():
     char = Character(
         name="Hero",
         race="human",
-        class_name="fighter",
+        class_id="fighter",
         level=1,
         stats={"constitution": 14},
         current_hp=12,
@@ -53,16 +53,14 @@ def test_apply_level_up_one_step():
     char = Character(
         name="Hero",
         race="human",
-        class_name="fighter",
+        class_id="fighter",
         level=1,
         stats={"constitution": 14},
         current_hp=12,
         max_hp=12,
         experience=900,
     )
-    gain, _ = roll_hp_gain_for_level_up(
-        char.class_name, char.stats, 2, "normal"
-    )
+    gain, _ = roll_hp_gain_for_level_up(char.class_id, char.stats, 2, "normal")
     updated = apply_level_up(char, gain)
     assert updated.level == 2
     assert updated.max_hp == 12 + gain
@@ -73,7 +71,7 @@ def test_resolve_pending_level_ups_matches_apply_experience(monkeypatch):
     char = Character(
         name="Hero",
         race="human",
-        class_name="fighter",
+        class_id="fighter",
         level=1,
         stats={"constitution": 14},
         current_hp=7,
@@ -178,7 +176,7 @@ def test_resolve_pending_level_ups_records_asi_at_level_four():
     char = Character(
         name="Hero",
         race="human",
-        class_name="fighter",
+        class_id="fighter",
         level=3,
         stats={"strength": 16, "constitution": 14},
         current_hp=28,
@@ -199,7 +197,7 @@ def test_resolve_pending_level_ups_tough_retroactive_on_stored_feat(
     char = Character(
         name="Hero",
         race="human",
-        class_name="fighter",
+        class_id="fighter",
         level=3,
         stats={"constitution": 14, "strength": 16},
         current_hp=28,
@@ -226,7 +224,7 @@ def test_resolve_pending_level_ups_ignores_malformed_feat_choice(monkeypatch):
     char = Character(
         name="Hero",
         race="human",
-        class_name="fighter",
+        class_id="fighter",
         level=3,
         stats={"constitution": 14, "intelligence": 10},
         current_hp=28,
@@ -254,7 +252,7 @@ def test_resolve_pending_level_ups_feat_ability_bonus_not_doubled(
     char = Character(
         name="Hero",
         race="human",
-        class_name="fighter",
+        class_id="fighter",
         level=3,
         stats={"constitution": 14, "intelligence": 10},
         current_hp=28,
@@ -285,7 +283,7 @@ def test_resolve_pending_level_ups_con_hp_from_stored_feat(monkeypatch):
     char = Character(
         name="Hero",
         race="human",
-        class_name="fighter",
+        class_id="fighter",
         level=3,
         stats={"constitution": 11, "strength": 16},
         current_hp=28,
@@ -314,7 +312,7 @@ def test_resolve_pending_level_ups_applies_feat_skill_grants(monkeypatch):
     char = Character(
         name="Hero",
         race="human",
-        class_name="fighter",
+        class_id="fighter",
         level=3,
         stats={"constitution": 14},
         current_hp=28,
@@ -349,7 +347,7 @@ def test_apply_experience_levels_up_and_caps_hp():
     char = Character(
         name="Hero",
         race="human",
-        class_name="fighter",
+        class_id="fighter",
         level=1,
         stats={"constitution": 14},
         current_hp=12,
@@ -376,7 +374,7 @@ def test_apply_experience_hardcore_adds_rolls_not_average(monkeypatch):
     char = Character(
         name="Hero",
         race="human",
-        class_name="fighter",
+        class_id="fighter",
         level=1,
         stats={"constitution": 14},
         current_hp=7,
@@ -395,7 +393,7 @@ def test_apply_experience_preserves_creation_fields():
     char = Character(
         name="Hero",
         race="half_orc",
-        class_name="fighter",
+        class_id="fighter",
         level=1,
         stats={"constitution": 14},
         current_hp=12,
@@ -419,7 +417,7 @@ def test_apply_experience_does_not_exceed_level_ten():
     char = Character(
         name="Hero",
         race="human",
-        class_name="fighter",
+        class_id="fighter",
         level=10,
         stats={"constitution": 10},
         current_hp=50,

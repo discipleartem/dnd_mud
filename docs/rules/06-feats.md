@@ -24,15 +24,15 @@
 |--------|------------|
 | Статус | **Реализовано** (создание + ASI/feat при левелапе) |
 | YAML | [`database/progression/feats.yaml`](../../database/progression/feats.yaml) |
-| Core | [`core/feats.py`](../../core/feats.py), [`core/asi.py`](../../core/asi.py) |
-| UI | [`ui/menus/feats.py`](../../ui/menus/feats.py), [`ui/menus/asi.py`](../../ui/menus/asi.py), шаг в [`character_flow.py`](../../ui/menus/character_flow.py) |
+| Core | [`core/feats.py`](../../core/feats.py), [`core/feats_loader.py`](../../core/feats_loader.py), [`core/feats_grants.py`](../../core/feats_grants.py), [`core/asi.py`](../../core/asi.py) |
+| UI | [`ui/menus/feats.py`](../../ui/menus/feats.py), [`ui/menus/asi.py`](../../ui/menus/asi.py), шаг `feats` в [`_creation_steps.py`](../../ui/menus/_creation_steps.py) |
 
 ### Реализовано
 
 | Правило PHB | Реализация |
 |-------------|------------|
 | ASI **или** черта вместо `ability_score_improvement` | `core/asi.py`, `ui/menus/asi.py`, `ui/menus/level_up.py`; слоты ASI в `classes.yaml` |
-| Черта при создании (variant human) | Шаг `feats` в `character_flow.py`, `race_feat_step_required()` |
+| Черта при создании (variant human) | Шаг `feats` в `_creation_steps.py`, `race_feat_step_required()` |
 | Каждую черту один раз | `can_take_feat()`; `repeatable: true` в YAML (`elemental_adept`) |
 | Требования **при взятии** черты | `feat_meets_requirements()` + `requirements` в `feats.yaml`; фильтр в `list_available_feats()` |
 | Бонусы к характеристикам, владения, навыки, языки | `resolve_feat_ability_bonuses`, `resolve_feat_grants`, `apply_feat_grants_to_character`; поля `feat_ids`, `feat_choices` |

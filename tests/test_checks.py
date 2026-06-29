@@ -13,7 +13,7 @@ def _fighter() -> Character:
     return Character(
         name="Test",
         race="human",
-        class_name="fighter",
+        class_id="fighter",
         stats={
             "strength": 16,
             "dexterity": 10,

@@ -60,7 +60,7 @@
 | Статус | Частично: 4 класса в YAML; выбор класса в UI; HP по режиму сложности |
 | YAML | [`database/classes/classes.yaml`](../../database/classes/classes.yaml) |
 | Core | [`core/classes.py`](../../core/classes.py): `load_classes()`, `get_class_hit_dice()` |
-| UI | [`ui/menus/character_flow.py`](../../ui/menus/character_flow.py) — шаг `_select_class` |
+| UI | [`ui/menus/_selectors.py`](../../ui/menus/_selectors.py) — `select_class` |
 | Режимы | Класс не зависит от режима сложности |
 | Заметки | `features` и `subclasses` в YAML — справочные; runtime не применяет умения. **Мультикласс запрещён** — один класс на персонажа (см. [06-multiclass.md](06-multiclass.md)). **Подклассы:** реализуем только перечисленные в YAML (см. [03-subclasses.md](03-subclasses.md) §Политика MUD) |
 

@@ -384,7 +384,7 @@ def apply_subclass_proficiencies_to_character(
 ) -> list[ProficiencyChoice]:
     """Добавить владения подкласса. Возвращает невыполненные выборы."""
     sw, sa, st, choices = get_subclass_proficiency_tokens(
-        character.class_name, subclass_id, character.level
+        character.class_id, subclass_id, character.level
     )
     character.weapon_proficiencies = merge_proficiency_tokens(
         character.weapon_proficiencies, sw

@@ -61,7 +61,7 @@ def test_pending_asi_at_level():
     char = Character(
         name="Hero",
         race="human",
-        class_name="fighter",
+        class_id="fighter",
         level=3,
         stats={"strength": 16},
         current_hp=20,
@@ -71,7 +71,7 @@ def test_pending_asi_at_level():
     char_done = Character(
         name="Hero",
         race="human",
-        class_name="fighter",
+        class_id="fighter",
         level=4,
         stats={"strength": 18},
         current_hp=28,

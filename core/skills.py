@@ -8,7 +8,11 @@ from core.classes import (
     get_subclass_choice_level,
     load_class_full,
 )
-from core.races import _collect_race_features, _get_race_and_subrace
+from core.races import (
+    collect_race_features,
+    get_race_and_subrace,
+    grants_as_features,
+)
 
 PHB_SKILL_IDS: tuple[str, ...] = skill_ids()
 
@@ -33,7 +37,7 @@ def get_merged_race_features(
     race_id: str, subrace_id: str | None = None
 ) -> list[dict[str, Any]]:
     """Объединить features базовой расы и подрасы (legacy-вид из grants)."""
-    return _collect_race_features(race_id, subrace_id)
+    return collect_race_features(race_id, subrace_id)
 
 
 def _skill_proficiency_mechanics(
@@ -102,7 +106,7 @@ def get_fixed_racial_proficiencies_with_source(
     race_id: str, subrace_id: str | None = None
 ) -> list[tuple[str, str]]:
     """Фиксированные расовые владения: (skill_id, race|subrace)."""
-    race_info, subrace_info = _get_race_and_subrace(race_id, subrace_id)
+    race_info, subrace_info = get_race_and_subrace(race_id, subrace_id)
     if not race_info:
         return []
 
@@ -111,17 +115,16 @@ def get_fixed_racial_proficiencies_with_source(
 
     if subrace_info:
         from core.grants import grants_from_entity, inherit_flags
-        from core.races import _grants_as_features
 
         _, inherit_grants = inherit_flags(subrace_info)
         if inherit_grants:
-            base_feats = _grants_as_features(grants_from_entity(race_info))
+            base_feats = grants_as_features(grants_from_entity(race_info))
             _collect_fixed_from_features(base_feats, "race", seen, result)
-        sub_feats = _grants_as_features(grants_from_entity(subrace_info))
+        sub_feats = grants_as_features(grants_from_entity(subrace_info))
         _collect_fixed_from_features(sub_feats, "subrace", seen, result)
     else:
         _collect_fixed_from_features(
-            _collect_race_features(race_id, subrace_id),
+            collect_race_features(race_id, subrace_id),
             "race",
             seen,
             result,
@@ -146,9 +149,8 @@ def get_race_skill_choices_with_source(
 ) -> list[tuple[dict[str, Any], str]]:
     """Выборные расовые владения: (mechanics, race|subrace)."""
     from core.grants import grants_from_entity, inherit_flags
-    from core.races import _grants_as_features
 
-    race_info, subrace_info = _get_race_and_subrace(race_id, subrace_id)
+    race_info, subrace_info = get_race_and_subrace(race_id, subrace_id)
     if not race_info:
         return []
 
@@ -168,10 +170,10 @@ def get_race_skill_choices_with_source(
     if subrace_info:
         _, inherit_grants = inherit_flags(subrace_info)
         if inherit_grants:
-            scan(_grants_as_features(grants_from_entity(race_info)), "race")
-        scan(_grants_as_features(grants_from_entity(subrace_info)), "subrace")
+            scan(grants_as_features(grants_from_entity(race_info)), "race")
+        scan(grants_as_features(grants_from_entity(subrace_info)), "subrace")
     else:
-        scan(_collect_race_features(race_id, subrace_id), "race")
+        scan(collect_race_features(race_id, subrace_id), "race")
     return result
 
 

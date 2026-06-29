@@ -4,29 +4,7 @@
 Импорты используются как `_deps.<name>` из других модулей пакета.
 """
 
-from core.adventure import load_adventures
-from core.backgrounds import load_background_full, load_backgrounds
-from core.character_storage import (
-    delete_all_characters,
-    delete_character,
-    load_characters,
-    save_character,
-    update_character,
-)
-from core.classes import load_class_full, load_classes, load_subclasses
-from core.dice import roll_ability_score
-from core.languages import get_language_name, load_languages
-from core.localization import load_strings
-from core.races import (
-    build_bonuses_from_choices,
-    get_choice_ability_bonus_mechanics,
-    get_effective_race_bonuses,
-    get_race_bonuses,
-    has_choice_ability_bonuses,
-    load_race_full,
-    load_races,
-)
-from core.stats import (
+from core.character import (
     ABILITY_SCORE_MAX,
     POINT_BUY_BUDGET,
     POINT_BUY_COSTS,
@@ -37,11 +15,33 @@ from core.stats import (
     STANDARD_ARRAY_MIN,
     STAT_NAMES,
     apply_bonuses_to_stats,
+    build_bonuses_from_choices,
     can_assign_point_buy_value,
+    delete_all_characters,
+    delete_character,
     generate_stats_point_buy,
     generate_stats_random,
     generate_stats_standard_array,
+    get_choice_ability_bonus_mechanics,
+    get_effective_race_bonuses,
+    get_language_name,
+    get_race_bonuses,
+    has_choice_ability_bonuses,
+    load_adventures,
+    load_background_full,
+    load_backgrounds,
+    load_characters,
+    load_class_full,
+    load_classes,
+    load_languages,
+    load_race_full,
+    load_races,
+    load_strings,
+    load_subclasses,
     point_buy_points_remaining,
+    roll_ability_score,
+    save_character,
+    update_character,
     validate_final_stats,
     validate_point_buy_finish,
 )
@@ -67,6 +67,7 @@ __all__ = [
     "generate_stats_standard_array",
     "get_choice_ability_bonus_mechanics",
     "get_effective_race_bonuses",
+    "get_language_name",
     "get_race_bonuses",
     "has_choice_ability_bonuses",
     "get_int_input",
@@ -77,7 +78,6 @@ __all__ = [
     "load_characters",
     "load_class_full",
     "load_classes",
-    "get_language_name",
     "load_languages",
     "load_subclasses",
     "load_race_full",

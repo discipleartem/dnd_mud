@@ -54,7 +54,11 @@ dnd_mud/
 ├── README.md
 ├── core/                    # Игровое ядро
 │   ├── models.py            # Dataclass: Character, Adventure
-│   ├── character.py         # Фасад: re-export API персонажей
+│   ├── character.py         # Фасад API персонажей и UI (_deps)
+│   ├── hp_bonuses.py        # Бонусы HP из features (раса, черта)
+│   ├── feats_loader.py      # Загрузка feats.yaml
+│   ├── feats_grants.py      # Гранты и apply feats
+│   ├── feats.py             # Публичный фасад черт
 │   ├── character_storage.py # CRUD персонажей (JSON в saves/)
 │   ├── slug.py              # make_save_slug — транслитерация имён
 │   ├── stats.py             # Генерация и валидация характеристик
@@ -73,12 +77,14 @@ dnd_mud/
 │   └── menus/               # Пакет экранов меню
 │       ├── main_menu.py
 │       ├── new_game.py
-│       ├── character_flow.py
+│       ├── character_flow.py  # Точка входа «Создать персонажа»
 │       ├── settings.py
 │       ├── stats/           # Генерация характеристик (подпакет)
 │       ├── _common.py       # SEPARATOR, _run_numbered_menu, …
-│       ├── _display.py
-│       └── _deps.py         # Seam для monkeypatch в тестах
+│       ├── _display/        # Пакет отображения (класс, раса, stats, персонаж)
+│       ├── _creation_steps.py
+│       ├── _selectors.py
+│       └── _deps.py         # Re-export core.character + input_handler (monkeypatch)
 ├── database/                # YAML-справочники D&D 5e
 │   ├── races/
 │   │   └── races.yaml       # Расы и подрасы
@@ -97,13 +103,13 @@ dnd_mud/
 │       └── en.yaml
 ├── saves/                   # Пользовательские данные (gitignored)
 │   └── characters/          # Сохранённые персонажи (по одному JSON на персонажа)
-├── adventures/      # Сценарии приключений (заглушки)
+├── adventures/      # Сценарии приключений (tutorial, lost_mine)
 │   ├── tutorial.yaml
 │   └── lost_mine.yaml
 ├── mods/
 │   ├── dragonborn_pack/     # Пример mod overlay (manifest + overlay.yaml)
 │   └── _examples/example_mod.yaml
-├── tests/                   # pytest (252 теста в 33 файлах)
+├── tests/                   # pytest (261 тест в 36 файлах)
 │   ├── conftest.py
 │   ├── test_adventure.py
 │   ├── test_character.py
@@ -170,7 +176,7 @@ make install-hooks   # или make install — подключает .githooks/pr
 """Тесты UI: выбор персонажа, подрасы, new game, приключения."""
 ```
 
-Покрытие (252 теста в 33 файлах; ключевые):
+Покрытие (261 тест; ключевые):
 - `test_grants.py` — нормализация grants, legacy features
 - `test_mod_loader.py` — deep-merge overlay модов
 - `test_adventure.py` — загрузка приключений, поля `hardcore_only`
@@ -314,7 +320,7 @@ races:
 
 ### Реализовано (core)
 - ✅ `core/models.py` — типизированные dataclass: Character, Adventure
-- ✅ `core/character.py` — создание, сохранение/загрузка персонажей
+- ✅ `core/character.py` — фасад API персонажей, adventure, backgrounds, dice, languages
 - ✅ `core/dice.py` — `roll`, `roll_ability_score`, `ability_modifier`
 - ✅ `core/localization.py` — YAML-словари с fallback на английский
 - ✅ `core/settings.py` — настройки пользователя (язык)
@@ -325,12 +331,12 @@ races:
 - ✅ `ui/input_handler.py` — валидация ввода (int, str)
 - ✅ `ui/menus/` — главное меню, настройки, languages, flows
 - ✅ `ui/menus/stats/` — генерация характеристик (standard / point-buy / random)
-- ✅ Flow «Новая игра» (персонаж → приключение с фильтром по режиму)
-- ✅ Flow «Создать персонажа» (сложность → имя → раса → подраса → генерация характеристик → класс)
+- ✅ Flow «Новая игра» (персонаж → приключение → `scenario_flow.run_scenario`)
+- ✅ Flow «Создать персонажа» — `character_flow.py` → `_creation_steps.py` (state machine)
 - ✅ Flow «Загрузить игру» — заглушка (`errors.load_not_implemented`)
 
 ### Тестирование
-- ✅ 252 теста в 33 файлах (см. выше)
+- ✅ 261 тест (см. выше)
 - ⏳ Backlog (добавляются по необходимости, см. [философию](#философия) выше):
   - E2E smoke через `python main.py` (ручная проверка меню)
 
@@ -361,9 +367,9 @@ API: `core/character.py`, UI: `show_stats_generation_flow` в `ui/menus/stats/st
 ### Не реализовано
 - ❌ Gating модов по режиму (`requires_game_difficulty` в manifest)
 - ❌ Параметризация game_engine по режиму сложности
-- ❌ Полноценный цикл приключений в game_engine.py
+- ❌ Полноценный game engine (сценарии — минимальный runner в `scenario_flow.py`)
 - ❌ Боевая система
 - ❌ Сохранение/загрузка состояния игры (flow «Загрузить игру»)
-- ❌ Сценарии приключений (только заглушки в `adventures/`)
+- ❌ Сценарии приключений — базовый runner (`tutorial`, `lost_mine`); без боевой системы
 - ❌ Отдельные пункты меню «Модификации» / «Приключения» (приключения — внутри «Новая игра»)
 - ❌ Обработка модов во время выполнения

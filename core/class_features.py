@@ -29,7 +29,7 @@ def subclass_skill_picks_pending(character: Character) -> bool:
         return False
     return bool(
         get_subclass_skill_choices(
-            character.class_name,
+            character.class_id,
             character.subclass_id,
             character.level,
         )

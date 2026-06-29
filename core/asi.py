@@ -39,7 +39,7 @@ def class_grants_asi_at_level(class_id: str, level: int) -> bool:
 
 def pending_asi_at_level(character: Character, new_level: int) -> bool:
     """На этом уровне ожидается выбор ASI или черты."""
-    if not class_grants_asi_at_level(character.class_name, new_level):
+    if not class_grants_asi_at_level(character.class_id, new_level):
         return False
     return str(new_level) not in character.asi_choices
 

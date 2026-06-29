@@ -80,7 +80,7 @@ def run_pending_level_ups(
                 feat_id for feat_id in breakdown_feat_ids if feat_id != "tough"
             ]
         breakdown = hp_gain_breakdown_for_level_up(
-            char.class_name,
+            char.class_id,
             char.stats,
             new_level,
             char.difficulty,
