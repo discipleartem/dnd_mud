@@ -4,6 +4,7 @@ from typing import Any
 
 from colorama import Fore, Style
 
+from core.asi import cap_stats
 from core.equipment import (
     all_tool_ids,
     all_weapon_ids,
@@ -13,9 +14,12 @@ from core.feats import (
     FeatRequirementContext,
     apply_feats_to_stats,
     character_has_spellcasting,
+    feat_full_description_lines,
+    feat_summary_description,
     get_race_feat_grants,
-    list_available_feats,
+    list_feats_for_selection,
     load_feat,
+    requirement_met,
     resolve_feat_ability_bonuses,
 )
 from core.localization import get_string
@@ -29,6 +33,7 @@ from ui.menus import _deps
 from ui.menus._common import (
     SEPARATOR,
     _ability_name,
+    _confirm_yes_no,
     _print_screen_header,
     _run_numbered_menu,
     _skill_name,
@@ -57,18 +62,36 @@ def _feat_ctx_at_creation(
     race_id: str,
     subrace_id: str | None,
     background_id: str | None,
+    class_id: str,
+    subclass_id: str | None,
+    level: int,
 ) -> FeatRequirementContext:
-    """Контекст требований черт на шаге создания (до класса)."""
+    """Контекст требований черт на шаге создания (после класса)."""
+    from core.proficiencies import (
+        get_class_proficiency_tokens,
+        get_subclass_proficiency_tokens,
+        merge_proficiency_tokens,
+    )
+
     rw, ra, rt, _ = get_racial_proficiency_tokens(race_id, subrace_id)
+    cw, ca, ct = get_class_proficiency_tokens(class_id)
+    sw, sa, st, _ = get_subclass_proficiency_tokens(
+        class_id, subclass_id, level
+    )
     bg_tools: list[str] = []
     if background_id:
         bg_tools, _ = get_background_tool_proficiencies(background_id)
     return FeatRequirementContext(
         stats=stats,
-        weapon_tokens=list(rw),
-        armor_tokens=list(ra),
-        tool_tokens=list(rt) + list(bg_tools),
-        has_spellcasting=False,
+        weapon_tokens=merge_proficiency_tokens(cw, rw, sw),
+        armor_tokens=merge_proficiency_tokens(ca, ra, sa),
+        tool_tokens=merge_proficiency_tokens(ct, rt, st, bg_tools),
+        class_id=class_id,
+        subclass_id=subclass_id,
+        level=level,
+        has_spellcasting=character_has_spellcasting(
+            class_id, subclass_id, level
+        ),
     )
 
 
@@ -90,14 +113,267 @@ def _feat_ctx_for_character(character: Any) -> FeatRequirementContext:
     )
 
 
-def _print_feat_details(strings: StringsDict, feat: dict[str, Any]) -> None:
-    """Имя и описание черты."""
-    print(
-        f"  {Fore.CYAN}{Style.BRIGHT}{feat.get('name', '?')}{Style.RESET_ALL}"
+def _split_feat_requirements(
+    feat: dict[str, Any],
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+    """AND- и OR-группы требований из записи черты."""
+    raw_reqs = feat.get("requirements", [])
+    if not isinstance(raw_reqs, list):
+        return [], []
+    and_reqs: list[dict[str, Any]] = []
+    or_reqs: list[dict[str, Any]] = []
+    for req in raw_reqs:
+        if not isinstance(req, dict):
+            continue
+        if req.get("alternative"):
+            or_reqs.append(req)
+        else:
+            and_reqs.append(req)
+    return and_reqs, or_reqs
+
+
+def _format_or_ability_requirements(
+    strings: StringsDict,
+    or_reqs: list[dict[str, Any]],
+) -> str | None:
+    """OR-группа ability_score — «Интеллект или Мудрость 13+»."""
+    if not or_reqs:
+        return None
+    if not all(req.get("type") == "ability_score" for req in or_reqs):
+        return None
+    values = {int(req.get("value", 0)) for req in or_reqs}
+    if len(values) != 1:
+        return None
+    value = next(iter(values))
+    abilities = [
+        _ability_name(strings, str(req.get("target", ""))) for req in or_reqs
+    ]
+    or_sep = get_string(strings, "character.feat_req_or_sep")
+    return get_string(
+        strings,
+        "character.feat_req_ability_or",
+        abilities=or_sep.join(abilities),
+        value=value,
     )
-    desc = feat.get("description", "")
+
+
+def _format_requirement_text(
+    strings: StringsDict,
+    req: dict[str, Any],
+    ctx: FeatRequirementContext,
+    language: str,
+) -> str:
+    """Текст одного требования для экрана выбора."""
+    rtype = req.get("type", "")
+    if rtype == "ability_score":
+        target = str(req.get("target", ""))
+        value = int(req.get("value", 0))
+        current = int(ctx.stats.get(target, 0))
+        return get_string(
+            strings,
+            "character.feat_req_ability",
+            ability=_ability_name(strings, target),
+            value=value,
+            current=current,
+        )
+    if rtype == "armor_proficiency":
+        raw = req.get("armors", [])
+        armors = [str(a) for a in raw] if isinstance(raw, list) else []
+        labels = [
+            proficiency_token_label(armor, strings, language)
+            for armor in armors
+        ]
+        return get_string(
+            strings,
+            "character.feat_req_armor",
+            armors=", ".join(labels),
+        )
+    if rtype == "spellcasting":
+        return get_string(strings, "character.feat_req_spellcasting")
+    return ""
+
+
+def _requirement_line_color(met: bool, *, muted: bool) -> str:
+    """Цвет строки требования: зелёный/красный при muted, иначе цвет секции."""
+    if not muted:
+        return str(Fore.GREEN)
+    return str(Fore.GREEN if met else Fore.RED)
+
+
+def _print_feat_requirements(
+    strings: StringsDict,
+    feat: dict[str, Any],
+    ctx: FeatRequirementContext,
+    language: str,
+    *,
+    muted: bool,
+    section_color: str,
+) -> None:
+    """Список требований черты с отметкой выполнения."""
+    and_reqs, or_reqs = _split_feat_requirements(feat)
+    if not and_reqs and not or_reqs:
+        return
+    line_count = len(and_reqs) + (1 if or_reqs else 0)
+    label_key = (
+        "character.feat_requirement_label"
+        if line_count == 1
+        else "character.feat_requirements_label"
+    )
+    print(
+        f"     {section_color}"
+        f"{get_string(strings, label_key)}"
+        f"{Style.RESET_ALL}"
+    )
+    for req in and_reqs:
+        text = _format_requirement_text(strings, req, ctx, language)
+        if not text:
+            continue
+        met = requirement_met(req, ctx)
+        color = _requirement_line_color(met, muted=muted)
+        print(f"     {color}• {text}{Style.RESET_ALL}")
+    if or_reqs:
+        line = _format_or_ability_requirements(strings, or_reqs)
+        met_any = any(requirement_met(req, ctx) for req in or_reqs)
+        if line is None:
+            parts: list[str] = []
+            for req in or_reqs:
+                text = _format_requirement_text(strings, req, ctx, language)
+                if text:
+                    parts.append(text)
+            if parts:
+                or_sep = get_string(strings, "character.feat_req_or_sep")
+                line = or_sep.join(parts)
+        if line:
+            color = _requirement_line_color(met_any, muted=muted)
+            print(f"     {color}• {line}{Style.RESET_ALL}")
+
+
+def _print_feat_details(
+    strings: StringsDict,
+    feat: dict[str, Any],
+    ctx: FeatRequirementContext,
+    language: str,
+    *,
+    color: str = Fore.CYAN,
+    muted: bool = False,
+) -> None:
+    """Имя, описание и требования черты."""
+    print(f"  {color}{Style.BRIGHT}{feat.get('name', '?')}{Style.RESET_ALL}")
+    desc = feat_summary_description(feat)
     if desc:
-        print(f"     {desc}")
+        print(f"     {color}{desc}{Style.RESET_ALL}")
+    _print_feat_requirements(
+        strings, feat, ctx, language, muted=muted, section_color=color
+    )
+
+
+def _print_feat_full_description(
+    strings: StringsDict,
+    feat: dict[str, Any],
+    ctx: FeatRequirementContext,
+    language: str,
+) -> None:
+    """Экран полного описания выбранной черты."""
+    _print_screen_header(get_string(strings, "character.feat_detail_caption"))
+    name = str(feat.get("name", "?"))
+    print(f"  {Fore.CYAN}{Style.BRIGHT}{name}{Style.RESET_ALL}")
+    print()
+    intro = feat_summary_description(feat)
+    if intro:
+        print(f"  {intro}")
+        print()
+    for line in feat_full_description_lines(feat):
+        if line.strip():
+            print(f"  {line}")
+        else:
+            print()
+    _print_feat_requirements(
+        strings,
+        feat,
+        ctx,
+        language,
+        muted=False,
+        section_color=Fore.CYAN,
+    )
+    print()
+
+
+def _confirm_feat_selection(
+    strings: StringsDict,
+    feat: dict[str, Any],
+    ctx: FeatRequirementContext,
+    language: str,
+) -> bool:
+    """Показать полное описание и подтвердить выбор."""
+    _print_feat_full_description(strings, feat, ctx, language)
+    return _confirm_yes_no(strings, "character.feat_confirm_prompt")
+
+
+def _print_feat_selection_menu(
+    strings: StringsDict,
+    eligible: list[dict[str, Any]],
+    blocked: list[dict[str, Any]],
+    ctx: FeatRequirementContext,
+    language: str,
+) -> None:
+    """Список черт: доступные и с невыполненными требованиями."""
+    for idx, feat in enumerate(eligible, 1):
+        if idx > 1:
+            print(f"  {Fore.LIGHTBLACK_EX}{SEPARATOR}{Style.RESET_ALL}")
+        print()
+        print(f"  {Fore.GREEN}{idx}{Style.RESET_ALL}. ", end="")
+        _print_feat_details(
+            strings,
+            feat,
+            ctx,
+            language,
+            color=Fore.GREEN,
+            muted=False,
+        )
+
+    if blocked:
+        print()
+        heading = get_string(
+            strings, "character.feat_requirements_unmet_heading"
+        )
+        print(f"  {Fore.LIGHTBLACK_EX}" f"{heading}" f"{Style.RESET_ALL}")
+        for feat in blocked:
+            print()
+            print(f"  {Fore.LIGHTBLACK_EX}—{Style.RESET_ALL}. ", end="")
+            _print_feat_details(
+                strings,
+                feat,
+                ctx,
+                language,
+                color=Fore.LIGHTBLACK_EX,
+                muted=True,
+            )
+
+
+def _pick_feat_from_lists(
+    strings: StringsDict,
+    eligible: list[dict[str, Any]],
+    blocked: list[dict[str, Any]],
+    ctx: FeatRequirementContext,
+    language: str,
+) -> dict[str, Any] | None:
+    """Выбор черты из списков; None — назад или нет доступных."""
+    if not eligible:
+        return None
+    while True:
+        _print_feat_selection_menu(strings, eligible, blocked, ctx, language)
+        print()
+        choice = _deps.get_int_input(
+            get_string(strings, "character.feat_prompt", count=len(eligible)),
+            0,
+            len(eligible),
+            strings,
+        )
+        if choice == 0:
+            return None
+        selected = eligible[choice - 1]
+        if _confirm_feat_selection(strings, selected, ctx, language):
+            return selected
 
 
 def _pick_ability_for_feat(
@@ -367,6 +643,9 @@ def select_creation_feats(
     background_id: str | None,
     language: str = "ru",
     *,
+    class_id: str,
+    subclass_id: str | None = None,
+    start_level: int = 1,
     known_languages: list[str] | None = None,
 ) -> tuple[list[str], dict[str, dict[str, Any]], StatMap] | None:
     """Выбор расовых черт; None — назад."""
@@ -384,10 +663,16 @@ def select_creation_feats(
         for _ in range(grant.count):
             pick_current += 1
             ctx = _feat_ctx_at_creation(
-                working_stats, race_id, subrace_id, background_id
+                working_stats,
+                race_id,
+                subrace_id,
+                background_id,
+                class_id,
+                subclass_id,
+                start_level,
             )
-            available = list_available_feats(ctx, feat_ids)
-            if not available:
+            eligible, blocked = list_feats_for_selection(ctx, feat_ids)
+            if not eligible:
                 _print_screen_header(
                     get_string(strings, "character.feat_caption")
                 )
@@ -405,28 +690,11 @@ def select_creation_feats(
                 )
             )
             print()
-            for idx, feat in enumerate(available, 1):
-                if idx > 1:
-                    print(
-                        f"  {Fore.LIGHTBLACK_EX}{SEPARATOR}{Style.RESET_ALL}"
-                    )
-                print()
-                print(f"  {Fore.YELLOW}{idx}{Style.RESET_ALL}. ", end="")
-                _print_feat_details(strings, feat)
-
-            print()
-            choice = _deps.get_int_input(
-                get_string(
-                    strings, "character.feat_prompt", count=len(available)
-                ),
-                0,
-                len(available),
-                strings,
+            selected = _pick_feat_from_lists(
+                strings, eligible, blocked, ctx, language
             )
-            if choice == 0:
+            if selected is None:
                 return None
-
-            selected = available[choice - 1]
             feat_id = str(selected.get("id", ""))
             sub = _resolve_feat_subchoices(
                 strings,
@@ -441,8 +709,8 @@ def select_creation_feats(
             feat_choices[feat_id] = sub
             feat_ids.append(feat_id)
             bonuses = resolve_feat_ability_bonuses(feat_id, sub)
-            working_stats = _deps.apply_bonuses_to_stats(
-                working_stats, bonuses
+            working_stats = cap_stats(
+                _deps.apply_bonuses_to_stats(working_stats, bonuses)
             )
 
     final_stats = apply_feats_to_stats(stats, feat_ids, feat_choices)
@@ -493,23 +761,16 @@ def select_level_up_feat_or_asi(
         return updated, stats, feat_ids, feat_choices, "asi"
 
     ctx = _feat_ctx_for_character(character)
-    available = list_available_feats(ctx, feat_ids)
-    if not available:
+    eligible, blocked = list_feats_for_selection(ctx, feat_ids)
+    if not eligible:
         print(get_string(strings, "character.feat_none_available"))
         print()
         return None
 
-    labels = [str(f.get("name", "?")) for f in available]
-    choice = _run_numbered_menu(
-        strings,
-        labels,
-        prompt_key="character.feat_prompt",
-        back_label_key="character.back",
-    )
-    if choice is None:
+    _print_screen_header(get_string(strings, "character.feat_caption"))
+    selected = _pick_feat_from_lists(strings, eligible, blocked, ctx, language)
+    if selected is None:
         return None
-
-    selected = available[choice - 1]
     feat_id = str(selected.get("id", ""))
     sub = _resolve_feat_subchoices(
         strings, feat_id, stats, language, known_languages=character.languages

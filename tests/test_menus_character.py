@@ -690,8 +690,20 @@ def test_proficient_summary_shows_racial_source(capsys, ru_strings):
     assert "раса" in output
 
 
+def test_normal_class_step_routes_to_subclass():
+    """Normal: после класса — экран выбора архетипа."""
+    from core.subclasses import subclass_offered_at_creation
+
+    state = character_flow._CreationState(
+        name="Hero",
+        difficulty="normal",
+        class_id="fighter",
+    )
+    assert subclass_offered_at_creation(state.difficulty, state.class_id or "")
+
+
 def test_feats_step_required_for_variant_human_state():
-    """Вариант человека требует шаг выбора черты после предыстории."""
+    """Вариант человека требует шаг выбора черты после класса."""
     state = character_flow._CreationState(
         name="Hero",
         difficulty="normal",
@@ -707,3 +719,36 @@ def test_feats_step_required_for_variant_human_state():
         subrace_id="wood_elf",
     )
     assert not character_flow._feats_step_required(elf_state)
+
+
+def test_step_after_class_choice_routes_to_feats_for_variant_human():
+    state = character_flow._CreationState(
+        name="Hero",
+        difficulty="normal",
+        race_id="human",
+        subrace_id="variant_human",
+        class_id="fighter",
+    )
+    assert character_flow._step_after_class_choice(state) == "feats"
+
+
+def test_step_after_class_choice_skips_feats_for_elf():
+    state = character_flow._CreationState(
+        name="Hero",
+        difficulty="normal",
+        race_id="elf",
+        subrace_id="wood_elf",
+        class_id="fighter",
+    )
+    assert character_flow._step_after_class_choice(state) == "proficiencies"
+
+
+def test_back_from_proficiencies_returns_to_feats_when_required():
+    state = character_flow._CreationState(
+        name="Hero",
+        difficulty="normal",
+        race_id="human",
+        subrace_id="variant_human",
+        class_id="fighter",
+    )
+    assert character_flow._back_step_from_proficiencies(state) == "feats"

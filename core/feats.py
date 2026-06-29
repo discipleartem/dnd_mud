@@ -1,5 +1,6 @@
 """Загрузка черт из YAML."""
 
+import re
 from dataclasses import dataclass
 from functools import lru_cache
 from pathlib import Path
@@ -9,8 +10,6 @@ from core.io import load_yaml
 from core.types import StatMap
 
 FEATS_FILE = Path("database/progression/feats.yaml")
-
-SPELLCASTING_CLASSES = frozenset({"cleric", "bard"})
 
 
 @dataclass(frozen=True)
@@ -67,6 +66,93 @@ def load_feat(feat_id: str) -> dict[str, Any]:
     return {"id": feat_id}
 
 
+_BENEFITS_MARKER = re.compile(
+    r"(?:,\s*)?(?:и\s+)?(?:вы\s+)?(?:дающие\s+)?"
+    r"получаете\s+следующие\s+преимущества",
+    re.IGNORECASE,
+)
+_BENEFITS_LINE_MARKER = re.compile(
+    r"получаете\s+следующие\s+преимущества|дающие\s+следующие\s+преимущества",
+    re.IGNORECASE,
+)
+
+
+def _collapse_whitespace(text: str) -> str:
+    """Схлопнуть пробелы и переносы для поиска маркера в description_full."""
+    return re.sub(r"\s+", " ", text.strip())
+
+
+def feat_intro_from_full(description_full: str) -> str:
+    """Вводный текст PHB до «…получаете следующие преимущества:»."""
+    normalized = _collapse_whitespace(description_full)
+    match = _BENEFITS_MARKER.search(normalized)
+    if not match:
+        return ""
+    intro = normalized[: match.start()].strip().rstrip(",").strip()
+    return intro
+
+
+def feat_benefit_lines_from_full(description_full: str) -> list[str]:
+    """Строки преимуществ (маркированный список) из description_full."""
+    lines: list[str] = []
+    for raw in description_full.strip().splitlines():
+        stripped = raw.strip()
+        if not stripped.startswith("•"):
+            continue
+        if _BENEFITS_LINE_MARKER.search(stripped):
+            continue
+        lines.append(stripped)
+    return lines
+
+
+def feat_summary_description(feat: dict[str, Any]) -> str:
+    """Краткое описание для списка выбора."""
+    short = feat.get("description_short")
+    if isinstance(short, str) and short.strip():
+        return short.strip()
+    full = feat.get("description_full")
+    if isinstance(full, str) and full.strip():
+        intro = feat_intro_from_full(full)
+        if intro:
+            return intro
+    raw = feat.get("description", "")
+    return str(raw).strip()
+
+
+def feat_full_description_lines(feat: dict[str, Any]) -> list[str]:
+    """Строки детального описания (преимущества) для экрана подтверждения."""
+    full = feat.get("description_full")
+    if isinstance(full, str) and full.strip():
+        benefits = feat_benefit_lines_from_full(full)
+        if benefits:
+            return benefits
+        return [
+            line.rstrip() for line in full.strip().splitlines() if line.strip()
+        ]
+    if isinstance(full, list):
+        return [str(line) for line in full if str(line).strip()]
+
+    lines: list[str] = []
+    raw_features = feat.get("features", [])
+    if isinstance(raw_features, list):
+        for feature in raw_features:
+            if not isinstance(feature, dict):
+                continue
+            fdesc = str(feature.get("description", "")).strip()
+            if not fdesc:
+                continue
+            fname = str(feature.get("name", "")).strip()
+            if fname and fname not in fdesc:
+                lines.append(f"• {fname}: {fdesc}")
+            else:
+                lines.append(f"• {fdesc}")
+    if not lines:
+        summary = str(feat.get("description", "")).strip()
+        if summary:
+            lines.append(summary)
+    return lines
+
+
 def get_race_feat_grants(
     race_id: str, subrace_id: str | None = None
 ) -> list[FeatGrant]:
@@ -100,13 +186,9 @@ def character_has_spellcasting(
     class_id: str, subclass_id: str | None, level: int
 ) -> bool:
     """Может ли персонаж накладывать заклинания (для требований черт)."""
-    if class_id in SPELLCASTING_CLASSES:
-        return True
-    if level < 3 or not subclass_id:
-        return False
-    if class_id == "fighter" and subclass_id == "eldritch_knight":
-        return True
-    return class_id == "rogue" and subclass_id == "arcane_trickster"
+    from core.classes import character_has_spellcasting as _from_yaml
+
+    return _from_yaml(class_id, subclass_id, level)
 
 
 def _armor_requirement_met(
@@ -140,6 +222,11 @@ def _requirement_met(
     if rtype == "spellcasting":
         return ctx.has_spellcasting
     return True
+
+
+def requirement_met(req: dict[str, Any], ctx: FeatRequirementContext) -> bool:
+    """Выполнено ли одно требование черты."""
+    return _requirement_met(req, ctx)
 
 
 def feat_meets_requirements(feat_id: str, ctx: FeatRequirementContext) -> bool:
@@ -451,19 +538,38 @@ def get_feat_proficiency_grants(
     return resolve_feat_grants(feat_id, choices)
 
 
+def feat_has_requirements(feat_id: str) -> bool:
+    """Есть ли у черты явные требования в YAML."""
+    feat = load_feat(feat_id)
+    raw_reqs = feat.get("requirements", [])
+    return isinstance(raw_reqs, list) and bool(raw_reqs)
+
+
+def list_feats_for_selection(
+    ctx: FeatRequirementContext,
+    existing_ids: list[str],
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+    """Черты для меню: (требования выполнены, требования не выполнены).
+
+    Уже взятые черты (кроме repeatable) не включаются.
+    """
+    eligible: list[dict[str, Any]] = []
+    blocked: list[dict[str, Any]] = []
+    for feat in load_feats():
+        feat_id = str(feat.get("id", ""))
+        if not feat_id or not can_take_feat(feat_id, existing_ids):
+            continue
+        if feat_meets_requirements(feat_id, ctx):
+            eligible.append(feat)
+        elif feat_has_requirements(feat_id):
+            blocked.append(feat)
+    return eligible, blocked
+
+
 def list_available_feats(
     ctx: FeatRequirementContext,
     existing_ids: list[str],
 ) -> list[dict[str, Any]]:
-    """Черты, доступные при текущем контексте."""
-    result: list[dict[str, Any]] = []
-    for feat in load_feats():
-        feat_id = str(feat.get("id", ""))
-        if not feat_id:
-            continue
-        if not can_take_feat(feat_id, existing_ids):
-            continue
-        if not feat_meets_requirements(feat_id, ctx):
-            continue
-        result.append(feat)
-    return result
+    """Черты, доступные для выбора (требования выполнены)."""
+    eligible, _ = list_feats_for_selection(ctx, existing_ids)
+    return eligible
