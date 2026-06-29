@@ -8,7 +8,7 @@ from core.classes import (
     get_subclass_choice_level,
     load_class_full,
 )
-from core.races import _get_race_and_subrace
+from core.races import _collect_race_features, _get_race_and_subrace
 
 PHB_SKILL_IDS: tuple[str, ...] = skill_ids()
 
@@ -32,34 +32,20 @@ def get_class_skill_config(class_id: str) -> tuple[list[str], int]:
 def get_merged_race_features(
     race_id: str, subrace_id: str | None = None
 ) -> list[dict[str, Any]]:
-    """Объединить features базовой расы и подрасы."""
-    race_info, subrace_info = _get_race_and_subrace(race_id, subrace_id)
-    if not race_info:
-        return []
-
-    features: list[dict[str, Any]] = []
-    if subrace_id and subrace_info:
-        inherit_base = subrace_info.get("inherit_base_features", True)
-        if inherit_base:
-            raw_base = race_info.get("features", [])
-            if isinstance(raw_base, list):
-                features.extend(
-                    feat for feat in raw_base if isinstance(feat, dict)
-                )
-        raw_sub = subrace_info.get("features", [])
-        if isinstance(raw_sub, list):
-            features.extend(feat for feat in raw_sub if isinstance(feat, dict))
-    else:
-        raw = race_info.get("features", [])
-        if isinstance(raw, list):
-            features.extend(feat for feat in raw if isinstance(feat, dict))
-    return features
+    """Объединить features базовой расы и подрасы (legacy-вид из grants)."""
+    return _collect_race_features(race_id, subrace_id)
 
 
 def _skill_proficiency_mechanics(
     feat: dict[str, Any],
 ) -> dict[str, Any] | None:
-    """Механика skill_proficiency из feature (раса, подкласс)."""
+    """Механика skill_proficiency из feature или grant."""
+    is_grant = (
+        str(feat.get("type", "")) == "skill_proficiency"
+        and "mechanics" not in feat
+    )
+    if is_grant:
+        return feat
     mechanics = feat.get("mechanics", {})
     if not isinstance(mechanics, dict):
         mechanics = {}
@@ -123,24 +109,19 @@ def get_fixed_racial_proficiencies_with_source(
     result: list[tuple[str, str]] = []
     seen: set[str] = set()
 
-    if subrace_id and subrace_info:
-        inherit_base = subrace_info.get("inherit_base_features", True)
-        if inherit_base:
-            _collect_fixed_from_features(
-                race_info.get("features", []),
-                "race",
-                seen,
-                result,
-            )
-        _collect_fixed_from_features(
-            subrace_info.get("features", []),
-            "subrace",
-            seen,
-            result,
-        )
+    if subrace_info:
+        from core.grants import grants_from_entity, inherit_flags
+        from core.races import _grants_as_features
+
+        _, inherit_grants = inherit_flags(subrace_info)
+        if inherit_grants:
+            base_feats = _grants_as_features(grants_from_entity(race_info))
+            _collect_fixed_from_features(base_feats, "race", seen, result)
+        sub_feats = _grants_as_features(grants_from_entity(subrace_info))
+        _collect_fixed_from_features(sub_feats, "subrace", seen, result)
     else:
         _collect_fixed_from_features(
-            race_info.get("features", []),
+            _collect_race_features(race_id, subrace_id),
             "race",
             seen,
             result,
@@ -164,6 +145,9 @@ def get_race_skill_choices_with_source(
     race_id: str, subrace_id: str | None = None
 ) -> list[tuple[dict[str, Any], str]]:
     """Выборные расовые владения: (mechanics, race|subrace)."""
+    from core.grants import grants_from_entity, inherit_flags
+    from core.races import _grants_as_features
+
     race_info, subrace_info = _get_race_and_subrace(race_id, subrace_id)
     if not race_info:
         return []
@@ -176,20 +160,18 @@ def get_race_skill_choices_with_source(
         for feat in features:
             if not isinstance(feat, dict):
                 continue
-            if feat.get("type") != "skill_proficiency":
-                continue
             mechanics = _skill_proficiency_mechanics(feat)
             if mechanics is None or not mechanics.get("choice"):
                 continue
             result.append((mechanics, source))
 
-    if subrace_id and subrace_info:
-        inherit_base = subrace_info.get("inherit_base_features", True)
-        if inherit_base:
-            scan(race_info.get("features", []), "race")
-        scan(subrace_info.get("features", []), "subrace")
+    if subrace_info:
+        _, inherit_grants = inherit_flags(subrace_info)
+        if inherit_grants:
+            scan(_grants_as_features(grants_from_entity(race_info)), "race")
+        scan(_grants_as_features(grants_from_entity(subrace_info)), "subrace")
     else:
-        scan(race_info.get("features", []), "race")
+        scan(_collect_race_features(race_id, subrace_id), "race")
     return result
 
 

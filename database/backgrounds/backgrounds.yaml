@@ -1,288 +1,694 @@
-# Предыстории PHB (гл. 4)
 backgrounds:
   acolyte:
-    name: { ru: "Прислужник", en: "Acolyte" }
+    name:
+      ru: Прислужник
+      en: Acolyte
     description:
-      ru: "Служитель храма, посвящённого богу или пантеону."
-      en: "A temple servant devoted to a god or pantheon."
-    skills: ["insight", "religion"]
-    languages: { count: 2, choice: true, pool: common }
+      ru: Служитель храма, посвящённого богу или пантеону.
+      en: A temple servant devoted to a god or pantheon.
+    skills:
+    - insight
+    - religion
+    languages:
+      count: 2
+      choice: true
+      pool: common
     tools: []
     tool_proficiencies:
       fixed: []
     equipment:
-      ru: ["священный символ", "молитвенник", "5 палочек благовоний", "облачение", "обычная одежда", "15 зм"]
-      en: ["holy symbol", "prayer book", "5 incense sticks", "vestments", "common clothes", "15 gp"]
+      ru:
+      - священный символ
+      - молитвенник
+      - 5 палочек благовоний
+      - облачение
+      - обычная одежда
+      - 15 зм
+      en:
+      - holy symbol
+      - prayer book
+      - 5 incense sticks
+      - vestments
+      - common clothes
+      - 15 gp
     feature:
-      name: { ru: "Приют для верующих", en: "Shelter of the Faithful" }
+      name:
+        ru: Приют для верующих
+        en: Shelter of the Faithful
       description:
-        ru: "Бесплатный уход в храмах вашей веры; скромное содержание от единоверцев."
-        en: "Free care at temples of your faith; modest support from the faithful."
-
+        ru: Бесплатный уход в храмах вашей веры; скромное содержание от единоверцев.
+        en: Free care at temples of your faith; modest support from the faithful.
+    grants:
+    - type: skill_proficiency
+      skills:
+      - insight
+      - religion
+    - type: language
+      count: 2
+      choice: true
+      pool: common
   charlatan:
-    name: { ru: "Шарлатан", en: "Charlatan" }
+    name:
+      ru: Шарлатан
+      en: Charlatan
     description:
-      ru: "Мастер обмана, интриг и подделок."
-      en: "A master of deception, intrigue, and forgery."
-    skills: ["sleight_of_hand", "deception"]
+      ru: Мастер обмана, интриг и подделок.
+      en: A master of deception, intrigue, and forgery.
+    skills:
+    - sleight_of_hand
+    - deception
     languages: {}
     tools:
-      ru: ["набор для грима", "набор для фальсификации"]
-      en: ["disguise kit", "forgery kit"]
+      ru:
+      - набор для грима
+      - набор для фальсификации
+      en:
+      - disguise kit
+      - forgery kit
     tool_proficiencies:
-      fixed: ["disguise_kit", "forgery_kit"]
+      fixed:
+      - disguise_kit
+      - forgery_kit
     equipment:
-      ru: ["отличная одежда", "набор для грима", "приспособление для жульничества", "15 зм"]
-      en: ["fine clothes", "disguise kit", "con tool", "15 gp"]
+      ru:
+      - отличная одежда
+      - набор для грима
+      - приспособление для жульничества
+      - 15 зм
+      en:
+      - fine clothes
+      - disguise kit
+      - con tool
+      - 15 gp
     feature:
-      name: { ru: "Поддельная личность", en: "False Identity" }
+      name:
+        ru: Поддельная личность
+        en: False Identity
       description:
-        ru: "Вторая личность с документами и знакомствами; подделка официальных бумаг."
-        en: "A second identity with documents and contacts; forge official papers."
-
+        ru: Вторая личность с документами и знакомствами; подделка официальных бумаг.
+        en: A second identity with documents and contacts; forge official papers.
+    grants:
+    - type: skill_proficiency
+      skills:
+      - sleight_of_hand
+      - deception
+    - type: tool_proficiency
+      tools:
+      - disguise_kit
+    - type: tool_proficiency
+      tools:
+      - forgery_kit
   criminal:
-    name: { ru: "Преступник", en: "Criminal" }
+    name:
+      ru: Преступник
+      en: Criminal
     description:
-      ru: "Преступник с тёмным прошлым, привыкший жить вне закона."
-      en: "An outlaw accustomed to living outside the law."
-    skills: ["deception", "stealth"]
+      ru: Преступник с тёмным прошлым, привыкший жить вне закона.
+      en: An outlaw accustomed to living outside the law.
+    skills:
+    - deception
+    - stealth
     languages: {}
     tools:
-      ru: ["воровские инструменты", "один игровой набор"]
-      en: ["thieves' tools", "one gaming set"]
+      ru:
+      - воровские инструменты
+      - один игровой набор
+      en:
+      - thieves' tools
+      - one gaming set
     tool_proficiencies:
-      fixed: ["thieves_tools"]
+      fixed:
+      - thieves_tools
       choices:
-        - count: 1
-          pool: "gaming_sets"
+      - count: 1
+        pool: gaming_sets
     equipment:
-      ru: ["ломик", "тёмная одежда с капюшоном", "15 зм"]
-      en: ["crowbar", "dark common clothes with hood", "15 gp"]
+      ru:
+      - ломик
+      - тёмная одежда с капюшоном
+      - 15 зм
+      en:
+      - crowbar
+      - dark common clothes with hood
+      - 15 gp
     feature:
-      name: { ru: "Криминальные связи", en: "Criminal Contact" }
+      name:
+        ru: Криминальные связи
+        en: Criminal Contact
       description:
-        ru: "Надёжный связной в криминальных кругах для получения и передачи сведений."
-        en: "A reliable contact in criminal circles for sending and receiving information."
-
+        ru: Надёжный связной в криминальных кругах для получения и передачи сведений.
+        en: A reliable contact in criminal circles for sending and receiving information.
+    grants:
+    - type: skill_proficiency
+      skills:
+      - deception
+      - stealth
+    - type: tool_proficiency
+      tools:
+      - thieves_tools
+    - type: tool_proficiency
+      count: 1
+      choice: true
+      pool: gaming_sets
   entertainer:
-    name: { ru: "Артист", en: "Entertainer" }
+    name:
+      ru: Артист
+      en: Entertainer
     description:
-      ru: "Странствующий артист, мастер выступлений."
-      en: "A traveling performer skilled in the performing arts."
-    skills: ["acrobatics", "performance"]
+      ru: Странствующий артист, мастер выступлений.
+      en: A traveling performer skilled in the performing arts.
+    skills:
+    - acrobatics
+    - performance
     languages: {}
     tools:
-      ru: ["набор для грима", "музыкальный инструмент"]
-      en: ["disguise kit", "musical instrument"]
+      ru:
+      - набор для грима
+      - музыкальный инструмент
+      en:
+      - disguise kit
+      - musical instrument
     tool_proficiencies:
-      fixed: ["disguise_kit"]
+      fixed:
+      - disguise_kit
       choices:
-        - count: 1
-          pool: "musical_instruments"
+      - count: 1
+        pool: musical_instruments
     equipment:
-      ru: ["музыкальный инструмент", "подарок от поклонника", "костюм", "2 зм"]
-      en: ["musical instrument", "admiration gift", "costume", "2 gp"]
+      ru:
+      - музыкальный инструмент
+      - подарок от поклонника
+      - костюм
+      - 2 зм
+      en:
+      - musical instrument
+      - admiration gift
+      - costume
+      - 2 gp
     feature:
-      name: { ru: "По многочисленным просьбам", en: "By Popular Demand" }
+      name:
+        ru: По многочисленным просьбам
+        en: By Popular Demand
       description:
-        ru: "Можете найти место для выступления в таверне или постоялом дворе."
-        en: "You can always find a place to perform at an inn or tavern."
-
+        ru: Можете найти место для выступления в таверне или постоялом дворе.
+        en: You can always find a place to perform at an inn or tavern.
+    grants:
+    - type: skill_proficiency
+      skills:
+      - acrobatics
+      - performance
+    - type: tool_proficiency
+      tools:
+      - disguise_kit
+    - type: tool_proficiency
+      count: 1
+      choice: true
+      pool: musical_instruments
   folk_hero:
-    name: { ru: "Народный герой", en: "Folk Hero" }
+    name:
+      ru: Народный герой
+      en: Folk Hero
     description:
-      ru: "Защитник простых людей из народа."
-      en: "A champion of the common folk."
-    skills: ["survival", "animal_handling"]
+      ru: Защитник простых людей из народа.
+      en: A champion of the common folk.
+    skills:
+    - survival
+    - animal_handling
     languages: {}
     tools:
-      ru: ["ремесленные инструменты", "наземный транспорт"]
-      en: ["artisan's tools", "land vehicles"]
+      ru:
+      - ремесленные инструменты
+      - наземный транспорт
+      en:
+      - artisan's tools
+      - land vehicles
     tool_proficiencies:
-      fixed: ["land_vehicles"]
+      fixed:
+      - land_vehicles
       choices:
-        - count: 1
-          pool: "artisans_tools"
+      - count: 1
+        pool: artisans_tools
     equipment:
-      ru: ["ремесленные инструменты", "лопата", "горшок", "обычная одежда", "10 зм"]
-      en: ["artisan's tools", "shovel", "iron pot", "common clothes", "10 gp"]
+      ru:
+      - ремесленные инструменты
+      - лопата
+      - горшок
+      - обычная одежда
+      - 10 зм
+      en:
+      - artisan's tools
+      - shovel
+      - iron pot
+      - common clothes
+      - 10 gp
     feature:
-      name: { ru: "Деревенское гостеприимство", en: "Rustic Hospitality" }
+      name:
+        ru: Деревенское гостеприимство
+        en: Rustic Hospitality
       description:
-        ru: "Среди простых людей легко найти укрытие, отдых и помощь."
-        en: "Among common folk you can find shelter, rest, and aid."
-
+        ru: Среди простых людей легко найти укрытие, отдых и помощь.
+        en: Among common folk you can find shelter, rest, and aid.
+    grants:
+    - type: skill_proficiency
+      skills:
+      - survival
+      - animal_handling
+    - type: tool_proficiency
+      tools:
+      - land_vehicles
+    - type: tool_proficiency
+      count: 1
+      choice: true
+      pool: artisans_tools
   guild_artisan:
-    name: { ru: "Гильдейский ремесленник", en: "Guild Artisan" }
+    name:
+      ru: Гильдейский ремесленник
+      en: Guild Artisan
     description:
-      ru: "Член гильдии ремесленников, мастер своего дела."
-      en: "A member of a guild of artisans and master crafters."
-    skills: ["insight", "persuasion"]
-    languages: { count: 1, choice: true, pool: common }
+      ru: Член гильдии ремесленников, мастер своего дела.
+      en: A member of a guild of artisans and master crafters.
+    skills:
+    - insight
+    - persuasion
+    languages:
+      count: 1
+      choice: true
+      pool: common
     tools:
-      ru: ["ремесленные инструменты"]
-      en: ["artisan's tools"]
+      ru:
+      - ремесленные инструменты
+      en:
+      - artisan's tools
     tool_proficiencies:
       choices:
-        - count: 1
-          pool: "artisans_tools"
+      - count: 1
+        pool: artisans_tools
     equipment:
-      ru: ["ремесленные инструменты", "рекомендательное письмо гильдии", "дорожная одежда", "15 зм"]
-      en: ["artisan's tools", "guild letter of introduction", "traveler's clothes", "15 gp"]
+      ru:
+      - ремесленные инструменты
+      - рекомендательное письмо гильдии
+      - дорожная одежда
+      - 15 зм
+      en:
+      - artisan's tools
+      - guild letter of introduction
+      - traveler's clothes
+      - 15 gp
     feature:
-      name: { ru: "Членство в гильдии", en: "Guild Membership" }
+      name:
+        ru: Членство в гильдии
+        en: Guild Membership
       description:
-        ru: "Союзники гильдии обеспечат жильё, питание и связи в городах."
-        en: "Guild allies provide lodging, food, and connections in cities."
-
+        ru: Союзники гильдии обеспечат жильё, питание и связи в городах.
+        en: Guild allies provide lodging, food, and connections in cities.
+    grants:
+    - type: skill_proficiency
+      skills:
+      - insight
+      - persuasion
+    - type: language
+      count: 1
+      choice: true
+      pool: common
+    - type: tool_proficiency
+      count: 1
+      choice: true
+      pool: artisans_tools
   hermit:
-    name: { ru: "Отшельник", en: "Hermit" }
+    name:
+      ru: Отшельник
+      en: Hermit
     description:
-      ru: "Живущий в уединении искатель истины."
-      en: "A recluse who lived in seclusion seeking truth."
-    skills: ["medicine", "religion"]
-    languages: { count: 1, choice: true, pool: common }
+      ru: Живущий в уединении искатель истины.
+      en: A recluse who lived in seclusion seeking truth.
+    skills:
+    - medicine
+    - religion
+    languages:
+      count: 1
+      choice: true
+      pool: common
     tools:
-      ru: ["набор травника"]
-      en: ["herbalism kit"]
+      ru:
+      - набор травника
+      en:
+      - herbalism kit
     tool_proficiencies:
-      fixed: ["herbalism_kit"]
+      fixed:
+      - herbalism_kit
     equipment:
-      ru: ["контейнер для свитков", "одеяло", "обычная одежда", "набор травника", "5 зм"]
-      en: ["scroll case", "blanket", "common clothes", "herbalism kit", "5 gp"]
+      ru:
+      - контейнер для свитков
+      - одеяло
+      - обычная одежда
+      - набор травника
+      - 5 зм
+      en:
+      - scroll case
+      - blanket
+      - common clothes
+      - herbalism kit
+      - 5 gp
     feature:
-      name: { ru: "Откровение", en: "Discovery" }
+      name:
+        ru: Откровение
+        en: Discovery
       description:
-        ru: "Тихое уединение дало вам великое откровение — тайну вселенной или прошлого."
-        en: "Seclusion granted you a great discovery about the cosmos or the past."
-
+        ru: Тихое уединение дало вам великое откровение — тайну вселенной или прошлого.
+        en: Seclusion granted you a great discovery about the cosmos or the past.
+    grants:
+    - type: skill_proficiency
+      skills:
+      - medicine
+      - religion
+    - type: language
+      count: 1
+      choice: true
+      pool: common
+    - type: tool_proficiency
+      tools:
+      - herbalism_kit
   noble:
-    name: { ru: "Благородный", en: "Noble" }
+    name:
+      ru: Благородный
+      en: Noble
     description:
-      ru: "Представитель знатного рода."
-      en: "Scion of a noble family."
-    skills: ["history", "persuasion"]
-    languages: { count: 1, choice: true, pool: common }
+      ru: Представитель знатного рода.
+      en: Scion of a noble family.
+    skills:
+    - history
+    - persuasion
+    languages:
+      count: 1
+      choice: true
+      pool: common
     tools:
-      ru: ["игровой набор"]
-      en: ["gaming set"]
+      ru:
+      - игровой набор
+      en:
+      - gaming set
     tool_proficiencies:
       choices:
-        - count: 1
-          pool: "gaming_sets"
+      - count: 1
+        pool: gaming_sets
     equipment:
-      ru: ["отличная одежда", "кольцо-печатка", "свиток родословной", "25 зм"]
-      en: ["fine clothes", "signet ring", "scroll of pedigree", "25 gp"]
+      ru:
+      - отличная одежда
+      - кольцо-печатка
+      - свиток родословной
+      - 25 зм
+      en:
+      - fine clothes
+      - signet ring
+      - scroll of pedigree
+      - 25 gp
     feature:
-      name: { ru: "Привилегированность", en: "Position of Privilege" }
+      name:
+        ru: Привилегированность
+        en: Position of Privilege
       description:
-        ru: "Высшее общество принимает вас; люди стремятся угодить."
-        en: "High society welcomes you; people seek to please you."
-
+        ru: Высшее общество принимает вас; люди стремятся угодить.
+        en: High society welcomes you; people seek to please you.
+    grants:
+    - type: skill_proficiency
+      skills:
+      - history
+      - persuasion
+    - type: language
+      count: 1
+      choice: true
+      pool: common
+    - type: tool_proficiency
+      count: 1
+      choice: true
+      pool: gaming_sets
   outlander:
-    name: { ru: "Чужеземец", en: "Outlander" }
+    name:
+      ru: Чужеземец
+      en: Outlander
     description:
-      ru: "Выросший в глуши, вдали от цивилизации."
-      en: "Raised in the wilds, far from civilization."
-    skills: ["athletics", "survival"]
-    languages: { count: 1, choice: true, pool: common }
+      ru: Выросший в глуши, вдали от цивилизации.
+      en: Raised in the wilds, far from civilization.
+    skills:
+    - athletics
+    - survival
+    languages:
+      count: 1
+      choice: true
+      pool: common
     tools:
-      ru: ["музыкальный инструмент"]
-      en: ["musical instrument"]
+      ru:
+      - музыкальный инструмент
+      en:
+      - musical instrument
     tool_proficiencies:
       choices:
-        - count: 1
-          pool: "musical_instruments"
+      - count: 1
+        pool: musical_instruments
     equipment:
-      ru: ["посох", "капкан", "трофей", "одежда путешественника", "10 зм"]
-      en: ["staff", "hunting trap", "trophy", "traveler's clothes", "10 gp"]
+      ru:
+      - посох
+      - капкан
+      - трофей
+      - одежда путешественника
+      - 10 зм
+      en:
+      - staff
+      - hunting trap
+      - trophy
+      - traveler's clothes
+      - 10 gp
     feature:
-      name: { ru: "Странник", en: "Wanderer" }
+      name:
+        ru: Странник
+        en: Wanderer
       description:
-        ru: "Отличная память на местность; еда и вода для себя и пятерых спутников."
-        en: "Excellent map memory; find food and water for yourself and five others."
-
+        ru: Отличная память на местность; еда и вода для себя и пятерых спутников.
+        en: Excellent map memory; find food and water for yourself and five others.
+    grants:
+    - type: skill_proficiency
+      skills:
+      - athletics
+      - survival
+    - type: language
+      count: 1
+      choice: true
+      pool: common
+    - type: tool_proficiency
+      count: 1
+      choice: true
+      pool: musical_instruments
   sage:
-    name: { ru: "Мудрец", en: "Sage" }
+    name:
+      ru: Мудрец
+      en: Sage
     description:
-      ru: "Учёный, посвятивший жизнь знаниям."
-      en: "A scholar devoted to knowledge."
-    skills: ["history", "arcana"]
-    languages: { count: 2, choice: true, pool: common }
+      ru: Учёный, посвятивший жизнь знаниям.
+      en: A scholar devoted to knowledge.
+    skills:
+    - history
+    - arcana
+    languages:
+      count: 2
+      choice: true
+      pool: common
     tools: []
     tool_proficiencies:
       fixed: []
     equipment:
-      ru: ["чёрнильница", "перо", "пергамент", "маленький нож", "письмо от поклонника", "обычная одежда", "10 зм"]
-      en: ["ink", "quill", "parchment", "small knife", "letter from colleague", "common clothes", "10 gp"]
+      ru:
+      - чёрнильница
+      - перо
+      - пергамент
+      - маленький нож
+      - письмо от поклонника
+      - обычная одежда
+      - 10 зм
+      en:
+      - ink
+      - quill
+      - parchment
+      - small knife
+      - letter from colleague
+      - common clothes
+      - 10 gp
     feature:
-      name: { ru: "Исследователь", en: "Researcher" }
+      name:
+        ru: Исследователь
+        en: Researcher
       description:
-        ru: "Зная язык, можете найти сведения, если они записаны где-либо."
-        en: "If lore exists in written form, you know where to find it."
-
+        ru: Зная язык, можете найти сведения, если они записаны где-либо.
+        en: If lore exists in written form, you know where to find it.
+    grants:
+    - type: skill_proficiency
+      skills:
+      - history
+      - arcana
+    - type: language
+      count: 2
+      choice: true
+      pool: common
   sailor:
-    name: { ru: "Моряк", en: "Sailor" }
+    name:
+      ru: Моряк
+      en: Sailor
     description:
-      ru: "Мореплаватель, проведший годы на корабле."
-      en: "A seafarer who spent years aboard ship."
-    skills: ["athletics", "perception"]
+      ru: Мореплаватель, проведший годы на корабле.
+      en: A seafarer who spent years aboard ship.
+    skills:
+    - athletics
+    - perception
     languages: {}
     tools:
-      ru: ["инструменты навигатора", "водный транспорт"]
-      en: ["navigator's tools", "water vehicles"]
+      ru:
+      - инструменты навигатора
+      - водный транспорт
+      en:
+      - navigator's tools
+      - water vehicles
     tool_proficiencies:
-      fixed: ["navigator_tools", "water_vehicles"]
+      fixed:
+      - navigator_tools
+      - water_vehicles
     equipment:
-      ru: ["бelaying pin", "50 футов шёлковой верёвки", "талисман", "обычная одежда", "10 зм"]
-      en: ["belaying pin", "50 feet silk rope", "lucky charm", "common clothes", "10 gp"]
+      ru:
+      - бelaying pin
+      - 50 футов шёлковой верёвки
+      - талисман
+      - обычная одежда
+      - 10 зм
+      en:
+      - belaying pin
+      - 50 feet silk rope
+      - lucky charm
+      - common clothes
+      - 10 gp
     feature:
-      name: { ru: "Поездка на корабле", en: "Ship's Passage" }
+      name:
+        ru: Поездка на корабле
+        en: Ship's Passage
       description:
-        ru: "Можете получить бесплатный проезд на паруснике для себя и спутников."
-        en: "Secure free passage on a sailing ship for you and your companions."
-
+        ru: Можете получить бесплатный проезд на паруснике для себя и спутников.
+        en: Secure free passage on a sailing ship for you and your companions.
+    grants:
+    - type: skill_proficiency
+      skills:
+      - athletics
+      - perception
+    - type: tool_proficiency
+      tools:
+      - navigator_tools
+    - type: tool_proficiency
+      tools:
+      - water_vehicles
   soldier:
-    name: { ru: "Солдат", en: "Soldier" }
+    name:
+      ru: Солдат
+      en: Soldier
     description:
-      ru: "Ветеран военных конфликтов."
-      en: "A veteran of military campaigns."
-    skills: ["athletics", "intimidation"]
+      ru: Ветеран военных конфликтов.
+      en: A veteran of military campaigns.
+    skills:
+    - athletics
+    - intimidation
     languages: {}
     tools:
-      ru: ["игровой набор", "наземный транспорт"]
-      en: ["gaming set", "land vehicles"]
+      ru:
+      - игровой набор
+      - наземный транспорт
+      en:
+      - gaming set
+      - land vehicles
     tool_proficiencies:
-      fixed: ["land_vehicles"]
+      fixed:
+      - land_vehicles
       choices:
-        - count: 1
-          pool: "gaming_sets"
+      - count: 1
+        pool: gaming_sets
     equipment:
-      ru: ["знак отличия", "трофей", "игровой набор", "обычная одежда", "10 зм"]
-      en: ["insignia of rank", "trophy", "gaming set", "common clothes", "10 gp"]
+      ru:
+      - знак отличия
+      - трофей
+      - игровой набор
+      - обычная одежда
+      - 10 зм
+      en:
+      - insignia of rank
+      - trophy
+      - gaming set
+      - common clothes
+      - 10 gp
     feature:
-      name: { ru: "Воинское звание", en: "Military Rank" }
+      name:
+        ru: Воинское звание
+        en: Military Rank
       description:
-        ru: "Солдаты уважают ваше звание; можете получить доступ к лагерям и казармам."
-        en: "Soldiers respect your rank; access to camps and fortresses."
-
+        ru: Солдаты уважают ваше звание; можете получить доступ к лагерям и казармам.
+        en: Soldiers respect your rank; access to camps and fortresses.
+    grants:
+    - type: skill_proficiency
+      skills:
+      - athletics
+      - intimidation
+    - type: tool_proficiency
+      tools:
+      - land_vehicles
+    - type: tool_proficiency
+      count: 1
+      choice: true
+      pool: gaming_sets
   urchin:
-    name: { ru: "Беспризорник", en: "Urchin" }
+    name:
+      ru: Беспризорник
+      en: Urchin
     description:
-      ru: "Выросший на улицах города."
-      en: "Grew up on the city streets."
-    skills: ["sleight_of_hand", "stealth"]
+      ru: Выросший на улицах города.
+      en: Grew up on the city streets.
+    skills:
+    - sleight_of_hand
+    - stealth
     languages: {}
     tools:
-      ru: ["воровские инструменты", "набор для грима"]
-      en: ["thieves' tools", "disguise kit"]
+      ru:
+      - воровские инструменты
+      - набор для грима
+      en:
+      - thieves' tools
+      - disguise kit
     tool_proficiencies:
-      fixed: ["thieves_tools", "disguise_kit"]
+      fixed:
+      - thieves_tools
+      - disguise_kit
     equipment:
-      ru: ["маленький нож", "карта города", "ручная крыса", "безделушка родителей", "обычная одежда", "10 зм"]
-      en: ["small knife", "city map", "pet mouse", "parent token", "common clothes", "10 gp"]
+      ru:
+      - маленький нож
+      - карта города
+      - ручная крыса
+      - безделушка родителей
+      - обычная одежда
+      - 10 зм
+      en:
+      - small knife
+      - city map
+      - pet mouse
+      - parent token
+      - common clothes
+      - 10 gp
     feature:
-      name: { ru: "Городские тайны", en: "City Secrets" }
+      name:
+        ru: Городские тайны
+        en: City Secrets
       description:
-        ru: "Знаете секретные ходы и тайные маршруты города."
-        en: "You know the secret passages and hidden routes of cities."
+        ru: Знаете секретные ходы и тайные маршруты города.
+        en: You know the secret passages and hidden routes of cities.
+    grants:
+    - type: skill_proficiency
+      skills:
+      - sleight_of_hand
+      - stealth
+    - type: tool_proficiency
+      tools:
+      - thieves_tools
+    - type: tool_proficiency
+      tools:
+      - disguise_kit

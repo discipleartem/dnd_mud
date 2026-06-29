@@ -1,46 +1,33 @@
 ---
-description: dnd_mud verification, git overrides, release checklist — console MUD
+description: dnd_mud — overrides, verify/review policy (console MUD)
 alwaysApply: true
 ---
 
 # dnd_mud verification
 
-Console MUD — browser forbidden. Переопределяет `ironbee-devtools-use.mdc` (`alwaysApply: false`) и `browser-automation.mdc`.
+Console MUD — browser forbidden. Переопределяет `ironbee-devtools-use.mdc` и `browser-automation.mdc`.
 
-Git-flow: [`01-operations.mdc`](~/.cursor/rules/01-operations.mdc) · оркестрация: [`AGENTS.md`](../AGENTS.md).
+Оркестрация: [`AGENTS.md`](../AGENTS.md). Git-flow: [`01-operations.mdc`](~/.cursor/rules/01-operations.mdc).
 
-## Переопределения глобальных правил
+## Переопределения global
 
-| Глобально (`00-global`, `01-operations`, user rules) | В dnd_mud |
-|------------------------------------------------------|-----------|
-| Agent напрямую — git-flow не обязателен | **git-старт обязателен** для любых правок кода/docs/git |
-| IronBee / browser verify | **`make test`**, smoke `python main.py`; браузер запрещён |
-| Commit/push по запросу (Agent напрямую, user rules) | **коммиты подзадач — автоматически** ([`01-operations.mdc`](~/.cursor/rules/01-operations.mdc) §Commits); **push — по запросу**; Plan → Build → Agent — push обязателен |
+| Global | dnd_mud |
+|--------|---------|
+| Agent напрямую — git-flow не обязателен | **git-старт обязателен** для правок кода/docs/git |
+| Browser / IronBee verify | **`make test`**, smoke `python main.py` |
+| Push по запросу | **auto-commit подзадач**; push по запросу; Plan → Build → Agent — push обязателен |
 
 ## Git scope
 
 Не коммитить: `.coverage`, `saves/`.
 
-## Документация
+## Процедуры (канон в skills)
 
-После коммита реализации — skill [`dnd-mud-docs-after-task`](../skills/dnd-mud-docs-after-task/SKILL.md). Канон: [`01-operations.mdc`](~/.cursor/rules/01-operations.mdc) §Task cycle шаг 3.
+| Шаг | Skill |
+|-----|-------|
+| Docs после реализации | [`dnd-mud-docs-after-task`](../skills/dnd-mud-docs-after-task/SKILL.md) |
+| Verify (runtime) | [`dnd-mud-verify`](../skills/dnd-mud-verify/SKILL.md) |
+| Review (readonly, до push/PR/merge) | [`dnd-mud-review`](../skills/dnd-mud-review/SKILL.md) |
+| Release `dev` → `main` | [`dnd-mud-release`](../skills/dnd-mud-release/SKILL.md) |
 
-## Verify
-
-Процедура: skill [`dnd-mud-verify`](../skills/dnd-mud-verify/SKILL.md). Кратко:
-
-```bash
-make test       # обязательно при изменении кода
-make check      # при изменениях типов/импортов
-python main.py  # smoke при затронутом UI
-```
-
-Docs-only, правила (`.cursor/`, `AGENTS.md`), workflows — runtime не нужен. Verify — **один раз** в конце, после docs.
-
-## Before finishing (task-ветка)
-
-Чеклист — в skill `dnd-mud-verify`. Политика: git-старт в начале; коммиты подзадач по ходу; push/PR — см. [`AGENTS.md`](../AGENTS.md) §7.
-
-## Release (`dev` → `main`)
-
-Процедура: skill [`dnd-mud-release`](../skills/dnd-mud-release/SKILL.md). Sync `dev` после merge — skill `git-dev-main-sync` или [`git-dev-main-sync.md`](~/.cursor/docs/git-dev-main-sync.md).
+Verify ≠ review. Оба — **один раз** в конце task-ветки, после docs. Runtime не нужен для docs-only / rules-only.

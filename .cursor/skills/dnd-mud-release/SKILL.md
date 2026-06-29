@@ -9,13 +9,15 @@ disable-model-invocation: true
 
 # dnd_mud — release (`dev` → `main`)
 
-Канон-политика: [`dnd-mud-verify.mdc`](.cursor/rules/dnd-mud-verify.mdc) §Release · CI: `.github/workflows/pr-dev-to-main-check.yml`.
+Канон-политика: [`AGENTS.md`](../../AGENTS.md) §8 · [`dnd-mud-verify.mdc`](../../rules/dnd-mud-verify.mdc) · CI: `.github/workflows/pr-dev-to-main-check.yml`.
 
 ## Когда выполнять
 
 По запросу пользователя: PR `dev` → `main`, релиз, squash merge в `main`.
 
 ## Перед PR
+
+Review (skill [`dnd-mud-review`](../dnd-mud-review/SKILL.md)): readonly Bugbot, `Base Branch: main`, ветка `dev` — **до** создания release PR.
 
 ```bash
 source .venv/bin/activate

@@ -197,11 +197,12 @@
 
 **Ограниченный каталог (Pre-Alpha).** В базовой поставке — подмножество PHB (см. [`02-races.md`](rules/02-races.md)): `human`, `elf`, `dwarf`, `half_orc` с подрасами из PHB 2023 RUS в YAML. Остальные расы PHB **осознанно не включены** в ядро; расширение — через механизм **Addon** (официальное дополнение контента, `type: addon` в метаданных мода, §5.4).
 
-**Особенности рас (features).** На экране выбора показываются название и описание из YAML. **Владения** из `mechanics` (оружие, доспехи, инструменты) применяются через `core/proficiencies.py`. Прочая механика (тёмное зрение, сопротивления, владения **навыками** lore college и т.д.) — Phase 2. Исключение: выборные бонусы к характеристикам (`type: ability_bonus`, напр. variant human) — реализованы в flow генерации stats (§3.4.6).
+**Особенности рас (grants).** На экране выбора показываются название и описание из YAML. **Владения** из `grants[]` (оружие, доспехи, инструменты) применяются через `core/proficiencies.py` (нормализация — `core/grants.py`). Прочая механика (тёмное зрение, сопротивления, владения **навыками** lore college и т.д.) — Phase 2. Исключение: выборные бонусы к характеристикам (`type: ability_increase`, напр. variant human) — реализованы в flow генерации stats (§3.4.6). Схема YAML: [`DATA_SCHEMA.md`](DATA_SCHEMA.md).
 
 #### 3.4.4. Выбор подрасы
-- Если у расы есть подрасы — экран описания и выбор подрасы (включая variant human).
-- Если подрас нет — переход к §3.4.6 (характеристики).
+- У каждой расы механика в `subraces`; при одной подрасе — автовыбор (`auto_select_subrace_id`), экран пропускается.
+- При нескольких подрасах — экран описания и выбор (включая variant human).
+- Fallback: `human` + `subrace: null` в save → `standard`.
 
 #### 3.4.6. Генерация характеристик (реализовано)
 
@@ -534,25 +535,31 @@ adventures:
 
 > Поля `allowed_game_difficulties` и `hardcore_only` загружаются в `Adventure` и проверяются в UI. В текущем каталоге `adventures.yaml` они не заданы — все приключения доступны в обоих режимах.
 
-### 5.4. Формат модификации (mods/_examples/example_mod.yaml)
+### 5.4. Формат модификации
+
+Канон: [`docs/DATA_SCHEMA.md`](DATA_SCHEMA.md) § Mod overlay, [`DEVELOPMENT.md`](DEVELOPMENT.md) § Создание мода.
+
 ```yaml
-name: "Новая раса - Драконорожденный"
-version: "1.0"
-type: "addon"   # addon или mod
-description: "Добавляет расу Dragonborn"
-requires_game_difficulty: hardcore  # опционально: мод доступен только в HardCore (целевая модель)
-files:
-  - target: "database/races/races.yaml"
-    action: "append"   # или "replace" / "delete"
-    data:
-      - id: dragonborn
-        name:
-          ru: "Драконорожденный"
-          en: "Dragonborn"
-        ability_bonuses:
-          strength: 2
-          charisma: 1
+# mods/dragonborn_pack/manifest.yaml
+id: dragonborn_pack
+overlays:
+  - target: database/races/races.yaml
+    path: overlay.yaml
 ```
+
+```yaml
+# mods/dragonborn_pack/overlay.yaml — partial YAML, deep-merge
+races:
+  dragonborn:
+    name: { ru: "Драконорожденный", en: "Dragonborn" }
+    subraces:
+      dragonborn:
+        ability_bonuses: { strength: 2, charisma: 1 }
+```
+
+Включение: `database/core/mods_state.json` (`enabled: ["dragonborn_pack"]`). Runtime: `core/mod_loader.py`.
+
+**Запланировано:** `requires_game_difficulty` в manifest; UI включения модов; `delete` / `replace_entity` в overlay.
 
 ## 6. Архитектура (модули)
 
@@ -564,7 +571,9 @@ files:
 - `difficulty.py` – `adventure_allows_difficulty()` для фильтрации приключений по режиму.
 - `localization.py` – `load_strings()`, `get_string()` (YAML-словари, fallback на английский).
 - `settings.py` – `load_settings()`, `save_settings(language)`; JSON в `database/core/settings.json`.
-- **Запланировано:** `mod_loader.py`, `game_engine.py`.
+- `grants.py` – нормализация `grants[]` и legacy `features`/`mechanics`.
+- `mod_loader.py` – deep-merge overlay модов в каталоги YAML (`races`, `backgrounds`, …).
+- **Запланировано:** `game_engine.py`.
 
 ### 6.2. UI
 - `menus.py` – функции отрисовки экранов (show_welcome_screen, show_main_menu, show_settings).
@@ -667,7 +676,7 @@ files:
 | P0 | Flow «Загрузить игру» | ⏳ Заглушка |
 | P1 | Настройки (заглушка; язык через Languages) | ✅ Реализовано |
 | P1 | Меню Languages (русский/английский) | ✅ Реализовано |
-| P2 | HardCore gating: ограничения в YAML каталоге и модах | ⏳ Core/UI готовы; YAML и mod_loader — нет |
+| P2 | HardCore gating: ограничения в YAML каталоге и модах | ⏳ Приключения в YAML/UI; mod overlay — да; `requires_game_difficulty` в модах — нет |
 | P2 | Полноценный движок приключений (комнаты, проверки, бой) | ❌ Не реализовано |
 | P2 | Автосохранение/ручное сохранение приключения | ❌ Не реализовано |
 
@@ -687,12 +696,12 @@ files:
 - [x] Пункт «Настройки»: заглушка (только «Назад»); язык — в «Languages».
 - [x] Пункт «Languages»: переключение языка интерфейса (русский/английский).
 - [x] Flow «Новая игра»: список персонажей → список приключений (фильтр по `Character.difficulty`).
-- [x] Flow «Создать персонажа»: выбор сложности → ввод имени → выбор расы → подраса → характеристики → класс → сохранение.
+- [x] Flow «Создать персонажа»: выбор сложности → имя → раса → подраса → характеристики → предыстория → языки → класс → подкласс → сохранение.
 - [x] Выбор расы: нумерованный список с описанием, бонусами и особенностями.
 - [ ] Flow «Загрузить игру»: список сохранений → загрузка состояния.
 - [x] Персонаж сохраняется в JSON вместе с выбранной сложностью.
 - [x] Уровень персонажа проверяется при выборе приключения (`min_level`).
-- [x] Ограничения приключений в `adventures.yaml` (`allowed_game_difficulties`, `hardcore_only`, `min_level`); gating модов по режиму HardCore — запланировано (§3.2.1).
+- [x] Ограничения приключений в `adventures.yaml` (`allowed_game_difficulties`, `hardcore_only`, `min_level`); gating модов по режиму HardCore — запланировано (`requires_game_difficulty`, §5.4).
 - [ ] Весь текст корректно переносится при изменении размера терминала.
 
 ## 11. План исправления ошибок

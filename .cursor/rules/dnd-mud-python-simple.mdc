@@ -8,7 +8,7 @@ alwaysApply: false
 
 **По умолчанию — самое простое решение, которое работает.** Не усложняй «на будущее».
 
-База: [`00-global.mdc`](~/.cursor/rules/00-global.mdc) (KISS/DRY/YAGNI), `python-standards.mdc`.  
+База: [`00-global.mdc`](~/.cursor/rules/00-global.mdc) (KISS/DRY/YAGNI), `python-standards.mdc`, [`dnd-mud-python-312.mdc`](dnd-mud-python-312.mdc).  
 `python-architecture.mdc` — только если паттерн **реально** упрощает код в этом MUD.
 
 ## Предпочитать

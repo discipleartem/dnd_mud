@@ -21,46 +21,41 @@ def _noop_press_enter(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setattr(_common, "_press_enter", lambda strings: None)
 
 
-def test_base_race_without_subraces_has_back_option(
+def test_half_orc_auto_selects_single_subrace(
     monkeypatch, capsys, patch_int_input
 ):
-    """У базовой расы без подрас есть пункт Назад."""
+    """Полуорк с одной подрасой выбирается автоматически."""
     strings = {
         "character": {
             "subrace_caption": "ОПИСАНИЕ РАСЫ И ВЫБОР ПОДРАСЫ",
-            "race_description": "  {desc}",
-            "features_label": "  Особенности:",
-            "feature_line": "    • {name}: {desc}",
-            "no_subraces": (
-                "У этой расы нет подрас. Будет выбрана основная раса."
-            ),
-            "subrace_prompt": "Выберите подрасу: ",
-            "back": "Назад",
         }
     }
     race = {
         "name": "Полуорк",
         "description": "Полуорки — сильные и выносливые воины",
-        "allow_base_race_choice": True,
+        "subraces": {
+            "half_orc": {
+                "name": "Полуорк",
+                "description": "Полуорки — сильные и выносливые воины",
+                "ability_bonuses": {"strength": 2},
+            }
+        },
     }
 
     monkeypatch.setattr(
         _deps, "load_race_full", lambda race_id, language="ru": race
     )
-    patch_int_input(monkeypatch, [0])
 
     selected, subrace_id = character_flow._select_subrace(strings, "half_orc")
-    output = capsys.readouterr().out
 
-    assert selected is False
-    assert subrace_id is None
-    assert "Назад" in output
+    assert selected is True
+    assert subrace_id == "half_orc"
 
 
-def test_human_has_base_and_variant_choices(
+def test_human_shows_standard_and_variant_subraces(
     monkeypatch, capsys, patch_int_input
 ):
-    """Человек показывает выбор обычного и вариантного человека."""
+    """Человек показывает подрасы standard и variant_human."""
     strings = {
         "character": {
             "subrace_caption": "ОПИСАНИЕ РАСЫ И ВЫБОР ПОДРАСЫ",
@@ -74,18 +69,19 @@ def test_human_has_base_and_variant_choices(
     }
     race = {
         "name": "Человек",
-        "base_choice_name": "Человек (обычный)",
         "description": "Описание человека",
-        "allow_base_race_choice": True,
-        "ability_bonuses": {"strength": 1},
         "subraces": {
+            "standard": {
+                "name": "Человек (стандарт)",
+                "description": "Стандартный человек",
+                "ability_bonuses": {"strength": 1},
+            },
             "variant_human": {
                 "name": "Человек (вариант)",
                 "description": "Вариант человека",
-                "inherit_base_bonuses": False,
-                "ability_bonuses": {},
-                "features": [],
-            }
+                "inherit": {"ability_bonuses": False, "grants": False},
+                "grants": [],
+            },
         },
     }
 
@@ -98,8 +94,8 @@ def test_human_has_base_and_variant_choices(
     output = capsys.readouterr().out
 
     assert selected is True
-    assert subrace_id is None
-    assert "Человек (обычный)" in output
+    assert subrace_id == "standard"
+    assert "Человек (стандарт)" in output
     assert "Человек (вариант)" in output
 
 

@@ -6,62 +6,51 @@ races:
     name:
       ru: "Человек"
       en: "Human"
-    base_choice_name:
-      ru: "Человек (обычный)"
-      en: "Human (standard)"
     description: "Человечество — самая разнообразная и амбициозная раса"
     age_range: [16, 100]
     size: "medium"
     speed: 30
-    languages: ["common"]
-    ability_bonuses:
-      strength: 1
-      dexterity: 1
-      constitution: 1
-      intelligence: 1
-      wisdom: 1
-      charisma: 1
-    features:
-      - name: "Дополнительный язык"
-        description: "Вы можете говорить, читать и писать на одном дополнительном языке на ваш выбор"
-        type: "language"
-        mechanics:
-          count: 1
-          choice: true
-          pool: common
-    allow_base_race_choice: true
     subraces:
+      standard:
+        name:
+          ru: "Человек (стандарт)"
+          en: "Human (standard)"
+        description: "Стандартный вариант человека из PHB"
+        languages: ["common"]
+        ability_bonuses:
+          strength: 1
+          dexterity: 1
+          constitution: 1
+          intelligence: 1
+          wisdom: 1
+          charisma: 1
+        grants:
+          - type: language
+            count: 1
+            choice: true
+            pool: common
       variant_human:
         name:
           ru: "Человек (вариант)"
           en: "Human (variant)"
         description: "Альтернативный вариант создания человека"
-        inherit_base_bonuses: false
-        inherit_base_features: false
-        ability_bonuses: {}
-        features:
-          - name: "Увеличение характеристик"
-            description: "Значение двух характеристик на ваш выбор увеличивается на 1"
-            type: "ability_bonus"
-            mechanics:
-              count: 2
-              value: 1
-              choice: true
-              allow_duplicates: false
-          - name: "Навыки"
-            description: "Вы получаете владение одним навыком на ваш выбор"
-            type: "skill_proficiency"
-            mechanics:
-              count: 1
-              choice: true
-              from_list: "all"
-          - name: "Черта"
-            description: "Вы получаете одну черту на ваш выбор"
-            type: "feat"
-            mechanics:
-              count: 1
-              choice: true
-              from_list: "all"
+        inherit:
+          ability_bonuses: false
+          grants: false
+        grants:
+          - type: ability_increase
+            count: 2
+            amount: 1
+            choice: true
+            allow_duplicates: false
+          - type: skill_proficiency
+            count: 1
+            choice: true
+            from: all
+          - type: feat
+            count: 1
+            choice: true
+            from: all
 
   elf:
     name:
@@ -97,7 +86,6 @@ races:
         mechanics:
           duration: 4
           effect: "full_rest"
-    allow_base_race_choice: false
     subraces:
       high_elf:
         name:
@@ -240,7 +228,6 @@ races:
           context: "stonework_origin"
           grants_proficiency: true
           expertise: true
-    allow_base_race_choice: false
     subraces:
       hill_dwarf:
         name:
@@ -279,21 +266,20 @@ races:
     age_range: [14, 80]
     size: "medium"
     speed: 30
-    languages: ["common", "orcish"]
-    ability_bonuses:
-      strength: 2
-      constitution: 1
-    features:
-      - name: "Непреклонность"
-        description: "Когда урон снижает ваши хиты до 0, вы остаётесь с 1 хитом"
-        type: "persistent_endurance"
-        mechanics:
-          trigger: "damage_reduces_to_zero"
-          effect: "remain_at_1_hp"
-      - name: "Дикие атаки"
-        description: "Когда вы наносите критический удар оружием, вы можете перебросить один из кубиков урона"
-        type: "damage_bonus"
-        mechanics:
-          trigger: "critical_hit"
-          effect: "reroll_one_damage_die"
-    allow_base_race_choice: true
+    subraces:
+      half_orc:
+        name:
+          ru: "Полуорк"
+          en: "Half-Orc"
+        description: "Полуорки — сильные и выносливые воины"
+        languages: ["common", "orcish"]
+        ability_bonuses:
+          strength: 2
+          constitution: 1
+        grants:
+          - type: persistent_endurance
+            trigger: damage_reduces_to_zero
+            effect: remain_at_1_hp
+          - type: damage_bonus
+            trigger: critical_hit
+            effect: reroll_one_damage_die

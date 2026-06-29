@@ -2,7 +2,19 @@
 
 ## [Unreleased]
 
+### Changed
+- Rules DRY: `AGENTS.md` — оркестрация; `dnd-mud-verify.mdc` — overrides + ссылки на skills; `00-project.mdc` — stack/index без дубля skills
+- Человек: подрасы `standard` и `variant_human`; убраны `allow_base_race_choice` / `base_choice_name`
+- Полуорк: одна подраса `half_orc` (автовыбор в UI)
+- Выбор подрасы: всегда из `subraces`; fallback `human` + `subrace: null` → `standard`
+
 ### Added
+- Skill `dnd-mud-review`: readonly Bugbot review vs `dev`/`main` после verify, до push / PR / merge; шаг 6.5 в `AGENTS.md`
+- YAML schema: [`docs/DATA_SCHEMA.md`](DATA_SCHEMA.md) — `grants[]`, единые `subraces`, mod overlay, Phase 2+ backlog
+- `core/grants.py` — нормализация grants и legacy `features`/`mechanics`
+- `core/mod_loader.py`, `database/core/mods_state.json`, пример `mods/dragonborn_pack/`
+- `grants[]` во всех предысториях (`backgrounds.yaml`)
+- Тесты: `test_grants.py`, `test_mod_loader.py`
 - Flow создания: шаги **языки** (раса/подраса) и **предыстория** (до класса); 13 PHB backgrounds
 - `database/core/languages.yaml`, `database/backgrounds/backgrounds.yaml`
 - `core/languages.py`, `core/backgrounds.py`; поля `Character.languages`, `Character.background_id`
