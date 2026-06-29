@@ -54,10 +54,7 @@ def compute_ac(
             dex_bonus = 0
         modifier_bonus = info.get("modifier_bonus")
         ac = base + dex_bonus if modifier_bonus == "DEX" else base
-    if shield and (
-        has_armor_proficiency(character.armor_proficiencies, "shield")
-        or "shield" in character.armor_proficiencies
-    ):
+    if shield:
         ac += 2
     return ac
 

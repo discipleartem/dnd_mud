@@ -75,3 +75,17 @@ def test_compute_ac_unarmored():
     char = _fighter_with_weapons()
     ac = compute_ac(char, None)
     assert ac == 12  # 10 + 2 dex
+
+
+def test_compute_ac_shield_without_proficiency():
+    """Щит даёт +2 КД даже без владения (PHB); помеха — отдельно."""
+    char = Character(
+        name="W",
+        race="human",
+        class_name="wizard",
+        stats={"dexterity": 14},
+        armor_proficiencies=[],
+    )
+    ac = compute_ac(char, None, shield=True)
+    assert ac == 14  # 10 + 2 dex + 2 shield
+    assert armor_wearing_penalty(char, "shield") is True
