@@ -2,6 +2,8 @@
 
 **Канон:** [`.cursor/rules/00-project.mdc`](.cursor/rules/00-project.mdc) · global [`00-global.mdc`](~/.cursor/rules/00-global.mdc) · git [`01-operations.mdc`](~/.cursor/rules/01-operations.mdc) · verify [`dnd-mud-verify.mdc`](.cursor/rules/dnd-mud-verify.mdc)
 
+**Приоритет при конфликте:** project local (этот файл, `.cursor/rules/`) → User Rules / global. User Rules: [`user-rules-minimal.md`](~/.cursor/docs/user-rules-minimal.md).
+
 **Принцип:** простой код (`dnd-mud-python-simple.mdc`) · минимум тестов (`dnd-mud-tests.mdc`)
 
 **Docs:** [`00-project.mdc`](.cursor/rules/00-project.mdc) §Docs · [`docs/API.md`](docs/API.md)

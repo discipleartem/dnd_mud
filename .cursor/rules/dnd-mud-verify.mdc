@@ -15,7 +15,7 @@ Git-flow: [`01-operations.mdc`](~/.cursor/rules/01-operations.mdc) · оркес
 |------------------------------------------------------|-----------|
 | Agent напрямую — git-flow не обязателен | **git-старт обязателен** для любых правок кода/docs/git |
 | IronBee / browser verify | **`make test`**, smoke `python main.py`; браузер запрещён |
-| Commit/push по запросу (Agent напрямую, user rules) | **коммиты подзадач — автоматически** ([`01-operations.mdc`](~/.cursor/rules/01-operations.mdc) §Commits); **push — по запросу**; Plan → Build → Agent — push обязателен |
+| Push по запросу (Agent напрямую); browser verify | **коммиты подзадач — автоматически** ([`01-operations.mdc`](~/.cursor/rules/01-operations.mdc) §Commits); **push — по запросу**; Plan → Build → Agent — push обязателен |
 
 ## Git scope
 
