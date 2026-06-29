@@ -52,7 +52,7 @@
 | Статус | Частично: 4 расы в YAML (не все 9 PHB) |
 | YAML | [`database/races/races.yaml`](../../database/races/races.yaml) |
 | Core | [`core/races.py`](../../core/races.py) |
-| UI | [`ui/menus/character_flow.py`](../../ui/menus/character_flow.py), [`ui/menus/_display.py`](../../ui/menus/_display.py) |
+| UI | [`ui/menus/_selectors.py`](../../ui/menus/_selectors.py) (`select_subrace`), [`ui/menus/_display/`](../../ui/menus/_display/) |
 | Режимы | Расовые бонусы одинаковы; отображаются до и после распределения stats |
 
 ### Расы в MUD (текущий каталог)

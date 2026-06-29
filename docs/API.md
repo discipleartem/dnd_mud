@@ -52,8 +52,8 @@ class Character:
 ```
 
 **Методы:**
-- `to_dict() -> dict[str, Any]` — сериализация для JSON
-- `from_dict(data: dict[str, Any]) -> Character` — десериализация
+- `to_dict() -> dict[str, Any]` — сериализация для JSON (ключ класса — `class_id`)
+- `from_dict(data: dict[str, Any]) -> Character` — десериализация; в JSON ожидается `class_id`
 
 ### Adventure
 
