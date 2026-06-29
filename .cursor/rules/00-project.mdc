@@ -31,11 +31,23 @@ python main.py  # smoke: пройти затронутое меню
 - [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md)
 - [docs/MUD_PRD.md](docs/MUD_PRD.md)
 
+## Skills (процедуры)
+
+| Skill | Когда |
+|-------|-------|
+| [`dnd-mud-docs-after-task`](../skills/dnd-mud-docs-after-task/SKILL.md) | После commit реализации, перед verify |
+| [`dnd-mud-verify`](../skills/dnd-mud-verify/SKILL.md) | Перед push/PR |
+| [`dnd-mud-release`](../skills/dnd-mud-release/SKILL.md) | Release PR `dev` → `main` |
+
+Personal: `git-dev-main-sync` (`~/.cursor/skills/git-dev-main-sync/`) — sync веток.
+
+Оркестрация: [`AGENTS.md`](../AGENTS.md).
+
 ## Local rules (index)
 
 | Файл | Globs | Канон |
 |------|-------|-------|
-| `dnd-mud-verify.mdc` | always | verify, overrides, release, Actions |
+| `dnd-mud-verify.mdc` | always | verify, overrides, release (политика; процедуры — skills) |
 | `dnd-mud-python-simple.mdc` | `core/**`, `ui/**`, `main.py`, `tests/**` | простой Python |
 | `dnd-mud-tests.mdc` | `tests/**` | pytest — только нужные тесты |
 | `dnd-mud-core.mdc` | `core/**`, `ui/**`, `main.py` | слои, локализация, механика |
