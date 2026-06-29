@@ -239,8 +239,11 @@ scenario:
 level_up:
   caption: "LEVEL UP"
   reached: "You reached level {level}!"
-  hp_gain_average: "HP gain (average): +{gain}"
-  hp_gain_roll: "HP roll: {roll} + {con_mod} (CON) = +{gain}"
+  hp_gain_first_level: "  Hit die (max): {die} + CON ({con_mod}) = +{class_part}"
+  hp_gain_average: "  Hit die (avg): {die_part} + CON ({con_mod}) = +{class_part}"
+  hp_gain_roll: "  Hit die roll: {roll} + CON ({con_mod}) = +{class_part}"
+  hp_gain_bonus_named: "  {name}: +{bonus}"
+  hp_gain_total: "  Total: +{total}"
   hp_totals: "HP: {current} / {max_hp}"
 
 errors:

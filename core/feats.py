@@ -1,5 +1,6 @@
 """Загрузка черт из YAML."""
 
+from dataclasses import dataclass
 from functools import lru_cache
 from pathlib import Path
 from typing import Any
@@ -38,6 +39,77 @@ def load_feat(feat_id: str) -> dict[str, Any]:
         entry["id"] = feat_id
         return entry
     return {"id": feat_id}
+
+
+@dataclass(frozen=True)
+class HpBonusSource:
+    """Именованный бонус HP за уровень (особенность расы или черта)."""
+
+    name: str
+    amount: int
+
+
+def _hit_point_bonus_amount(
+    mechanics: dict[str, Any], feat: dict[str, Any]
+) -> int:
+    """Значение hit_point_bonus из feature, если per_level."""
+    mtype = feat.get("type") or mechanics.get("type")
+    if mtype != "hit_point_bonus" or not mechanics.get("per_level"):
+        return 0
+    return int(mechanics.get("value", mechanics.get("amount", 0)))
+
+
+def hit_point_bonus_sources_from_features(
+    features: list[dict[str, Any]],
+) -> list[HpBonusSource]:
+    """Бонусы HP за уровень из features (имя — поле name особенности)."""
+    sources: list[HpBonusSource] = []
+    for feat in features:
+        mechanics = feat.get("mechanics", {})
+        if not isinstance(mechanics, dict):
+            mechanics = {}
+        amount = _hit_point_bonus_amount(mechanics, feat)
+        if amount <= 0:
+            continue
+        name = str(feat.get("name", "")).strip() or "?"
+        sources.append(HpBonusSource(name=name, amount=amount))
+    return sources
+
+
+def hit_point_bonus_per_level_from_features(
+    features: list[dict[str, Any]],
+) -> int:
+    """Сумма бонусов HP за уровень из списка features (раса, черта)."""
+    return sum(
+        s.amount for s in hit_point_bonus_sources_from_features(features)
+    )
+
+
+def get_feat_hp_bonus_sources(feat_ids: list[str]) -> list[HpBonusSource]:
+    """Бонусы HP за уровень из выбранных черт (имя — название черты)."""
+    sources: list[HpBonusSource] = []
+    for feat_id in feat_ids:
+        feat = load_feat(feat_id)
+        feat_name = str(feat.get("name", feat_id)).strip() or feat_id
+        raw_features = feat.get("features", [])
+        if not isinstance(raw_features, list):
+            continue
+        for feature in raw_features:
+            if not isinstance(feature, dict):
+                continue
+            mechanics = feature.get("mechanics", {})
+            if not isinstance(mechanics, dict):
+                mechanics = {}
+            amount = _hit_point_bonus_amount(mechanics, feature)
+            if amount <= 0:
+                continue
+            sources.append(HpBonusSource(name=feat_name, amount=amount))
+    return sources
+
+
+def get_feat_hp_bonus_per_level(feat_ids: list[str]) -> int:
+    """Дополнительные HP за уровень из выбранных черт."""
+    return sum(s.amount for s in get_feat_hp_bonus_sources(feat_ids))
 
 
 def _grants_from_mechanics(

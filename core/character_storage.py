@@ -17,9 +17,20 @@ def starting_max_hp(
     class_id: str,
     stats: StatMap,
     difficulty: GameDifficulty = "normal",
+    race_id: str | None = None,
+    subrace_id: str | None = None,
+    feat_ids: list[str] | None = None,
 ) -> int:
     """Максимум хитов на 1 уровне с учётом режима сложности."""
-    return max_hp_for_level(class_id, stats, 1, difficulty)
+    return max_hp_for_level(
+        class_id,
+        stats,
+        1,
+        difficulty,
+        race_id,
+        subrace_id,
+        feat_ids,
+    )
 
 
 def save_character(
@@ -52,7 +63,15 @@ def save_character(
         level = start_level_for_difficulty(difficulty)
     level = clamp_level(level)
 
-    hp = max_hp_for_level(class_id, stats, level, difficulty)
+    hp = max_hp_for_level(
+        class_id,
+        stats,
+        level,
+        difficulty,
+        race_id,
+        subrace_id,
+        feat_ids,
+    )
 
     character = Character(
         name=name,
