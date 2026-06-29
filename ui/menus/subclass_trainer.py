@@ -17,7 +17,7 @@ from core.proficiencies import (
 from core.types import LanguageCode, StringsDict
 from ui.menus import _deps
 from ui.menus._common import _print_screen_header, _print_success_and_wait
-from ui.menus.character_flow import _select_subclass
+from ui.menus._selectors import select_subclass
 from ui.menus.class_features import apply_pending_class_features
 from ui.menus.expertise import apply_pending_expertise
 from ui.menus.proficiencies import _pick_tools
@@ -30,7 +30,7 @@ def assign_subclass_from_menu(
     language: LanguageCode,
 ) -> Character | None:
     """Выбрать подкласс, применить владения и сохранить. None — отмена."""
-    subclass_id = _select_subclass(strings, character.class_id, language)
+    subclass_id = select_subclass(strings, character.class_id, language)
     if subclass_id is None:
         return None
 
