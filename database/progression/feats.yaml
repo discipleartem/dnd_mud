@@ -5,6 +5,9 @@ feats:
   heavily_armored:
     name: "Тяжело вооружённый"
     description: "Вы владеете тяжёлыми доспехами. Также увеличивает вашу Силу на 1."
+    requirements:
+      - type: "armor_proficiency"
+        armors: ["medium"]
     ability_bonuses:
       strength: 1
     features:
@@ -29,6 +32,9 @@ feats:
   moderately_armored:
     name: "Средневооружённый"
     description: "Вы владеете средними доспехами и щитами. Также увеличивает вашу Силу или Ловкость на 1."
+    requirements:
+      - type: "armor_proficiency"
+        armors: ["light"]
     ability_bonuses_choice: ["strength", "dexterity"]
     ability_bonuses_amount: 1
     features:
@@ -162,6 +168,9 @@ feats:
   elemental_adept:
     name: "Адепт стихии"
     description: "Выберите одну стихию. Получаете сопротивление к ней и можете создавать небольшие эффекты."
+    repeatable: true
+    requirements:
+      - type: "spellcasting"
     features:
       - name: "Сопротивление стихии"
         description: "Сопротивление к выбранной стихии"
@@ -211,6 +220,8 @@ feats:
       - type: "ability_score"
         target: "strength"
         value: 13
+      - type: "armor_proficiency"
+        armors: ["heavy"]
     features:
       - name: "Снижение урона"
         description: "Снижает немагический урон от атак по тяжёлым доспехам"
@@ -286,16 +297,16 @@ feats:
           expertise: true
 
   skilled:
-    name: "Мастер умений"
-    description: "Получите владение любыми четырьмя навыками или инструментами."
+    name: "Одарённый"
+    description: "Получите владение любыми тремя навыками или инструментами."
     features:
       - name: "Разностороннее владение"
-        description: "Владение четырьмя навыками или инструментами"
+        description: "Владение тремя навыками или инструментами"
         mechanics:
           type: "multiple_proficiency"
-          skills_tools: []  # Заполняется при выборе
+          skills_tools: []
           choice: true
-          count: 4
+          count: 3
           types: ["skill", "tool"]
 
   tough:
@@ -312,6 +323,8 @@ feats:
   war_caster:
     name: "Заклинатель в бою"
     description: "Преимущество на сохранение концентрации. Заклинания как бонусное действие. Атаки заклинаниями оружием."
+    requirements:
+      - type: "spellcasting"
     features:
       - name: "Боевое колдовство"
         description: "Преимущество на концентрацию, заклинания бонусным действием, атака заклинаниями оружием"
@@ -320,3 +333,199 @@ feats:
           advantage_concentration_saves: true
           spell_as_bonus_action: true
           spell_with_weapon_attack: true
+
+  alert:
+    name: "Бдительный"
+    description: "Бонус к инициативе, вас не застать врасплох, скрытые не получают преимущества."
+    features:
+      - name: "Бдительность"
+        mechanics:
+          type: "initiative_bonus"
+          bonus: 5
+
+  martial_adept:
+    name: "Воинский адепт"
+    description: "Два приёма воина и одна кость превосходства (к6)."
+    features:
+      - name: "Боевые приёмы"
+        mechanics:
+          type: "martial_adept"
+          maneuvers: 2
+          superiority_die: "d6"
+
+  mounted_combatant:
+    name: "Верховой боец"
+    description: "Преимущество на атаки по меньшим существам, перенацеливание атак на скакуна."
+    features:
+      - name: "Верховая тактика"
+        mechanics:
+          type: "mounted_combat"
+
+  observant:
+    name: "Внимательный"
+    description: "Интеллект или Мудрость +1, чтение по губам, +5 к пассивным проверкам."
+    ability_bonuses_choice: ["intelligence", "wisdom"]
+    ability_bonuses_amount: 1
+    features:
+      - name: "Внимательность"
+        mechanics:
+          type: "passive_bonus"
+          skills: ["perception", "investigation"]
+          bonus: 5
+
+  inspiring_leader:
+    name: "Воодушевляющий лидер"
+    description: "10 минут — временные хиты союзникам в 30 фт."
+    requirements:
+      - type: "ability_score"
+        target: "charisma"
+        value: 13
+    features:
+      - name: "Воодушевление"
+        mechanics:
+          type: "temp_hp_grant"
+
+  savage_attacker:
+    name: "Дикий атакующий"
+    description: "Раз в ход переброс урона рукопашной атаки."
+    features:
+      - name: "Переброс урона"
+        mechanics:
+          type: "damage_reroll"
+          trigger: "melee_weapon"
+
+  tavern_brawler:
+    name: "Драчун"
+    description: "Сила или Телосложение +1, импровизированное оружие, безоружный удар к4, захват бонусным действием."
+    ability_bonuses_choice: ["strength", "constitution"]
+    ability_bonuses_amount: 1
+    features:
+      - name: "Мордобой"
+        mechanics:
+          type: "unarmed_improvised"
+          unarmed_die: 4
+          weapon_proficiency: ["improvised"]
+
+  great_weapon_master:
+    name: "Мастер большого оружия"
+    description: "Бонусная атака при крите/убийстве; -5/+10 на тяжёлое оружие."
+    features:
+      - name: "Тяжёлое оружие"
+        mechanics:
+          type: "great_weapon_master"
+
+  polearm_master:
+    name: "Мастер древкового оружия"
+    description: "Бонусная атака противоположным концом; провоцированные атаки при входе в досягаемость."
+    features:
+      - name: "Древковое оружие"
+        mechanics:
+          type: "polearm_master"
+
+  medium_armor_master:
+    name: "Мастер средних доспехов"
+    description: "Средние доспехи не мешают скрытности; +3 к КД при Ловкости 16+."
+    requirements:
+      - type: "armor_proficiency"
+        armors: ["medium"]
+    features:
+      - name: "Средние доспехи"
+        mechanics:
+          type: "medium_armor_master"
+
+  shield_master:
+    name: "Мастер щитов"
+    description: "Толчок щитом, бонус КД от щита к спасброскам, реакция на урон."
+    features:
+      - name: "Щит"
+        mechanics:
+          type: "shield_master"
+
+  keen_mind:
+    name: "Отличная память"
+    description: "Интеллект +1, ориентирование во времени, идеальная память за месяц."
+    ability_bonuses:
+      intelligence: 1
+    features:
+      - name: "Память"
+        mechanics:
+          type: "keen_mind"
+
+  spell_sniper:
+    name: "Меткие заклинания"
+    description: "Удвоенная дистанция атакующих заклинаний, игнор укрытия, заговор атаки."
+    requirements:
+      - type: "spellcasting"
+    features:
+      - name: "Снайпер заклинаний"
+        mechanics:
+          type: "spell_sniper"
+          cantrip_choice: true
+
+  sharpshooter:
+    name: "Меткий стрелок"
+    description: "Дальняя атака без помехи на дистанции, игнор укрытия, -5/+10."
+    features:
+      - name: "Стрельба"
+        mechanics:
+          type: "sharpshooter"
+
+  magic_initiate:
+    name: "Посвящённый в магию"
+    description: "Два заговора и одно заклинание 1 уровня от выбранного класса."
+    features:
+      - name: "Магия"
+        mechanics:
+          type: "magic_initiate"
+          choice: true
+          classes: ["bard", "cleric", "druid", "sorcerer", "warlock", "wizard"]
+
+  ritual_caster:
+    name: "Ритуальный заклинатель"
+    description: "Ритуальная книга с двумя ритуалами 1 уровня."
+    requirements:
+      - type: "ability_score"
+        target: "intelligence"
+        value: 13
+      - type: "ability_score"
+        target: "wisdom"
+        value: 13
+        alternative: true
+    features:
+      - name: "Ритуалы"
+        mechanics:
+          type: "ritual_caster"
+          choice: true
+          classes: ["bard", "cleric", "druid", "sorcerer", "warlock", "wizard"]
+
+  mage_slayer:
+    name: "Убийца магов"
+    description: "Реакция на заклинания в 5 фт., помеха концентрации, преимущество на спасброски от заклинаний рядом."
+    features:
+      - name: "Антимагия"
+        mechanics:
+          type: "mage_slayer"
+
+  linguist:
+    name: "Языковед"
+    description: "Интеллект +1, три языка, шифрованные письма."
+    ability_bonuses:
+      intelligence: 1
+    features:
+      - name: "Языки"
+        mechanics:
+          type: "language"
+          count: 3
+          choice: true
+
+  skulker:
+    name: "Проныра"
+    description: "Скрытность при слабом укрытии, выстрел не выдаёт позицию, тусклый свет не мешает."
+    requirements:
+      - type: "ability_score"
+        target: "dexterity"
+        value: 13
+    features:
+      - name: "Скрытность"
+        mechanics:
+          type: "skulker"

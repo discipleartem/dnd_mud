@@ -56,6 +56,55 @@ classes:
         feature_type: "active"
         requires_action: true
 
+      - id: "ability_score_improvement"
+        name: "Увеличение характеристик"
+        description: "Увеличьте одну характеристику на 2 или две характеристики на 1 (макс. 20). Опционально: вместо этого возьмите черту."
+        level: 4
+        feature_type: "passive"
+        requires_action: false
+
+      - id: "ability_score_improvement"
+        name: "Увеличение характеристик"
+        description: "Увеличьте одну характеристику на 2 или две характеристики на 1 (макс. 20). Опционально: вместо этого возьмите черту."
+        level: 6
+        feature_type: "passive"
+        requires_action: false
+
+      - id: "ability_score_improvement"
+        name: "Увеличение характеристик"
+        description: "Увеличьте одну характеристику на 2 или две характеристики на 1 (макс. 20). Опционально: вместо этого возьмите черту."
+        level: 8
+        feature_type: "passive"
+        requires_action: false
+
+      - id: "ability_score_improvement"
+        name: "Увеличение характеристик"
+        description: "Увеличьте одну характеристику на 2 или две характеристики на 1 (макс. 20). Опционально: вместо этого возьмите черту."
+        level: 12
+        feature_type: "passive"
+        requires_action: false
+
+      - id: "ability_score_improvement"
+        name: "Увеличение характеристик"
+        description: "Увеличьте одну характеристику на 2 или две характеристики на 1 (макс. 20). Опционально: вместо этого возьмите черту."
+        level: 14
+        feature_type: "passive"
+        requires_action: false
+
+      - id: "ability_score_improvement"
+        name: "Увеличение характеристик"
+        description: "Увеличьте одну характеристику на 2 или две характеристики на 1 (макс. 20). Опционально: вместо этого возьмите черту."
+        level: 16
+        feature_type: "passive"
+        requires_action: false
+
+      - id: "ability_score_improvement"
+        name: "Увеличение характеристик"
+        description: "Увеличьте одну характеристику на 2 или две характеристики на 1 (макс. 20). Опционально: вместо этого возьмите черту."
+        level: 19
+        feature_type: "passive"
+        requires_action: false
+
     
     subclasses:
       - id: "battle_master"
@@ -251,7 +300,48 @@ classes:
         level: 9
         feature_type: "active"
         reaction: true
-        
+
+      - id: "ability_score_improvement"
+        name: "Увеличение характеристик"
+        description: "Увеличьте одну характеристику на 2 или две характеристики на 1 (макс. 20). Опционально: вместо этого возьмите черту."
+        level: 4
+        feature_type: "passive"
+        requires_action: false
+
+      - id: "ability_score_improvement"
+        name: "Увеличение характеристик"
+        description: "Увеличьте одну характеристику на 2 или две характеристики на 1 (макс. 20). Опционально: вместо этого возьмите черту."
+        level: 8
+        feature_type: "passive"
+        requires_action: false
+
+      - id: "ability_score_improvement"
+        name: "Увеличение характеристик"
+        description: "Увеличьте одну характеристику на 2 или две характеристики на 1 (макс. 20). Опционально: вместо этого возьмите черту."
+        level: 10
+        feature_type: "passive"
+        requires_action: false
+
+      - id: "ability_score_improvement"
+        name: "Увеличение характеристик"
+        description: "Увеличьте одну характеристику на 2 или две характеристики на 1 (макс. 20). Опционально: вместо этого возьмите черту."
+        level: 12
+        feature_type: "passive"
+        requires_action: false
+
+      - id: "ability_score_improvement"
+        name: "Увеличение характеристик"
+        description: "Увеличьте одну характеристику на 2 или две характеристики на 1 (макс. 20). Опционально: вместо этого возьмите черту."
+        level: 16
+        feature_type: "passive"
+        requires_action: false
+
+      - id: "ability_score_improvement"
+        name: "Увеличение характеристик"
+        description: "Увеличьте одну характеристику на 2 или две характеристики на 1 (макс. 20). Опционально: вместо этого возьмите черту."
+        level: 19
+        feature_type: "passive"
+        requires_action: false
 
     
     subclasses:
@@ -396,7 +486,41 @@ classes:
         feature_type: "active"
         uses_per_day: 1
         requires_action: true
-        
+
+      - id: "ability_score_improvement"
+        name: "Увеличение характеристик"
+        description: "Увеличьте одну характеристику на 2 или две характеристики на 1 (макс. 20). Опционально: вместо этого возьмите черту."
+        level: 4
+        feature_type: "passive"
+        requires_action: false
+
+      - id: "ability_score_improvement"
+        name: "Увеличение характеристик"
+        description: "Увеличьте одну характеристику на 2 или две характеристики на 1 (макс. 20). Опционально: вместо этого возьмите черту."
+        level: 8
+        feature_type: "passive"
+        requires_action: false
+
+      - id: "ability_score_improvement"
+        name: "Увеличение характеристик"
+        description: "Увеличьте одну характеристику на 2 или две характеристики на 1 (макс. 20). Опционально: вместо этого возьмите черту."
+        level: 12
+        feature_type: "passive"
+        requires_action: false
+
+      - id: "ability_score_improvement"
+        name: "Увеличение характеристик"
+        description: "Увеличьте одну характеристику на 2 или две характеристики на 1 (макс. 20). Опционально: вместо этого возьмите черту."
+        level: 16
+        feature_type: "passive"
+        requires_action: false
+
+      - id: "ability_score_improvement"
+        name: "Увеличение характеристик"
+        description: "Увеличьте одну характеристику на 2 или две характеристики на 1 (макс. 20). Опционально: вместо этого возьмите черту."
+        level: 19
+        feature_type: "passive"
+        requires_action: false
 
     
     subclasses:
@@ -614,6 +738,41 @@ classes:
         level: 10
         feature_type: "spell"
         requires_action: true
+
+      - id: "ability_score_improvement"
+        name: "Увеличение характеристик"
+        description: "Увеличьте одну характеристику на 2 или две характеристики на 1 (макс. 20). Опционально: вместо этого возьмите черту."
+        level: 4
+        feature_type: "passive"
+        requires_action: false
+
+      - id: "ability_score_improvement"
+        name: "Увеличение характеристик"
+        description: "Увеличьте одну характеристику на 2 или две характеристики на 1 (макс. 20). Опционально: вместо этого возьмите черту."
+        level: 8
+        feature_type: "passive"
+        requires_action: false
+
+      - id: "ability_score_improvement"
+        name: "Увеличение характеристик"
+        description: "Увеличьте одну характеристику на 2 или две характеристики на 1 (макс. 20). Опционально: вместо этого возьмите черту."
+        level: 12
+        feature_type: "passive"
+        requires_action: false
+
+      - id: "ability_score_improvement"
+        name: "Увеличение характеристик"
+        description: "Увеличьте одну характеристику на 2 или две характеристики на 1 (макс. 20). Опционально: вместо этого возьмите черту."
+        level: 16
+        feature_type: "passive"
+        requires_action: false
+
+      - id: "ability_score_improvement"
+        name: "Увеличение характеристик"
+        description: "Увеличьте одну характеристику на 2 или две характеристики на 1 (макс. 20). Опционально: вместо этого возьмите черту."
+        level: 19
+        feature_type: "passive"
+        requires_action: false
 
     
     subclasses:
