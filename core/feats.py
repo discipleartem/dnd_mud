@@ -454,6 +454,48 @@ def apply_feats_to_stats(
     return result
 
 
+def apply_feat_grants_to_character(
+    character: Any,
+    feat_id: str,
+    choices: dict[str, Any] | None = None,
+) -> Any:
+    """Добавить на персонажа владения, навыки и языки из одной черты."""
+    from dataclasses import replace
+
+    from core.proficiencies import merge_proficiency_tokens
+    from core.skills import merge_proficiencies
+
+    choices = choices or {}
+    feat_choices = {feat_id: choices}
+    weapons, armors, tools, _ = resolve_feat_grants(feat_id, choices)
+    skills = get_feat_skill_ids([feat_id], feat_choices)
+    languages = get_feat_language_ids([feat_id], feat_choices)
+    expertise = get_feat_expertise_ids([feat_id], feat_choices)
+
+    merged_langs = list(character.languages)
+    for lang_id in languages:
+        if lang_id not in merged_langs:
+            merged_langs.append(lang_id)
+
+    return replace(
+        character,
+        weapon_proficiencies=merge_proficiency_tokens(
+            character.weapon_proficiencies, weapons
+        ),
+        armor_proficiencies=merge_proficiency_tokens(
+            character.armor_proficiencies, armors
+        ),
+        tool_proficiencies=merge_proficiency_tokens(
+            character.tool_proficiencies, tools
+        ),
+        skills=merge_proficiencies(character.skills, skills),
+        languages=merged_langs,
+        skill_expertise=merge_proficiencies(
+            character.skill_expertise, expertise
+        ),
+    )
+
+
 def tough_hp_adjustment_on_acquire(level: int) -> int:
     """Дополнительные HP при взятии черты Крепкий: 2 × уровень."""
     return 2 * level

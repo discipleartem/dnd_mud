@@ -6,9 +6,17 @@ from core.asi import (
     cap_stats,
     class_grants_asi_at_level,
     con_hp_bonus_from_asi,
+    feat_id_from_asi_choice,
     pending_asi_at_level,
 )
 from core.models import Character
+
+
+def test_feat_id_from_asi_choice():
+    assert feat_id_from_asi_choice("feat:resilient") == "resilient"
+    assert feat_id_from_asi_choice("feat:tough") == "tough"
+    assert feat_id_from_asi_choice("feat:") is None
+    assert feat_id_from_asi_choice("asi") is None
 
 
 def test_class_grants_asi_at_level_fighter():
@@ -38,6 +46,14 @@ def test_apply_asi_one_two():
 def test_con_hp_bonus_from_asi():
     old = {"constitution": 14}
     new = {"constitution": 16}
+    assert con_hp_bonus_from_asi(old, new, 8) == 8
+
+
+def test_con_hp_bonus_from_asi_uses_reached_level():
+    """При левелапе 7→8 передаётся new_level=8, не текущий char.level=7."""
+    old = {"constitution": 13}
+    new = {"constitution": 14}
+    assert con_hp_bonus_from_asi(old, new, 7) == 7
     assert con_hp_bonus_from_asi(old, new, 8) == 8
 
 

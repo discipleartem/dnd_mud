@@ -752,3 +752,44 @@ def test_back_from_proficiencies_returns_to_feats_when_required():
         class_id="fighter",
     )
     assert character_flow._back_step_from_proficiencies(state) == "feats"
+
+
+def test_back_from_feats_returns_to_subclass_when_offered():
+    """Черты после класса/подкласса — назад на подкласс, не на предысторию."""
+    state = character_flow._CreationState(
+        name="Hero",
+        difficulty="normal",
+        race_id="human",
+        subrace_id="variant_human",
+        class_id="fighter",
+    )
+    assert character_flow._back_step_from_feats(state) == "subclass"
+
+
+def test_back_from_feats_returns_to_class_when_subclass_skipped():
+    """Без шага подкласса назад с черт — на выбор класса."""
+    state = character_flow._CreationState(
+        name="Hero",
+        difficulty="hardcore",
+        race_id="human",
+        subrace_id="variant_human",
+        class_id="fighter",
+    )
+    assert character_flow._back_step_from_feats(state) == "class"
+
+
+def test_merge_feat_languages_when_languages_empty():
+    """Языки из черты добавляются, даже если список языков пуст."""
+    state = character_flow._CreationState(
+        name="Hero",
+        difficulty="normal",
+        languages=None,
+        feat_ids=["linguist"],
+        feat_choices={
+            "linguist": {
+                "languages": ["elvish", "dwarvish", "draconic"],
+            },
+        },
+    )
+    character_flow._merge_feat_languages(state)
+    assert state.languages == ["elvish", "dwarvish", "draconic"]

@@ -8,6 +8,7 @@ classes:
       en: "Fighter"
     description: "Мастер оружия и доспехов, специалист по бою. Воины обучены сражаться с различными видами оружия и доспехов, владеют многими боевыми стилями и обладают превосходной физической подготовкой."
     hit_dice: 10
+    spellcasting: false
     subclass_choice_level: 3
     prime_ability: "strength"
     saving_throws: ["strength", "constitution"]
@@ -160,10 +161,12 @@ classes:
           en: "Eldritch Knight"
         description: "Воин, сочетающий мастерство боя с заклинаниями школ Воплощения и Ограждения."
         parent_class: "fighter"
+        spellcasting: true
+        spellcasting_level: 3
         features:
           - id: "spellcasting_ek"
             name: "Использование заклинаний"
-            description: "Заклинания волшебника; известные заклинания — школы Воплощения и Ограждения"
+            description: "С 3 уровня — заклинания волшебника (заговоры и ячейки по таблице мистического рыцаря); известные заклинания 1+ уровня — школы Воплощения и Ограждения; базовая характеристика — Интеллект"
             level: 3
             feature_type: "spell"
             requires_action: true
@@ -226,6 +229,7 @@ classes:
       en: "Rogue"
     description: "Мастер скрытности, ловкости и точных ударов. Плуты превосходно справляются с проникновением в защищенные места, обезвреживанием ловушек и нанесением точных ударов по уязвимым местам противника."
     hit_dice: 8
+    spellcasting: false
     subclass_choice_level: 3
     prime_ability: "dexterity"
     skill_choices: [
@@ -411,10 +415,12 @@ classes:
           en: "Arcane Trickster"
         description: "Плут, усиливающий ловкость заклинаниями школ Иллюзии и Очарования."
         parent_class: "rogue"
+        spellcasting: true
+        spellcasting_level: 3
         features:
           - id: "spellcasting_at"
             name: "Использование заклинаний"
-            description: "Заклинания волшебника; известные — школы Иллюзии и Очарования"
+            description: "С 3 уровня — заклинания волшебника (заговоры и ячейки по таблице мистического ловкача); известные заклинания 1+ уровня — школы Иллюзии и Очарования; базовая характеристика — Интеллект"
             level: 3
             feature_type: "spell"
             requires_action: true
@@ -440,6 +446,8 @@ classes:
       en: "Cleric"
     description: "Слуга божества, использующий божественную магию. Жрецы служат высшим силам, получают от них божественную магию и служат проводниками воли своих богов в мире смертных."
     hit_dice: 8
+    spellcasting: true
+    spellcasting_level: 1
     subclass_choice_level: 1
     prime_ability: "wisdom"
     skill_choices: [
@@ -457,6 +465,13 @@ classes:
       tools: []
 
     features:
+      - id: "spellcasting_cleric"
+        name: "Использование заклинаний"
+        description: "Проводник божественной силы; заговоры, подготовка и ячейки заклинаний жреца по таблице класса; базовая характеристика — Мудрость"
+        level: 1
+        feature_type: "spell"
+        requires_action: true
+
       - id: "ritual_casting"
         name: "Заклинание ритуала"
         description: "Возможность колдовать заклинания как ритуалы"
@@ -658,6 +673,8 @@ classes:
       en: "Bard"
     description: "Вдохновляющий рассказчик и маг музыки. Барды используют музыку и слова для создания магических эффектов, вдохновляют союзников и влияют на умы окружающих."
     hit_dice: 8
+    spellcasting: true
+    spellcasting_level: 1
     subclass_choice_level: 3
     prime_ability: "charisma"
     skill_choices: [
@@ -680,6 +697,13 @@ classes:
           pool: "musical_instruments"
 
     features:
+      - id: "spellcasting_bard"
+        name: "Использование заклинаний"
+        description: "Магия воли и музыки; заговоры и ячейки заклинаний барда по таблице класса; базовая характеристика — Харизма"
+        level: 1
+        feature_type: "spell"
+        requires_action: true
+
       - id: "bardic_inspiration"
         name: "Вдохновение барда"
         description: "Бонусным действием дать союзнику в 60 фт. кость вдохновения (к6); один раз добавить к проверке, атаке или спасброску. Использований = мод. Харизмы (мин. 1), восстановление после продолжительного отдыха; кость растёт на 5/10/15 ур."

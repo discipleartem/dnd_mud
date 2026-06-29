@@ -4,6 +4,7 @@ from core.asi import cap_stats
 from core.classes import character_has_spellcasting
 from core.feats import (
     FeatRequirementContext,
+    apply_feat_grants_to_character,
     apply_feats_to_stats,
     feat_full_description_lines,
     feat_meets_requirements,
@@ -269,3 +270,31 @@ def test_feat_full_description_fallback_from_features():
     }
     lines = feat_full_description_lines(feat)
     assert "Подробность умения" in lines[0]
+
+
+def test_apply_feat_grants_to_character_merges_skills_and_tools():
+    from core.models import Character
+
+    char = Character(
+        name="Hero",
+        race="human",
+        class_name="fighter",
+        level=4,
+        stats={"constitution": 14},
+        current_hp=30,
+        max_hp=30,
+        skills=["perception"],
+        tool_proficiencies=["gaming_set_dice"],
+    )
+    choices = {
+        "skills_tools": [
+            {"type": "skill", "id": "athletics"},
+            {"type": "skill", "id": "stealth"},
+            {"type": "tool", "id": "thieves_tools"},
+        ]
+    }
+    updated = apply_feat_grants_to_character(char, "skilled", choices)
+
+    assert updated.skills == ["perception", "athletics", "stealth"]
+    assert "thieves_tools" in updated.tool_proficiencies
+    assert "gaming_set_dice" in updated.tool_proficiencies

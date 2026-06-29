@@ -55,8 +55,13 @@ def save_character(
     asi_choices: dict[str, str] | None = None,
     level: int | None = None,
     class_features_applied: bool = False,
+    apply_feat_stat_bonuses: bool = True,
 ) -> Character:
-    """Создать нового персонажа и сохранить в JSON."""
+    """Создать нового персонажа и сохранить в JSON.
+
+    ``apply_feat_stat_bonuses=False`` — если ``stats`` уже содержат бонусы
+    черт (flow создания после ``select_creation_feats``).
+    """
     if stats is None:
         stats = generate_stats_standard_array(
             list(STANDARD_ARRAY), race_id, subrace_id
@@ -68,7 +73,8 @@ def save_character(
             get_feat_language_ids,
         )
 
-        stats = apply_feats_to_stats(stats, feat_ids, feat_choices)
+        if apply_feat_stat_bonuses:
+            stats = apply_feats_to_stats(stats, feat_ids, feat_choices)
         feat_lang_ids = get_feat_language_ids(feat_ids, feat_choices)
         if feat_lang_ids:
             merged_langs = list(languages) if languages else []

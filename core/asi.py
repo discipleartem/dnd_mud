@@ -9,6 +9,16 @@ from core.types import StatMap
 ASI_FEATURE_ID = "ability_score_improvement"
 
 
+def feat_id_from_asi_choice(asi_value: str) -> str | None:
+    """ID черты из сохранённого выбора ASI (``feat:<id>``) или None."""
+    if not asi_value.startswith("feat:"):
+        return None
+    feat_id = asi_value.split(":", 1)[1]
+    if not feat_id:
+        return None
+    return feat_id
+
+
 def class_grants_asi_at_level(class_id: str, level: int) -> bool:
     """Есть ли у класса умение ASI на указанном уровне."""
     class_info = _load_classes_yaml().get(class_id, {})
