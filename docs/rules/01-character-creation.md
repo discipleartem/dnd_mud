@@ -82,7 +82,7 @@
 
 ### Сохранение персонажа
 
-Путь: `saves/characters/{save_slug}.json`. Поля модели `Character`: `name`, `race`, `class_name`, `level`, `stats`, `current_hp`, `max_hp`, `experience`, `difficulty`, `subrace`, `subclass_id` (JSON: `"subclass"`), `languages`, `background_id` (JSON: `"background"`), `weapon_proficiencies`, `armor_proficiencies`, `tool_proficiencies`, `skills`, `skill_expertise`, `tool_expertise`, `feat_ids`, `feat_choices`, `asi_choices`, `save_slug`, `created_at`.
+Путь: `saves/characters/{save_slug}.json`. Поля модели `Character`: `name`, `race`, `class_id`, `level`, `stats`, `current_hp`, `max_hp`, `experience`, `difficulty`, `subrace`, `subclass_id` (JSON: `"subclass"`), `languages`, `background_id` (JSON: `"background"`), …
 
 ### Константы генерации (`core/stats.py`)
 
