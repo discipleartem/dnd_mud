@@ -4,7 +4,7 @@
 
 ### Предварительные требования
 
-- Python 3.12+ (обзор возможностей — [PYTHON_312.md](PYTHON_312.md))
+- Python 3.12+ (синтаксис и tooling — [`.cursor/rules/dnd-mud-python-312.mdc`](../.cursor/rules/dnd-mud-python-312.mdc))
 - Git
 
 ### Установка

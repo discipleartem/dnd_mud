@@ -24,7 +24,6 @@ python main.py  # smoke: пройти затронутое меню
 ## Docs
 
 - [docs/DND_RULES.md](docs/DND_RULES.md)
-- [docs/PYTHON_312.md](docs/PYTHON_312.md)
 - [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)
 - [docs/API.md](docs/API.md)
 - [docs/CHANGELOG.md](docs/CHANGELOG.md)
@@ -48,6 +47,7 @@ Personal: `git-dev-main-sync` (`~/.cursor/skills/git-dev-main-sync/`) — sync �
 | Файл | Globs | Канон |
 |------|-------|-------|
 | `dnd-mud-verify.mdc` | always | verify, overrides, release (политика; процедуры — skills) |
+| `dnd-mud-python-312.mdc` | `**/*.py` | Python 3.12, типы, tooling |
 | `dnd-mud-python-simple.mdc` | `core/**`, `ui/**`, `main.py`, `tests/**` | простой Python |
 | `dnd-mud-tests.mdc` | `tests/**` | pytest — только нужные тесты |
 | `dnd-mud-core.mdc` | `core/**`, `ui/**`, `main.py` | слои, локализация, механика |

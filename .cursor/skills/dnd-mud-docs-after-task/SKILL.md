@@ -37,7 +37,7 @@ description: >-
 | Продуктовые требования, scope | `docs/MUD_PRD.md` |
 | Заметные фичи / фиксы для пользователей | `docs/CHANGELOG.md` |
 | Workflow разработки, команды | `docs/DEVELOPMENT.md` |
-| Python-версия, tooling | `docs/PYTHON_312.md` |
+| Python-версия, tooling | `.cursor/rules/dnd-mud-python-312.mdc` |
 
 Индекс: [`00-project.mdc`](.cursor/rules/00-project.mdc) §Docs.
 
