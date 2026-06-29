@@ -4,6 +4,7 @@ from typing import Any
 
 from colorama import Fore, Style
 
+from core.feats import get_feat_skill_ids
 from core.localization import get_string
 from core.skills import (
     get_class_skill_config,
@@ -178,10 +179,15 @@ def select_creation_skills(
     background_skills: list[str] | None = None,
     subclass_id: str | None = None,
     start_level: int = 1,
+    feat_ids: list[str] | None = None,
+    feat_choices: dict[str, dict[str, Any]] | None = None,
 ) -> list[str] | None:
     """Выбор навыков: предыстория, класс, раса, подкласс (если активен)."""
     proficient: list[str] = []
     sources: dict[str, SkillSource] = {}
+
+    for skill_id in get_feat_skill_ids(feat_ids or [], feat_choices):
+        _add_proficiency(proficient, sources, skill_id, "feat")
 
     for skill_id in background_skills or []:
         _add_proficiency(proficient, sources, skill_id, "background")

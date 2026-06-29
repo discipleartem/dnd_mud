@@ -269,14 +269,28 @@ load_skill_info(skill_id: str) -> dict[str, Any]
 
 ---
 
-## core.feats — Черты (данные)
+## core.feats — Черты
 
-Источник: `database/progression/feats.yaml`. UI выбора черты при левелапе **не реализован**; `Character.feat_ids` — задел.
+Источник: `database/progression/feats.yaml`. Выбор при создании (variant human) и при левелапе (ASI или черта).
 
 ```python
 load_feats() -> list[dict[str, Any]]
 load_feat(feat_id: str) -> dict[str, Any]
-get_feat_proficiency_grants(feat_id: str) -> tuple[list[str], list[str], list[str]]
+race_feat_step_required(race_id, subrace_id) -> bool
+feat_meets_requirements(feat_id, ctx) -> bool
+resolve_feat_grants(feat_id, choices) -> tuple[weapons, armors, tools, skills]
+get_feat_skill_ids(feat_ids, feat_choices) -> list[str]
+apply_feats_to_stats(stats, feat_ids, feat_choices) -> StatMap
+tough_hp_adjustment_on_acquire(level) -> int
+```
+
+## core.asi — Увеличение характеристик
+
+```python
+class_grants_asi_at_level(class_id, level) -> bool
+pending_asi_at_level(character, new_level) -> bool
+apply_asi_two_one(stats, stat) -> StatMap
+con_hp_bonus_from_asi(old_stats, new_stats, level) -> int
 ```
 
 ---

@@ -1,4 +1,4 @@
-"""Flow «Создать персонажа»: имя, раса, предыстория, языки, класс, навыки."""
+"""Flow создания персонажа: раса, предыстория, черты, класс."""
 
 from dataclasses import dataclass, field
 from typing import Any, Literal
@@ -7,6 +7,7 @@ from colorama import Fore, Style
 
 from core.class_features import class_features_applied_at_creation
 from core.expertise import expertise_step_required
+from core.feats import get_feat_language_ids, race_feat_step_required
 from core.localization import get_string
 from core.models import Character
 from core.subclasses import (
@@ -29,6 +30,7 @@ from ui.menus._display import (
 )
 from ui.menus.backgrounds import select_creation_background
 from ui.menus.expertise import select_creation_expertise
+from ui.menus.feats import select_creation_feats
 from ui.menus.languages import select_creation_languages
 from ui.menus.proficiencies import select_creation_proficiencies
 from ui.menus.settings import select_difficulty
@@ -41,6 +43,7 @@ CreationStep = Literal[
     "languages",
     "stats",
     "background",
+    "feats",
     "class",
     "subclass",
     "proficiencies",
@@ -69,7 +72,15 @@ class _CreationState:
     weapon_proficiencies: list[str] | None = None
     armor_proficiencies: list[str] | None = None
     tool_proficiencies: list[str] | None = None
+    feat_ids: list[str] = field(default_factory=list)
+    feat_choices: dict[str, dict[str, Any]] = field(default_factory=dict)
     hardcore_rolls: list[int] = field(default_factory=list)
+
+
+def _feats_step_required(state: _CreationState) -> bool:
+    """Нужен ли шаг выбора черт (вариант человека и т.п.)."""
+    assert state.race_id is not None
+    return race_feat_step_required(state.race_id, state.subrace_id)
 
 
 def _back_step_from_skills(state: _CreationState) -> CreationStep:
@@ -289,6 +300,8 @@ def _save_created_character(state: _CreationState) -> Character:
         weapon_proficiencies=state.weapon_proficiencies,
         armor_proficiencies=state.armor_proficiencies,
         tool_proficiencies=state.tool_proficiencies,
+        feat_ids=state.feat_ids or None,
+        feat_choices=state.feat_choices or None,
         class_features_applied=features_applied,
     )
 
@@ -373,6 +386,26 @@ def show_create_character_flow(
                 bg_id, bg_skills = bg_result
                 state.background_id = bg_id
                 state.background_skills = bg_skills
+                step = "feats" if _feats_step_required(state) else "languages"
+
+            case "feats":
+                assert state.race_id is not None
+                assert state.stats is not None
+                feat_result = select_creation_feats(
+                    strings,
+                    state.race_id,
+                    state.subrace_id,
+                    state.stats,
+                    state.background_id,
+                    language,
+                )
+                if feat_result is None:
+                    step = "background"
+                    continue
+                feat_ids, feat_choices, updated_stats = feat_result
+                state.feat_ids = feat_ids
+                state.feat_choices = feat_choices
+                state.stats = updated_stats
                 step = "languages"
 
             case "languages":
@@ -386,9 +419,19 @@ def show_create_character_flow(
                     language,
                 )
                 if langs is None:
-                    step = "background"
+                    if _feats_step_required(state):
+                        step = "feats"
+                    else:
+                        step = "background"
                     continue
-                state.languages = langs
+                feat_langs = get_feat_language_ids(
+                    state.feat_ids, state.feat_choices
+                )
+                merged = list(langs)
+                for lang_id in feat_langs:
+                    if lang_id not in merged:
+                        merged.append(lang_id)
+                state.languages = merged
                 step = "class"
 
             case "class":
@@ -430,6 +473,8 @@ def show_create_character_flow(
                     state.subclass_id,
                     state.difficulty,
                     language,
+                    feat_ids=state.feat_ids,
+                    feat_choices=state.feat_choices,
                 )
                 if profs is None:
                     step = _back_step_from_proficiencies(state)
@@ -454,6 +499,8 @@ def show_create_character_flow(
                     background_skills=state.background_skills,
                     subclass_id=state.subclass_id,
                     start_level=start_level,
+                    feat_ids=state.feat_ids,
+                    feat_choices=state.feat_choices,
                 )
                 if skills is None:
                     step = _back_step_from_skills(state)

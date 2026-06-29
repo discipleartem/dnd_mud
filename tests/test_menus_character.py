@@ -688,3 +688,22 @@ def test_proficient_summary_shows_racial_source(capsys, ru_strings):
     assert "Уже владеете" in output
     assert "Восприятие" in output
     assert "раса" in output
+
+
+def test_feats_step_required_for_variant_human_state():
+    """Вариант человека требует шаг выбора черты после предыстории."""
+    state = character_flow._CreationState(
+        name="Hero",
+        difficulty="normal",
+        race_id="human",
+        subrace_id="variant_human",
+    )
+    assert character_flow._feats_step_required(state)
+
+    elf_state = character_flow._CreationState(
+        name="Hero",
+        difficulty="normal",
+        race_id="elf",
+        subrace_id="wood_elf",
+    )
+    assert not character_flow._feats_step_required(elf_state)

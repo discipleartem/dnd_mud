@@ -1,7 +1,11 @@
-"""Повышение уровня персонажа (PHB): HP по режиму сложности."""
+"""Повышение уровня персонажа (PHB): ASI/черта и HP по режиму сложности."""
+
+from dataclasses import replace
 
 from colorama import Fore, Style
 
+from core.asi import con_hp_bonus_from_asi, pending_asi_at_level
+from core.feats import load_feat, tough_hp_adjustment_on_acquire
 from core.localization import get_string
 from core.models import Character
 from core.progression import (
@@ -12,6 +16,7 @@ from core.progression import (
 )
 from core.types import LanguageCode, StringsDict
 from ui.menus._common import _press_enter, _print_screen_header
+from ui.menus.feats import select_level_up_feat_or_asi
 
 
 def run_pending_level_ups(
@@ -23,6 +28,40 @@ def run_pending_level_ups(
     char = character
     while has_pending_level_up(char):
         new_level = char.level + 1
+        old_stats = char.stats.copy()
+        con_bonus = 0
+        tough_bonus = 0
+
+        if pending_asi_at_level(char, new_level):
+            result = select_level_up_feat_or_asi(
+                strings, char, new_level, language
+            )
+            if result is None:
+                break
+            char, stats, feat_ids, feat_choices, asi_value = result
+            asi_choices = dict(char.asi_choices)
+            asi_choices[str(new_level)] = asi_value
+            con_bonus = con_hp_bonus_from_asi(old_stats, stats, char.level)
+            had_tough = "tough" in character.feat_ids
+            char = replace(
+                char,
+                stats=stats,
+                feat_ids=feat_ids,
+                feat_choices=feat_choices,
+                asi_choices=asi_choices,
+            )
+            if asi_value.startswith("feat:tough") and not had_tough:
+                tough_bonus = tough_hp_adjustment_on_acquire(new_level)
+            if asi_value.startswith("feat:"):
+                feat_id = asi_value.split(":", 1)[1]
+                feat = load_feat(feat_id)
+                feat_name = feat.get("name", feat_id)
+                msg = get_string(
+                    strings, "level_up.feat_taken", name=feat_name
+                )
+                print(f"{Fore.GREEN}{msg}{Style.RESET_ALL}")
+                print()
+
         breakdown = hp_gain_breakdown_for_level_up(
             char.class_name,
             char.stats,
@@ -33,8 +72,19 @@ def run_pending_level_ups(
             char.feat_ids,
         )
         _print_level_up_screen(strings, char, new_level, breakdown)
+        if con_bonus:
+            msg = get_string(strings, "level_up.con_hp_bonus", bonus=con_bonus)
+            print(f"{Fore.CYAN}{msg}{Style.RESET_ALL}")
+        if tough_bonus:
+            msg = get_string(
+                strings, "level_up.tough_hp_bonus", bonus=tough_bonus
+            )
+            print(f"{Fore.CYAN}{msg}{Style.RESET_ALL}")
+        if con_bonus or tough_bonus:
+            print()
         _press_enter(strings)
-        char = apply_level_up(char, breakdown.total)
+        extra = con_bonus + tough_bonus
+        char = apply_level_up(char, breakdown.total + extra)
     return char
 
 

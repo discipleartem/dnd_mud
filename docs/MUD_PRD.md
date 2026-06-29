@@ -52,7 +52,7 @@
 | Снаряжение, КД, оружие | Частично | Каталог + владения + `compute_ac`; инвентарь — Phase 2; см. `05-equipment.md` |
 | Предыстории | Частично | Выбор + tool proficiencies; стартовое снаряжение — Phase 2; см. `04-backgrounds.md` |
 | Мультикласс | **Запрещено** | Один класс на персонажа (`class_name`); см. `06-multiclass-feats.md` |
-| Черты (feats) | Частично | `database/progression/feats.yaml` + resolver; UI выбора — Phase 2 |
+| Черты (feats) | Реализовано | Каталог PHB + создание (variant human) + ASI/feat при левелапе; боевые механики — Phase 2 |
 | Прогрессия (XP, уровни, HP при левелапе) | Частично | XP 1–10; левелап через UI (`level_up`); умения в бою — Phase 2 |
 | Игровой движок приключений | Частично | Минимальный `run_scenario()`; комнаты, проверки, бой — Phase 2 |
 | Загрузка игры | Заглушка | `errors.load_not_implemented` |

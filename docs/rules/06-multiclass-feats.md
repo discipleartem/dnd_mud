@@ -15,7 +15,7 @@
 
 ### Черты (feats)
 
-На уровнях, где класс даёт **увеличение характеристики**, можно вместо этого взять **черту** — постоянное правило (например, «Атлет», «Бдительный»). Variant human на 1 уровне получает одну черту.
+На уровнях, где класс даёт **увеличение характеристики** (`ability_score_improvement` в `classes.yaml`), можно вместо этого взять **черту** — постоянное правило (например, «Атлет», «Бдительный»). Variant human на 1 уровне получает одну черту на шаге создания после предыстории.
 
 ## Для разработчиков
 
@@ -25,11 +25,12 @@
 
 | Аспект | Мультикласс | Черты (feats) |
 |--------|-------------|---------------|
-| Статус | **Запрещено** (Pre-Alpha) | **Phase 2** |
-| YAML | — | [`database/_future/progression/feats.yaml`](../../database/_future/progression/feats.yaml) |
-| Core | `class_name` — одно поле | — |
-| Заметки | Не добавлять в flow создания и левелап | Variant human ссылается на `feat` в [`races.yaml`](../../database/races/races.yaml), но выбор черты не реализован |
+| Статус | **Запрещено** (Pre-Alpha) | **Реализовано** (создание + ASI/feat при левелапе) |
+| YAML | — | [`database/progression/feats.yaml`](../../database/progression/feats.yaml) |
+| Core | `class_name` — одно поле | [`core/feats.py`](../../core/feats.py), [`core/asi.py`](../../core/asi.py) |
+| UI | — | [`ui/menus/feats.py`](../../ui/menus/feats.py), [`ui/menus/asi.py`](../../ui/menus/asi.py), шаг в [`character_flow.py`](../../ui/menus/character_flow.py) |
+| Заметки | Не добавлять в flow создания и левелап | Боевые механики черт — Phase 2 (`game_engine`) |
 
 ### Связь с расами
 
-`variant_human` → feature `type: feat` — задел под выбор черты при создании; UI пока не обрабатывает.
+`variant_human` → feature `type: feat` — шаг `feats` после предыстории, если у расы/подрасы есть слот черты.

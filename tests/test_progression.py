@@ -174,6 +174,24 @@ def test_max_hp_level_three_fighter_average():
     assert hp == 28
 
 
+def test_resolve_pending_level_ups_records_asi_at_level_four():
+    char = Character(
+        name="Hero",
+        race="human",
+        class_name="fighter",
+        level=3,
+        stats={"strength": 16, "constitution": 14},
+        current_hp=28,
+        max_hp=28,
+        experience=2700,
+        difficulty="normal",
+    )
+    updated = resolve_pending_level_ups(char)
+    assert updated.level == 4
+    assert updated.asi_choices.get("4") == "asi"
+    assert updated.stats["strength"] == 18
+
+
 def test_apply_experience_levels_up_and_caps_hp():
     char = Character(
         name="Hero",
