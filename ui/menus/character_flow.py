@@ -5,6 +5,7 @@ from typing import Any, Literal
 
 from colorama import Fore, Style
 
+from core.class_features import class_features_applied_at_creation
 from core.expertise import expertise_step_required
 from core.localization import get_string
 from core.models import Character
@@ -29,6 +30,7 @@ from ui.menus._display import (
 from ui.menus.backgrounds import select_creation_background
 from ui.menus.expertise import select_creation_expertise
 from ui.menus.languages import select_creation_languages
+from ui.menus.proficiencies import select_creation_proficiencies
 from ui.menus.settings import select_difficulty
 from ui.menus.skills import select_creation_skills
 from ui.menus.stats import show_stats_generation_flow
@@ -41,6 +43,7 @@ CreationStep = Literal[
     "background",
     "class",
     "subclass",
+    "proficiencies",
     "skills",
     "expertise",
 ]
@@ -63,11 +66,19 @@ class _CreationState:
     skills: list[str] | None = None
     skill_expertise: list[str] | None = None
     tool_expertise: list[str] | None = None
+    weapon_proficiencies: list[str] | None = None
+    armor_proficiencies: list[str] | None = None
+    tool_proficiencies: list[str] | None = None
     hardcore_rolls: list[int] = field(default_factory=list)
 
 
 def _back_step_from_skills(state: _CreationState) -> CreationStep:
     """Куда вернуться с шага навыков."""
+    return "proficiencies"
+
+
+def _back_step_from_proficiencies(state: _CreationState) -> CreationStep:
+    """Куда вернуться с шага владений."""
     assert state.class_id is not None
     if subclass_offered_at_creation(state.difficulty, state.class_id):
         return "subclass"
@@ -257,6 +268,11 @@ def _save_created_character(state: _CreationState) -> Character:
     assert state.stats is not None
     assert state.class_id is not None
 
+    start_level = start_level_for_difficulty(state.difficulty)
+    features_applied = class_features_applied_at_creation(
+        state.class_id, state.subclass_id, start_level
+    )
+
     return _deps.save_character(
         name=state.name,
         race_id=str(state.race_id),
@@ -270,6 +286,10 @@ def _save_created_character(state: _CreationState) -> Character:
         skills=state.skills,
         skill_expertise=state.skill_expertise,
         tool_expertise=state.tool_expertise,
+        weapon_proficiencies=state.weapon_proficiencies,
+        armor_proficiencies=state.armor_proficiencies,
+        tool_proficiencies=state.tool_proficiencies,
+        class_features_applied=features_applied,
     )
 
 
@@ -385,7 +405,7 @@ def show_create_character_flow(
                 ):
                     step = "subclass"
                 else:
-                    step = "skills"
+                    step = "proficiencies"
 
             case "subclass":
                 assert state.class_id is not None
@@ -396,11 +416,35 @@ def show_create_character_flow(
                     step = "class"
                     continue
                 state.subclass_id = subclass_id
+                step = "proficiencies"
+
+            case "proficiencies":
+                assert state.race_id is not None
+                assert state.class_id is not None
+                profs = select_creation_proficiencies(
+                    strings,
+                    state.race_id,
+                    state.subrace_id,
+                    state.class_id,
+                    state.background_id,
+                    state.subclass_id,
+                    state.difficulty,
+                    language,
+                )
+                if profs is None:
+                    step = _back_step_from_proficiencies(state)
+                    continue
+                (
+                    state.weapon_proficiencies,
+                    state.armor_proficiencies,
+                    (state.tool_proficiencies),
+                ) = profs
                 step = "skills"
 
             case "skills":
                 assert state.race_id is not None
                 assert state.class_id is not None
+                start_level = start_level_for_difficulty(state.difficulty)
                 skills = select_creation_skills(
                     strings,
                     state.race_id,
@@ -408,12 +452,13 @@ def show_create_character_flow(
                     state.class_id,
                     language,
                     background_skills=state.background_skills,
+                    subclass_id=state.subclass_id,
+                    start_level=start_level,
                 )
                 if skills is None:
                     step = _back_step_from_skills(state)
                     continue
                 state.skills = skills
-                start_level = start_level_for_difficulty(state.difficulty)
                 if expertise_step_required(state.class_id, start_level):
                     step = "expertise"
                 else:

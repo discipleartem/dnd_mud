@@ -8,6 +8,8 @@ backgrounds:
     skills: ["insight", "religion"]
     languages: { count: 2, choice: true, pool: common }
     tools: []
+    tool_proficiencies:
+      fixed: []
     equipment:
       ru: ["священный символ", "молитвенник", "5 палочек благовоний", "облачение", "обычная одежда", "15 зм"]
       en: ["holy symbol", "prayer book", "5 incense sticks", "vestments", "common clothes", "15 gp"]
@@ -27,6 +29,8 @@ backgrounds:
     tools:
       ru: ["набор для грима", "набор для фальсификации"]
       en: ["disguise kit", "forgery kit"]
+    tool_proficiencies:
+      fixed: ["disguise_kit", "forgery_kit"]
     equipment:
       ru: ["отличная одежда", "набор для грима", "приспособление для жульничества", "15 зм"]
       en: ["fine clothes", "disguise kit", "con tool", "15 gp"]
@@ -46,6 +50,11 @@ backgrounds:
     tools:
       ru: ["воровские инструменты", "один игровой набор"]
       en: ["thieves' tools", "one gaming set"]
+    tool_proficiencies:
+      fixed: ["thieves_tools"]
+      choices:
+        - count: 1
+          pool: "gaming_sets"
     equipment:
       ru: ["ломик", "тёмная одежда с капюшоном", "15 зм"]
       en: ["crowbar", "dark common clothes with hood", "15 gp"]
@@ -65,6 +74,11 @@ backgrounds:
     tools:
       ru: ["набор для грима", "музыкальный инструмент"]
       en: ["disguise kit", "musical instrument"]
+    tool_proficiencies:
+      fixed: ["disguise_kit"]
+      choices:
+        - count: 1
+          pool: "musical_instruments"
     equipment:
       ru: ["музыкальный инструмент", "подарок от поклонника", "костюм", "2 зм"]
       en: ["musical instrument", "admiration gift", "costume", "2 gp"]
@@ -84,6 +98,11 @@ backgrounds:
     tools:
       ru: ["ремесленные инструменты", "наземный транспорт"]
       en: ["artisan's tools", "land vehicles"]
+    tool_proficiencies:
+      fixed: ["land_vehicles"]
+      choices:
+        - count: 1
+          pool: "artisans_tools"
     equipment:
       ru: ["ремесленные инструменты", "лопата", "горшок", "обычная одежда", "10 зм"]
       en: ["artisan's tools", "shovel", "iron pot", "common clothes", "10 gp"]
@@ -103,6 +122,10 @@ backgrounds:
     tools:
       ru: ["ремесленные инструменты"]
       en: ["artisan's tools"]
+    tool_proficiencies:
+      choices:
+        - count: 1
+          pool: "artisans_tools"
     equipment:
       ru: ["ремесленные инструменты", "рекомендательное письмо гильдии", "дорожная одежда", "15 зм"]
       en: ["artisan's tools", "guild letter of introduction", "traveler's clothes", "15 gp"]
@@ -122,6 +145,8 @@ backgrounds:
     tools:
       ru: ["набор травника"]
       en: ["herbalism kit"]
+    tool_proficiencies:
+      fixed: ["herbalism_kit"]
     equipment:
       ru: ["контейнер для свитков", "одеяло", "обычная одежда", "набор травника", "5 зм"]
       en: ["scroll case", "blanket", "common clothes", "herbalism kit", "5 gp"]
@@ -141,6 +166,10 @@ backgrounds:
     tools:
       ru: ["игровой набор"]
       en: ["gaming set"]
+    tool_proficiencies:
+      choices:
+        - count: 1
+          pool: "gaming_sets"
     equipment:
       ru: ["отличная одежда", "кольцо-печатка", "свиток родословной", "25 зм"]
       en: ["fine clothes", "signet ring", "scroll of pedigree", "25 gp"]
@@ -160,6 +189,10 @@ backgrounds:
     tools:
       ru: ["музыкальный инструмент"]
       en: ["musical instrument"]
+    tool_proficiencies:
+      choices:
+        - count: 1
+          pool: "musical_instruments"
     equipment:
       ru: ["посох", "капкан", "трофей", "одежда путешественника", "10 зм"]
       en: ["staff", "hunting trap", "trophy", "traveler's clothes", "10 gp"]
@@ -177,6 +210,8 @@ backgrounds:
     skills: ["history", "arcana"]
     languages: { count: 2, choice: true, pool: common }
     tools: []
+    tool_proficiencies:
+      fixed: []
     equipment:
       ru: ["чёрнильница", "перо", "пергамент", "маленький нож", "письмо от поклонника", "обычная одежда", "10 зм"]
       en: ["ink", "quill", "parchment", "small knife", "letter from colleague", "common clothes", "10 gp"]
@@ -196,6 +231,8 @@ backgrounds:
     tools:
       ru: ["инструменты навигатора", "водный транспорт"]
       en: ["navigator's tools", "water vehicles"]
+    tool_proficiencies:
+      fixed: ["navigator_tools", "water_vehicles"]
     equipment:
       ru: ["бelaying pin", "50 футов шёлковой верёвки", "талисман", "обычная одежда", "10 зм"]
       en: ["belaying pin", "50 feet silk rope", "lucky charm", "common clothes", "10 gp"]
@@ -215,6 +252,11 @@ backgrounds:
     tools:
       ru: ["игровой набор", "наземный транспорт"]
       en: ["gaming set", "land vehicles"]
+    tool_proficiencies:
+      fixed: ["land_vehicles"]
+      choices:
+        - count: 1
+          pool: "gaming_sets"
     equipment:
       ru: ["знак отличия", "трофей", "игровой набор", "обычная одежда", "10 зм"]
       en: ["insignia of rank", "trophy", "gaming set", "common clothes", "10 gp"]
@@ -234,6 +276,8 @@ backgrounds:
     tools:
       ru: ["воровские инструменты", "набор для грима"]
       en: ["thieves' tools", "disguise kit"]
+    tool_proficiencies:
+      fixed: ["thieves_tools", "disguise_kit"]
     equipment:
       ru: ["маленький нож", "карта города", "ручная крыса", "безделушка родителей", "обычная одежда", "10 зм"]
       en: ["small knife", "city map", "pet mouse", "parent token", "common clothes", "10 gp"]

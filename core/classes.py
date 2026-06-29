@@ -109,6 +109,7 @@ def _normalize_class_dict(
         "skill_choices": class_info.get("skill_choices", []),
         "skill_choices_count": class_info.get("skill_choices_count", 0),
         "equipment": class_info.get("equipment", {}),
+        "proficiencies": class_info.get("proficiencies", {}),
         "features": _class_features_only(class_info),
         "subclasses": class_info.get("subclasses", []),
     }

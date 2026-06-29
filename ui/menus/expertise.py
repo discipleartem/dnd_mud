@@ -6,8 +6,10 @@ from core.expertise import (
     ExpertiseGrant,
     default_rogue_tool_expertise,
     get_expertise_grants,
+    pending_expertise_grants,
 )
 from core.localization import get_string
+from core.models import Character
 from core.types import StringsDict
 from ui.menus import _deps
 from ui.menus._common import _print_screen_header, _skill_name
@@ -168,6 +170,34 @@ def select_creation_expertise(
 
     for grant in grants:
         result = _resolve_grant(strings, grant, proficiencies)
+        if result is None:
+            return None
+        skill_part, tool_part = result
+        for skill_id in skill_part:
+            if skill_id not in all_skill_expertise:
+                all_skill_expertise.append(skill_id)
+        for tool_id in tool_part:
+            if tool_id not in all_tool_expertise:
+                all_tool_expertise.append(tool_id)
+
+    return all_skill_expertise, all_tool_expertise
+
+
+def apply_pending_expertise(
+    strings: StringsDict,
+    character: Character,
+    language: str = "ru",
+) -> tuple[list[str], list[str]] | None:
+    """Добавить компетентность для grants, ещё не выбранных на персонаже."""
+    pending = pending_expertise_grants(character)
+    if not pending:
+        return list(character.skill_expertise), list(character.tool_expertise)
+
+    all_skill_expertise = list(character.skill_expertise)
+    all_tool_expertise = list(character.tool_expertise)
+
+    for grant in pending:
+        result = _resolve_grant(strings, grant, character.skills)
         if result is None:
             return None
         skill_part, tool_part = result

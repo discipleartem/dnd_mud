@@ -44,6 +44,10 @@ class Character:
     skills: list[str] = field(default_factory=list)
     skill_expertise: list[str] = field(default_factory=list)
     tool_expertise: list[str] = field(default_factory=list)
+    weapon_proficiencies: list[str] = field(default_factory=list)
+    armor_proficiencies: list[str] = field(default_factory=list)
+    tool_proficiencies: list[str] = field(default_factory=list)
+    feat_ids: list[str] = field(default_factory=list)
     save_slug: str | None = None
 ```
 
@@ -210,6 +214,132 @@ get_background_language_choice(background_id: str) -> dict[str, Any] | None
 
 **UI:** `select_creation_background(strings, language) -> tuple[str, list[str]] | None` (`ui/menus/backgrounds.py`) — `(background_id, skills)`.
 
+**UI:** `select_creation_proficiencies(...)` (`ui/menus/proficiencies.py`) — выбор инструментов из пулов класса/предыстории/расы.
+
+---
+
+## core.equipment — Каталог снаряжения
+
+Источник: `database/equipment/*.yaml`.
+
+```python
+load_weapon(weapon_id: str) -> dict[str, Any]
+load_armor(armor_id: str) -> dict[str, Any]
+load_tool(tool_id: str) -> dict[str, Any]
+load_equipment_item(item_id: str) -> dict[str, Any]
+weapon_category(weapon_id: str) -> str
+armor_category(armor_id: str) -> str
+tool_category(tool_id: str) -> str
+tools_by_category(category: str) -> list[str]
+resolve_tool_pool(pool: str) -> list[str]
+get_weapon_name(weapon_id: str, language: str = "ru") -> str
+get_armor_name(armor_id: str, language: str = "ru") -> str
+get_tool_name(tool_id: str, language: str = "ru") -> str
+weapon_matches_category(category: str, weapon_id: str) -> bool
+```
+
+---
+
+## core.constants — Константы PHB
+
+Источник: `database/core/constants.yaml`.
+
+```python
+proficiency_bonus(level: int) -> int
+difficulty_class(tier: str) -> int
+cover_bonus(tier: str) -> int | str | None
+size_label(size_id: str) -> str
+```
+
+---
+
+## core.abilities — Характеристики и навыки (метаданные)
+
+Источники: `database/core/abilities.yaml`, `database/core/skills.yaml`.
+
+```python
+ability_ids() -> tuple[str, ...]
+skill_ids() -> tuple[str, ...]
+skill_ability_map() -> dict[str, str]
+ability_for_skill(skill_id: str) -> str | None
+load_skill_info(skill_id: str) -> dict[str, Any]
+```
+
+`core/stats.py` → `STAT_NAMES` и `core/skills.py` → `PHB_SKILL_IDS` загружаются из YAML с fallback.
+
+---
+
+## core.feats — Черты (данные)
+
+Источник: `database/progression/feats.yaml`. UI выбора черты при левелапе **не реализован**; `Character.feat_ids` — задел.
+
+```python
+load_feats() -> list[dict[str, Any]]
+load_feat(feat_id: str) -> dict[str, Any]
+get_feat_proficiency_grants(feat_id: str) -> tuple[list[str], list[str], list[str]]
+```
+
+---
+
+## core.proficiencies — Владения
+
+Merge токенов из класса, подкласса, расы, предыстории и черт. На персонаже хранятся **токены** (`simple`, `martial`, `longsword`, `light`, `thieves_tools`, …), не развёрнутые списки предметов.
+
+```python
+ProficiencyChoice  # dataclass: pool, count, label
+
+merge_proficiency_tokens(*parts: list[str]) -> list[str]
+get_class_proficiency_tokens(class_id: str) -> tuple[list[str], list[str], list[str]]
+get_class_tool_choices(class_id: str) -> list[ProficiencyChoice]
+get_subclass_proficiency_tokens(class_id, subclass_id, level) -> tuple[...]
+get_racial_proficiency_tokens(race_id, subrace_id) -> tuple[...]
+get_background_tool_proficiencies(background_id) -> tuple[list[str], list[ProficiencyChoice]]
+get_feat_proficiency_tokens(feat_ids: list[str]) -> tuple[...]
+get_proficiency_choices(...) -> list[ProficiencyChoice]
+build_fixed_proficiencies(...) -> tuple[list[str], list[str], list[str]]
+has_weapon_proficiency(proficiencies, weapon_id) -> bool
+has_armor_proficiency(proficiencies, armor_id) -> bool
+has_tool_proficiency(proficiencies, tool_id) -> bool
+get_class_saving_throws(class_id: str) -> list[str]
+apply_subclass_proficiencies_to_character(character) -> Character
+```
+
+Re-export: `core.character`.
+
+---
+
+## core.checks — Проверки характеристик
+
+```python
+roll_d20(*, advantage=False, disadvantage=False) -> int
+ability_check_modifier(character, ability, *, proficient=False) -> int
+skill_check_modifier(character, skill_id) -> int
+saving_throw_modifier(character, ability) -> int
+passive_skill(character, skill_id) -> int
+ability_check(character, ability, dc, *, proficient=False, advantage=False, disadvantage=False) -> tuple[int, bool]
+skill_check(character, skill_id, dc, *, advantage=False, disadvantage=False) -> tuple[int, bool]
+saving_throw(character, ability, dc, *, advantage=False, disadvantage=False) -> tuple[int, bool]
+```
+
+Бонус мастерства — `core.constants.proficiency_bonus(level)`.
+
+---
+
+## core.combat — Атака и КД
+
+Параметры `armor_id` / `weapon_id` передаются явно (инвентарь UI — Phase 2).
+
+```python
+attack_roll_modifier(character, weapon_id, ability_mod=None) -> int
+armor_wearing_penalty(character, armor_id) -> bool
+compute_ac(character, armor_id=None, *, shield=False) -> int
+tool_check_modifier(character, tool_id, ability_mod) -> int
+```
+
+`armor_wearing_penalty` — `True`, если доспех без владения (помеха на Str/Dex checks/saves/attacks по PHB).
+
+---
+
 ### Формат saves/characters/{save_slug}.json
 
 ```json
@@ -224,6 +354,10 @@ get_background_language_choice(background_id: str) -> dict[str, Any] | None
   "background": "folk_hero",
   "languages": ["common", "elvish"],
   "skills": ["survival", "animal_handling", "athletics", "intimidation"],
+  "weapon_proficiencies": ["simple", "martial"],
+  "armor_proficiencies": ["light", "medium", "heavy", "shield"],
+  "tool_proficiencies": ["vehicles_land"],
+  "feat_ids": [],
   "level": 1,
   "stats": {
     "strength": 16,
@@ -498,7 +632,7 @@ show_settings(strings: dict, settings: dict) -> dict
 show_languages_menu(strings: dict, settings: dict) -> dict
 ```
 
-Создание персонажа: сложность → имя → раса → подраса → **характеристики** → **предыстория** → **языки** → класс → подкласс → **навыки** → (компетентность?) → сохранение.  
+Создание персонажа: сложность → имя → раса → подраса → **характеристики** → **предыстория** → **языки** → класс → подкласс → **владения** → **навыки** → (компетентность?) → сохранение.  
 Режимы сложности: `easy`, `normal`, `hardcore`. HardCore — ключевой режим для механики, приключений и модов.  
 Подробности: [MUD_PRD.md §3.2.1](MUD_PRD.md#321-режимы-сложности-игры), [§3.4](MUD_PRD.md#34-flow-создать-персонажа).
 

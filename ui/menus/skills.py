@@ -1,5 +1,7 @@
 """Выбор навыков при создании персонажа."""
 
+from typing import Any
+
 from colorama import Fore, Style
 
 from core.localization import get_string
@@ -7,6 +9,8 @@ from core.skills import (
     get_class_skill_config,
     get_fixed_racial_proficiencies_with_source,
     get_race_skill_choices_with_source,
+    get_subclass_fixed_skills,
+    get_subclass_skill_choices,
     resolve_skill_pool,
 )
 from core.types import StringsDict
@@ -133,6 +137,38 @@ def _add_proficiency(
         sources[skill_id] = source
 
 
+def _pick_skill_choices(
+    strings: StringsDict,
+    choices: list[tuple[dict[str, Any], SkillSource]],
+    class_id: str,
+    proficient: list[str],
+    sources: dict[str, SkillSource],
+    prompt_key: str,
+) -> bool:
+    """Выбрать навыки по списку (mechanics, source). False при «Назад»."""
+    pick_total = sum(int(m.get("count", 0)) for m, _src in choices)
+    pick_current = 0
+    for mechanics, source in choices:
+        count = int(mechanics.get("count", 0))
+        from_list = str(mechanics.get("from_list", "all"))
+        pool = resolve_skill_pool(from_list, class_id)
+        for _ in range(count):
+            pick_current += 1
+            picked = _pick_one_skill(
+                strings,
+                pool,
+                proficient,
+                sources,
+                prompt_key,
+                pick_current,
+                pick_total,
+            )
+            if picked is None:
+                return False
+            _add_proficiency(proficient, sources, picked, source)
+    return True
+
+
 def select_creation_skills(
     strings: StringsDict,
     race_id: str,
@@ -140,8 +176,10 @@ def select_creation_skills(
     class_id: str,
     language: str = "ru",
     background_skills: list[str] | None = None,
+    subclass_id: str | None = None,
+    start_level: int = 1,
 ) -> list[str] | None:
-    """Выбор навыков: предыстория, класс, расовые."""
+    """Выбор навыков: предыстория, класс, раса, подкласс (если активен)."""
     proficient: list[str] = []
     sources: dict[str, SkillSource] = {}
 
@@ -169,27 +207,69 @@ def select_creation_skills(
         _add_proficiency(proficient, sources, picked, "class")
 
     racial_choices = get_race_skill_choices_with_source(race_id, subrace_id)
-    racial_pick_total = sum(
-        int(mechanics.get("count", 0)) for mechanics, _source in racial_choices
-    )
-    racial_current = 0
-    for mechanics, choice_source in racial_choices:
-        count = int(mechanics.get("count", 0))
-        from_list = str(mechanics.get("from_list", "all"))
-        pool = resolve_skill_pool(from_list, class_id)
-        for _ in range(count):
-            racial_current += 1
-            picked = _pick_one_skill(
-                strings,
-                pool,
-                proficient,
-                sources,
-                "character.skills_racial_pick_prompt",
-                racial_current,
-                racial_pick_total,
-            )
-            if picked is None:
-                return None
-            _add_proficiency(proficient, sources, picked, choice_source)
+    if not _pick_skill_choices(
+        strings,
+        racial_choices,
+        class_id,
+        proficient,
+        sources,
+        "character.skills_racial_pick_prompt",
+    ):
+        return None
+
+    for skill_id in get_subclass_fixed_skills(
+        class_id, subclass_id, start_level
+    ):
+        _add_proficiency(proficient, sources, skill_id, "subclass")
+
+    subclass_choices = [
+        (mechanics, "subclass")
+        for mechanics in get_subclass_skill_choices(
+            class_id, subclass_id, start_level
+        )
+    ]
+    if subclass_choices and not _pick_skill_choices(
+        strings,
+        subclass_choices,
+        class_id,
+        proficient,
+        sources,
+        "character.skills_subclass_pick_prompt",
+    ):
+        return None
+
+    return proficient
+
+
+def add_subclass_skills_from_menu(
+    strings: StringsDict,
+    class_id: str,
+    subclass_id: str,
+    level: int,
+    current_skills: list[str],
+    language: str = "ru",
+) -> list[str] | None:
+    """Добавить навыки подкласса к уже имеющимся. None — отмена."""
+    proficient = list(current_skills)
+    sources: dict[str, SkillSource] = {s: "class" for s in proficient}
+
+    for skill_id in get_subclass_fixed_skills(class_id, subclass_id, level):
+        _add_proficiency(proficient, sources, skill_id, "subclass")
+
+    subclass_choices = [
+        (mechanics, "subclass")
+        for mechanics in get_subclass_skill_choices(
+            class_id, subclass_id, level
+        )
+    ]
+    if subclass_choices and not _pick_skill_choices(
+        strings,
+        subclass_choices,
+        class_id,
+        proficient,
+        sources,
+        "character.skills_subclass_pick_prompt",
+    ):
+        return None
 
     return proficient

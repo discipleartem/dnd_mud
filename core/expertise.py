@@ -4,6 +4,7 @@ from dataclasses import dataclass, field
 from typing import Any
 
 from core.classes import load_class_full
+from core.models import Character
 from core.skills import THIEVES_TOOLS_ID
 
 
@@ -107,6 +108,35 @@ def get_expertise_grants(
 def expertise_step_required(class_id: str, character_level: int) -> bool:
     """Нужен ли экран выбора экспертизы при создании."""
     return bool(get_expertise_grants(class_id, character_level))
+
+
+def _prior_expertise_picks(
+    class_id: str, character_level: int, before_level: int
+) -> int:
+    """Сумма pick по grants с level < before_level (без альтернатив)."""
+    return sum(
+        g.pick
+        for g in get_expertise_grants(class_id, character_level)
+        if not g.alternatives and g.level < before_level
+    )
+
+
+def grant_expertise_satisfied(
+    character: Character, grant: ExpertiseGrant
+) -> bool:
+    """Компетентность по grant уже выбрана на персонаже."""
+    if grant.alternatives:
+        return bool(character.skill_expertise or character.tool_expertise)
+    prior = _prior_expertise_picks(
+        character.class_name, character.level, grant.level
+    )
+    return len(character.skill_expertise) >= prior + grant.pick
+
+
+def pending_expertise_grants(character: Character) -> list[ExpertiseGrant]:
+    """Grants компетентности, ещё не выбранные на текущем уровне."""
+    grants = get_expertise_grants(character.class_name, character.level)
+    return [g for g in grants if not grant_expertise_satisfied(character, g)]
 
 
 def validate_expertise_selection(

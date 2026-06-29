@@ -20,7 +20,11 @@ classes:
       weapons: ["все простые", "все воинские"]
       armor: ["все доспехи", "щиты"]
       tools: ["нет"]
-    
+    proficiencies:
+      weapons: ["simple", "martial"]
+      armor: ["light", "medium", "heavy", "shield"]
+      tools: []
+
     features:
       - id: "fighting_style"
         name: "Боевой стиль"
@@ -74,6 +78,11 @@ classes:
             level: 3
             feature_type: "passive"
             requires_action: false
+            mechanics:
+              type: "tool_proficiency"
+              count: 1
+              choice: true
+              pool: "artisans_tools"
 
           - id: "know_your_enemy"
             name: "Познай своего врага"
@@ -180,7 +189,11 @@ classes:
       weapons: ["простые", "ручные арбалеты", "длинные мечи", "рапиры", "короткие мечи"]
       armor: ["лёгкие"]
       tools: ["набор вора", "набор отмычек"]
-    
+    proficiencies:
+      weapons: ["simple", "hand_crossbow", "longsword", "rapier", "shortsword"]
+      armor: ["light"]
+      tools: ["thieves_tools"]
+
     features:
       - id: "expertise"
         name: "Компетентность"
@@ -284,6 +297,9 @@ classes:
             level: 3
             feature_type: "passive"
             requires_action: false
+            mechanics:
+              type: "tool_proficiency"
+              tools: ["disguise_kit", "poisoner_tools"]
 
           - id: "assassinate"
             name: "Ликвидация"
@@ -345,7 +361,11 @@ classes:
       weapons: ["простые"]
       armor: ["лёгкие", "средние", "щиты"]
       tools: ["нет"]
-    
+    proficiencies:
+      weapons: ["simple"]
+      armor: ["light", "medium", "shield"]
+      tools: []
+
     features:
       - id: "ritual_casting"
         name: "Заклинание ритуала"
@@ -400,6 +420,9 @@ classes:
             level: 1
             feature_type: "passive"
             requires_action: false
+            mechanics:
+              type: "armor_proficiency"
+              armor_types: ["heavy"]
 
           - id: "disciple_of_life"
             name: "Поборник жизни"
@@ -524,7 +547,14 @@ classes:
       weapons: ["простые", "ручные арбалеты", "длинные мечи", "рапиры", "короткие мечи"]
       armor: ["лёгкие"]
       tools: ["три музыкальных инструмента"]
-    
+    proficiencies:
+      weapons: ["simple", "hand_crossbow", "longsword", "rapier", "shortsword"]
+      armor: ["light"]
+      tools: []
+      tool_choices:
+        - count: 3
+          pool: "musical_instruments"
+
     features:
       - id: "bardic_inspiration"
         name: "Вдохновение барда"
@@ -600,6 +630,10 @@ classes:
             level: 3
             feature_type: "passive"
             requires_action: false
+            mechanics:
+              type: "armor_proficiency"
+              armor_types: ["medium", "shield"]
+              weapons: ["martial"]
 
           - id: "combat_inspiration"
             name: "Боевое вдохновение"
@@ -629,6 +663,11 @@ classes:
             level: 3
             feature_type: "passive"
             requires_action: false
+            mechanics:
+              type: "skill_proficiency"
+              count: 3
+              choice: true
+              from_list: "all"
 
           - id: "cutting_words"
             name: "Острое словцо"

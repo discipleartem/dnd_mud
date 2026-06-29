@@ -35,7 +35,12 @@ def save_character(
     skills: list[str] | None = None,
     skill_expertise: list[str] | None = None,
     tool_expertise: list[str] | None = None,
+    weapon_proficiencies: list[str] | None = None,
+    armor_proficiencies: list[str] | None = None,
+    tool_proficiencies: list[str] | None = None,
+    feat_ids: list[str] | None = None,
     level: int | None = None,
+    class_features_applied: bool = False,
 ) -> Character:
     """Создать нового персонажа и сохранить в JSON."""
     if stats is None:
@@ -66,6 +71,17 @@ def save_character(
         skills=list(skills) if skills else [],
         skill_expertise=list(skill_expertise) if skill_expertise else [],
         tool_expertise=list(tool_expertise) if tool_expertise else [],
+        weapon_proficiencies=(
+            list(weapon_proficiencies) if weapon_proficiencies else []
+        ),
+        armor_proficiencies=(
+            list(armor_proficiencies) if armor_proficiencies else []
+        ),
+        tool_proficiencies=(
+            list(tool_proficiencies) if tool_proficiencies else []
+        ),
+        feat_ids=list(feat_ids) if feat_ids else [],
+        class_features_applied=class_features_applied,
         save_slug=_unique_save_slug(name),
         created_at=datetime.now(UTC).isoformat(),
     )

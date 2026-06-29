@@ -179,6 +179,15 @@ def test_hardcore_back_from_stats_keeps_rolls(
     )
     monkeypatch.setattr(
         character_flow,
+        "select_creation_proficiencies",
+        lambda *args, **kwargs: (
+            ["simple"],
+            ["light"],
+            ["lute", "flute", "drum"],
+        ),
+    )
+    monkeypatch.setattr(
+        character_flow,
         "_select_class",
         lambda strings, language="ru": {"id": "bard"},
     )
@@ -266,6 +275,15 @@ def test_hardcore_back_to_race_clears_rolls(
         character_flow,
         "select_creation_background",
         fake_background,
+    )
+    monkeypatch.setattr(
+        character_flow,
+        "select_creation_proficiencies",
+        lambda *args, **kwargs: (
+            ["simple", "martial"],
+            ["light", "medium", "heavy", "shield"],
+            ["dice_set"],
+        ),
     )
     monkeypatch.setattr(
         character_flow,

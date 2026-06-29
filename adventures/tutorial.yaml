@@ -25,8 +25,8 @@ scenario:
 
     subclass_trainer:
       description:
-        ru: "Наставник предлагает выбрать боевой архетип (для HardCore без подкласса)."
-        en: "A mentor offers to choose your subclass (HardCore without one)."
+        ru: "Наставник помогает освоить архетип и умения, доступные на 3 уровне."
+        en: "A mentor helps you learn your subclass and level 3 features."
       action: subclass_training
       message_key: scenario.subclass_not_ready
       next: finish

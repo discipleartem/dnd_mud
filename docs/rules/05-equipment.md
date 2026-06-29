@@ -30,12 +30,27 @@
 
 | Аспект | Значение |
 |--------|----------|
-| Статус | **Phase 2** |
-| YAML | [`database/_future/equipment/armor.yaml`](../../database/_future/equipment/armor.yaml), [`weapon.yaml`](../../database/_future/equipment/weapon.yaml), [`equipment.yaml`](../../database/_future/equipment/equipment.yaml), [`tools.yaml`](../../database/_future/equipment/tools.yaml) |
-| Core | — |
-| Заметки | Каталог не загружается runtime; см. [`database/_future/README.md`](../../database/_future/README.md) |
+| Статус | **Частично:** каталог YAML + владения + API КД/атаки; инвентарь и стартовое снаряжение — Phase 2 |
+| YAML | [`database/equipment/armor.yaml`](../../database/equipment/armor.yaml), [`weapon.yaml`](../../database/equipment/weapon.yaml), [`equipment.yaml`](../../database/equipment/equipment.yaml), [`tools.yaml`](../../database/equipment/tools.yaml) |
+| Core | [`core/equipment.py`](../../core/equipment.py), [`core/proficiencies.py`](../../core/proficiencies.py), [`core/combat.py`](../../core/combat.py) |
+| Заметки | На персонаже — **токены** владений; `armor_id`/`weapon_id` в combat API передаются явно |
+
+### Реализовано сейчас
+
+| Механика | Модуль |
+|----------|--------|
+| Загрузка оружия, доспехов, инструментов | `core/equipment.py` |
+| Владения (класс/раса/предыстория/подкласс) | `core/proficiencies.py` |
+| Шаг выбора инструментов при создании | `ui/menus/proficiencies.py` |
+| Расчёт КД, модификатор атаки, штраф за невладение доспехом | `core/combat.py` |
+
+### Запланировано (Phase 2)
+
+- Инвентарь персонажа (`equipped_armor`, `equipped_weapon`)
+- Стартовое снаряжение класса/предыстории в UI
+- Полный боевой цикл (урон, инициатива) — см. [09-combat.md](09-combat.md)
 
 ### Зависимости engine
 
-- Расчёт КД и урона — [09-combat.md](09-combat.md)
-- Инвентарь персонажа — новые поля в `Character` / save JSON
+- Расчёт КД и атак — [09-combat.md](09-combat.md)
+- Владения — [01-character-creation.md](01-character-creation.md), [`classes.yaml`](../../database/classes/classes.yaml)

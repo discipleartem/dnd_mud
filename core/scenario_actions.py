@@ -4,6 +4,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
+from core.class_features import needs_class_feature_picks
 from core.io import load_yaml
 from core.models import Character
 from core.progression import grant_experience, has_pending_level_up
@@ -17,6 +18,7 @@ class ScenarioActionResult:
     character: Character
     level_up_pending: bool = False
     pick_subclass: bool = False
+    apply_class_features: bool = False
     message_key: str | None = None
 
 
@@ -45,14 +47,18 @@ def apply_scenario_action(
         )
 
     if action == "subclass_training":
+        if needs_subclass_npc(character):
+            return ScenarioActionResult(
+                character=character, pick_subclass=True
+            )
+        if needs_class_feature_picks(character):
+            return ScenarioActionResult(
+                character=character, apply_class_features=True
+            )
         if character.subclass_id is not None:
             return ScenarioActionResult(
                 character=character,
                 message_key="characters_menu.subclass_trainer_already",
-            )
-        if needs_subclass_npc(character):
-            return ScenarioActionResult(
-                character=character, pick_subclass=True
             )
         key = str(
             action_data.get("message_key", "scenario.subclass_not_ready")
