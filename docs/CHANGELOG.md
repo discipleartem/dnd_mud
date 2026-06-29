@@ -2,11 +2,14 @@
 
 ## [Unreleased]
 
+### Fixed
+- `Character.from_dict()` — fallback на legacy-ключ `"class"` при загрузке старых сейвов (запись — только `class_id`)
+
 ### Changed
 - Рефакторинг техдолга: `core/hp_bonuses.py` (разрыв цикла races↔feats); `class_name` → `class_id` (JSON-сейвы только `class_id`)
 - Декомпозиция: `ui/menus/_display/` (пакет), `core/feats_loader.py` + `feats_grants.py`, `ui/menus/_creation_steps.py` + `_selectors.py`
 - `ui/menus/_deps.py` — re-export из расширенного `core/character.py` (seam для тестов сохранён)
-- Удалены legacy JSON-ключи `class`/`class_name` и re-export в `character_flow.py`
+- Удалены legacy re-export в `character_flow.py`; запись JSON — только `class_id` (чтение старых `"class"` — см. Fixed)
 - Документация синхронизирована: `ARCHITECTURE`, `API`, `DEVELOPMENT`, scenario runner
 
 ### Added

@@ -53,7 +53,7 @@ class Character:
 
 **Методы:**
 - `to_dict() -> dict[str, Any]` — сериализация для JSON (ключ класса — `class_id`)
-- `from_dict(data: dict[str, Any]) -> Character` — десериализация; в JSON ожидается `class_id`
+- `from_dict(data: dict[str, Any]) -> Character` — десериализация; ключ класса — `class_id` (при загрузке старых сейвов — fallback на `"class"`)
 
 ### Adventure
 
@@ -453,6 +453,8 @@ tool_check_modifier(character, tool_id, ability_mod) -> int
 ```
 
 Имя файла — slug из `core/slug.make_save_slug()`; при коллизии — `hero_2.json`, `hero_3.json` и т.д.
+
+> **Legacy:** сейвы до переименования поля могли содержать `"class"` вместо `"class_id"`; `from_dict()` читает оба ключа, `to_dict()` пишет только `class_id`.
 
 ---
 
