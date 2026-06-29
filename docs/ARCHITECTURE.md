@@ -123,7 +123,7 @@ main.py → ui/menus/ → core/character.py (фасад) → character_storage, 
 
 **Сценарий «Новая игра»:** персонаж → приключение (фильтр по режиму) → `run_scenario()` в `ui/menus/scenario_flow.py` (grant XP, subclass training, меню узлов).
 
-**Сценарий «Создать персонажа»:** сложность → имя → раса → подраса → характеристики → предыстория → языки → класс → подкласс → владения → навыки → (черты?) → сохранение в `saves/characters/{save_slug}.json`.
+**Сценарий «Создать персонажа»:** сложность → имя → раса → подраса → характеристики → предыстория → языки → класс → подкласс → черты (если нужны) → владения → навыки → (компетентность?) → сохранение в `saves/characters/{save_slug}.json`.
 
 - Оркестрация: `ui/menus/_creation_steps.py`, `ui/menus/character_flow.py`, `ui/menus/stats/stats_flow.py`
 - Генераторы: `core/stats.py`, `core/races.py` (через фасад `core/character.py`)
