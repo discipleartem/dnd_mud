@@ -3,9 +3,10 @@
 ## [Unreleased]
 
 ### Changed
-- Рефакторинг техдолга: `core/hp_bonuses.py` (разрыв цикла races↔feats); `class_name` → `class_id` с миграцией JSON-сейвов
+- Рефакторинг техдолга: `core/hp_bonuses.py` (разрыв цикла races↔feats); `class_name` → `class_id` (JSON-сейвы только `class_id`)
 - Декомпозиция: `ui/menus/_display/` (пакет), `core/feats_loader.py` + `feats_grants.py`, `ui/menus/_creation_steps.py` + `_selectors.py`
 - `ui/menus/_deps.py` — re-export из расширенного `core/character.py` (seam для тестов сохранён)
+- `character_flow.py` — только точка входа; state machine в `_creation_steps.py` (без re-export)
 - Документация синхронизирована: `ARCHITECTURE`, `API`, `DEVELOPMENT`, scenario runner
 
 ### Added

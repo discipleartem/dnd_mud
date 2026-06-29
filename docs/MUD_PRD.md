@@ -495,7 +495,7 @@ classes:
   "level": 1,
   "race": "human",
   "subrace": "variant_human",
-  "class": "fighter",
+  "class_id": "fighter",
   "stats": {
     "strength": 15,
     "dexterity": 14,

@@ -24,7 +24,7 @@
 | `ui/menus/` | Пакет экранов меню (flows по файлам) |
 | `ui/menus/main_menu.py` | Приветствие, главное меню, заглушка «Загрузить игру» |
 | `ui/menus/new_game.py` | Flow «Новая игра» |
-| `ui/menus/character_flow.py` | Фасад flow «Создать персонажа» (re-export для тестов) |
+| `ui/menus/character_flow.py` | Точка входа flow «Создать персонажа» |
 | `ui/menus/_creation_steps.py` | State machine создания персонажа |
 | `ui/menus/_selectors.py` | Общие селекторы расы, класса, подкласса |
 | `ui/menus/scenario_flow.py` | Интерактивный runner YAML-сценариев |
