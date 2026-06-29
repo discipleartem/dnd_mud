@@ -5,6 +5,7 @@ from typing import Any
 from colorama import Fore, Style
 
 from core.classes import get_subclass_choice_level
+from core.equipment import proficiency_token_label
 from core.localization import get_string
 from core.models import Character
 from core.subclasses import features_up_to_level, subclass_is_active
@@ -108,16 +109,39 @@ def _character_subclass_label(
     return char.subclass_id
 
 
-def _format_class_proficiencies(equipment: dict[str, Any]) -> str:
+def _format_class_proficiencies(
+    strings: StringsDict,
+    class_info: dict[str, Any],
+) -> str:
     """Сжатая строка владений класса."""
-    parts: list[str] = []
-    weapons = equipment.get("weapons", [])
-    armor = equipment.get("armor", [])
-    if isinstance(weapons, list) and weapons:
-        parts.append(", ".join(str(w) for w in weapons))
-    if isinstance(armor, list) and armor:
-        parts.append(", ".join(str(a) for a in armor))
-    return "; ".join(parts)
+    prof = class_info.get("proficiencies", {})
+    if isinstance(prof, dict):
+        parts: list[str] = []
+        for key, label_key in (
+            ("armor", "proficiency"),
+            ("weapons", "proficiency"),
+            ("tools", "proficiency"),
+        ):
+            raw = prof.get(key, [])
+            if isinstance(raw, list) and raw:
+                labels = [
+                    get_string(strings, f"{label_key}.{token}", default=token)
+                    for token in raw
+                ]
+                parts.append(", ".join(labels))
+        if parts:
+            return "; ".join(parts)
+    equipment = class_info.get("equipment", {})
+    if isinstance(equipment, dict):
+        legacy: list[str] = []
+        weapons = equipment.get("weapons", [])
+        armor = equipment.get("armor", [])
+        if isinstance(weapons, list) and weapons:
+            legacy.append(", ".join(str(w) for w in weapons))
+        if isinstance(armor, list) and armor:
+            legacy.append(", ".join(str(a) for a in armor))
+        return "; ".join(legacy)
+    return ""
 
 
 def _format_class_skills(
@@ -253,17 +277,15 @@ def _print_class_summary(
             f"{Fore.CYAN}{ability}{Style.RESET_ALL}"
         )
 
-    equipment = class_info.get("equipment", {})
-    if isinstance(equipment, dict):
-        prof = _format_class_proficiencies(equipment)
-        if prof:
-            label = get_string(strings, "character.class_proficiencies_label")
-            if "{proficiencies}" in label:
-                label = label.split("{proficiencies}")[0].rstrip(": ")
-            print(
-                f"  {Fore.LIGHTBLACK_EX}{label}:{Style.RESET_ALL} "
-                f"{Fore.CYAN}{prof}{Style.RESET_ALL}"
-            )
+    prof = _format_class_proficiencies(strings, class_info)
+    if prof:
+        label = get_string(strings, "character.class_proficiencies_label")
+        if "{proficiencies}" in label:
+            label = label.split("{proficiencies}")[0].rstrip(": ")
+        print(
+            f"  {Fore.LIGHTBLACK_EX}{label}:{Style.RESET_ALL} "
+            f"{Fore.CYAN}{prof}{Style.RESET_ALL}"
+        )
 
     skills_line = ""
     if skills_summary:
@@ -341,6 +363,67 @@ def _print_characters_list(
     print()
     for idx, char in enumerate(characters, 1):
         _print_character_card(idx, char, strings, language)
+
+
+def _format_proficiency_token_list(
+    strings: StringsDict,
+    tokens: list[str],
+    *,
+    language: str = "ru",
+) -> str:
+    """Локализованный список токенов владений."""
+    names = [proficiency_token_label(t, strings, language) for t in tokens]
+    return ", ".join(names)
+
+
+def _print_character_proficiencies(
+    char: Character,
+    strings: StringsDict,
+    language: str,
+    *,
+    indent: str = "     ",
+) -> None:
+    """Владения персонажа: заголовок и категории с отступом."""
+    categories: tuple[tuple[list[str], str], ...] = (
+        (
+            char.armor_proficiencies,
+            "choose_character.field_proficiencies_armor",
+        ),
+        (
+            char.weapon_proficiencies,
+            "choose_character.field_proficiencies_weapons",
+        ),
+        (
+            char.tool_proficiencies,
+            "choose_character.field_proficiencies_tools",
+        ),
+    )
+    has_any = any(tokens for tokens, _ in categories)
+    if not has_any:
+        _print_labeled_field(
+            strings,
+            "choose_character.field_proficiencies",
+            _empty_field_value(strings),
+            indent=indent,
+        )
+        return
+
+    header = get_string(strings, "choose_character.field_proficiencies")
+    print(f"{indent}{Fore.LIGHTBLACK_EX}{header}{Style.RESET_ALL}")
+    sub_indent = f"{indent}  "
+    for tokens, label_key in categories:
+        if not tokens:
+            continue
+        value = _format_proficiency_token_list(
+            strings,
+            tokens,
+            language=language,
+        )
+        cat_label = get_string(strings, label_key)
+        print(
+            f"{sub_indent}{Fore.LIGHTBLACK_EX}{cat_label}{Style.RESET_ALL} "
+            f"{Fore.CYAN}{value}{Style.RESET_ALL}"
+        )
 
 
 def _print_character_card(
@@ -479,6 +562,8 @@ def _print_character_card(
         expertise_display,
         indent=indent,
     )
+
+    _print_character_proficiencies(char, strings, language, indent=indent)
 
     _print_labeled_field(
         strings,

@@ -1,0 +1,457 @@
+# Снаряжение Dungeons & Dragons 5e
+# Категория указывается полем category у каждого предмета
+
+equipment:
+  crossbow_bolts:
+    name: "Арбалетные болты"
+    category: "ammunition"
+    quantity: 20
+    cost: { value: 1, currency: "gold" }
+    weight: 1.5
+
+  blowgun_needles:
+    name: "Иглы для трубки"
+    category: "ammunition"
+    quantity: 50
+    cost: { value: 1, currency: "gold" }
+    weight: 1
+
+  sling_bullets:
+    name: "Снаряды для пращи"
+    category: "ammunition"
+    quantity: 20
+    cost: { value: 4, currency: "copper" }
+    weight: 1.5
+
+  arrows:
+    name: "Стрелы"
+    category: "ammunition"
+    quantity: 20
+    cost: { value: 1, currency: "gold" }
+    weight: 1
+
+  wand:
+    name: "Волшебная палочка"
+    category: "arcane_focus"
+    cost: { value: 10, currency: "gold" }
+    weight: 1
+
+  rod:
+    name: "Жезл"
+    category: "arcane_focus"
+    cost: { value: 10, currency: "gold" }
+    weight: 2
+
+  crystal:
+    name: "Кристалл"
+    category: "arcane_focus"
+    cost: { value: 10, currency: "gold" }
+    weight: 1
+
+  staff:
+    name: "Посох"
+    category: "arcane_focus"
+    cost: { value: 5, currency: "gold" }
+    weight: 4
+
+  orb:
+    name: "Сфера"
+    category: "arcane_focus"
+    cost: { value: 20, currency: "gold" }
+    weight: 3
+
+  mistletoe:
+    name: "Веточка омелы"
+    category: "druidic_focus"
+    cost: { value: 1, currency: "gold" }
+    weight: null
+
+  wooden_staff:
+    name: "Деревянный посох"
+    category: "druidic_focus"
+    cost: { value: 5, currency: "gold" }
+    weight: 4
+
+  yew_wand:
+    name: "Тисовая палочка"
+    category: "druidic_focus"
+    cost: { value: 10, currency: "gold" }
+    weight: 1
+
+  totem:
+    name: "Тотем"
+    category: "druidic_focus"
+    cost: { value: 1, currency: "gold" }
+    weight: null
+
+  amulet:
+    name: "Амулет"
+    category: "holy_symbol"
+    cost: { value: 5, currency: "gold" }
+    weight: 1
+
+  reliquary:
+    name: "Реликварий"
+    category: "holy_symbol"
+    cost: { value: 5, currency: "gold" }
+    weight: 2
+
+  emblem:
+    name: "Эмблема"
+    category: "holy_symbol"
+    cost: { value: 5, currency: "gold" }
+    weight: null
+
+  abacus:
+    name: "Абак"
+    category: "tools_and_kits"
+    cost: { value: 2, currency: "gold" }
+    weight: 2
+
+  alchemist_fire:
+    name: "Алхимический огонь (фляга)"
+    category: "tools_and_kits"
+    cost: { value: 50, currency: "gold" }
+    weight: 1
+
+  block_and_tackle:
+    name: "Блок и лебёдка"
+    category: "tools_and_kits"
+    cost: { value: 1, currency: "gold" }
+    weight: 5
+
+  barrel:
+    name: "Бочка"
+    category: "tools_and_kits"
+    cost: { value: 2, currency: "gold" }
+    weight: 70
+
+  paper:
+    name: "Бумага (один лист)"
+    category: "tools_and_kits"
+    cost: { value: 2, currency: "silver" }
+    weight: null
+
+  waterskin:
+    name: "Бурдюк"
+    category: "tools_and_kits"
+    cost: { value: 2, currency: "silver" }
+    full_weight: 5
+    empty_weight: 1
+
+  glass_bottle:
+    name: "Бутылка, стеклянная"
+    category: "tools_and_kits"
+    cost: { value: 2, currency: "gold" }
+    weight: 2
+
+  bucket:
+    name: "Ведро"
+    category: "tools_and_kits"
+    cost: { value: 5, currency: "copper" }
+    weight: 2
+
+  hempen_rope:
+    name: "Верёвка пеньковая (50 футов)"
+    category: "tools_and_kits"
+    cost: { value: 1, currency: "gold" }
+    weight: 10
+
+  silk_rope:
+    name: "Верёвка шёлковая (50 футов)"
+    category: "tools_and_kits"
+    cost: { value: 10, currency: "gold" }
+    weight: 5
+
+  merchant_scale:
+    name: "Весы торговые"
+    category: "tools_and_kits"
+    cost: { value: 5, currency: "gold" }
+    weight: 3
+
+  wax:
+    name: "Воск"
+    category: "tools_and_kits"
+    cost: { value: 5, currency: "silver" }
+    weight: null
+
+  iron_pot:
+    name: "Горшок железный"
+    category: "tools_and_kits"
+    cost: { value: 2, currency: "gold" }
+    weight: 10
+
+  perfume:
+    name: "Духи (флакон)"
+    category: "tools_and_kits"
+    cost: { value: 5, currency: "gold" }
+    weight: null
+
+  lock:
+    name: "Замок"
+    category: "tools_and_kits"
+    cost: { value: 10, currency: "gold" }
+    weight: 1
+
+  healing_potion:
+    name: "Зелье лечения"
+    category: "tools_and_kits"
+    cost: { value: 50, currency: "gold" }
+    weight: 0.5
+
+  steel_mirror:
+    name: "Зеркало стальное"
+    category: "tools_and_kits"
+    cost: { value: 5, currency: "gold" }
+    weight: 0.5
+
+  caltrops:
+    name: "Калтропы"
+    category: "tools_and_kits"
+    quantity: 20
+    cost: { value: 1, currency: "gold" }
+    weight: 2
+
+  manacles:
+    name: "Кандалы"
+    category: "tools_and_kits"
+    cost: { value: 2, currency: "gold" }
+    weight: 6
+
+  mining_pick:
+    name: "Кирка горняцкая"
+    category: "tools_and_kits"
+    cost: { value: 2, currency: "gold" }
+    weight: 10
+
+  acid:
+    name: "Кислота (флакон)"
+    category: "tools_and_kits"
+    cost: { value: 25, currency: "gold" }
+    weight: 1
+
+  book:
+    name: "Книга"
+    category: "tools_and_kits"
+    cost: { value: 25, currency: "gold" }
+    weight: 5
+
+  spellbook:
+    name: "Книга заклинаний"
+    category: "tools_and_kits"
+    cost: { value: 50, currency: "gold" }
+    weight: 3
+
+  bell:
+    name: "Колокольчик"
+    category: "tools_and_kits"
+    cost: { value: 1, currency: "gold" }
+    weight: null
+
+  quiver:
+    name: "Колчан"
+    category: "tools_and_kits"
+    cost: { value: 1, currency: "gold" }
+    weight: 1
+
+  signet_ring:
+    name: "Кольцо-печатка"
+    category: "tools_and_kits"
+    cost: { value: 5, currency: "gold" }
+    weight: null
+
+  climbers_kit:
+    name: "Комплект для лазания"
+    category: "tools_and_kits"
+    cost: { value: 25, currency: "gold" }
+    weight: 12
+
+  fishing_tackle:
+    name: "Комплект для рыбалки"
+    category: "tools_and_kits"
+    cost: { value: 1, currency: "gold" }
+    weight: 4
+
+  healers_kit:
+    name: "Комплект целителя"
+    category: "tools_and_kits"
+    cost: { value: 5, currency: "gold" }
+    weight: 3
+
+  crossbow_case:
+    name: "Контейнер для арбалетных болтов"
+    category: "tools_and_kits"
+    cost: { value: 1, currency: "gold" }
+    weight: 1
+
+  map_case:
+    name: "Контейнер для карт и свитков"
+    category: "tools_and_kits"
+    cost: { value: 1, currency: "gold" }
+    weight: 1
+
+  basket:
+    name: "Корзина"
+    category: "tools_and_kits"
+    cost: { value: 4, currency: "silver" }
+    weight: 2
+
+  pouch:
+    name: "Кошель"
+    category: "tools_and_kits"
+    cost: { value: 5, currency: "silver" }
+    weight: 1
+
+  grappling_hook:
+    name: "Крюк-кошка"
+    category: "tools_and_kits"
+    cost: { value: 2, currency: "gold" }
+    weight: 4
+
+  pitcher:
+    name: "Кувшин или графин"
+    category: "tools_and_kits"
+    cost: { value: 2, currency: "copper" }
+    weight: 4
+
+  lamp:
+    name: "Лампа"
+    category: "tools_and_kits"
+    cost: { value: 5, currency: "silver" }
+    weight: 1
+
+  ladder:
+    name: "Лестница (10 футов)"
+    category: "tools_and_kits"
+    cost: { value: 1, currency: "silver" }
+    weight: 25
+
+  crowbar:
+    name: "Ломик"
+    category: "tools_and_kits"
+    cost: { value: 2, currency: "gold" }
+    weight: 5
+
+  shovel:
+    name: "Лопата"
+    category: "tools_and_kits"
+    cost: { value: 2, currency: "gold" }
+    weight: 5
+
+  oil:
+    name: "Масло (фляга)"
+    category: "tools_and_kits"
+    cost: { value: 1, currency: "silver" }
+    weight: 1
+
+  bedroll:
+    name: "Спальник"
+    category: "tools_and_kits"
+    cost: { value: 1, currency: "gold" }
+    weight: 7
+
+  mess_kit:
+    name: "Столовый набор"
+    category: "tools_and_kits"
+    cost: { value: 2, currency: "silver" }
+    weight: 1
+
+  chest:
+    name: "Сундук"
+    category: "tools_and_kits"
+    cost: { value: 5, currency: "gold" }
+    weight: 25
+
+  portable_ram:
+    name: "Таран портативный"
+    category: "tools_and_kits"
+    cost: { value: 4, currency: "gold" }
+    weight: 35
+
+  whetstone:
+    name: "Тонильный камень"
+    category: "tools_and_kits"
+    cost: { value: 1, currency: "copper" }
+    weight: 0.5
+
+  tinderbox:
+    name: "Трутница"
+    category: "tools_and_kits"
+    cost: { value: 5, currency: "silver" }
+    weight: 1
+
+  magnifying_glass:
+    name: "Увеличительное стекло"
+    category: "tools_and_kits"
+    cost: { value: 100, currency: "gold" }
+    weight: null
+
+  torch:
+    name: "Факел"
+    category: "tools_and_kits"
+    cost: { value: 1, currency: "copper" }
+    weight: 1
+
+  vial:
+    name: "Флакон"
+    category: "tools_and_kits"
+    cost: { value: 1, currency: "gold" }
+    weight: null
+
+  flask:
+    name: "Фляга или большая кружка"
+    category: "tools_and_kits"
+    cost: { value: 2, currency: "copper" }
+    weight: 1
+
+  hooded_lantern:
+    name: "Фонарь закрытый"
+    category: "tools_and_kits"
+    cost: { value: 10, currency: "gold" }
+    weight: 2
+
+  bullseye_lantern:
+    name: "Фонарь направленный"
+    category: "tools_and_kits"
+    cost: { value: 5, currency: "gold" }
+    weight: 2
+
+  chain:
+    name: "Цепь"
+    category: "tools_and_kits"
+    length: 10
+    cost: { value: 5, currency: "gold" }
+    weight: 10
+
+  ink:
+    name: "Чернила"
+    category: "tools_and_kits"
+    usage: 700
+    cost: { value: 10, currency: "gold" }
+    weight: null
+
+  pole:
+    name: "Шест"
+    category: "tools_and_kits"
+    length: 10
+    cost: { value: 5, currency: "copper" }
+    weight: 7
+
+  iron_spikes:
+    name: "Шипы железные"
+    category: "tools_and_kits"
+    quantity: 10
+    cost: { value: 1, currency: "gold" }
+    weight: 5
+
+  piton:
+    name: "Шлямбур"
+    category: "tools_and_kits"
+    cost: { value: 1, currency: "gold" }
+    weight: 5
+
+  poison:
+    name: "Яд простой"
+    category: "tools_and_kits"
+    cost: { value: 100, currency: "gold" }
+    weight: null

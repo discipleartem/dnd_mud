@@ -29,7 +29,11 @@ alwaysApply: false
 | Локализация | `database/strings/{ru,en}.yaml` | `core/localization.py` |
 | Языки PHB | `database/core/languages.yaml` | `core/languages.py` |
 | Предыстории | `database/backgrounds/backgrounds.yaml` | `core/backgrounds.py` |
-| Справочники Phase 2 | `database/_future/` | не загружаются |
+| Оружие / доспехи / инструменты | `database/equipment/*.yaml` | `core/equipment.py` |
+| Константы PHB (PB, DC) | `database/core/constants.yaml` | `core/constants.py` |
+| Характеристики / навыки (мета) | `database/core/abilities.yaml`, `skills.yaml` | `core/abilities.py` |
+| Черты | `database/progression/feats.yaml` | `core/feats.py` |
+| Архив Phase 2 | `database/_future/` | см. `_future/README.md` |
 | Сценарии | `adventures/*.yaml` | `core/adventure.py` |
 
 ## YAML conventions (`database/`, `mods/`, `adventures/`)
@@ -37,6 +41,7 @@ alwaysApply: false
 - Human-editable reference data; bilingual fields where needed: `name: { ru: "...", en: "..." }`
 - User-facing UI strings: `database/strings/{ru,en}.yaml` with matching keys
 - Do not hardcode game data in Python — extend YAML under `database/`
+- Владения на персонаже — **токены** (`simple`, `martial`, `light`, `thieves_tools`, …), не развёрнутые списки предметов
 
 ```yaml
 # mods/example_mod.yaml
@@ -75,7 +80,10 @@ files:
   "stats": {},
   "current_hp": 12,
   "experience": 0,
-  "difficulty": "normal"
+  "difficulty": "normal",
+  "weapon_proficiencies": ["simple", "martial"],
+  "armor_proficiencies": ["light", "medium", "heavy", "shield"],
+  "tool_proficiencies": []
 }
 ```
 

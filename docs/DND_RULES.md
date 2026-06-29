@@ -28,14 +28,14 @@
 | Глава PHB | Файл | Статус в MUD |
 |-----------|------|--------------|
 | Введение | [rules/00-introduction.md](rules/00-introduction.md) | Частично (`core/dice.py`) |
-| 1. Создание персонажа | [rules/01-character-creation.md](rules/01-character-creation.md) | Реализовано (языки, предыстория; без снаряжения) |
+| 1. Создание персонажа | [rules/01-character-creation.md](rules/01-character-creation.md) | Реализовано (языки, предыстория, владения; без стартового снаряжения) |
 | 2. Расы | [rules/02-races.md](rules/02-races.md) | Частично (4 из 9 рас PHB) |
 | 3. Классы | [rules/03-classes.md](rules/03-classes.md) | Частично (4 из 12 классов PHB) |
 | 3a. Подклассы | [rules/03-subclasses.md](rules/03-subclasses.md) | Phase 2; каталог — только `classes.yaml` |
 | 4. Личность и предыстория | [rules/04-backgrounds.md](rules/04-backgrounds.md) | Частично (выбор предыстории) |
-| 5. Снаряжение | [rules/05-equipment.md](rules/05-equipment.md) | Phase 2 |
-| 6. Мультикласс и черты | [rules/06-multiclass-feats.md](rules/06-multiclass-feats.md) | Мультикласс: **запрещено**; черты: Phase 2 |
-| 7. Использование характеристик | [rules/07-ability-scores.md](rules/07-ability-scores.md) | Частично |
+| 5. Снаряжение | [rules/05-equipment.md](rules/05-equipment.md) | Частично (каталог, владения, КД/атака API) |
+| 6. Мультикласс и черты | [rules/06-multiclass-feats.md](rules/06-multiclass-feats.md) | Мультикласс: **запрещено**; черты: данные в YAML, UI выбора — Phase 2 |
+| 7. Использование характеристик | [rules/07-ability-scores.md](rules/07-ability-scores.md) | Частично (checks API, PB по уровню) |
 | 8. Приключения | [rules/08-adventures.md](rules/08-adventures.md) | Запланировано (engine) |
 | 9. Сражение | [rules/09-combat.md](rules/09-combat.md) | Запланировано (engine) |
 | 10–11. Заклинания | [rules/10-spells.md](rules/10-spells.md) | Не реализовано |
@@ -54,14 +54,14 @@
 | Мудрость | Wisdom | `wisdom` |
 | Харизма | Charisma | `charisma` |
 | Модификатор характеристики | Ability modifier | `ability_modifier()` |
-| Проверка характеристики | Ability check | — |
-| Спасбросок | Saving throw | — |
-| Бонус мастерства | Proficiency bonus | — |
-| Преимущество / помеха | Advantage / disadvantage | — |
+| Проверка характеристики | Ability check | `core/checks.ability_check()` |
+| Спасбросок | Saving throw | `core/checks.saving_throw()` |
+| Бонус мастерства | Proficiency bonus | `core/constants.proficiency_bonus()` |
+| Преимущество / помеха | Advantage / disadvantage | `core/checks.roll_d20()` |
 | Кость хитов | Hit die | `hit_dice` в `classes.yaml` |
 | Хиты (HP) | Hit points | `current_hp`, `max_hp` в `Character` |
 | Сл (Сложность) | DC (Difficulty Class) | — |
-| Владение | Proficiency | — |
+| Владение | Proficiency | `Character.*_proficiencies`, `core/proficiencies.py` |
 | Действие / бонусное действие / реакция | Action / bonus action / reaction | — |
 
 ## Модификатор характеристики
@@ -80,7 +80,7 @@
 |---------|-----|-----|------|-------|-------|
 | Бонус | +2 | +3 | +4 | +5 | +6 |
 
-На 1 уровне персонажа MUD бонус мастерства = **+2** (по PHB).
+На 1 уровне персонажа MUD бонус мастерства = **+2** (по PHB). Расчёт: `core/constants.proficiency_bonus(level)` из `database/core/constants.yaml`.
 
 ## Режимы сложности MUD
 

@@ -3,6 +3,7 @@
 Фасад: re-export публичного API из подмодулей для обратной совместимости.
 """
 
+from core.abilities import ability_ids, skill_ids
 from core.character_storage import (
     delete_all_characters,
     delete_character,
@@ -15,6 +16,14 @@ from core.classes import load_class_full, load_classes, load_subclasses
 from core.expertise import (
     expertise_step_required,
     get_expertise_grants,
+)
+from core.proficiencies import (
+    build_fixed_proficiencies,
+    get_proficiency_choices,
+    has_armor_proficiency,
+    has_tool_proficiency,
+    has_weapon_proficiency,
+    merge_proficiency_tokens,
 )
 from core.races import (
     build_bonuses_from_choices,
@@ -79,7 +88,15 @@ __all__ = [
     "get_expertise_grants",
     "apply_racial_proficiencies",
     "available_skills",
+    "ability_ids",
+    "build_fixed_proficiencies",
+    "get_proficiency_choices",
+    "has_armor_proficiency",
+    "has_tool_proficiency",
+    "has_weapon_proficiency",
+    "merge_proficiency_tokens",
     "PHB_SKILL_IDS",
+    "skill_ids",
     "get_effective_race_bonuses",
     "get_race_bonuses",
     "has_choice_ability_bonuses",

@@ -1,11 +1,7 @@
 ---
-description: "IronBee DevTools (web). Отключено для console MUD — см. dnd-mud-verify.mdc."
 alwaysApply: false
 ---
-
 # Use IronBee DevTools to drive and verify the running application
-
-> **dnd_mud:** правило **отключено** (`alwaysApply: false`). Verify — `make test` / `python main.py` в [`dnd-mud-verify.mdc`](dnd-mud-verify.mdc). Браузер запрещён.
 
 **IronBee DevTools** is the verification and intelligence layer for this workspace. It is exposed as up
 to three MCP servers — one per platform enabled in the extension settings
@@ -38,8 +34,9 @@ sections below for the exact tools and flow).
 - **Scenario** tools (`scenario_*`) save and replay reusable flows.
 
 <!--IRONBEE:PLATFORM:browser-->
-<!-- Browser platform is OFF for console MUD. Enable only for web projects; verify via dnd-mud-verify.mdc. -->
-<!--
+<!-- Browser platform is ENABLED for this project (ironbee-dt-browser MCP server). -->
+
+## Browser platform: only IronBee DevTools
 
 **For any browser-related work you MUST use only the IronBee DevTools browser tools.** It is
 **FORBIDDEN** to use:
@@ -67,7 +64,6 @@ Open the affected page (`navigation_go-to`) → functionally exercise the change
 not just look at it) → confirm with a screenshot (`content_take-screenshot`) and/or an ARIA snapshot
 (`a11y_take-aria-snapshot`) → check `o11y_get-console-messages` for errors. Prefer one `execute` script
 when the flow is more than 2–3 calls.
--->
 <!--/IRONBEE:PLATFORM:browser-->
 
 <!--IRONBEE:PLATFORM:node-->

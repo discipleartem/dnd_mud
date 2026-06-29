@@ -6,7 +6,9 @@ from core.skills import (
     get_class_skill_config,
     get_fixed_racial_proficiencies_with_source,
     get_race_skill_choices_with_source,
+    get_subclass_skill_choices,
     merge_proficiencies,
+    subclass_skills_active,
 )
 
 
@@ -65,3 +67,22 @@ def test_merge_proficiencies_dedupes():
     """merge_proficiencies не дублирует навыки."""
     merged = merge_proficiencies(["perception"], ["athletics", "perception"])
     assert merged == ["perception", "athletics"]
+
+
+def test_lore_college_skill_choices_at_level_three():
+    """Коллегия знаний: 3 выборных навыка на 3 уровне."""
+    choices = get_subclass_skill_choices("bard", "lore_college", 3)
+    assert len(choices) == 1
+    assert int(choices[0].get("count", 0)) == 3
+    assert choices[0].get("from_list") == "all"
+
+
+def test_lore_college_no_skills_at_level_one():
+    """На 1 уровне подкласс барда ещё не активен — навыков нет."""
+    assert subclass_skills_active("bard", "lore_college", 1) is False
+    assert get_subclass_skill_choices("bard", "lore_college", 1) == []
+
+
+def test_subclass_skills_active_easy_start_level():
+    """На 3 уровне (easy) подкласс барда активен."""
+    assert subclass_skills_active("bard", "lore_college", 3) is True

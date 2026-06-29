@@ -77,11 +77,10 @@
 
 | Аспект | Значение |
 |--------|----------|
-| Статус | Частично: модификатор и генерация значений; проверки/навыки — Phase 2 |
-| YAML | [`database/_future/core/abilities.yaml`](../../database/_future/core/abilities.yaml), [`database/_future/core/skills.yaml`](../../database/_future/core/skills.yaml) — не загружаются |
-| Core | [`core/dice.py`](../../core/dice.py), [`core/stats.py`](../../core/stats.py) |
+| Статус | **Частично:** модификатор, генерация stats, проверки/навыки/спасброски в engine API |
+| YAML | [`database/core/abilities.yaml`](../../database/core/abilities.yaml), [`database/core/skills.yaml`](../../database/core/skills.yaml), [`database/core/constants.yaml`](../../database/core/constants.yaml) |
+| Core | [`core/dice.py`](../../core/dice.py), [`core/stats.py`](../../core/stats.py), [`core/checks.py`](../../core/checks.py), [`core/abilities.py`](../../core/abilities.py) |
 | Режимы | HardCore: целевые полные проверки в engine; Normal: может упрощаться в сценариях |
-| Заметки | В `_future/abilities.yaml` CON назван «Выносливость» — при активации сверить с PHB |
 
 ### Реализовано сейчас
 
@@ -90,13 +89,17 @@
 | `ability_modifier(score)` | `core/dice.py` |
 | Генерация и валидация stats | `core/stats.py` |
 | Применение расовых бонусов | `core/races.py`, `core/stats.py` |
+| Привязка навыков к характеристикам | `core/abilities.py` |
+| Бонус мастерства по уровню | `core/constants.proficiency_bonus()` |
+| `ability_check`, `skill_check`, `saving_throw`, `passive_skill` | `core/checks.py` |
+| Преимущество/помеха на к20 | `core/checks.roll_d20()` |
+| Владение навыками при создании | `core/skills.py`, UI |
 
 ### Запланировано (game engine)
 
-- `ability_check(ability, skill?, dc, advantage?)`
-- `saving_throw(ability, dc, proficiency?)`
-- Пассивные значения для скрытности/внимательности
-- Таблица бонуса мастерства по `Character.level`
+- Использование проверок в сценариях приключений (`adventures/*.yaml`)
+- Соревновательные проверки
+- Автоматическая помеха от невладения доспехом в combat flow — см. `core/combat.armor_wearing_penalty()`
 
 ### Связь с режимами MUD
 

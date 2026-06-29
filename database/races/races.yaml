@@ -231,7 +231,7 @@ races:
         mechanics:
           count: 1
           choice: true
-          tools: ["smith_tools", "brewer_tools", "mason_tools"]
+          tools: ["smith_tools", "brewer_supplies", "mason_tools"]
       - name: "Знание камня"
         description: "Если вы совершаете проверку Интеллекта (История), связанную с происхождением работы по камню, вы считаетесь владеющим навыком История, и добавляете к проверке удвоенный бонус мастерства вместо обычного"
         type: "skill_bonus"

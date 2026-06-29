@@ -31,6 +31,11 @@ class Character:
     skills: list[str] = field(default_factory=list)
     skill_expertise: list[str] = field(default_factory=list)
     tool_expertise: list[str] = field(default_factory=list)
+    weapon_proficiencies: list[str] = field(default_factory=list)
+    armor_proficiencies: list[str] = field(default_factory=list)
+    tool_proficiencies: list[str] = field(default_factory=list)
+    feat_ids: list[str] = field(default_factory=list)
+    class_features_applied: bool = False
     save_slug: str | None = None
     created_at: str | None = None
 
@@ -61,6 +66,16 @@ class Character:
             data["skill_expertise"] = self.skill_expertise
         if self.tool_expertise:
             data["tool_expertise"] = self.tool_expertise
+        if self.weapon_proficiencies:
+            data["weapon_proficiencies"] = self.weapon_proficiencies
+        if self.armor_proficiencies:
+            data["armor_proficiencies"] = self.armor_proficiencies
+        if self.tool_proficiencies:
+            data["tool_proficiencies"] = self.tool_proficiencies
+        if self.feat_ids:
+            data["feat_ids"] = self.feat_ids
+        if self.class_features_applied:
+            data["class_features_applied"] = True
         if self.save_slug is not None:
             data["save_slug"] = self.save_slug
         if self.created_at is not None:
@@ -77,6 +92,13 @@ class Character:
         skills_raw = data.get("skills", [])
         skill_expertise_raw = data.get("skill_expertise", [])
         tool_expertise_raw = data.get("tool_expertise", [])
+        weapon_prof_raw = data.get("weapon_proficiencies", [])
+        armor_prof_raw = data.get("armor_proficiencies", [])
+        tool_prof_raw = data.get("tool_proficiencies", [])
+        feat_ids_raw = data.get("feat_ids", [])
+        class_features_applied = bool(
+            data.get("class_features_applied", False)
+        )
         save_slug = data.get("save_slug")
         created_at = data.get("created_at")
         current_hp = int(data.get("current_hp", 0))
@@ -128,6 +150,27 @@ class Character:
                 if isinstance(tool_expertise_raw, list)
                 else []
             ),
+            weapon_proficiencies=(
+                [str(w) for w in weapon_prof_raw]
+                if isinstance(weapon_prof_raw, list)
+                else []
+            ),
+            armor_proficiencies=(
+                [str(a) for a in armor_prof_raw]
+                if isinstance(armor_prof_raw, list)
+                else []
+            ),
+            tool_proficiencies=(
+                [str(t) for t in tool_prof_raw]
+                if isinstance(tool_prof_raw, list)
+                else []
+            ),
+            feat_ids=(
+                [str(f) for f in feat_ids_raw]
+                if isinstance(feat_ids_raw, list)
+                else []
+            ),
+            class_features_applied=class_features_applied,
             save_slug=str(save_slug) if save_slug is not None else None,
             created_at=str(created_at) if created_at is not None else None,
         )

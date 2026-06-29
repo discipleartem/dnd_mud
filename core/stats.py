@@ -1,5 +1,6 @@
 """Генерация и валидация характеристик персонажа."""
 
+from core.abilities import ability_ids
 from core.races import get_race_bonuses
 from core.types import StatMap
 
@@ -7,14 +8,7 @@ STANDARD_ARRAY = [15, 14, 13, 12, 10, 8]
 STANDARD_ARRAY_MIN = min(STANDARD_ARRAY)
 STANDARD_ARRAY_MAX = max(STANDARD_ARRAY)
 
-STAT_NAMES = [
-    "strength",
-    "dexterity",
-    "constitution",
-    "intelligence",
-    "wisdom",
-    "charisma",
-]
+STAT_NAMES: list[str] = list(ability_ids())
 
 POINT_BUY_BUDGET = 27
 POINT_BUY_COSTS: dict[int, int] = {

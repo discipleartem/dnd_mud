@@ -2,29 +2,15 @@
 
 from typing import Any
 
-from core.classes import load_class_full
+from core.abilities import skill_ids
+from core.classes import (
+    _load_classes_yaml,
+    get_subclass_choice_level,
+    load_class_full,
+)
 from core.races import _get_race_and_subrace
 
-PHB_SKILL_IDS: tuple[str, ...] = (
-    "acrobatics",
-    "animal_handling",
-    "arcana",
-    "athletics",
-    "deception",
-    "history",
-    "insight",
-    "intimidation",
-    "investigation",
-    "medicine",
-    "nature",
-    "perception",
-    "performance",
-    "persuasion",
-    "religion",
-    "sleight_of_hand",
-    "stealth",
-    "survival",
-)
+PHB_SKILL_IDS: tuple[str, ...] = skill_ids()
 
 THIEVES_TOOLS_ID = "thieves_tools"
 
@@ -70,12 +56,23 @@ def get_merged_race_features(
     return features
 
 
-def _skills_from_proficiency_feature(feat: dict[str, Any]) -> list[str]:
-    """Фиксированные навыки из feature skill_proficiency."""
-    if feat.get("type") != "skill_proficiency":
-        return []
+def _skill_proficiency_mechanics(
+    feat: dict[str, Any],
+) -> dict[str, Any] | None:
+    """Механика skill_proficiency из feature (раса, подкласс)."""
     mechanics = feat.get("mechanics", {})
     if not isinstance(mechanics, dict):
+        mechanics = {}
+    mtype = mechanics.get("type") or feat.get("type")
+    if mtype != "skill_proficiency":
+        return None
+    return mechanics
+
+
+def _skills_from_proficiency_feature(feat: dict[str, Any]) -> list[str]:
+    """Фиксированные навыки из feature skill_proficiency."""
+    mechanics = _skill_proficiency_mechanics(feat)
+    if mechanics is None:
         return []
     if mechanics.get("choice"):
         return []
@@ -181,8 +178,8 @@ def get_race_skill_choices_with_source(
                 continue
             if feat.get("type") != "skill_proficiency":
                 continue
-            mechanics = feat.get("mechanics", {})
-            if not isinstance(mechanics, dict) or not mechanics.get("choice"):
+            mechanics = _skill_proficiency_mechanics(feat)
+            if mechanics is None or not mechanics.get("choice"):
                 continue
             result.append((mechanics, source))
 
@@ -193,6 +190,71 @@ def get_race_skill_choices_with_source(
         scan(subrace_info.get("features", []), "subrace")
     else:
         scan(race_info.get("features", []), "race")
+    return result
+
+
+def _subclass_features(
+    class_id: str, subclass_id: str | None
+) -> list[dict[str, Any]]:
+    """Список features выбранного подкласса."""
+    if not subclass_id:
+        return []
+    info = _load_classes_yaml().get(class_id, {})
+    if not isinstance(info, dict):
+        return []
+    raw_subs = info.get("subclasses", [])
+    if not isinstance(raw_subs, list):
+        return []
+    for sub in raw_subs:
+        if not isinstance(sub, dict) or sub.get("id") != subclass_id:
+            continue
+        features = sub.get("features", [])
+        if isinstance(features, list):
+            return [f for f in features if isinstance(f, dict)]
+    return []
+
+
+def subclass_skills_active(
+    class_id: str, subclass_id: str | None, level: int
+) -> bool:
+    """Подкласс активен на уровне — навыки подкласса можно применять."""
+    if not subclass_id:
+        return False
+    return level >= get_subclass_choice_level(class_id)
+
+
+def get_subclass_fixed_skills(
+    class_id: str, subclass_id: str | None, level: int
+) -> list[str]:
+    """Фиксированные навыки подкласса с учётом уровня персонажа."""
+    if not subclass_skills_active(class_id, subclass_id, level):
+        return []
+    result: list[str] = []
+    for feat in _subclass_features(class_id, subclass_id):
+        feat_level = feat.get("level")
+        if isinstance(feat_level, int) and feat_level > level:
+            continue
+        for skill_id in _skills_from_proficiency_feature(feat):
+            if skill_id not in result:
+                result.append(skill_id)
+    return result
+
+
+def get_subclass_skill_choices(
+    class_id: str, subclass_id: str | None, level: int
+) -> list[dict[str, Any]]:
+    """Выборные навыки подкласса с учётом уровня персонажа."""
+    if not subclass_skills_active(class_id, subclass_id, level):
+        return []
+    result: list[dict[str, Any]] = []
+    for feat in _subclass_features(class_id, subclass_id):
+        feat_level = feat.get("level")
+        if isinstance(feat_level, int) and feat_level > level:
+            continue
+        mechanics = _skill_proficiency_mechanics(feat)
+        if mechanics is None or not mechanics.get("choice"):
+            continue
+        result.append(mechanics)
     return result
 
 

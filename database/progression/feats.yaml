@@ -1,0 +1,322 @@
+# Черты Dungeons & Dragons 5e
+# Базовые черты из Player's Handbook
+
+feats:
+  heavily_armored:
+    name: "Тяжело вооружённый"
+    description: "Вы владеете тяжёлыми доспехами. Также увеличивает вашу Силу на 1."
+    ability_bonuses:
+      strength: 1
+    features:
+      - name: "Владение тяжёлыми доспехами"
+        description: "Вы владеете тяжёлыми доспехами"
+        mechanics:
+          type: "armor_proficiency"
+          armors: ["heavy"]
+
+  lightly_armored:
+    name: "Легковооружённый"
+    description: "Вы владеете лёгкими доспехами. Также увеличивает вашу Ловкость на 1."
+    ability_bonuses:
+      dexterity: 1
+    features:
+      - name: "Владение лёгкими доспехами"
+        description: "Вы владеете лёгкими доспехами"
+        mechanics:
+          type: "armor_proficiency"
+          armors: ["light"]
+
+  moderately_armored:
+    name: "Средневооружённый"
+    description: "Вы владеете средними доспехами и щитами. Также увеличивает вашу Силу или Ловкость на 1."
+    ability_bonuses_choice: ["strength", "dexterity"]
+    ability_bonuses_amount: 1
+    features:
+      - name: "Владение средними доспехами и щитами"
+        description: "Вы владеете средними доспехами и щитами"
+        mechanics:
+          type: "armor_proficiency"
+          armors: ["medium", "shield"]
+
+  weapon_master:
+    name: "Мастер оружия"
+    description: "Вы владеете четырьмя видами оружия на ваш выбор. Также увеличивает вашу Силу или Ловкость на 1."
+    ability_bonuses_choice: ["strength", "dexterity"]
+    ability_bonuses_amount: 1
+    features:
+      - name: "Владение оружием"
+        description: "Выберите четыре вида оружия"
+        mechanics:
+          type: "weapon_proficiency"
+          weapons: []  # Заполняется при выборе
+          choice: true
+          count: 4
+
+  athlete:
+    name: "Атлет"
+    description: "Увеличивает вашу Силу или Ловкость на 1. Также получаете владение атлетикой."
+    ability_bonuses_choice: ["strength", "dexterity"]
+    ability_bonuses_amount: 1
+    features:
+      - name: "Владение атлетикой"
+        description: "Владение навыком атлетика"
+        mechanics:
+          type: "skill_proficiency"
+          skills: ["athletics"]
+
+  actor:
+    name: "Актёр"
+    description: "Увеличивает вашу Харизму на 1. Получаете владение актёрством и обманом. Преимущество на проверки, чтобы притвориться."
+    ability_bonuses:
+      charisma: 1
+    features:
+      - name: "Владение актёрством и обманом"
+        description: "Владение актёрством и обманом"
+        mechanics:
+          type: "skill_proficiency"
+          skills: ["deception", "performance"]
+      - name: "Мастерство притворения"
+        description: "Преимущество на проверки характеристики, когда пытаетесь притвориться"
+        mechanics:
+          type: "advantage"
+          skills: ["deception", "performance"]
+          context: "pretending"
+
+  charger:
+    name: "Атакующий"
+    description: "Когда вы совершаете рывок, последующая атака в том же ходу получает бонус к урону."
+    features:
+      - name: "Рывок и атака"
+        description: "После рывка совершите одну атаку оружием в качестве бонусного действия"
+        mechanics:
+          type: "special_attack"
+          trigger: "dash"
+          action: "bonus_action_attack"
+          damage_bonus: 5
+
+  crossbow_expert:
+    name: "Эксперт по арбалетам"
+    description: "Вы игнорируете свойство загрузки арбалетов. После атаки арбалетом можете атаковать как бонусное действие рукой."
+    features:
+      - name: "Мастерство арбалетов"
+        description: "Игнорирование свойства загрузки, бонусная атака рукой после выстрела"
+        mechanics:
+          type: "weapon_mastery"
+          weapon_type: "crossbow"
+          ignore_loading: true
+          bonus_action_attack: true
+
+  defensive_duelist:
+    name: "Защитный дуэлянт"
+    description: "Когда вы атакуете одной рукой и держите лёгкий щит в другой, получаете +2 к КД до следующего хода."
+    requirements:
+      - type: "ability_score"
+        target: "dexterity"
+        value: 13
+    features:
+      - name: "Защитная стойка"
+        description: "+2 к КД при атаке одной рукой с лёгким щитом"
+        mechanics:
+          type: "defensive_bonus"
+          trigger: "one_handed_attack_with_shield"
+          bonus: 2
+          target: "ac"
+          duration: "until_next_turn"
+
+  dual_wielder:
+    name: "Боец двумя оружиями"
+    description: "При использовании двух оружий добавляете модификатор характеристики к урону второго оружия."
+    features:
+      - name: "Мастерство двух оружий"
+        description: "Добавляйте модификатор характеристики к урону второго оружия"
+        mechanics:
+          type: "dual_wielding"
+          damage_bonus: "ability_modifier"
+          ignore_two_weapon_fighting_property: true
+
+  dungeon_delver:
+    name: "Подземельщик"
+    description: "Преимущество на спасброски от ловушек, дополнительные 1d6 урона ловушкам атакующим."
+    features:
+      - name: "Мастерство ловушек"
+        description: "Преимущество на спасброски от ловушек, контратака по ловушке"
+        mechanics:
+          type: "trap_mastery"
+          advantage_saves: "traps"
+          counter_attack_damage: "1d6"
+
+  durable:
+    name: "Выносливый"
+    description: "Увеличивает Телосложение на 1. При восстановлении хитов восстанавливаете минимум 2 хита за уровень Телосложения."
+    ability_bonuses:
+      constitution: 1
+    features:
+      - name: "Быстрое восстановление"
+        description: "Минимум 2 хита за уровень Телосложения при отдыхе"
+        mechanics:
+          type: "healing"
+          healing_type: "hit_point_recovery"
+          minimum_per_level: 2
+          stat_bonus: "constitution"
+
+  elemental_adept:
+    name: "Адепт стихии"
+    description: "Выберите одну стихию. Получаете сопротивление к ней и можете создавать небольшие эффекты."
+    features:
+      - name: "Сопротивление стихии"
+        description: "Сопротивление к выбранной стихии"
+        mechanics:
+          type: "resistance"
+          damage_types: []  # Заполняется при выборе
+          choice: true
+          count: 1
+      - name: "Маленькие стихийные трюки"
+        description: "Создание небольших эффектов выбранной стихии"
+        mechanics:
+          type: "spellcasting"
+          spell_type: "elemental_tricks"
+          choice: true
+
+  grappler:
+    name: "Схватчик"
+    description: "Преимущество на атаки против существ, которые вы схватили. Схваченные существа не могут атаковать других."
+    requirements:
+      - type: "ability_score"
+        target: "strength"
+        value: 13
+    features:
+      - name: "Мастерство захвата"
+        description: "Преимущество на атаки против схваченных, ограничение атак схваченных"
+        mechanics:
+          type: "grappling"
+          advantage_attacks: "against_grappled_creatures"
+          restrict_attacks: "grappled_creatures_cannot_attack_others"
+
+  healer:
+    name: "Лекарь"
+    description: "При использовании набора лекаря восстанавливаете дополнительные хиты. stabilise без проверки."
+    features:
+      - name: "Эффективное лечение"
+        description: "Дополнительные хиты при лечении, автоматическая стабилизация"
+        mechanics:
+          type: "healing"
+          healer_kit_bonus: true
+          stabilize_no_check: true
+          extra_hp: 0  # Обычно 1d6 + 4, но упростим
+
+  heavy_armor_master:
+    name: "Мастер тяжёлых доспехов"
+    description: "Снижаете немагический урон от атак по тяжёлым доспехам."
+    requirements:
+      - type: "ability_score"
+        target: "strength"
+        value: 13
+    features:
+      - name: "Снижение урона"
+        description: "Снижает немагический урон от атак по тяжёлым доспехам"
+        mechanics:
+          type: "damage_reduction"
+          amount: 3
+          damage_types: ["nonmagical_physical"]
+          condition: "wearing_heavy_armor"
+
+  lucky:
+    name: "Счастливчик"
+    description: "Можете перебросить 1, 2 или 20. Другие могут перебросить ваши атаки/проверки/спасброски."
+    features:
+      - name: "Удача"
+        description: "Переброс 1, 2 или 20. Заставляйте других перебрасывать ваши удачные броски."
+        mechanics:
+          type: "lucky"
+          reroll_values: [1, 2, 20]
+          force_reroll_on_attackers: true
+          force_reroll_on_checks: true
+          force_reroll_on_saves: true
+          uses_per_turn: 1
+
+  mobile:
+    name: "Мобильный"
+    description: "Скорость +10 футов. Атаки по вам не останавливают движение."
+    features:
+      - name: "Боевая мобильность"
+        description: "Скорость +10, атаки не останавливают движение"
+        mechanics:
+          type: "mobility"
+          speed_bonus: 10
+          attacks_dont_stop_movement: true
+          difficult_terrain_ignoring: false
+
+  resilient:
+    name: "Устойчивый"
+    description: "Увеличивает одну характеристику на 1. Преимущество на спасброски по ней."
+    ability_bonuses_choice: ["strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma"]
+    ability_bonuses_amount: 1
+    features:
+      - name: "Устойчивость"
+        description: "Преимущество на спасброски по выбранной характеристике"
+        mechanics:
+          type: "advantage"
+          save_type: ""  # Заполняется при выборе
+          choice: true
+
+  sentinel:
+    name: "Часовой"
+    description: "Атаки возможности останавливают движение. Атакуете тех, кто атакует ваших союзников."
+    features:
+      - name: "Защитная стойка"
+        description: "Атаки возможностей останавливают цель, атака нападающих на союзников"
+        mechanics:
+          type: "protection"
+          opportunity_attack_stops_movement: true
+          react_to_attacks_on_allies: true
+          no_disadvantage_on_reach: true
+
+  skill_expert:
+    name: "Эксперт навыков"
+    description: "Получите двойное владение двумя навыками или одним навыком и одним инструментом."
+    features:
+      - name: "Экспертное владение"
+        description: "Двойное владение навыками или инструментами"
+        mechanics:
+          type: "skill_expertise"
+          skills: []  # Заполняется при выборе
+          tools: []  # Заполняется при выборе
+          choice: true
+          count: 2
+          expertise: true
+
+  skilled:
+    name: "Мастер умений"
+    description: "Получите владение любыми четырьмя навыками или инструментами."
+    features:
+      - name: "Разностороннее владение"
+        description: "Владение четырьмя навыками или инструментами"
+        mechanics:
+          type: "multiple_proficiency"
+          skills_tools: []  # Заполняется при выборе
+          choice: true
+          count: 4
+          types: ["skill", "tool"]
+
+  tough:
+    name: "Крепкий"
+    description: "Получите 2 дополнительных хита за уровень."
+    features:
+      - name: "Дополнительные хиты"
+        description: "2 дополнительных хита за уровень персонажа"
+        mechanics:
+          type: "hit_point_bonus"
+          amount: 2
+          per_level: true
+
+  war_caster:
+    name: "Заклинатель в бою"
+    description: "Преимущество на сохранение концентрации. Заклинания как бонусное действие. Атаки заклинаниями оружием."
+    features:
+      - name: "Боевое колдовство"
+        description: "Преимущество на концентрацию, заклинания бонусным действием, атака заклинаниями оружием"
+        mechanics:
+          type: "combat_spellcasting"
+          advantage_concentration_saves: true
+          spell_as_bonus_action: true
+          spell_with_weapon_attack: true
