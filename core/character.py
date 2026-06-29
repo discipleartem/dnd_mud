@@ -4,6 +4,8 @@
 """
 
 from core.abilities import ability_ids, skill_ids
+from core.adventure import load_adventures
+from core.backgrounds import load_background_full, load_backgrounds
 from core.character_storage import (
     delete_all_characters,
     delete_character,
@@ -13,10 +15,13 @@ from core.character_storage import (
     update_character,
 )
 from core.classes import load_class_full, load_classes, load_subclasses
+from core.dice import roll_ability_score
 from core.expertise import (
     expertise_step_required,
     get_expertise_grants,
 )
+from core.languages import get_language_name, load_languages
+from core.localization import load_strings
 from core.proficiencies import (
     build_fixed_proficiencies,
     get_proficiency_choices,
@@ -83,6 +88,7 @@ __all__ = [
     "generate_stats_random",
     "generate_stats_standard_array",
     "get_choice_ability_bonus_mechanics",
+    "get_language_name",
     "expertise_step_required",
     "get_class_skill_config",
     "get_expertise_grants",
@@ -100,15 +106,21 @@ __all__ = [
     "get_effective_race_bonuses",
     "get_race_bonuses",
     "has_choice_ability_bonuses",
+    "load_adventures",
+    "load_background_full",
+    "load_backgrounds",
     "load_characters",
     "load_class_full",
     "load_classes",
+    "load_languages",
     "load_subclasses",
     "load_race_full",
     "load_races",
+    "load_strings",
     "point_buy_points_remaining",
     "point_buy_total_cost",
     "remaining_standard_array_pool",
+    "roll_ability_score",
     "save_character",
     "starting_max_hp",
     "update_character",
