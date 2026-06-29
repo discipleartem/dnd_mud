@@ -5,6 +5,13 @@ from pathlib import Path
 from typing import Any
 
 from core.feats import HpBonusSource, hit_point_bonus_sources_from_features
+from core.grants import (
+    _ABILITY_INCREASE,
+    grants_from_entity,
+    grants_of_type,
+    inherit_flags,
+    merge_entity_grants,
+)
 from core.io import load_yaml
 from core.localization import resolve_localized_text
 from core.types import StatMap
@@ -55,46 +62,73 @@ def get_race_bonuses(race_id: str, subrace_id: str | None = None) -> StatMap:
     if not race_info:
         return {}
 
-    if subrace_id and subrace_info:
-        inherit_base = subrace_info.get("inherit_base_bonuses", True)
-    else:
-        inherit_base = True
-
     bonuses: StatMap = {}
-    if inherit_base:
-        base_bonuses = race_info.get("ability_bonuses", {})
-        if isinstance(base_bonuses, dict):
-            bonuses.update(base_bonuses)
-
-    if subrace_id and subrace_info:
+    if subrace_info:
+        inherit_bonuses, _ = inherit_flags(subrace_info)
+        if inherit_bonuses:
+            base_bonuses = race_info.get("ability_bonuses", {})
+            if isinstance(base_bonuses, dict):
+                bonuses.update(base_bonuses)
         sub_bonuses = subrace_info.get("ability_bonuses", {})
         if isinstance(sub_bonuses, dict):
             bonuses = _merge_bonus_dicts(bonuses, sub_bonuses)
+    else:
+        base_bonuses = race_info.get("ability_bonuses", {})
+        if isinstance(base_bonuses, dict):
+            bonuses.update(base_bonuses)
     return bonuses
 
 
-def _race_info_for_features(
+def collect_race_grants(
     race_id: str, subrace_id: str | None = None
-) -> dict[str, Any]:
-    """Данные расы/подрасы для чтения features."""
+) -> list[dict[str, Any]]:
+    """Grants расы и подрасы с учётом наследования."""
     race_info, subrace_info = _get_race_and_subrace(race_id, subrace_id)
-    if subrace_id and subrace_info:
-        return subrace_info
-    return race_info
+    if not race_info:
+        return []
+    if subrace_info:
+        return merge_entity_grants(race_info, subrace_info, use_parent=True)
+    return grants_from_entity(race_info)
+
+
+def _grants_as_features(grants: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """Legacy-вид features для существующих парсеров."""
+    result: list[dict[str, Any]] = []
+    for grant in grants:
+        gtype = str(grant.get("type", ""))
+        legacy_type = "ability_bonus" if gtype == _ABILITY_INCREASE else gtype
+        mechanics = dict(grant)
+        if "type" in mechanics:
+            del mechanics["type"]
+        if "amount" in mechanics and "value" not in mechanics:
+            mechanics["value"] = mechanics["amount"]
+        if legacy_type == "feat" and "from" in mechanics:
+            mechanics.setdefault("from_list", mechanics["from"])
+        entry: dict[str, Any] = {"type": legacy_type, "mechanics": mechanics}
+        if grant.get("name"):
+            entry["name"] = grant["name"]
+        result.append(entry)
+    return result
+
+
+def _collect_race_features(
+    race_id: str, subrace_id: str | None = None
+) -> list[dict[str, Any]]:
+    """Особенности расы и подрасы (legacy features из grants)."""
+    return _grants_as_features(collect_race_grants(race_id, subrace_id))
 
 
 def get_choice_ability_bonus_mechanics(
     race_id: str, subrace_id: str | None = None
 ) -> dict[str, Any] | None:
-    """Механика выборного бонуса к характеристикам из features."""
-    info = _race_info_for_features(race_id, subrace_id)
-    for feat in info.get("features", []):
-        if not isinstance(feat, dict):
-            continue
-        if feat.get("type") != "ability_bonus":
-            continue
-        mechanics = feat.get("mechanics", {})
-        if isinstance(mechanics, dict) and mechanics.get("choice"):
+    """Механика выборного бонуса к характеристикам из grants."""
+    for grant in grants_of_type(
+        collect_race_grants(race_id, subrace_id), _ABILITY_INCREASE
+    ):
+        if grant.get("choice"):
+            mechanics = dict(grant)
+            if "amount" in mechanics and "value" not in mechanics:
+                mechanics["value"] = mechanics["amount"]
             return mechanics
     return None
 
@@ -114,33 +148,6 @@ def build_bonuses_from_choices(
     for stat in chosen_stats:
         bonuses = _merge_bonus_dicts(bonuses, {stat: value})
     return bonuses
-
-
-def _collect_race_features(
-    race_id: str, subrace_id: str | None = None
-) -> list[dict[str, Any]]:
-    """Особенности расы и подрасы (базовые + подрасовые)."""
-    race_info, subrace_info = _get_race_and_subrace(race_id, subrace_id)
-    if not race_info:
-        return []
-
-    features: list[dict[str, Any]] = []
-    if subrace_id and subrace_info:
-        inherit_base = subrace_info.get("inherit_base_features", True)
-        if inherit_base:
-            raw_base = race_info.get("features", [])
-            if isinstance(raw_base, list):
-                features.extend(
-                    feat for feat in raw_base if isinstance(feat, dict)
-                )
-        raw_sub = subrace_info.get("features", [])
-        if isinstance(raw_sub, list):
-            features.extend(feat for feat in raw_sub if isinstance(feat, dict))
-    else:
-        raw = race_info.get("features", [])
-        if isinstance(raw, list):
-            features.extend(feat for feat in raw if isinstance(feat, dict))
-    return features
 
 
 def get_racial_hp_bonus_sources(
@@ -179,12 +186,6 @@ def _localize_race_info(
     result = dict(race_info)
     if "name" in result:
         result["name"] = resolve_localized_text(result["name"], language)
-    if "base_choice_name" in result:
-        result["base_choice_name"] = resolve_localized_text(
-            result["base_choice_name"],
-            language,
-            fallback=str(result.get("name", "")),
-        )
     subraces = result.get("subraces")
     if isinstance(subraces, dict):
         localized_subraces: dict[str, Any] = {}

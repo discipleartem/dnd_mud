@@ -50,26 +50,26 @@ def merge_proficiency_tokens(*parts: list[str]) -> list[str]:
 def _tokens_from_mechanics(
     mechanics: dict[str, Any],
 ) -> tuple[list[str], list[str], list[str]]:
-    """Из mechanics feature: weapons, armors, tools."""
+    """Из mechanics/grant: weapons, armors, tools."""
+    merged = dict(mechanics)
     weapons: list[str] = []
     armors: list[str] = []
     tools: list[str] = []
-    mtype = str(mechanics.get("type", ""))
+    mtype = str(merged.get("type", ""))
     if mtype in ("weapon_proficiency", "bonus_proficiencies"):
-        raw = mechanics.get("weapons", [])
+        raw = merged.get("weapons", [])
         if isinstance(raw, list):
             weapons.extend(str(w) for w in raw)
     if mtype in ("armor_proficiency", "bonus_proficiencies"):
-        raw = mechanics.get("armor_types", mechanics.get("armors", []))
+        raw = merged.get("armor_types", merged.get("armors", []))
         if isinstance(raw, list):
             armors.extend(_normalize_armor_token(str(a)) for a in raw)
-    if mtype == "tool_proficiency" and not mechanics.get("choice"):
-        raw = mechanics.get("tools", [])
+    if mtype == "tool_proficiency" and not merged.get("choice"):
+        raw = merged.get("tools", [])
         if isinstance(raw, list):
             tools.extend(str(t) for t in raw)
-    # valor: weapons в armor_proficiency block
     if mtype == "armor_proficiency":
-        raw_w = mechanics.get("weapons", [])
+        raw_w = merged.get("weapons", [])
         if isinstance(raw_w, list):
             weapons.extend(str(w) for w in raw_w)
     return weapons, armors, tools
@@ -218,32 +218,21 @@ def get_background_tool_proficiencies(
     background_id: str,
 ) -> tuple[list[str], list[ProficiencyChoice]]:
     """Инструменты предыстории: fixed + choices."""
-    from core.backgrounds import _load_backgrounds_yaml
+    from core.backgrounds import get_background_tool_proficiencies as _bg_tools
 
-    info = _load_backgrounds_yaml().get(background_id, {})
-    if not isinstance(info, dict):
-        return [], []
-    prof = info.get("tool_proficiencies", {})
-    if not isinstance(prof, dict):
-        return [], []
-    fixed_raw = prof.get("fixed", [])
-    fixed = [str(t) for t in fixed_raw] if isinstance(fixed_raw, list) else []
+    fixed, raw_choices = _bg_tools(background_id)
     choices: list[ProficiencyChoice] = []
-    raw_choices = prof.get("choices", [])
-    if isinstance(raw_choices, list):
-        for entry in raw_choices:
-            if not isinstance(entry, dict):
-                continue
-            count = int(entry.get("count", 1))
-            pool = str(entry.get("pool", ""))
-            choices.append(
-                ProficiencyChoice(
-                    count=count,
-                    pool=pool,
-                    source="background",
-                    options=resolve_tool_pool(pool) if pool else None,
-                )
+    for entry in raw_choices:
+        count = int(entry.get("count", 1))
+        pool = str(entry.get("pool", ""))
+        choices.append(
+            ProficiencyChoice(
+                count=count,
+                pool=pool,
+                source="background",
+                options=resolve_tool_pool(pool) if pool else None,
             )
+        )
     return fixed, choices
 
 
