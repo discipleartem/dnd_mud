@@ -17,6 +17,8 @@ disable-model-invocation: true
 
 ## Перед PR
 
+Review (skill [`dnd-mud-review`](../dnd-mud-review/SKILL.md)): readonly Bugbot, `Base Branch: main`, ветка `dev` — **до** создания release PR.
+
 ```bash
 source .venv/bin/activate
 git fetch origin

@@ -31,7 +31,7 @@ description: >-
    - процедура: [`user-protocols.mdc`](~/.cursor/rules/user-protocols.mdc) §Commit procedure
    - не коммитить `.coverage`, `saves/`
    - если diff пустой — коммит пропустить
-4. Перейти к skill `dnd-mud-verify` или verify по [`dnd-mud-verify.mdc`](.cursor/rules/dnd-mud-verify.mdc).
+4. Перейти к skill `dnd-mud-verify` → затем `dnd-mud-review` (см. [`AGENTS.md`](../../AGENTS.md) §6–6.5).
 
 ## Коммит (шаг 3 — детали)
 
