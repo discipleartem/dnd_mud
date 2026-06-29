@@ -239,8 +239,11 @@ scenario:
 level_up:
   caption: "ПОВЫШЕНИЕ УРОВНЯ"
   reached: "Вы достигли {level} уровня!"
-  hp_gain_average: "Прирост HP (среднее): +{gain}"
-  hp_gain_roll: "Бросок HP: {roll} + {con_mod} (CON) = +{gain}"
+  hp_gain_first_level: "  Кость HP (макс.): {die} + CON ({con_mod}) = +{class_part}"
+  hp_gain_average: "  Кость HP (сред.): {die_part} + CON ({con_mod}) = +{class_part}"
+  hp_gain_roll: "  Бросок кости: {roll} + CON ({con_mod}) = +{class_part}"
+  hp_gain_bonus_named: "  {name}: +{bonus}"
+  hp_gain_total: "  Итого: +{total}"
   hp_totals: "HP: {current} / {max_hp}"
 
 errors:

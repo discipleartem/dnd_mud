@@ -4,6 +4,7 @@ from functools import lru_cache
 from pathlib import Path
 from typing import Any
 
+from core.feats import HpBonusSource, hit_point_bonus_sources_from_features
 from core.io import load_yaml
 from core.localization import resolve_localized_text
 from core.types import StatMap
@@ -113,6 +114,50 @@ def build_bonuses_from_choices(
     for stat in chosen_stats:
         bonuses = _merge_bonus_dicts(bonuses, {stat: value})
     return bonuses
+
+
+def _collect_race_features(
+    race_id: str, subrace_id: str | None = None
+) -> list[dict[str, Any]]:
+    """Особенности расы и подрасы (базовые + подрасовые)."""
+    race_info, subrace_info = _get_race_and_subrace(race_id, subrace_id)
+    if not race_info:
+        return []
+
+    features: list[dict[str, Any]] = []
+    if subrace_id and subrace_info:
+        inherit_base = subrace_info.get("inherit_base_features", True)
+        if inherit_base:
+            raw_base = race_info.get("features", [])
+            if isinstance(raw_base, list):
+                features.extend(
+                    feat for feat in raw_base if isinstance(feat, dict)
+                )
+        raw_sub = subrace_info.get("features", [])
+        if isinstance(raw_sub, list):
+            features.extend(feat for feat in raw_sub if isinstance(feat, dict))
+    else:
+        raw = race_info.get("features", [])
+        if isinstance(raw, list):
+            features.extend(feat for feat in raw if isinstance(feat, dict))
+    return features
+
+
+def get_racial_hp_bonus_sources(
+    race_id: str, subrace_id: str | None = None
+) -> list[HpBonusSource]:
+    """Именованные бонусы HP за уровень из особенностей расы/подрасы."""
+    return hit_point_bonus_sources_from_features(
+        _collect_race_features(race_id, subrace_id)
+    )
+
+
+def get_racial_hp_bonus_per_level(
+    race_id: str, subrace_id: str | None = None
+) -> int:
+    """Дополнительные HP за каждый уровень (hit_point_bonus, per_level)."""
+    sources = get_racial_hp_bonus_sources(race_id, subrace_id)
+    return sum(s.amount for s in sources)
 
 
 def get_effective_race_bonuses(

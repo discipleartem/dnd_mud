@@ -7,6 +7,7 @@ from core.progression import (
     apply_level_up,
     grant_experience,
     has_pending_level_up,
+    hp_gain_breakdown_for_level_up,
     level_from_xp,
     max_hp_for_level,
     resolve_pending_level_ups,
@@ -98,6 +99,72 @@ def test_resolve_pending_level_ups_matches_apply_experience(monkeypatch):
     assert via_resolve.level == via_apply.level == 3
     assert via_resolve.max_hp == via_apply.max_hp == 22
     assert via_resolve.experience == via_apply.experience == 900
+
+
+def test_hill_dwarf_hp_bonus_per_level():
+    """Дварфская выдержка: +1 HP на каждый уровень."""
+    stats = {"constitution": 17}
+    hp = max_hp_for_level(
+        "cleric", stats, 3, "normal", race_id="dwarf", subrace_id="hill_dwarf"
+    )
+    # normal cleric d8, CON +3: 11 + 8 + 8 = 27; hill dwarf +3 = 30
+    assert hp == 30
+
+
+def test_hill_dwarf_level_up_gain_includes_bonus():
+    breakdown = hp_gain_breakdown_for_level_up(
+        "cleric",
+        {"constitution": 17},
+        2,
+        "normal",
+        race_id="dwarf",
+        subrace_id="hill_dwarf",
+    )
+    assert breakdown.class_part == 8
+    assert breakdown.extra_bonus == 1
+    assert breakdown.total == 9
+
+
+def test_hp_gain_breakdown_lists_bonus_sources_by_name():
+    breakdown = hp_gain_breakdown_for_level_up(
+        "cleric",
+        {"constitution": 20},
+        2,
+        "normal",
+        race_id="dwarf",
+        subrace_id="hill_dwarf",
+        feat_ids=["tough"],
+    )
+    names = [source.name for source in breakdown.bonus_sources]
+    assert names == ["Дварфская выдержка", "Крепкий"]
+    assert breakdown.extra_bonus == 3
+
+
+def test_mountain_dwarf_has_no_hp_bonus():
+    stats = {"constitution": 17}
+    hp = max_hp_for_level(
+        "cleric",
+        stats,
+        3,
+        "normal",
+        race_id="dwarf",
+        subrace_id="mountain_dwarf",
+    )
+    assert hp == 27
+
+
+def test_tough_feat_hp_bonus_per_level():
+    stats = {"constitution": 14}
+    hp = max_hp_for_level(
+        "fighter",
+        stats,
+        3,
+        "normal",
+        race_id="human",
+        feat_ids=["tough"],
+    )
+    # fighter d10 CON+2: 12+8+8=28; tough +2×3 = +6 → 34
+    assert hp == 34
 
 
 def test_max_hp_level_three_fighter_average():
