@@ -1,5 +1,5 @@
 ---
-description: dnd_mud — console MUD, индекс локальных правил, команды
+description: dnd_mud — stack, команды, docs index, local rules index
 alwaysApply: true
 ---
 
@@ -7,18 +7,18 @@ alwaysApply: true
 
 **Stack:** Python **3.12**, console MUD, Colorama, file-based storage, pytest.
 
-**Принцип:** максимально простой код, минимально необходимые тесты.
+**Принцип:** простой код (`dnd-mud-python-simple.mdc`), минимум тестов (`dnd-mud-tests.mdc`).
 
 ## Commands
 
-Все команды — из активированного `.venv` ([`01-operations.mdc`](~/.cursor/rules/01-operations.mdc) §Virtual environment).
+Из активированного `.venv` ([`01-operations.mdc`](~/.cursor/rules/01-operations.mdc) §Virtual environment):
 
 ```bash
 source .venv/bin/activate
 make install    # venv + pip install -e ".[dev]"
 make test       # pytest
 make check      # ruff --fix + black + mypy
-python main.py  # smoke: пройти затронутое меню
+python main.py  # smoke: затронутое меню
 ```
 
 ## Docs
@@ -31,29 +31,22 @@ python main.py  # smoke: пройти затронутое меню
 - [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md)
 - [docs/MUD_PRD.md](docs/MUD_PRD.md)
 
-## Skills (процедуры)
+## Agent-loop и skills
 
-| Skill | Когда |
-|-------|-------|
-| [`dnd-mud-docs-after-task`](../skills/dnd-mud-docs-after-task/SKILL.md) | После commit реализации, перед verify; **автокоммит** `docs: …` |
-| [`dnd-mud-verify`](../skills/dnd-mud-verify/SKILL.md) | После docs, перед review |
-| [`dnd-mud-review`](../skills/dnd-mud-review/SKILL.md) | После verify, **до** push / PR / merge |
-| [`dnd-mud-release`](../skills/dnd-mud-release/SKILL.md) | Release PR `dev` → `main` (после review vs `main`) |
+Оркестрация и таблица skills: [`AGENTS.md`](../AGENTS.md).
 
-Personal: `git-dev-main-sync` (`~/.cursor/skills/git-dev-main-sync/`) — sync веток.
-
-Оркестрация: [`AGENTS.md`](../AGENTS.md).
+Политика verify/review/release: [`dnd-mud-verify.mdc`](dnd-mud-verify.mdc).
 
 ## Local rules (index)
 
 | Файл | Globs | Канон |
 |------|-------|-------|
-| `dnd-mud-verify.mdc` | always | verify, overrides, release (политика; процедуры — skills) |
+| `dnd-mud-verify.mdc` | always | overrides, verify/review policy |
 | `dnd-mud-python-312.mdc` | `**/*.py` | Python 3.12, типы, tooling |
 | `dnd-mud-python-simple.mdc` | `core/**`, `ui/**`, `main.py`, `tests/**` | простой Python |
 | `dnd-mud-tests.mdc` | `tests/**` | pytest — только нужные тесты |
 | `dnd-mud-core.mdc` | `core/**`, `ui/**`, `main.py` | слои, локализация, механика |
 | `dnd-mud-data.mdc` | `database/**`, `mods/**`, `**/*.json` | YAML/JSON |
-| `ironbee-devtools-use.mdc` | — | **не в git** (`.gitignore`); расширение IronBee может создать локально; канон verify — `dnd-mud-verify` |
+| `ironbee-devtools-use.mdc` | — | локально; verify — `dnd-mud-verify` |
 
-Глобальные правила: [`00-global.mdc`](~/.cursor/rules/00-global.mdc) · git: [`01-operations.mdc`](~/.cursor/rules/01-operations.mdc)
+Global: [`00-global.mdc`](~/.cursor/rules/00-global.mdc) · git: [`01-operations.mdc`](~/.cursor/rules/01-operations.mdc)

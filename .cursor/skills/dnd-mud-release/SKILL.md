@@ -9,7 +9,7 @@ disable-model-invocation: true
 
 # dnd_mud — release (`dev` → `main`)
 
-Канон-политика: [`dnd-mud-verify.mdc`](.cursor/rules/dnd-mud-verify.mdc) §Release · CI: `.github/workflows/pr-dev-to-main-check.yml`.
+Канон-политика: [`AGENTS.md`](../../AGENTS.md) §8 · [`dnd-mud-verify.mdc`](../../rules/dnd-mud-verify.mdc) · CI: `.github/workflows/pr-dev-to-main-check.yml`.
 
 ## Когда выполнять
 

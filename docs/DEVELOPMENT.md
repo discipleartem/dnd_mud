@@ -197,7 +197,7 @@ pytest tests/test_menus_character.py -v
 
 ## Git Workflow
 
-Канон: [`~/.cursor/rules/01-operations.mdc`](~/.cursor/rules/01-operations.mdc) · [`AGENTS.md`](../AGENTS.md) §3–7 · [`dnd-mud-verify.mdc`](../.cursor/rules/dnd-mud-verify.mdc). Sync FAQ: [`~/.cursor/docs/git-dev-main-sync.md`](~/.cursor/docs/git-dev-main-sync.md).
+Канон: [`AGENTS.md`](../AGENTS.md) (оркестрация) · [`01-operations.mdc`](~/.cursor/rules/01-operations.mdc) (git) · [`dnd-mud-verify.mdc`](../.cursor/rules/dnd-mud-verify.mdc) (overrides, процедуры → skills). Sync FAQ: [`~/.cursor/docs/git-dev-main-sync.md`](~/.cursor/docs/git-dev-main-sync.md).
 
 IDE: расширения **GitHub Pull Requests** и **GitHub Actions** — настройки [`.vscode/settings.json`](../.vscode/settings.json) (squash merge, фильтры PR).
 

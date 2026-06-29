@@ -3,7 +3,7 @@
 ## [Unreleased]
 
 ### Changed
-- Документация синхронизирована с grants/mod overlay: API, ARCHITECTURE, backgrounds rules, README, DEVELOPMENT, MUD_PRD
+- Rules DRY: `AGENTS.md` — оркестрация; `dnd-mud-verify.mdc` — overrides + ссылки на skills; `00-project.mdc` — stack/index без дубля skills
 - Человек: подрасы `standard` и `variant_human`; убраны `allow_base_race_choice` / `base_choice_name`
 - Полуорк: одна подраса `half_orc` (автовыбор в UI)
 - Выбор подрасы: всегда из `subraces`; fallback `human` + `subrace: null` → `standard`
