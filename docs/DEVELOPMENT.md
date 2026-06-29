@@ -183,15 +183,15 @@ pytest tests/test_menus_character.py -v
 
 ## Git Workflow
 
-Канон: [`~/.cursor/rules/01-operations.mdc`](~/.cursor/rules/01-operations.mdc) · [`AGENTS.md`](../AGENTS.md) §3–6 · [`dnd-mud-verify.mdc`](../.cursor/rules/dnd-mud-verify.mdc). Sync FAQ: [`~/.cursor/docs/git-dev-main-sync.md`](~/.cursor/docs/git-dev-main-sync.md).
+Канон: [`~/.cursor/rules/01-operations.mdc`](~/.cursor/rules/01-operations.mdc) · [`AGENTS.md`](../AGENTS.md) §3–7 · [`dnd-mud-verify.mdc`](../.cursor/rules/dnd-mud-verify.mdc). Sync FAQ: [`~/.cursor/docs/git-dev-main-sync.md`](~/.cursor/docs/git-dev-main-sync.md).
 
 IDE: расширения **GitHub Pull Requests** и **GitHub Actions** — настройки [`.vscode/settings.json`](../.vscode/settings.json) (squash merge, фильтры PR).
 
 ### Цикл задачи
 
 ```
-git-старт → task-ветка → подзадачи (commits) → verify → push → PR task→dev
-→ (накопление в dev) → PR dev→main → Action sync dev←main
+git-старт → task-ветка → подзадачи (commits) → docs → verify → review → push → PR task→dev
+→ (накопление в dev) → review (vs main) → PR dev→main → Action sync dev←main
 ```
 
 ### Git-старт (перед работой)
@@ -210,6 +210,7 @@ git checkout -b feat/my-task
 
 ```bash
 make test
+# skill dnd-mud-review (Bugbot vs dev) — до push/PR
 git push -u origin HEAD
 gh pr create --base dev --title "feat: …"   # squash merge
 ```

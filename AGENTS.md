@@ -10,7 +10,7 @@
 
 | Режим | Цикл |
 |-------|------|
-| Agent напрямую | анализ → git-старт → план → действие → commit → **docs** → verify → PR (по запросу) |
+| Agent напрямую | анализ → git-старт → план → действие → commit → **docs** → verify → **review** → PR (по запросу) |
 | Plan → Build → Agent | см. [`00-global.mdc`](~/.cursor/rules/00-global.mdc) §Cursor modes |
 
 **Project overrides:** [`dnd-mud-verify.mdc`](.cursor/rules/dnd-mud-verify.mdc) §Переопределения (git-старт всегда; verify без браузера).
@@ -57,9 +57,19 @@
 
 Один раз в конце (не после каждого файла): `make test` / `make check` / smoke `python main.py` по условиям.
 
+### 6.5 Review
+
+Канон: skill [`dnd-mud-review`](.cursor/skills/dnd-mud-review/SKILL.md). Readonly Bugbot vs **`dev`** (task-ветка) или **`main`** (release).
+
+**Обязательно после verify, до** `git push`, `gh pr create`, `git merge`, интегрирующего код в `dev`/`main`.
+
+Пропуск: только docs/rules без кода и данных; явный запрос пользователя без review.
+
+Blockers → fix → verify → один повтор review. Push/PR — после чистого review или по запросу (non-blocker).
+
 ### 7. Завершение task-ветки
 
-1. Verify (шаг 6) выполнен
+1. Verify (шаг 6) и review (шаг 6.5) выполнены
 2. Push и PR — [`01-operations.mdc`](~/.cursor/rules/01-operations.mdc) §Task cycle шаги 5–6
 3. **Plan → Build → Agent:** push обязателен; предложить PR → `dev`
 4. **Agent напрямую:** push — по запросу; после push — предложить PR → `dev`
@@ -77,7 +87,8 @@
 | Skill | Когда |
 |-------|-------|
 | [`dnd-mud-docs-after-task`](.cursor/skills/dnd-mud-docs-after-task/SKILL.md) | После commit реализации, перед verify |
-| [`dnd-mud-verify`](.cursor/skills/dnd-mud-verify/SKILL.md) | Перед push/PR, «проверь задачу» |
-| [`dnd-mud-release`](.cursor/skills/dnd-mud-release/SKILL.md) | Release PR `dev` → `main` |
+| [`dnd-mud-verify`](.cursor/skills/dnd-mud-verify/SKILL.md) | После docs, перед review |
+| [`dnd-mud-review`](.cursor/skills/dnd-mud-review/SKILL.md) | После verify, **до** push / PR / merge |
+| [`dnd-mud-release`](.cursor/skills/dnd-mud-release/SKILL.md) | Release PR `dev` → `main` (после review vs `main`) |
 
 Personal: `git-dev-main-sync` (`~/.cursor/skills/git-dev-main-sync/`) — sync `dev` с `main`.

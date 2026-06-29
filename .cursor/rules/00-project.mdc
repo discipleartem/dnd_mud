@@ -35,8 +35,9 @@ python main.py  # smoke: пройти затронутое меню
 | Skill | Когда |
 |-------|-------|
 | [`dnd-mud-docs-after-task`](../skills/dnd-mud-docs-after-task/SKILL.md) | После commit реализации, перед verify |
-| [`dnd-mud-verify`](../skills/dnd-mud-verify/SKILL.md) | Перед push/PR |
-| [`dnd-mud-release`](../skills/dnd-mud-release/SKILL.md) | Release PR `dev` → `main` |
+| [`dnd-mud-verify`](../skills/dnd-mud-verify/SKILL.md) | После docs, перед review |
+| [`dnd-mud-review`](../skills/dnd-mud-review/SKILL.md) | После verify, **до** push / PR / merge |
+| [`dnd-mud-release`](../skills/dnd-mud-release/SKILL.md) | Release PR `dev` → `main` (после review vs `main`) |
 
 Personal: `git-dev-main-sync` (`~/.cursor/skills/git-dev-main-sync/`) — sync веток.
 

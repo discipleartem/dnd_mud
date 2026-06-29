@@ -37,9 +37,13 @@ python main.py  # smoke при затронутом UI
 
 Docs-only, правила (`.cursor/`, `AGENTS.md`), workflows — runtime не нужен. Verify — **один раз** в конце, после docs.
 
+## Review
+
+Процедура: skill [`dnd-mud-review`](../skills/dnd-mud-review/SKILL.md). Readonly Bugbot **после verify**, **до** `git push`, `gh pr create`, `git merge` (интеграция кода). Verify ≠ review.
+
 ## Before finishing (task-ветка)
 
-Чеклист — в skill `dnd-mud-verify`. Политика: git-старт в начале; коммиты подзадач по ходу; push/PR — см. [`AGENTS.md`](../AGENTS.md) §7.
+Чеклист — verify в skill `dnd-mud-verify`, review в skill `dnd-mud-review`. Политика: git-старт в начале; коммиты подзадач по ходу; push/PR — см. [`AGENTS.md`](../AGENTS.md) §7.
 
 ## Release (`dev` → `main`)
 

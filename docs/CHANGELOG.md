@@ -3,6 +3,7 @@
 ## [Unreleased]
 
 ### Added
+- Skill `dnd-mud-review`: readonly Bugbot review vs `dev`/`main` после verify, до push / PR / merge; шаг 6.5 в `AGENTS.md`
 - Flow создания: шаги **языки** (раса/подраса) и **предыстория** (до класса); 13 PHB backgrounds
 - `database/core/languages.yaml`, `database/backgrounds/backgrounds.yaml`
 - `core/languages.py`, `core/backgrounds.py`; поля `Character.languages`, `Character.background_id`

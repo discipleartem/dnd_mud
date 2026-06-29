@@ -12,7 +12,7 @@ disable-model-invocation: true
 
 ## Когда выполнять
 
-Один раз в конце task-ветки, **после** docs (skill `dnd-mud-docs-after-task`), **перед** push.
+Один раз в конце task-ветки, **после** docs (skill `dnd-mud-docs-after-task`), **перед** review (skill `dnd-mud-review`).
 
 ## Предусловия
 
@@ -40,8 +40,9 @@ which python   # must point to .venv/bin/python
 - [ ] `make test` прошёл (если был код)
 - [ ] `make check` прошёл (если нужен)
 - [ ] Smoke пройден (если UI)
-- [ ] **Plan → Build → Agent:** push обязателен → предложить PR → `dev`
-- [ ] **Agent напрямую:** push по запросу → после push предложить PR → `dev`
+- [ ] Перейти к skill [`dnd-mud-review`](../dnd-mud-review/SKILL.md) (readonly Bugbot **до** push / PR / merge)
+- [ ] **Plan → Build → Agent:** после review → push обязателен → предложить PR → `dev`
+- [ ] **Agent напрямую:** после review → push по запросу → после push предложить PR → `dev`
 
 ## Git scope
 
