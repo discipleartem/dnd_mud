@@ -128,6 +128,7 @@ ABILITY_SCORE_MAX = 20
 ```
 
 `save_character` создаёт `Character` (`current_hp` = `max_hp` = `max_hp_for_level(..., difficulty)`) и сохраняет в `saves/characters/{save_slug}.json`.  
+Параметр `apply_feat_stat_bonuses=False` — если `stats` уже содержат бонусы черт (flow создания после `select_creation_feats`).  
 `starting_max_hp` — HP на 1 уровне с учётом режима (Normal/Easy: `max(1, hit_dice + CON)`; HardCore: бросок + CON).  
 `max_hp_for_level` — см. `core.progression` (HP на уровне 1–10).  
 `update_character` — перезапись JSON после изменений (подкласс, XP и т.д.).
@@ -281,8 +282,13 @@ feat_meets_requirements(feat_id, ctx) -> bool
 resolve_feat_grants(feat_id, choices) -> tuple[weapons, armors, tools, skills]
 get_feat_skill_ids(feat_ids, feat_choices) -> list[str]
 apply_feats_to_stats(stats, feat_ids, feat_choices) -> StatMap
+apply_feat_grants_to_character(character, feat_id, choices) -> Character
 tough_hp_adjustment_on_acquire(level) -> int
 ```
+
+`apply_feat_grants_to_character` — владения, навыки, языки и экспертиза одной черты; вызывается при левелапе (`level_up.py`, `resolve_pending_level_ups`).
+
+**Запланировано (Phase 2):** постоянная проверка требований — `feat_is_active`, `active_feat_ids`, `feat_requirement_context_from_character`; владение спасброском Resilient (`save_proficiency`); см. [`06-feats.md`](rules/06-feats.md) §«Запланировано».
 
 ## core.asi — Увеличение характеристик
 
