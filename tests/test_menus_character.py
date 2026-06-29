@@ -5,8 +5,15 @@ import re
 import pytest
 
 from core.models import Adventure, Character
-from ui.menus import _deps, character_flow, characters_menu, new_game
+from ui.menus import (
+    _creation_steps,
+    _deps,
+    character_flow,
+    characters_menu,
+    new_game,
+)
 from ui.menus import settings as settings_menu
+from ui.menus._selectors import select_class, select_subclass, select_subrace
 
 
 def _patch_load_characters(
@@ -46,7 +53,7 @@ def test_half_orc_auto_selects_single_subrace(
         _deps, "load_race_full", lambda race_id, language="ru": race
     )
 
-    selected, subrace_id = character_flow._select_subrace(strings, "half_orc")
+    selected, subrace_id = select_subrace(strings, "half_orc")
 
     assert selected is True
     assert subrace_id == "half_orc"
@@ -90,7 +97,7 @@ def test_human_shows_standard_and_variant_subraces(
     )
     patch_int_input(monkeypatch, [1])
 
-    selected, subrace_id = character_flow._select_subrace(strings, "human")
+    selected, subrace_id = select_subrace(strings, "human")
     output = capsys.readouterr().out
 
     assert selected is True
@@ -124,7 +131,7 @@ def test_create_character_back_from_subrace_exits(
         subrace_calls["n"] += 1
         return False, None
 
-    monkeypatch.setattr(character_flow, "_select_subrace", fake_subrace)
+    monkeypatch.setattr(_creation_steps, "select_subrace", fake_subrace)
     patch_int_input(monkeypatch, [1, 0])
 
     result = character_flow.show_create_character_flow(ru_strings)
@@ -155,12 +162,12 @@ def test_hardcore_back_from_stats_keeps_rolls(
         lambda language="ru": [{"id": "elf", "name": "Эльф"}],
     )
     monkeypatch.setattr(
-        character_flow,
-        "_select_subrace",
+        _creation_steps,
+        "select_subrace",
         lambda strings, race_id, language="ru": (True, "wood_elf"),
     )
     monkeypatch.setattr(
-        character_flow,
+        _creation_steps,
         "select_creation_languages",
         lambda *args, **kwargs: ["common", "elvish"],
     )
@@ -169,12 +176,12 @@ def test_hardcore_back_from_stats_keeps_rolls(
         return ("folk_hero", ["survival", "animal_handling"])
 
     monkeypatch.setattr(
-        character_flow,
+        _creation_steps,
         "select_creation_background",
         fake_background,
     )
     monkeypatch.setattr(
-        character_flow,
+        _creation_steps,
         "select_creation_proficiencies",
         lambda *args, **kwargs: (
             ["simple"],
@@ -183,27 +190,27 @@ def test_hardcore_back_from_stats_keeps_rolls(
         ),
     )
     monkeypatch.setattr(
-        character_flow,
-        "_select_class",
+        _creation_steps,
+        "select_class",
         lambda strings, language="ru": {"id": "bard"},
     )
     monkeypatch.setattr(
-        character_flow,
+        _creation_steps,
         "select_creation_skills",
         lambda *args, **kwargs: ["performance", "persuasion", "deception"],
     )
     monkeypatch.setattr(
-        character_flow,
+        _creation_steps,
         "select_creation_expertise",
         lambda *args, **kwargs: ([], []),
     )
     monkeypatch.setattr(
-        character_flow,
+        _creation_steps,
         "_save_created_character",
         lambda state: Character(name="Hero", race="elf", class_id="bard"),
     )
     monkeypatch.setattr(
-        character_flow,
+        _creation_steps,
         "_print_success_and_wait",
         lambda strings, message: None,
     )
@@ -257,9 +264,9 @@ def test_hardcore_back_to_race_clears_rolls(
             return False, None
         return True, "wood_elf"
 
-    monkeypatch.setattr(character_flow, "_select_subrace", fake_subrace)
+    monkeypatch.setattr(_creation_steps, "select_subrace", fake_subrace)
     monkeypatch.setattr(
-        character_flow,
+        _creation_steps,
         "select_creation_languages",
         lambda *args, **kwargs: ["common", "elvish"],
     )
@@ -268,12 +275,12 @@ def test_hardcore_back_to_race_clears_rolls(
         return ("soldier", ["athletics", "intimidation"])
 
     monkeypatch.setattr(
-        character_flow,
+        _creation_steps,
         "select_creation_background",
         fake_background,
     )
     monkeypatch.setattr(
-        character_flow,
+        _creation_steps,
         "select_creation_proficiencies",
         lambda *args, **kwargs: (
             ["simple", "martial"],
@@ -282,27 +289,27 @@ def test_hardcore_back_to_race_clears_rolls(
         ),
     )
     monkeypatch.setattr(
-        character_flow,
-        "_select_class",
+        _creation_steps,
+        "select_class",
         lambda strings, language="ru": {"id": "fighter"},
     )
     monkeypatch.setattr(
-        character_flow,
+        _creation_steps,
         "select_creation_skills",
         lambda *args, **kwargs: ["athletics", "intimidation"],
     )
     monkeypatch.setattr(
-        character_flow,
+        _creation_steps,
         "select_creation_expertise",
         lambda *args, **kwargs: ([], []),
     )
     monkeypatch.setattr(
-        character_flow,
+        _creation_steps,
         "_save_created_character",
         lambda state: Character(name="Hero", race="elf", class_id="fighter"),
     )
     monkeypatch.setattr(
-        character_flow,
+        _creation_steps,
         "_print_success_and_wait",
         lambda strings, message: None,
     )
@@ -628,7 +635,7 @@ def test_select_class_shows_description_and_features(
     """Экран выбора класса показывает описание и умения из YAML."""
     patch_int_input(monkeypatch, [1])
 
-    result = character_flow._select_class(ru_strings, "ru")
+    result = select_class(ru_strings, "ru")
     output = capsys.readouterr().out
 
     assert result is not None
@@ -645,7 +652,7 @@ def test_select_subclass_shows_subclass_features(
     """Экран выбора подкласса показывает архетипы и их умения."""
     patch_int_input(monkeypatch, [1])
 
-    subclass_id = character_flow._select_subclass(ru_strings, "fighter", "ru")
+    subclass_id = select_subclass(ru_strings, "fighter", "ru")
     output = capsys.readouterr().out
 
     assert subclass_id == "battle_master"
@@ -690,7 +697,7 @@ def test_normal_class_step_routes_to_subclass():
     """Normal: после класса — экран выбора архетипа."""
     from core.subclasses import subclass_offered_at_creation
 
-    state = character_flow._CreationState(
+    state = _creation_steps._CreationState(
         name="Hero",
         difficulty="normal",
         class_id="fighter",
@@ -700,83 +707,83 @@ def test_normal_class_step_routes_to_subclass():
 
 def test_feats_step_required_for_variant_human_state():
     """Вариант человека требует шаг выбора черты после класса."""
-    state = character_flow._CreationState(
+    state = _creation_steps._CreationState(
         name="Hero",
         difficulty="normal",
         race_id="human",
         subrace_id="variant_human",
     )
-    assert character_flow._feats_step_required(state)
+    assert _creation_steps._feats_step_required(state)
 
-    elf_state = character_flow._CreationState(
+    elf_state = _creation_steps._CreationState(
         name="Hero",
         difficulty="normal",
         race_id="elf",
         subrace_id="wood_elf",
     )
-    assert not character_flow._feats_step_required(elf_state)
+    assert not _creation_steps._feats_step_required(elf_state)
 
 
 def test_step_after_class_choice_routes_to_feats_for_variant_human():
-    state = character_flow._CreationState(
+    state = _creation_steps._CreationState(
         name="Hero",
         difficulty="normal",
         race_id="human",
         subrace_id="variant_human",
         class_id="fighter",
     )
-    assert character_flow._step_after_class_choice(state) == "feats"
+    assert _creation_steps._step_after_class_choice(state) == "feats"
 
 
 def test_step_after_class_choice_skips_feats_for_elf():
-    state = character_flow._CreationState(
+    state = _creation_steps._CreationState(
         name="Hero",
         difficulty="normal",
         race_id="elf",
         subrace_id="wood_elf",
         class_id="fighter",
     )
-    assert character_flow._step_after_class_choice(state) == "proficiencies"
+    assert _creation_steps._step_after_class_choice(state) == "proficiencies"
 
 
 def test_back_from_proficiencies_returns_to_feats_when_required():
-    state = character_flow._CreationState(
+    state = _creation_steps._CreationState(
         name="Hero",
         difficulty="normal",
         race_id="human",
         subrace_id="variant_human",
         class_id="fighter",
     )
-    assert character_flow._back_step_from_proficiencies(state) == "feats"
+    assert _creation_steps._back_step_from_proficiencies(state) == "feats"
 
 
 def test_back_from_feats_returns_to_subclass_when_offered():
     """Черты после класса/подкласса — назад на подкласс, не на предысторию."""
-    state = character_flow._CreationState(
+    state = _creation_steps._CreationState(
         name="Hero",
         difficulty="normal",
         race_id="human",
         subrace_id="variant_human",
         class_id="fighter",
     )
-    assert character_flow._back_step_from_feats(state) == "subclass"
+    assert _creation_steps._back_step_from_feats(state) == "subclass"
 
 
 def test_back_from_feats_returns_to_class_when_subclass_skipped():
     """Без шага подкласса назад с черт — на выбор класса."""
-    state = character_flow._CreationState(
+    state = _creation_steps._CreationState(
         name="Hero",
         difficulty="hardcore",
         race_id="human",
         subrace_id="variant_human",
         class_id="fighter",
     )
-    assert character_flow._back_step_from_feats(state) == "class"
+    assert _creation_steps._back_step_from_feats(state) == "class"
 
 
 def test_merge_feat_languages_when_languages_empty():
     """Языки из черты добавляются, даже если список языков пуст."""
-    state = character_flow._CreationState(
+    state = _creation_steps._CreationState(
         name="Hero",
         difficulty="normal",
         languages=None,
@@ -787,5 +794,5 @@ def test_merge_feat_languages_when_languages_empty():
             },
         },
     )
-    character_flow._merge_feat_languages(state)
+    _creation_steps._merge_feat_languages(state)
     assert state.languages == ["elvish", "dwarvish", "draconic"]

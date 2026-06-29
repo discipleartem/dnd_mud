@@ -12,7 +12,7 @@ class HpBonusSource:
     amount: int
 
 
-def _hit_point_bonus_amount(
+def hit_point_bonus_amount(
     mechanics: dict[str, Any], feat: dict[str, Any]
 ) -> int:
     """Значение hit_point_bonus из feature, если per_level."""
@@ -20,13 +20,6 @@ def _hit_point_bonus_amount(
     if mtype != "hit_point_bonus" or not mechanics.get("per_level"):
         return 0
     return int(mechanics.get("value", mechanics.get("amount", 0)))
-
-
-def hit_point_bonus_amount(
-    mechanics: dict[str, Any], feat: dict[str, Any]
-) -> int:
-    """Значение hit_point_bonus из feature, если per_level."""
-    return _hit_point_bonus_amount(mechanics, feat)
 
 
 def hit_point_bonus_sources_from_features(
@@ -38,7 +31,7 @@ def hit_point_bonus_sources_from_features(
         mechanics = feat.get("mechanics", {})
         if not isinstance(mechanics, dict):
             mechanics = {}
-        amount = _hit_point_bonus_amount(mechanics, feat)
+        amount = hit_point_bonus_amount(mechanics, feat)
         if amount <= 0:
             continue
         name = str(feat.get("name", "")).strip() or "?"

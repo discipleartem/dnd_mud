@@ -22,10 +22,10 @@ def test_character_round_trip_with_subrace():
     assert restored.save_slug == "test"
 
 
-def test_character_from_dict_legacy_class_key():
-    """from_dict принимает устаревший ключ class в JSON."""
+def test_character_from_dict_requires_class_id():
+    """from_dict читает только ключ class_id."""
     character = Character.from_dict(
-        {"name": "X", "race": "human", "class": "wizard"}
+        {"name": "X", "race": "human", "class_id": "wizard"}
     )
     assert character.class_id == "wizard"
 

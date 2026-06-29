@@ -341,7 +341,7 @@ def test_load_characters_sorted_by_creation_date(characters_dir):
         "schema_version": 1,
         "name": "Zeta",
         "race": "human",
-        "class": "fighter",
+        "class_id": "fighter",
         "save_slug": "zeta",
         "created_at": "2024-01-01T00:00:00+00:00",
     }
@@ -349,7 +349,7 @@ def test_load_characters_sorted_by_creation_date(characters_dir):
         "schema_version": 1,
         "name": "Alpha",
         "race": "elf",
-        "class": "rogue",
+        "class_id": "rogue",
         "save_slug": "alpha",
         "created_at": "2024-06-01T00:00:00+00:00",
     }

@@ -1,8 +1,7 @@
 """Шаги state machine создания персонажа."""
 
-import types
 from dataclasses import dataclass, field
-from typing import Any, Literal, cast
+from typing import Any, Literal
 
 from core.class_features import class_features_applied_at_creation
 from core.expertise import expertise_step_required
@@ -17,8 +16,17 @@ from core.types import GameDifficulty, StatMap, StringsDict
 from ui.menus import _deps
 from ui.menus._common import (
     _print_screen_header,
+    _print_success_and_wait,
     _run_numbered_menu,
 )
+from ui.menus._selectors import select_class, select_subclass, select_subrace
+from ui.menus.backgrounds import select_creation_background
+from ui.menus.expertise import select_creation_expertise
+from ui.menus.feats import select_creation_feats
+from ui.menus.languages import select_creation_languages
+from ui.menus.proficiencies import select_creation_proficiencies
+from ui.menus.skills import select_creation_skills
+from ui.menus.stats import show_stats_generation_flow
 
 CreationStep = Literal[
     "race",
@@ -33,13 +41,6 @@ CreationStep = Literal[
     "skills",
     "expertise",
 ]
-
-
-def _flow() -> types.ModuleType:
-    """Ленивый импорт фасада — для monkeypatch в тестах."""
-    import ui.menus.character_flow as cf
-
-    return cf
 
 
 @dataclass
@@ -122,12 +123,11 @@ def _finalize_creation(
     strings: StringsDict, state: _CreationState
 ) -> Character | None:
     """Сохранить персонажа и показать сообщение об успехе."""
-    cf = _flow()
-    character = cast(Character | None, cf._save_created_character(state))
+    character = _save_created_character(state)
     if character is None:
         return None
     msg = get_string(strings, "character.save_success", name=state.name)
-    cf._print_success_and_wait(strings, msg)
+    _print_success_and_wait(strings, msg)
     return character
 
 
@@ -170,7 +170,6 @@ def run_creation_steps(
     language: str = "ru",
 ) -> Character | None:
     """Цикл шагов создания персонажа после ввода имени."""
-    cf = _flow()
     step: CreationStep = "race"
 
     while True:
@@ -196,7 +195,7 @@ def run_creation_steps(
                 if state.race_id is None:
                     step = "race"
                     continue
-                subrace_selected, subrace_id = cf._select_subrace(
+                subrace_selected, subrace_id = select_subrace(
                     strings, state.race_id, language
                 )
                 if not subrace_selected:
@@ -216,7 +215,7 @@ def run_creation_steps(
                     if state.difficulty == "hardcore"
                     else None
                 )
-                stats = cf.show_stats_generation_flow(
+                stats = show_stats_generation_flow(
                     strings,
                     state.race_id,
                     state.subrace_id,
@@ -230,7 +229,7 @@ def run_creation_steps(
                 step = "background"
 
             case "background":
-                bg_result = cf.select_creation_background(strings, language)
+                bg_result = select_creation_background(strings, language)
                 if bg_result is None:
                     step = "stats"
                     continue
@@ -243,7 +242,7 @@ def run_creation_steps(
                 if state.race_id is None or state.background_id is None:
                     step = "background"
                     continue
-                langs = cf.select_creation_languages(
+                langs = select_creation_languages(
                     strings,
                     state.race_id,
                     state.subrace_id,
@@ -260,7 +259,7 @@ def run_creation_steps(
                 if state.race_id is None or state.stats is None:
                     step = "languages"
                     continue
-                cls = cf._select_class(strings, language)
+                cls = select_class(strings, language)
                 if cls is None:
                     step = "languages"
                     continue
@@ -277,7 +276,7 @@ def run_creation_steps(
                 if state.class_id is None:
                     step = "class"
                     continue
-                subclass_id = cf._select_subclass(
+                subclass_id = select_subclass(
                     strings, state.class_id, language
                 )
                 if subclass_id is None:
@@ -295,7 +294,7 @@ def run_creation_steps(
                     step = "class"
                     continue
                 start_level = start_level_for_difficulty(state.difficulty)
-                feat_result = cf.select_creation_feats(
+                feat_result = select_creation_feats(
                     strings,
                     state.race_id,
                     state.subrace_id,
@@ -321,7 +320,7 @@ def run_creation_steps(
                 if state.race_id is None or state.class_id is None:
                     step = "class"
                     continue
-                profs = cf.select_creation_proficiencies(
+                profs = select_creation_proficiencies(
                     strings,
                     state.race_id,
                     state.subrace_id,
@@ -348,7 +347,7 @@ def run_creation_steps(
                     step = "proficiencies"
                     continue
                 start_level = start_level_for_difficulty(state.difficulty)
-                skills = cf.select_creation_skills(
+                skills = select_creation_skills(
                     strings,
                     state.race_id,
                     state.subrace_id,
@@ -374,7 +373,7 @@ def run_creation_steps(
                     step = "skills"
                     continue
                 start_level = start_level_for_difficulty(state.difficulty)
-                expertise_result = cf.select_creation_expertise(
+                expertise_result = select_creation_expertise(
                     strings,
                     state.class_id,
                     start_level,
