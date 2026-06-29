@@ -107,7 +107,7 @@ def save_character(
     character = Character(
         name=name,
         race=race_id,
-        class_name=class_id,
+        class_id=class_id,
         level=level,
         stats=stats,
         current_hp=hp,

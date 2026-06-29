@@ -244,7 +244,7 @@ def resolve_pending_level_ups(character: Character) -> Character:
         asi_value = ""
 
         if pending_asi_at_level(char, new_level):
-            prime = next(iter(auto_asi_bonus(char.class_name)))
+            prime = next(iter(auto_asi_bonus(char.class_id)))
             stats = cap_stats(apply_asi_two_one(char.stats, prime))
             con_bonus = con_hp_bonus_from_asi(old_stats, stats, new_level)
             asi_choices = dict(char.asi_choices)
@@ -282,7 +282,7 @@ def resolve_pending_level_ups(character: Character) -> Character:
             ]
 
         gain, _ = roll_hp_gain_for_level_up(
-            char.class_name,
+            char.class_id,
             char.stats,
             new_level,
             char.difficulty,

@@ -322,7 +322,7 @@ def test_save_and_load_character(characters_dir):
     loaded = character_mod.load_characters()
     assert len(loaded) == 1
     assert loaded[0].name == "Hero"
-    assert loaded[0].class_name == "fighter"
+    assert loaded[0].class_id == "fighter"
 
     save_path = characters_dir / "hero.json"
     assert save_path.exists()
@@ -330,7 +330,7 @@ def test_save_and_load_character(characters_dir):
         data = json.load(f)
     assert data["schema_version"] == 1
     assert data["save_slug"] == "hero"
-    assert data["class"] == "fighter"
+    assert data["class_id"] == "fighter"
     assert data["max_hp"] == saved.max_hp
     assert "created_at" in data
 

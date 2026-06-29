@@ -30,7 +30,7 @@ def assign_subclass_from_menu(
     language: LanguageCode,
 ) -> Character | None:
     """Выбрать подкласс, применить владения и сохранить. None — отмена."""
-    subclass_id = _select_subclass(strings, character.class_name, language)
+    subclass_id = _select_subclass(strings, character.class_id, language)
     if subclass_id is None:
         return None
 
@@ -62,7 +62,7 @@ def assign_subclass_from_menu(
 
     updated_skills = add_subclass_skills_from_menu(
         strings,
-        character.class_name,
+        character.class_id,
         subclass_id,
         character.level,
         character.skills,
@@ -98,7 +98,7 @@ def run_subclass_trainer(
         print()
         return character
 
-    choice_level = get_subclass_choice_level(character.class_name)
+    choice_level = get_subclass_choice_level(character.class_id)
     if character.level < choice_level:
         msg = get_string(
             strings,
@@ -119,7 +119,7 @@ def run_subclass_trainer(
 
     subclass_id = updated.subclass_id
     name = subclass_id or ""
-    for sub in _deps.load_subclasses(character.class_name, language):
+    for sub in _deps.load_subclasses(character.class_id, language):
         if sub.get("id") == subclass_id:
             name = str(sub.get("name", subclass_id))
             break

@@ -102,11 +102,11 @@ def _feat_ctx_for_character(character: Any) -> FeatRequirementContext:
         weapon_tokens=list(character.weapon_proficiencies),
         armor_tokens=list(character.armor_proficiencies),
         tool_tokens=list(character.tool_proficiencies),
-        class_id=character.class_name,
+        class_id=character.class_id,
         subclass_id=character.subclass_id,
         level=character.level + 1,
         has_spellcasting=character_has_spellcasting(
-            character.class_name,
+            character.class_id,
             character.subclass_id,
             character.level + 1,
         ),

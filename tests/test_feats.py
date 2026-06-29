@@ -278,7 +278,7 @@ def test_apply_feat_grants_to_character_merges_skills_and_tools():
     char = Character(
         name="Hero",
         race="human",
-        class_name="fighter",
+        class_id="fighter",
         level=4,
         stats={"constitution": 14},
         current_hp=30,

@@ -12,7 +12,7 @@ def _fighter_level_three() -> Character:
     return Character(
         name="Hero",
         race="human",
-        class_name="fighter",
+        class_id="fighter",
         level=3,
         stats={"constitution": 14, "strength": 16},
         current_hp=28,

@@ -51,7 +51,7 @@ def skill_check_modifier(character: Character, skill_id: str) -> int:
 
 def saving_throw_modifier(character: Character, ability: str) -> int:
     """Модификатор спасброска."""
-    proficient = ability in get_class_saving_throws(character.class_name)
+    proficient = ability in get_class_saving_throws(character.class_id)
     return ability_check_modifier(character, ability, proficient=proficient)
 
 

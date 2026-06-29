@@ -128,14 +128,14 @@ def grant_expertise_satisfied(
     if grant.alternatives:
         return bool(character.skill_expertise or character.tool_expertise)
     prior = _prior_expertise_picks(
-        character.class_name, character.level, grant.level
+        character.class_id, character.level, grant.level
     )
     return len(character.skill_expertise) >= prior + grant.pick
 
 
 def pending_expertise_grants(character: Character) -> list[ExpertiseGrant]:
     """Grants компетентности, ещё не выбранные на текущем уровне."""
-    grants = get_expertise_grants(character.class_name, character.level)
+    grants = get_expertise_grants(character.class_id, character.level)
     return [g for g in grants if not grant_expertise_satisfied(character, g)]
 
 

@@ -92,9 +92,9 @@ def _print_labeled_field(
 def _character_class_label(char: Character, language: str = "ru") -> str:
     """Читаемое название класса персонажа."""
     for cls in _deps.load_classes(language):
-        if cls.get("id") == char.class_name:
-            return str(cls.get("name", char.class_name))
-    return char.class_name
+        if cls.get("id") == char.class_id:
+            return str(cls.get("name", char.class_id))
+    return char.class_id
 
 
 def _character_subclass_label(
@@ -103,7 +103,7 @@ def _character_subclass_label(
     """Читаемое название подкласса или None."""
     if not char.subclass_id:
         return None
-    for sub in _deps.load_subclasses(char.class_name, language):
+    for sub in _deps.load_subclasses(char.class_id, language):
         if sub.get("id") == char.subclass_id:
             return str(sub.get("name", char.subclass_id))
     return char.subclass_id
@@ -497,7 +497,7 @@ def _print_character_card(
     if subclass_label:
         display = f"{Fore.CYAN}{subclass_label}{Style.RESET_ALL}"
         if char.subclass_id and not subclass_is_active(char):
-            choice_level = get_subclass_choice_level(char.class_name)
+            choice_level = get_subclass_choice_level(char.class_id)
             pending = get_string(
                 strings,
                 "choose_character.subclass_pending_level",

@@ -200,7 +200,7 @@ def test_hardcore_back_from_stats_keeps_rolls(
     monkeypatch.setattr(
         character_flow,
         "_save_created_character",
-        lambda state: Character(name="Hero", race="elf", class_name="bard"),
+        lambda state: Character(name="Hero", race="elf", class_id="bard"),
     )
     monkeypatch.setattr(
         character_flow,
@@ -299,7 +299,7 @@ def test_hardcore_back_to_race_clears_rolls(
     monkeypatch.setattr(
         character_flow,
         "_save_created_character",
-        lambda state: Character(name="Hero", race="elf", class_name="fighter"),
+        lambda state: Character(name="Hero", race="elf", class_id="fighter"),
     )
     monkeypatch.setattr(
         character_flow,
@@ -329,7 +329,7 @@ def test_select_character_shows_cards_with_difficulty(
     normal_char = Character(
         name="Hero Normal",
         race="human",
-        class_name="fighter",
+        class_id="fighter",
         difficulty="normal",
         stats={"strength": 16, "dexterity": 14},
         current_hp=12,
@@ -337,7 +337,7 @@ def test_select_character_shows_cards_with_difficulty(
     hardcore_char = Character(
         name="Hero HC",
         race="elf",
-        class_name="bard",
+        class_id="bard",
         difficulty="hardcore",
         current_hp=9,
     )
@@ -373,7 +373,7 @@ def test_select_character_shows_subrace_name(
     character = Character(
         name="Variant Hero",
         race="human",
-        class_name="cleric",
+        class_id="cleric",
         difficulty="hardcore",
         subrace="variant_human",
         stats=dict.fromkeys(
@@ -406,7 +406,7 @@ def test_select_character_create_via_enter(monkeypatch, capsys, ru_strings):
     character = Character(
         name="Hero",
         race="human",
-        class_name="fighter",
+        class_id="fighter",
         difficulty="normal",
     )
     monkeypatch.setattr(_deps, "load_characters", lambda: [character])
@@ -429,7 +429,7 @@ def test_select_adventure_filters_by_character_difficulty(
     character = Character(
         name="Normal Hero",
         race="human",
-        class_name="fighter",
+        class_id="fighter",
         difficulty="normal",
     )
     available = Adventure(
@@ -464,7 +464,7 @@ def test_select_adventure_choice_returns_adventure(
     character = Character(
         name="Normal Hero",
         race="human",
-        class_name="fighter",
+        class_id="fighter",
         difficulty="normal",
     )
     tutorial = Adventure(
@@ -508,7 +508,7 @@ def test_new_game_back_returns_one_step(monkeypatch):
     character = Character(
         name="Test Hero",
         race="human",
-        class_name="fighter",
+        class_id="fighter",
     )
 
     def select_character(strings, characters, language="ru"):
@@ -552,7 +552,7 @@ def test_characters_menu_shows_hub_options(
     character = Character(
         name="Hero",
         race="human",
-        class_name="fighter",
+        class_id="fighter",
         save_slug="hero",
     )
     _patch_load_characters(monkeypatch, [character])
@@ -575,7 +575,7 @@ def test_characters_menu_delete_one_confirmed(
     character = Character(
         name="Hero",
         race="human",
-        class_name="fighter",
+        class_id="fighter",
         save_slug="hero",
     )
     deleted: list[str] = []
@@ -601,7 +601,7 @@ def test_characters_menu_delete_all_cancelled(
     character = Character(
         name="Hero",
         race="human",
-        class_name="fighter",
+        class_id="fighter",
         save_slug="hero",
     )
     deleted_all_called: list[bool] = []

@@ -17,7 +17,7 @@ class Character:
 
     name: str
     race: str
-    class_name: str
+    class_id: str
     level: int = 1
     stats: StatMap = field(default_factory=dict)
     current_hp: int = 0
@@ -46,7 +46,7 @@ class Character:
         data: dict[str, Any] = {
             "name": self.name,
             "race": self.race,
-            "class": self.class_name,
+            "class_id": self.class_id,
             "level": self.level,
             "stats": self.stats,
             "current_hp": self.current_hp,
@@ -121,10 +121,16 @@ class Character:
             difficulty = "normal"
         level_raw = int(data.get("level", 1))
         level = clamp_level(level_raw)
+        class_id_raw = (
+            data.get("class_id")
+            or data.get("class")
+            or data.get("class_name")
+            or ""
+        )
         return cls(
             name=data.get("name", ""),
             race=data.get("race", ""),
-            class_name=data.get("class", ""),
+            class_id=str(class_id_raw),
             level=level,
             stats=data.get("stats", {}),
             current_hp=current_hp,

@@ -12,7 +12,7 @@ def _fighter_with_weapons() -> Character:
     return Character(
         name="Test",
         race="human",
-        class_name="fighter",
+        class_id="fighter",
         stats={
             "strength": 16,
             "dexterity": 14,
@@ -38,7 +38,7 @@ def test_attack_without_proficiency_no_pb():
     char = Character(
         name="M",
         race="human",
-        class_name="wizard",
+        class_id="wizard",
         stats={"strength": 10},
         weapon_proficiencies=[],
     )
@@ -51,7 +51,7 @@ def test_armor_penalty_without_proficiency():
     char = Character(
         name="M",
         race="human",
-        class_name="wizard",
+        class_id="wizard",
         armor_proficiencies=[],
     )
     assert armor_wearing_penalty(char, "plate") is True
@@ -82,7 +82,7 @@ def test_compute_ac_shield_without_proficiency():
     char = Character(
         name="W",
         race="human",
-        class_name="wizard",
+        class_id="wizard",
         stats={"dexterity": 14},
         armor_proficiencies=[],
     )
