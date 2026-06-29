@@ -21,6 +21,8 @@
 
 Запрос + история → режим (Ask / Plan / Agent) → ограничения (git, venv, verify, язык).
 
+**venv:** любые bash-команды проекта (`make`, `python`, `pytest`, `pip`) — только из активированного `.venv` ([`01-operations.mdc`](~/.cursor/rules/01-operations.mdc) §Virtual environment).
+
 **Plan → Build?** `CreatePlan`, `.plan.md`, «реализуй план» → [`01-operations.mdc`](~/.cursor/rules/01-operations.mdc) §Task cycle; commit/push на task-ветке **обязательны**.
 
 ### 2. Собрать контекст (readonly)
@@ -40,7 +42,8 @@
 
 Канон: [`01-operations.mdc`](~/.cursor/rules/01-operations.mdc) §Task cycle шаг 2, §Commits.
 
-**Agent напрямую:** commit/push — по запросу пользователя.
+**Коммиты** — автоматически после каждой подзадачи и в конце задачи (если остались правки).  
+**Agent напрямую:** push и PR — по запросу пользователя.
 
 ### 5. Завершение task-ветки
 

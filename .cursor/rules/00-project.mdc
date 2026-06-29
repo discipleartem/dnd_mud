@@ -11,7 +11,10 @@ alwaysApply: true
 
 ## Commands
 
+Все команды — из активированного `.venv` ([`01-operations.mdc`](~/.cursor/rules/01-operations.mdc) §Virtual environment).
+
 ```bash
+source .venv/bin/activate
 make install    # venv + pip install -e ".[dev]"
 make test       # pytest
 make check      # ruff --fix + black + mypy
