@@ -45,6 +45,46 @@ def get_subclass_choice_level(class_id: str) -> int:
     return DEFAULT_SUBCLASS_CHOICE_LEVEL
 
 
+def _spellcasting_from_entry(
+    entry: dict[str, Any], level: int, default_start: int
+) -> bool:
+    """Есть ли заклинания у класса/подкласса на данном уровне."""
+    if not entry.get("spellcasting"):
+        return False
+    start = entry.get("spellcasting_level", default_start)
+    if not isinstance(start, int):
+        start = default_start
+    return level >= start
+
+
+def character_has_spellcasting(
+    class_id: str, subclass_id: str | None, level: int
+) -> bool:
+    """Может ли персонаж накладывать заклинания (для требований черт).
+
+    Данные — поля ``spellcasting`` / ``spellcasting_level`` в
+    ``database/classes/classes.yaml`` (PHB: «Использование заклинаний»).
+    """
+    class_info = _load_classes_yaml().get(class_id, {})
+    if not isinstance(class_info, dict):
+        return False
+    if _spellcasting_from_entry(class_info, level, 1):
+        return True
+    if not subclass_id:
+        return False
+    raw_subclasses = class_info.get("subclasses", [])
+    if not isinstance(raw_subclasses, list):
+        return False
+    choice_level = get_subclass_choice_level(class_id)
+    for entry in raw_subclasses:
+        if not isinstance(entry, dict):
+            continue
+        if str(entry.get("id", "")) != subclass_id:
+            continue
+        return _spellcasting_from_entry(entry, level, choice_level)
+    return False
+
+
 def _subclass_feature_ids_and_names(
     class_info: dict[str, Any],
 ) -> tuple[set[str], set[str]]:

@@ -145,6 +145,21 @@ def test_save_easy_starts_at_level_three(characters_dir):
     assert saved.max_hp > character_mod.starting_max_hp("fighter", stats)
 
 
+def test_save_normal_starts_at_level_one_with_subclass(characters_dir):
+    """Режим normal: подкласс при создании, старт с 1 уровня."""
+    stats = dict.fromkeys(character_mod.STAT_NAMES, 12)
+    saved = character_mod.save_character(
+        name="NormHero",
+        race_id="human",
+        class_id="fighter",
+        difficulty="normal",
+        stats=stats,
+        subclass_id="champion",
+    )
+    assert saved.level == 1
+    assert saved.subclass_id == "champion"
+
+
 def test_save_with_subclass_persisted(characters_dir):
     """subclass_id сохраняется в JSON."""
     character_mod.save_character(
@@ -414,3 +429,40 @@ def test_delete_all_characters(characters_dir):
     assert deleted == 2
     assert len(character_mod.load_characters()) == 0
     assert list(characters_dir.glob("*.json")) == []
+
+
+def test_save_character_applies_feat_bonuses_to_base_stats(characters_dir):
+    """save_character применяет бонусы черт к базовым stats."""
+    stats = dict.fromkeys(character_mod.STAT_NAMES, 10)
+    saved = character_mod.save_character(
+        name="FeatHero",
+        race_id="human",
+        class_id="fighter",
+        stats=stats,
+        feat_ids=["resilient"],
+        feat_choices={"resilient": {"ability": "constitution"}},
+    )
+    assert saved.stats["constitution"] == 11
+
+
+def test_save_character_skips_feat_stat_bonuses_when_stats_final(
+    characters_dir,
+):
+    """stats уже с бонусами черты — повторно не применять."""
+    from core.feats import apply_feats_to_stats
+
+    base = dict.fromkeys(character_mod.STAT_NAMES, 10)
+    base["constitution"] = 13
+    feat_ids = ["resilient"]
+    feat_choices = {"resilient": {"ability": "constitution"}}
+    with_feat = apply_feats_to_stats(base, feat_ids, feat_choices)
+    saved = character_mod.save_character(
+        name="FeatHero",
+        race_id="human",
+        class_id="fighter",
+        stats=with_feat,
+        feat_ids=feat_ids,
+        feat_choices=feat_choices,
+        apply_feat_stat_bonuses=False,
+    )
+    assert saved.stats["constitution"] == 14

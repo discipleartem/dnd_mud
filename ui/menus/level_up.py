@@ -1,7 +1,19 @@
-"""Повышение уровня персонажа (PHB): HP по режиму сложности."""
+"""Повышение уровня персонажа (PHB): ASI/черта и HP по режиму сложности."""
+
+from dataclasses import replace
 
 from colorama import Fore, Style
 
+from core.asi import (
+    con_hp_bonus_from_asi,
+    feat_id_from_asi_choice,
+    pending_asi_at_level,
+)
+from core.feats import (
+    apply_feat_grants_to_character,
+    load_feat,
+    tough_hp_adjustment_on_acquire,
+)
 from core.localization import get_string
 from core.models import Character
 from core.progression import (
@@ -12,6 +24,7 @@ from core.progression import (
 )
 from core.types import LanguageCode, StringsDict
 from ui.menus._common import _press_enter, _print_screen_header
+from ui.menus.feats import select_level_up_feat_or_asi
 
 
 def run_pending_level_ups(
@@ -23,6 +36,49 @@ def run_pending_level_ups(
     char = character
     while has_pending_level_up(char):
         new_level = char.level + 1
+        old_stats = char.stats.copy()
+        con_bonus = 0
+        tough_bonus = 0
+
+        if pending_asi_at_level(char, new_level):
+            had_tough = "tough" in char.feat_ids
+            result = select_level_up_feat_or_asi(
+                strings, char, new_level, language
+            )
+            if result is None:
+                break
+            char, stats, feat_ids, feat_choices, asi_value = result
+            asi_choices = dict(char.asi_choices)
+            asi_choices[str(new_level)] = asi_value
+            con_bonus = con_hp_bonus_from_asi(old_stats, stats, new_level)
+            char = replace(
+                char,
+                stats=stats,
+                feat_ids=feat_ids,
+                feat_choices=feat_choices,
+                asi_choices=asi_choices,
+            )
+            feat_id = feat_id_from_asi_choice(asi_value)
+            if feat_id:
+                char = apply_feat_grants_to_character(
+                    char, feat_id, feat_choices.get(feat_id, {})
+                )
+            if feat_id == "tough" and not had_tough:
+                tough_bonus = tough_hp_adjustment_on_acquire(new_level)
+            if feat_id:
+                feat = load_feat(feat_id)
+                feat_name = feat.get("name", feat_id)
+                msg = get_string(
+                    strings, "level_up.feat_taken", name=feat_name
+                )
+                print(f"{Fore.GREEN}{msg}{Style.RESET_ALL}")
+                print()
+
+        breakdown_feat_ids = list(char.feat_ids)
+        if tough_bonus > 0:
+            breakdown_feat_ids = [
+                feat_id for feat_id in breakdown_feat_ids if feat_id != "tough"
+            ]
         breakdown = hp_gain_breakdown_for_level_up(
             char.class_name,
             char.stats,
@@ -30,11 +86,22 @@ def run_pending_level_ups(
             char.difficulty,
             char.race,
             char.subrace,
-            char.feat_ids,
+            breakdown_feat_ids,
         )
-        _print_level_up_screen(strings, char, new_level, breakdown)
+        extra = con_bonus + tough_bonus
+        _print_level_up_screen(strings, char, new_level, breakdown, extra)
+        if con_bonus:
+            msg = get_string(strings, "level_up.con_hp_bonus", bonus=con_bonus)
+            print(f"{Fore.CYAN}{msg}{Style.RESET_ALL}")
+        if tough_bonus:
+            msg = get_string(
+                strings, "level_up.tough_hp_bonus", bonus=tough_bonus
+            )
+            print(f"{Fore.CYAN}{msg}{Style.RESET_ALL}")
+        if con_bonus or tough_bonus:
+            print()
         _press_enter(strings)
-        char = apply_level_up(char, breakdown.total)
+        char = apply_level_up(char, breakdown.total + extra)
     return char
 
 
@@ -43,6 +110,7 @@ def _print_level_up_screen(
     character: Character,
     new_level: int,
     breakdown: HpGainBreakdown,
+    extra_hp: int = 0,
 ) -> None:
     """Экран одного повышения уровня."""
     _print_screen_header(get_string(strings, "level_up.caption"))
@@ -54,8 +122,9 @@ def _print_level_up_screen(
         print(f"{Fore.CYAN}{line}{Style.RESET_ALL}")
     print()
 
-    preview_max = character.max_hp + breakdown.total
-    preview_current = character.current_hp + breakdown.total
+    total_gain = breakdown.total + extra_hp
+    preview_max = character.max_hp + total_gain
+    preview_current = character.current_hp + total_gain
     totals = get_string(
         strings,
         "level_up.hp_totals",
