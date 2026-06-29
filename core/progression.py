@@ -4,7 +4,8 @@ from dataclasses import dataclass, replace
 
 from core.classes import get_class_hit_dice
 from core.dice import ability_modifier, roll
-from core.feats import HpBonusSource, get_feat_hp_bonus_sources
+from core.feats import get_feat_hp_bonus_sources
+from core.hp_bonuses import HpBonusSource
 from core.levels import MAX_CHARACTER_LEVEL, clamp_level
 from core.models import Character
 from core.races import get_racial_hp_bonus_sources
