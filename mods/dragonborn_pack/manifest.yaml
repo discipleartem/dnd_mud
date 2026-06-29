@@ -1,0 +1,10 @@
+id: dragonborn_pack
+name:
+  ru: "Драконорождённые"
+  en: "Dragonborn"
+version: "1.0.0"
+type: addon
+description: "Добавляет расу Dragonborn (PHB)"
+overlays:
+  - target: database/races/races.yaml
+    path: overlay.yaml

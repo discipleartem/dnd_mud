@@ -12,8 +12,8 @@ from core.grants import (
     inherit_flags,
     merge_entity_grants,
 )
-from core.io import load_yaml
 from core.localization import resolve_localized_text
+from core.mod_loader import load_merged_catalog
 from core.types import StatMap
 
 RACES_FILE = Path("database/races/races.yaml")
@@ -27,11 +27,7 @@ def clear_races_cache() -> None:
 @lru_cache(maxsize=1)
 def _load_races_yaml() -> dict[str, Any]:
     """Загрузить и закэшировать данные рас из YAML."""
-    data = load_yaml(RACES_FILE)
-    races = data.get("races", {})
-    if isinstance(races, dict):
-        return races
-    return {}
+    return load_merged_catalog(str(RACES_FILE), "races")
 
 
 def resolve_subrace_id(race_id: str, subrace_id: str | None) -> str | None:

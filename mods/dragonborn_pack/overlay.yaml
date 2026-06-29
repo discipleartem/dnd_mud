@@ -1,0 +1,23 @@
+races:
+  dragonborn:
+    name:
+      ru: "Драконорожденный"
+      en: "Dragonborn"
+    description: "Потомки драконов с дыханием стихии"
+    age_range: [15, 80]
+    size: medium
+    speed: 30
+    subraces:
+      dragonborn:
+        name:
+          ru: "Драконорожденный"
+          en: "Dragonborn"
+        languages: [common, draconic]
+        ability_bonuses:
+          strength: 2
+          charisma: 1
+        grants:
+          - type: damage_bonus
+            damage_type: breath_weapon
+          - type: resistance
+            damage_types: [depends_on_ancestry]
