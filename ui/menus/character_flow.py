@@ -141,49 +141,35 @@ def _select_subrace(
     """Показать описание расы и выбрать подрасу."""
     race_full = _deps.load_race_full(race_id, language)
     subraces = race_full.get("subraces", {})
-    allow_base = bool(race_full.get("allow_base_race_choice", False))
+    if not isinstance(subraces, dict) or not subraces:
+        return False, None
+
+    if len(subraces) == 1:
+        return True, next(iter(subraces))
 
     _print_screen_header(get_string(strings, "character.subrace_caption"))
 
     race_name = race_full.get("name", race_id)
     print(f"{Fore.CYAN}{race_name}{Style.RESET_ALL}")
-    _print_race_info(race_full, strings)
+    desc = race_full.get("description", "")
+    if desc:
+        print(get_string(strings, "character.race_description", desc=desc))
     print()
 
-    if not subraces:
-        if not allow_base:
-            return False, None
-        print(get_string(strings, "character.no_subraces"))
-        print()
-        choice = _run_numbered_menu(
-            strings,
-            [str(race_name)],
-            prompt_key="character.subrace_prompt",
-            back_label_key="character.back",
-        )
-        if choice is None:
-            return False, None
-        return True, None
-
     print(get_string(strings, "character.subraces_label"))
-    choices: list[tuple[str | None, dict[str, Any]]] = []
-    if allow_base:
-        base_info = dict(race_full)
-        base_info["name"] = race_full.get("base_choice_name", race_name)
-        choices.append((None, base_info))
-
+    choices: list[tuple[str, dict[str, Any]]] = []
     for subrace_id, subrace_info in subraces.items():
-        choices.append((str(subrace_id), subrace_info))
+        if isinstance(subrace_info, dict):
+            choices.append((str(subrace_id), subrace_info))
 
-    for idx, (subrace_id, subrace_info) in enumerate(choices, 1):
+    for idx, (_subrace_id, subrace_info) in enumerate(choices, 1):
         print()
         print(
             f"  {Fore.YELLOW}{idx}{Style.RESET_ALL}. "
             f"{Fore.CYAN}{subrace_info.get('name', '?')}"
             f"{Style.RESET_ALL}"
         )
-        if not (subrace_id is None and idx == 1):
-            _print_race_info(subrace_info, strings)
+        _print_race_info(subrace_info, strings)
 
     print()
     print(

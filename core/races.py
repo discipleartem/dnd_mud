@@ -19,6 +19,11 @@ from core.types import StatMap
 RACES_FILE = Path("database/races/races.yaml")
 
 
+def clear_races_cache() -> None:
+    """Сбросить кэш рас (для тестов)."""
+    _load_races_yaml.cache_clear()
+
+
 @lru_cache(maxsize=1)
 def _load_races_yaml() -> dict[str, Any]:
     """Загрузить и закэшировать данные рас из YAML."""
@@ -29,6 +34,23 @@ def _load_races_yaml() -> dict[str, Any]:
     return {}
 
 
+def resolve_subrace_id(race_id: str, subrace_id: str | None) -> str | None:
+    """Нормализовать id подрасы (fallback human → standard)."""
+    race_info = _load_races_yaml().get(race_id, {})
+    if not isinstance(race_info, dict):
+        return subrace_id
+    subraces = race_info.get("subraces", {})
+    if not isinstance(subraces, dict) or not subraces:
+        return subrace_id
+    if subrace_id and subrace_id in subraces:
+        return subrace_id
+    if subrace_id is None and race_id == "human" and "standard" in subraces:
+        return "standard"
+    if subrace_id is None and len(subraces) == 1:
+        return str(next(iter(subraces)))
+    return subrace_id
+
+
 def _get_race_and_subrace(
     race_id: str, subrace_id: str | None = None
 ) -> tuple[dict[str, Any], dict[str, Any] | None]:
@@ -37,12 +59,13 @@ def _get_race_and_subrace(
     race_info = races.get(race_id, {})
     if not isinstance(race_info, dict):
         return {}, None
-    if not subrace_id:
+    resolved = resolve_subrace_id(race_id, subrace_id)
+    if not resolved:
         return race_info, None
     subraces = race_info.get("subraces", {})
     if not isinstance(subraces, dict):
         return race_info, None
-    subrace_info = subraces.get(subrace_id, {})
+    subrace_info = subraces.get(resolved, {})
     if isinstance(subrace_info, dict):
         return race_info, subrace_info
     return race_info, None
@@ -227,3 +250,14 @@ def load_race_full(race_id: str, language: str = "ru") -> dict[str, Any]:
     if race_info:
         return _localize_race_info(race_info, language)
     return {}
+
+
+def auto_select_subrace_id(race_id: str) -> str | None:
+    """Автовыбор подрасы, если в YAML ровно одна."""
+    race_info = _load_races_yaml().get(race_id, {})
+    if not isinstance(race_info, dict):
+        return None
+    subraces = race_info.get("subraces", {})
+    if isinstance(subraces, dict) and len(subraces) == 1:
+        return str(next(iter(subraces)))
+    return None
