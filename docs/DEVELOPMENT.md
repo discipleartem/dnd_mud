@@ -237,12 +237,15 @@ gh pr create --base dev --title "feat: …"   # squash merge
 
 ### Release (`dev` → `main`)
 
+**Только через PR** — без PR в `main` не релизим (локальный merge/push в `main` запрещён).
+
 ```bash
 git fetch origin && git checkout dev && git pull origin dev
 git log dev..origin/main --oneline   # must be empty
-git merge origin/main --no-commit --no-ff && git merge --abort
+git merge origin/main --no-commit --no-ff && git merge --abort   # пробная проверка, не релиз
 make test
 gh pr create --base main --head dev --title "release: …"
+# CI dev-sync-and-mergeable → gh pr merge <number> --squash
 ```
 
 CI: [`.github/workflows/pr-dev-to-main-check.yml`](../.github/workflows/pr-dev-to-main-check.yml) (только PR `dev` → `main`, события open/sync). После merge в `main` — [`.github/workflows/sync-dev-with-main.yml`](../.github/workflows/sync-dev-with-main.yml).
