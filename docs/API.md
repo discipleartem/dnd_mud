@@ -96,8 +96,9 @@ CLASSES_FILE = Path("database/classes/classes.yaml")
 ```python
 save_character(...) -> Character
 update_character(character: Character) -> Character
-load_characters() -> list[Character]
-pop_corrupt_save_warnings() -> list[str]  # имя или save_slug битых JSON после load_characters
+load_characters() -> LoadCharactersResult
+# LoadCharactersResult.characters — tuple[Character, ...]
+# LoadCharactersResult.corrupt_save_warnings — имя или save_slug битых JSON
 load_races(language: str = "ru") -> list[dict[str, Any]]
 load_race_full(race_id: str, language: str = "ru") -> dict[str, Any]
 load_classes(language: str = "ru") -> list[dict[str, Any]]

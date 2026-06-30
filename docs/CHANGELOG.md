@@ -7,16 +7,22 @@
 - `tests/test_character_builder.py`
 - `core/catalog_loader.py` — `load_catalog`, `clear_catalog_cache`, `clear_all_catalog_caches`
 - `tests/test_catalog_loader.py`
-- `tests/test_creation_handlers.py`
+- `tests/test_creation_handlers.py` — smoke переходов handlers
+- `tests/test_catalog_loader.py` — `CatalogLoadError` на битом JSON-синтаксисе
+- `tests/test_mod_loader.py` — битый manifest мода
 - `ui/menus/_creation_handlers.py`, `_creation_navigation.py`, `_creation_finalize.py`, `_creation_state.py`
+
+### Changed
+- Fix-plan remediation: `load_characters()` → `LoadCharactersResult` (без глобальной очереди `pop_corrupt_save_warnings`)
+- `core/mod_loader` — `strict=True` для `manifest.yaml` модов
+- `core/grants.ABILITY_INCREASE` — публичная константа для UI (вместо `_ABILITY_INCREASE`)
 
 ### Changed
 - Review remediation: `_try_load_character_file` — одно чтение JSON при загрузке битых сейвов
 - `tests/test_menus_character.py` — предупреждение о битых сейвах в flow «Новая игра»
 - Review fix-plan: `load_catalog` без собственного `@lru_cache` (кэш только в `load_merged_catalog`)
-- `pop_corrupt_save_warnings` — имя персонажа из JSON, иначе save_slug
-- `ui/menus/feats/_creation.py` — weapon grants из YAML обновляют `weapon_profs` при мульти-выборе черт
-- `ui/menus/_display/_grants.py` — `_ABILITY_INCREASE` из `core.grants`
+- `pop_corrupt_save_warnings` — имя персонажа из JSON, иначе save_slug *(заменено на `LoadCharactersResult.corrupt_save_warnings`)*
+- `ui/menus/_display/_grants.py` — `ABILITY_INCREASE` из `core.grants`
 - Review fixes: conftest catalog cache reset, corrupt save warning in characters menu, `save_character` derives proficiencies via `resolve_creation_grants`, single-layer catalog cache
 - `ui/menus/_display/_grants.py` — grant display вынесен из `_race.py`
 - `ui/menus/_creation_steps.py` — тонкий loop; навигация и финализация в отдельных модулях
@@ -33,6 +39,7 @@
 - Doc drift: `class_id` in `dnd-mud-core.mdc`; `core/scenario_actions.py` in `03-subclasses.md`
 
 ### Removed
+- `pop_corrupt_save_warnings()` — предупреждения о битых сейвах в `LoadCharactersResult`
 - `hit_point_bonus_sources_from_features` (unused legacy) in `core/hp_bonuses.py`
 - `_collect_from_features` legacy wrapper in `core/proficiencies.py`
 - Duplicate `_normalize_armor_token` in `core/grant_mechanics.py`
