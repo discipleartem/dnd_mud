@@ -19,7 +19,7 @@ from core.character_storage import load_characters
             {},
             {
                 "count": 2,
-                "value": 1,
+                "amount": 1,
                 "choice": True,
                 "allow_duplicates": False,
             },

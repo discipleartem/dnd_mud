@@ -47,8 +47,8 @@ grants:
 
 ### Legacy → grants (удалено)
 
-Ранее loader [`core/grants.py`](../core/grants.py) конвертировал `features[]` в `grants[]`.  
-С **2026-06** активные YAML используют только `grants[]`; классовые умения — `progression.<level>.grants` (с **2026-07**).
+Ранее loader [`core/grants.py`](../core/grants.py) конвертировал `features[]` в `grants[]` и нормализовал алиасы полей (`ability_bonus`, `value`, `from_list`, `inherit_base_*`).  
+С **2026-07** YAML и JSON используют канонические поля без fallback в Python.
 
 ## Mod overlay
 

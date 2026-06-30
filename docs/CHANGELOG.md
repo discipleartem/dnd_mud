@@ -12,6 +12,10 @@
 - **Breaking:** `database/races/races.yaml` — grants используют только `amount` (без `value`)
 - Строки UI: placeholder `{content_tier}` в списке приключений
 
+### Changed
+- **Breaking:** удалены legacy fallback в core: `normalize_grant` алиасы, `inherit_base_*`, backgrounds top-level fields, `"class"` в JSON, dual `value`/`amount`, equipment prof fallback в UI
+- `core/grants.py` — `normalize_grant` passthrough; `inherit_flags` только через `inherit:`
+
 ### Added
 - `scripts/verify_targets.py` — маппинг git diff → pytest/lint; `make verify-changed`, `verify-scope`, `verify`
 - `.github/workflows/ci.yml` — полный `make check` + `make test` на PR в `dev` / `main`

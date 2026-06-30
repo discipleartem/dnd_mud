@@ -71,20 +71,13 @@ def load_background_full(
 def get_background_skills(background_id: str) -> list[str]:
     """Два навыка предыстории."""
     skills: list[str] = []
-    skill_grants = grants_of_type(
+    for grant in grants_of_type(
         _background_grants(background_id), "skill_proficiency"
-    )
-    for grant in skill_grants:
+    ):
         raw = grant.get("skills", [])
         if isinstance(raw, list):
             skills.extend(str(s) for s in raw)
-    if skills:
-        return skills
-    info = _background_info(background_id)
-    raw = info.get("skills", [])
-    if isinstance(raw, list):
-        return [str(s) for s in raw]
-    return []
+    return skills
 
 
 def get_background_language_choice(
@@ -96,20 +89,13 @@ def get_background_language_choice(
             count = int(grant.get("count", 0))
             if count > 0:
                 return grant
-    info = _background_info(background_id)
-    langs = info.get("languages", {})
-    if not isinstance(langs, dict) or not langs.get("choice"):
-        return None
-    count = int(langs.get("count", 0))
-    if count <= 0:
-        return None
-    return langs
+    return None
 
 
 def get_background_tool_proficiencies(
     background_id: str,
 ) -> tuple[list[str], list[dict[str, Any]]]:
-    """Инструменты предыстории: fixed + choices (legacy-формат choices)."""
+    """Инструменты предыстории: fixed + choices."""
     fixed: list[str] = []
     choices: list[dict[str, Any]] = []
     for grant in grants_of_type(
@@ -126,20 +112,4 @@ def get_background_tool_proficiencies(
         raw = grant.get("tools", [])
         if isinstance(raw, list):
             fixed.extend(str(t) for t in raw)
-    if fixed or choices:
-        return fixed, choices
-    info = _background_info(background_id)
-    prof = info.get("tool_proficiencies", {})
-    if not isinstance(prof, dict):
-        return [], []
-    fixed_raw = prof.get("fixed", [])
-    fixed_legacy = (
-        [str(t) for t in fixed_raw] if isinstance(fixed_raw, list) else []
-    )
-    choices_legacy: list[dict[str, Any]] = []
-    raw_choices = prof.get("choices", [])
-    if isinstance(raw_choices, list):
-        for entry in raw_choices:
-            if isinstance(entry, dict):
-                choices_legacy.append(entry)
-    return fixed_legacy, choices_legacy
+    return fixed, choices

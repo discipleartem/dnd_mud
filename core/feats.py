@@ -142,7 +142,7 @@ def get_race_feat_grants(
         collect_race_grants(race_id, subrace_id), "feat"
     ):
         count = int(grant.get("count", 1))
-        from_list = str(grant.get("from", grant.get("from_list", "all")))
+        from_list = str(grant.get("from", "all"))
         source = "subrace" if subrace_id else "race"
         result.append(
             FeatGrant(count=count, from_list=from_list, source=source)

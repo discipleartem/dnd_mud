@@ -468,7 +468,7 @@ apply_subclass_proficiencies_to_character(character) -> Character
 
 Имя файла — slug из `core/slug.make_save_slug()`; при коллизии — `hero_2.json`, `hero_3.json` и т.д.
 
-> **Legacy:** сейвы до переименования поля могли содержать `"class"` вместо `"class_id"`; `from_dict()` читает оба ключа, `to_dict()` пишет только `class_id`.
+> **Save format:** `to_dict()` / `from_dict()` используют только `class_id` (ключ `"class"` не поддерживается).
 
 ---
 

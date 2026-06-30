@@ -51,19 +51,18 @@ def get_fixed_racial_languages(
     if not race_info:
         return []
 
-    inherit = True
-    if subrace_id and subrace_info:
-        inherit = bool(subrace_info.get("inherit_base_languages", True))
-
     result: list[str] = []
-    if inherit:
+    if subrace_info:
         for lang in race_info.get("languages", []):
             lang_id = str(lang)
             if lang_id not in result:
                 result.append(lang_id)
-
-    if subrace_id and subrace_info:
         for lang in subrace_info.get("languages", []):
+            lang_id = str(lang)
+            if lang_id not in result:
+                result.append(lang_id)
+    else:
+        for lang in race_info.get("languages", []):
             lang_id = str(lang)
             if lang_id not in result:
                 result.append(lang_id)
