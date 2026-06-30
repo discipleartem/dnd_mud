@@ -2,10 +2,21 @@
 
 from __future__ import annotations
 
+from collections.abc import Generator
 from pathlib import Path
 from typing import Any
 
 import pytest
+
+
+@pytest.fixture(autouse=True)
+def _reset_catalog_caches() -> Generator[None, None, None]:
+    """Сбросить кэши каталогов между тестами."""
+    from core.catalog_loader import clear_all_catalog_caches
+
+    clear_all_catalog_caches()
+    yield
+    clear_all_catalog_caches()
 
 
 @pytest.fixture

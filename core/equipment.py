@@ -1,6 +1,5 @@
 """Загрузка каталога снаряжения из YAML."""
 
-from functools import lru_cache
 from pathlib import Path
 from typing import Any
 
@@ -35,22 +34,18 @@ def _item_name(name: Any, language: str, fallback: str) -> str:
     return fallback
 
 
-@lru_cache(maxsize=1)
 def _load_weapons() -> dict[str, Any]:
     return load_catalog(WEAPONS_FILE, "weapons")
 
 
-@lru_cache(maxsize=1)
 def _load_armor() -> dict[str, Any]:
     return load_catalog(ARMOR_FILE, "armor")
 
 
-@lru_cache(maxsize=1)
 def _load_tools() -> dict[str, Any]:
     return load_catalog(TOOLS_FILE, "tools")
 
 
-@lru_cache(maxsize=1)
 def _load_equipment_items() -> dict[str, Any]:
     return load_catalog(EQUIPMENT_FILE, "equipment")
 

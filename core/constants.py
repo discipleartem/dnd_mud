@@ -1,6 +1,5 @@
 """Константы D&D 5e из YAML."""
 
-from functools import lru_cache
 from pathlib import Path
 from typing import Any
 
@@ -34,7 +33,6 @@ _DEFAULT_PROFICIENCY_BONUS: dict[int, int] = {
 }
 
 
-@lru_cache(maxsize=1)
 def _load_constants() -> dict[str, Any]:
     """Загрузить блок constants из YAML."""
     return load_catalog(CONSTANTS_FILE, "constants")

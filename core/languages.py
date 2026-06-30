@@ -1,6 +1,5 @@
 """Загрузка языков и пулов выбора при создании персонажа."""
 
-from functools import lru_cache
 from pathlib import Path
 from typing import Any, Literal
 
@@ -13,7 +12,6 @@ LANGUAGES_FILE = Path("database/core/languages.yaml")
 LanguagePool = Literal["common", "exotic", "any"]
 
 
-@lru_cache(maxsize=1)
 def _load_languages_yaml() -> dict[str, Any]:
     """Загрузить каталог языков."""
     return load_catalog(LANGUAGES_FILE, "languages")

@@ -1,6 +1,5 @@
 """Загрузка предысторий из YAML."""
 
-from functools import lru_cache
 from pathlib import Path
 from typing import Any
 
@@ -11,7 +10,6 @@ from core.localization import resolve_localized_text
 BACKGROUNDS_FILE = Path("database/backgrounds/backgrounds.yaml")
 
 
-@lru_cache(maxsize=1)
 def _load_backgrounds_yaml() -> dict[str, Any]:
     """Загрузить данные предысторий."""
     return load_catalog(BACKGROUNDS_FILE, "backgrounds")

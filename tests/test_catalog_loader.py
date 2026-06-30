@@ -1,6 +1,15 @@
 """Тесты единого загрузчика каталогов."""
 
-from core.catalog_loader import clear_catalog_cache, load_catalog
+from pathlib import Path
+
+import pytest
+
+from core.catalog_loader import (
+    clear_all_catalog_caches,
+    clear_catalog_cache,
+    load_catalog,
+)
+from core.io import CatalogLoadError
 from core.races import RACES_FILE, clear_races_cache
 
 
@@ -15,3 +24,18 @@ def test_clear_races_cache_invalidates_catalog() -> None:
     clear_races_cache()
     second = load_catalog(RACES_FILE, "races")
     assert first is not second
+
+
+def test_clear_all_catalog_caches_resets_load_catalog() -> None:
+    first = load_catalog(RACES_FILE, "races")
+    clear_all_catalog_caches()
+    second = load_catalog(RACES_FILE, "races")
+    assert first is not second
+
+
+def test_load_catalog_raises_on_corrupt_yaml(tmp_path: Path) -> None:
+    path = tmp_path / "races.yaml"
+    path.write_text(":\n  bad: [unclosed", encoding="utf-8")
+    clear_catalog_cache()
+    with pytest.raises(CatalogLoadError):
+        load_catalog(path, "races")

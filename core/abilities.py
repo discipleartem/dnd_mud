@@ -1,6 +1,5 @@
 """Характеристики и привязка навыков из YAML."""
 
-from functools import lru_cache
 from pathlib import Path
 from typing import Any
 
@@ -40,13 +39,11 @@ _FALLBACK_SKILL_IDS: tuple[str, ...] = (
 )
 
 
-@lru_cache(maxsize=1)
 def _load_abilities_yaml() -> dict[str, Any]:
     """Загрузить abilities из YAML."""
     return load_catalog(ABILITIES_FILE, "abilities")
 
 
-@lru_cache(maxsize=1)
 def _load_skills_yaml() -> dict[str, Any]:
     """Загрузить skills из YAML."""
     return load_catalog(SKILLS_FILE, "skills")

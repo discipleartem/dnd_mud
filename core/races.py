@@ -1,6 +1,5 @@
 """Загрузка рас и расовых бонусов из YAML."""
 
-from functools import lru_cache
 from pathlib import Path
 from typing import Any
 
@@ -24,13 +23,11 @@ RACES_FILE = Path("database/races/races.yaml")
 
 def clear_races_cache() -> None:
     """Сбросить кэш рас (для тестов)."""
-    _load_races_yaml.cache_clear()
     clear_catalog_cache()
 
 
-@lru_cache(maxsize=1)
 def _load_races_yaml() -> dict[str, Any]:
-    """Загрузить и закэшировать данные рас из YAML."""
+    """Загрузить данные рас из YAML."""
     return load_catalog(RACES_FILE, "races")
 
 

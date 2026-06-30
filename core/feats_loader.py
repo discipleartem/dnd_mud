@@ -1,7 +1,6 @@
 """Загрузка каталога черт из YAML."""
 
 from dataclasses import dataclass, field
-from functools import lru_cache
 from pathlib import Path
 from typing import Any
 
@@ -38,7 +37,6 @@ class FeatRequirementContext:
     skills: list[str] = field(default_factory=list)
 
 
-@lru_cache(maxsize=1)
 def _load_feats_yaml() -> dict[str, Any]:
     """Загрузить feats из YAML."""
     return load_catalog(FEATS_FILE, "feats")

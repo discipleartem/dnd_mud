@@ -1,6 +1,5 @@
 """Загрузка классов персонажей из YAML."""
 
-from functools import lru_cache
 from pathlib import Path
 from typing import Any
 
@@ -11,9 +10,8 @@ CLASSES_FILE = Path("database/classes/classes.yaml")
 DEFAULT_SUBCLASS_CHOICE_LEVEL = 3
 
 
-@lru_cache(maxsize=1)
 def _load_classes_yaml() -> dict[str, Any]:
-    """Загрузить и закэшировать данные классов из YAML."""
+    """Загрузить данные классов из YAML."""
     return load_catalog(CLASSES_FILE, "classes")
 
 
