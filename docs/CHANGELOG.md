@@ -8,6 +8,7 @@
 - `core/combat.py`, `core/checks.py` и их тесты (Phase 2 stubs)
 - Legacy-парсер `feature_to_grants` и блоки `features:` в активных YAML (только `grants[]`)
 - `ui/menus/character_flow.py` — flow перенесён в `_creation_steps.py`
+- `core/feats_grants.py` — логика перенесена в `core/feats.py`
 
 ### Added
 - `core/io.save_json`, `core/io.merge_unique` — единый JSON I/O и merge списков
@@ -15,6 +16,9 @@
 - `core/classes.get_class_dict` — публичный доступ к сырым данным класса
 - `ui/menus/_display/_labels._label_from_catalog` — lookup подписей из каталога
 - Фикстуры `human_race_with_subraces`, `subrace_strings` в `tests/conftest.py`
+- `core/grant_mechanics.py` — общий парсер proficiency-токенов из grant dict
+- `ui/menus/_common._read_numbered_choice` — DRY ввод номера после кастомного рендера
+- Тест `test_print_race_info_shows_grants` в `tests/test_display.py`
 
 ### Changed
 - YAML races/classes/feats — grants-only; классовые умения — `class_features[]`
@@ -23,13 +27,19 @@
 - Тесты: 261 → 249 (удалены combat/checks); `test_dice.py` — monkeypatch вместо MagicMock
 
 - `ui/menus/feats._resolve_feat_subchoices` — читает `grants[]` вместо legacy `features[]`
+- `ui/menus/_display/_race.py` — экран подрасы читает `grants[]` вместо legacy `features[]`
+- `core/progression.process_pending_level_ups` — UI-хук `on_level_up`; `level_up.py` — thin wrapper
+- `_CreationState.save_kwargs()` — единый маппинг в `save_character`
+- `ui/menus/_selectors.py` — `_read_numbered_choice` для ввода выбора
+- Документация: убраны ссылки на Phase 2 stubs (`combat`, `checks`, `_future`)
+- Тесты: 249 → 250
 
 ### Fixed
 - `Character.from_dict()` — fallback на legacy-ключ `"class"` при загрузке старых сейвов (запись — только `class_id`)
 
 ### Changed
 - Рефакторинг техдолга: `core/hp_bonuses.py` (разрыв цикла races↔feats); `class_name` → `class_id` (JSON-сейвы только `class_id`)
-- Декомпозиция: `ui/menus/_display/` (пакет), `core/feats_loader.py` + `feats_grants.py`, `ui/menus/_creation_steps.py` + `_selectors.py`
+- Декомпозиция: `ui/menus/_display/` (пакет), `core/feats_loader.py` + grants в `core/feats.py`, `ui/menus/_creation_steps.py` + `_selectors.py`
 - `ui/menus/_deps.py` — re-export из расширенного `core/character.py` (seam для тестов сохранён)
 - Удалены legacy re-export в `character_flow.py`; запись JSON — только `class_id` (чтение старых `"class"` — см. Fixed)
 - Документация синхронизирована: `ARCHITECTURE`, `API`, `DEVELOPMENT`, scenario runner

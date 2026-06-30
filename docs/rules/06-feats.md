@@ -24,7 +24,7 @@
 |--------|------------|
 | Статус | **Реализовано** (создание + ASI/feat при левелапе) |
 | YAML | [`database/progression/feats.yaml`](../../database/progression/feats.yaml) |
-| Core | [`core/feats.py`](../../core/feats.py), [`core/feats_loader.py`](../../core/feats_loader.py), [`core/feats_grants.py`](../../core/feats_grants.py), [`core/asi.py`](../../core/asi.py) |
+| Core | [`core/feats.py`](../../core/feats.py), [`core/feats_loader.py`](../../core/feats_loader.py), [`core/asi.py`](../../core/asi.py) |
 | UI | [`ui/menus/feats.py`](../../ui/menus/feats.py), [`ui/menus/asi.py`](../../ui/menus/asi.py), шаг `feats` в [`_creation_steps.py`](../../ui/menus/_creation_steps.py) |
 
 ### Реализовано
@@ -50,12 +50,12 @@
 | Правило PHB | Целевая реализация |
 |-------------|-------------------|
 | Пока требования **не выполнены** — нельзя **пользоваться** чертой | `feat_is_active(feat_id, character) -> bool` — обёртка над `feat_meets_requirements()` с полным `FeatRequirementContext` из текущего состояния персонажа |
-| Эффекты черты только при `feat_is_active` | В `game_engine` / `core/combat.py` / `core/checks.py` перед применением механики из `features[].mechanics` |
+| Эффекты черты только при `feat_is_active` | В `game_engine` перед применением механики из `grants[]` / YAML |
 | Проклятия и временное снижение характеристик | Отдельный слой модификаторов статов (база + временные эффекты); `feat_is_active` смотрит на **эффективные** статы, не только `Character.stats` |
 | Бонусы к характеристикам от черты при потере требований | Вариант A: не вычитать из `stats` (PHB: «не получаете преимуществ», не отзыв ASI); вариант B: пересчёт при смене эффективных статов — решить при появлении curse-механики |
 | HP от Tough при неактивной черте | `get_feat_hp_bonus_sources` / `max_hp_for_level` — учитывать только **активные** черты при пересчёте HP (если появится динамический пересчёт max HP) |
 | Боевые и пассивные механики (`alert`, `sharpshooter`, `war_caster`, …) | Резолвер по `mechanics.type` в `feats.yaml`; интеграция в бой и сценарии ([09-combat.md](09-combat.md)) |
-| Resilient: владение спасброском по выбранной характеристике | `save_proficiency` в YAML; поле на `Character` + учёт в `core/checks.py` |
+| Resilient: владение спасброском по выбранной характеристике | `save_proficiency` в YAML; поле на `Character` + учёт в Phase 2 checks API |
 | Отображение неактивных черт в UI | В карточке персонажа: черта в списке, пометка «требования не выполнены» (опционально) |
 
 **Черновой API (не реализован):**

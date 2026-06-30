@@ -45,9 +45,9 @@
 
 | Область PHB | Статус | Заметки |
 |-------------|--------|---------|
-| Проверки характеристик, навыки, спасброски, преимущество/помеха | Частично | `core/checks.py`; интеграция в сценарии — Phase 2; см. `07-ability-scores.md` |
+| Проверки характеристик, навыки, спасброски, преимущество/помеха | Запланировано | Phase 2 engine; см. `07-ability-scores.md` |
 | Бонус мастерства | Реализовано | `core/constants.proficiency_bonus(level)` |
-| Бой (инициатива, атаки, урон, смерть, укрытие) | Частично | API атаки/КД в `core/combat.py`; полный цикл — Phase 2; см. `09-combat.md` |
+| Бой (инициатива, атаки, урон, смерть, укрытие) | Запланировано | Phase 2 engine; см. `09-combat.md` |
 | Заклинания и ячейки | Запланировано | См. `10-spells.md` |
 | Снаряжение, КД, оружие | Частично | Каталог + владения + `compute_ac`; инвентарь — Phase 2; см. `05-equipment.md` |
 | Предыстории | Частично | Выбор + tool proficiencies; стартовое снаряжение — Phase 2; см. `04-backgrounds.md` |
@@ -58,7 +58,7 @@
 | Загрузка игры | Заглушка | `errors.load_not_implemented` |
 | Состояния (оглушён, опутан, …) | Запланировано | См. `appendices.md` |
 
-Целевая реализация: `game_engine.py`, загрузка сценариев из `adventures/*.yaml`. Справочники equipment/constants/abilities/skills/feats — в `database/` (см. `database/_future/README.md`). Режим HardCore — полные правила в engine; Normal — допустимые упрощения в YAML-приключениях (§3.2.1).
+Целевая реализация: `game_engine.py`, загрузка сценариев из `adventures/*.yaml`. Справочники equipment/constants/abilities/skills/feats — в `database/`. Режим HardCore — полные правила в engine; Normal — допустимые упрощения в YAML-приключениях (§3.2.1).
 
 ## 3. Функциональные требования
 
@@ -418,9 +418,6 @@ dnd_mud/
 │   │   └── settings.json.example
 │   ├── equipment/                   # weapon, armor, tools, equipment
 │   ├── progression/feats.yaml
-│   ├── _future/                     # Неактивированные справочники
-│   │   ├── core/languages.yaml      # устаревшая схема
-│   │   └── content/mods_state.yaml
 │   └── strings/                     # ru.yaml, en.yaml
 ├── saves/                           # пользовательские данные (gitignored)
 │   └── characters/                  # по одному JSON на персонажа
@@ -723,7 +720,7 @@ races:
 | # | Проблема | Целевое исправление | Ссылки | Статус |
 |---|----------|---------------------|--------|--------|
 | 6 | CON в `ru.yaml` — «Выносливость» | «Телосложение» в `stats.constitution` | `database/strings/ru.yaml` | ✅ |
-| 7 | CON в `_future/core/abilities.yaml` | Исправлено при промоуте: «Телосложение» | `database/core/abilities.yaml` | ✅ |
+| 7 | CON в legacy `_future/core/abilities.yaml` | Исправлено при промоуте: «Телосложение» | `database/core/abilities.yaml` | ✅ |
 
 ### 11.3. Согласованность документации проекта
 

@@ -42,7 +42,7 @@
 | Аспект | Значение |
 |--------|----------|
 | Статус | **Запланировано** |
-| YAML | [`database/_future/core/constants.yaml`](../../database/_future/core/constants.yaml) — задел под константы |
+| YAML | [`database/core/constants.yaml`](../../database/core/constants.yaml) — константы DC/PB |
 | Core | Нет `apply_condition()` / `has_condition()` |
 | Заметки | Состояния критичны для боя и заклинаний — Phase 2 engine |
 

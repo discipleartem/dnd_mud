@@ -57,8 +57,8 @@ dnd_mud/
 │   ├── character.py         # Фасад API персонажей и UI (_deps)
 │   ├── hp_bonuses.py        # Бонусы HP из features (раса, черта)
 │   ├── feats_loader.py      # Загрузка feats.yaml
-│   ├── feats_grants.py      # Гранты и apply feats
-│   ├── feats.py             # Публичный фасад черт
+│   ├── grant_mechanics.py   # Парсинг proficiency-токенов из grants
+│   ├── feats.py             # Публичный фасад черт (гранты + apply)
 │   ├── character_storage.py # CRUD персонажей (JSON в saves/)
 │   ├── slug.py              # make_save_slug — транслитерация имён
 │   ├── stats.py             # Генерация и валидация характеристик

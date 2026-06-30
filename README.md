@@ -102,7 +102,7 @@ dnd_mud/
 │
 ├── ui/                              # Пользовательский интерфейс
 │   ├── input_handler.py             # Валидация ввода (числа, строки, выбор)
-│   └── menus/                       # Экраны меню (character_flow, stats, …)
+│   └── menus/                       # Экраны меню (_creation_steps, stats, …)
 │
 ├── database/                        # База данных правил D&D 5e
 │   ├── races/races.yaml
@@ -111,7 +111,6 @@ dnd_mud/
 │   ├── content/adventures.yaml
 │   ├── core/settings.json.example
 │   ├── core/mods_state.json         # Включённые моды
-│   ├── _future/                     # Справочники Phase 2 (не загружаются)
 │   └── strings/{ru,en}.yaml
 ├── saves/                           # Пользовательские данные (gitignored)
 │   └── characters/                  # Персонажи (по одному JSON на персонажа)

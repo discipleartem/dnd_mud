@@ -83,7 +83,7 @@ Checklist (report findings with severity Blocker / Major / Minor / Nit):
 3. Tests — meaningful gaps only (do not re-run pytest); missing tests for new behavior in core/ or database/.
 4. Types & imports — if core/ changed, flag missing type hints or obvious mypy/ruff issues.
 5. Data & mods — database/**/*.yaml, mods/**: grants schema per docs/DATA_SCHEMA.md, legacy compatibility, localization {ru,en} where applicable.
-6. UI — ui/, character_flow: localization keys, menu flow regressions.
+6. UI — ui/, `_creation_steps`: localization keys, menu flow regressions.
 7. Docs sync — if behavior/API/data changed, docs/ (API, ARCHITECTURE, DATA_SCHEMA, CHANGELOG) should reflect it; flag drift.
 8. Git hygiene — unrelated files, secrets, committed artifacts (.coverage, saves/).
 9. Security — only if auth, file paths, or user input parsing changed; otherwise skip.
