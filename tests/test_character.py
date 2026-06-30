@@ -478,6 +478,25 @@ def test_load_characters_skips_corrupt_save(characters_dir):
     assert pop_corrupt_save_warnings() == ["bad"]
 
 
+def test_load_characters_skips_empty_save_file(characters_dir):
+    """Пустой JSON-файл пропускается с предупреждением."""
+    characters_dir.mkdir(parents=True, exist_ok=True)
+    (characters_dir / "empty.json").write_text("", encoding="utf-8")
+    assert load_characters() == []
+    assert pop_corrupt_save_warnings() == ["empty"]
+
+
+def test_load_characters_skips_semantically_invalid_save(characters_dir):
+    """Сейв с name, но невалидными полями, не роняет load_characters."""
+    characters_dir.mkdir(parents=True, exist_ok=True)
+    (characters_dir / "broken.json").write_text(
+        '{"name": "Broken", "current_hp": "not-a-number"}',
+        encoding="utf-8",
+    )
+    assert load_characters() == []
+    assert pop_corrupt_save_warnings() == ["broken"]
+
+
 def test_save_character_derives_proficiencies_when_omitted(characters_dir):
     """save_character без proficiencies делегирует в character_builder."""
     saved = character_mod.save_character(

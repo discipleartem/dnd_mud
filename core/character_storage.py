@@ -32,10 +32,13 @@ def _is_corrupt_save_file(path: Path) -> bool:
         return False
     try:
         if path.stat().st_size == 0:
-            return False
+            return True
         data = load_json(path)
-        return not data.get("name")
-    except OSError:
+        if not data.get("name"):
+            return True
+        Character.from_dict(data)
+        return False
+    except (OSError, ValueError, TypeError):
         return True
 
 
@@ -239,7 +242,7 @@ def _load_character_file(path: Path) -> Character | None:
         if not character.save_slug:
             character.save_slug = path.stem
         return character
-    except OSError:
+    except (OSError, ValueError, TypeError):
         return None
 
 
