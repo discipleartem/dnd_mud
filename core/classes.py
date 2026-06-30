@@ -21,12 +21,15 @@ def _load_classes_yaml() -> dict[str, Any]:
     return {}
 
 
+def get_class_dict(class_id: str) -> dict[str, Any]:
+    """Сырые данные класса из YAML."""
+    info = _load_classes_yaml().get(class_id, {})
+    return info if isinstance(info, dict) else {}
+
+
 def get_class_hit_dice(class_id: str) -> int:
     """Получить кость здоровья класса."""
-    class_info = _load_classes_yaml().get(class_id, {})
-    if not isinstance(class_info, dict):
-        return 8
-    hit_dice = class_info.get("hit_dice", 8)
+    hit_dice = get_class_dict(class_id).get("hit_dice", 8)
     if isinstance(hit_dice, int):
         return hit_dice
     return 8
@@ -34,10 +37,7 @@ def get_class_hit_dice(class_id: str) -> int:
 
 def get_subclass_choice_level(class_id: str) -> int:
     """Уровень класса, на котором выбирается подкласс (PHB / YAML)."""
-    class_info = _load_classes_yaml().get(class_id, {})
-    if not isinstance(class_info, dict):
-        return DEFAULT_SUBCLASS_CHOICE_LEVEL
-    level = class_info.get(
+    level = get_class_dict(class_id).get(
         "subclass_choice_level", DEFAULT_SUBCLASS_CHOICE_LEVEL
     )
     if isinstance(level, int):
@@ -65,8 +65,8 @@ def character_has_spellcasting(
     Данные — поля ``spellcasting`` / ``spellcasting_level`` в
     ``database/classes/classes.yaml`` (PHB: «Использование заклинаний»).
     """
-    class_info = _load_classes_yaml().get(class_id, {})
-    if not isinstance(class_info, dict):
+    class_info = get_class_dict(class_id)
+    if not class_info:
         return False
     if _spellcasting_from_entry(class_info, level, 1):
         return True
@@ -97,7 +97,7 @@ def _subclass_feature_ids_and_names(
     for entry in raw_subclasses:
         if not isinstance(entry, dict):
             continue
-        raw_features = entry.get("features", [])
+        raw_features = entry.get("class_features", [])
         if not isinstance(raw_features, list):
             continue
         for feat in raw_features:
@@ -114,7 +114,7 @@ def _subclass_feature_ids_and_names(
 
 def _class_features_only(class_info: dict[str, Any]) -> list[dict[str, Any]]:
     """Умения класса без дублей из подклассов (по id или name)."""
-    raw_features = class_info.get("features", [])
+    raw_features = class_info.get("class_features", [])
     if not isinstance(raw_features, list):
         return []
     subclass_ids, subclass_names = _subclass_feature_ids_and_names(class_info)
@@ -175,8 +175,8 @@ def load_classes(language: str = "ru") -> list[dict[str, Any]]:
 
 def load_class_full(class_id: str, language: str = "ru") -> dict[str, Any]:
     """Загрузить полные данные класса для экрана выбора."""
-    class_info = _load_classes_yaml().get(class_id, {})
-    if not isinstance(class_info, dict):
+    class_info = get_class_dict(class_id)
+    if not class_info:
         return {"id": class_id, "name": class_id}
     return _normalize_class_dict(class_id, class_info, language)
 
@@ -185,8 +185,8 @@ def load_subclasses(
     class_id: str, language: str = "ru"
 ) -> list[dict[str, Any]]:
     """Загрузить подклассы класса с локализованными именами."""
-    class_info = _load_classes_yaml().get(class_id, {})
-    if not isinstance(class_info, dict):
+    class_info = get_class_dict(class_id)
+    if not class_info:
         return []
 
     raw_subclasses = class_info.get("subclasses", [])
@@ -207,7 +207,7 @@ def load_subclasses(
                 "name": str(name),
                 "description": entry.get("description", ""),
                 "parent_class": entry.get("parent_class", class_id),
-                "features": entry.get("features", []),
+                "features": entry.get("class_features", []),
             }
         )
     return result

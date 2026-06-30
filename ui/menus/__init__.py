@@ -1,6 +1,6 @@
 """Публичный API экранов меню."""
 
-from ui.menus.character_flow import show_create_character_flow
+from ui.menus._creation_steps import show_create_character_flow
 from ui.menus.characters_menu import show_characters_menu
 from ui.menus.main_menu import (
     show_load_game_flow,

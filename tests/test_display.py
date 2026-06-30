@@ -43,3 +43,32 @@ def test_print_character_card_shows_name_and_class(capsys, ru_strings):
     assert "Арагорн" in output
     assert "Воин" in output
     assert "3" in output
+
+
+def test_print_race_info_shows_grants(capsys, subrace_strings):
+    """Экран подрасы выводит особенности из grants[]."""
+    from ui.menus._display._race import _print_race_info
+
+    high_elf = {
+        "name": "Высший эльф",
+        "description": "Описание",
+        "grants": [
+            {
+                "type": "weapon_proficiency",
+                "name": "Эльфийская боевая подготовка",
+                "weapons": ["longsword", "longbow"],
+            },
+            {
+                "type": "language",
+                "name": "Дополнительный язык",
+                "choice": True,
+                "count": 1,
+                "pool": "common",
+            },
+        ],
+    }
+    _print_race_info(high_elf, subrace_strings)
+    output = capsys.readouterr().out
+    assert "Эльфийская боевая подготовка" in output
+    assert "Дополнительный язык" in output
+    assert "longsword" in output

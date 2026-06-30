@@ -95,9 +95,6 @@ CLASSES_FILE = Path("database/classes/classes.yaml")
 
 ```python
 save_character(...) -> Character
-starting_max_hp(
-    class_id: str, stats: StatMap, difficulty: GameDifficulty = "normal"
-) -> int
 update_character(character: Character) -> Character
 load_characters() -> list[Character]
 load_races(language: str = "ru") -> list[dict[str, Any]]
@@ -105,9 +102,6 @@ load_race_full(race_id: str, language: str = "ru") -> dict[str, Any]
 load_classes(language: str = "ru") -> list[dict[str, Any]]
 get_race_bonuses(race_id: str, subrace_id: str | None = None) -> StatMap
 apply_bonuses_to_stats(stats: StatMap, bonuses: StatMap) -> StatMap
-apply_racial_bonuses_to_stats(
-    base_stats: StatMap, race_id: str, subrace_id: str | None = None
-) -> StatMap
 get_choice_ability_bonus_mechanics(race_id: str, subrace_id: str | None = None) -> dict[str, Any] | None
 has_choice_ability_bonuses(race_id: str, subrace_id: str | None = None) -> bool
 build_bonuses_from_choices(chosen_stats: list[str], value: int = 1) -> StatMap
@@ -129,8 +123,7 @@ ABILITY_SCORE_MAX = 20
 
 `save_character` создаёт `Character` (`current_hp` = `max_hp` = `max_hp_for_level(..., difficulty)`) и сохраняет в `saves/characters/{save_slug}.json`.  
 Параметр `apply_feat_stat_bonuses=False` — если `stats` уже содержат бонусы черт (flow создания после `select_creation_feats`).  
-`starting_max_hp` — HP на 1 уровне с учётом режима (Normal/Easy: `max(1, hit_dice + CON)`; HardCore: бросок + CON).  
-`max_hp_for_level` — см. `core.progression` (HP на уровне 1–10).  
+`max_hp_for_level` — см. `core.progression` (HP на уровне 1–10, включая режим Normal/Easy/HardCore).  
 `update_character` — перезапись JSON после изменений (подкласс, XP и т.д.).
 `validate_final_stats` — первое превышение потолка 20 после всех бонусов; UI вызывает при финализации характеристик.
 
@@ -235,12 +228,11 @@ get_background_language_choice(background_id: str) -> dict[str, Any] | None
 
 ## core.grants — Нормализация grants
 
-Единый формат эффектов из YAML (`grants[]` или legacy `features`/`mechanics`). Схема типов: [`DATA_SCHEMA.md`](DATA_SCHEMA.md).
+Единый формат эффектов из YAML (`grants[]`). Схема типов: [`DATA_SCHEMA.md`](DATA_SCHEMA.md).
 
 ```python
 inherit_flags(entity: dict[str, Any]) -> tuple[bool, bool]
 normalize_grant(raw: dict[str, Any]) -> dict[str, Any]
-feature_to_grants(feature: dict[str, Any]) -> list[dict[str, Any]]
 grants_from_entity(entity: dict[str, Any]) -> list[dict[str, Any]]
 merge_entity_grants(
     parent: dict[str, Any] | None,
@@ -327,7 +319,7 @@ load_skill_info(skill_id: str) -> dict[str, Any]
 
 ## core.feats — Черты
 
-Источник: `database/progression/feats.yaml`. Загрузка — `core/feats_loader.py`, гранты — `core/feats_grants.py`; публичный API — `core/feats.py`. Выбор при создании (variant human) и при левелапе (ASI или черта).
+Источник: `database/progression/feats.yaml`. Загрузка — `core/feats_loader.py`; гранты и apply — в `core/feats.py`. Выбор при создании (variant human) и при левелапе (ASI или черта).
 
 ```python
 load_feats() -> list[dict[str, Any]]
@@ -380,42 +372,6 @@ apply_subclass_proficiencies_to_character(character) -> Character
 ```
 
 Re-export: `core.character`.
-
----
-
-## core.checks — Проверки характеристик
-
-```python
-roll_d20(*, advantage=False, disadvantage=False) -> int
-ability_check_modifier(character, ability, *, proficient=False) -> int
-skill_check_modifier(character, skill_id) -> int
-saving_throw_modifier(character, ability) -> int
-passive_skill(character, skill_id) -> int
-ability_check(character, ability, dc, *, proficient=False, advantage=False, disadvantage=False) -> tuple[int, bool]
-skill_check(character, skill_id, dc, *, advantage=False, disadvantage=False) -> tuple[int, bool]
-saving_throw(character, ability, dc, *, advantage=False, disadvantage=False) -> tuple[int, bool]
-```
-
-Бонус мастерства — `core.constants.proficiency_bonus(level)`.
-
----
-
-## core.combat — Атака и КД
-
-Параметры `armor_id` / `weapon_id` передаются явно (инвентарь UI — Phase 2).
-
-```python
-attack_roll_modifier(character, weapon_id, ability_mod=None) -> int
-armor_wearing_penalty(character, armor_id) -> bool
-compute_ac(character, armor_id=None, *, shield=False) -> int
-tool_check_modifier(character, tool_id, ability_mod) -> int
-```
-
-`armor_wearing_penalty` — `True`, если доспех или щит (`armor_id="shield"`) без владения: помеха на Str/Dex checks/saves/attacks по PHB. Запрет заклинаний — Phase 2.
-
-`compute_ac`: щит (`shield=True`) всегда даёт **+2 КД**; владение щитом на КД не влияет.
-
-`build_fixed_proficiencies`: инструменты с `choice: true` в YAML **не** попадают в fixed-список — только через `get_proficiency_choices()` и UI.
 
 ---
 
@@ -580,6 +536,7 @@ def clamp_level(level: int) -> int
 ## core.classes — Классы
 
 ```python
+get_class_dict(class_id: str) -> dict[str, Any]
 load_classes(language: str = "ru") -> list[dict[str, Any]]
 load_class_full(class_id: str, language: str = "ru") -> dict[str, Any]
 load_subclasses(class_id: str, language: str = "ru") -> list[dict[str, Any]]
@@ -627,6 +584,12 @@ def grant_experience(character: Character, amount: int) -> Character
 def has_pending_level_up(character: Character) -> bool
 def apply_level_up(character: Character, hp_gain: int) -> Character
 def resolve_pending_level_ups(character: Character) -> Character
+def process_pending_level_ups(
+    character: Character,
+    *,
+    resolve_asi: Callable[[Character, int], AsiResolution | None] | None = None,
+    on_level_up: Callable[[Character, int, HpGainBreakdown, int, int], bool] | None = None,
+) -> Character
 def apply_experience(character: Character, amount: int) -> Character
 ```
 
@@ -727,7 +690,7 @@ show_main_menu(strings: dict) -> int
 select_difficulty(strings: dict) -> str | None
 show_new_game_flow(strings: dict, settings: dict) -> None
 show_load_game_flow(strings: dict) -> None
-show_create_character_flow(strings: dict, language: str = "ru") -> Character | None
+show_create_character_flow(strings: dict, language: str = "ru") -> Character | None  # ui/menus/_creation_steps.py
 show_stats_generation_flow(strings: StringsDict, race_id: str, subrace_id: str | None, difficulty: GameDifficulty) -> StatMap | None
 show_settings(strings: dict, settings: dict) -> dict
 show_languages_menu(strings: dict, settings: dict) -> dict

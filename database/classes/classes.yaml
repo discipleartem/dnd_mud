@@ -1,868 +1,890 @@
-# Классы Dungeons & Dragons 5e - Оптимизированная структура
-# Базовые классы из Player's Handbook с детализацией особенностей
-
 classes:
   fighter:
     name:
-      ru: "Воин"
-      en: "Fighter"
-    description: "Мастер оружия и доспехов, специалист по бою. Воины обучены сражаться с различными видами оружия и доспехов, владеют многими боевыми стилями и обладают превосходной физической подготовкой."
+      ru: Воин
+      en: Fighter
+    description: Мастер оружия и доспехов, специалист по бою. Воины обучены сражаться с различными видами оружия и доспехов,
+      владеют многими боевыми стилями и обладают превосходной физической подготовкой.
     hit_dice: 10
     spellcasting: false
     subclass_choice_level: 3
-    prime_ability: "strength"
-    saving_throws: ["strength", "constitution"]
-    skill_choices: [
-      "acrobatics", "animal_handling", "athletics", "history", 
-      "insight", "intimidation", "perception", "survival"
-    ]
+    prime_ability: strength
+    saving_throws:
+    - strength
+    - constitution
+    skill_choices:
+    - acrobatics
+    - animal_handling
+    - athletics
+    - history
+    - insight
+    - intimidation
+    - perception
+    - survival
     skill_choices_count: 2
     equipment:
-      weapons: ["все простые", "все воинские"]
-      armor: ["все доспехи", "щиты"]
-      tools: ["нет"]
+      weapons:
+      - все простые
+      - все воинские
+      armor:
+      - все доспехи
+      - щиты
+      tools:
+      - нет
     proficiencies:
-      weapons: ["simple", "martial"]
-      armor: ["light", "medium", "heavy", "shield"]
+      weapons:
+      - simple
+      - martial
+      armor:
+      - light
+      - medium
+      - heavy
+      - shield
       tools: []
-
-    features:
-      - id: "fighting_style"
-        name: "Боевой стиль"
-        description: "Выбор одного из боевых стилей: Дуэлянт, Защита, Стрельба, Большое оружие, Двуручное оружие, Защита от снарядов"
-        level: 1
-        feature_type: "passive"
-        requires_action: false
-        
-      - id: "second_wind"
-        name: "Восстановление"
-        description: "Короткий отдых восстанавливает часть здоровья"
-        level: 1
-        feature_type: "active"
-        uses_per_rest: 1
-        requires_action: true
-        bonus_action: true
-        
-      - id: "improved_second_wind"
-        name: "Улучшенное восстановление"
-        description: "Увеличенное количество здоровья при восстановлении"
-        level: 5
-        feature_type: "passive"
-        requires_action: false
-        
-      - id: "extra_attack"
-        name: "Атака дополнительным действием"
-        description: "Возможность атаковать как дополнительное действие"
-        level: 11
-        feature_type: "active"
-        requires_action: true
-
-      - id: "ability_score_improvement"
-        name: "Увеличение характеристик"
-        description: "Увеличьте одну характеристику на 2 или две характеристики на 1 (макс. 20). Опционально: вместо этого возьмите черту."
-        level: 4
-        feature_type: "passive"
-        requires_action: false
-
-      - id: "ability_score_improvement"
-        name: "Увеличение характеристик"
-        description: "Увеличьте одну характеристику на 2 или две характеристики на 1 (макс. 20). Опционально: вместо этого возьмите черту."
-        level: 6
-        feature_type: "passive"
-        requires_action: false
-
-      - id: "ability_score_improvement"
-        name: "Увеличение характеристик"
-        description: "Увеличьте одну характеристику на 2 или две характеристики на 1 (макс. 20). Опционально: вместо этого возьмите черту."
-        level: 8
-        feature_type: "passive"
-        requires_action: false
-
-      - id: "ability_score_improvement"
-        name: "Увеличение характеристик"
-        description: "Увеличьте одну характеристику на 2 или две характеристики на 1 (макс. 20). Опционально: вместо этого возьмите черту."
-        level: 12
-        feature_type: "passive"
-        requires_action: false
-
-      - id: "ability_score_improvement"
-        name: "Увеличение характеристик"
-        description: "Увеличьте одну характеристику на 2 или две характеристики на 1 (макс. 20). Опционально: вместо этого возьмите черту."
-        level: 14
-        feature_type: "passive"
-        requires_action: false
-
-      - id: "ability_score_improvement"
-        name: "Увеличение характеристик"
-        description: "Увеличьте одну характеристику на 2 или две характеристики на 1 (макс. 20). Опционально: вместо этого возьмите черту."
-        level: 16
-        feature_type: "passive"
-        requires_action: false
-
-      - id: "ability_score_improvement"
-        name: "Увеличение характеристик"
-        description: "Увеличьте одну характеристику на 2 или две характеристики на 1 (макс. 20). Опционально: вместо этого возьмите черту."
-        level: 19
-        feature_type: "passive"
-        requires_action: false
-
-    
     subclasses:
-      - id: "battle_master"
-        name:
-          ru: "Мастер боевых искусств"
-          en: "Battle Master"
-        description: "Воин, опирающийся на поколения боевых техник, кости превосходства и боевые приёмы."
-        parent_class: "fighter"
-        features:
-          - id: "combat_superiority"
-            name: "Боевое превосходство"
-            description: "Три приёма и четыре кости превосходства (к8); одно использование приёма за атаку"
-            level: 3
-            feature_type: "active"
-            requires_action: true
-
-          - id: "student_of_war"
-            name: "Ученик войны"
-            description: "Владение одним ремесленным инструментом на выбор"
-            level: 3
-            feature_type: "passive"
-            requires_action: false
-            mechanics:
-              type: "tool_proficiency"
-              count: 1
-              choice: true
-              pool: "artisans_tools"
-
-          - id: "know_your_enemy"
-            name: "Познай своего врага"
-            description: "Вне боя сравнить способности существа с вашими по выбранным характеристикам"
-            level: 7
-            feature_type: "passive"
-            requires_action: false
-
-          - id: "additional_maneuvers"
-            name: "Дополнительные приёмы"
-            description: "Два новых приёма; можно заменить один известный приём"
-            level: 7
-            feature_type: "passive"
-            requires_action: false
-
-          - id: "superiority_dice_10"
-            name: "Кость превосходства (10 ур.)"
-            description: "Кости превосходства становятся к10"
-            level: 10
-            feature_type: "passive"
-            requires_action: false
-
-      - id: "eldritch_knight"
-        name:
-          ru: "Мистический рыцарь"
-          en: "Eldritch Knight"
-        description: "Воин, сочетающий мастерство боя с заклинаниями школ Воплощения и Ограждения."
-        parent_class: "fighter"
-        spellcasting: true
-        spellcasting_level: 3
-        features:
-          - id: "spellcasting_ek"
-            name: "Использование заклинаний"
-            description: "С 3 уровня — заклинания волшебника (заговоры и ячейки по таблице мистического рыцаря); известные заклинания 1+ уровня — школы Воплощения и Ограждения; базовая характеристика — Интеллект"
-            level: 3
-            feature_type: "spell"
-            requires_action: true
-
-          - id: "weapon_bond"
-            name: "Связь с оружием"
-            description: "Ритуальная связь с оружием: призыв бонусным действием, защита от обезоруживания"
-            level: 3
-            feature_type: "active"
-            bonus_action: true
-            requires_action: false
-
-          - id: "war_magic"
-            name: "Боевая магия"
-            description: "После сотворения заговора бонусным действием можно совершить атаку оружием"
-            level: 7
-            feature_type: "active"
-            bonus_action: true
-            requires_action: false
-
-          - id: "eldritch_strike"
-            name: "Мистический удар"
-            description: "Попадание оружием может наложить на цель помеху к следующему спасброску от вашего заклинания"
-            level: 10
-            feature_type: "passive"
-            requires_action: false
-
-      - id: "champion"
-        name:
-          ru: "Чемпион"
-          en: "Champion"
-        description: "Воин, доводящий физическую мощь и точность ударов до смертоносного совершенства."
-        parent_class: "fighter"
-        features:
-          - id: "improved_critical_champion"
-            name: "Улучшенные критические попадания"
-            description: "Критическое попадание оружием при «19–20» на кости атаки"
-            level: 3
-            feature_type: "passive"
-            requires_action: false
-
-          - id: "remarkable_athlete"
-            name: "Выдающийся атлет"
-            description: "Половина бонуса мастерства к проверкам Силы, Ловкости и Телосложения; бонус к прыжку с разбега"
-            level: 7
-            feature_type: "passive"
-            requires_action: false
-
-          - id: "additional_fighting_style"
-            name: "Дополнительный боевой стиль"
-            description: "Второй боевой стиль на выбор"
-            level: 10
-            feature_type: "passive"
-            requires_action: false
-
-
+    - id: battle_master
+      name:
+        ru: Мастер боевых искусств
+        en: Battle Master
+      description: Воин, опирающийся на поколения боевых техник, кости превосходства и боевые приёмы.
+      parent_class: fighter
+      class_features:
+      - id: combat_superiority
+        name: Боевое превосходство
+        description: Три приёма и четыре кости превосходства (к8); одно использование приёма за атаку
+        level: 3
+        feature_type: active
+        requires_action: true
+      - id: student_of_war
+        name: Ученик войны
+        description: Владение одним ремесленным инструментом на выбор
+        level: 3
+        feature_type: passive
+        requires_action: false
+        mechanics:
+          type: tool_proficiency
+          count: 1
+          choice: true
+          pool: artisans_tools
+      - id: know_your_enemy
+        name: Познай своего врага
+        description: Вне боя сравнить способности существа с вашими по выбранным характеристикам
+        level: 7
+        feature_type: passive
+        requires_action: false
+      - id: additional_maneuvers
+        name: Дополнительные приёмы
+        description: Два новых приёма; можно заменить один известный приём
+        level: 7
+        feature_type: passive
+        requires_action: false
+      - id: superiority_dice_10
+        name: Кость превосходства (10 ур.)
+        description: Кости превосходства становятся к10
+        level: 10
+        feature_type: passive
+        requires_action: false
+    - id: eldritch_knight
+      name:
+        ru: Мистический рыцарь
+        en: Eldritch Knight
+      description: Воин, сочетающий мастерство боя с заклинаниями школ Воплощения и Ограждения.
+      parent_class: fighter
+      spellcasting: true
+      spellcasting_level: 3
+      class_features:
+      - id: spellcasting_ek
+        name: Использование заклинаний
+        description: С 3 уровня — заклинания волшебника (заговоры и ячейки по таблице мистического рыцаря); известные заклинания
+          1+ уровня — школы Воплощения и Ограждения; базовая характеристика — Интеллект
+        level: 3
+        feature_type: spell
+        requires_action: true
+      - id: weapon_bond
+        name: Связь с оружием
+        description: 'Ритуальная связь с оружием: призыв бонусным действием, защита от обезоруживания'
+        level: 3
+        feature_type: active
+        bonus_action: true
+        requires_action: false
+      - id: war_magic
+        name: Боевая магия
+        description: После сотворения заговора бонусным действием можно совершить атаку оружием
+        level: 7
+        feature_type: active
+        bonus_action: true
+        requires_action: false
+      - id: eldritch_strike
+        name: Мистический удар
+        description: Попадание оружием может наложить на цель помеху к следующему спасброску от вашего заклинания
+        level: 10
+        feature_type: passive
+        requires_action: false
+    - id: champion
+      name:
+        ru: Чемпион
+        en: Champion
+      description: Воин, доводящий физическую мощь и точность ударов до смертоносного совершенства.
+      parent_class: fighter
+      class_features:
+      - id: improved_critical_champion
+        name: Улучшенные критические попадания
+        description: Критическое попадание оружием при «19–20» на кости атаки
+        level: 3
+        feature_type: passive
+        requires_action: false
+      - id: remarkable_athlete
+        name: Выдающийся атлет
+        description: Половина бонуса мастерства к проверкам Силы, Ловкости и Телосложения; бонус к прыжку с разбега
+        level: 7
+        feature_type: passive
+        requires_action: false
+      - id: additional_fighting_style
+        name: Дополнительный боевой стиль
+        description: Второй боевой стиль на выбор
+        level: 10
+        feature_type: passive
+        requires_action: false
+    class_features:
+    - id: fighting_style
+      name: Боевой стиль
+      description: 'Выбор одного из боевых стилей: Дуэлянт, Защита, Стрельба, Большое оружие, Двуручное оружие, Защита от
+        снарядов'
+      level: 1
+      feature_type: passive
+      requires_action: false
+    - id: second_wind
+      name: Восстановление
+      description: Короткий отдых восстанавливает часть здоровья
+      level: 1
+      feature_type: active
+      uses_per_rest: 1
+      requires_action: true
+      bonus_action: true
+    - id: improved_second_wind
+      name: Улучшенное восстановление
+      description: Увеличенное количество здоровья при восстановлении
+      level: 5
+      feature_type: passive
+      requires_action: false
+    - id: extra_attack
+      name: Атака дополнительным действием
+      description: Возможность атаковать как дополнительное действие
+      level: 11
+      feature_type: active
+      requires_action: true
+    - id: ability_score_improvement
+      name: Увеличение характеристик
+      description: 'Увеличьте одну характеристику на 2 или две характеристики на 1 (макс. 20). Опционально: вместо этого возьмите
+        черту.'
+      level: 4
+      feature_type: passive
+      requires_action: false
+    - id: ability_score_improvement
+      name: Увеличение характеристик
+      description: 'Увеличьте одну характеристику на 2 или две характеристики на 1 (макс. 20). Опционально: вместо этого возьмите
+        черту.'
+      level: 6
+      feature_type: passive
+      requires_action: false
+    - id: ability_score_improvement
+      name: Увеличение характеристик
+      description: 'Увеличьте одну характеристику на 2 или две характеристики на 1 (макс. 20). Опционально: вместо этого возьмите
+        черту.'
+      level: 8
+      feature_type: passive
+      requires_action: false
+    - id: ability_score_improvement
+      name: Увеличение характеристик
+      description: 'Увеличьте одну характеристику на 2 или две характеристики на 1 (макс. 20). Опционально: вместо этого возьмите
+        черту.'
+      level: 12
+      feature_type: passive
+      requires_action: false
+    - id: ability_score_improvement
+      name: Увеличение характеристик
+      description: 'Увеличьте одну характеристику на 2 или две характеристики на 1 (макс. 20). Опционально: вместо этого возьмите
+        черту.'
+      level: 14
+      feature_type: passive
+      requires_action: false
+    - id: ability_score_improvement
+      name: Увеличение характеристик
+      description: 'Увеличьте одну характеристику на 2 или две характеристики на 1 (макс. 20). Опционально: вместо этого возьмите
+        черту.'
+      level: 16
+      feature_type: passive
+      requires_action: false
+    - id: ability_score_improvement
+      name: Увеличение характеристик
+      description: 'Увеличьте одну характеристику на 2 или две характеристики на 1 (макс. 20). Опционально: вместо этого возьмите
+        черту.'
+      level: 19
+      feature_type: passive
+      requires_action: false
   rogue:
     name:
-      ru: "Плут"
-      en: "Rogue"
-    description: "Мастер скрытности, ловкости и точных ударов. Плуты превосходно справляются с проникновением в защищенные места, обезвреживанием ловушек и нанесением точных ударов по уязвимым местам противника."
+      ru: Плут
+      en: Rogue
+    description: Мастер скрытности, ловкости и точных ударов. Плуты превосходно справляются с проникновением в защищенные
+      места, обезвреживанием ловушек и нанесением точных ударов по уязвимым местам противника.
     hit_dice: 8
     spellcasting: false
     subclass_choice_level: 3
-    prime_ability: "dexterity"
-    skill_choices: [
-      "acrobatics", "athletics", "deception", "insight",
-      "intimidation", "investigation", "perception", "performance",
-      "persuasion", "sleight_of_hand", "stealth"
-    ]
+    prime_ability: dexterity
+    skill_choices:
+    - acrobatics
+    - athletics
+    - deception
+    - insight
+    - intimidation
+    - investigation
+    - perception
+    - performance
+    - persuasion
+    - sleight_of_hand
+    - stealth
     skill_choices_count: 4
     equipment:
-      weapons: ["простые", "ручные арбалеты", "длинные мечи", "рапиры", "короткие мечи"]
-      armor: ["лёгкие"]
-      tools: ["набор вора", "набор отмычек"]
+      weapons:
+      - простые
+      - ручные арбалеты
+      - длинные мечи
+      - рапиры
+      - короткие мечи
+      armor:
+      - лёгкие
+      tools:
+      - набор вора
+      - набор отмычек
     proficiencies:
-      weapons: ["simple", "hand_crossbow", "longsword", "rapier", "shortsword"]
-      armor: ["light"]
-      tools: ["thieves_tools"]
-
-    features:
-      - id: "expertise"
-        name: "Компетентность"
-        description: "На 1 уровне выберите два владения в навыках или одно владение навыком и владение воровскими инструментами; бонус мастерства удваивается для выбранных владений"
-        level: 1
-        feature_type: "passive"
-        requires_action: false
-        expertise_mechanics:
-          grants:
-            - level: 1
-              pick: 2
-              pool: proficient_skills
-              alternatives:
-                - pick: 1
-                  pool: proficient_skills
-                - pick: 1
-                  pool: tools
-                  options: [thieves_tools]
-            - level: 6
-              pick: 2
-              pool: proficient_skills
-        
-      - id: "sneak_attack"
-        name: "Скрытая атака"
-        description: "Дополнительный урон при атаке с преимуществом или когда противник рядом с союзником"
-        level: 1
-        feature_type: "passive"
-        requires_action: false
-        
-      - id: "thieves_cant"
-        name: "Воровской жаргон"
-        description: "Понимание секретных языков и знаков"
-        level: 1
-        feature_type: "passive"
-        requires_action: false
-        
-      - id: "cunning_action"
-        name: "Коварная атака"
-        description: "Использование бонусного действия для атаки или уклонения"
-        level: 2
-        feature_type: "active"
-        requires_action: false
-        bonus_action: true
-        
-      - id: "improved_sneak_attack"
-        name: "Улучшенная скрытая атака"
-        description: "Увеличение урона скрытой атаки"
-        level: 3
-        feature_type: "passive"
-        requires_action: false
-        
-      - id: "uncanny_dodge"
-        name: "Улучшенная коварная атака"
-        description: "Дополнительная атака при коварной атаке"
-        level: 9
-        feature_type: "active"
-        reaction: true
-
-      - id: "ability_score_improvement"
-        name: "Увеличение характеристик"
-        description: "Увеличьте одну характеристику на 2 или две характеристики на 1 (макс. 20). Опционально: вместо этого возьмите черту."
-        level: 4
-        feature_type: "passive"
-        requires_action: false
-
-      - id: "ability_score_improvement"
-        name: "Увеличение характеристик"
-        description: "Увеличьте одну характеристику на 2 или две характеристики на 1 (макс. 20). Опционально: вместо этого возьмите черту."
-        level: 8
-        feature_type: "passive"
-        requires_action: false
-
-      - id: "ability_score_improvement"
-        name: "Увеличение характеристик"
-        description: "Увеличьте одну характеристику на 2 или две характеристики на 1 (макс. 20). Опционально: вместо этого возьмите черту."
-        level: 10
-        feature_type: "passive"
-        requires_action: false
-
-      - id: "ability_score_improvement"
-        name: "Увеличение характеристик"
-        description: "Увеличьте одну характеристику на 2 или две характеристики на 1 (макс. 20). Опционально: вместо этого возьмите черту."
-        level: 12
-        feature_type: "passive"
-        requires_action: false
-
-      - id: "ability_score_improvement"
-        name: "Увеличение характеристик"
-        description: "Увеличьте одну характеристику на 2 или две характеристики на 1 (макс. 20). Опционально: вместо этого возьмите черту."
-        level: 16
-        feature_type: "passive"
-        requires_action: false
-
-      - id: "ability_score_improvement"
-        name: "Увеличение характеристик"
-        description: "Увеличьте одну характеристику на 2 или две характеристики на 1 (макс. 20). Опционально: вместо этого возьмите черту."
-        level: 19
-        feature_type: "passive"
-        requires_action: false
-
-    
+      weapons:
+      - simple
+      - hand_crossbow
+      - longsword
+      - rapier
+      - shortsword
+      armor:
+      - light
+      tools:
+      - thieves_tools
     subclasses:
-      - id: "thief"
-        name:
-          ru: "Вор"
-          en: "Thief"
-        description: "Плут, отточивший воровское ремесло: ловкость рук, лазание и магические предметы."
-        parent_class: "rogue"
-        features:
-          - id: "fast_hands"
-            name: "Быстрые руки"
-            description: "Бонусным действием — Ловкость рук, воровские инструменты или Использование предмета"
-            level: 3
-            feature_type: "active"
-            bonus_action: true
-            requires_action: false
-
-          - id: "second_story_work"
-            name: "Форточник"
-            description: "Лазание без дополнительных затрат движения; бонус к прыжку с разбега"
-            level: 3
-            feature_type: "passive"
-            requires_action: false
-
-          - id: "supreme_sneak"
-            name: "Высокая скрытность"
-            description: "Преимущество на Скрытность, если в ходу перемещались не больше половины скорости"
-            level: 9
-            feature_type: "passive"
-            requires_action: false
-
-      - id: "assassin"
-        name:
-          ru: "Убийца"
-          en: "Assassin"
-        description: "Плут, владеющий смертоносным искусством: маскировка, яды и внезапные удары."
-        parent_class: "rogue"
-        features:
-          - id: "assassin_proficiencies"
-            name: "Дополнительные владения"
-            description: "Набор для грима и инструменты отравителя"
-            level: 3
-            feature_type: "passive"
-            requires_action: false
-            mechanics:
-              type: "tool_proficiency"
-              tools: ["disguise_kit", "poisoner_tools"]
-
-          - id: "assassinate"
-            name: "Ликвидация"
-            description: "Преимущество на атаку по существам, не совершившим ход; крит по застигнутым врасплох"
-            level: 3
-            feature_type: "passive"
-            requires_action: false
-
-          - id: "infiltration_expertise"
-            name: "Мастер проникновения"
-            description: "Создание убедительной ложной личности и связей (7 дней, 25 зм)"
-            level: 9
-            feature_type: "passive"
-            requires_action: false
-
-      - id: "arcane_trickster"
-        name:
-          ru: "Мистический ловкач"
-          en: "Arcane Trickster"
-        description: "Плут, усиливающий ловкость заклинаниями школ Иллюзии и Очарования."
-        parent_class: "rogue"
-        spellcasting: true
-        spellcasting_level: 3
-        features:
-          - id: "spellcasting_at"
-            name: "Использование заклинаний"
-            description: "С 3 уровня — заклинания волшебника (заговоры и ячейки по таблице мистического ловкача); известные заклинания 1+ уровня — школы Иллюзии и Очарования; базовая характеристика — Интеллект"
-            level: 3
-            feature_type: "spell"
-            requires_action: true
-
-          - id: "mage_hand_legerdemain"
-            name: "Улучшенная волшебная рука"
-            description: "Невидимая волшебная рука: воровские действия на расстоянии заклинания"
-            level: 3
-            feature_type: "active"
-            requires_action: true
-
-          - id: "magical_ambush"
-            name: "Магическая засада"
-            description: "Цель, отвлечённая вами, совершает с помехой спасброски от ваших иллюзий и очарований"
-            level: 9
-            feature_type: "passive"
-            requires_action: false
-
-
+    - id: thief
+      name:
+        ru: Вор
+        en: Thief
+      description: 'Плут, отточивший воровское ремесло: ловкость рук, лазание и магические предметы.'
+      parent_class: rogue
+      class_features:
+      - id: fast_hands
+        name: Быстрые руки
+        description: Бонусным действием — Ловкость рук, воровские инструменты или Использование предмета
+        level: 3
+        feature_type: active
+        bonus_action: true
+        requires_action: false
+      - id: second_story_work
+        name: Форточник
+        description: Лазание без дополнительных затрат движения; бонус к прыжку с разбега
+        level: 3
+        feature_type: passive
+        requires_action: false
+      - id: supreme_sneak
+        name: Высокая скрытность
+        description: Преимущество на Скрытность, если в ходу перемещались не больше половины скорости
+        level: 9
+        feature_type: passive
+        requires_action: false
+    - id: assassin
+      name:
+        ru: Убийца
+        en: Assassin
+      description: 'Плут, владеющий смертоносным искусством: маскировка, яды и внезапные удары.'
+      parent_class: rogue
+      class_features:
+      - id: assassin_proficiencies
+        name: Дополнительные владения
+        description: Набор для грима и инструменты отравителя
+        level: 3
+        feature_type: passive
+        requires_action: false
+        mechanics:
+          type: tool_proficiency
+          tools:
+          - disguise_kit
+          - poisoner_tools
+      - id: assassinate
+        name: Ликвидация
+        description: Преимущество на атаку по существам, не совершившим ход; крит по застигнутым врасплох
+        level: 3
+        feature_type: passive
+        requires_action: false
+      - id: infiltration_expertise
+        name: Мастер проникновения
+        description: Создание убедительной ложной личности и связей (7 дней, 25 зм)
+        level: 9
+        feature_type: passive
+        requires_action: false
+    - id: arcane_trickster
+      name:
+        ru: Мистический ловкач
+        en: Arcane Trickster
+      description: Плут, усиливающий ловкость заклинаниями школ Иллюзии и Очарования.
+      parent_class: rogue
+      spellcasting: true
+      spellcasting_level: 3
+      class_features:
+      - id: spellcasting_at
+        name: Использование заклинаний
+        description: С 3 уровня — заклинания волшебника (заговоры и ячейки по таблице мистического ловкача); известные заклинания
+          1+ уровня — школы Иллюзии и Очарования; базовая характеристика — Интеллект
+        level: 3
+        feature_type: spell
+        requires_action: true
+      - id: mage_hand_legerdemain
+        name: Улучшенная волшебная рука
+        description: 'Невидимая волшебная рука: воровские действия на расстоянии заклинания'
+        level: 3
+        feature_type: active
+        requires_action: true
+      - id: magical_ambush
+        name: Магическая засада
+        description: Цель, отвлечённая вами, совершает с помехой спасброски от ваших иллюзий и очарований
+        level: 9
+        feature_type: passive
+        requires_action: false
+    class_features:
+    - id: expertise
+      name: Компетентность
+      description: На 1 уровне выберите два владения в навыках или одно владение навыком и владение воровскими инструментами;
+        бонус мастерства удваивается для выбранных владений
+      level: 1
+      feature_type: passive
+      requires_action: false
+      expertise_mechanics:
+        grants:
+        - level: 1
+          pick: 2
+          pool: proficient_skills
+          alternatives:
+          - pick: 1
+            pool: proficient_skills
+          - pick: 1
+            pool: tools
+            options:
+            - thieves_tools
+        - level: 6
+          pick: 2
+          pool: proficient_skills
+    - id: sneak_attack
+      name: Скрытая атака
+      description: Дополнительный урон при атаке с преимуществом или когда противник рядом с союзником
+      level: 1
+      feature_type: passive
+      requires_action: false
+    - id: thieves_cant
+      name: Воровской жаргон
+      description: Понимание секретных языков и знаков
+      level: 1
+      feature_type: passive
+      requires_action: false
+    - id: cunning_action
+      name: Коварная атака
+      description: Использование бонусного действия для атаки или уклонения
+      level: 2
+      feature_type: active
+      requires_action: false
+      bonus_action: true
+    - id: improved_sneak_attack
+      name: Улучшенная скрытая атака
+      description: Увеличение урона скрытой атаки
+      level: 3
+      feature_type: passive
+      requires_action: false
+    - id: uncanny_dodge
+      name: Улучшенная коварная атака
+      description: Дополнительная атака при коварной атаке
+      level: 9
+      feature_type: active
+      reaction: true
+    - id: ability_score_improvement
+      name: Увеличение характеристик
+      description: 'Увеличьте одну характеристику на 2 или две характеристики на 1 (макс. 20). Опционально: вместо этого возьмите
+        черту.'
+      level: 4
+      feature_type: passive
+      requires_action: false
+    - id: ability_score_improvement
+      name: Увеличение характеристик
+      description: 'Увеличьте одну характеристику на 2 или две характеристики на 1 (макс. 20). Опционально: вместо этого возьмите
+        черту.'
+      level: 8
+      feature_type: passive
+      requires_action: false
+    - id: ability_score_improvement
+      name: Увеличение характеристик
+      description: 'Увеличьте одну характеристику на 2 или две характеристики на 1 (макс. 20). Опционально: вместо этого возьмите
+        черту.'
+      level: 10
+      feature_type: passive
+      requires_action: false
+    - id: ability_score_improvement
+      name: Увеличение характеристик
+      description: 'Увеличьте одну характеристику на 2 или две характеристики на 1 (макс. 20). Опционально: вместо этого возьмите
+        черту.'
+      level: 12
+      feature_type: passive
+      requires_action: false
+    - id: ability_score_improvement
+      name: Увеличение характеристик
+      description: 'Увеличьте одну характеристику на 2 или две характеристики на 1 (макс. 20). Опционально: вместо этого возьмите
+        черту.'
+      level: 16
+      feature_type: passive
+      requires_action: false
+    - id: ability_score_improvement
+      name: Увеличение характеристик
+      description: 'Увеличьте одну характеристику на 2 или две характеристики на 1 (макс. 20). Опционально: вместо этого возьмите
+        черту.'
+      level: 19
+      feature_type: passive
+      requires_action: false
   cleric:
     name:
-      ru: "Жрец"
-      en: "Cleric"
-    description: "Слуга божества, использующий божественную магию. Жрецы служат высшим силам, получают от них божественную магию и служат проводниками воли своих богов в мире смертных."
+      ru: Жрец
+      en: Cleric
+    description: Слуга божества, использующий божественную магию. Жрецы служат высшим силам, получают от них божественную
+      магию и служат проводниками воли своих богов в мире смертных.
     hit_dice: 8
     spellcasting: true
     spellcasting_level: 1
     subclass_choice_level: 1
-    prime_ability: "wisdom"
-    skill_choices: [
-      "history", "insight", "medicine", "investigation", 
-      "religion", "persuasion"
-    ]
+    prime_ability: wisdom
+    skill_choices:
+    - history
+    - insight
+    - medicine
+    - investigation
+    - religion
+    - persuasion
     skill_choices_count: 2
     equipment:
-      weapons: ["простые"]
-      armor: ["лёгкие", "средние", "щиты"]
-      tools: ["нет"]
+      weapons:
+      - простые
+      armor:
+      - лёгкие
+      - средние
+      - щиты
+      tools:
+      - нет
     proficiencies:
-      weapons: ["simple"]
-      armor: ["light", "medium", "shield"]
+      weapons:
+      - simple
+      armor:
+      - light
+      - medium
+      - shield
       tools: []
-
-    features:
-      - id: "spellcasting_cleric"
-        name: "Использование заклинаний"
-        description: "Проводник божественной силы; заговоры, подготовка и ячейки заклинаний жреца по таблице класса; базовая характеристика — Мудрость"
+    subclasses:
+    - id: life_domain
+      name:
+        ru: Домен жизни
+        en: Life Domain
+      description: Жрец, служащий силам жизни и исцеления.
+      parent_class: cleric
+      class_features:
+      - id: life_domain_spells
+        name: Заклинания домена жизни
+        description: Дополнительные заклинания домена на уровнях жреца 1, 3, 5, 7 и 9
         level: 1
-        feature_type: "spell"
+        feature_type: spell
         requires_action: true
-
-      - id: "ritual_casting"
-        name: "Заклинание ритуала"
-        description: "Возможность колдовать заклинания как ритуалы"
+      - id: bonus_proficiency_life
+        name: Бонусное владение
+        description: Владение тяжёлыми доспехами
         level: 1
-        feature_type: "passive"
+        feature_type: passive
         requires_action: false
-        
-      - id: "spell_recovery"
-        name: "Восстановление заклинаний"
-        description: "Восстановление части заклинаний после короткого отдыха"
+        mechanics:
+          type: armor_proficiency
+          armor_types:
+          - heavy
+      - id: disciple_of_life
+        name: Поборник жизни
+        description: Лечащие заклинания 1+ уровня восстанавливают дополнительно 2 + уровень заклинания хитов
         level: 1
-        feature_type: "active"
+        feature_type: passive
+        requires_action: false
+      - id: preserve_life
+        name: Сохранение жизни
+        description: 'Божественный канал: распределить исцеление (уровень жреца × 5) между существами в 30 фт.'
+        level: 2
+        feature_type: active
         uses_per_rest: 1
         requires_action: true
-        
-      - id: "destroy_undead"
-        name: "Уничтожение нежити"
-        description: "Способность наносить дополнительный урон нежити"
-        level: 5
-        feature_type: "active"
+      - id: blessed_healer
+        name: Благословенный целитель
+        description: При исцелении другого заклинанием 1+ уровня вы восстанавливаете 2 + уровень заклинания хитов
+        level: 6
+        feature_type: passive
+        requires_action: false
+    - id: trickery_domain
+      name:
+        ru: Домен обмана
+        en: Trickery Domain
+      description: Жрец интриг, воровства и иллюзорных обманов.
+      parent_class: cleric
+      class_features:
+      - id: trickery_domain_spells
+        name: Заклинания домена обмана
+        description: Дополнительные заклинания домена на уровнях жреца 1, 3, 5, 7 и 9
+        level: 1
+        feature_type: spell
         requires_action: true
-        
-      - id: "divine_intervention"
-        name: "Божественное вмешательство"
-        description: "Просьба к божеству о прямом вмешательстве"
-        level: 10
-        feature_type: "active"
-        uses_per_day: 1
+      - id: blessing_of_the_trickster
+        name: Благословение обманщика
+        description: Действием дать согласному существу преимущество на проверки Скрытности на 1 час
+        level: 1
+        feature_type: active
         requires_action: true
-
-      - id: "ability_score_improvement"
-        name: "Увеличение характеристик"
-        description: "Увеличьте одну характеристику на 2 или две характеристики на 1 (макс. 20). Опционально: вместо этого возьмите черту."
-        level: 4
-        feature_type: "passive"
+      - id: invoke_duplicity
+        name: Двуличность
+        description: 'Божественный канал: иллюзорная копия; заклинания и атаки с её позиции'
+        level: 2
+        feature_type: active
+        uses_per_rest: 1
+        requires_action: true
+      - id: cloak_of_shadows
+        name: Плащ теней
+        description: 'Божественный канал: невидимость до конца следующего хода'
+        level: 6
+        feature_type: active
+        uses_per_rest: 1
+        requires_action: true
+    - id: light_domain
+      name:
+        ru: Домен света
+        en: Light Domain
+      description: Жрец света, истины и огненного сияния.
+      parent_class: cleric
+      class_features:
+      - id: light_domain_spells
+        name: Заклинания домена света
+        description: Дополнительные заклинания домена на уровнях жреца 1, 3, 5, 7 и 9
+        level: 1
+        feature_type: spell
+        requires_action: true
+      - id: bonus_cantrip_light
+        name: Дополнительный заговор
+        description: Заговор свет, если ещё не был известен
+        level: 1
+        feature_type: spell
         requires_action: false
-
-      - id: "ability_score_improvement"
-        name: "Увеличение характеристик"
-        description: "Увеличьте одну характеристику на 2 или две характеристики на 1 (макс. 20). Опционально: вместо этого возьмите черту."
-        level: 8
-        feature_type: "passive"
+      - id: warding_flare
+        name: Защищающая вспышка
+        description: Реакцией помеха атаке в 30 фт.; использований = модификатор Мудрости (мин. 1) за продолжительный отдых
+        level: 1
+        feature_type: active
+        reaction: true
         requires_action: false
-
-      - id: "ability_score_improvement"
-        name: "Увеличение характеристик"
-        description: "Увеличьте одну характеристику на 2 или две характеристики на 1 (макс. 20). Опционально: вместо этого возьмите черту."
-        level: 12
-        feature_type: "passive"
+      - id: radiance_of_the_dawn
+        name: Сияние рассвета
+        description: 'Божественный канал: рассеять магическую тьму в 30 фт. и урон излучением врагам'
+        level: 2
+        feature_type: active
+        uses_per_rest: 1
+        requires_action: true
+      - id: improved_flare
+        name: Улучшенная вспышка
+        description: Защищающая вспышка защищает союзника, атакованного вместо вас
+        level: 6
+        feature_type: passive
         requires_action: false
-
-      - id: "ability_score_improvement"
-        name: "Увеличение характеристик"
-        description: "Увеличьте одну характеристику на 2 или две характеристики на 1 (макс. 20). Опционально: вместо этого возьмите черту."
-        level: 16
-        feature_type: "passive"
-        requires_action: false
-
-      - id: "ability_score_improvement"
-        name: "Увеличение характеристик"
-        description: "Увеличьте одну характеристику на 2 или две характеристики на 1 (макс. 20). Опционально: вместо этого возьмите черту."
-        level: 19
-        feature_type: "passive"
-        requires_action: false
-
-    
-    subclasses:
-      - id: "life_domain"
-        name:
-          ru: "Домен жизни"
-          en: "Life Domain"
-        description: "Жрец, служащий силам жизни и исцеления."
-        parent_class: "cleric"
-        features:
-          - id: "life_domain_spells"
-            name: "Заклинания домена жизни"
-            description: "Дополнительные заклинания домена на уровнях жреца 1, 3, 5, 7 и 9"
-            level: 1
-            feature_type: "spell"
-            requires_action: true
-
-          - id: "bonus_proficiency_life"
-            name: "Бонусное владение"
-            description: "Владение тяжёлыми доспехами"
-            level: 1
-            feature_type: "passive"
-            requires_action: false
-            mechanics:
-              type: "armor_proficiency"
-              armor_types: ["heavy"]
-
-          - id: "disciple_of_life"
-            name: "Поборник жизни"
-            description: "Лечащие заклинания 1+ уровня восстанавливают дополнительно 2 + уровень заклинания хитов"
-            level: 1
-            feature_type: "passive"
-            requires_action: false
-
-          - id: "preserve_life"
-            name: "Сохранение жизни"
-            description: "Божественный канал: распределить исцеление (уровень жреца × 5) между существами в 30 фт."
-            level: 2
-            feature_type: "active"
-            uses_per_rest: 1
-            requires_action: true
-
-          - id: "blessed_healer"
-            name: "Благословенный целитель"
-            description: "При исцелении другого заклинанием 1+ уровня вы восстанавливаете 2 + уровень заклинания хитов"
-            level: 6
-            feature_type: "passive"
-            requires_action: false
-
-      - id: "trickery_domain"
-        name:
-          ru: "Домен обмана"
-          en: "Trickery Domain"
-        description: "Жрец интриг, воровства и иллюзорных обманов."
-        parent_class: "cleric"
-        features:
-          - id: "trickery_domain_spells"
-            name: "Заклинания домена обмана"
-            description: "Дополнительные заклинания домена на уровнях жреца 1, 3, 5, 7 и 9"
-            level: 1
-            feature_type: "spell"
-            requires_action: true
-
-          - id: "blessing_of_the_trickster"
-            name: "Благословение обманщика"
-            description: "Действием дать согласному существу преимущество на проверки Скрытности на 1 час"
-            level: 1
-            feature_type: "active"
-            requires_action: true
-
-          - id: "invoke_duplicity"
-            name: "Двуличность"
-            description: "Божественный канал: иллюзорная копия; заклинания и атаки с её позиции"
-            level: 2
-            feature_type: "active"
-            uses_per_rest: 1
-            requires_action: true
-
-          - id: "cloak_of_shadows"
-            name: "Плащ теней"
-            description: "Божественный канал: невидимость до конца следующего хода"
-            level: 6
-            feature_type: "active"
-            uses_per_rest: 1
-            requires_action: true
-
-      - id: "light_domain"
-        name:
-          ru: "Домен света"
-          en: "Light Domain"
-        description: "Жрец света, истины и огненного сияния."
-        parent_class: "cleric"
-        features:
-          - id: "light_domain_spells"
-            name: "Заклинания домена света"
-            description: "Дополнительные заклинания домена на уровнях жреца 1, 3, 5, 7 и 9"
-            level: 1
-            feature_type: "spell"
-            requires_action: true
-
-          - id: "bonus_cantrip_light"
-            name: "Дополнительный заговор"
-            description: "Заговор свет, если ещё не был известен"
-            level: 1
-            feature_type: "spell"
-            requires_action: false
-
-          - id: "warding_flare"
-            name: "Защищающая вспышка"
-            description: "Реакцией помеха атаке в 30 фт.; использований = модификатор Мудрости (мин. 1) за продолжительный отдых"
-            level: 1
-            feature_type: "active"
-            reaction: true
-            requires_action: false
-
-          - id: "radiance_of_the_dawn"
-            name: "Сияние рассвета"
-            description: "Божественный канал: рассеять магическую тьму в 30 фт. и урон излучением врагам"
-            level: 2
-            feature_type: "active"
-            uses_per_rest: 1
-            requires_action: true
-
-          - id: "improved_flare"
-            name: "Улучшенная вспышка"
-            description: "Защищающая вспышка защищает союзника, атакованного вместо вас"
-            level: 6
-            feature_type: "passive"
-            requires_action: false
-
-
+    class_features:
+    - id: spellcasting_cleric
+      name: Использование заклинаний
+      description: Проводник божественной силы; заговоры, подготовка и ячейки заклинаний жреца по таблице класса; базовая
+        характеристика — Мудрость
+      level: 1
+      feature_type: spell
+      requires_action: true
+    - id: ritual_casting
+      name: Заклинание ритуала
+      description: Возможность колдовать заклинания как ритуалы
+      level: 1
+      feature_type: passive
+      requires_action: false
+    - id: spell_recovery
+      name: Восстановление заклинаний
+      description: Восстановление части заклинаний после короткого отдыха
+      level: 1
+      feature_type: active
+      uses_per_rest: 1
+      requires_action: true
+    - id: destroy_undead
+      name: Уничтожение нежити
+      description: Способность наносить дополнительный урон нежити
+      level: 5
+      feature_type: active
+      requires_action: true
+    - id: divine_intervention
+      name: Божественное вмешательство
+      description: Просьба к божеству о прямом вмешательстве
+      level: 10
+      feature_type: active
+      uses_per_day: 1
+      requires_action: true
+    - id: ability_score_improvement
+      name: Увеличение характеристик
+      description: 'Увеличьте одну характеристику на 2 или две характеристики на 1 (макс. 20). Опционально: вместо этого возьмите
+        черту.'
+      level: 4
+      feature_type: passive
+      requires_action: false
+    - id: ability_score_improvement
+      name: Увеличение характеристик
+      description: 'Увеличьте одну характеристику на 2 или две характеристики на 1 (макс. 20). Опционально: вместо этого возьмите
+        черту.'
+      level: 8
+      feature_type: passive
+      requires_action: false
+    - id: ability_score_improvement
+      name: Увеличение характеристик
+      description: 'Увеличьте одну характеристику на 2 или две характеристики на 1 (макс. 20). Опционально: вместо этого возьмите
+        черту.'
+      level: 12
+      feature_type: passive
+      requires_action: false
+    - id: ability_score_improvement
+      name: Увеличение характеристик
+      description: 'Увеличьте одну характеристику на 2 или две характеристики на 1 (макс. 20). Опционально: вместо этого возьмите
+        черту.'
+      level: 16
+      feature_type: passive
+      requires_action: false
+    - id: ability_score_improvement
+      name: Увеличение характеристик
+      description: 'Увеличьте одну характеристику на 2 или две характеристики на 1 (макс. 20). Опционально: вместо этого возьмите
+        черту.'
+      level: 19
+      feature_type: passive
+      requires_action: false
   bard:
     name:
-      ru: "Бард"
-      en: "Bard"
-    description: "Вдохновляющий рассказчик и маг музыки. Барды используют музыку и слова для создания магических эффектов, вдохновляют союзников и влияют на умы окружающих."
+      ru: Бард
+      en: Bard
+    description: Вдохновляющий рассказчик и маг музыки. Барды используют музыку и слова для создания магических эффектов,
+      вдохновляют союзников и влияют на умы окружающих.
     hit_dice: 8
     spellcasting: true
     spellcasting_level: 1
     subclass_choice_level: 3
-    prime_ability: "charisma"
-    skill_choices: [
-      "acrobatics", "animal_handling", "arcana", "athletics", 
-      "deception", "history", "insight", "intimidation", "investigation", 
-      "medicine", "nature", "perception", "persuasion", "religion", 
-      "sleight_of_hand", "stealth", "survival", "performance"
-    ]
+    prime_ability: charisma
+    skill_choices:
+    - acrobatics
+    - animal_handling
+    - arcana
+    - athletics
+    - deception
+    - history
+    - insight
+    - intimidation
+    - investigation
+    - medicine
+    - nature
+    - perception
+    - persuasion
+    - religion
+    - sleight_of_hand
+    - stealth
+    - survival
+    - performance
     skill_choices_count: 3
     equipment:
-      weapons: ["простые", "ручные арбалеты", "длинные мечи", "рапиры", "короткие мечи"]
-      armor: ["лёгкие"]
-      tools: ["три музыкальных инструмента"]
+      weapons:
+      - простые
+      - ручные арбалеты
+      - длинные мечи
+      - рапиры
+      - короткие мечи
+      armor:
+      - лёгкие
+      tools:
+      - три музыкальных инструмента
     proficiencies:
-      weapons: ["simple", "hand_crossbow", "longsword", "rapier", "shortsword"]
-      armor: ["light"]
+      weapons:
+      - simple
+      - hand_crossbow
+      - longsword
+      - rapier
+      - shortsword
+      armor:
+      - light
       tools: []
       tool_choices:
-        - count: 3
-          pool: "musical_instruments"
-
-    features:
-      - id: "spellcasting_bard"
-        name: "Использование заклинаний"
-        description: "Магия воли и музыки; заговоры и ячейки заклинаний барда по таблице класса; базовая характеристика — Харизма"
-        level: 1
-        feature_type: "spell"
-        requires_action: true
-
-      - id: "bardic_inspiration"
-        name: "Вдохновение барда"
-        description: "Бонусным действием дать союзнику в 60 фт. кость вдохновения (к6); один раз добавить к проверке, атаке или спасброску. Использований = мод. Харизмы (мин. 1), восстановление после продолжительного отдыха; кость растёт на 5/10/15 ур."
-        level: 1
-        feature_type: "active"
-        uses_per_rest: 1
+      - count: 3
+        pool: musical_instruments
+    subclasses:
+    - id: valor_college
+      name:
+        ru: Коллегия доблести
+        en: College of Valor
+      description: Бард-скальд, вдохновляющий героев в бою; владеет доспехами и оружием.
+      parent_class: bard
+      class_features:
+      - id: bonus_proficiencies_valor
+        name: Бонусное владение
+        description: Средние доспехи, щиты и воинское оружие
+        level: 3
+        feature_type: passive
+        requires_action: false
+        mechanics:
+          type: armor_proficiency
+          armor_types:
+          - medium
+          - shield
+          weapons:
+          - martial
+      - id: combat_inspiration
+        name: Боевое вдохновение
+        description: Кость вдохновения барда добавляется к урону оружием или КД
+        level: 3
+        feature_type: active
         bonus_action: true
         requires_action: false
-        
-      - id: "jack_of_all_trades"
-        name: "Мастер на все руки"
-        description: "Половина бонуса мастерства, округлённая в меньшую сторону, ко всем проверкам характеристик, куда этот бонус ещё не включён"
-        level: 2
-        feature_type: "passive"
-        requires_action: false
-        
-      - id: "song_of_rest"
-        name: "Песнь отдыха"
-        description: "В конце короткого отдыха союзники, потратившие хотя бы одну Кость Хитов, восстанавливают дополнительно 1к6 хитов (к8 на 9 ур., к10 на 13, к12 на 17)"
-        level: 2
-        feature_type: "passive"
-        requires_action: false
-        
-      - id: "expertise_bard"
-        name: "Компетентность"
-        description: "Выберите 2 владеемых навыка: бонус мастерства для них удваивается; на 10 уровне — ещё 2 навыка"
-        level: 3
-        feature_type: "passive"
-        requires_action: false
-        expertise_mechanics:
-          grants:
-            - level: 3
-              pick: 2
-              pool: proficient_skills
-            - level: 10
-              pick: 2
-              pool: proficient_skills
-        
-      - id: "font_of_inspiration"
-        name: "Источник вдохновения"
-        description: "Вдохновение барда восстанавливается после короткого и продолжительного отдыха"
-        level: 5
-        feature_type: "passive"
-        requires_action: false
-        
-      - id: "countercharm"
-        name: "Контрочарование"
-        description: "Действием: до конца следующего хода вы и союзники в 30 фт. с преимуществом на спасброски от запугивания и очарования (должны слышать вас)"
+      - id: extra_attack_valor
+        name: Дополнительная атака
+        description: Две атаки при действии Атака
         level: 6
-        feature_type: "active"
+        feature_type: passive
+        requires_action: false
+    - id: lore_college
+      name:
+        ru: Коллегия знаний
+        en: College of Lore
+      description: Бард-хранитель знаний, мастер очарования и контрзаклинаний.
+      parent_class: bard
+      class_features:
+      - id: bonus_proficiencies_lore
+        name: Дополнительные навыки
+        description: Владение тремя дополнительными навыками на выбор
+        level: 3
+        feature_type: passive
+        requires_action: false
+        mechanics:
+          type: skill_proficiency
+          count: 3
+          choice: true
+          from_list: all
+      - id: cutting_words
+        name: Острое словцо
+        description: Реакцией вычесть кость вдохновения из броска атаки, урона или проверки врага
+        level: 3
+        feature_type: active
+        reaction: true
+        requires_action: false
+      - id: additional_magical_secrets
+        name: Дополнительные тайны магии
+        description: Два заклинания из любого класса; ячейки барда
+        level: 6
+        feature_type: spell
         requires_action: true
-        
-      - id: "magical_secrets"
-        name: "Тайны магии"
-        description: "Два заклинания любого класса (уровень доступных ячеек или заговор); считаются заклинаниями барда"
-        level: 10
-        feature_type: "spell"
-        requires_action: true
-
-      - id: "ability_score_improvement"
-        name: "Увеличение характеристик"
-        description: "Увеличьте одну характеристику на 2 или две характеристики на 1 (макс. 20). Опционально: вместо этого возьмите черту."
-        level: 4
-        feature_type: "passive"
-        requires_action: false
-
-      - id: "ability_score_improvement"
-        name: "Увеличение характеристик"
-        description: "Увеличьте одну характеристику на 2 или две характеристики на 1 (макс. 20). Опционально: вместо этого возьмите черту."
-        level: 8
-        feature_type: "passive"
-        requires_action: false
-
-      - id: "ability_score_improvement"
-        name: "Увеличение характеристик"
-        description: "Увеличьте одну характеристику на 2 или две характеристики на 1 (макс. 20). Опционально: вместо этого возьмите черту."
-        level: 12
-        feature_type: "passive"
-        requires_action: false
-
-      - id: "ability_score_improvement"
-        name: "Увеличение характеристик"
-        description: "Увеличьте одну характеристику на 2 или две характеристики на 1 (макс. 20). Опционально: вместо этого возьмите черту."
-        level: 16
-        feature_type: "passive"
-        requires_action: false
-
-      - id: "ability_score_improvement"
-        name: "Увеличение характеристик"
-        description: "Увеличьте одну характеристику на 2 или две характеристики на 1 (макс. 20). Опционально: вместо этого возьмите черту."
-        level: 19
-        feature_type: "passive"
-        requires_action: false
-
-    
-    subclasses:
-      - id: "valor_college"
-        name:
-          ru: "Коллегия доблести"
-          en: "College of Valor"
-        description: "Бард-скальд, вдохновляющий героев в бою; владеет доспехами и оружием."
-        parent_class: "bard"
-        features:
-          - id: "bonus_proficiencies_valor"
-            name: "Бонусное владение"
-            description: "Средние доспехи, щиты и воинское оружие"
-            level: 3
-            feature_type: "passive"
-            requires_action: false
-            mechanics:
-              type: "armor_proficiency"
-              armor_types: ["medium", "shield"]
-              weapons: ["martial"]
-
-          - id: "combat_inspiration"
-            name: "Боевое вдохновение"
-            description: "Кость вдохновения барда добавляется к урону оружием или КД"
-            level: 3
-            feature_type: "active"
-            bonus_action: true
-            requires_action: false
-
-          - id: "extra_attack_valor"
-            name: "Дополнительная атака"
-            description: "Две атаки при действии Атака"
-            level: 6
-            feature_type: "passive"
-            requires_action: false
-
-      - id: "lore_college"
-        name:
-          ru: "Коллегия знаний"
-          en: "College of Lore"
-        description: "Бард-хранитель знаний, мастер очарования и контрзаклинаний."
-        parent_class: "bard"
-        features:
-          - id: "bonus_proficiencies_lore"
-            name: "Дополнительные навыки"
-            description: "Владение тремя дополнительными навыками на выбор"
-            level: 3
-            feature_type: "passive"
-            requires_action: false
-            mechanics:
-              type: "skill_proficiency"
-              count: 3
-              choice: true
-              from_list: "all"
-
-          - id: "cutting_words"
-            name: "Острое словцо"
-            description: "Реакцией вычесть кость вдохновения из броска атаки, урона или проверки врага"
-            level: 3
-            feature_type: "active"
-            reaction: true
-            requires_action: false
-
-          - id: "additional_magical_secrets"
-            name: "Дополнительные тайны магии"
-            description: "Два заклинания из любого класса; ячейки барда"
-            level: 6
-            feature_type: "spell"
-            requires_action: true
+    class_features:
+    - id: spellcasting_bard
+      name: Использование заклинаний
+      description: Магия воли и музыки; заговоры и ячейки заклинаний барда по таблице класса; базовая характеристика — Харизма
+      level: 1
+      feature_type: spell
+      requires_action: true
+    - id: bardic_inspiration
+      name: Вдохновение барда
+      description: Бонусным действием дать союзнику в 60 фт. кость вдохновения (к6); один раз добавить к проверке, атаке или
+        спасброску. Использований = мод. Харизмы (мин. 1), восстановление после продолжительного отдыха; кость растёт на 5/10/15
+        ур.
+      level: 1
+      feature_type: active
+      uses_per_rest: 1
+      bonus_action: true
+      requires_action: false
+    - id: jack_of_all_trades
+      name: Мастер на все руки
+      description: Половина бонуса мастерства, округлённая в меньшую сторону, ко всем проверкам характеристик, куда этот бонус
+        ещё не включён
+      level: 2
+      feature_type: passive
+      requires_action: false
+    - id: song_of_rest
+      name: Песнь отдыха
+      description: В конце короткого отдыха союзники, потратившие хотя бы одну Кость Хитов, восстанавливают дополнительно
+        1к6 хитов (к8 на 9 ур., к10 на 13, к12 на 17)
+      level: 2
+      feature_type: passive
+      requires_action: false
+    - id: expertise_bard
+      name: Компетентность
+      description: 'Выберите 2 владеемых навыка: бонус мастерства для них удваивается; на 10 уровне — ещё 2 навыка'
+      level: 3
+      feature_type: passive
+      requires_action: false
+      expertise_mechanics:
+        grants:
+        - level: 3
+          pick: 2
+          pool: proficient_skills
+        - level: 10
+          pick: 2
+          pool: proficient_skills
+    - id: font_of_inspiration
+      name: Источник вдохновения
+      description: Вдохновение барда восстанавливается после короткого и продолжительного отдыха
+      level: 5
+      feature_type: passive
+      requires_action: false
+    - id: countercharm
+      name: Контрочарование
+      description: 'Действием: до конца следующего хода вы и союзники в 30 фт. с преимуществом на спасброски от запугивания
+        и очарования (должны слышать вас)'
+      level: 6
+      feature_type: active
+      requires_action: true
+    - id: magical_secrets
+      name: Тайны магии
+      description: Два заклинания любого класса (уровень доступных ячеек или заговор); считаются заклинаниями барда
+      level: 10
+      feature_type: spell
+      requires_action: true
+    - id: ability_score_improvement
+      name: Увеличение характеристик
+      description: 'Увеличьте одну характеристику на 2 или две характеристики на 1 (макс. 20). Опционально: вместо этого возьмите
+        черту.'
+      level: 4
+      feature_type: passive
+      requires_action: false
+    - id: ability_score_improvement
+      name: Увеличение характеристик
+      description: 'Увеличьте одну характеристику на 2 или две характеристики на 1 (макс. 20). Опционально: вместо этого возьмите
+        черту.'
+      level: 8
+      feature_type: passive
+      requires_action: false
+    - id: ability_score_improvement
+      name: Увеличение характеристик
+      description: 'Увеличьте одну характеристику на 2 или две характеристики на 1 (макс. 20). Опционально: вместо этого возьмите
+        черту.'
+      level: 12
+      feature_type: passive
+      requires_action: false
+    - id: ability_score_improvement
+      name: Увеличение характеристик
+      description: 'Увеличьте одну характеристику на 2 или две характеристики на 1 (макс. 20). Опционально: вместо этого возьмите
+        черту.'
+      level: 16
+      feature_type: passive
+      requires_action: false
+    - id: ability_score_improvement
+      name: Увеличение характеристик
+      description: 'Увеличьте одну характеристику на 2 или две характеристики на 1 (макс. 20). Опционально: вместо этого возьмите
+        черту.'
+      level: 19
+      feature_type: passive
+      requires_action: false

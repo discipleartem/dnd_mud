@@ -1,11 +1,108 @@
 """Отображение рас и расовых бонусов."""
 
+from typing import Any
+
 from colorama import Fore, Style
 
+from core.grants import grants_from_entity, grants_of_type
 from core.localization import get_string
 from core.types import StatMap, StringsDict
 from ui.menus import _deps
 from ui.menus._common import _ability_name
+
+_ABILITY_INCREASE = "ability_increase"
+
+
+def _grant_description(grant: dict[str, Any], strings: StringsDict) -> str:
+    """Краткое описание grant для экрана расы."""
+    gtype = str(grant.get("type", ""))
+    if gtype == _ABILITY_INCREASE and grant.get("choice"):
+        count = int(grant.get("count", 1))
+        amount = int(grant.get("amount", grant.get("value", 1)))
+        return get_string(
+            strings,
+            "character.stats_choice_bonus_subrace_info",
+            count=count,
+            value=amount,
+        )
+    if grant.get("choice"):
+        count = int(grant.get("count", 1))
+        pool = grant.get("pool", grant.get("from", ""))
+        if pool:
+            return get_string(
+                strings,
+                "character.grant_choice_pool",
+                count=count,
+                pool=pool,
+                default=f"выбор: {count} из {pool}",
+            )
+        return get_string(
+            strings,
+            "character.grant_choice",
+            count=count,
+            default=f"на выбор: {count}",
+        )
+    weapons = grant.get("weapons", [])
+    if isinstance(weapons, list) and weapons:
+        return ", ".join(str(w) for w in weapons)
+    skills = grant.get("skills", grant.get("skill"))
+    if isinstance(skills, list) and skills:
+        return ", ".join(str(s) for s in skills)
+    if isinstance(skills, str) and skills:
+        return skills
+    range_ft = grant.get("range")
+    if gtype == "darkvision" and range_ft is not None:
+        return get_string(
+            strings,
+            "character.grant_darkvision",
+            range=range_ft,
+            default=f"{range_ft} фт.",
+        )
+    return str(grant.get("description", ""))
+
+
+def _print_race_grants(info: dict[str, Any], strings: StringsDict) -> None:
+    """Вывести особенности из grants[] (после миграции YAML)."""
+    grants = grants_from_entity(info)
+    if not grants:
+        return
+    print(get_string(strings, "character.features_label"))
+    for grant in grants:
+        name = str(grant.get("name", grant.get("type", "")))
+        desc = _grant_description(grant, strings)
+        print(
+            get_string(
+                strings,
+                "character.feature_line",
+                name=name,
+                desc=desc,
+            )
+        )
+
+
+def _print_choice_ability_from_grants(
+    info: dict[str, Any], strings: StringsDict
+) -> None:
+    """Выборный бонус характеристик из grants, если нет ability_bonuses."""
+    for grant in grants_of_type(grants_from_entity(info), _ABILITY_INCREASE):
+        if not grant.get("choice"):
+            continue
+        count = int(grant.get("count", 1))
+        amount = int(grant.get("amount", grant.get("value", 1)))
+        choice_info = get_string(
+            strings,
+            "character.stats_choice_bonus_subrace_info",
+            count=count,
+            value=amount,
+        )
+        print(
+            get_string(
+                strings,
+                "character.ability_bonuses_label",
+                bonuses=choice_info,
+            )
+        )
+        return
 
 
 def _print_race_info(info: StringsDict, strings: StringsDict) -> None:
@@ -43,43 +140,9 @@ def _print_race_info(info: StringsDict, strings: StringsDict) -> None:
             )
         )
     else:
-        for feat in info.get("features", []):
-            if not isinstance(feat, dict):
-                continue
-            if feat.get("type") != "ability_bonus":
-                continue
-            mechanics = feat.get("mechanics", {})
-            if isinstance(mechanics, dict) and mechanics.get("choice"):
-                count = int(mechanics.get("count", 1))
-                value = int(mechanics.get("value", 1))
-                choice_info = get_string(
-                    strings,
-                    "character.stats_choice_bonus_subrace_info",
-                    count=count,
-                    value=value,
-                )
-                print(
-                    get_string(
-                        strings,
-                        "character.ability_bonuses_label",
-                        bonuses=choice_info,
-                    )
-                )
-                break
+        _print_choice_ability_from_grants(info, strings)
 
-    features = info.get("features", [])
-    if features:
-        print(get_string(strings, "character.features_label"))
-        for feat in features:
-            description = feat.get("description", "")
-            print(
-                get_string(
-                    strings,
-                    "character.feature_line",
-                    name=feat.get("name", ""),
-                    desc=description,
-                )
-            )
+    _print_race_grants(info, strings)
 
 
 def _format_bonuses(bonuses: StatMap, strings: StringsDict) -> str:

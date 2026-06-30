@@ -133,9 +133,8 @@ def test_resolve_feat_ability_bonuses_resilient():
 
 def test_skilled_feat_count_is_three():
     feat = load_feat("skilled")
-    features = feat.get("features", [])
-    mechanics = features[0]["mechanics"]
-    assert mechanics.get("count") == 3
+    grants = feat.get("grants", [])
+    assert grants[0].get("count") == 3
 
 
 def test_get_feat_skill_ids_from_skilled_choices():
@@ -266,7 +265,7 @@ def test_healer_full_description_from_yaml():
 def test_feat_full_description_fallback_from_features():
     feat = {
         "description": "Кратко.",
-        "features": [{"name": "Умение", "description": "Подробность умения."}],
+        "grants": [{"name": "Умение", "description": "Подробность умения."}],
     }
     lines = feat_full_description_lines(feat)
     assert "Подробность умения" in lines[0]

@@ -57,8 +57,8 @@ dnd_mud/
 │   ├── character.py         # Фасад API персонажей и UI (_deps)
 │   ├── hp_bonuses.py        # Бонусы HP из features (раса, черта)
 │   ├── feats_loader.py      # Загрузка feats.yaml
-│   ├── feats_grants.py      # Гранты и apply feats
-│   ├── feats.py             # Публичный фасад черт
+│   ├── grant_mechanics.py   # Парсинг proficiency-токенов из grants
+│   ├── feats.py             # Публичный фасад черт (гранты + apply)
 │   ├── character_storage.py # CRUD персонажей (JSON в saves/)
 │   ├── slug.py              # make_save_slug — транслитерация имён
 │   ├── stats.py             # Генерация и валидация характеристик
@@ -77,12 +77,11 @@ dnd_mud/
 │   └── menus/               # Пакет экранов меню
 │       ├── main_menu.py
 │       ├── new_game.py
-│       ├── character_flow.py  # Точка входа «Создать персонажа»
+│       ├── _creation_steps.py  # Flow «Создать персонажа» + state machine
 │       ├── settings.py
 │       ├── stats/           # Генерация характеристик (подпакет)
 │       ├── _common.py       # SEPARATOR, _run_numbered_menu, …
 │       ├── _display/        # Пакет отображения (класс, раса, stats, персонаж)
-│       ├── _creation_steps.py
 │       ├── _selectors.py
 │       └── _deps.py         # Re-export core.character + input_handler (monkeypatch)
 ├── database/                # YAML-справочники D&D 5e
@@ -97,8 +96,7 @@ dnd_mud/
 │   │   ├── settings.json.example
 │   │   ├── mods_state.json  # Включённые моды
 │   │   └── languages.yaml
-│   ├── _future/               # Справочники Phase 2
-│   └── strings/
+│   ├── strings/
 │       ├── ru.yaml
 │       └── en.yaml
 ├── saves/                   # Пользовательские данные (gitignored)
@@ -107,9 +105,8 @@ dnd_mud/
 │   ├── tutorial.yaml
 │   └── lost_mine.yaml
 ├── mods/
-│   ├── dragonborn_pack/     # Пример mod overlay (manifest + overlay.yaml)
-│   └── _examples/example_mod.yaml
-├── tests/                   # pytest (261 тест в 36 файлах)
+│   └── dragonborn_pack/     # Пример mod overlay (manifest + overlay.yaml)
+├── tests/                   # pytest (250 тестов)
 │   ├── conftest.py
 │   ├── test_adventure.py
 │   ├── test_character.py
@@ -176,7 +173,8 @@ make install-hooks   # или make install — подключает .githooks/pr
 """Тесты UI: выбор персонажа, подрасы, new game, приключения."""
 ```
 
-Покрытие (261 тест; ключевые):
+Покрытие (250 тестов; ключевые):
+- `test_display.py` — формат stats, карточка персонажа, grants на экране расы
 - `test_grants.py` — нормализация grants, legacy features
 - `test_mod_loader.py` — deep-merge overlay модов
 - `test_adventure.py` — загрузка приключений, поля `hardcore_only`
@@ -335,11 +333,11 @@ races:
 - ✅ `ui/menus/` — главное меню, настройки, languages, flows
 - ✅ `ui/menus/stats/` — генерация характеристик (standard / point-buy / random)
 - ✅ Flow «Новая игра» (персонаж → приключение → `scenario_flow.run_scenario`)
-- ✅ Flow «Создать персонажа» — `character_flow.py` → `_creation_steps.py` (state machine)
+- ✅ Flow «Создать персонажа» — `ui/menus/_creation_steps.py` (`show_create_character_flow`)
 - ✅ Flow «Загрузить игру» — заглушка (`errors.load_not_implemented`)
 
 ### Тестирование
-- ✅ 261 тест (см. выше)
+- ✅ 250 тестов (см. выше)
 - ⏳ Backlog (добавляются по необходимости, см. [философию](#философия) выше):
   - E2E smoke через `python main.py` (ручная проверка меню)
 
@@ -365,7 +363,6 @@ API: `core/character.py`, UI: `show_stats_generation_flow` в `ui/menus/stats/st
 - ✅ Справочники: `races/races.yaml`, `classes/classes.yaml`, `content/adventures.yaml`
 - ✅ JSON: `database/core/settings.json`, `saves/characters/*.json` (с `schema_version: 1`)
 - ✅ Локализация: `strings/ru.yaml`, `strings/en.yaml`
-- ⏳ Справочники Phase 2 в `database/_future/` — не загружаются runtime
 
 ### Не реализовано
 - ❌ Gating модов по режиму (`requires_game_difficulty` в manifest)

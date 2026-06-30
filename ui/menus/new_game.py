@@ -8,7 +8,7 @@ from core.difficulty import adventure_unavailable_reason
 from core.localization import get_string
 from core.models import Adventure, Character
 from core.types import RuntimeSettings, StringsDict
-from ui.menus import _deps, character_flow
+from ui.menus import _creation_steps, _deps
 from ui.menus._common import (
     _press_enter,
     _print_screen_header,
@@ -159,7 +159,7 @@ def show_new_game_flow(
     while True:
         characters = _deps.load_characters()
         if not characters:
-            character = character_flow.show_create_character_flow(
+            character = _creation_steps.show_create_character_flow(
                 strings, language
             )
         else:
@@ -167,7 +167,7 @@ def show_new_game_flow(
             if result is None:
                 return
             if result == "create":
-                character = character_flow.show_create_character_flow(
+                character = _creation_steps.show_create_character_flow(
                     strings, language
                 )
             else:

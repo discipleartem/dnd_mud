@@ -45,6 +45,44 @@ def settings_file(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
 
 
 @pytest.fixture
+def human_race_with_subraces() -> dict[str, Any]:
+    """Человек с подрасами standard и variant_human (тестовый YAML)."""
+    return {
+        "name": "Человек",
+        "description": "Описание человека",
+        "subraces": {
+            "standard": {
+                "name": "Человек (стандарт)",
+                "description": "Стандартный человек",
+                "ability_bonuses": {"strength": 1},
+            },
+            "variant_human": {
+                "name": "Человек (вариант)",
+                "description": "Вариант человека",
+                "inherit": {"ability_bonuses": False, "grants": False},
+                "grants": [],
+            },
+        },
+    }
+
+
+@pytest.fixture
+def subrace_strings() -> dict[str, Any]:
+    """Минимальные строки для экрана выбора подрасы."""
+    return {
+        "character": {
+            "subrace_caption": "ОПИСАНИЕ РАСЫ И ВЫБОР ПОДРАСЫ",
+            "race_description": "  {desc}",
+            "features_label": "  Особенности:",
+            "feature_line": "    • {name}: {desc}",
+            "subraces_label": "  Подрасы:",
+            "subrace_prompt": "Выберите подрасу: ",
+            "back": "Назад",
+        }
+    }
+
+
+@pytest.fixture
 def patch_int_input():
     """Фабрика подмены get_int_input последовательностью значений."""
 

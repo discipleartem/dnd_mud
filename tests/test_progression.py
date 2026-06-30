@@ -134,7 +134,7 @@ def test_hp_gain_breakdown_lists_bonus_sources_by_name():
         feat_ids=["tough"],
     )
     names = [source.name for source in breakdown.bonus_sources]
-    assert names == ["Дварфская выдержка", "Крепкий"]
+    assert names == ["Дварфская выдержка", "Дополнительные хиты"]
     assert breakdown.extra_bonus == 3
 
 

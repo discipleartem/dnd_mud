@@ -1,4 +1,4 @@
-"""Нормализация grants из YAML (единый формат + legacy features/mechanics)."""
+"""Нормализация grants из YAML."""
 
 from typing import Any
 
@@ -30,7 +30,7 @@ def inherit_flags(entity: dict[str, Any]) -> tuple[bool, bool]:
 
 
 def normalize_grant(raw: dict[str, Any]) -> dict[str, Any]:
-    """Привести grant или legacy mechanics к плоскому виду."""
+    """Привести grant к плоскому виду."""
     grant = dict(raw)
     grant_type = str(grant.get("type", ""))
     if grant_type == _ABILITY_BONUS:
@@ -44,40 +44,12 @@ def normalize_grant(raw: dict[str, Any]) -> dict[str, Any]:
     return grant
 
 
-def feature_to_grants(feature: dict[str, Any]) -> list[dict[str, Any]]:
-    """Legacy feature → список grants."""
-    name = feature.get("name")
-    mechanics = feature.get("mechanics", {})
-    if isinstance(mechanics, dict) and mechanics:
-        merged = dict(mechanics)
-        feat_type = feature.get("type")
-        if feat_type and "type" not in merged:
-            merged["type"] = feat_type
-        grant = normalize_grant(merged)
-        if name:
-            grant["name"] = name
-        return [grant]
-    feat_type = feature.get("type")
-    if feat_type:
-        grant = normalize_grant({"type": str(feat_type)})
-        if name:
-            grant["name"] = name
-        return [grant]
-    return []
-
-
 def grants_from_entity(entity: dict[str, Any]) -> list[dict[str, Any]]:
-    """Grants сущности: ключ grants или legacy features."""
+    """Grants сущности из ключа grants."""
     raw_grants = entity.get("grants", [])
-    if isinstance(raw_grants, list) and raw_grants:
-        return [normalize_grant(g) for g in raw_grants if isinstance(g, dict)]
-    raw_features = entity.get("features", [])
-    if not isinstance(raw_features, list):
+    if not isinstance(raw_grants, list):
         return []
-    result: list[dict[str, Any]] = []
-    for feature in raw_features:
-        result.extend(feature_to_grants(feature))
-    return result
+    return [normalize_grant(g) for g in raw_grants if isinstance(g, dict)]
 
 
 def merge_entity_grants(

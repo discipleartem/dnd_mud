@@ -25,8 +25,9 @@ from ui.menus.expertise import select_creation_expertise
 from ui.menus.feats import select_creation_feats
 from ui.menus.languages import select_creation_languages
 from ui.menus.proficiencies import select_creation_proficiencies
+from ui.menus.settings import select_difficulty
 from ui.menus.skills import select_creation_skills
-from ui.menus.stats import show_stats_generation_flow
+from ui.menus.stats.stats_flow import show_stats_generation_flow
 
 CreationStep = Literal[
     "race",
@@ -66,6 +67,62 @@ class _CreationState:
     feat_ids: list[str] = field(default_factory=list)
     feat_choices: dict[str, dict[str, Any]] = field(default_factory=dict)
     hardcore_rolls: list[int] = field(default_factory=list)
+
+    @property
+    def start_level(self) -> int:
+        """Стартовый уровень по сложности (вычисляется один раз на чтение)."""
+        return start_level_for_difficulty(self.difficulty)
+
+    def save_kwargs(self) -> dict[str, Any]:
+        """Аргументы для save_character из состояния создания."""
+        if self.race_id is None or self.stats is None or self.class_id is None:
+            return {}
+        start_level = self.start_level
+        features_applied = class_features_applied_at_creation(
+            self.class_id, self.subclass_id, start_level
+        )
+        return {
+            "name": self.name,
+            "race_id": str(self.race_id),
+            "class_id": str(self.class_id),
+            "difficulty": self.difficulty,
+            "subrace_id": str(self.subrace_id) if self.subrace_id else None,
+            "stats": self.stats,
+            "subclass_id": self.subclass_id,
+            "languages": self.languages,
+            "background_id": self.background_id,
+            "skills": self.skills,
+            "skill_expertise": self.skill_expertise,
+            "tool_expertise": self.tool_expertise,
+            "weapon_proficiencies": self.weapon_proficiencies,
+            "armor_proficiencies": self.armor_proficiencies,
+            "tool_proficiencies": self.tool_proficiencies,
+            "feat_ids": self.feat_ids or None,
+            "feat_choices": self.feat_choices or None,
+            "class_features_applied": features_applied,
+            "apply_feat_stat_bonuses": False,
+        }
+
+
+def show_create_character_flow(
+    strings: StringsDict, language: str = "ru"
+) -> Character | None:
+    """Flow «Создать персонажа»: сложность → создание."""
+    difficulty = select_difficulty(strings)
+    if difficulty is None:
+        return None
+
+    _print_screen_header(get_string(strings, "character.creation_caption"))
+
+    name = _deps.get_str_input(
+        get_string(strings, "character.name_prompt"),
+        min_length=2,
+        only_letters=True,
+        strings=strings,
+    )
+
+    state = _CreationState(name=name, difficulty=difficulty)
+    return run_creation_steps(strings, state, language)
 
 
 def _feats_step_required(state: _CreationState) -> bool:
@@ -133,35 +190,10 @@ def _finalize_creation(
 
 def _save_created_character(state: _CreationState) -> Character | None:
     """Сохранить персонажа из состояния создания."""
-    if state.race_id is None or state.stats is None or state.class_id is None:
+    kwargs = state.save_kwargs()
+    if not kwargs:
         return None
-
-    start_level = start_level_for_difficulty(state.difficulty)
-    features_applied = class_features_applied_at_creation(
-        state.class_id, state.subclass_id, start_level
-    )
-
-    return _deps.save_character(
-        name=state.name,
-        race_id=str(state.race_id),
-        class_id=str(state.class_id),
-        difficulty=state.difficulty,
-        subrace_id=str(state.subrace_id) if state.subrace_id else None,
-        stats=state.stats,
-        subclass_id=state.subclass_id,
-        languages=state.languages,
-        background_id=state.background_id,
-        skills=state.skills,
-        skill_expertise=state.skill_expertise,
-        tool_expertise=state.tool_expertise,
-        weapon_proficiencies=state.weapon_proficiencies,
-        armor_proficiencies=state.armor_proficiencies,
-        tool_proficiencies=state.tool_proficiencies,
-        feat_ids=state.feat_ids or None,
-        feat_choices=state.feat_choices or None,
-        class_features_applied=features_applied,
-        apply_feat_stat_bonuses=False,
-    )
+    return _deps.save_character(**kwargs)
 
 
 def run_creation_steps(
@@ -293,7 +325,7 @@ def run_creation_steps(
                 ):
                     step = "class"
                     continue
-                start_level = start_level_for_difficulty(state.difficulty)
+                start_level = state.start_level
                 feat_result = select_creation_feats(
                     strings,
                     state.race_id,
@@ -346,7 +378,7 @@ def run_creation_steps(
                 if state.race_id is None or state.class_id is None:
                     step = "proficiencies"
                     continue
-                start_level = start_level_for_difficulty(state.difficulty)
+                start_level = state.start_level
                 skills = select_creation_skills(
                     strings,
                     state.race_id,
@@ -372,7 +404,7 @@ def run_creation_steps(
                 if state.class_id is None or state.skills is None:
                     step = "skills"
                     continue
-                start_level = start_level_for_difficulty(state.difficulty)
+                start_level = state.start_level
                 expertise_result = select_creation_expertise(
                     strings,
                     state.class_id,
