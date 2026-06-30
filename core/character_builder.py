@@ -4,7 +4,6 @@ from dataclasses import dataclass
 from typing import Any
 
 from core.io import merge_unique
-from core.models import Character
 from core.proficiencies import (
     get_background_tool_proficiencies,
     get_class_proficiency_tokens,
@@ -83,17 +82,6 @@ def resolve_creation_grants(
         tool_tokens=tuple(tools),
         skill_ids=tuple(skills),
         language_ids=tuple(languages),
-    )
-
-
-def resolve_grants_from_character(character: Character) -> ResolvedGrants:
-    """Владения сохранённого персонажа."""
-    return ResolvedGrants(
-        weapon_tokens=tuple(character.weapon_proficiencies),
-        armor_tokens=tuple(character.armor_proficiencies),
-        tool_tokens=tuple(character.tool_proficiencies),
-        skill_ids=tuple(character.skills),
-        language_ids=tuple(character.languages),
     )
 
 

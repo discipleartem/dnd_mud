@@ -244,8 +244,6 @@ resolve_creation_grants(
     extra_skills=None, extra_weapon_tokens=None, extra_tool_tokens=None,
     extra_languages=None, include_feat_languages=True,
 ) -> ResolvedGrants
-
-resolve_grants_from_character(character: Character) -> ResolvedGrants
 merge_languages_with_feats(languages, feat_ids, feat_choices) -> list[str]
 merge_expertise_with_feats(skill_expertise, feat_ids, feat_choices) -> list[str]
 ```
