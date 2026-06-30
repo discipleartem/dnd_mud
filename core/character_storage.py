@@ -1,11 +1,12 @@
 """Сохранение и загрузка персонажей в JSON."""
 
-import json
+import logging
+from dataclasses import dataclass
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
-from core.io import save_json
+from core.io import load_json, save_json
 from core.levels import clamp_level
 from core.models import Character
 from core.progression import max_hp_for_level
@@ -13,6 +14,52 @@ from core.slug import make_save_slug
 from core.stats import STANDARD_ARRAY, generate_stats_standard_array
 from core.subclasses import start_level_for_difficulty
 from core.types import GameDifficulty, StatMap
+
+logger = logging.getLogger(__name__)
+
+
+@dataclass(frozen=True)
+class LoadCharactersResult:
+    """Результат загрузки персонажей и предупреждений о битых сейвах."""
+
+    characters: tuple[Character, ...]
+    corrupt_save_warnings: tuple[str, ...] = ()
+
+    @classmethod
+    def empty(cls) -> "LoadCharactersResult":
+        """Пустой результат без персонажей и предупреждений."""
+        return cls(characters=())
+
+
+def _corrupt_label_from_data(data: dict[str, Any], path: Path) -> str:
+    """Имя персонажа из JSON или save_slug, если имя недоступно."""
+    name = data.get("name")
+    if isinstance(name, str) and name.strip():
+        return name.strip()
+    return path.stem
+
+
+def _try_load_character_file(
+    path: Path,
+) -> tuple[Character | None, str | None]:
+    """Загрузить персонажа; при битом сейве — (None, подпись)."""
+    if not path.exists():
+        return None, None
+    try:
+        if path.stat().st_size == 0:
+            return None, path.stem
+        data = load_json(path)
+        if not data.get("name"):
+            return None, path.stem
+        try:
+            character = Character.from_dict(data)
+        except (ValueError, TypeError):
+            return None, _corrupt_label_from_data(data, path)
+        if not character.save_slug:
+            character.save_slug = path.stem
+        return character, None
+    except OSError:
+        return None, path.stem
 
 
 def save_character(
@@ -48,34 +95,53 @@ def save_character(
             list(STANDARD_ARRAY), race_id, subrace_id
         )
     if feat_ids:
-        from core.feats import (
-            apply_feats_to_stats,
-            get_feat_expertise_ids,
-            get_feat_language_ids,
+        from core.character_builder import (
+            merge_expertise_with_feats,
+            merge_languages_with_feats,
         )
+        from core.feats import apply_feats_to_stats
 
         if apply_feat_stat_bonuses:
             stats = apply_feats_to_stats(stats, feat_ids, feat_choices)
-        feat_lang_ids = get_feat_language_ids(feat_ids, feat_choices)
-        if feat_lang_ids:
-            from core.io import merge_unique
-
-            languages = merge_unique(
-                list(languages) if languages else [],
-                feat_lang_ids,
-            )
-        feat_expertise = get_feat_expertise_ids(feat_ids, feat_choices)
-        if feat_expertise:
-            from core.io import merge_unique
-
-            skill_expertise = merge_unique(
-                list(skill_expertise) if skill_expertise else [],
-                feat_expertise,
-            )
+        languages = merge_languages_with_feats(
+            languages, feat_ids, feat_choices
+        )
+        skill_expertise = merge_expertise_with_feats(
+            skill_expertise, feat_ids, feat_choices
+        )
 
     if level is None:
         level = start_level_for_difficulty(difficulty)
     level = clamp_level(level)
+
+    need_grants = (
+        weapon_proficiencies is None
+        or armor_proficiencies is None
+        or tool_proficiencies is None
+        or skills is None
+    )
+    if need_grants:
+        from core.character_builder import resolve_creation_grants
+
+        grants = resolve_creation_grants(
+            race_id,
+            subrace_id,
+            class_id,
+            background_id,
+            subclass_id,
+            level,
+            feat_ids=feat_ids,
+            feat_choices=feat_choices,
+            include_feat_languages=False,
+        )
+        if weapon_proficiencies is None:
+            weapon_proficiencies = list(grants.weapon_tokens)
+        if armor_proficiencies is None:
+            armor_proficiencies = list(grants.armor_tokens)
+        if tool_proficiencies is None:
+            tool_proficiencies = list(grants.tool_tokens)
+        if skills is None:
+            skills = list(grants.skill_ids)
 
     hp = max_hp_for_level(
         class_id,
@@ -187,18 +253,8 @@ def _save_character_file(character: Character) -> None:
 
 def _load_character_file(path: Path) -> Character | None:
     """Загрузить одного персонажа из JSON-файла."""
-    try:
-        with open(path, encoding="utf-8") as f:
-            data = json.load(f)
-        if not isinstance(data, dict) or not data.get("name"):
-            return None
-
-        character = Character.from_dict(data)
-        if not character.save_slug:
-            character.save_slug = path.stem
-        return character
-    except (json.JSONDecodeError, OSError):
-        return None
+    character, _corrupt_label = _try_load_character_file(path)
+    return character
 
 
 def _character_created_at_timestamp(character: Character, path: Path) -> float:
@@ -211,21 +267,28 @@ def _character_created_at_timestamp(character: Character, path: Path) -> float:
     return path.stat().st_mtime
 
 
-def load_characters() -> list[Character]:
-    """Загрузить список всех сохранённых персонажей (старые → новые)."""
+def load_characters() -> LoadCharactersResult:
+    """Загрузить всех сохранённых персонажей (старые → новые) и битые сейвы."""
     if not CHARACTERS_DIR.exists():
-        return []
+        return LoadCharactersResult.empty()
 
     entries: list[tuple[float, Character]] = []
+    corrupt_labels: list[str] = []
     for path in CHARACTERS_DIR.glob("*.json"):
-        character = _load_character_file(path)
+        character, corrupt_label = _try_load_character_file(path)
         if character is not None:
             entries.append(
                 (_character_created_at_timestamp(character, path), character)
             )
+        elif corrupt_label is not None:
+            logger.warning("Битый файл сохранения персонажа: %s", path)
+            corrupt_labels.append(corrupt_label)
 
     entries.sort(key=lambda item: item[0])
-    return [character for _, character in entries]
+    return LoadCharactersResult(
+        characters=tuple(character for _, character in entries),
+        corrupt_save_warnings=tuple(corrupt_labels),
+    )
 
 
 def delete_character(save_slug: str) -> bool:

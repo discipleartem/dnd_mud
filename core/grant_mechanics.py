@@ -14,10 +14,6 @@ def normalize_armor_token(token: str) -> str:
     return _ARMOR_ALIASES.get(token, token)
 
 
-def _normalize_armor_token(token: str) -> str:
-    return normalize_armor_token(token)
-
-
 def proficiency_tokens_and_skills_from_grant(
     grant: dict[str, Any],
     choices: dict[str, Any] | None = None,
@@ -43,7 +39,7 @@ def proficiency_tokens_and_skills_from_grant(
     if mtype in ("armor_proficiency", "bonus_proficiencies"):
         raw = grant.get("armor_types", grant.get("armors", []))
         if isinstance(raw, list):
-            armors.extend(_normalize_armor_token(str(a)) for a in raw)
+            armors.extend(normalize_armor_token(str(a)) for a in raw)
     if mtype == "tool_proficiency" and not grant.get("choice"):
         raw = grant.get("tools", [])
         if isinstance(raw, list):

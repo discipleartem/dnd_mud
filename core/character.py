@@ -1,11 +1,13 @@
 """Создание, сохранение и загрузка персонажей.
 
-Фасад: re-export публичного API из подмодулей персонажа.
+Фасад для flow-оркестраторов UI (`_deps`) и тестов.
+Специализированные экраны импортируют leaf-модули core напрямую.
 """
 
 from core.adventure import load_adventures
 from core.backgrounds import load_background_full, load_backgrounds
 from core.character_storage import (
+    LoadCharactersResult,
     delete_all_characters,
     delete_character,
     load_characters,
@@ -14,20 +16,8 @@ from core.character_storage import (
 )
 from core.classes import load_class_full, load_classes, load_subclasses
 from core.dice import roll_ability_score
-from core.expertise import (
-    expertise_step_required,
-    get_expertise_grants,
-)
 from core.languages import get_language_name, load_languages
 from core.localization import load_strings
-from core.proficiencies import (
-    build_fixed_proficiencies,
-    get_proficiency_choices,
-    has_armor_proficiency,
-    has_tool_proficiency,
-    has_weapon_proficiency,
-    merge_proficiency_tokens,
-)
 from core.races import (
     build_bonuses_from_choices,
     get_choice_ability_bonus_mechanics,
@@ -36,12 +26,6 @@ from core.races import (
     has_choice_ability_bonuses,
     load_race_full,
     load_races,
-)
-from core.skills import (
-    PHB_SKILL_IDS,
-    apply_racial_proficiencies,
-    available_skills,
-    get_class_skill_config,
 )
 from core.stats import (
     ABILITY_SCORE_MAX,
@@ -85,18 +69,6 @@ __all__ = [
     "generate_stats_standard_array",
     "get_choice_ability_bonus_mechanics",
     "get_language_name",
-    "expertise_step_required",
-    "get_class_skill_config",
-    "get_expertise_grants",
-    "apply_racial_proficiencies",
-    "available_skills",
-    "build_fixed_proficiencies",
-    "get_proficiency_choices",
-    "has_armor_proficiency",
-    "has_tool_proficiency",
-    "has_weapon_proficiency",
-    "merge_proficiency_tokens",
-    "PHB_SKILL_IDS",
     "get_effective_race_bonuses",
     "get_race_bonuses",
     "has_choice_ability_bonuses",
@@ -104,6 +76,7 @@ __all__ = [
     "load_background_full",
     "load_backgrounds",
     "load_characters",
+    "LoadCharactersResult",
     "load_class_full",
     "load_classes",
     "load_languages",

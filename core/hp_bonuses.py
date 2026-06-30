@@ -35,21 +35,3 @@ def hit_point_bonus_sources_from_grants(
         name = str(grant.get("name", "")).strip() or "?"
         sources.append(HpBonusSource(name=name, amount=amount))
     return sources
-
-
-def hit_point_bonus_sources_from_features(
-    features: list[dict[str, Any]],
-) -> list[HpBonusSource]:
-    """Бонусы HP за уровень из features (legacy-обёртка для grants)."""
-    grants: list[dict[str, Any]] = []
-    for feat in features:
-        mechanics = feat.get("mechanics", {})
-        if not isinstance(mechanics, dict):
-            mechanics = {}
-        merged = dict(mechanics)
-        if feat.get("type") and "type" not in merged:
-            merged["type"] = feat["type"]
-        if feat.get("name"):
-            merged["name"] = feat["name"]
-        grants.append(merged)
-    return hit_point_bonus_sources_from_grants(grants)

@@ -264,6 +264,7 @@ choose_character:
 characters_menu:
   caption: "CHARACTERS"
   empty_list: "No saved characters."
+  corrupt_save_warning: "Could not load saves: {names}"
   create: "Create character"
   subclass_trainer: "Learn subclass from mentor"
   subclass_trainer_caption: "SUBCLASS MENTOR"

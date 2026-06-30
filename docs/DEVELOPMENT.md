@@ -54,8 +54,10 @@ dnd_mud/
 ├── README.md
 ├── core/                    # Игровое ядро
 │   ├── models.py            # Dataclass: Character, Adventure
-│   ├── character.py         # Фасад API персонажей и UI (_deps)
-│   ├── hp_bonuses.py        # Бонусы HP из features (раса, черта)
+│   ├── character.py         # Узкий фасад для flow-оркестраторов (_deps)
+│   ├── character_builder.py # resolve_creation_grants, merge языков/компетентности
+│   ├── catalog_loader.py    # load_catalog — единая загрузка YAML-каталогов + mod overlay
+│   ├── hp_bonuses.py        # Бонусы HP из grants (раса, черта)
 │   ├── feats_loader.py      # Загрузка feats.yaml
 │   ├── grant_mechanics.py   # Парсинг proficiency-токенов из grants
 │   ├── feats.py             # Публичный фасад черт (гранты + apply)
@@ -77,13 +79,17 @@ dnd_mud/
 │   └── menus/               # Пакет экранов меню
 │       ├── main_menu.py
 │       ├── new_game.py
-│       ├── _creation_steps.py  # Flow «Создать персонажа» + state machine
+│       ├── _creation_steps.py  # Тонкий loop создания персонажа
+│       ├── _creation_handlers.py, _creation_navigation.py, _creation_finalize.py, _creation_state.py
+│       ├── characters_menu.py
+│       ├── _corrupt_saves.py
+│       ├── feats/           # Выбор черт (creation + level-up)
 │       ├── settings.py
 │       ├── stats/           # Генерация характеристик (подпакет)
 │       ├── _common.py       # SEPARATOR, _run_numbered_menu, …
 │       ├── _display/        # Пакет отображения (класс, раса, stats, персонаж)
 │       ├── _selectors.py
-│       └── _deps.py         # Re-export core.character + input_handler (monkeypatch)
+│       └── _deps.py         # Re-export core.character + input_handler (flows only)
 ├── database/                # YAML-справочники D&D 5e
 │   ├── races/
 │   │   └── races.yaml       # Расы и подрасы
@@ -106,7 +112,7 @@ dnd_mud/
 │   └── lost_mine.yaml
 ├── mods/
 │   └── dragonborn_pack/     # Пример mod overlay (manifest + overlay.yaml)
-├── tests/                   # pytest (250 тестов)
+├── tests/                   # pytest
 │   ├── conftest.py
 │   ├── test_adventure.py
 │   ├── test_character.py
@@ -135,6 +141,15 @@ dnd_mud/
     ├── DEVELOPMENT.md
     └── CHANGELOG.md
 ```
+
+### UI → core imports
+
+| Слой | Импорт |
+|------|--------|
+| Flows (`_creation_steps`, `new_game`, `characters_menu`, …) | `ui/menus/_deps` |
+| Экраны (`feats/`, `level_up`, `_display/`) | Прямые `from core.*` |
+
+`core/character.py` синхронизирован с `_deps` — не дублировать leaf-API в фасаде.
 
 ## Линтинг и форматирование
 
@@ -312,7 +327,7 @@ overlays:
     path: overlay.yaml
 ```
 
-Overlay-фрагмент (`overlay.yaml`) — partial YAML с ключом каталога (`races:`, …). Runtime: deep-merge через `core/mod_loader.py`.
+Overlay-фрагмент (`overlay.yaml`) — partial YAML с ключом каталога (`races:`, …). Runtime: `core/catalog_loader.load_catalog` → deep-merge через `core/mod_loader.py`.
 
 ## Добавление локализации
 

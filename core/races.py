@@ -1,9 +1,9 @@
 """Загрузка рас и расовых бонусов из YAML."""
 
-from functools import lru_cache
 from pathlib import Path
 from typing import Any
 
+from core.catalog_loader import clear_catalog_cache, load_catalog
 from core.grants import (
     _ABILITY_INCREASE,
     grants_from_entity,
@@ -16,7 +16,6 @@ from core.hp_bonuses import (
     hit_point_bonus_sources_from_grants,
 )
 from core.localization import resolve_localized_text
-from core.mod_loader import load_merged_catalog
 from core.types import StatMap
 
 RACES_FILE = Path("database/races/races.yaml")
@@ -24,13 +23,12 @@ RACES_FILE = Path("database/races/races.yaml")
 
 def clear_races_cache() -> None:
     """Сбросить кэш рас (для тестов)."""
-    _load_races_yaml.cache_clear()
+    clear_catalog_cache()
 
 
-@lru_cache(maxsize=1)
 def _load_races_yaml() -> dict[str, Any]:
-    """Загрузить и закэшировать данные рас из YAML."""
-    return load_merged_catalog(str(RACES_FILE), "races")
+    """Загрузить данные рас из YAML."""
+    return load_catalog(RACES_FILE, "races")
 
 
 def resolve_subrace_id(race_id: str, subrace_id: str | None) -> str | None:

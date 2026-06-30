@@ -1,10 +1,13 @@
 """Загрузка YAML-каталогов с overlay модов."""
 
+import logging
 from functools import lru_cache
 from pathlib import Path
 from typing import Any
 
-from core.io import load_json, load_yaml
+from core.io import CatalogLoadError, load_json, load_yaml
+
+logger = logging.getLogger(__name__)
 
 MODS_DIR = Path("mods")
 MODS_STATE_FILE = Path("database/core/mods_state.json")
@@ -37,6 +40,15 @@ def _mod_manifest_path(mod_id: str) -> Path:
     return MODS_DIR / mod_id / "manifest.yaml"
 
 
+def _load_mod_manifest(mod_id: str) -> dict[str, Any]:
+    """Загрузить manifest мода; битый файл — пустой dict."""
+    try:
+        return load_yaml(_mod_manifest_path(mod_id), strict=True)
+    except CatalogLoadError:
+        logger.warning("Битый manifest мода %s, overlay пропущен", mod_id)
+        return {}
+
+
 def _apply_mod_overlays(
     data: dict[str, Any], target_path: Path
 ) -> dict[str, Any]:
@@ -44,7 +56,7 @@ def _apply_mod_overlays(
     target = str(target_path).replace("\\", "/")
     result = dict(data)
     for mod_id in _enabled_mod_ids():
-        manifest = load_yaml(_mod_manifest_path(mod_id))
+        manifest = _load_mod_manifest(mod_id)
         overlays = manifest.get("overlays", [])
         if not isinstance(overlays, list):
             continue
@@ -64,7 +76,7 @@ def _apply_mod_overlays(
 
 def load_merged_yaml(path: Path) -> dict[str, Any]:
     """Загрузить YAML с deep-merge overlay включённых модов."""
-    data = load_yaml(path)
+    data = load_yaml(path, strict=True)
     return _apply_mod_overlays(data, path)
 
 

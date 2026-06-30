@@ -37,6 +37,6 @@ message = "New Game"                            # ❌
 ## D&D механика
 
 - Модели в `core/models.py` — `dataclass` для `Character`, `Adventure`
-- `class_name: str` сейчас; `CharacterClass` Enum — целевой рефакторинг, не блокер
+- `class_id: str` на `Character`; `CharacterClass` Enum — целевой рефакторинг, не блокер
 - Баланс из YAML — без magic numbers в Python
 - Явные проверки условий; эффекты apply/remove явно

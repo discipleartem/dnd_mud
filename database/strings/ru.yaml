@@ -264,6 +264,7 @@ choose_character:
 characters_menu:
   caption: "ПЕРСОНАЖИ"
   empty_list: "Нет сохранённых персонажей."
+  corrupt_save_warning: "Не удалось загрузить сохранения: {names}"
   create: "Создать персонажа"
   subclass_trainer: "Получить подкласс у наставника"
   subclass_trainer_caption: "НАСТАВНИК ПО ПОДКЛАССУ"

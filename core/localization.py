@@ -4,6 +4,7 @@
 Язык по умолчанию — русский, если нет — английский (запасной).
 """
 
+from functools import lru_cache
 from pathlib import Path
 from typing import Any
 
@@ -13,6 +14,12 @@ from core.types import LanguageCode, StringsDict
 STRINGS_DIR = Path("database/strings")
 
 
+def clear_strings_cache() -> None:
+    """Сбросить кэш строк локализации (для тестов)."""
+    load_strings.cache_clear()
+
+
+@lru_cache(maxsize=4)
 def load_strings(language: LanguageCode) -> StringsDict:
     """Загрузить строки для указанного языка.
 

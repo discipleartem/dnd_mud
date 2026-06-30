@@ -2,7 +2,7 @@
 
 from pathlib import Path
 
-from core.io import load_json, load_yaml
+from core.io import CatalogLoadError, load_json, load_yaml
 
 
 def test_load_yaml_missing_file_returns_default(tmp_path: Path) -> None:
@@ -21,6 +21,17 @@ def test_load_yaml_corrupt_file_returns_default(tmp_path: Path) -> None:
     path = tmp_path / "bad.yaml"
     path.write_text(":\n  bad: [unclosed", encoding="utf-8")
     assert load_yaml(path, {"fallback": True}) == {"fallback": True}
+
+
+def test_load_yaml_strict_raises_on_corrupt_file(tmp_path: Path) -> None:
+    path = tmp_path / "bad.yaml"
+    path.write_text(":\n  bad: [unclosed", encoding="utf-8")
+    try:
+        load_yaml(path, strict=True)
+        raised = False
+    except CatalogLoadError:
+        raised = True
+    assert raised
 
 
 def test_load_json_missing_file_returns_default(tmp_path: Path) -> None:

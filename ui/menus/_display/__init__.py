@@ -25,6 +25,7 @@ from ui.menus._display._class import (
     _print_subclass_info,
 )
 from ui.menus._display._difficulty import _difficulty_color, _difficulty_label
+from ui.menus._display._grants import _grant_description, _grant_display_name
 from ui.menus._display._race import (
     _format_bonuses,
     _print_race_bonuses,
@@ -51,6 +52,8 @@ __all__ = [
     "_format_class_skills",
     "_format_feature_uses",
     "_format_proficiency_token_list",
+    "_grant_description",
+    "_grant_display_name",
     "_print_character_card",
     "_print_character_proficiencies",
     "_print_characters_list",
