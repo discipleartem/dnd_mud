@@ -45,8 +45,10 @@ UI-строки — из YAML (`database/strings/`); f-strings в коде — �
 ## Tooling
 
 ```bash
-make check   # ruff --fix + black + mypy
-make test    # pytest
+make verify-changed   # подзадача: lint + test staged .py
+make verify-scope     # конец задачи: diff origin/dev...HEAD
+make verify           # full: check + test (CI)
+make check            # ruff + black --check + mypy (весь проект)
 ```
 
 venv: `python3.12 -m venv .venv` (см. [DEVELOPMENT.md](../../docs/DEVELOPMENT.md)).

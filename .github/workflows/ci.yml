@@ -1,0 +1,25 @@
+# Полная проверка качества на PR в dev и main.
+name: CI
+
+on:
+  pull_request:
+    branches: [dev, main]
+
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: make install
+
+      - name: Lint and typecheck
+        run: make check
+
+      - name: Tests with coverage
+        run: make test

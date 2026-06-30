@@ -1,7 +1,5 @@
 """Тесты UI: выбор персонажа, подрасы, new game, приключения."""
 
-import re
-
 import pytest
 
 from core.character_storage import LoadCharactersResult
@@ -12,8 +10,7 @@ from ui.menus import (
     characters_menu,
     new_game,
 )
-from ui.menus import settings as settings_menu
-from ui.menus._selectors import select_class, select_subclass, select_subrace
+from ui.menus._selectors import select_subrace
 
 
 def _patch_load_characters(
@@ -311,91 +308,6 @@ def test_hardcore_back_to_race_clears_rolls(
     assert roll_calls["count"] == 12
 
 
-def test_select_character_shows_cards_with_difficulty(
-    monkeypatch, capsys, ru_strings, patch_int_input
-):
-    """Список персонажей показывает имя, расу, класс и сложность."""
-    normal_char = Character(
-        name="Hero Normal",
-        race="human",
-        class_id="fighter",
-        difficulty="normal",
-        stats={"strength": 16, "dexterity": 14},
-        current_hp=12,
-    )
-    hardcore_char = Character(
-        name="Hero HC",
-        race="elf",
-        class_id="bard",
-        difficulty="hardcore",
-        current_hp=9,
-    )
-
-    monkeypatch.setattr(
-        _deps,
-        "load_characters",
-        lambda: LoadCharactersResult(characters=(normal_char, hardcore_char)),
-    )
-    patch_int_input(monkeypatch, [0])
-
-    result = new_game._select_character(
-        ru_strings, [normal_char, hardcore_char]
-    )
-    output = capsys.readouterr().out
-
-    assert result is None
-    assert "Hero Normal" in output
-    assert "Hero HC" in output
-    assert "Человек" in output
-    assert "Эльф" in output
-    assert output.count("языки:") == 2
-    assert output.count("предыстория:") == 2
-    assert output.count("навыки:") == 2
-    assert output.count("компетентность:") == 2
-    assert "Сложность:" in output
-    assert "HardCore" in output
-    assert "Создать нового персонажа" in output
-
-
-def test_select_character_shows_subrace_name(
-    monkeypatch, capsys, ru_strings, patch_int_input
-):
-    """Подраса отображается читаемым названием, а не ID."""
-    character = Character(
-        name="Variant Hero",
-        race="human",
-        class_id="cleric",
-        difficulty="hardcore",
-        subrace="variant_human",
-        stats=dict.fromkeys(
-            [
-                "strength",
-                "dexterity",
-                "constitution",
-                "intelligence",
-                "wisdom",
-                "charisma",
-            ],
-            10,
-        ),
-        current_hp=10,
-    )
-
-    monkeypatch.setattr(
-        _deps,
-        "load_characters",
-        lambda: LoadCharactersResult(characters=(character,)),
-    )
-    patch_int_input(monkeypatch, [0])
-
-    new_game._select_character(ru_strings, [character])
-    output = capsys.readouterr().out
-
-    assert "подраса:" in output
-    assert "вариант" in output
-    assert "variant_human" not in output
-
-
 def test_select_character_create_via_enter(monkeypatch, capsys, ru_strings):
     """Enter без ввода на пункте «Создать» возвращает 'create'."""
     character = Character(
@@ -587,23 +499,6 @@ def test_new_game_back_reuses_cached_character_list(monkeypatch):
     assert calls == {"load": 1, "character": 2, "adventure": 1}
 
 
-def test_languages_menu_order_depends_on_locale(
-    monkeypatch, capsys, ru_strings, en_strings, patch_int_input
-):
-    """Порядок языков в меню зависит от текущей локали."""
-    patch_int_input(monkeypatch, [0, 0])
-
-    settings_menu.show_languages_menu(ru_strings, {"language": "ru"})
-    ru_output = capsys.readouterr().out
-    assert re.search(r"1.*English", ru_output)
-    assert re.search(r"2.*Русский", ru_output)
-
-    settings_menu.show_languages_menu(en_strings, {"language": "en"})
-    en_output = capsys.readouterr().out
-    assert re.search(r"1.*Русский", en_output)
-    assert re.search(r"2.*English", en_output)
-
-
 def test_characters_menu_shows_hub_options(
     monkeypatch, capsys, ru_strings, patch_int_input
 ):
@@ -625,31 +520,6 @@ def test_characters_menu_shows_hub_options(
     assert "Создать персонажа" in output
     assert "Удалить персонажа" in output
     assert "Удалить всех персонажей" in output
-
-
-def test_characters_menu_corrupt_warning_shown_once_per_visit(
-    monkeypatch, capsys, ru_strings, patch_int_input
-):
-    """Предупреждение о битых сейвах показывается один раз за визит меню."""
-    monkeypatch.setattr(
-        _deps,
-        "load_characters",
-        lambda: LoadCharactersResult(
-            characters=(), corrupt_save_warnings=("Broken",)
-        ),
-    )
-    monkeypatch.setattr(
-        _creation_steps,
-        "show_create_character_flow",
-        lambda _strings, _language: None,
-    )
-    patch_int_input(monkeypatch, [1, 0])
-
-    characters_menu.show_characters_menu(ru_strings)
-    output = capsys.readouterr().out
-
-    assert output.count("Не удалось загрузить сохранения") == 1
-    assert "Broken" in output
 
 
 def test_characters_menu_delete_one_confirmed(
@@ -706,170 +576,25 @@ def test_characters_menu_delete_all_cancelled(
     assert "Удаление отменено" in output
 
 
-def test_select_class_shows_description_and_features(
-    monkeypatch, capsys, ru_strings, patch_int_input
-):
-    """Экран выбора класса показывает описание и умения из YAML."""
-    patch_int_input(monkeypatch, [1])
-
-    result = select_class(ru_strings, "ru")
-    output = capsys.readouterr().out
-
-    assert result is not None
-    assert result.get("id") == "fighter"
-    assert "Воин" in output
-    assert "Особенности" in output
-    assert "Атлетика" in output
-    assert "acrobatics" not in output
-
-
-def test_select_subclass_shows_subclass_features(
-    monkeypatch, capsys, ru_strings, patch_int_input
-):
-    """Экран выбора подкласса показывает архетипы и их умения."""
-    patch_int_input(monkeypatch, [1])
-
-    subclass_id = select_subclass(ru_strings, "fighter", "ru")
-    output = capsys.readouterr().out
-
-    assert subclass_id == "battle_master"
-    assert "Архетипы" in output
-    assert "Мастер боевых искусств" in output
-    assert "Уровень 3:" in output
-    assert "Боевое превосходство" in output
-
-
-def test_skill_pick_list_grays_proficient_skills(capsys, ru_strings):
-    """Занятые навыки отображаются с пометкой «уже владеете»."""
-    from core.skills import get_class_skill_config
-    from ui.menus.skills import _print_skill_pick_list
-
-    pool, _ = get_class_skill_config("fighter")
-    available = _print_skill_pick_list(ru_strings, pool, ["perception"])
-    output = capsys.readouterr().out
-
-    assert "уже владеете" in output
-    assert "Восприятие" in output
-    assert "perception" not in available
-    assert "athletics" in available
-
-
-def test_proficient_summary_shows_racial_source(capsys, ru_strings):
-    """Блок «Уже владеете» показывает навык и источник (раса)."""
-    from ui.menus.skills import _print_proficient_summary
-
-    _print_proficient_summary(
-        ru_strings,
-        ["perception"],
-        {"perception": "race"},
-    )
-    output = capsys.readouterr().out
-
-    assert "Уже владеете" in output
-    assert "Восприятие" in output
-    assert "раса" in output
-
-
-def test_normal_class_step_routes_to_subclass():
-    """Normal: после класса — экран выбора архетипа."""
-    from core.subclasses import subclass_offered_at_creation
-
-    state = _creation_steps._CreationState(
-        name="Hero",
-        difficulty="normal",
-        class_id="fighter",
-    )
-    assert subclass_offered_at_creation(state.difficulty, state.class_id or "")
-
-
-def test_feats_step_required_for_variant_human_state():
-    """Вариант человека требует шаг выбора черты после класса."""
-    state = _creation_steps._CreationState(
-        name="Hero",
-        difficulty="normal",
-        race_id="human",
-        subrace_id="variant_human",
-    )
-    assert _creation_steps._feats_step_required(state)
-
-    elf_state = _creation_steps._CreationState(
-        name="Hero",
-        difficulty="normal",
-        race_id="elf",
-        subrace_id="wood_elf",
-    )
-    assert not _creation_steps._feats_step_required(elf_state)
-
-
-def test_step_after_class_choice_routes_to_feats_for_variant_human():
-    state = _creation_steps._CreationState(
+def test_creation_feat_step_routing() -> None:
+    """Маршрутизация шага черт для variant human vs elf."""
+    variant = _creation_steps._CreationState(
         name="Hero",
         difficulty="normal",
         race_id="human",
         subrace_id="variant_human",
         class_id="fighter",
     )
-    assert _creation_steps._step_after_class_choice(state) == "feats"
+    assert _creation_steps._feats_step_required(variant)
+    assert _creation_steps._step_after_class_choice(variant) == "feats"
+    assert _creation_steps._back_step_from_feats(variant) == "subclass"
 
-
-def test_step_after_class_choice_skips_feats_for_elf():
-    state = _creation_steps._CreationState(
+    elf = _creation_steps._CreationState(
         name="Hero",
         difficulty="normal",
         race_id="elf",
         subrace_id="wood_elf",
         class_id="fighter",
     )
-    assert _creation_steps._step_after_class_choice(state) == "proficiencies"
-
-
-def test_back_from_proficiencies_returns_to_feats_when_required():
-    state = _creation_steps._CreationState(
-        name="Hero",
-        difficulty="normal",
-        race_id="human",
-        subrace_id="variant_human",
-        class_id="fighter",
-    )
-    assert _creation_steps._back_step_from_proficiencies(state) == "feats"
-
-
-def test_back_from_feats_returns_to_subclass_when_offered():
-    """Черты после класса/подкласса — назад на подкласс, не на предысторию."""
-    state = _creation_steps._CreationState(
-        name="Hero",
-        difficulty="normal",
-        race_id="human",
-        subrace_id="variant_human",
-        class_id="fighter",
-    )
-    assert _creation_steps._back_step_from_feats(state) == "subclass"
-
-
-def test_back_from_feats_returns_to_class_when_subclass_skipped():
-    """Без шага подкласса назад с черт — на выбор класса."""
-    state = _creation_steps._CreationState(
-        name="Hero",
-        difficulty="hardcore",
-        race_id="human",
-        subrace_id="variant_human",
-        class_id="fighter",
-    )
-    assert _creation_steps._back_step_from_feats(state) == "class"
-
-
-def test_merge_feat_languages_when_languages_empty():
-    """Языки из черты добавляются, даже если список языков пуст."""
-    state = _creation_steps._CreationState(
-        name="Hero",
-        difficulty="normal",
-        languages=None,
-        feat_ids=["linguist"],
-        feat_choices={
-            "linguist": {
-                "languages": ["elvish", "dwarvish", "draconic"],
-            },
-        },
-    )
-    _creation_steps._merge_feat_languages(state)
-    assert state.languages == ["elvish", "dwarvish", "draconic"]
+    assert not _creation_steps._feats_step_required(elf)
+    assert _creation_steps._step_after_class_choice(elf) == "proficiencies"

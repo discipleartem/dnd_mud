@@ -16,7 +16,7 @@ Console MUD — browser forbidden. Переопределяет `ironbee-devtool
 | Global | dnd_mud |
 |--------|---------|
 | Agent напрямую — git-flow не обязателен | **git-старт обязателен** для правок кода/docs/git |
-| Browser / IronBee verify | **`make test`**, smoke `python main.py` |
+| Browser / IronBee verify | **`make verify-changed`** (подзадача), **`make verify-scope`** (конец/rebase), smoke `python main.py` |
 | Push по запросу | **auto-commit подзадач**; push по запросу; Plan → Build → Agent — push обязателен |
 
 ## Git (delta)
@@ -26,14 +26,14 @@ Console MUD — browser forbidden. Переопределяет `ironbee-devtool
 **Git-старт:** [`01-operations.mdc`](~/.cursor/rules/01-operations.mdc) §Task cycle шаг 1. Если `main` впереди `dev`:
 
 ```bash
-git merge origin/main && make test && git push origin dev
+git merge origin/main && make verify-scope && git push origin dev
 ```
 
-**Parallel dev:** после каждого `rebase`/`merge origin/dev` и после конфликта — **`make test`** перед push/PR.
+**Parallel dev:** после каждого `rebase`/`merge origin/dev` и после конфликта — **`make verify-scope`** перед push/PR.
 
 ```bash
-git fetch origin && git rebase origin/dev && make test
-# конфликт: git add <files> && git rebase --continue && make test
+git fetch origin && git rebase origin/dev && make verify-scope
+# конфликт: git add <files> && git rebase --continue && make verify-scope
 # push после rebase на remote: --force-with-lease (только своя ветка)
 ```
 
@@ -45,7 +45,7 @@ git fetch origin && git rebase origin/dev && make test
 **Завершение task-ветки:** docs + verify + **review** light|full (skill `dnd-mud-review`) → push/PR. Перед push — `rebase origin/dev`; subagent review **не** в середине ветки:
 
 ```bash
-git fetch origin && git rebase origin/dev && make test
+git fetch origin && git rebase origin/dev && make verify-scope
 git push -u origin HEAD   # после rebase: --force-with-lease
 gh pr create --base dev --title "feat: …"   # PR по запросу; squash merge
 ```

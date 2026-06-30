@@ -90,4 +90,4 @@ overlays:
 
 1. Keep `ru` and `en` in sync for new localization keys
 2. YAML for new races/classes/items; JSON for new save/config shapes
-3. Run `make test` after changes that affect loading
+3. Run `make verify-scope` after changes that affect loading

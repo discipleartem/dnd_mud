@@ -16,8 +16,11 @@ alwaysApply: true
 ```bash
 source .venv/bin/activate
 make install    # venv + pip install -e ".[dev]"
-make test       # pytest
-make check      # ruff --fix + black + mypy
+make verify-changed # подзадача: lint + test staged
+make verify-scope   # конец задачи: diff vs origin/dev
+make verify         # full check + test (CI)
+make test           # pytest + coverage (full)
+make check          # ruff + black + mypy (full)
 python main.py  # smoke: затронутое меню
 ```
 

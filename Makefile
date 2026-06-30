@@ -1,9 +1,11 @@
-.PHONY: help venv-recreate venv install install-hooks reinstall clean lint format format-check typecheck check test
+.PHONY: help venv-recreate venv install install-hooks reinstall clean lint format format-check typecheck check test verify verify-changed verify-scope test-changed test-scope check-changed check-scope
 
 VENV      := .venv
 PYTHON    := python3.12
 PIP       := $(VENV)/bin/pip
 PYTHON_VENV := $(VENV)/bin/python
+VERIFY    := $(PYTHON_VENV) scripts/verify_targets.py
+VERIFY_BASE ?= origin/dev
 
 $(VENV)/bin/python:
 	$(PYTHON) -m venv $(VENV)
@@ -65,7 +67,32 @@ check: lint format-check typecheck
 
 .PHONY: test
 test:
-	$(VENV)/bin/pytest
+	$(VENV)/bin/pytest --cov=core --cov=ui --cov-report=term-missing
+
+.PHONY: verify
+verify: check test
+
+.PHONY: check-changed
+check-changed:
+	$(VERIFY) --mode staged run-check
+
+.PHONY: check-scope
+check-scope:
+	$(VERIFY) --mode scope --base $(VERIFY_BASE) run-check
+
+.PHONY: test-changed
+test-changed:
+	$(VERIFY) --mode staged run-test
+
+.PHONY: test-scope
+test-scope:
+	$(VERIFY) --mode scope --base $(VERIFY_BASE) run-test
+
+.PHONY: verify-changed
+verify-changed: check-changed test-changed
+
+.PHONY: verify-scope
+verify-scope: check-scope test-scope
 
 .PHONY: help
 help:
@@ -74,10 +101,15 @@ help:
 	@echo "  make help            — показать эту справку"
 	@echo "  make venv            — создать виртуальное окружение (если нет)"
 	@echo "  make venv-recreate   — пересоздать виртуальное окружение"
-	@echo "  make install         — зависимости + git pre-commit (check + test)"
+	@echo "  make install         — зависимости + git pre-commit (verify-changed)"
 	@echo "  make install-hooks   — подключить .githooks/pre-commit"
 	@echo "  make reinstall       — переустановить все зависимости (с удалением)"
 	@echo "  make clean           — очистить кеш и временные файлы"
 	@echo "  make check           — полная проверка: ruff + black --check + mypy"
 	@echo "  make format          — применить black (исправить форматирование)"
-	@echo "  make test            — запустить тесты"
+	@echo "  make test            — полный pytest + coverage"
+	@echo "  make verify          — make check + make test (CI / ручной full)"
+	@echo "  make verify-changed  — lint + test только staged .py (подзадача)"
+	@echo "  make verify-scope    — lint + test diff $(VERIFY_BASE)...HEAD (конец задачи)"
+	@echo "  make test-changed    — pytest только для staged изменений"
+	@echo "  make test-scope      — pytest для diff ветки vs $(VERIFY_BASE)"

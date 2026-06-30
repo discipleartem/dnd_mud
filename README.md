@@ -73,7 +73,10 @@ dnd_mud
 ## Тестирование
 
 ```bash
-make test              # pytest
+make verify-changed    # lint + test (staged)
+make verify-scope      # lint + test (diff vs dev)
+make verify            # full check + test (CI)
+make test              # pytest + coverage
 make check             # ruff + black + mypy
 pytest -v              # подробный вывод
 pytest --cov=.         # с coverage

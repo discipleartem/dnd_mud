@@ -9,7 +9,7 @@ disable-model-invocation: true
 
 # dnd_mud — release (`dev` → `main`)
 
-Канон-политика: [`AGENTS.md`](../../AGENTS.md) · [`dnd-mud-workflow.mdc`](../../rules/dnd-mud-workflow.mdc) · CI: `.github/workflows/pr-dev-to-main-check.yml`.
+Канон-политика: [`AGENTS.md`](../../AGENTS.md) · [`dnd-mud-workflow.mdc`](../../rules/dnd-mud-workflow.mdc) · CI: [`ci.yml`](../../.github/workflows/ci.yml), [`pr-dev-to-main-check.yml`](../../.github/workflows/pr-dev-to-main-check.yml).
 
 ## Когда выполнять
 
@@ -31,7 +31,7 @@ disable-model-invocation: true
 
 По умолчанию **без** full bugbot `dev` vs `main` — каждая task-ветка уже прошла review при merge в `dev`.
 
-Обязательно: `make test`, trial merge, CI [`pr-dev-to-main-check.yml`](../../.github/workflows/pr-dev-to-main-check.yml).
+Обязательно: `make verify` (или дождаться CI `quality`), trial merge, CI sync-check.
 
 Full bugbot release-review ([`dnd-mud-review`](../dnd-mud-review/SKILL.md), `Base Branch: main`, ветка `dev`) — только если: (a) в release попали коммиты без task-review; (b) пользователь явно просит; (c) hotfix напрямую в `dev`.
 
@@ -50,7 +50,7 @@ git log dev..origin/main --oneline   # must be empty
 git merge origin/main --no-commit --no-ff && git merge --abort
 ```
 
-`make test` — обязательно.
+`make verify` — рекомендуется локально; CI [`ci.yml`](../../.github/workflows/ci.yml) — обязателен на PR.
 
 Создать PR (только по запросу):
 
@@ -58,7 +58,7 @@ git merge origin/main --no-commit --no-ff && git merge --abort
 gh pr create --base main --head dev --title "release: …"
 ```
 
-Дождаться CI (`dev-sync-and-mergeable`), затем squash merge PR:
+Дождаться CI (`quality`, `dev-sync-and-mergeable`), затем squash merge PR:
 
 ```bash
 gh pr merge <number> --squash
@@ -73,11 +73,10 @@ gh pr merge <number> --squash
 
 | Workflow | Триггер | Назначение |
 |----------|---------|------------|
+| `ci.yml` | PR → `dev`, `main` | `make check` + `make test` |
 | `sync-dev-with-main.yml` | push `main` | auto merge `main` → `dev` |
 | `pr-dev-to-main-check.yml` | PR `dev` → `main` | `dev` не отстаёт; пробный merge |
 
-Orphaned workflows на GitHub без файла в репо — `gh workflow disable "<name>"`.
-
-Ruleset `main_rules`: required check — **`dev-sync-and-mergeable`** (job name).
+Ruleset `main_rules`: required checks — **`quality`**, **`dev-sync-and-mergeable`**.
 
 Статус — панель **GitHub Actions** в Cursor / на GitHub.

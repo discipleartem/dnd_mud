@@ -10,7 +10,7 @@ description: >-
 
 Канон-политика: [`dnd-mud-workflow.mdc`](../../rules/dnd-mud-workflow.mdc) §Verify / review · [`AGENTS.md`](../../AGENTS.md).
 
-**Verify** (`make test`) — runtime. **Review** — readonly diff + чеклист; не дублирует pytest.
+**Verify** (`make verify-scope` локально; `make verify` в CI) — runtime. **Review** — readonly diff + чеклист; не дублирует pytest.
 
 ## Когда выполнять
 
