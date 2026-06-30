@@ -97,10 +97,12 @@ def show_characters_menu(
     strings: StringsDict, language: LanguageCode = "ru"
 ) -> None:
     """Меню управления персонажами: список, создание, удаление."""
+    corrupt_warning_shown = False
     while True:
         characters = _deps.load_characters()
         corrupt_slugs = _deps.pop_corrupt_save_warnings()
-        if corrupt_slugs:
+        if corrupt_slugs and not corrupt_warning_shown:
+            corrupt_warning_shown = True
             names = ", ".join(corrupt_slugs)
             warning = get_string(
                 strings,
