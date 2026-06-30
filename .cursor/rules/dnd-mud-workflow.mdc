@@ -16,7 +16,7 @@ Console MUD — browser forbidden. Переопределяет `ironbee-devtool
 | Global | dnd_mud |
 |--------|---------|
 | Agent напрямую — git-flow не обязателен | **git-старт обязателен** для правок кода/docs/git |
-| Browser / IronBee verify | **`make test`**, smoke `python main.py` |
+| Browser / IronBee verify | **`make verify-changed`** (подзадача), **`make verify-scope`** (конец/rebase), smoke `python main.py` |
 | Push по запросу | **auto-commit подзадач**; push по запросу; Plan → Build → Agent — push обязателен |
 
 ## Git (delta)
@@ -26,14 +26,14 @@ Console MUD — browser forbidden. Переопределяет `ironbee-devtool
 **Git-старт:** [`01-operations.mdc`](~/.cursor/rules/01-operations.mdc) §Task cycle шаг 1. Если `main` впереди `dev`:
 
 ```bash
-git merge origin/main && make test && git push origin dev
+git merge origin/main && make verify-scope && git push origin dev
 ```
 
-**Parallel dev:** после каждого `rebase`/`merge origin/dev` и после конфликта — **`make test`** перед push/PR.
+**Parallel dev:** после каждого `rebase`/`merge origin/dev` и после конфликта — **`make verify-scope`** перед push/PR.
 
 ```bash
-git fetch origin && git rebase origin/dev && make test
-# конфликт: git add <files> && git rebase --continue && make test
+git fetch origin && git rebase origin/dev && make verify-scope
+# конфликт: git add <files> && git rebase --continue && make verify-scope
 # push после rebase на remote: --force-with-lease (только своя ветка)
 ```
 
@@ -45,9 +45,27 @@ git fetch origin && git rebase origin/dev && make test
 **Завершение task-ветки:** docs + verify + **review** light|full (skill `dnd-mud-review`) → push/PR. Перед push — `rebase origin/dev`; subagent review **не** в середине ветки:
 
 ```bash
-git fetch origin && git rebase origin/dev && make test
+git fetch origin && git rebase origin/dev && make verify-scope
 git push -u origin HEAD   # после rebase: --force-with-lease
 gh pr create --base dev --title "feat: …"   # PR по запросу; squash merge
+```
+
+**После squash merge PR task → `dev`:** переименовать task-ветку в `merged/<исходное-имя>` (локально и на `origin`), чтобы отличать **актуальные** ветки (`feat/…`, `fix/…`, …) от **завершённых** (`merged/…`). `main` и `dev` не переименовывать; не добавлять префикс повторно, если имя уже начинается с `merged/`.
+
+| Статус | Имя | Пример |
+|--------|-----|--------|
+| Актуальная task-ветка | `<prefix>/<slug>` | `feat/character-stats-menu` |
+| Завершённая (после merge в `dev`) | `merged/<prefix>/<slug>` | `merged/feat/character-stats-menu` |
+
+```bash
+TASK=feat/my-task
+MERGED=merged/feat/my-task
+git fetch origin
+git checkout dev && git pull origin dev
+git push origin "refs/heads/${TASK}:refs/heads/${MERGED}"
+git push origin --delete "${TASK}"
+git branch -m "${TASK}" "${MERGED}" 2>/dev/null || git branch -D "${TASK}" 2>/dev/null || true
+git fetch origin --prune
 ```
 
 Release `dev` → `main`: skill [`dnd-mud-release`](../skills/dnd-mud-release/SKILL.md). Sync `dev`←`main`: [`git-dev-main-sync.md`](~/.cursor/docs/git-dev-main-sync.md).
@@ -69,3 +87,13 @@ Verify ≠ review. Runtime не нужен для docs-only / rules-only.
 **Review:** skill `dnd-mud-review` — light (оркестратор) или full (локальный bugbot subagent). **GitHub PR Bugbot не используется** — не включать в Cursor dashboard, `.cursor/BUGBOT.md` не вести.
 
 **Cursor IDE (экономия токенов):** Agent Review on Commit — OFF; Include Submodules / Untracked Files — OFF; Default Approach — Quick.
+
+## Динамические метрики
+
+Не хардкодить в rules, skills, docs и ответах агента **точное** число тестов, файлов diff или строк — suite и diff меняются. Получать из команд:
+
+| Метрика | Команда |
+|---------|---------|
+| Число тестов | `pytest --collect-only -q` |
+| Объём diff | `git diff --shortstat origin/<base>...HEAD` |
+| Файлы в diff | `git diff --name-only origin/<base>...HEAD` |

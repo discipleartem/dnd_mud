@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Локальный pre-commit: make check + make test (не CI).
+# Локальный pre-commit: incremental verify (не CI).
 set -euo pipefail
 
 ROOT="$(git rev-parse --show-toplevel)"
@@ -20,8 +20,5 @@ if [[ ! -x .venv/bin/python ]]; then
   exit 1
 fi
 
-echo "pre-commit: make check..."
-make check
-
-echo "pre-commit: make test..."
-make test
+echo "pre-commit: make verify-changed..."
+make verify-changed

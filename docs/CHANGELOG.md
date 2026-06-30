@@ -3,6 +3,18 @@
 ## [Unreleased]
 
 ### Added
+- `scripts/verify_targets.py` — маппинг git diff → pytest/lint; `make verify-changed`, `verify-scope`, `verify`
+- `.github/workflows/ci.yml` — полный `make check` + `make test` на PR в `dev` / `main`
+- `tests/test_verify_targets.py`
+
+### Fixed
+- `scripts/verify_targets.py` — incremental pytest: full suite, если **любой** изменённый `.py` в diff без mapped-тестов (в т.ч. смешанный diff)
+
+### Changed
+- Git workflow: после squash merge PR task→`dev` — переименование ветки в `merged/<исходное-имя>` (`dnd-mud-workflow.mdc`, `AGENTS.md`, `DEVELOPMENT.md`)
+- Pre-commit: `make verify-changed` вместо полного `make check` + `make test`
+- Verify workflow: подзадача → `verify-changed`, конец task-ветки → `verify-scope`, full → CI
+- Тесты: консолидация в `test_feats`, `test_character`, `test_progression`, `test_proficiencies`; review fix-plan — восстановлены `test_constants`, `test_backgrounds`, `test_races`, `test_scenario`, `test_subclass_trainer`, UI/class features в `test_class_features`
 - `core/character_builder.py` — `ResolvedGrants`, `resolve_creation_grants`, merge helpers для языков/компетентности из черт
 - `tests/test_character_builder.py`
 - `core/catalog_loader.py` — `load_catalog`, `clear_catalog_cache`, `clear_all_catalog_caches`
@@ -11,16 +23,12 @@
 - `tests/test_catalog_loader.py` — `CatalogLoadError` на битом JSON-синтаксисе
 - `tests/test_mod_loader.py` — битый manifest мода не роняет загрузку каталога
 - `ui/menus/_creation_handlers.py`, `_creation_navigation.py`, `_creation_finalize.py`, `_creation_state.py`
-
-### Changed
 - Docs: sync mod overlay table, feats package paths, `LoadCharactersResult`, `character_builder`, easy mode status
 - Review fix-plan: `ui/menus/new_game.py`, `characters_menu.py` — кэш `LoadCharactersResult`, reload после create/delete
 - Review fix-plan: `ui/menus/feats/__init__.py` — только публичный API (`select_creation_feats`, `select_level_up_feat_or_asi`)
 - Fix-plan remediation: `load_characters()` → `LoadCharactersResult` (без глобальной очереди `pop_corrupt_save_warnings`)
 - `core/mod_loader` — `strict=True` для YAML каталогов игры; manifest модов — graceful skip при ошибке
 - `core/grants.ABILITY_INCREASE` — публичная константа для UI (вместо `_ABILITY_INCREASE`)
-
-### Changed
 - Review remediation: `_try_load_character_file` — одно чтение JSON при загрузке битых сейвов
 - `tests/test_menus_character.py` — предупреждение о битых сейвах в flow «Новая игра»
 - Review fix-plan: `load_catalog` без собственного `@lru_cache` (кэш только в `load_merged_catalog`)
@@ -36,8 +44,6 @@
 - `core/character.py` — узкий фасад для `_deps` (без proficiencies/skills/expertise re-export)
 - `Character.from_dict` — legacy `"class"` → `_migrate_legacy_fields`
 - `ui/menus/_display/_character.py` — `_print_character_skills_and_expertise`
-
-### Changed
 - Phase 0 refactor: armor token normalization only in `core/grant_mechanics.normalize_armor_token`; `proficiencies` delegates
 - Doc drift: `class_id` in `dnd-mud-core.mdc`; `core/scenario_actions.py` in `03-subclasses.md`
 
