@@ -3,7 +3,15 @@
 import pytest
 
 from core.stats import STAT_NAMES
-from ui.menus._creation_handlers import _handle_feats, _handle_skills
+from ui.menus._creation_handlers import (
+    _handle_background,
+    _handle_feats,
+    _handle_languages,
+    _handle_proficiencies,
+    _handle_skills,
+    _handle_stats,
+    _handle_subrace,
+)
 from ui.menus._creation_navigation import (
     back_step_from_feats,
     back_step_from_proficiencies,
@@ -146,3 +154,58 @@ def test_handle_expertise_completes_creation(
 
     assert result.character is expected
     assert result.next_step is None
+
+
+def test_handle_subrace_without_race_id_advances_to_race() -> None:
+    state = _CreationState(name="Test", difficulty="normal")
+    result = _handle_subrace({}, state, "ru")
+    assert result.next_step == "race"
+    assert result.character is None
+
+
+def test_handle_stats_without_race_id_advances_to_race() -> None:
+    state = _CreationState(name="Test", difficulty="normal")
+    result = _handle_stats({}, state, "ru")
+    assert result.next_step == "race"
+    assert result.character is None
+
+
+def test_handle_background_cancel_advances_to_stats(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setattr(
+        "ui.menus._creation_steps.select_creation_background",
+        lambda _strings, _language: None,
+    )
+    state = _CreationState(
+        name="Test",
+        difficulty="normal",
+        race_id="human",
+        stats=_flat_stats(),
+    )
+    result = _handle_background({}, state, "ru")
+    assert result.next_step == "stats"
+    assert result.character is None
+
+
+def test_handle_languages_without_background_advances_to_background() -> None:
+    state = _CreationState(
+        name="Test",
+        difficulty="normal",
+        race_id="human",
+        stats=_flat_stats(),
+    )
+    result = _handle_languages({}, state, "ru")
+    assert result.next_step == "background"
+    assert result.character is None
+
+
+def test_handle_proficiencies_without_class_id_advances_to_class() -> None:
+    state = _CreationState(
+        name="Test",
+        difficulty="normal",
+        race_id="human",
+    )
+    result = _handle_proficiencies({}, state, "ru")
+    assert result.next_step == "class"
+    assert result.character is None
