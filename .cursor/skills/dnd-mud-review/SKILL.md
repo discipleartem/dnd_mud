@@ -1,9 +1,9 @@
 ---
 name: dnd-mud-review
 description: >-
-  Локальный readonly review diff vs dev/main: light (оркестратор) или full
-  (bugbot subagent) по критериям. После verify, до push/PR/merge. При
-  Major/Blocker — предложить dnd-mud-fix-plan. GitHub PR Bugbot не используется.
+  Локальный readonly review diff vs base: task-ветка → dev, ветка dev → main;
+  light (оркестратор) или full (bugbot subagent). После verify, до push/PR/merge.
+  При Major/Blocker — предложить dnd-mud-fix-plan. GitHub PR Bugbot не используется.
 ---
 
 # dnd_mud — review (light | full)
@@ -16,12 +16,29 @@ description: >-
 
 После skill [`dnd-mud-verify`](../dnd-mud-verify/SKILL.md), **до** push/PR/merge:
 
-| Действие | Base Branch | Ветка для review |
-|----------|-------------|------------------|
-| `git push` task-ветки | `dev` | текущая task-ветка |
-| `gh pr create --base dev` | `dev` | head PR / task-ветка |
+| Действие | Base branch | Ветка для review | Diff |
+|----------|-------------|------------------|------|
+| `git push` task-ветки | `dev` | текущая task-ветка | `origin/dev...HEAD` |
+| `gh pr create --base dev` | `dev` | head PR / task-ветка | `origin/dev...HEAD` |
+| Review на ветке **`dev`** | **`main`** | `dev` | **`origin/main...HEAD`** |
 
 Release `dev` → `main`: review **не обязателен** — см. [`dnd-mud-release`](../dnd-mud-release/SKILL.md).
+
+## Определение base branch
+
+Перед review: `git fetch origin`, затем:
+
+```bash
+git branch --show-current
+```
+
+| Текущая ветка | Base branch | Команда diff |
+|---------------|-------------|--------------|
+| `dev` | **`main`** | `git diff origin/main...HEAD` |
+| task-ветка (не `main`, не `dev`) | `dev` | `git diff origin/dev...HEAD` |
+| `main` | — | review не типичен; только по явному запросу |
+
+**На `dev`:** сравнивать с `main`, не с `dev` (иначе diff пустой или бессмысленный).
 
 ## Когда пропустить
 
@@ -31,7 +48,9 @@ Release `dev` → `main`: review **не обязателен** — см. [`dnd-m
 
 ## Выбор режима review
 
-Перед review: `git fetch origin` и оценить diff `origin/<base>...HEAD` (для task-ветки — rebase на `origin/dev`).
+Перед review: `git fetch origin`, определить base (§**Определение base branch**), оценить diff `origin/<base>...HEAD`.
+
+Для **task-ветки** перед full review: `git rebase origin/dev`. На **`dev`** rebase на `origin/dev` не нужен; убедиться, что `origin/main` актуален (`git fetch origin`).
 
 | Условие | Режим |
 |---------|-------|
@@ -44,22 +63,24 @@ Release `dev` → `main`: review **не обязателен** — см. [`dnd-m
 
 - [ ] Verify пройден
 - [ ] Рабочее дерево чистое (для финального review — сначала commit)
-- [ ] Перед **full**: `git fetch origin && git rebase origin/dev` (task-ветка)
+- [ ] Перед **full** на task-ветке: `git fetch origin && git rebase origin/dev`
+- [ ] Перед **full** на **`dev`**: `git fetch origin` (base = `main`, rebase не на `dev`)
 
 ## Алгоритм light review (оркестратор)
 
 Без subagent и без Task tool.
 
-1. `git diff --stat origin/<base>...HEAD` и `git diff origin/<base>...HEAD`.
-2. Прочитать **только** файлы из diff.
-3. Чеклист (4 пункта): correctness; git hygiene & secrets; docs drift (если менялось поведение); tests — meaningful gaps only.
-4. Сводка по §**Формат ответа**; при Blocker/Major — предложить [`dnd-mud-fix-plan`](../dnd-mud-fix-plan/SKILL.md).
-5. Оркестратор **не** правит код, пока пользователь не попросил fix.
+1. Определить **base branch** (§**Определение base branch**): task-ветка → `dev`, **`dev` → `main`**.
+2. `git diff --stat origin/<base>...HEAD` и `git diff origin/<base>...HEAD`.
+3. Прочитать **только** файлы из diff.
+4. Чеклист (4 пункта): correctness; git hygiene & secrets; docs drift (если менялось поведение); tests — meaningful gaps only.
+5. Сводка по §**Формат ответа**; при Blocker/Major — предложить [`dnd-mud-fix-plan`](../dnd-mud-fix-plan/SKILL.md).
+6. Оркестратор **не** правит код, пока пользователь не попросил fix.
 
 ## Алгоритм full review (bugbot subagent)
 
-1. Определить **Base Branch** (`dev` по умолчанию).
-2. `git fetch origin && git rebase origin/<base>` (если применимо).
+1. Определить **base branch** (§**Определение base branch**): task-ветка → `dev`, **`dev` → `main`**.
+2. `git fetch origin`; на task-ветке — `git rebase origin/dev` (на `dev` — не rebase на себя).
 3. `git diff --stat origin/<base>...HEAD` — убедиться, что diff не пуст.
 4. Запустить **ровно один** subagent `bugbot` ([`review-bugbot`](~/.cursor/skills-cursor/review-bugbot/SKILL.md)):
    - `readonly: true`, `run_in_background: false`, `description: "Bugbot"`, `subagent_type: "bugbot"`
@@ -68,7 +89,7 @@ Release `dev` → `main`: review **не обязателен** — см. [`dnd-m
 ```text
 Full Repository Path: <absolute repository path>
 Diff: branch changes
-Base Branch: dev
+Base Branch: <main|dev — по §Определение base branch>
 Custom Instructions: <текст из §dnd_mud checklist ниже>
 ```
 
@@ -107,7 +128,7 @@ Language: findings in Russian; file paths and identifiers in English.
 
 ## Формат ответа (оркестратор)
 
-Указать режим: **Light** или **Full**.
+Указать режим: **Light** или **Full** и **base branch** (`dev` или `main`).
 
 **1. Findings** — Blocker, Major, Minor:
 
