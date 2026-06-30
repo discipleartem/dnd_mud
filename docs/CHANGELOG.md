@@ -10,7 +10,7 @@
 ### Changed
 - Pre-commit: `make verify-changed` вместо полного `make check` + `make test`
 - Verify workflow: подзадача → `verify-changed`, конец task-ветки → `verify-scope`, full → CI
-- Тесты: консолидация в `test_feats`, `test_character`, `test_progression`, `test_proficiencies` (327 → ~205); review fix-plan — восстановлены `test_constants`, `test_backgrounds`, `test_races`, `test_scenario`, `test_subclass_trainer`, UI/class features в `test_class_features`
+- Тесты: консолидация в `test_feats`, `test_character`, `test_progression`, `test_proficiencies`; review fix-plan — восстановлены `test_constants`, `test_backgrounds`, `test_races`, `test_scenario`, `test_subclass_trainer`, UI/class features в `test_class_features`
 - `core/character_builder.py` — `ResolvedGrants`, `resolve_creation_grants`, merge helpers для языков/компетентности из черт
 - `tests/test_character_builder.py`
 - `core/catalog_loader.py` — `load_catalog`, `clear_catalog_cache`, `clear_all_catalog_caches`

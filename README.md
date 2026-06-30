@@ -126,7 +126,7 @@ dnd_mud/
 │   ├── dragonborn_pack/             # Пример: manifest + overlay.yaml
 │   └── _examples/example_mod.yaml
 │
-├── tests/                           # Тесты (250 в 34 файлах)
+├── tests/                           # Тесты (pytest)
 │   ├── test_adventure.py
 │   ├── test_character.py
 │   ├── test_difficulty.py

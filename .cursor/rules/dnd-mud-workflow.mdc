@@ -69,3 +69,13 @@ Verify ≠ review. Runtime не нужен для docs-only / rules-only.
 **Review:** skill `dnd-mud-review` — light (оркестратор) или full (локальный bugbot subagent). **GitHub PR Bugbot не используется** — не включать в Cursor dashboard, `.cursor/BUGBOT.md` не вести.
 
 **Cursor IDE (экономия токенов):** Agent Review on Commit — OFF; Include Submodules / Untracked Files — OFF; Default Approach — Quick.
+
+## Динамические метрики
+
+Не хардкодить в rules, skills, docs и ответах агента **точное** число тестов, файлов diff или строк — suite и diff меняются. Получать из команд:
+
+| Метрика | Команда |
+|---------|---------|
+| Число тестов | `pytest --collect-only -q` |
+| Объём diff | `git diff --shortstat origin/<base>...HEAD` |
+| Файлы в diff | `git diff --name-only origin/<base>...HEAD` |

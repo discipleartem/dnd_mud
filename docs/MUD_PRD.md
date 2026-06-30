@@ -5,7 +5,7 @@
 **Стадия:** Pre-Alpha
 **Платформы:** Windows, Linux
 **Инструменты:** Python 3.12, colorama, PyYAML, pyproject.toml
-**БД:** YAML-справочники в `database/` (17 файлов) + JSON для настроек и сейвов
+**БД:** YAML-справочники в `database/` + JSON для настроек и сейвов
 
 ---
 
@@ -426,7 +426,7 @@ dnd_mud/
 │   └── lost_mine.yaml
 ├── mods/                            # примеры модов
 │   └── _examples/example_mod.yaml
-├── tests/                           # 54 теста в 11 файлах
+├── tests/                           # Тесты (pytest)
 │   ├── test_adventure.py
 │   ├── test_character.py
 │   ├── test_difficulty.py

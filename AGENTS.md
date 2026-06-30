@@ -48,7 +48,7 @@ Personal: `git-dev-main-sync` (`~/.cursor/skills/git-dev-main-sync/`).
 |-------|---------|--------------|
 | После подзадачи / перед commit | `make verify-changed` | ruff + black + mypy + pytest **только staged `.py`** |
 | Конец task-ветки, после rebase/merge | `make verify-scope` | то же для diff `origin/dev...HEAD` |
-| CI на PR; release локально | `make verify` | полный `make check` + `make test` (~205 тестов + coverage) |
+| CI на PR; release локально | `make verify` | полный `make check` + `make test` (coverage) |
 
 **Не** запускать `make test` / `make check` после каждой правки — только уровень из таблицы.
 

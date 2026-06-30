@@ -201,7 +201,7 @@ make install-hooks   # или make install — подключает .githooks/pr
 """Тесты UI: выбор персонажа, подрасы, new game, приключения."""
 ```
 
-Покрытие (~205 тестов; ключевые):
+Покрытие (актуальный список — `pytest --collect-only -q`; ключевые файлы):
 - `test_display.py` — формат stats, карточка персонажа, grants на экране расы
 - `test_grants.py` — нормализация grants, legacy features
 - `test_mod_loader.py` — deep-merge overlay модов
@@ -271,7 +271,7 @@ gh pr create --base dev --title "feat: …"   # squash merge
 
 | Канал | Использование |
 |-------|----------------|
-| **Light review** (оркестратор, diff vs `dev`) | Мелкие ветки без `core/`/`database/`/`mods/`/`ui/`/`main.py`, ≤5 файлов, ≤~200 строк |
+| **Light review** (оркестратор, diff vs `dev`) | Узкий diff без `core/`/`database/`/`mods/`/`ui/`/`main.py` — критерии и метрики: skill [`dnd-mud-review`](../.cursor/skills/dnd-mud-review/SKILL.md) (`git diff --shortstat`, `--name-only`) |
 | **Full review** (subagent `bugbot`) | Рискованные изменения; явный запрос «полный review» |
 | GitHub PR Bugbot (авто на push, `.cursor/BUGBOT.md`) | **Нет** |
 
@@ -411,7 +411,7 @@ races:
 - ✅ Flow «Загрузить игру» — заглушка (`errors.load_not_implemented`)
 
 ### Тестирование
-- ✅ 250 тестов (см. выше)
+- ✅ pytest suite (`make test`; число кейсов: `pytest --collect-only -q`)
 - ⏳ Backlog (добавляются по необходимости, см. [философию](#философия) выше):
   - E2E smoke через `python main.py` (ручная проверка меню)
 

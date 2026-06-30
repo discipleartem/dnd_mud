@@ -48,6 +48,8 @@ which python   # must point to .venv/bin/python
 
 **Пропустить runtime**, если только docs, `.cursor/`, `AGENTS.md`, workflows — без изменений кода.
 
+Число тестов в отчётах — только из `pytest --collect-only -q`, не из docs.
+
 ## Чеклист Before finishing
 
 - [ ] `make verify-scope` прошёл (если был код)
