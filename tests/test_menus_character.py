@@ -552,6 +552,26 @@ def test_characters_menu_shows_hub_options(
     assert "Удалить всех персонажей" in output
 
 
+def test_characters_menu_corrupt_warning_shown_once_per_visit(
+    monkeypatch, capsys, ru_strings, patch_int_input
+):
+    """Предупреждение о битых сейвах показывается один раз за визит меню."""
+    monkeypatch.setattr(_deps, "load_characters", lambda: [])
+    monkeypatch.setattr(_deps, "pop_corrupt_save_warnings", lambda: ["Broken"])
+    monkeypatch.setattr(
+        _creation_steps,
+        "show_create_character_flow",
+        lambda _strings, _language: None,
+    )
+    patch_int_input(monkeypatch, [1, 0])
+
+    characters_menu.show_characters_menu(ru_strings)
+    output = capsys.readouterr().out
+
+    assert output.count("Не удалось загрузить сохранения") == 1
+    assert "Broken" in output
+
+
 def test_characters_menu_delete_one_confirmed(
     monkeypatch, ru_strings, patch_int_input
 ):

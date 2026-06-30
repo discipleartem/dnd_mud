@@ -14,6 +14,7 @@ from ui.menus._common import (
     _print_screen_header,
     _run_numbered_menu,
 )
+from ui.menus._corrupt_saves import show_corrupt_save_warnings_if_any
 from ui.menus._display import _print_characters_list
 from ui.menus.scenario_flow import run_scenario
 
@@ -155,9 +156,13 @@ def show_new_game_flow(
 ) -> None:
     """Flow «Новая игра»: персонаж → приключение."""
     language = settings["language"]
+    corrupt_warning_shown = False
 
     while True:
         characters = _deps.load_characters()
+        corrupt_warning_shown = show_corrupt_save_warnings_if_any(
+            strings, already_shown=corrupt_warning_shown
+        )
         if not characters:
             character = _creation_steps.show_create_character_flow(
                 strings, language

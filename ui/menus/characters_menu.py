@@ -13,6 +13,7 @@ from ui.menus._common import (
     _print_success_and_wait,
     _run_numbered_menu,
 )
+from ui.menus._corrupt_saves import show_corrupt_save_warnings_if_any
 from ui.menus._display import _print_characters_list
 
 
@@ -100,17 +101,9 @@ def show_characters_menu(
     corrupt_warning_shown = False
     while True:
         characters = _deps.load_characters()
-        corrupt_slugs = _deps.pop_corrupt_save_warnings()
-        if corrupt_slugs and not corrupt_warning_shown:
-            corrupt_warning_shown = True
-            names = ", ".join(corrupt_slugs)
-            warning = get_string(
-                strings,
-                "characters_menu.corrupt_save_warning",
-                names=names,
-            )
-            print(f"  {Fore.RED}{warning}{Style.RESET_ALL}")
-            print()
+        corrupt_warning_shown = show_corrupt_save_warnings_if_any(
+            strings, already_shown=corrupt_warning_shown
+        )
         has_characters = bool(characters)
 
         _print_screen_header(get_string(strings, "characters_menu.caption"))

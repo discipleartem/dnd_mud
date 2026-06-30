@@ -19,6 +19,16 @@ def _reset_catalog_caches() -> Generator[None, None, None]:
     clear_all_catalog_caches()
 
 
+@pytest.fixture(autouse=True)
+def _reset_corrupt_save_warnings() -> Generator[None, None, None]:
+    """Сбросить очередь предупреждений о битых сейвах между тестами."""
+    from core.character_storage import pop_corrupt_save_warnings
+
+    pop_corrupt_save_warnings()
+    yield
+    pop_corrupt_save_warnings()
+
+
 @pytest.fixture
 def ru_strings() -> dict[str, Any]:
     """Строки локализации ru."""
