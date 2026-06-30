@@ -173,7 +173,7 @@ character:
   languages_caption: "LANGUAGE SELECTION"
   languages_fixed: "Racial languages: {list}"
   languages_known: "Known languages: {list}"
-  languages_pick_prompt: "Language ({current}/{total}): "
+  languages_pick_prompt: "Racial language ({current}/{total}): "
   languages_taken_suffix: "(already known)"
   languages_pool_empty: "No languages available to choose."
   background_caption: "BACKGROUND SELECTION"

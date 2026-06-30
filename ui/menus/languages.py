@@ -131,8 +131,6 @@ def select_creation_languages(
     bg_mechanics = get_background_language_choice(background_id)
 
     racial_pick_total = sum(int(m.get("count", 0)) for m, _ in racial_choices)
-    bg_pick_total = int(bg_mechanics.get("count", 0)) if bg_mechanics else 0
-    pick_total = racial_pick_total + bg_pick_total
 
     _print_screen_header(get_string(strings, "character.languages_caption"))
 
@@ -161,7 +159,7 @@ def select_creation_languages(
             language,
             prompt_key="character.languages_pick_prompt",
             pick_offset=pick_offset,
-            pick_total=pick_total,
+            pick_total=racial_pick_total,
         )
         if picked is None:
             return None
@@ -177,8 +175,6 @@ def select_creation_languages(
                 result,
                 language,
                 prompt_key="character.background_languages_prompt",
-                pick_offset=pick_offset,
-                pick_total=pick_total,
             )
             if picked is None:
                 return None

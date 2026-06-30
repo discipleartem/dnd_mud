@@ -173,7 +173,7 @@ character:
   languages_caption: "ВЫБОР ЯЗЫКОВ"
   languages_fixed: "Языки расы: {list}"
   languages_known: "Известные языки: {list}"
-  languages_pick_prompt: "Язык ({current}/{total}): "
+  languages_pick_prompt: "Язык расы ({current}/{total}): "
   languages_taken_suffix: "(уже знаете)"
   languages_pool_empty: "Нет доступных языков для выбора."
   background_caption: "ВЫБОР ПРЕДЫСТОРИИ"
