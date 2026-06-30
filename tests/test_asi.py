@@ -1,5 +1,7 @@
 """Тесты увеличения характеристик (ASI)."""
 
+import pytest
+
 from core.asi import (
     apply_asi_one_two,
     apply_asi_two_one,
@@ -19,15 +21,20 @@ def test_feat_id_from_asi_choice():
     assert feat_id_from_asi_choice("asi") is None
 
 
-def test_class_grants_asi_at_level_fighter():
-    assert class_grants_asi_at_level("fighter", 4)
-    assert class_grants_asi_at_level("fighter", 6)
-    assert not class_grants_asi_at_level("fighter", 5)
-
-
-def test_class_grants_asi_at_level_rogue():
-    assert class_grants_asi_at_level("rogue", 10)
-    assert not class_grants_asi_at_level("rogue", 9)
+@pytest.mark.parametrize(
+    "class_id,level,expected",
+    [
+        ("fighter", 4, True),
+        ("fighter", 6, True),
+        ("fighter", 5, False),
+        ("rogue", 10, True),
+        ("rogue", 9, False),
+    ],
+)
+def test_class_grants_asi_at_level(
+    class_id: str, level: int, expected: bool
+) -> None:
+    assert class_grants_asi_at_level(class_id, level) is expected
 
 
 def test_apply_asi_two_one_and_cap():
@@ -43,18 +50,20 @@ def test_apply_asi_one_two():
     assert updated["dexterity"] == 13
 
 
-def test_con_hp_bonus_from_asi():
-    old = {"constitution": 14}
-    new = {"constitution": 16}
-    assert con_hp_bonus_from_asi(old, new, 8) == 8
-
-
-def test_con_hp_bonus_from_asi_uses_reached_level():
-    """При левелапе 7→8 передаётся new_level=8, не текущий char.level=7."""
-    old = {"constitution": 13}
-    new = {"constitution": 14}
-    assert con_hp_bonus_from_asi(old, new, 7) == 7
-    assert con_hp_bonus_from_asi(old, new, 8) == 8
+@pytest.mark.parametrize(
+    "old_con,new_con,level,expected_bonus",
+    [
+        (14, 16, 8, 8),
+        (13, 14, 7, 7),
+        (13, 14, 8, 8),
+    ],
+)
+def test_con_hp_bonus_from_asi(
+    old_con: int, new_con: int, level: int, expected_bonus: int
+) -> None:
+    old = {"constitution": old_con}
+    new = {"constitution": new_con}
+    assert con_hp_bonus_from_asi(old, new, level) == expected_bonus
 
 
 def test_pending_asi_at_level():

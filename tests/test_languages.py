@@ -2,6 +2,8 @@
 
 import re
 
+import pytest
+
 from core.languages import (
     get_fixed_racial_languages,
     get_racial_language_choices,
@@ -75,56 +77,38 @@ def test_exotic_pool_only_with_explicit_spec():
     assert "abyssal" in exotic_pool
 
 
-def test_language_pick_prompts_variant_human_noble(monkeypatch, ru_strings):
-    """Промпты: раса (1/1) и предыстория (1/1), без глобального (2/2)."""
-    calls: list[tuple[object, ...]] = []
-
-    def fake_get_int_input(
-        prompt: str, *args: object, **kwargs: object
-    ) -> int:
-        calls.append((prompt, args, kwargs))
-        values = [1, 1]
-        return values[len(calls) - 1]
-
-    monkeypatch.setattr("ui.menus._deps.get_int_input", fake_get_int_input)
-    result = select_creation_languages(
-        ru_strings, "human", "variant_human", "noble", "ru"
-    )
-    assert result is not None
-    prompts = _pick_prompts_from_calls(calls)
-    assert any("расы (1/1)" in p for p in prompts)
-    assert any("предыстории (1/1)" in p for p in prompts)
-    assert not any("предыстории (2/2)" in p for p in prompts)
-    assert not any("Язык (1/2)" in p for p in prompts)
-
-
-def test_language_pick_prompts_variant_human_acolyte(monkeypatch, ru_strings):
-    """Прислужник: раса (1/1), предыстория (1/2)(2/2), без (1/3)."""
-    calls: list[tuple[object, ...]] = []
-
-    def fake_get_int_input(
-        prompt: str, *args: object, **kwargs: object
-    ) -> int:
-        calls.append((prompt, args, kwargs))
-        return 1
-
-    monkeypatch.setattr("ui.menus._deps.get_int_input", fake_get_int_input)
-    result = select_creation_languages(
-        ru_strings, "human", "variant_human", "acolyte", "ru"
-    )
-    assert result is not None
-    prompts = _pick_prompts_from_calls(calls)
-    assert any("расы (1/1)" in p for p in prompts)
-    assert any("предыстории (1/2)" in p for p in prompts)
-    assert any("предыстории (2/2)" in p for p in prompts)
-    assert not any("(1/3)" in p for p in prompts)
-    assert not any("(3/3)" in p for p in prompts)
-
-
-def test_language_pick_prompts_variant_human_charlatan(
-    monkeypatch, ru_strings
+@pytest.mark.parametrize(
+    "background,expected_checks",
+    [
+        (
+            "noble",
+            [
+                "расы (1/1)",
+                "предыстории (1/1)",
+                "not:предыстории (2/2)",
+                "not:Язык (1/2)",
+            ],
+        ),
+        (
+            "acolyte",
+            [
+                "расы (1/1)",
+                "предыстории (1/2)",
+                "предыстории (2/2)",
+                "not:(1/3)",
+                "not:(3/3)",
+            ],
+        ),
+        (
+            "charlatan",
+            ["len:1", "расы (1/1)", "not:предыстории"],
+        ),
+    ],
+)
+def test_language_pick_prompts_variant_human(
+    monkeypatch, ru_strings, background, expected_checks
 ):
-    """Шарлатан без языка предыстории — только расовый промпт."""
+    """Промпты выбора языков для variant human по предыстории."""
     calls: list[tuple[object, ...]] = []
 
     def fake_get_int_input(
@@ -135,10 +119,14 @@ def test_language_pick_prompts_variant_human_charlatan(
 
     monkeypatch.setattr("ui.menus._deps.get_int_input", fake_get_int_input)
     result = select_creation_languages(
-        ru_strings, "human", "variant_human", "charlatan", "ru"
+        ru_strings, "human", "variant_human", background, "ru"
     )
     assert result is not None
     prompts = _pick_prompts_from_calls(calls)
-    assert len(prompts) == 1
-    assert "расы (1/1)" in prompts[0]
-    assert not any("предыстории" in p for p in prompts)
+    for check in expected_checks:
+        if check.startswith("not:"):
+            assert not any(check[4:] in p for p in prompts)
+        elif check.startswith("len:"):
+            assert len(prompts) == int(check[4:])
+        else:
+            assert any(check in p for p in prompts)

@@ -1,12 +1,13 @@
 """Тесты прогрессии и потолка уровня."""
 
 from collections.abc import Callable
+from dataclasses import replace
 from typing import Any
 
 import pytest
 
 from core.levels import MAX_CHARACTER_LEVEL, clamp_level
-from core.models import Character
+from core.models import Adventure, Character
 from core.progression import (
     apply_experience,
     grant_experience,
@@ -14,6 +15,8 @@ from core.progression import (
     max_hp_for_level,
     resolve_pending_level_ups,
 )
+from ui.menus import level_up as level_up_menu
+from ui.menus.scenario_flow import run_scenario
 
 
 def test_character_level_cap_and_xp() -> None:
@@ -52,18 +55,9 @@ def test_max_hp_for_level_with_bonuses(
 
 def test_resolve_pending_level_ups_matches_apply_experience(
     monkeypatch: pytest.MonkeyPatch,
+    fighter_l1_hardcore: Character,
 ) -> None:
-    char = Character(
-        name="Hero",
-        race="human",
-        class_id="fighter",
-        level=1,
-        stats={"constitution": 14},
-        current_hp=7,
-        max_hp=7,
-        experience=0,
-        difficulty="hardcore",
-    )
+    char = fighter_l1_hardcore
 
     def patch_rolls(values: list[int]) -> None:
         rolls = iter(values)
@@ -156,48 +150,6 @@ def test_resolve_pending_level_ups_applies_stored_feat(
     assert extra_assert(updated)
 
 
-def test_apply_experience_levels_up_and_caps_hp() -> None:
-    char = Character(
-        name="Hero",
-        race="human",
-        class_id="fighter",
-        level=1,
-        stats={"constitution": 14},
-        current_hp=12,
-        max_hp=12,
-        experience=0,
-        difficulty="normal",
-    )
-    updated = apply_experience(char, 900)
-    assert updated.level == 3
-    assert updated.max_hp == 28
-    assert updated.current_hp == 28
-
-
-def test_apply_experience_hardcore_uses_rolls(
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    rolls = iter([8, 3])
-    monkeypatch.setattr(
-        "core.progression.roll",
-        lambda count, sides, modifier=0: next(rolls) + modifier,
-    )
-    char = Character(
-        name="Hero",
-        race="human",
-        class_id="fighter",
-        level=1,
-        stats={"constitution": 14},
-        current_hp=7,
-        max_hp=7,
-        experience=0,
-        difficulty="hardcore",
-    )
-    updated = apply_experience(char, 900)
-    assert updated.level == 3
-    assert updated.max_hp == 22
-
-
 def test_apply_experience_does_not_exceed_level_ten() -> None:
     char = Character(
         name="Hero",
@@ -212,3 +164,88 @@ def test_apply_experience_does_not_exceed_level_ten() -> None:
     updated = apply_experience(char, 50_000)
     assert updated.level == 10
     assert updated.experience == 114_000
+
+
+# --- UI smoke ---
+
+
+def test_run_pending_level_ups_preview_matches_applied_hp(
+    monkeypatch: pytest.MonkeyPatch,
+    patch_level_up_ui: None,
+    fighter_l3: Character,
+) -> None:
+    """Превью max HP учитывает con_bonus и tough_bonus."""
+    char = fighter_l3
+    preview_gain: list[int] = []
+
+    def capture_screen(strings, character, new_level, breakdown, extra_hp=0):
+        preview_gain.append(breakdown.total + extra_hp)
+
+    def fake_asi(strings, character, new_level, language="ru"):
+        stats = character.stats.copy()
+        stats["constitution"] = 16
+        new_feats = list(character.feat_ids) + ["tough"]
+        updated = replace(character, stats=stats, feat_ids=new_feats)
+        return updated, stats, new_feats, {}, "feat:tough"
+
+    monkeypatch.setattr(level_up_menu, "select_level_up_feat_or_asi", fake_asi)
+    monkeypatch.setattr(
+        level_up_menu, "_print_level_up_screen", capture_screen
+    )
+
+    result = level_up_menu.run_pending_level_ups({}, char)
+
+    assert preview_gain == [result.max_hp - char.max_hp]
+
+
+def test_run_scenario_grant_xp_levels_character(
+    monkeypatch: pytest.MonkeyPatch,
+    ru_strings: dict[str, Any],
+    patch_int_input: Callable[[pytest.MonkeyPatch, list[int]], None],
+) -> None:
+    """grant_xp в сценарии открывает экраны повышения уровня."""
+    rolls = iter([8, 3])
+
+    def fake_roll(count: int, sides: int, modifier: int = 0) -> int:
+        return next(rolls) + modifier
+
+    monkeypatch.setattr("core.progression.roll", fake_roll)
+
+    character = Character(
+        name="Hero",
+        race="human",
+        class_id="fighter",
+        level=1,
+        stats={"constitution": 14},
+        current_hp=12,
+        max_hp=12,
+        save_slug="hero",
+        difficulty="hardcore",
+    )
+    adventure = Adventure(
+        id="test",
+        name={"ru": "Тест"},
+        script_file="adventures/tutorial.yaml",
+    )
+
+    saved: list[Character] = []
+
+    def fake_update(char: Character) -> None:
+        saved.append(char)
+
+    monkeypatch.setattr("ui.menus.scenario_flow.update_character", fake_update)
+    monkeypatch.setattr(
+        "ui.menus.scenario_flow.assign_subclass_from_menu",
+        lambda *args, **kwargs: None,
+    )
+    monkeypatch.setattr(
+        "ui.menus.level_up._press_enter",
+        lambda strings: None,
+    )
+    patch_int_input(monkeypatch, [1, 1])
+
+    result = run_scenario(adventure, character, ru_strings, "ru")
+
+    assert result.level == 3
+    assert result.experience == 900
+    assert result.max_hp == 27
