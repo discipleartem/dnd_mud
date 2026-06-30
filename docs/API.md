@@ -383,42 +383,6 @@ Re-export: `core.character`.
 
 ---
 
-## core.checks — Проверки характеристик
-
-```python
-roll_d20(*, advantage=False, disadvantage=False) -> int
-ability_check_modifier(character, ability, *, proficient=False) -> int
-skill_check_modifier(character, skill_id) -> int
-saving_throw_modifier(character, ability) -> int
-passive_skill(character, skill_id) -> int
-ability_check(character, ability, dc, *, proficient=False, advantage=False, disadvantage=False) -> tuple[int, bool]
-skill_check(character, skill_id, dc, *, advantage=False, disadvantage=False) -> tuple[int, bool]
-saving_throw(character, ability, dc, *, advantage=False, disadvantage=False) -> tuple[int, bool]
-```
-
-Бонус мастерства — `core.constants.proficiency_bonus(level)`.
-
----
-
-## core.combat — Атака и КД
-
-Параметры `armor_id` / `weapon_id` передаются явно (инвентарь UI — Phase 2).
-
-```python
-attack_roll_modifier(character, weapon_id, ability_mod=None) -> int
-armor_wearing_penalty(character, armor_id) -> bool
-compute_ac(character, armor_id=None, *, shield=False) -> int
-tool_check_modifier(character, tool_id, ability_mod) -> int
-```
-
-`armor_wearing_penalty` — `True`, если доспех или щит (`armor_id="shield"`) без владения: помеха на Str/Dex checks/saves/attacks по PHB. Запрет заклинаний — Phase 2.
-
-`compute_ac`: щит (`shield=True`) всегда даёт **+2 КД**; владение щитом на КД не влияет.
-
-`build_fixed_proficiencies`: инструменты с `choice: true` в YAML **не** попадают в fixed-список — только через `get_proficiency_choices()` и UI.
-
----
-
 ### Формат saves/characters/{save_slug}.json
 
 ```json

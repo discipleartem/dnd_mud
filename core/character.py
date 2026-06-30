@@ -3,7 +3,6 @@
 Фасад: re-export публичного API из подмодулей персонажа.
 """
 
-from core.abilities import ability_ids, skill_ids
 from core.adventure import load_adventures
 from core.backgrounds import load_background_full, load_backgrounds
 from core.character_storage import (
@@ -11,7 +10,6 @@ from core.character_storage import (
     delete_character,
     load_characters,
     save_character,
-    starting_max_hp,
     update_character,
 )
 from core.classes import load_class_full, load_classes, load_subclasses
@@ -56,7 +54,6 @@ from core.stats import (
     STANDARD_ARRAY_MIN,
     STAT_NAMES,
     apply_bonuses_to_stats,
-    apply_racial_bonuses_to_stats,
     can_assign_point_buy_value,
     generate_stats_point_buy,
     generate_stats_random,
@@ -79,7 +76,6 @@ __all__ = [
     "STANDARD_ARRAY_MIN",
     "STAT_NAMES",
     "apply_bonuses_to_stats",
-    "apply_racial_bonuses_to_stats",
     "build_bonuses_from_choices",
     "can_assign_point_buy_value",
     "delete_all_characters",
@@ -94,7 +90,6 @@ __all__ = [
     "get_expertise_grants",
     "apply_racial_proficiencies",
     "available_skills",
-    "ability_ids",
     "build_fixed_proficiencies",
     "get_proficiency_choices",
     "has_armor_proficiency",
@@ -102,7 +97,6 @@ __all__ = [
     "has_weapon_proficiency",
     "merge_proficiency_tokens",
     "PHB_SKILL_IDS",
-    "skill_ids",
     "get_effective_race_bonuses",
     "get_race_bonuses",
     "has_choice_ability_bonuses",
@@ -122,7 +116,6 @@ __all__ = [
     "remaining_standard_array_pool",
     "roll_ability_score",
     "save_character",
-    "starting_max_hp",
     "update_character",
     "validate_final_stats",
     "validate_point_buy_finish",

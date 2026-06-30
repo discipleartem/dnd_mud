@@ -14,26 +14,6 @@ from core.subclasses import start_level_for_difficulty
 from core.types import GameDifficulty, StatMap
 
 
-def starting_max_hp(
-    class_id: str,
-    stats: StatMap,
-    difficulty: GameDifficulty = "normal",
-    race_id: str | None = None,
-    subrace_id: str | None = None,
-    feat_ids: list[str] | None = None,
-) -> int:
-    """Максимум хитов на 1 уровне с учётом режима сложности."""
-    return max_hp_for_level(
-        class_id,
-        stats,
-        1,
-        difficulty,
-        race_id,
-        subrace_id,
-        feat_ids,
-    )
-
-
 def save_character(
     name: str,
     race_id: str,

@@ -48,22 +48,6 @@ def get_language_name(lang_id: str, language: str = "ru") -> str:
     return lang_id
 
 
-def _collect_features(
-    race_id: str, subrace_id: str | None
-) -> list[dict[str, Any]]:
-    """Особенности расы и подрасы для чтения language-механик."""
-    race_info, subrace_info = get_race_and_subrace(race_id, subrace_id)
-    features: list[dict[str, Any]] = []
-    for feat in race_info.get("features", []):
-        if isinstance(feat, dict):
-            features.append(feat)
-    if subrace_id and subrace_info:
-        for feat in subrace_info.get("features", []):
-            if isinstance(feat, dict):
-                features.append(feat)
-    return features
-
-
 def get_fixed_racial_languages(
     race_id: str, subrace_id: str | None = None
 ) -> list[str]:

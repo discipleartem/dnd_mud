@@ -37,12 +37,3 @@ def hit_point_bonus_sources_from_features(
         name = str(feat.get("name", "")).strip() or "?"
         sources.append(HpBonusSource(name=name, amount=amount))
     return sources
-
-
-def hit_point_bonus_per_level_from_features(
-    features: list[dict[str, Any]],
-) -> int:
-    """Сумма бонусов HP за уровень из списка features (раса, черта)."""
-    return sum(
-        s.amount for s in hit_point_bonus_sources_from_features(features)
-    )

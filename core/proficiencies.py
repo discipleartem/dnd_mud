@@ -12,7 +12,7 @@ from core.equipment import (
 )
 from core.feats import get_feat_proficiency_grants
 from core.models import Character
-from core.skills import get_merged_race_features
+from core.races import collect_race_features
 
 # Категории доспехов: light -> light_armor в races, normalize both
 ARMOR_ALIASES: dict[str, str] = {
@@ -210,7 +210,7 @@ def get_racial_proficiency_tokens(
     subrace_id: str | None = None,
 ) -> tuple[list[str], list[str], list[str], list[ProficiencyChoice]]:
     """Расовые владения из features."""
-    features = get_merged_race_features(race_id, subrace_id)
+    features = collect_race_features(race_id, subrace_id)
     return _collect_from_features(features, level=99, require_level=False)
 
 

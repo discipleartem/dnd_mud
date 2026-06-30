@@ -33,13 +33,11 @@ __all__ = [
     "feat_meets_requirements",
     "feat_summary_description",
     "get_feat_expertise_ids",
-    "get_feat_hp_bonus_per_level",
     "get_feat_hp_bonus_sources",
     "get_feat_language_ids",
     "get_feat_proficiency_grants",
     "get_feat_skill_ids",
     "get_race_feat_grants",
-    "list_available_feats",
     "list_feats_for_selection",
     "load_feat",
     "load_feats",
@@ -141,10 +139,10 @@ def get_race_feat_grants(
     race_id: str, subrace_id: str | None = None
 ) -> list[FeatGrant]:
     """Слоты выбора черты из features расы/подрасы."""
-    from core.skills import get_merged_race_features
+    from core.races import collect_race_features
 
     grants: list[FeatGrant] = []
-    for feat in get_merged_race_features(race_id, subrace_id):
+    for feat in collect_race_features(race_id, subrace_id):
         if feat.get("type") != "feat":
             continue
         mechanics = feat.get("mechanics", {})
@@ -281,11 +279,6 @@ def get_feat_hp_bonus_sources(feat_ids: list[str]) -> list[HpBonusSource]:
     return sources
 
 
-def get_feat_hp_bonus_per_level(feat_ids: list[str]) -> int:
-    """Дополнительные HP за уровень из выбранных черт."""
-    return sum(s.amount for s in get_feat_hp_bonus_sources(feat_ids))
-
-
 def feat_has_requirements(feat_id: str) -> bool:
     """Есть ли у черты явные требования в YAML."""
     feat = load_feat(feat_id)
@@ -309,12 +302,3 @@ def list_feats_for_selection(
         elif feat_has_requirements(feat_id):
             blocked.append(feat)
     return eligible, blocked
-
-
-def list_available_feats(
-    ctx: FeatRequirementContext,
-    existing_ids: list[str],
-) -> list[dict[str, Any]]:
-    """Черты, доступные для выбора (требования выполнены)."""
-    eligible, _ = list_feats_for_selection(ctx, existing_ids)
-    return eligible

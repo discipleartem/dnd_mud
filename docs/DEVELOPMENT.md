@@ -97,8 +97,7 @@ dnd_mud/
 │   │   ├── settings.json.example
 │   │   ├── mods_state.json  # Включённые моды
 │   │   └── languages.yaml
-│   ├── _future/               # Справочники Phase 2
-│   └── strings/
+│   ├── strings/
 │       ├── ru.yaml
 │       └── en.yaml
 ├── saves/                   # Пользовательские данные (gitignored)
@@ -107,8 +106,7 @@ dnd_mud/
 │   ├── tutorial.yaml
 │   └── lost_mine.yaml
 ├── mods/
-│   ├── dragonborn_pack/     # Пример mod overlay (manifest + overlay.yaml)
-│   └── _examples/example_mod.yaml
+│   └── dragonborn_pack/     # Пример mod overlay (manifest + overlay.yaml)
 ├── tests/                   # pytest (261 тест в 36 файлах)
 │   ├── conftest.py
 │   ├── test_adventure.py
@@ -365,7 +363,6 @@ API: `core/character.py`, UI: `show_stats_generation_flow` в `ui/menus/stats/st
 - ✅ Справочники: `races/races.yaml`, `classes/classes.yaml`, `content/adventures.yaml`
 - ✅ JSON: `database/core/settings.json`, `saves/characters/*.json` (с `schema_version: 1`)
 - ✅ Локализация: `strings/ru.yaml`, `strings/en.yaml`
-- ⏳ Справочники Phase 2 в `database/_future/` — не загружаются runtime
 
 ### Не реализовано
 - ❌ Gating модов по режиму (`requires_game_difficulty` в manifest)

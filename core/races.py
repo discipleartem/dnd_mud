@@ -181,14 +181,6 @@ def get_racial_hp_bonus_sources(
     )
 
 
-def get_racial_hp_bonus_per_level(
-    race_id: str, subrace_id: str | None = None
-) -> int:
-    """Дополнительные HP за каждый уровень (hit_point_bonus, per_level)."""
-    sources = get_racial_hp_bonus_sources(race_id, subrace_id)
-    return sum(s.amount for s in sources)
-
-
 def get_effective_race_bonuses(
     race_id: str,
     subrace_id: str | None = None,

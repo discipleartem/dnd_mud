@@ -33,13 +33,6 @@ def get_class_skill_config(class_id: str) -> tuple[list[str], int]:
     return pool, count
 
 
-def get_merged_race_features(
-    race_id: str, subrace_id: str | None = None
-) -> list[dict[str, Any]]:
-    """Объединить features базовой расы и подрасы (legacy-вид из grants)."""
-    return collect_race_features(race_id, subrace_id)
-
-
 def _skill_proficiency_mechanics(
     feat: dict[str, Any],
 ) -> dict[str, Any] | None:

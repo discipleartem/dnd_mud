@@ -3,6 +3,7 @@
 import json
 
 import core.character as character_mod
+from core.progression import max_hp_for_level
 
 
 def test_variant_human_does_not_inherit_base_bonuses():
@@ -142,7 +143,7 @@ def test_save_easy_starts_at_level_three(characters_dir):
     )
     assert saved.level == 3
     assert saved.subclass_id == "champion"
-    assert saved.max_hp > character_mod.starting_max_hp("fighter", stats)
+    assert saved.max_hp > max_hp_for_level("fighter", stats, 1)
 
 
 def test_save_normal_starts_at_level_one_with_subclass(characters_dir):
