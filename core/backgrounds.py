@@ -4,9 +4,9 @@ from functools import lru_cache
 from pathlib import Path
 from typing import Any
 
+from core.catalog_loader import load_catalog
 from core.grants import grants_from_entity, grants_of_type
 from core.localization import resolve_localized_text
-from core.mod_loader import load_merged_catalog
 
 BACKGROUNDS_FILE = Path("database/backgrounds/backgrounds.yaml")
 
@@ -14,7 +14,7 @@ BACKGROUNDS_FILE = Path("database/backgrounds/backgrounds.yaml")
 @lru_cache(maxsize=1)
 def _load_backgrounds_yaml() -> dict[str, Any]:
     """Загрузить данные предысторий."""
-    return load_merged_catalog(str(BACKGROUNDS_FILE), "backgrounds")
+    return load_catalog(BACKGROUNDS_FILE, "backgrounds")
 
 
 def _background_info(background_id: str) -> dict[str, Any]:

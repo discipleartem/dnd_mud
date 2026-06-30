@@ -4,7 +4,7 @@ from functools import lru_cache
 from pathlib import Path
 from typing import Any
 
-from core.io import load_yaml
+from core.catalog_loader import load_catalog
 
 ABILITIES_FILE = Path("database/core/abilities.yaml")
 SKILLS_FILE = Path("database/core/skills.yaml")
@@ -43,21 +43,13 @@ _FALLBACK_SKILL_IDS: tuple[str, ...] = (
 @lru_cache(maxsize=1)
 def _load_abilities_yaml() -> dict[str, Any]:
     """Загрузить abilities из YAML."""
-    data = load_yaml(ABILITIES_FILE)
-    abilities = data.get("abilities", {})
-    if isinstance(abilities, dict):
-        return abilities
-    return {}
+    return load_catalog(ABILITIES_FILE, "abilities")
 
 
 @lru_cache(maxsize=1)
 def _load_skills_yaml() -> dict[str, Any]:
     """Загрузить skills из YAML."""
-    data = load_yaml(SKILLS_FILE)
-    skills = data.get("skills", {})
-    if isinstance(skills, dict):
-        return skills
-    return {}
+    return load_catalog(SKILLS_FILE, "skills")
 
 
 def ability_ids() -> tuple[str, ...]:

@@ -1,11 +1,10 @@
 """Сохранение и загрузка персонажей в JSON."""
 
-import json
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
-from core.io import save_json
+from core.io import load_json, save_json
 from core.levels import clamp_level
 from core.models import Character
 from core.progression import max_hp_for_level
@@ -178,16 +177,15 @@ def _save_character_file(character: Character) -> None:
 def _load_character_file(path: Path) -> Character | None:
     """Загрузить одного персонажа из JSON-файла."""
     try:
-        with open(path, encoding="utf-8") as f:
-            data = json.load(f)
-        if not isinstance(data, dict) or not data.get("name"):
+        data = load_json(path)
+        if not data.get("name"):
             return None
 
         character = Character.from_dict(data)
         if not character.save_slug:
             character.save_slug = path.stem
         return character
-    except (json.JSONDecodeError, OSError):
+    except OSError:
         return None
 
 

@@ -4,7 +4,7 @@ from functools import lru_cache
 from pathlib import Path
 from typing import Any
 
-from core.io import load_yaml
+from core.catalog_loader import load_catalog
 from core.levels import clamp_level
 
 CONSTANTS_FILE = Path("database/core/constants.yaml")
@@ -37,11 +37,7 @@ _DEFAULT_PROFICIENCY_BONUS: dict[int, int] = {
 @lru_cache(maxsize=1)
 def _load_constants() -> dict[str, Any]:
     """Загрузить блок constants из YAML."""
-    data = load_yaml(CONSTANTS_FILE)
-    constants = data.get("constants", {})
-    if isinstance(constants, dict):
-        return constants
-    return {}
+    return load_catalog(CONSTANTS_FILE, "constants")
 
 
 def proficiency_bonus(level: int) -> int:

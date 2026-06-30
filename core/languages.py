@@ -4,8 +4,8 @@ from functools import lru_cache
 from pathlib import Path
 from typing import Any, Literal
 
+from core.catalog_loader import load_catalog
 from core.grants import grants_from_entity, grants_of_type, inherit_flags
-from core.io import load_yaml
 from core.localization import resolve_localized_text
 from core.races import collect_race_grants, get_race_and_subrace
 
@@ -16,11 +16,7 @@ LanguagePool = Literal["common", "exotic", "any"]
 @lru_cache(maxsize=1)
 def _load_languages_yaml() -> dict[str, Any]:
     """Загрузить каталог языков."""
-    data = load_yaml(LANGUAGES_FILE)
-    languages = data.get("languages", {})
-    if isinstance(languages, dict):
-        return languages
-    return {}
+    return load_catalog(LANGUAGES_FILE, "languages")
 
 
 def load_languages(language: str = "ru") -> list[dict[str, Any]]:

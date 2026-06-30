@@ -4,7 +4,7 @@ from functools import lru_cache
 from pathlib import Path
 from typing import Any
 
-from core.io import load_yaml
+from core.catalog_loader import load_catalog
 from core.localization import get_string, resolve_localized_text
 from core.types import StringsDict
 
@@ -37,30 +37,22 @@ def _item_name(name: Any, language: str, fallback: str) -> str:
 
 @lru_cache(maxsize=1)
 def _load_weapons() -> dict[str, Any]:
-    data = load_yaml(WEAPONS_FILE)
-    weapons = data.get("weapons", {})
-    return weapons if isinstance(weapons, dict) else {}
+    return load_catalog(WEAPONS_FILE, "weapons")
 
 
 @lru_cache(maxsize=1)
 def _load_armor() -> dict[str, Any]:
-    data = load_yaml(ARMOR_FILE)
-    armor = data.get("armor", {})
-    return armor if isinstance(armor, dict) else {}
+    return load_catalog(ARMOR_FILE, "armor")
 
 
 @lru_cache(maxsize=1)
 def _load_tools() -> dict[str, Any]:
-    data = load_yaml(TOOLS_FILE)
-    tools = data.get("tools", {})
-    return tools if isinstance(tools, dict) else {}
+    return load_catalog(TOOLS_FILE, "tools")
 
 
 @lru_cache(maxsize=1)
 def _load_equipment_items() -> dict[str, Any]:
-    data = load_yaml(EQUIPMENT_FILE)
-    items = data.get("equipment", {})
-    return items if isinstance(items, dict) else {}
+    return load_catalog(EQUIPMENT_FILE, "equipment")
 
 
 def all_weapon_ids() -> list[str]:

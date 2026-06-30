@@ -4,7 +4,7 @@ from functools import lru_cache
 from pathlib import Path
 from typing import Any
 
-from core.io import load_yaml
+from core.catalog_loader import load_catalog
 from core.localization import resolve_localized_text
 
 CLASSES_FILE = Path("database/classes/classes.yaml")
@@ -14,11 +14,7 @@ DEFAULT_SUBCLASS_CHOICE_LEVEL = 3
 @lru_cache(maxsize=1)
 def _load_classes_yaml() -> dict[str, Any]:
     """Загрузить и закэшировать данные классов из YAML."""
-    data = load_yaml(CLASSES_FILE)
-    classes = data.get("classes", {})
-    if isinstance(classes, dict):
-        return classes
-    return {}
+    return load_catalog(CLASSES_FILE, "classes")
 
 
 def get_class_dict(class_id: str) -> dict[str, Any]:

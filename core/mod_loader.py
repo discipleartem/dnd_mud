@@ -64,7 +64,7 @@ def _apply_mod_overlays(
 
 def load_merged_yaml(path: Path) -> dict[str, Any]:
     """Загрузить YAML с deep-merge overlay включённых модов."""
-    data = load_yaml(path)
+    data = load_yaml(path, strict=True)
     return _apply_mod_overlays(data, path)
 
 
