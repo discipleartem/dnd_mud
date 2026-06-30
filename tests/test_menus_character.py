@@ -557,6 +557,36 @@ def test_new_game_back_returns_one_step(monkeypatch):
     assert calls == {"character": 2, "adventure": 1}
 
 
+def test_new_game_back_reuses_cached_character_list(monkeypatch):
+    """Назад из приключения не перечитывает saves без изменений."""
+    calls = {"load": 0, "character": 0, "adventure": 0}
+    character = Character(
+        name="Test Hero",
+        race="human",
+        class_id="fighter",
+    )
+
+    def load_characters():
+        calls["load"] += 1
+        return LoadCharactersResult(characters=(character,))
+
+    def select_character(strings, characters, language="ru"):
+        calls["character"] += 1
+        return character if calls["character"] == 1 else None
+
+    def select_adventure(strings, language, char):
+        calls["adventure"] += 1
+        return None
+
+    monkeypatch.setattr(_deps, "load_characters", load_characters)
+    monkeypatch.setattr(new_game, "_select_character", select_character)
+    monkeypatch.setattr(new_game, "_select_adventure", select_adventure)
+
+    new_game.show_new_game_flow({}, {"language": "ru"})
+
+    assert calls == {"load": 1, "character": 2, "adventure": 1}
+
+
 def test_languages_menu_order_depends_on_locale(
     monkeypatch, capsys, ru_strings, en_strings, patch_int_input
 ):
