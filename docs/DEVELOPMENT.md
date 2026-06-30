@@ -241,28 +241,32 @@ git merge origin/main && make verify-scope && git push origin dev   # если m
 git checkout -b feat/my-task
 ```
 
-### Завершение task-ветки
+### Завершение task-ветки (PR + rename)
 
-См. [`dnd-mud-workflow.mdc`](../.cursor/rules/dnd-mud-workflow.mdc) §Git (delta).
+См. [`dnd-mud-workflow.mdc`](../.cursor/rules/dnd-mud-workflow.mdc) §PR task → dev.
+
+Запрос **«сделай PR into dev»** на task-ветке — не только `gh pr create`, но и **обязательный rename** в `merged/…` после squash merge.
 
 ```bash
 git fetch origin && git rebase origin/dev
 make verify-scope
 # skill dnd-mud-review — light или full, один раз, до push/PR
 git push -u origin HEAD        # после rebase на remote: --force-with-lease
-gh pr create --base dev --title "feat: …"   # squash merge
+gh pr create --base dev --title "feat: …"
+# после squash merge в dev (или сразу, если PR уже MERGED):
+# rename → merged/<исходное-имя> — команды ниже
 ```
 
-### После merge task-ветки в `dev`
+### Rename после squash merge в `dev`
 
-Канон: [`dnd-mud-workflow.mdc`](../.cursor/rules/dnd-mud-workflow.mdc) §Git (delta).
+Канон: [`dnd-mud-workflow.mdc`](../.cursor/rules/dnd-mud-workflow.mdc) §PR task → dev.
 
-После squash merge PR переименовать task-ветку в `merged/<исходное-имя>` — на `origin` и локально. Так в списке веток видно, что **актуальные** (`feat/…`, `fix/…`) ещё в работе, а **`merged/…`** уже влиты в `dev`.
+Переименовать task-ветку в `merged/<исходное-имя>` на `origin` и локально — **до merge не делать** (head открытого PR). Агент выполняет rename в том же turn, если PR уже смержен; иначе — по подтверждению пользователя («смержил», «PR merged»).
 
 | Статус | Пример |
 |--------|--------|
-| В работе | `feat/character-stats-menu` |
-| Завершена | `merged/feat/character-stats-menu` |
+| В работе / PR открыт | `feat/character-stats-menu` |
+| Завершена (после squash merge) | `merged/feat/character-stats-menu` |
 
 ```bash
 TASK=feat/my-task

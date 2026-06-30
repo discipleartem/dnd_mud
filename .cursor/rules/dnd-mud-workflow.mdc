@@ -42,20 +42,34 @@ git fetch origin && git rebase origin/dev && make verify-scope
 | `git rebase origin/dev` | По умолчанию |
 | `git merge origin/dev` | Ветка расшарена; force-push — согласовать |
 
-**Завершение task-ветки:** docs + verify + **review** light|full (skill `dnd-mud-review`) → push/PR. Перед push — `rebase origin/dev`; subagent review **не** в середине ветки:
+**Завершение task-ветки:** docs + verify + **review** light|full (skill `dnd-mud-review`) → push/PR → **rename** `merged/…`. Перед push — `rebase origin/dev`; subagent review **не** в середине ветки.
+
+### PR task → `dev` (по запросу)
+
+Триггеры: «сделай PR», «PR into dev», `gh pr create --base dev` и т.п. на **task-ветке** (`feat/…`, `fix/…`, …).
+
+Процедура PR — [`user-protocols.mdc`](~/.cursor/rules/user-protocols.mdc) §PR procedure; ниже — **delta dnd_mud** (включая rename).
 
 ```bash
 git fetch origin && git rebase origin/dev && make verify-scope
-git push -u origin HEAD   # после rebase: --force-with-lease
-gh pr create --base dev --title "feat: …"   # PR по запросу; squash merge
+git push -u origin HEAD   # после rebase на remote: --force-with-lease
+gh pr create --base dev --title "feat: …"
 ```
 
-**После squash merge PR task → `dev`:** переименовать task-ветку в `merged/<исходное-имя>` (локально и на `origin`), чтобы отличать **актуальные** ветки (`feat/…`, `fix/…`, …) от **завершённых** (`merged/…`). `main` и `dev` не переименовывать; не добавлять префикс повторно, если имя уже начинается с `merged/`.
+**Rename (обязательно, не пропускать):** только **после squash merge** PR в `dev` (до merge не переименовывать — head PR ещё на task-ветке). Ветку task→`merged/<исходное-имя>` на `origin` и локально.
+
+| Когда merge | Действие агента |
+|-------------|-----------------|
+| Уже выполнен (`gh pr view --json state,mergedAt` → `MERGED`) | Rename **в том же turn**, сразу после `gh pr create` / в ответ на «сделай PR» |
+| Ещё нет | Вернуть URL PR **и** явно: после squash merge — rename; при «смержил» / «PR merged» — выполнить rename **без уточнений** |
+
+Task-ветка без rename на `origin` **не считается завершённой**.
 
 | Статус | Имя | Пример |
 |--------|-----|--------|
 | Актуальная task-ветка | `<prefix>/<slug>` | `feat/character-stats-menu` |
-| Завершённая (после merge в `dev`) | `merged/<prefix>/<slug>` | `merged/feat/character-stats-menu` |
+| PR открыт / ожидает merge | то же | `feat/character-stats-menu` |
+| Завершённая (после squash merge в `dev`) | `merged/<prefix>/<slug>` | `merged/feat/character-stats-menu` |
 
 ```bash
 TASK=feat/my-task
@@ -67,6 +81,8 @@ git push origin --delete "${TASK}"
 git branch -m "${TASK}" "${MERGED}" 2>/dev/null || git branch -D "${TASK}" 2>/dev/null || true
 git fetch origin --prune
 ```
+
+`main` и `dev` не переименовывать. Префикс `merged/` не дублировать.
 
 Release `dev` → `main`: skill [`dnd-mud-release`](../skills/dnd-mud-release/SKILL.md). Sync `dev`←`main`: [`git-dev-main-sync.md`](~/.cursor/docs/git-dev-main-sync.md).
 

@@ -12,6 +12,7 @@
 
 ### Changed
 - Тесты: агрессивный рефакторинг — слияние мелких файлов (`dice`/`constants`→`stats`, `mod_loader`→`catalog_loader`, `skills`→`proficiencies`, `creation_handlers`→`menus_character`, `subclass_trainer`→`subclasses`, `adventure`→`models`, `level_up`/`scenario`→`progression`); dedup core/UI; обновлён `verify_targets`
+- Git workflow: запрос «сделай PR into dev» включает обязательный rename в `merged/…` после squash merge (`dnd-mud-workflow.mdc`, `AGENTS.md`, `user-protocols.mdc`)
 - Git workflow: после squash merge PR task→`dev` — переименование ветки в `merged/<исходное-имя>` (`dnd-mud-workflow.mdc`, `AGENTS.md`, `DEVELOPMENT.md`)
 - Pre-commit: `make verify-changed` вместо полного `make check` + `make test`
 - Verify workflow: подзадача → `verify-changed`, конец task-ветки → `verify-scope`, full → CI

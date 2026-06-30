@@ -7,7 +7,7 @@
 ## Agent-loop
 
 ```
-git-старт → подзадачи (commits) → docs → verify → review (light|full) → [fix-plan?] → fix → verify → light re-check* → push / PR → merge task→dev → rename → merged/…
+git-старт → подзадачи (commits) → docs → verify → review (light|full) → [fix-plan?] → fix → verify → light re-check* → push / PR task→dev (+ rename после squash merge) → merged/…
                                                                                               ↑ blockers only
                                                                     ↑ Major+ или /dnd-mud-fix-plan
 ```
@@ -37,8 +37,8 @@ Personal: `git-dev-main-sync` (`~/.cursor/skills/git-dev-main-sync/`).
 4. **Verify** — skill [`dnd-mud-verify`](.cursor/skills/dnd-mud-verify/SKILL.md) (см. таблицу ниже)
 5. **Review** — skill [`dnd-mud-review`](.cursor/skills/dnd-mud-review/SKILL.md) (light или full, до push/PR/merge)
 6. **Fix plan** — skill [`dnd-mud-fix-plan`](.cursor/skills/dnd-mud-fix-plan/SKILL.md) при Major/Blocker
-7. **Push / PR** — [`dnd-mud-workflow.mdc`](.cursor/rules/dnd-mud-workflow.mdc) §Git (delta)
-8. **Rename после merge** — squash merge PR task→`dev` → `merged/<исходное-имя>` на `origin` и локально; см. [`dnd-mud-workflow.mdc`](.cursor/rules/dnd-mud-workflow.mdc) §Git (delta)
+7. **Push / PR task→`dev`** — [`dnd-mud-workflow.mdc`](.cursor/rules/dnd-mud-workflow.mdc) §PR task → dev (rebase, `make verify-scope`, push, `gh pr create`)
+8. **Rename** — **обязательно** после squash merge PR в `dev` → `merged/<исходное-имя>`; если merge уже есть — в том же turn, что и PR; иначе — по «смержил» / «PR merged»; см. [`dnd-mud-workflow.mdc`](.cursor/rules/dnd-mud-workflow.mdc) §PR task → dev
 9. **Release** — skill [`dnd-mud-release`](.cursor/skills/dnd-mud-release/SKILL.md)
 
 ## Verify (lint + pytest)
