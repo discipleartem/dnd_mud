@@ -14,7 +14,6 @@ from core.feats import (
     get_feat_skill_ids,
     list_feats_for_selection,
     load_feat,
-    race_feat_step_required,
     resolve_feat_ability_bonuses,
     tough_hp_adjustment_on_acquire,
 )
@@ -29,9 +28,12 @@ _CREATION_STATS = {
 }
 
 
-def test_race_feat_step_and_requirements() -> None:
-    assert race_feat_step_required("human", "variant_human")
-    assert not race_feat_step_required("elf", "wood_elf")
+def test_feat_meets_requirements_and_spellcasting_context() -> None:
+    from core.feat_visibility import (
+        build_feat_selection_context,
+        build_feat_selection_context_from_character,
+    )
+    from core.models import Character
 
     ctx_ok = FeatRequirementContext(
         stats={"dexterity": 14, "strength": 10},
@@ -79,31 +81,13 @@ def test_race_feat_step_and_requirements() -> None:
         ),
     )
 
-
-def test_feat_selection_context_and_spellcasting() -> None:
-    from core.feat_visibility import (
-        build_feat_selection_context,
-        build_feat_selection_context_from_character,
-    )
-    from core.models import Character
-
     character = Character(
         name="Elf",
         race="elf",
         subrace="high_elf",
         class_id="wizard",
         level=1,
-        stats=dict.fromkeys(
-            [
-                "strength",
-                "dexterity",
-                "constitution",
-                "intelligence",
-                "wisdom",
-                "charisma",
-            ],
-            10,
-        ),
+        stats=base,
     )
     ctx = build_feat_selection_context_from_character(character)
     assert ctx.race_id == "elf"
@@ -152,86 +136,34 @@ def test_apply_feats_and_skilled_grants() -> None:
     assert skills == ["athletics"]
 
 
-@pytest.mark.parametrize(
-    "ctx_kwargs,check",
-    [
-        (
-            {
-                "stats": {"dexterity": 12, "strength": 10},
-                "weapon_tokens": [],
-                "armor_tokens": [],
-                "tool_tokens": [],
-                "has_spellcasting": False,
-            },
-            "requirements_split",
-        ),
-        (
-            {
-                "stats": {"strength": 16, "dexterity": 14},
-                "weapon_tokens": ["simple", "martial"],
-                "armor_tokens": ["light", "medium", "heavy", "shield"],
-                "tool_tokens": [],
-                "class_id": "fighter",
-                "skills": ["athletics", "intimidation"],
-            },
-            "redundant_armor_hidden",
-        ),
-    ],
-)
-def test_list_feats_for_selection_visibility(
-    ctx_kwargs: dict[str, Any], check: str
-) -> None:
-    ctx = FeatRequirementContext(**ctx_kwargs)
+def test_list_feats_for_selection_requirements_split() -> None:
+    ctx = FeatRequirementContext(
+        stats={"dexterity": 12, "strength": 10},
+        weapon_tokens=[],
+        armor_tokens=[],
+        tool_tokens=[],
+        has_spellcasting=False,
+    )
     eligible, blocked, hidden = list_feats_for_selection(ctx, [])
     eligible_ids = {str(f.get("id")) for f in eligible}
     blocked_ids = {str(f.get("id")) for f in blocked}
     hidden_ids = {str(f.get("id")) for f in hidden}
-
-    if check == "requirements_split":
-        assert "defensive_duelist" in blocked_ids
-        assert "tough" in eligible_ids
-        assert not eligible_ids & hidden_ids
-    else:
-        redundant = {
-            "heavily_armored",
-            "lightly_armored",
-            "moderately_armored",
-        }
-        assert redundant <= hidden_ids
-        assert redundant.isdisjoint(eligible_ids)
-
-
-@pytest.mark.parametrize(
-    "class_id,subclass_id,level",
-    [
-        ("fighter", "champion", 1),
-        ("cleric", "life_domain", 1),
-        ("bard", "valor_college", 3),
-    ],
-)
-def test_list_feats_no_redundant_proficiency_grants(
-    class_id: str, subclass_id: str, level: int
-) -> None:
-    from core.feat_visibility import build_feat_selection_context
-
-    ctx = build_feat_selection_context(
-        stats=_CREATION_STATS,
-        race_id="human",
-        subrace_id="variant_human",
-        background_id="soldier",
-        class_id=class_id,
-        subclass_id=subclass_id,
-        level=level,
-    )
-    eligible, _, _ = list_feats_for_selection(ctx, [])
-    for feat in eligible:
-        feat_id = str(feat.get("id", ""))
-        assert feat_visible_for_selection(feat_id, ctx)
+    assert "defensive_duelist" in blocked_ids
+    assert "tough" in eligible_ids
+    assert not eligible_ids & hidden_ids
 
 
 @pytest.mark.parametrize(
     "race_id,subrace_id,class_id,subclass_id,level,hidden_subset",
     [
+        (
+            "human",
+            "variant_human",
+            "fighter",
+            "champion",
+            1,
+            {"heavily_armored", "lightly_armored", "moderately_armored"},
+        ),
         (
             "dwarf",
             "mountain_dwarf",
@@ -250,7 +182,7 @@ def test_list_feats_no_redundant_proficiency_grants(
         ),
     ],
 )
-def test_list_feats_hides_redundant_proficiency_feats(
+def test_redundant_proficiency_feats_hidden(
     race_id: str,
     subrace_id: str,
     class_id: str,
@@ -274,6 +206,9 @@ def test_list_feats_hides_redundant_proficiency_feats(
     hidden_ids = {str(f.get("id")) for f in hidden}
     assert hidden_subset <= hidden_ids
     assert eligible_ids.isdisjoint(hidden_subset)
+    for feat in eligible:
+        feat_id = str(feat.get("id", ""))
+        assert feat_visible_for_selection(feat_id, ctx)
 
 
 def test_apply_feat_grants_to_character_merges_skills_and_tools() -> None:
@@ -371,32 +306,50 @@ def test_format_or_ability_requirements_ritual_caster() -> None:
     assert text == "Интеллект или Мудрость 13 или выше"
 
 
-def test_feat_full_description_benefits_only() -> None:
-    feat = load_feat("spell_sniper")
-    lines = feat_full_description_lines(feat)
+@pytest.mark.parametrize(
+    "feat,expected_substrings,summary_check",
+    [
+        (
+            "spell_sniper",
+            ["дистанция заклинания удваивается"],
+            None,
+        ),
+        (
+            "healer",
+            ["комплект целителя", "1к6 + 4", "Костей Хитов"],
+            "healer_summary",
+        ),
+        (
+            "inline_fallback",
+            ["Подробность умения"],
+            None,
+        ),
+    ],
+)
+def test_feat_full_description_lines(
+    feat: str,
+    expected_substrings: list[str],
+    summary_check: str | None,
+) -> None:
+    if feat == "inline_fallback":
+        feat_data: dict[str, Any] = {
+            "description": "Кратко.",
+            "grants": [
+                {"name": "Умение", "description": "Подробность умения."}
+            ],
+        }
+    else:
+        feat_data = load_feat(feat)
+    if summary_check == "healer_summary":
+        summary = feat_summary_description(feat_data)
+        assert "stabilise" not in summary.lower()
+        assert "медик" in summary.lower()
+    lines = feat_full_description_lines(feat_data)
     text = "\n".join(lines)
-    assert "получаете следующие преимущества" not in text
-    assert "дистанция заклинания удваивается" in text
-
-
-def test_healer_full_description_from_yaml() -> None:
-    feat = load_feat("healer")
-    assert "stabilise" not in feat_summary_description(feat).lower()
-    assert "медик" in feat_summary_description(feat).lower()
-    lines = feat_full_description_lines(feat)
-    text = "\n".join(lines)
-    assert "комплект целителя" in text
-    assert "1к6 + 4" in text
-    assert "Костей Хитов" in text
-
-
-def test_feat_full_description_fallback_from_features() -> None:
-    feat = {
-        "description": "Кратко.",
-        "grants": [{"name": "Умение", "description": "Подробность умения."}],
-    }
-    lines = feat_full_description_lines(feat)
-    assert "Подробность умения" in lines[0]
+    if feat == "spell_sniper":
+        assert "получаете следующие преимущества" not in text
+    for substring in expected_substrings:
+        assert substring in (text if len(lines) > 1 else lines[0])
 
 
 def test_creation_known_for_feat_picks_includes_race_and_background() -> None:

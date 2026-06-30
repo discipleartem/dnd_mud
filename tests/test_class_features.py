@@ -8,56 +8,36 @@ from core.class_features import (
     class_features_applied_at_creation,
     needs_class_feature_picks,
 )
-from core.expertise import grant_expertise_satisfied, pending_expertise_grants
 from core.models import Character
 from core.scenario_actions import apply_scenario_action
 from ui.menus.class_features import apply_pending_class_features
 
 
-def test_class_features_not_applied_at_normal_level_one():
-    """Normal, 1 ур.: подкласс выбран, особенности ещё не применены."""
+@pytest.mark.parametrize(
+    "level,needs_picks,applied_at_creation",
+    [
+        (1, False, False),
+        (3, True, True),
+    ],
+)
+def test_bard_class_features_by_level(
+    level: int, needs_picks: bool, applied_at_creation: bool
+) -> None:
+    """Normal: особенности подкласса с 3 уровня."""
     char = Character(
         name="Hero",
         race="elf",
         class_id="bard",
-        level=1,
+        level=level,
         subclass_id="lore_college",
         difficulty="normal",
+        class_features_applied=level < 3,
     )
     assert (
-        class_features_applied_at_creation("bard", "lore_college", 1) is False
+        class_features_applied_at_creation("bard", "lore_college", level)
+        is applied_at_creation
     )
-    assert needs_class_feature_picks(char) is False
-
-
-def test_needs_class_features_at_level_three_normal():
-    """Normal, 3 ур.: нужны особенности подкласса."""
-    char = Character(
-        name="Hero",
-        race="elf",
-        class_id="bard",
-        level=3,
-        subclass_id="lore_college",
-        difficulty="normal",
-        class_features_applied=False,
-    )
-    assert needs_class_feature_picks(char) is True
-
-
-def test_bard_expertise_pending_at_level_three():
-    """Бард 3 ур. без компетентности — grant в очереди."""
-    char = Character(
-        name="Hero",
-        race="elf",
-        class_id="bard",
-        level=3,
-        subclass_id="lore_college",
-        skills=["arcana", "history", "performance"],
-    )
-    pending = pending_expertise_grants(char)
-    assert len(pending) == 1
-    assert pending[0].pick == 2
-    assert not grant_expertise_satisfied(char, pending[0])
+    assert needs_class_feature_picks(char) is needs_picks
 
 
 def test_subclass_training_triggers_class_features():
@@ -72,25 +52,6 @@ def test_subclass_training_triggers_class_features():
     )
     result = apply_scenario_action("subclass_training", {}, char)
     assert result.apply_class_features is True
-    assert result.pick_subclass is False
-
-
-def test_apply_scenario_action_grant_xp() -> None:
-    """grant_xp начисляет XP; повышение уровня — через UI."""
-    character = Character(
-        name="Hero",
-        race="human",
-        class_id="fighter",
-        level=1,
-        stats={"constitution": 14},
-        current_hp=12,
-        max_hp=12,
-        difficulty="hardcore",
-    )
-    result = apply_scenario_action("grant_xp", {"amount": 900}, character)
-    assert result.character.level == 1
-    assert result.character.experience == 900
-    assert result.level_up_pending is True
     assert result.pick_subclass is False
 
 

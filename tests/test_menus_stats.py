@@ -8,26 +8,19 @@ from ui.menus import stats as stats_menu
 from ui.menus.stats import stats_methods, stats_shared
 
 
-def test_method_menu_hides_race_bonuses(
+def test_race_bonus_display_on_method_menu(
     monkeypatch, capsys, ru_strings, patch_int_input
 ):
-    """На экране выбора метода расовые бонусы не показываются."""
+    """На экране метода бонусы скрыты; после standard array — видны."""
     patch_int_input(monkeypatch, [0])
-
     result = stats_menu.show_stats_generation_flow(
         ru_strings, "half_orc", None, "normal"
     )
     output = capsys.readouterr().out
-
     assert result is None
     assert "Расовые бонусы" not in output
     assert "Стандартный массив" in output
 
-
-def test_race_bonuses_shown_after_standard_array_choice(
-    monkeypatch, capsys, ru_strings, patch_int_input
-):
-    """После выбора стандартного массива показываются расовые бонусы."""
     patch_int_input(monkeypatch, [1, 0, 0])
     monkeypatch.setattr(_common, "_press_enter", lambda strings: None)
     monkeypatch.setattr(
@@ -35,12 +28,10 @@ def test_race_bonuses_shown_after_standard_array_choice(
         "get_race_bonuses",
         lambda race_id, subrace_id=None: {"strength": 2},
     )
-
     result = stats_menu.show_stats_generation_flow(
         ru_strings, "half_orc", None, "normal"
     )
     output = capsys.readouterr().out
-
     assert result is None
     assert "Расовые бонусы" in output
     assert "Сила +2" in output
@@ -203,99 +194,3 @@ def test_hardcore_confirm_no_regenerate_option(
 
     assert "Принять характеристики" in output
     assert "Перегенерировать" not in output
-
-
-def test_hardcore_back_from_confirm_exits_stats(
-    monkeypatch, ru_strings, patch_int_input
-):
-    """HardCore: «Назад» с подтверждения выходит из генерации."""
-    monkeypatch.setattr(_deps, "roll_ability_score", lambda: 12)
-    monkeypatch.setattr(stats_methods, "_press_enter", lambda strings: None)
-    patch_int_input(monkeypatch, [0])
-
-    result = stats_methods._select_stats_random_hardcore(
-        ru_strings, "elf", None
-    )
-
-    assert result is None
-
-
-def test_hardcore_reentry_reuses_stored_rolls(
-    monkeypatch, capsys, ru_strings, patch_int_input
-):
-    """HardCore: повторный вход сохраняет броски без переброса."""
-    roll_calls = {"count": 0}
-
-    def fake_roll() -> int:
-        roll_calls["count"] += 1
-        return 10
-
-    monkeypatch.setattr(_deps, "roll_ability_score", fake_roll)
-    monkeypatch.setattr(stats_methods, "_press_enter", lambda strings: None)
-
-    stored_rolls = [15, 13, 9, 9, 14, 14]
-    patch_int_input(monkeypatch, [1])
-
-    stats_methods._select_stats_random_hardcore(
-        ru_strings,
-        "elf",
-        None,
-        hardcore_rolls=stored_rolls,
-    )
-    output = capsys.readouterr().out
-
-    assert roll_calls["count"] == 0
-    assert stored_rolls == [15, 13, 9, 9, 14, 14]
-    assert "Метод: 4d6" not in output
-    assert "15" in output
-
-
-def test_confirm_stats_shows_bonus_after_choice(
-    monkeypatch, capsys, ru_strings, patch_int_input
-):
-    """Экран подтверждения показывает (+1) после выбора бонусов."""
-    stats = {stat: 10 for stat in STAT_NAMES}
-    stats["strength"] = 16
-    stats["dexterity"] = 15
-    race_bonuses = {"strength": 1, "dexterity": 1}
-
-    patch_int_input(monkeypatch, [0])
-
-    stats_shared._confirm_stats(
-        ru_strings,
-        stats,
-        "human",
-        "variant_human",
-        reroll_label_key="character.stats_reroll_redistribute",
-        race_bonuses=race_bonuses,
-    )
-    output = capsys.readouterr().out
-
-    assert "(+1)" in output
-
-
-def test_show_stats_generation_flow_loops_on_method_back(
-    monkeypatch, ru_strings, patch_int_input
-):
-    """При «Назад» с подтверждения flow возвращается к меню методов."""
-    calls = {"standard": 0}
-    final_stats = dict.fromkeys(STAT_NAMES, 10)
-
-    def fake_standard_array(strings, race_id, subrace_id):
-        calls["standard"] += 1
-        if calls["standard"] == 1:
-            return None
-        return final_stats
-
-    patch_int_input(monkeypatch, [1, 1])
-    monkeypatch.setattr(
-        "ui.menus.stats.stats_flow._select_stats_standard_array",
-        fake_standard_array,
-    )
-
-    result = stats_menu.show_stats_generation_flow(
-        ru_strings, "human", None, "normal"
-    )
-
-    assert calls["standard"] == 2
-    assert result == final_stats

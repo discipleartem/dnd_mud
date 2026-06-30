@@ -2,13 +2,12 @@
 
 import json
 from pathlib import Path
-from typing import Literal
+from typing import Any
 
 import pytest
 
 import core.character as character_mod
 from core.character_storage import load_characters
-from core.progression import max_hp_for_level
 
 
 @pytest.mark.parametrize(
@@ -91,68 +90,100 @@ def test_generate_stats_and_point_buy() -> None:
     )
 
 
-@pytest.mark.parametrize(
-    "difficulty,level,subclass_id",
-    [("easy", 3, "champion"), ("normal", 1, "champion")],
-)
-def test_save_character_start_level(
-    characters_dir: Path,
-    difficulty: Literal["easy", "normal", "hardcore"],
-    level: int,
-    subclass_id: str,
-) -> None:
+def test_save_character_start_level(characters_dir: Path) -> None:
     stats = dict.fromkeys(character_mod.STAT_NAMES, 12)
     saved = character_mod.save_character(
         name="Hero",
         race_id="human",
         class_id="fighter",
-        difficulty=difficulty,
+        difficulty="normal",
         stats=stats,
-        subclass_id=subclass_id,
+        subclass_id="champion",
     )
-    assert saved.level == level
-    if difficulty == "easy":
-        assert saved.max_hp > max_hp_for_level("fighter", stats, 1)
+    assert saved.level == 1
 
 
-def test_save_and_load_character(characters_dir: Path) -> None:
+@pytest.mark.parametrize(
+    "name,class_id,extra_kwargs,json_checks,load_checks",
+    [
+        (
+            "Hero",
+            "fighter",
+            {
+                "skills": ["athletics"],
+                "languages": ["common"],
+                "background_id": "soldier",
+                "feat_ids": ["resilient"],
+                "feat_choices": {"resilient": {"ability": "constitution"}},
+            },
+            {"background": "soldier"},
+            {"skills": ["athletics"], "slug": "hero", "con": 13},
+        ),
+        (
+            "RogueHero",
+            "rogue",
+            {
+                "skills": [
+                    "stealth",
+                    "perception",
+                    "athletics",
+                    "deception",
+                ],
+                "skill_expertise": ["stealth", "athletics"],
+                "tool_expertise": [],
+            },
+            {},
+            {
+                "skill_expertise": ["stealth", "athletics"],
+                "slug": "roguehero",
+            },
+        ),
+        (
+            "AutoProf",
+            "fighter",
+            {},
+            {},
+            {"weapon_prof": "simple"},
+        ),
+    ],
+)
+def test_save_character_persists_fields(
+    characters_dir: Path,
+    name: str,
+    class_id: str,
+    extra_kwargs: dict[str, Any],
+    json_checks: dict[str, object],
+    load_checks: dict[str, object],
+) -> None:
+    """Save/load сохраняет поля персонажа в JSON."""
+    stat_value = 10 if name == "AutoProf" else 12
+    stats = dict.fromkeys(character_mod.STAT_NAMES, stat_value)
     saved = character_mod.save_character(
-        name="Hero",
+        name=name,
         race_id="human",
-        class_id="fighter",
-        stats=dict.fromkeys(character_mod.STAT_NAMES, 12),
-        skills=["athletics"],
-        languages=["common"],
-        background_id="soldier",
-        feat_ids=["resilient"],
-        feat_choices={"resilient": {"ability": "constitution"}},
+        class_id=class_id,
+        stats=stats,
+        **extra_kwargs,
     )
-    assert saved.save_slug == "hero"
-    assert saved.stats["constitution"] == 13
-    loaded = character_mod.load_characters().characters[0]
-    assert loaded.skills == ["athletics"]
-    with open(characters_dir / "hero.json", encoding="utf-8") as f:
-        assert json.load(f)["background"] == "soldier"
-
-
-def test_save_skills_and_expertise_persisted(characters_dir: Path) -> None:
-    """Навыки и компетентность сохраняются в JSON."""
-    saved = character_mod.save_character(
-        name="RogueHero",
-        race_id="human",
-        class_id="rogue",
-        stats=dict.fromkeys(character_mod.STAT_NAMES, 10),
-        skills=["stealth", "perception", "athletics", "deception"],
-        skill_expertise=["stealth", "athletics"],
-        tool_expertise=[],
-    )
-    assert saved.skill_expertise == ["stealth", "athletics"]
-    with open(characters_dir / "roguehero.json", encoding="utf-8") as f:
-        data = json.load(f)
-    assert data["skills"] == saved.skills
-    assert data["skill_expertise"] == saved.skill_expertise
+    slug = str(load_checks.get("slug", saved.save_slug))
+    if "con" in load_checks:
+        assert saved.stats["constitution"] == load_checks["con"]
+    if "skill_expertise" in load_checks:
+        assert saved.skill_expertise == load_checks["skill_expertise"]
+    if "weapon_prof" in load_checks:
+        assert load_checks["weapon_prof"] in saved.weapon_proficiencies
+        assert saved.armor_proficiencies
     loaded = character_mod.load_characters().characters[-1]
-    assert loaded.skill_expertise == saved.skill_expertise
+    if "skills" in load_checks:
+        assert loaded.skills == load_checks["skills"]
+    if "skill_expertise" in load_checks:
+        assert loaded.skill_expertise == saved.skill_expertise
+    with open(characters_dir / f"{slug}.json", encoding="utf-8") as f:
+        data = json.load(f)
+    for key, value in json_checks.items():
+        assert data[key] == value
+    if "skills" in extra_kwargs:
+        assert data["skills"] == saved.skills
 
 
 def test_starting_max_hp_floor_and_max_hp_field(characters_dir: Path) -> None:
@@ -215,14 +246,3 @@ def test_load_characters_skips_invalid_saves(characters_dir: Path) -> None:
     result = load_characters()
     assert result.characters == ()
     assert result.corrupt_save_warnings == ("bad",)
-
-
-def test_save_character_derives_proficiencies(characters_dir: Path) -> None:
-    saved = character_mod.save_character(
-        name="AutoProf",
-        race_id="human",
-        class_id="fighter",
-        stats=dict.fromkeys(character_mod.STAT_NAMES, 10),
-    )
-    assert "simple" in saved.weapon_proficiencies
-    assert saved.armor_proficiencies

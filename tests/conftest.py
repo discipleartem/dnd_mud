@@ -109,3 +109,50 @@ def patch_int_input():
         )
 
     return _patch
+
+
+@pytest.fixture
+def fighter_l3() -> Any:
+    """Боец 3 уровня для progression/level-up."""
+    from core.models import Character
+
+    return Character(
+        name="Hero",
+        race="human",
+        class_id="fighter",
+        level=3,
+        stats={"constitution": 14, "strength": 16},
+        current_hp=28,
+        max_hp=28,
+        experience=2700,
+        difficulty="normal",
+    )
+
+
+@pytest.fixture
+def fighter_l1_hardcore() -> Any:
+    """Боец 1 уровня HardCore."""
+    from core.models import Character
+
+    return Character(
+        name="Hero",
+        race="human",
+        class_id="fighter",
+        level=1,
+        stats={"constitution": 14},
+        current_hp=7,
+        max_hp=7,
+        experience=0,
+        difficulty="hardcore",
+    )
+
+
+@pytest.fixture
+def patch_level_up_ui(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Заглушки UI повышения уровня."""
+    from ui.menus import level_up as level_up_menu
+
+    monkeypatch.setattr(level_up_menu, "_press_enter", lambda strings: None)
+    monkeypatch.setattr(
+        level_up_menu, "_print_screen_header", lambda strings: None
+    )
