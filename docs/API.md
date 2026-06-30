@@ -97,6 +97,7 @@ CLASSES_FILE = Path("database/classes/classes.yaml")
 save_character(...) -> Character
 update_character(character: Character) -> Character
 load_characters() -> list[Character]
+pop_corrupt_save_warnings() -> list[str]  # save_slug битых JSON после load_characters
 load_races(language: str = "ru") -> list[dict[str, Any]]
 load_race_full(race_id: str, language: str = "ru") -> dict[str, Any]
 load_classes(language: str = "ru") -> list[dict[str, Any]]
@@ -298,7 +299,7 @@ clear_catalog_cache() -> None
 clear_all_catalog_caches() -> None
 ```
 
-Deep-merge модов через `mod_loader`; кэш `@lru_cache` на пару (путь, ключ). Используется в `races`, `backgrounds`, `classes`, `feats_loader`, `equipment`, `languages`, `abilities`, `constants`.
+Deep-merge модов через `mod_loader` (overlay по полю `target` — путь к базовому YAML в `manifest.yaml`); кэш `@lru_cache` на `load_catalog` и `load_merged_catalog`.
 
 ---
 

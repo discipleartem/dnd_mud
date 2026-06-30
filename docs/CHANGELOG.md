@@ -10,7 +10,7 @@
 - `ui/menus/_creation_handlers.py`, `_creation_navigation.py`, `_creation_finalize.py`, `_creation_state.py`
 
 ### Changed
-- `ui/menus/feats/` — пакет вместо монолитного `feats.py` (`_requirements`, `_subchoices`, `_creation`, `_level_up`)
+- Review fixes: conftest catalog cache reset, corrupt save warning in characters menu, `save_character` derives proficiencies via `resolve_creation_grants`, single-layer catalog cache
 - `ui/menus/_display/_grants.py` — grant display вынесен из `_race.py`
 - `ui/menus/_creation_steps.py` — тонкий loop; навигация и финализация в отдельных модулях
 - Каталоги YAML (`classes`, `feats`, `equipment`, `languages`, `abilities`, `constants`, `races`, `backgrounds`) — через `load_catalog` + mod overlay
