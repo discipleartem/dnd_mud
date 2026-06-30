@@ -218,10 +218,10 @@ def resolve_test_paths(changed: list[str]) -> tuple[list[str], bool]:
 
     tests: set[str] = set()
     for path in py_changed:
-        tests.update(source_to_tests(path))
-
-    if not tests:
-        return [], True
+        mapped = source_to_tests(path)
+        if not mapped:
+            return [], True
+        tests.update(mapped)
 
     return sorted(tests), False
 

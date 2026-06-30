@@ -43,6 +43,15 @@ def test_database_and_infra_fallbacks() -> None:
     assert full is True
 
 
+def test_resolve_test_paths_mixed_mapped_and_unmapped() -> None:
+    """Смешанный diff: хотя бы один .py без маппинга → full suite."""
+    tests, full = vt.resolve_test_paths(
+        ["core/difficulty.py", "tools/unknown_helper.py"]
+    )
+    assert full is True
+    assert tests == []
+
+
 def test_cmd_resolve_tests_staged(
     monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
 ) -> None:
