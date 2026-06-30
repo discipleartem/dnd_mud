@@ -7,6 +7,9 @@
 - `.github/workflows/ci.yml` — полный `make check` + `make test` на PR в `dev` / `main`
 - `tests/test_verify_targets.py`
 
+### Fixed
+- `scripts/verify_targets.py` — incremental pytest: full suite, если **любой** изменённый `.py` в diff без mapped-тестов (в т.ч. смешанный diff)
+
 ### Changed
 - Pre-commit: `make verify-changed` вместо полного `make check` + `make test`
 - Verify workflow: подзадача → `verify-changed`, конец task-ветки → `verify-scope`, full → CI

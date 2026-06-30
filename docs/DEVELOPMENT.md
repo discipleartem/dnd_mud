@@ -163,7 +163,7 @@ VERIFY_BASE=origin/main make verify-scope  # на ветке dev
 make verify           # check + test (CI / ручной full)
 ```
 
-Маппинг changed → pytest/lint: [`scripts/verify_targets.py`](../scripts/verify_targets.py).
+Маппинг changed → pytest/lint: [`scripts/verify_targets.py`](../scripts/verify_targets.py). Если хотя бы один изменённый `.py` не смапился — full suite (не только когда mapped-тестов нет совсем).
 
 Инкрементальный `mypy` в `verify-changed` / `verify-scope` проверяет только изменённые `.py`; полный typecheck — `make check` или CI.
 

@@ -56,5 +56,5 @@ Personal: `git-dev-main-sync` (`~/.cursor/skills/git-dev-main-sync/`).
 |----------|----------|
 | Только `docs/`, `.cursor/`, `AGENTS.md`, workflows | verify **пропустить** |
 | Затронут `ui/` или меню | + smoke `python main.py` |
-| Нет mapped-тестов / infra (`Makefile`, `conftest.py`, …) | incremental → **full suite** (fallback в `verify_targets.py`) |
+| Infra или `.py` без mapped-тестов в diff (`Makefile`, `conftest.py`, …) | incremental → **full suite** (fallback в `verify_targets.py`) |
 | Pre-commit | хук уже вызывает `make verify-changed` |
