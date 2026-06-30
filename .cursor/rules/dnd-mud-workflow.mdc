@@ -50,6 +50,24 @@ git push -u origin HEAD   # после rebase: --force-with-lease
 gh pr create --base dev --title "feat: …"   # PR по запросу; squash merge
 ```
 
+**После squash merge PR task → `dev`:** переименовать task-ветку в `merged/<исходное-имя>` (локально и на `origin`), чтобы отличать **актуальные** ветки (`feat/…`, `fix/…`, …) от **завершённых** (`merged/…`). `main` и `dev` не переименовывать; не добавлять префикс повторно, если имя уже начинается с `merged/`.
+
+| Статус | Имя | Пример |
+|--------|-----|--------|
+| Актуальная task-ветка | `<prefix>/<slug>` | `feat/character-stats-menu` |
+| Завершённая (после merge в `dev`) | `merged/<prefix>/<slug>` | `merged/feat/character-stats-menu` |
+
+```bash
+TASK=feat/my-task
+MERGED=merged/feat/my-task
+git fetch origin
+git checkout dev && git pull origin dev
+git push origin "refs/heads/${TASK}:refs/heads/${MERGED}"
+git push origin --delete "${TASK}"
+git branch -m "${TASK}" "${MERGED}" 2>/dev/null || git branch -D "${TASK}" 2>/dev/null || true
+git fetch origin --prune
+```
+
 Release `dev` → `main`: skill [`dnd-mud-release`](../skills/dnd-mud-release/SKILL.md). Sync `dev`←`main`: [`git-dev-main-sync.md`](~/.cursor/docs/git-dev-main-sync.md).
 
 ## Verify / review (policy)

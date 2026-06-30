@@ -238,7 +238,7 @@ IDE: расширения **GitHub Pull Requests** и **GitHub Actions** — н�
 
 ```
 git-старт → task-ветка → подзадачи (commits) → docs → verify → review (light|full) → push → PR task→dev
-→ (накопление в dev) → PR dev→main → Action sync dev←main
+→ squash merge → rename task → merged/… → (накопление в dev) → PR dev→main → Action sync dev←main
 ```
 
 ### Git-старт (перед работой)
@@ -265,6 +265,30 @@ make verify-scope
 git push -u origin HEAD        # после rebase на remote: --force-with-lease
 gh pr create --base dev --title "feat: …"   # squash merge
 ```
+
+### После merge task-ветки в `dev`
+
+Канон: [`dnd-mud-workflow.mdc`](../.cursor/rules/dnd-mud-workflow.mdc) §Git (delta).
+
+После squash merge PR переименовать task-ветку в `merged/<исходное-имя>` — на `origin` и локально. Так в списке веток видно, что **актуальные** (`feat/…`, `fix/…`) ещё в работе, а **`merged/…`** уже влиты в `dev`.
+
+| Статус | Пример |
+|--------|--------|
+| В работе | `feat/character-stats-menu` |
+| Завершена | `merged/feat/character-stats-menu` |
+
+```bash
+TASK=feat/my-task
+MERGED=merged/feat/my-task
+git fetch origin
+git checkout dev && git pull origin dev
+git push origin "refs/heads/${TASK}:refs/heads/${MERGED}"
+git push origin --delete "${TASK}"
+git branch -m "${TASK}" "${MERGED}" 2>/dev/null || git branch -D "${TASK}" 2>/dev/null || true
+git fetch origin --prune
+```
+
+`main` и `dev` не переименовывать. Если имя уже начинается с `merged/` — повторный префикс не добавлять.
 
 ### Code review (локальный, не GitHub Bugbot)
 

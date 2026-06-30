@@ -11,6 +11,7 @@
 - `scripts/verify_targets.py` — incremental pytest: full suite, если **любой** изменённый `.py` в diff без mapped-тестов (в т.ч. смешанный diff)
 
 ### Changed
+- Git workflow: после squash merge PR task→`dev` — переименование ветки в `merged/<исходное-имя>` (`dnd-mud-workflow.mdc`, `AGENTS.md`, `DEVELOPMENT.md`)
 - Pre-commit: `make verify-changed` вместо полного `make check` + `make test`
 - Verify workflow: подзадача → `verify-changed`, конец task-ветки → `verify-scope`, full → CI
 - Тесты: консолидация в `test_feats`, `test_character`, `test_progression`, `test_proficiencies`; review fix-plan — восстановлены `test_constants`, `test_backgrounds`, `test_races`, `test_scenario`, `test_subclass_trainer`, UI/class features в `test_class_features`
