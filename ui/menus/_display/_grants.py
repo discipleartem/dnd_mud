@@ -8,6 +8,7 @@ from core.equipment import (
     proficiency_token_label,
 )
 from core.grant_mechanics import normalize_armor_token
+from core.grants import _ABILITY_INCREASE
 from core.localization import get_string
 from core.types import StringsDict
 from ui.menus._common import _ability_name, _skill_name
@@ -15,8 +16,6 @@ from ui.menus._display._labels import (
     _grant_pool_label,
     _grant_type_label,
 )
-
-_ABILITY_INCREASE = "ability_increase"
 
 
 def _armor_labels_from_grant(

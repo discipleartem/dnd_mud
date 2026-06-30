@@ -16,14 +16,31 @@ from core.types import GameDifficulty, StatMap
 
 logger = logging.getLogger(__name__)
 
-_corrupt_save_slugs: list[str] = []
+_corrupt_save_labels: list[str] = []
 
 
 def pop_corrupt_save_warnings() -> list[str]:
-    """Имена save_slug битых JSON-файлов с последнего load_characters."""
-    warnings = list(_corrupt_save_slugs)
-    _corrupt_save_slugs.clear()
+    """Подписи битых сейвов с последнего load_characters.
+
+    Имя персонажа из JSON или save_slug, если имя недоступно.
+    """
+    warnings = list(_corrupt_save_labels)
+    _corrupt_save_labels.clear()
     return warnings
+
+
+def _corrupt_save_display_label(path: Path) -> str:
+    """Имя персонажа из JSON или save_slug, если имя недоступно."""
+    try:
+        if path.stat().st_size == 0:
+            return path.stem
+        data = load_json(path)
+        name = data.get("name")
+        if isinstance(name, str) and name.strip():
+            return name.strip()
+    except (OSError, ValueError, TypeError):
+        pass
+    return path.stem
 
 
 def _is_corrupt_save_file(path: Path) -> bool:
@@ -258,7 +275,7 @@ def _character_created_at_timestamp(character: Character, path: Path) -> float:
 
 def load_characters() -> list[Character]:
     """Загрузить список всех сохранённых персонажей (старые → новые)."""
-    _corrupt_save_slugs.clear()
+    _corrupt_save_labels.clear()
     if not CHARACTERS_DIR.exists():
         return []
 
@@ -271,7 +288,7 @@ def load_characters() -> list[Character]:
             )
         elif _is_corrupt_save_file(path):
             logger.warning("Битый файл сохранения персонажа: %s", path)
-            _corrupt_save_slugs.append(path.stem)
+            _corrupt_save_labels.append(_corrupt_save_display_label(path))
 
     entries.sort(key=lambda item: item[0])
     return [character for _, character in entries]

@@ -118,9 +118,13 @@ def select_creation_feats(
             for g in load_feat(feat_id).get("grants", []):
                 if not isinstance(g, dict):
                     continue
-                _w, _a, tools, skills = (
+                weapons, _armor, tools, skills = (
                     proficiency_tokens_and_skills_from_grant(g, sub)
                 )
+                for weapon_id in weapons:
+                    token = str(weapon_id)
+                    if token not in weapon_profs:
+                        weapon_profs.append(token)
                 for skill_id in skills:
                     if skill_id not in known_skills:
                         known_skills.append(skill_id)

@@ -4,13 +4,12 @@ from typing import Any
 
 from colorama import Fore, Style
 
-from core.grants import grants_from_entity, grants_of_type
+from core.grants import _ABILITY_INCREASE, grants_from_entity, grants_of_type
 from core.localization import get_string
 from core.types import StatMap, StringsDict
 from ui.menus import _deps
 from ui.menus._common import _ability_name
 from ui.menus._display._grants import (
-    _ABILITY_INCREASE,
     _grant_description,
     _grant_display_name,
 )

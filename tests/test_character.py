@@ -494,7 +494,18 @@ def test_load_characters_skips_semantically_invalid_save(characters_dir):
         encoding="utf-8",
     )
     assert load_characters() == []
-    assert pop_corrupt_save_warnings() == ["broken"]
+    assert pop_corrupt_save_warnings() == ["Broken"]
+
+
+def test_corrupt_warning_uses_name_when_readable(characters_dir):
+    """Битый сейв с читаемым name показывает имя, а не save_slug."""
+    characters_dir.mkdir(parents=True, exist_ok=True)
+    (characters_dir / "hero_save.json").write_text(
+        '{"name": "Герой", "current_hp": "bad"}',
+        encoding="utf-8",
+    )
+    assert load_characters() == []
+    assert pop_corrupt_save_warnings() == ["Герой"]
 
 
 def test_save_character_derives_proficiencies_when_omitted(characters_dir):
