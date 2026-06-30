@@ -134,6 +134,36 @@ def test_feat_spellcasting_requirement_needs_class_context():
     assert feat_meets_requirements("war_caster", ctx_cleric)
 
 
+def test_build_feat_selection_context_from_character_uses_race_fields():
+    from core.feat_visibility import (
+        build_feat_selection_context_from_character,
+    )
+    from core.models import Character
+
+    character = Character(
+        name="Elf",
+        race="elf",
+        subrace="high_elf",
+        class_id="wizard",
+        level=1,
+        stats=dict.fromkeys(
+            [
+                "strength",
+                "dexterity",
+                "constitution",
+                "intelligence",
+                "wisdom",
+                "charisma",
+            ],
+            10,
+        ),
+    )
+    ctx = build_feat_selection_context_from_character(character)
+    assert ctx.race_id == "elf"
+    assert ctx.subrace_id == "high_elf"
+    assert ctx.level == 2
+
+
 def test_build_feat_selection_context_includes_class_armor():
     from core.feat_visibility import build_feat_selection_context
 
