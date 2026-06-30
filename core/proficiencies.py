@@ -46,29 +46,10 @@ def merge_proficiency_tokens(*parts: list[str]) -> list[str]:
 def _tokens_from_mechanics(
     mechanics: dict[str, Any],
 ) -> tuple[list[str], list[str], list[str]]:
-    """Из mechanics/grant: weapons, armors, tools."""
-    merged = dict(mechanics)
-    weapons: list[str] = []
-    armors: list[str] = []
-    tools: list[str] = []
-    mtype = str(merged.get("type", ""))
-    if mtype in ("weapon_proficiency", "bonus_proficiencies"):
-        raw = merged.get("weapons", [])
-        if isinstance(raw, list):
-            weapons.extend(str(w) for w in raw)
-    if mtype in ("armor_proficiency", "bonus_proficiencies"):
-        raw = merged.get("armor_types", merged.get("armors", []))
-        if isinstance(raw, list):
-            armors.extend(_normalize_armor_token(str(a)) for a in raw)
-    if mtype == "tool_proficiency" and not merged.get("choice"):
-        raw = merged.get("tools", [])
-        if isinstance(raw, list):
-            tools.extend(str(t) for t in raw)
-    if mtype == "armor_proficiency":
-        raw_w = merged.get("weapons", [])
-        if isinstance(raw_w, list):
-            weapons.extend(str(w) for w in raw_w)
-    return weapons, armors, tools
+    """Из grant/class feature: weapons, armors, tools."""
+    from core.grant_mechanics import proficiency_tokens_from_grant
+
+    return proficiency_tokens_from_grant(mechanics)
 
 
 def _mechanics_from_entry(entry: dict[str, Any]) -> dict[str, Any]:
