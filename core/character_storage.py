@@ -29,34 +29,35 @@ def pop_corrupt_save_warnings() -> list[str]:
     return warnings
 
 
-def _corrupt_save_display_label(path: Path) -> str:
+def _corrupt_label_from_data(data: dict[str, Any], path: Path) -> str:
     """Имя персонажа из JSON или save_slug, если имя недоступно."""
-    try:
-        if path.stat().st_size == 0:
-            return path.stem
-        data = load_json(path)
-        name = data.get("name")
-        if isinstance(name, str) and name.strip():
-            return name.strip()
-    except (OSError, ValueError, TypeError):
-        pass
+    name = data.get("name")
+    if isinstance(name, str) and name.strip():
+        return name.strip()
     return path.stem
 
 
-def _is_corrupt_save_file(path: Path) -> bool:
-    """Файл существует и не читается как валидный персонаж."""
+def _try_load_character_file(
+    path: Path,
+) -> tuple[Character | None, str | None]:
+    """Загрузить персонажа; при битом сейве — (None, подпись)."""
     if not path.exists():
-        return False
+        return None, None
     try:
         if path.stat().st_size == 0:
-            return True
+            return None, path.stem
         data = load_json(path)
         if not data.get("name"):
-            return True
-        Character.from_dict(data)
-        return False
-    except (OSError, ValueError, TypeError):
-        return True
+            return None, path.stem
+        try:
+            character = Character.from_dict(data)
+        except (ValueError, TypeError):
+            return None, _corrupt_label_from_data(data, path)
+        if not character.save_slug:
+            character.save_slug = path.stem
+        return character, None
+    except OSError:
+        return None, path.stem
 
 
 def save_character(
@@ -250,17 +251,8 @@ def _save_character_file(character: Character) -> None:
 
 def _load_character_file(path: Path) -> Character | None:
     """Загрузить одного персонажа из JSON-файла."""
-    try:
-        data = load_json(path)
-        if not data.get("name"):
-            return None
-
-        character = Character.from_dict(data)
-        if not character.save_slug:
-            character.save_slug = path.stem
-        return character
-    except (OSError, ValueError, TypeError):
-        return None
+    character, _corrupt_label = _try_load_character_file(path)
+    return character
 
 
 def _character_created_at_timestamp(character: Character, path: Path) -> float:
@@ -281,14 +273,14 @@ def load_characters() -> list[Character]:
 
     entries: list[tuple[float, Character]] = []
     for path in CHARACTERS_DIR.glob("*.json"):
-        character = _load_character_file(path)
+        character, corrupt_label = _try_load_character_file(path)
         if character is not None:
             entries.append(
                 (_character_created_at_timestamp(character, path), character)
             )
-        elif _is_corrupt_save_file(path):
+        elif corrupt_label is not None:
             logger.warning("Битый файл сохранения персонажа: %s", path)
-            _corrupt_save_labels.append(_corrupt_save_display_label(path))
+            _corrupt_save_labels.append(corrupt_label)
 
     entries.sort(key=lambda item: item[0])
     return [character for _, character in entries]
