@@ -26,6 +26,7 @@
 - `core/progression.process_pending_level_ups` — headless level-up engine с ASI callback
 - `core/classes.get_class_dict` — публичный доступ к сырым данным класса
 - `ui/menus/_display/_labels._label_from_catalog` — lookup подписей из каталога
+- `ui/menus/_display/_labels._localized_string_list` — локализованный список строк из YAML (предыстории)
 - Фикстуры `human_race_with_subraces`, `subrace_strings` в `tests/conftest.py`
 - `core/grant_mechanics.py` — общий парсер proficiency-токенов из grant dict
 - `ui/menus/_common._read_numbered_choice` — DRY ввод номера после кастомного рендера
@@ -45,13 +46,15 @@
 - `list_feats_for_selection` — третья группа `hidden` (черты без новых владений; показ в конце списка)
 - Экраны расы/подрасы/предыстории — локализованный вывод `grants[]` (`ui/menus/_display/_race.py`, `_background.py`, `_labels.py`; ключи в `database/strings/`)
 - Документация: убраны ссылки на Phase 2 stubs (`combat`, `checks`, `_future`)
-- Тесты: 249 → 250 → 288
+- Тесты: 249 → 250 → 288 → 293
 
 ### Fixed
 - `Character.from_dict()` — fallback на legacy-ключ `"class"` при загрузке старых сейвов (запись — только `class_id`)
 - `variant_human` — grant `language` (choice из common) в `database/races/races.yaml`
 - `_pick_skills_or_tools` — пул инструментов с учётом категориальных tool-токенов (`has_tool_proficiency`)
 - `feat_visible_for_selection` — choice `skill_proficiency` / `tool_proficiency` скрываются при исчерпанном пуле
+- `build_feat_selection_context` — опциональные `skills` / `weapon_tokens` / `tool_tokens` учитывают владения от уже выбранных черт в том же шаге создания
+- `normalize_armor_token` — публичный API в `core/grant_mechanics.py` (display и visibility)
 
 ### Changed
 - Рефакторинг техдолга: `core/hp_bonuses.py` (разрыв цикла races↔feats); `class_name` → `class_id` (JSON-сейвы только `class_id`)

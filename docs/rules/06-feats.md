@@ -60,6 +60,8 @@
 - навыки: расовые + предыстория (классовые навыки **ещё не** учтены);
 - заклинания: `character_has_spellcasting(class, subclass, level)`.
 
+Опциональные аргументы `skills`, `weapon_tokens`, `tool_tokens` **дополняют** базовый контекст (напр. владения от уже выбранных черт при нескольких расовых picks подряд).
+
 При левелапе контекст строится из текущего `Character` (`build_feat_selection_context_from_character`).
 
 #### Правило `feat_visible_for_selection`
@@ -76,6 +78,7 @@
 | `skill_proficiency` | все перечисленные навыки уже в `skills` |
 | `tool_proficiency` | все перечисленные инструменты уже в `tool_tokens` |
 | `multiple_proficiency` (**Одарённый**) | все 18 навыков **и** все инструменты каталога уже известны |
+| `skill_proficiency` / `tool_proficiency` + `choice` | нет свободных навыков / инструментов в пуле PHB |
 
 Если в `grants[]` есть **хотя бы один** grant другого типа (`damage_reduction`, `lucky`, `medium_armor_master`, `hit_point_bonus`, …), черта **остаётся** в списке — даже при полном перекрытии владений. Примеры: **Мастер тяжёлых доспехов** (`heavy_armor_master`), **Мастер средних доспехов**, **Мастер щитов**, **Крепкий**, **Атлетичный**.
 
