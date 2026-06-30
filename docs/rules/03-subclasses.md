@@ -122,7 +122,7 @@
 | Потолок уровня | Умения с `level > 10` в YAML не показываются и не применяются (`MAX_CHARACTER_LEVEL`) |
 | PRD | §3.4.7: выбор подкласса, режимы easy/normal/hardcore |
 | Flow создания | После класса → подкласс (если `subclass_offered_at_creation`); иначе NPC на 3+ ур. (hardcore fighter/rogue/bard) |
-| NPC | Меню персонажей `subclass_trainer`; сценарий `subclass_training` в `core/scenario.py` |
+| NPC | Меню персонажей `subclass_trainer`; сценарий `subclass_training` в `core/scenario_actions.py` |
 
 ### Режимы сложности и подкласс
 

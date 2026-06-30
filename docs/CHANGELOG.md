@@ -3,6 +3,15 @@
 ## [Unreleased]
 
 ### Changed
+- Phase 0 refactor: armor token normalization only in `core/grant_mechanics.normalize_armor_token`; `proficiencies` delegates
+- Doc drift: `class_id` in `dnd-mud-core.mdc`; `core/scenario_actions.py` in `03-subclasses.md`
+
+### Removed
+- `hit_point_bonus_sources_from_features` (unused legacy) in `core/hp_bonuses.py`
+- `_collect_from_features` legacy wrapper in `core/proficiencies.py`
+- Duplicate `_normalize_armor_token` in `core/grant_mechanics.py`
+
+### Changed
 - Token usage: tiered review (light orchestrator / full bugbot) — `dnd-mud-review`, `dnd-mud-workflow`, `AGENTS.md`, `dnd-mud-fix-plan`, `dnd-mud-release`, `DEVELOPMENT.md`
 - Rules refactor: `dnd-mud-workflow.mdc` (git + verify overrides), `dnd-mud-python.mdc` (3.12 + KISS); `AGENTS.md` — оркестрация; global rules slim (`00-global`, `01-operations`, `user-protocols`)
 - Rules DRY: git workflow проекта — канон [`.cursor/rules/dnd-mud-workflow.mdc`](../.cursor/rules/dnd-mud-workflow.mdc); global `01-operations` — Task cycle, Cursor modes, commit policy

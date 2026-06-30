@@ -11,16 +11,10 @@ from core.equipment import (
     weapon_matches_category,
 )
 from core.feats import get_feat_proficiency_grants
+from core.grant_mechanics import normalize_armor_token
 from core.io import merge_unique
 from core.models import Character
 from core.races import collect_race_grants
-
-# Категории доспехов: light -> light_armor в races, normalize both
-ARMOR_ALIASES: dict[str, str] = {
-    "light_armor": "light",
-    "medium_armor": "medium",
-    "heavy_armor": "heavy",
-}
 
 
 @dataclass
@@ -31,11 +25,6 @@ class ProficiencyChoice:
     pool: str
     source: str
     options: list[str] | None = None
-
-
-def _normalize_armor_token(token: str) -> str:
-    """Привести токен доспеха к light/medium/heavy/shield."""
-    return ARMOR_ALIASES.get(token, token)
 
 
 def merge_proficiency_tokens(*parts: list[str]) -> list[str]:
@@ -112,16 +101,6 @@ def _collect_from_grants(
     return weapons, armors, tools, choices
 
 
-def _collect_from_features(
-    features: list[dict[str, Any]],
-    level: int,
-    *,
-    require_level: bool,
-) -> tuple[list[str], list[str], list[str], list[ProficiencyChoice]]:
-    """Владения из class features (обратная совместимость)."""
-    return _collect_from_grants(features, level, require_level=require_level)
-
-
 def get_class_proficiency_tokens(
     class_id: str,
 ) -> tuple[list[str], list[str], list[str]]:
@@ -136,7 +115,7 @@ def get_class_proficiency_tokens(
     weapons = [str(w) for w in raw_w] if isinstance(raw_w, list) else []
     raw_a = prof.get("armor", [])
     armors = (
-        [_normalize_armor_token(str(a)) for a in raw_a]
+        [normalize_armor_token(str(a)) for a in raw_a]
         if isinstance(raw_a, list)
         else []
     )
@@ -192,7 +171,7 @@ def get_subclass_proficiency_tokens(
             continue
         features = sub.get("class_features", [])
         if isinstance(features, list):
-            return _collect_from_features(
+            return _collect_from_grants(
                 [f for f in features if isinstance(f, dict)],
                 level,
                 require_level=True,
@@ -331,7 +310,7 @@ def has_armor_proficiency(proficiencies: list[str], armor_id: str) -> bool:
     cat = armor_category(armor_id)
     if not cat:
         return False
-    normalized = _normalize_armor_token(cat)
+    normalized = normalize_armor_token(cat)
     return normalized in proficiencies or cat in proficiencies
 
 
