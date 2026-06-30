@@ -7,7 +7,10 @@
 - `tests/test_character_builder.py`
 
 ### Changed
-- Phase 1: grants aggregation через `resolve_creation_grants` (`proficiencies`, `feat_visibility`, `character_storage`, `_creation_steps`)
+- `ui/menus/feats/` — пакет вместо монолитного `feats.py` (`_requirements`, `_subchoices`, `_creation`, `_level_up`)
+- `ui/menus/_display/_grants.py` — grant display вынесен из `_race.py`
+
+### Changed
 - Phase 0 refactor: armor token normalization only in `core/grant_mechanics.normalize_armor_token`; `proficiencies` delegates
 - Doc drift: `class_id` in `dnd-mud-core.mdc`; `core/scenario_actions.py` in `03-subclasses.md`
 
