@@ -7,13 +7,13 @@ from core.backgrounds import (
 from core.skills import PHB_SKILL_IDS
 
 
-def test_load_backgrounds_count():
+def test_load_backgrounds_count() -> None:
     """13 предысторий PHB."""
     backgrounds = load_backgrounds("ru")
     assert len(backgrounds) == 13
 
 
-def test_background_skills_valid():
+def test_background_skills_valid() -> None:
     """Навыки предысторий — валидные PHB skill id."""
     for bg in load_backgrounds("ru"):
         bg_id = str(bg["id"])
@@ -21,7 +21,7 @@ def test_background_skills_valid():
             assert skill_id in PHB_SKILL_IDS
 
 
-def test_acolyte_russian_name():
+def test_acolyte_russian_name() -> None:
     """Прислужник — каноничное имя PHB."""
     names = {bg["id"]: bg["name"] for bg in load_backgrounds("ru")}
     assert names["acolyte"] == "Прислужник"

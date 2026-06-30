@@ -1,32 +1,19 @@
-"""Тесты scenario runner."""
+"""Тесты scenario runner UI."""
+
+from collections.abc import Callable
+from typing import Any
+
+import pytest
 
 from core.models import Adventure, Character
-from core.scenario_actions import apply_scenario_action
 from ui.menus.scenario_flow import run_scenario
 
 
-def test_apply_scenario_action_grant_xp():
-    """grant_xp начисляет XP; повышение уровня — через UI."""
-    character = Character(
-        name="Hero",
-        race="human",
-        class_id="fighter",
-        level=1,
-        stats={"constitution": 14},
-        current_hp=12,
-        max_hp=12,
-        difficulty="hardcore",
-    )
-    result = apply_scenario_action("grant_xp", {"amount": 900}, character)
-    assert result.character.level == 1
-    assert result.character.experience == 900
-    assert result.level_up_pending is True
-    assert result.pick_subclass is False
-
-
 def test_run_scenario_grant_xp_levels_character(
-    monkeypatch, ru_strings, patch_int_input
-):
+    monkeypatch: pytest.MonkeyPatch,
+    ru_strings: dict[str, Any],
+    patch_int_input: Callable[[pytest.MonkeyPatch, list[int]], None],
+) -> None:
     """grant_xp в сценарии открывает экраны повышения уровня."""
     rolls = iter([8, 3])
 

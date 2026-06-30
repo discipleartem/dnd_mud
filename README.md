@@ -73,7 +73,10 @@ dnd_mud
 ## Тестирование
 
 ```bash
-make test              # pytest
+make verify-changed    # lint + test (staged)
+make verify-scope      # lint + test (diff vs dev)
+make verify            # full check + test (CI)
+make test              # pytest + coverage
 make check             # ruff + black + mypy
 pytest -v              # подробный вывод
 pytest --cov=.         # с coverage
@@ -123,7 +126,7 @@ dnd_mud/
 │   ├── dragonborn_pack/             # Пример: manifest + overlay.yaml
 │   └── _examples/example_mod.yaml
 │
-├── tests/                           # Тесты (250 в 34 файлах)
+├── tests/                           # Тесты (pytest)
 │   ├── test_adventure.py
 │   ├── test_character.py
 │   ├── test_difficulty.py

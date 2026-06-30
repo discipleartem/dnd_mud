@@ -10,7 +10,7 @@ description: >-
 
 Канон-политика: [`dnd-mud-workflow.mdc`](../../rules/dnd-mud-workflow.mdc) §Verify / review · [`AGENTS.md`](../../AGENTS.md).
 
-**Verify** (`make test`) — runtime. **Review** — readonly diff + чеклист; не дублирует pytest.
+**Verify** (`make verify-scope` локально; `make verify` в CI) — runtime. **Review** — readonly diff + чеклист; не дублирует pytest.
 
 ## Когда выполнять
 
@@ -48,7 +48,14 @@ git branch --show-current
 
 ## Выбор режима review
 
-Перед review: `git fetch origin`, определить base (§**Определение base branch**), оценить diff `origin/<base>...HEAD`.
+Перед review: `git fetch origin`, определить base (§**Определение base branch**), **снять метрики diff** (не опираться на числа из docs — suite и diff меняются):
+
+```bash
+git diff --shortstat origin/<base>...HEAD
+git diff --name-only origin/<base>...HEAD
+```
+
+При необходимости указать число тестов в ответе: `pytest --collect-only -q` (из `.venv`).
 
 Для **task-ветки** перед full review: `git rebase origin/dev`. На **`dev`** rebase на `origin/dev` не нужен; убедиться, что `origin/main` актуален (`git fetch origin`).
 
@@ -56,7 +63,7 @@ git branch --show-current
 |---------|-------|
 | Только `docs/`, `.cursor/rules`, `AGENTS.md` | **Пропуск** |
 | Пользователь явно просит «полный review» / «bugbot» | **Full** |
-| Diff без `core/`, `database/`, `mods/`, `ui/`, `main.py`; ≤5 файлов; ≤~200 строк (`git diff --shortstat`) | **Light** |
+| Diff **не** затрагивает `core/`, `database/`, `mods/`, `ui/`, `main.py`; узкий scope по `--shortstat` / `--name-only` (преимущественно docs, rules, skills, infra/tests без продуктового кода) | **Light** |
 | Иначе | **Full** |
 
 ## Предусловия

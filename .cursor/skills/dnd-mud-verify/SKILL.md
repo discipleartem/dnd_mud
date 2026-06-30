@@ -1,8 +1,8 @@
 ---
 name: dnd-mud-verify
 description: >-
-  Runs dnd_mud verification checklist (make test, make check, python main.py smoke)
-  once at end of task. Use before push/PR or when the user asks to verify changes.
+  Runs dnd_mud verification (verify-changed / verify-scope / full via CI).
+  Use after subtasks, at end of task branch, before push/PR, or when asked.
 disable-model-invocation: true
 ---
 
@@ -10,9 +10,21 @@ disable-model-invocation: true
 
 Канон: [`dnd-mud-workflow.mdc`](../../rules/dnd-mud-workflow.mdc). Браузер **запрещён** — только консоль.
 
+## Три уровня verify
+
+| Уровень | Когда | Команда |
+|---------|-------|---------|
+| **changed** | После подзадачи, pre-commit | `make verify-changed` |
+| **scope** | Конец task-ветки, после rebase/merge | `make verify-scope` |
+| **full** | CI на PR; опционально локально | `make verify` (= `make check` + `make test`) |
+
+Маппинг changed/scope → pytest/lint: [`scripts/verify_targets.py`](../../scripts/verify_targets.py).
+
 ## Когда выполнять
 
-Один раз в конце task-ветки, **после** docs (skill `dnd-mud-docs-after-task`), **перед** review (skill `dnd-mud-review`).
+- **Подзадача:** `make verify-changed` после правок (или полагается на pre-commit).
+- **Конец task-ветки:** один раз **после** docs (skill `dnd-mud-docs-after-task`), **перед** review — `make verify-scope`.
+- **Full локально** — по желанию перед push; **обязателен** в CI ([`.github/workflows/ci.yml`](../../.github/workflows/ci.yml)) на PR в `dev` / `main`.
 
 ## Предусловия
 
@@ -29,15 +41,17 @@ which python   # must point to .venv/bin/python
 
 | Условие | Команда |
 |---------|---------|
-| Изменён код | `make test` — **обязательно** |
-| Типы / импорты | `make check` |
+| Подзадача (staged .py) | `make verify-changed` |
+| Конец задачи (diff `origin/dev...HEAD`) | `make verify-scope` |
 | Затронут UI (`ui/`, меню) | `python main.py` — smoke затронутого меню |
+| Полный прогон (CI / вручную) | `make verify` |
 
 **Пропустить runtime**, если только docs, `.cursor/`, `AGENTS.md`, workflows — без изменений кода.
 
+Число тестов в отчётах — только из `pytest --collect-only -q`, не из docs.
+
 ## Чеклист Before finishing
 
-- [ ] `make test` прошёл (если был код)
-- [ ] `make check` прошёл (если нужен)
+- [ ] `make verify-scope` прошёл (если был код)
 - [ ] Smoke пройден (если UI)
-- [ ] Перейти к skill [`dnd-mud-review`](../dnd-mud-review/SKILL.md)
+- [ ] Перейти к skill [`dnd-mud-review`](../dnd-mud-review/SKILL.md) — review **не** заменяет CI full test

@@ -40,9 +40,10 @@ dnd_mud
 ### Тестирование
 
 ```bash
-make test
+make test          # полный pytest + coverage (core, ui)
+make verify-scope  # инкрементально на конец task-ветки (vs origin/dev)
+VERIFY_BASE=origin/main make verify-scope  # на ветке dev — diff vs main
 pytest -v
-pytest --cov=.
 ```
 
 ## Структура проекта
@@ -127,6 +128,7 @@ dnd_mud/
 │   ├── test_menus_stats.py
 │   ├── test_models.py
 │   ├── test_races.py
+│   ├── test_verify_targets.py
 │   ├── test_settings.py
 │   ├── test_stats.py
 │   ├── test_grants.py
@@ -154,18 +156,30 @@ dnd_mud/
 ## Линтинг и форматирование
 
 ```bash
-make check   # lint + black --check + mypy
+make check            # полный: ruff + black --check + mypy
+make verify-changed   # только staged .py (подзадача)
+make verify-scope     # diff origin/dev...HEAD (конец task-ветки)
+VERIFY_BASE=origin/main make verify-scope  # на ветке dev
+make verify           # check + test (CI / ручной full)
 ```
+
+Маппинг changed → pytest/lint: [`scripts/verify_targets.py`](../scripts/verify_targets.py). Если хотя бы один изменённый `.py` не смапился — full suite (не только когда mapped-тестов нет совсем).
+
+Инкрементальный `mypy` в `verify-changed` / `verify-scope` проверяет только изменённые `.py`; полный typecheck — `make check` или CI.
 
 ### Pre-commit (локально)
 
-Перед коммитом с изменениями кода или данных хук запускает `make check` и `make test` (не GitHub Actions).
+Перед коммитом с изменениями кода или данных хук запускает `make verify-changed` (не полный CI).
 
 ```bash
 make install-hooks   # или make install — подключает .githooks/pre-commit
 ```
 
 Коммиты только в `docs/`, `.cursor/`, `.githooks/`, `AGENTS.md`, `.github/`, `.vscode/` — без прогона. Обход: `git commit --no-verify` (только если осознанно).
+
+### CI (GitHub Actions)
+
+Полный `make check` + `make test` — на PR в `dev` и `main`: [`.github/workflows/ci.yml`](../.github/workflows/ci.yml).
 
 ## Тестирование
 
@@ -188,7 +202,7 @@ make install-hooks   # или make install — подключает .githooks/pr
 """Тесты UI: выбор персонажа, подрасы, new game, приключения."""
 ```
 
-Покрытие (250 тестов; ключевые):
+Покрытие (актуальный список — `pytest --collect-only -q`; ключевые файлы):
 - `test_display.py` — формат stats, карточка персонажа, grants на экране расы
 - `test_grants.py` — нормализация grants, legacy features
 - `test_mod_loader.py` — deep-merge overlay модов
@@ -204,7 +218,7 @@ make install-hooks   # или make install — подключает .githooks/pr
 - `test_menus_main.py` — главное меню, select_difficulty
 - `test_menus_stats.py` — генерация характеристик (standard array, point-buy, 4d6, HardCore)
 - `test_models.py` — сериализация Character/Adventure
-- `test_races.py` — load_races, bilingual names
+- `test_verify_targets.py` — маппинг incremental verify
 - `test_settings.py` — save/load JSON, `schema_version`
 - `test_stats.py` — validate_point_buy_finish, point_buy_points_remaining
 
@@ -236,7 +250,7 @@ git fetch origin
 git checkout main && git pull origin main
 git checkout dev && git pull origin dev
 git log dev..origin/main --oneline   # must be empty
-git merge origin/main && make test && git push origin dev   # если main впереди
+git merge origin/main && make verify-scope && git push origin dev   # если main впереди
 git checkout -b feat/my-task
 ```
 
@@ -246,7 +260,7 @@ git checkout -b feat/my-task
 
 ```bash
 git fetch origin && git rebase origin/dev
-make test
+make verify-scope
 # skill dnd-mud-review — light или full, один раз, до push/PR
 git push -u origin HEAD        # после rebase на remote: --force-with-lease
 gh pr create --base dev --title "feat: …"   # squash merge
@@ -258,13 +272,13 @@ gh pr create --base dev --title "feat: …"   # squash merge
 
 | Канал | Использование |
 |-------|----------------|
-| **Light review** (оркестратор, diff vs `dev`) | Мелкие ветки без `core/`/`database/`/`mods/`/`ui/`/`main.py`, ≤5 файлов, ≤~200 строк |
+| **Light review** (оркестратор, diff vs `dev`) | Узкий diff без `core/`/`database/`/`mods/`/`ui/`/`main.py` — критерии и метрики: skill [`dnd-mud-review`](../.cursor/skills/dnd-mud-review/SKILL.md) (`git diff --shortstat`, `--name-only`) |
 | **Full review** (subagent `bugbot`) | Рискованные изменения; явный запрос «полный review» |
 | GitHub PR Bugbot (авто на push, `.cursor/BUGBOT.md`) | **Нет** |
 
 Повтор после fix Blocker — **light re-check** (не full bugbot по умолчанию). Release `dev` → `main` — без обязательного bugbot; см. skill [`dnd-mud-release`](../.cursor/skills/dnd-mud-release/SKILL.md).
 
-Quality gate на PR `task → dev`: локальный pytest + локальный review (light или full). CI на task-PR нет; на release `dev → main` — [workflow](../.github/workflows/pr-dev-to-main-check.yml).
+Quality gate на PR `task → dev`: локальный `make verify-scope` + review (light или full). Полный pytest/lint — CI [`ci.yml`](../.github/workflows/ci.yml) на PR в `dev`/`main`; sync-check release — [`pr-dev-to-main-check.yml`](../.github/workflows/pr-dev-to-main-check.yml).
 
 #### Рекомендуемые настройки Cursor IDE
 
@@ -398,7 +412,7 @@ races:
 - ✅ Flow «Загрузить игру» — заглушка (`errors.load_not_implemented`)
 
 ### Тестирование
-- ✅ 250 тестов (см. выше)
+- ✅ pytest suite (`make test`; число кейсов: `pytest --collect-only -q`)
 - ⏳ Backlog (добавляются по необходимости, см. [философию](#философия) выше):
   - E2E smoke через `python main.py` (ручная проверка меню)
 

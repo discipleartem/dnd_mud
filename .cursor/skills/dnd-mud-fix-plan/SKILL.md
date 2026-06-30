@@ -49,7 +49,7 @@ disable-model-invocation: true
 3. Для каждого пункта must/optional указать:
    - файл(ы) и суть правки (1–2 предложения)
    - предлагаемый commit message (Conventional Commits, **why**)
-   - verify после пункта или блока: `make check`, `make test`; smoke — если UI
+   - verify после пункта: `make verify-changed`; после блока must-fix: `make verify-scope`
 4. Границы коммитов: atomic; не смешивать unrelated (код vs docs vs `.cursor/`).
 5. Финальный блок **After fixes**:
    - verify один раз в конце блока must-fix
@@ -66,7 +66,7 @@ disable-model-invocation: true
 1. [Blocker|Major] `<location>` — <краткое описание>
    - Files: …
    - Commit: `fix: …` / `docs: …`
-   - Verify: `make check` && `make test` [; smoke …]
+   - Verify: `make verify-changed` [; smoke …]
 
 ### Optional
 2. [Minor] …
@@ -78,7 +78,7 @@ disable-model-invocation: true
 - [Nit] `<location>` — …
 
 ### After fixes
-- [ ] verify (…)
+- [ ] verify-scope (…); full test — CI на PR
 - [ ] light re-check (dnd-mud-review) — только при Blocker в must-fix; full bugbot — по запросу
 - [ ] push/PR — по запросу
 ```

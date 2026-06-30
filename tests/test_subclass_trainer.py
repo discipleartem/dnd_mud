@@ -1,5 +1,10 @@
 """Тесты NPC-наставника подкласса."""
 
+from collections.abc import Callable
+from typing import Any
+
+import pytest
+
 from core.models import Character
 from ui.menus.subclass_trainer import (
     assign_subclass_from_menu,
@@ -8,8 +13,10 @@ from ui.menus.subclass_trainer import (
 
 
 def test_run_subclass_trainer_requires_higher_level(
-    capsys, ru_strings, patch_int_input
-):
+    capsys: pytest.CaptureFixture[str],
+    ru_strings: dict[str, Any],
+    patch_int_input: Callable[[pytest.MonkeyPatch, list[int]], None],
+) -> None:
     """Боец 1 ур. не может выбрать подкласс у наставника."""
     char = Character(
         name="Hero",
@@ -25,7 +32,9 @@ def test_run_subclass_trainer_requires_higher_level(
     assert "3" in output
 
 
-def test_run_subclass_trainer_already_has_subclass(capsys, ru_strings):
+def test_run_subclass_trainer_already_has_subclass(
+    capsys: pytest.CaptureFixture[str], ru_strings: dict[str, Any]
+) -> None:
     """Подкласс уже выбран — сообщение без повторного выбора."""
     char = Character(
         name="Hero",
@@ -43,8 +52,10 @@ def test_run_subclass_trainer_already_has_subclass(capsys, ru_strings):
 
 
 def test_assign_subclass_from_menu_champion(
-    monkeypatch, ru_strings, patch_int_input
-):
+    monkeypatch: pytest.MonkeyPatch,
+    ru_strings: dict[str, Any],
+    patch_int_input: Callable[[pytest.MonkeyPatch, list[int]], None],
+) -> None:
     """Наставник: выбор чемпиона сохраняет subclass_id."""
     char = Character(
         name="Hero",

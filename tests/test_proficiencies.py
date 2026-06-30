@@ -1,5 +1,7 @@
 """Тесты владений снаряжением."""
 
+import pytest
+
 from core.proficiencies import (
     build_fixed_proficiencies,
     get_background_tool_proficiencies,
@@ -37,21 +39,22 @@ def test_life_domain_heavy_armor():
     assert "heavy" in armors
 
 
-def test_valor_bard_level_1_no_martial():
-    """Коллегия доблести — воинское оружие только с 3 уровня."""
-    weapons, _, _, _ = get_subclass_proficiency_tokens(
-        "bard", "valor_college", 1
-    )
-    assert "martial" not in weapons
-
-
-def test_valor_bard_level_3_martial():
-    """Коллегия доблести на 3 уровне — воинское оружие."""
+@pytest.mark.parametrize(
+    "level,expect_martial,expect_medium",
+    [
+        (1, False, False),
+        (3, True, True),
+    ],
+)
+def test_valor_bard_martial_and_armor_by_level(
+    level: int, expect_martial: bool, expect_medium: bool
+) -> None:
+    """Коллегия доблести — воинское оружие и средние доспехи с 3 уровня."""
     weapons, armors, _, _ = get_subclass_proficiency_tokens(
-        "bard", "valor_college", 3
+        "bard", "valor_college", level
     )
-    assert "martial" in weapons
-    assert "medium" in armors
+    assert ("martial" in weapons) is expect_martial
+    assert ("medium" in armors) is expect_medium
 
 
 def test_elf_weapon_proficiency():
@@ -79,14 +82,10 @@ def test_criminal_background_tool_choice():
     assert choices[0].pool == "gaming_sets"
 
 
-def test_has_weapon_proficiency_by_category():
-    """Владение simple покрывает club."""
+def test_has_weapon_and_armor_proficiency():
+    """Владение категориями оружия и доспехов."""
     assert has_weapon_proficiency(["simple"], "club")
     assert not has_weapon_proficiency(["martial"], "club")
-
-
-def test_has_armor_proficiency_shield():
-    """Владение shield."""
     assert has_armor_proficiency(["shield"], "shield")
     assert has_armor_proficiency(["light"], "leather")
 
@@ -97,8 +96,8 @@ def test_merge_proficiency_tokens_dedupes():
     assert merged == ["simple", "martial"]
 
 
-def test_dwarf_tool_choice_not_pre_granted():
-    """Дварф: один инструмент на выбор, не все три сразу."""
+def test_dwarf_tool_proficiency_choice_and_build():
+    """Дварф: инструмент на выбор; fixed-владения без инструментов до UI."""
     from core.proficiencies import get_racial_proficiency_tokens
 
     _, _, tools, choices = get_racial_proficiency_tokens("dwarf", None)
@@ -111,14 +110,11 @@ def test_dwarf_tool_choice_not_pre_granted():
         "mason_tools",
     }
 
-
-def test_dwarf_build_fixed_proficiencies_no_tools_until_picked():
-    """Дварф: fixed-владения без инструментов до выбора в UI."""
-    weapons, armors, tools = build_fixed_proficiencies(
+    weapons, armors, built_tools = build_fixed_proficiencies(
         "dwarf", None, "fighter", None, None, 1
     )
     assert "battleaxe" in weapons
-    assert tools == []
+    assert built_tools == []
 
 
 def test_mountain_dwarf_armor_proficiency():
