@@ -5,7 +5,6 @@ from pathlib import Path
 
 import pytest
 
-from core.io import CatalogLoadError
 from core.mod_loader import (
     clear_mod_loader_cache,
     load_merged_catalog,
@@ -35,10 +34,10 @@ def test_dragonborn_mod_overlay(tmp_path, monkeypatch):
     clear_races_cache()
 
 
-def test_corrupt_mod_manifest_raises(
+def test_corrupt_mod_manifest_skips_overlay(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
-    """Битый manifest.yaml включённого мода — CatalogLoadError."""
+    """Битый manifest.yaml включённого мода не роняет загрузку каталога."""
     mod_id = "broken_pack"
     mod_dir = tmp_path / "mods" / mod_id
     mod_dir.mkdir(parents=True)
@@ -53,5 +52,5 @@ def test_corrupt_mod_manifest_raises(
     clear_mod_loader_cache()
     clear_races_cache()
 
-    with pytest.raises(CatalogLoadError):
-        load_merged_catalog("database/races/races.yaml", "races")
+    races = load_merged_catalog("database/races/races.yaml", "races")
+    assert "human" in races
