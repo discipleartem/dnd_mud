@@ -409,7 +409,7 @@ def test_list_feats_cleric_life_hides_heavy_armor_feat():
 
 def test_print_feat_selection_menu_shows_hidden_section(capsys, ru_strings):
     """Скрытые черты — в конце списка, серым, без номера."""
-    from ui.menus.feats import _print_feat_selection_menu
+    from ui.menus.feats._selection import _print_feat_selection_menu
 
     ctx = FeatRequirementContext(
         stats={"strength": 16, "dexterity": 14},
@@ -434,7 +434,7 @@ def test_print_feat_selection_menu_shows_hidden_section(capsys, ru_strings):
 
 
 def test_format_feat_requirement_ability_text():
-    from ui.menus.feats import _format_requirement_text
+    from ui.menus.feats._requirements import _format_requirement_text
 
     strings = {
         "character": {
@@ -459,7 +459,7 @@ def test_format_feat_requirement_ability_text():
 
 def test_format_or_ability_requirements_ritual_caster():
     from core.localization import load_strings
-    from ui.menus.feats import (
+    from ui.menus.feats._requirements import (
         _format_or_ability_requirements,
         _split_feat_requirements,
     )
@@ -527,7 +527,7 @@ def test_creation_known_for_feat_picks_includes_race_and_background():
 def test_pick_skills_or_tools_excludes_known(
     monkeypatch, ru_strings, patch_int_input
 ):
-    from ui.menus.feats import _pick_skills_or_tools
+    from ui.menus.feats._subchoices import _pick_skills_or_tools
 
     patch_int_input(monkeypatch, [1])
     result = _pick_skills_or_tools(
@@ -545,7 +545,7 @@ def test_pick_skills_or_tools_excludes_known(
 def test_pick_skills_or_tools_excludes_category_tool_pool(
     monkeypatch, ru_strings, patch_int_input
 ):
-    from ui.menus.feats import _pick_skills_or_tools
+    from ui.menus.feats._subchoices import _pick_skills_or_tools
 
     patch_int_input(monkeypatch, [1])
     result = _pick_skills_or_tools(
@@ -664,7 +664,7 @@ def test_bonus_proficiencies_visibility_variants():
 def test_pick_weapons_for_feat_excludes_martial_proficiency(
     monkeypatch, ru_strings, patch_int_input
 ):
-    from ui.menus.feats import _pick_weapons_for_feat
+    from ui.menus.feats._subchoices import _pick_weapons_for_feat
 
     patch_int_input(monkeypatch, [1])
     result = _pick_weapons_for_feat(
