@@ -3,7 +3,7 @@
 from dataclasses import dataclass
 from typing import Any
 
-from core.classes import _load_classes_yaml, get_subclass_choice_level
+from core.classes import get_class_dict, get_subclass_choice_level
 from core.equipment import (
     armor_category,
     resolve_tool_pool,
@@ -145,8 +145,8 @@ def get_class_proficiency_tokens(
     class_id: str,
 ) -> tuple[list[str], list[str], list[str]]:
     """Базовые владения класса."""
-    info = _load_classes_yaml().get(class_id, {})
-    if not isinstance(info, dict):
+    info = get_class_dict(class_id)
+    if not info:
         return [], [], []
     prof = info.get("proficiencies", {})
     if not isinstance(prof, dict):
@@ -166,8 +166,8 @@ def get_class_proficiency_tokens(
 
 def get_class_tool_choices(class_id: str) -> list[ProficiencyChoice]:
     """Выборы инструментов класса."""
-    info = _load_classes_yaml().get(class_id, {})
-    if not isinstance(info, dict):
+    info = get_class_dict(class_id)
+    if not info:
         return []
     prof = info.get("proficiencies", {})
     if not isinstance(prof, dict):
@@ -200,8 +200,8 @@ def get_subclass_proficiency_tokens(
     """Владения подкласса с учётом уровня feature."""
     if not subclass_id:
         return [], [], [], []
-    info = _load_classes_yaml().get(class_id, {})
-    if not isinstance(info, dict):
+    info = get_class_dict(class_id)
+    if not info:
         return [], [], [], []
     raw_subs = info.get("subclasses", [])
     if not isinstance(raw_subs, list):
@@ -383,8 +383,8 @@ def is_valid_tool_selection(
 
 def get_class_saving_throws(class_id: str) -> list[str]:
     """Спасброски класса."""
-    info = _load_classes_yaml().get(class_id, {})
-    if not isinstance(info, dict):
+    info = get_class_dict(class_id)
+    if not info:
         return []
     raw = info.get("saving_throws", [])
     if isinstance(raw, list):

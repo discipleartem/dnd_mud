@@ -4,7 +4,7 @@ from typing import Any
 
 from core.abilities import skill_ids
 from core.classes import (
-    _load_classes_yaml,
+    get_class_dict,
     get_subclass_choice_level,
     load_class_full,
 )
@@ -168,9 +168,7 @@ def _subclass_features(
     """Список class_features выбранного подкласса."""
     if not subclass_id:
         return []
-    info = _load_classes_yaml().get(class_id, {})
-    if not isinstance(info, dict):
-        return []
+    info = get_class_dict(class_id)
     raw_subs = info.get("subclasses", [])
     if not isinstance(raw_subs, list):
         return []

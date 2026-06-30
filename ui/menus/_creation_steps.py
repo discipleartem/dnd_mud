@@ -25,8 +25,9 @@ from ui.menus.expertise import select_creation_expertise
 from ui.menus.feats import select_creation_feats
 from ui.menus.languages import select_creation_languages
 from ui.menus.proficiencies import select_creation_proficiencies
+from ui.menus.settings import select_difficulty
 from ui.menus.skills import select_creation_skills
-from ui.menus.stats import show_stats_generation_flow
+from ui.menus.stats.stats_flow import show_stats_generation_flow
 
 CreationStep = Literal[
     "race",
@@ -66,6 +67,32 @@ class _CreationState:
     feat_ids: list[str] = field(default_factory=list)
     feat_choices: dict[str, dict[str, Any]] = field(default_factory=dict)
     hardcore_rolls: list[int] = field(default_factory=list)
+
+    @property
+    def start_level(self) -> int:
+        """Стартовый уровень по сложности (вычисляется один раз на чтение)."""
+        return start_level_for_difficulty(self.difficulty)
+
+
+def show_create_character_flow(
+    strings: StringsDict, language: str = "ru"
+) -> Character | None:
+    """Flow «Создать персонажа»: сложность → создание."""
+    difficulty = select_difficulty(strings)
+    if difficulty is None:
+        return None
+
+    _print_screen_header(get_string(strings, "character.creation_caption"))
+
+    name = _deps.get_str_input(
+        get_string(strings, "character.name_prompt"),
+        min_length=2,
+        only_letters=True,
+        strings=strings,
+    )
+
+    state = _CreationState(name=name, difficulty=difficulty)
+    return run_creation_steps(strings, state, language)
 
 
 def _feats_step_required(state: _CreationState) -> bool:
@@ -136,7 +163,7 @@ def _save_created_character(state: _CreationState) -> Character | None:
     if state.race_id is None or state.stats is None or state.class_id is None:
         return None
 
-    start_level = start_level_for_difficulty(state.difficulty)
+    start_level = state.start_level
     features_applied = class_features_applied_at_creation(
         state.class_id, state.subclass_id, start_level
     )
@@ -293,7 +320,7 @@ def run_creation_steps(
                 ):
                     step = "class"
                     continue
-                start_level = start_level_for_difficulty(state.difficulty)
+                start_level = state.start_level
                 feat_result = select_creation_feats(
                     strings,
                     state.race_id,
@@ -346,7 +373,7 @@ def run_creation_steps(
                 if state.race_id is None or state.class_id is None:
                     step = "proficiencies"
                     continue
-                start_level = start_level_for_difficulty(state.difficulty)
+                start_level = state.start_level
                 skills = select_creation_skills(
                     strings,
                     state.race_id,
@@ -372,7 +399,7 @@ def run_creation_steps(
                 if state.class_id is None or state.skills is None:
                     step = "skills"
                     continue
-                start_level = start_level_for_difficulty(state.difficulty)
+                start_level = state.start_level
                 expertise_result = select_creation_expertise(
                     strings,
                     state.class_id,

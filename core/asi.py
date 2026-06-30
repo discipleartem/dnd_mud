@@ -1,6 +1,6 @@
 """Увеличение характеристик (ASI) при повышении уровня."""
 
-from core.classes import _load_classes_yaml
+from core.classes import get_class_dict
 from core.dice import ability_modifier
 from core.models import Character
 from core.stats import ABILITY_SCORE_MAX, STAT_NAMES, apply_bonuses_to_stats
@@ -21,8 +21,8 @@ def feat_id_from_asi_choice(asi_value: str) -> str | None:
 
 def class_grants_asi_at_level(class_id: str, level: int) -> bool:
     """Есть ли у класса умение ASI на указанном уровне."""
-    class_info = _load_classes_yaml().get(class_id, {})
-    if not isinstance(class_info, dict):
+    class_info = get_class_dict(class_id)
+    if not class_info:
         return False
     raw_features = class_info.get("class_features", [])
     if not isinstance(raw_features, list):
@@ -83,7 +83,7 @@ def con_hp_bonus_from_asi(
 
 def auto_asi_bonus(class_id: str) -> StatMap:
     """Авто-ASI для тестов: +2 к ключевой характеристике класса."""
-    class_info = _load_classes_yaml().get(class_id, {})
+    class_info = get_class_dict(class_id)
     prime = "strength"
     if isinstance(class_info, dict):
         raw = class_info.get("prime_ability", "strength")

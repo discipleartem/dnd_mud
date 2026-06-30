@@ -8,7 +8,6 @@ from core.models import Adventure, Character
 from ui.menus import (
     _creation_steps,
     _deps,
-    character_flow,
     characters_menu,
     new_game,
 )
@@ -60,44 +59,22 @@ def test_half_orc_auto_selects_single_subrace(
 
 
 def test_human_shows_standard_and_variant_subraces(
-    monkeypatch, capsys, patch_int_input
+    monkeypatch,
+    capsys,
+    patch_int_input,
+    subrace_strings,
+    human_race_with_subraces,
 ):
     """Человек показывает подрасы standard и variant_human."""
-    strings = {
-        "character": {
-            "subrace_caption": "ОПИСАНИЕ РАСЫ И ВЫБОР ПОДРАСЫ",
-            "race_description": "  {desc}",
-            "features_label": "  Особенности:",
-            "feature_line": "    • {name}: {desc}",
-            "subraces_label": "  Подрасы:",
-            "subrace_prompt": "Выберите подрасу: ",
-            "back": "Назад",
-        }
-    }
-    race = {
-        "name": "Человек",
-        "description": "Описание человека",
-        "subraces": {
-            "standard": {
-                "name": "Человек (стандарт)",
-                "description": "Стандартный человек",
-                "ability_bonuses": {"strength": 1},
-            },
-            "variant_human": {
-                "name": "Человек (вариант)",
-                "description": "Вариант человека",
-                "inherit": {"ability_bonuses": False, "grants": False},
-                "grants": [],
-            },
-        },
-    }
 
     monkeypatch.setattr(
-        _deps, "load_race_full", lambda race_id, language="ru": race
+        _deps,
+        "load_race_full",
+        lambda _race_id, language="ru": human_race_with_subraces,
     )
     patch_int_input(monkeypatch, [1])
 
-    selected, subrace_id = select_subrace(strings, "human")
+    selected, subrace_id = select_subrace(subrace_strings, "human")
     output = capsys.readouterr().out
 
     assert selected is True
@@ -111,7 +88,7 @@ def test_create_character_back_from_subrace_exits(
 ):
     """Назад с подрасы — к расе; повторный назад выходит из flow."""
     monkeypatch.setattr(
-        character_flow,
+        _creation_steps,
         "select_difficulty",
         lambda strings: "normal",
     )
@@ -134,7 +111,7 @@ def test_create_character_back_from_subrace_exits(
     monkeypatch.setattr(_creation_steps, "select_subrace", fake_subrace)
     patch_int_input(monkeypatch, [1, 0])
 
-    result = character_flow.show_create_character_flow(ru_strings)
+    result = _creation_steps.show_create_character_flow(ru_strings)
 
     assert result is None
     assert subrace_calls["n"] == 1
@@ -147,7 +124,7 @@ def test_hardcore_back_from_stats_keeps_rolls(
     from ui.menus.stats import stats_methods
 
     monkeypatch.setattr(
-        character_flow,
+        _creation_steps,
         "select_difficulty",
         lambda strings: "hardcore",
     )
@@ -225,7 +202,7 @@ def test_hardcore_back_from_stats_keeps_rolls(
     monkeypatch.setattr(stats_methods, "_press_enter", lambda strings: None)
     patch_int_input(monkeypatch, [1, 0, 1])
 
-    character_flow.show_create_character_flow(ru_strings)
+    _creation_steps.show_create_character_flow(ru_strings)
     output = capsys.readouterr().out
 
     assert roll_calls["count"] == 6
@@ -240,7 +217,7 @@ def test_hardcore_back_to_race_clears_rolls(
     from ui.menus.stats import stats_methods
 
     monkeypatch.setattr(
-        character_flow,
+        _creation_steps,
         "select_difficulty",
         lambda strings: "hardcore",
     )
@@ -324,7 +301,7 @@ def test_hardcore_back_to_race_clears_rolls(
     monkeypatch.setattr(stats_methods, "_press_enter", lambda strings: None)
     patch_int_input(monkeypatch, [1, 0, 1, 1])
 
-    character_flow.show_create_character_flow(ru_strings)
+    _creation_steps.show_create_character_flow(ru_strings)
 
     assert roll_calls["count"] == 12
 
@@ -501,7 +478,7 @@ def test_new_game_no_characters_goes_to_create(monkeypatch):
 
     monkeypatch.setattr(_deps, "load_characters", lambda: [])
     monkeypatch.setattr(
-        character_flow, "show_create_character_flow", create_flow
+        _creation_steps, "show_create_character_flow", create_flow
     )
 
     new_game.show_new_game_flow({}, {"language": "ru"})
