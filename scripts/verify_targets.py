@@ -13,7 +13,6 @@ TESTS_DIR = ROOT / "tests"
 
 FULL_SUITE_PATHS = frozenset(
     {
-        "conftest.py",
         "pyproject.toml",
         "scripts/verify_targets.py",
         "Makefile",
@@ -32,7 +31,7 @@ CORE_MODULE_TESTS: dict[str, list[str]] = {
     "core/feat_visibility.py": ["tests/test_feats.py"],
     "core/feats_loader.py": ["tests/test_feats.py"],
     "core/character_storage.py": ["tests/test_character.py"],
-    "core/scenario_actions.py": ["tests/test_scenario.py"],
+    "core/scenario_actions.py": ["tests/test_class_features.py"],
     "core/levels.py": ["tests/test_progression.py"],
     "core/hp_bonuses.py": ["tests/test_progression.py"],
 }
@@ -56,7 +55,7 @@ UI_MENU_TESTS: dict[str, str] = {
     "expertise": "tests/test_expertise.py",
     "asi": "tests/test_asi.py",
     "level_up": "tests/test_level_up.py",
-    "class_features": "tests/test_class_features_ui.py",
+    "class_features": "tests/test_class_features.py",
     "subclass_trainer": "tests/test_subclass_trainer.py",
     "_creation_handlers": "tests/test_creation_handlers.py",
     "_deps": "tests/test_menus_character.py",

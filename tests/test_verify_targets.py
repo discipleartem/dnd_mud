@@ -12,6 +12,15 @@ def test_core_and_ui_mapping() -> None:
     assert vt.source_to_tests("core/feat_visibility.py") == [
         "tests/test_feats.py"
     ]
+    assert vt.source_to_tests("core/scenario_actions.py") == [
+        "tests/test_class_features.py"
+    ]
+    assert vt.source_to_tests("ui/menus/class_features.py") == [
+        "tests/test_class_features.py"
+    ]
+    assert vt.source_to_tests("ui/menus/scenario_flow.py") == [
+        "tests/test_scenario.py"
+    ]
     assert vt.source_to_tests("ui/menus/stats/stats_flow.py") == [
         "tests/test_menus_stats.py"
     ]
