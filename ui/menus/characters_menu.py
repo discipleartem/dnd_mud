@@ -99,6 +99,16 @@ def show_characters_menu(
     """Меню управления персонажами: список, создание, удаление."""
     while True:
         characters = _deps.load_characters()
+        corrupt_slugs = _deps.pop_corrupt_save_warnings()
+        if corrupt_slugs:
+            names = ", ".join(corrupt_slugs)
+            warning = get_string(
+                strings,
+                "characters_menu.corrupt_save_warning",
+                names=names,
+            )
+            print(f"  {Fore.RED}{warning}{Style.RESET_ALL}")
+            print()
         has_characters = bool(characters)
 
         _print_screen_header(get_string(strings, "characters_menu.caption"))

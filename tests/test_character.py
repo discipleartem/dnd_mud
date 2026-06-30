@@ -3,6 +3,7 @@
 import json
 
 import core.character as character_mod
+from core.character_storage import load_characters, pop_corrupt_save_warnings
 from core.progression import max_hp_for_level
 
 
@@ -467,3 +468,23 @@ def test_save_character_skips_feat_stat_bonuses_when_stats_final(
         apply_feat_stat_bonuses=False,
     )
     assert saved.stats["constitution"] == 14
+
+
+def test_load_characters_skips_corrupt_save(characters_dir):
+    """Битый JSON пропускается; slug в pop_corrupt_save_warnings."""
+    characters_dir.mkdir(parents=True, exist_ok=True)
+    (characters_dir / "bad.json").write_text("{not json", encoding="utf-8")
+    assert load_characters() == []
+    assert pop_corrupt_save_warnings() == ["bad"]
+
+
+def test_save_character_derives_proficiencies_when_omitted(characters_dir):
+    """save_character без proficiencies делегирует в character_builder."""
+    saved = character_mod.save_character(
+        name="AutoProf",
+        race_id="human",
+        class_id="fighter",
+        stats=dict.fromkeys(character_mod.STAT_NAMES, 10),
+    )
+    assert "simple" in saved.weapon_proficiencies
+    assert saved.armor_proficiencies

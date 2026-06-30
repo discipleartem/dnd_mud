@@ -1,5 +1,6 @@
 """Сохранение и загрузка персонажей в JSON."""
 
+import logging
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
@@ -12,6 +13,30 @@ from core.slug import make_save_slug
 from core.stats import STANDARD_ARRAY, generate_stats_standard_array
 from core.subclasses import start_level_for_difficulty
 from core.types import GameDifficulty, StatMap
+
+logger = logging.getLogger(__name__)
+
+_corrupt_save_slugs: list[str] = []
+
+
+def pop_corrupt_save_warnings() -> list[str]:
+    """Имена save_slug битых JSON-файлов с последнего load_characters."""
+    warnings = list(_corrupt_save_slugs)
+    _corrupt_save_slugs.clear()
+    return warnings
+
+
+def _is_corrupt_save_file(path: Path) -> bool:
+    """Файл существует и не читается как валидный персонаж."""
+    if not path.exists():
+        return False
+    try:
+        if path.stat().st_size == 0:
+            return False
+        data = load_json(path)
+        return not data.get("name")
+    except OSError:
+        return True
 
 
 def save_character(
@@ -65,6 +90,35 @@ def save_character(
     if level is None:
         level = start_level_for_difficulty(difficulty)
     level = clamp_level(level)
+
+    need_grants = (
+        weapon_proficiencies is None
+        or armor_proficiencies is None
+        or tool_proficiencies is None
+        or skills is None
+    )
+    if need_grants:
+        from core.character_builder import resolve_creation_grants
+
+        grants = resolve_creation_grants(
+            race_id,
+            subrace_id,
+            class_id,
+            background_id,
+            subclass_id,
+            level,
+            feat_ids=feat_ids,
+            feat_choices=feat_choices,
+            include_feat_languages=False,
+        )
+        if weapon_proficiencies is None:
+            weapon_proficiencies = list(grants.weapon_tokens)
+        if armor_proficiencies is None:
+            armor_proficiencies = list(grants.armor_tokens)
+        if tool_proficiencies is None:
+            tool_proficiencies = list(grants.tool_tokens)
+        if skills is None:
+            skills = list(grants.skill_ids)
 
     hp = max_hp_for_level(
         class_id,
@@ -201,6 +255,7 @@ def _character_created_at_timestamp(character: Character, path: Path) -> float:
 
 def load_characters() -> list[Character]:
     """Загрузить список всех сохранённых персонажей (старые → новые)."""
+    _corrupt_save_slugs.clear()
     if not CHARACTERS_DIR.exists():
         return []
 
@@ -211,6 +266,9 @@ def load_characters() -> list[Character]:
             entries.append(
                 (_character_created_at_timestamp(character, path), character)
             )
+        elif _is_corrupt_save_file(path):
+            logger.warning("Битый файл сохранения персонажа: %s", path)
+            _corrupt_save_slugs.append(path.stem)
 
     entries.sort(key=lambda item: item[0])
     return [character for _, character in entries]

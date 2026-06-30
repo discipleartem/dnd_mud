@@ -62,6 +62,36 @@ def _skills_from_proficiency_entry(entry: dict[str, Any]) -> list[str]:
     return [str(s) for s in raw_skills if str(s) in PHB_SKILL_IDS]
 
 
+def creation_skill_ids(
+    race_id: str,
+    subrace_id: str | None,
+    class_id: str,
+    background_id: str | None,
+    subclass_id: str | None,
+    level: int,
+    *,
+    feat_ids: list[str] | None = None,
+    feat_choices: dict[str, dict[str, Any]] | None = None,
+    extra_skills: list[str] | None = None,
+) -> list[str]:
+    """Базовые навыки при создании (раса, предыстория, черты, extra)."""
+    from core.character_builder import resolve_creation_grants
+
+    grants = resolve_creation_grants(
+        race_id,
+        subrace_id,
+        class_id,
+        background_id,
+        subclass_id,
+        level,
+        feat_ids=feat_ids,
+        feat_choices=feat_choices,
+        extra_skills=extra_skills,
+        include_feat_languages=False,
+    )
+    return list(grants.skill_ids)
+
+
 def apply_racial_proficiencies(
     race_id: str, subrace_id: str | None = None
 ) -> list[str]:

@@ -10,6 +10,7 @@ from core.character_storage import (
     delete_all_characters,
     delete_character,
     load_characters,
+    pop_corrupt_save_warnings,
     save_character,
     update_character,
 )
@@ -75,6 +76,7 @@ __all__ = [
     "load_background_full",
     "load_backgrounds",
     "load_characters",
+    "pop_corrupt_save_warnings",
     "load_class_full",
     "load_classes",
     "load_languages",
