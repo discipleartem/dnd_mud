@@ -113,26 +113,19 @@ dnd_mud/
 │   └── lost_mine.yaml
 ├── mods/
 │   └── dragonborn_pack/     # Пример mod overlay (manifest + overlay.yaml)
-├── tests/                   # pytest
+├── tests/                   # pytest (~29 файлов; см. pytest --collect-only -q)
 │   ├── conftest.py
-│   ├── test_adventure.py
 │   ├── test_character.py
 │   ├── test_difficulty.py
-│   ├── test_dice.py
-│   ├── test_input_handler.py
-│   ├── test_io.py
-│   ├── test_localization.py
-│   ├── test_main.py
-│   ├── test_menus_character.py
-│   ├── test_menus_main.py
-│   ├── test_menus_stats.py
-│   ├── test_models.py
-│   ├── test_races.py
-│   ├── test_verify_targets.py
-│   ├── test_settings.py
-│   ├── test_stats.py
-│   ├── test_grants.py
-│   └── test_mod_loader.py
+│   ├── test_stats.py        # stats, dice, constants
+│   ├── test_grants.py       # grants + races load
+│   ├── test_catalog_loader.py  # catalog + mod_loader
+│   ├── test_proficiencies.py   # proficiencies + skills
+│   ├── test_progression.py     # progression, level-up UI, scenario
+│   ├── test_menus_character.py # creation handlers, new game
+│   ├── test_subclasses.py      # subclasses + subclass_trainer
+│   ├── test_models.py          # models + adventure load
+│   └── test_verify_targets.py
 └── docs/                    # Документация
     ├── DATA_SCHEMA.md       # Схема YAML (grants, subraces, mods)
     ├── DND_RULES.md         # Правила D&D 5e (справочник по PHB)
@@ -191,36 +184,30 @@ make install-hooks   # или make install — подключает .githooks/pr
 > без лишних абстракций и без погони за покрытием.
 
 - Тесты — инструмент регрессии, не цель сама по себе
+- На сценарий — **один** тест на слой: core **или** 0–1 UI smoke (monkeypatch-навигация), не дублировать unit + integration одного пути
+- Похожие кейсы — `@pytest.mark.parametrize`, не копии функций; мелкие домены — в существующий `test_*.py`, не новый файл на 1–2 теста
 - При фиче или фиксе — минимальный diff в `tests/`: столько assert, сколько нужно для изменённого поведения
 - Эталоны стиля: `tests/test_difficulty.py` (короткий unit), `tests/test_menus_character.py` (интеграция UI без тяжёлых моков)
 - Не обязательно закрывать все пробелы из backlog Pre-Alpha — тест добавляется, когда есть реальное поведение, баг или риск регрессии
 
 Подробные правила для агентов: `.cursor/rules/dnd-mud-tests.mdc`.
 
-```python
-# tests/test_menus_character.py
-"""Тесты UI: выбор персонажа, подрасы, new game, приключения."""
-```
+Покрытие — актуальный список: `pytest --collect-only -q`. Ключевые файлы:
 
-Покрытие (актуальный список — `pytest --collect-only -q`; ключевые файлы):
-- `test_display.py` — формат stats, карточка персонажа, grants на экране расы
-- `test_grants.py` — нормализация grants, legacy features
-- `test_mod_loader.py` — deep-merge overlay модов
-- `test_adventure.py` — загрузка приключений, поля `hardcore_only`
-- `test_character.py` — save/load, генерация stats, variant human, slug
-- `test_difficulty.py` — `adventure_allows_difficulty()`
-- `test_dice.py` — `roll`, `roll_ability_score`, `ability_modifier`
-- `test_input_handler.py` — валидация int/str
-- `test_io.py` — `load_yaml` / `load_json`
-- `test_localization.py` — ключи en/ru, `resolve_localized_text`, `get_string` default
-- `test_main.py` — импорт `main`, VERSION
-- `test_menus_character.py` — подрасы, new game, фильтр приключений
-- `test_menus_main.py` — главное меню, select_difficulty
-- `test_menus_stats.py` — генерация характеристик (standard array, point-buy, 4d6, HardCore)
-- `test_models.py` — сериализация Character/Adventure
-- `test_verify_targets.py` — маппинг incremental verify
-- `test_settings.py` — save/load JSON, `schema_version`
-- `test_stats.py` — validate_point_buy_finish, point_buy_points_remaining
+| Файл | Область |
+|------|---------|
+| `test_stats.py` | point-buy, dice, proficiency bonus, DC |
+| `test_grants.py` | grants, загрузка рас |
+| `test_catalog_loader.py` | каталоги YAML, mod overlay |
+| `test_proficiencies.py` | владения, навыки при создании |
+| `test_progression.py` | XP, level-up core + UI smoke, scenario grant_xp |
+| `test_feats.py` | черты, visibility, UI выбора |
+| `test_character.py` | save/load, stats, slug |
+| `test_menus_character.py` | подрасы, new game, creation handlers |
+| `test_menus_stats.py` | генерация характеристик, HardCore 4d6 |
+| `test_subclasses.py` | подклассы, NPC-наставник |
+| `test_models.py` | Character/Adventure, load adventures |
+| `test_verify_targets.py` | маппинг incremental verify (`scripts/verify_targets.py`) |
 
 Запуск конкретного тестового файла:
 
