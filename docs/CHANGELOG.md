@@ -13,7 +13,7 @@
 - `ui/menus/_creation_handlers.py`, `_creation_navigation.py`, `_creation_finalize.py`, `_creation_state.py`
 
 ### Changed
-- Review fix-plan: битый `manifest.yaml` включённого мода пропускается с warning, каталог грузится без overlay
+- Docs: sync mod overlay table, feats package paths, `LoadCharactersResult`, `character_builder`, easy mode status
 - Review fix-plan: `ui/menus/new_game.py`, `characters_menu.py` — кэш `LoadCharactersResult`, reload после create/delete
 - Review fix-plan: `ui/menus/feats/__init__.py` — только публичный API (`select_creation_feats`, `select_level_up_feat_or_asi`)
 - Fix-plan remediation: `load_characters()` → `LoadCharactersResult` (без глобальной очереди `pop_corrupt_save_warnings`)

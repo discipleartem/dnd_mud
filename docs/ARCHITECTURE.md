@@ -37,6 +37,10 @@
 | `ui/menus/stats/stats_methods.py` | Standard array, point-buy, random |
 | `ui/menus/stats/stats_choice_bonuses.py` | Выборные расовые бонусы |
 | `ui/menus/settings.py` | Настройки, языки, выбор сложности |
+| `ui/menus/characters_menu.py` | Список персонажей; кэш `LoadCharactersResult`, reload после create/delete |
+| `ui/menus/_corrupt_saves.py` | Предупреждение о битых JSON в `saves/characters/` |
+| `ui/menus/feats/` | Выбор черт при создании и левелапе (публичный API в `__init__.py`) |
+| `ui/menus/_creation_handlers.py`, `_creation_navigation.py`, `_creation_finalize.py`, `_creation_state.py` | State machine создания персонажа |
 | `ui/menus/_common.py`, `_display/`, `_deps.py` | Общие хелперы, отображение (пакет), seam для тестов |
 | `ui/input_handler.py` | Валидация ввода, UTF-8 для stdin/stdout |
 
@@ -148,7 +152,7 @@ select_difficulty() → show_stats_generation_flow() → adventure_allows_diffic
 |-------|---------------------|---------------|
 | `normal` | 3 метода характеристик, переквалификация | Базовая механика engine |
 | `hardcore` | Авто-4d6×6, без переквалификации; фильтр приключений в UI | Gating модов, полная механика D&D 5e |
-| `easy` | — | Упрощённая механика / обучение |
+| `easy` | Старт 3 ур., обязательный подкласс; характеристики как Normal | Упрощённая механика engine / обучение |
 
 Фильтрация приключений: `core/difficulty.py` (`adventure_unavailable_reason`) + `_select_adventure()` в `ui/menus/new_game.py`. Каталог `adventures.yaml` задаёт `min_level`, `allowed_game_difficulties`, `hardcore_only`; недоступные приключения — серым списком с причиной.  
 Спецификация: [MUD_PRD.md §3.2.1](MUD_PRD.md#321-режимы-сложности-игры).

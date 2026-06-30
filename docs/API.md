@@ -372,7 +372,7 @@ load_skill_info(skill_id: str) -> dict[str, Any]
 
 ## core.feats — Черты
 
-Источник: `database/progression/feats.yaml`. Загрузка — `core/feats_loader.py`; гранты и apply — в `core/feats.py`; скрытие в меню выбора — `core/feat_visibility.py`. Выбор при создании (variant human) и при левелапе (ASI или черта).
+Источник: `database/progression/feats.yaml`. Загрузка — `core/feats_loader.py`; гранты и apply — в `core/feats.py`; скрытие в меню выбора — `core/feat_visibility.py`. UI: пакет `ui/menus/feats/` (`select_creation_feats`, `select_level_up_feat_or_asi`).
 
 ```python
 load_feats() -> list[dict[str, Any]]
@@ -429,7 +429,7 @@ get_class_saving_throws(class_id: str) -> list[str]
 apply_subclass_proficiencies_to_character(character) -> Character
 ```
 
-Re-export: `core.character`.
+Импорт из `core.proficiencies` (не re-export в `core.character`).
 
 ---
 
