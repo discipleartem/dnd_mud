@@ -249,6 +249,20 @@ grants_of_type(grants: list[dict[str, Any]], type_name: str) -> list[dict[str, A
 
 ---
 
+## core.grant_mechanics — Парсинг proficiency-grants
+
+Разбор владений из `grants[]` (расы, классы, черты). См. также `core/feat_visibility` для скрытия черт в меню.
+
+```python
+normalize_armor_token(token: str) -> str
+proficiency_tokens_from_grant(grant, choices=None) -> tuple[weapons, armors, tools]
+proficiency_tokens_and_skills_from_grant(grant, choices=None) -> tuple[weapons, armors, tools, skills]
+```
+
+`normalize_armor_token` — алиасы YAML (`light_armor` → `light` и т.д.).
+
+---
+
 ## core.mod_loader — Overlay модов
 
 ```python
@@ -319,13 +333,16 @@ load_skill_info(skill_id: str) -> dict[str, Any]
 
 ## core.feats — Черты
 
-Источник: `database/progression/feats.yaml`. Загрузка — `core/feats_loader.py`; гранты и apply — в `core/feats.py`. Выбор при создании (variant human) и при левелапе (ASI или черта).
+Источник: `database/progression/feats.yaml`. Загрузка — `core/feats_loader.py`; гранты и apply — в `core/feats.py`; скрытие в меню выбора — `core/feat_visibility.py`. Выбор при создании (variant human) и при левелапе (ASI или черта).
 
 ```python
 load_feats() -> list[dict[str, Any]]
 load_feat(feat_id: str) -> dict[str, Any]
 race_feat_step_required(race_id, subrace_id) -> bool
 feat_meets_requirements(feat_id, ctx) -> bool
+feat_visible_for_selection(feat_id, ctx) -> bool
+build_feat_selection_context(stats, race_id, subrace_id, background_id, class_id, subclass_id, level, *, skills=None, weapon_tokens=None, tool_tokens=None) -> FeatRequirementContext
+list_feats_for_selection(ctx, existing_ids) -> tuple[eligible, blocked, hidden]
 resolve_feat_grants(feat_id, choices) -> tuple[weapons, armors, tools, skills]
 get_feat_skill_ids(feat_ids, feat_choices) -> list[str]
 apply_feats_to_stats(stats, feat_ids, feat_choices) -> StatMap
@@ -334,6 +351,8 @@ tough_hp_adjustment_on_acquire(level) -> int
 ```
 
 `apply_feat_grants_to_character` — владения, навыки, языки и экспертиза одной черты; вызывается при левелапе (`level_up.py`, `resolve_pending_level_ups`).
+
+`list_feats_for_selection` — eligible (требования OK + новые владения), blocked (требования не выполнены) и hidden (нет новых владений; показываются в конце списка, не выбираются). Уже взятые черты не возвращаются. См. [`06-feats.md`](rules/06-feats.md) §«Фильтрация списка».
 
 **Запланировано (Phase 2):** постоянная проверка требований — `feat_is_active`, `active_feat_ids`, `feat_requirement_context_from_character`; владение спасброском Resilient (`save_proficiency`); см. [`06-feats.md`](rules/06-feats.md) §«Запланировано».
 

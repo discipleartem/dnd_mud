@@ -9,7 +9,7 @@ disable-model-invocation: true
 
 # dnd_mud — release (`dev` → `main`)
 
-Канон-политика: [`AGENTS.md`](../../AGENTS.md) §8 · [`dnd-mud-verify.mdc`](../../rules/dnd-mud-verify.mdc) · CI: `.github/workflows/pr-dev-to-main-check.yml`.
+Канон-политика: [`AGENTS.md`](../../AGENTS.md) · [`dnd-mud-workflow.mdc`](../../rules/dnd-mud-workflow.mdc) · CI: `.github/workflows/pr-dev-to-main-check.yml`.
 
 ## Когда выполнять
 
@@ -29,7 +29,11 @@ disable-model-invocation: true
 
 ## Перед PR
 
-Review (skill [`dnd-mud-review`](../dnd-mud-review/SKILL.md)): readonly Bugbot, `Base Branch: main`, ветка `dev` — **до** создания release PR.
+По умолчанию **без** full bugbot `dev` vs `main` — каждая task-ветка уже прошла review при merge в `dev`.
+
+Обязательно: `make test`, trial merge, CI [`pr-dev-to-main-check.yml`](../../.github/workflows/pr-dev-to-main-check.yml).
+
+Full bugbot release-review ([`dnd-mud-review`](../dnd-mud-review/SKILL.md), `Base Branch: main`, ветка `dev`) — только если: (a) в release попали коммиты без task-review; (b) пользователь явно просит; (c) hotfix напрямую в `dev`.
 
 ```bash
 source .venv/bin/activate

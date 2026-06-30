@@ -24,7 +24,7 @@
 |--------|------------|
 | Статус | **Реализовано** (создание + ASI/feat при левелапе) |
 | YAML | [`database/progression/feats.yaml`](../../database/progression/feats.yaml) |
-| Core | [`core/feats.py`](../../core/feats.py), [`core/feats_loader.py`](../../core/feats_loader.py), [`core/asi.py`](../../core/asi.py) |
+| Core | [`core/feats.py`](../../core/feats.py), [`core/feat_visibility.py`](../../core/feat_visibility.py), [`core/feats_loader.py`](../../core/feats_loader.py), [`core/asi.py`](../../core/asi.py) |
 | UI | [`ui/menus/feats.py`](../../ui/menus/feats.py), [`ui/menus/asi.py`](../../ui/menus/asi.py), шаг `feats` в [`_creation_steps.py`](../../ui/menus/_creation_steps.py) |
 
 ### Реализовано
@@ -34,7 +34,8 @@
 | ASI **или** черта вместо `ability_score_improvement` | `core/asi.py`, `ui/menus/asi.py`, `ui/menus/level_up.py`; слоты ASI в `classes.yaml` |
 | Черта при создании (variant human) | Шаг `feats` в `_creation_steps.py`, `race_feat_step_required()` |
 | Каждую черту один раз | `can_take_feat()`; `repeatable: true` в YAML (`elemental_adept`) |
-| Требования **при взятии** черты | `feat_meets_requirements()` + `requirements` в `feats.yaml`; фильтр в `list_available_feats()` |
+| Требования **при взятии** черты | `feat_meets_requirements()` + `requirements` в `feats.yaml`; фильтр в `list_feats_for_selection()` |
+| Скрытие черт без новых владений | `feat_visible_for_selection()` в `core/feat_visibility.py`; вызывается из `list_feats_for_selection()` — см. §«Фильтрация списка» |
 | Бонусы к характеристикам, владения, навыки, языки | `resolve_feat_ability_bonuses`, `resolve_feat_grants`, `apply_feat_grants_to_character`; поля `feat_ids`, `feat_choices` |
 | Tough: +2 HP/уровень и ретроактивно при взятии | `get_feat_hp_bonus_sources`, `tough_hp_adjustment_on_acquire` |
 
@@ -42,6 +43,95 @@
 При левелапе: `apply_feat_grants_to_character` после выбора черты.
 
 Требования проверяются **только в момент выбора** (создание / левелап). Запись в `feat_ids` не снимается при временной потере характеристик.
+
+### Фильтрация списка черт
+
+При выборе (создание variant human, ASI → черта) `list_feats_for_selection(ctx, existing_ids)` делит каталог на три группы:
+
+| Группа | Условие | В UI |
+|--------|---------|------|
+| **Доступные** | требования выполнены, черта ещё не взята, есть **новое** владение | нумерованный список |
+| **Требования не выполнены** | есть `requirements` в YAML, контекст не проходит | секция «Требования не выполнены» (`—.`) |
+| **Скрыты** | нет новых владений (`feat_visible_for_selection`) | секция «Скрыто» в конце списка (`—.`, серый текст); выбрать нельзя |
+
+**Контекст** (`FeatRequirementContext`) на шаге создания собирается в `build_feat_selection_context()` (`core/feat_visibility.py`) **после** выбора класса и подкласса, **до** шагов владений и навыков класса:
+
+- оружие / доспехи / инструменты: раса, подраса, класс, подкласс (с учётом `level`), фиксированные инструменты предыстории;
+- навыки: расовые + предыстория (классовые навыки **ещё не** учтены);
+- заклинания: `character_has_spellcasting(class, subclass, level)`.
+
+Опциональные аргументы `skills`, `weapon_tokens`, `tool_tokens` **дополняют** базовый контекст (напр. владения от уже выбранных черт при нескольких расовых picks подряд).
+
+При левелапе контекст строится из текущего `Character` (`build_feat_selection_context_from_character`).
+
+#### Правило `feat_visible_for_selection`
+
+Черта **скрывается**, если **все** её `grants[]` с типами владения уже покрыты контекстом. Проверяются типы:
+
+`weapon_proficiency`, `armor_proficiency`, `skill_proficiency`, `tool_proficiency`, `multiple_proficiency`, `bonus_proficiencies`.
+
+| Grant в черте | Скрыта, когда… |
+|---------------|----------------|
+| `armor_proficiency` | все категории доспехов из grant уже в `armor_tokens` |
+| `weapon_proficiency` (фикс. список) | все виды оружия уже покрыты токенами (`simple`, `martial`, …) |
+| `weapon_proficiency` + `choice` (**Мастер оружия**) | любое PHB-оружие уже покрыто токенами |
+| `skill_proficiency` (фикс. список или `choice`) | перечисленные навыки уже в `skills`; при `choice` — нет свободных навыков в пуле PHB |
+| `tool_proficiency` (фикс. список или `choice`) | перечисленные инструменты уже в `tool_tokens`; при `choice` — нет свободных инструментов в пуле PHB |
+| `multiple_proficiency` (**Одарённый**) | все 18 навыков **и** все инструменты каталога уже известны |
+
+Если в `grants[]` есть **хотя бы один** grant другого типа (`damage_reduction`, `lucky`, `medium_armor_master`, `hit_point_bonus`, …), черта **остаётся** в списке — даже при полном перекрытии владений. Примеры: **Мастер тяжёлых доспехов** (`heavy_armor_master`), **Мастер средних доспехов**, **Мастер щитов**, **Крепкий**, **Атлетичный**.
+
+Бонусы к характеристикам (`ability_bonuses` / `ability_bonuses_choice` вне `grants[]`) **не** спасают черту от скрытия: если единственные grants — владения и они все дублируются, черта скрыта (напр. **Знаток тяжёлых доспехов** у воина).
+
+#### Черты, которые чаще всего скрываются (только владения)
+
+| ID (YAML) | Название | Что даёт из владений |
+|-----------|----------|----------------------|
+| `lightly_armored` | Знаток лёгких доспехов | `light` |
+| `moderately_armored` | Знаток средних доспехов | `medium`, `shield` |
+| `heavily_armored` | Знаток тяжёлых доспехов | `heavy` |
+| `weapon_master` | Мастер оружия | 4 вида оружия на выбор |
+| `skilled` | Одарённый | 3 навыка/инструмента на выбор |
+
+#### Справочник по классам и подклассам (PHB-каталог)
+
+Условия: человек (вариант), предыстория **Солдат**, стартовый уровень создания **1** или **3** (подкласс активен с 3 ур.). Скрыты только черты из таблицы выше, требования которых **выполнены**.
+
+| Класс | Подкласс | Ур. | Скрытые черты (владения) |
+|-------|----------|-----|--------------------------|
+| **Воин** | любой | 1, 3 | `lightly_armored`, `moderately_armored`, `heavily_armored`, `weapon_master` |
+| **Плут** | любой | 1, 3 | `lightly_armored` |
+| **Жрец** | Домен жизни | 1, 3 | `lightly_armored`, `moderately_armored`, `heavily_armored` |
+| **Жрец** | Домен обмана, Домен света | 1, 3 | `lightly_armored`, `moderately_armored` |
+| **Бард** | Коллегия доблести | 1 | `lightly_armored` |
+| **Бард** | Коллегия доблести | 3 | `lightly_armored`, `moderately_armored`, `weapon_master` |
+| **Бард** | Коллегия знаний | 1, 3 | `lightly_armored` |
+
+На 3 уровне у **Коллегии доблести** подкласс добавляет `medium`, `shield`, `martial` — поэтому на 1 ур. ещё доступны `moderately_armored` и `weapon_master`, на 3 ур. — нет.
+
+#### Справочник по расам (воин / Чемпион, 1 ур.)
+
+Дополнительные расовые владения **добавляют** к скрытию черт с перекрывающимися категориями:
+
+| Раса | Подраса | Дополнительно скрывает (к базе воина) |
+|------|---------|----------------------------------------|
+| **Горный дварф** | `mountain_dwarf` | — (у воина уже всё; дварф даёт `light`, `medium`) |
+| **Эльф** | любая | — (воинское владение шире эльфийского списка оружия) |
+| **Человек** | `standard`, `variant_human` | — (владения только от класса) |
+
+У **горного дварфа** без уровня воина (другой класс): появляются `light` и `medium` от расы → скрываются `lightly_armored` и частично `moderately_armored` (щит всё ещё может понадобиться).
+
+#### Фильтрация подвыборов внутри черты
+
+После выбора черты `_resolve_feat_subchoices()` исключает из пулов уже известные владения (список черты не пересчитывается):
+
+| Черта | Подвыбор | Исключается |
+|-------|----------|-------------|
+| `skilled` | навык / инструмент | уже в `skills` / `tool_proficiencies` |
+| `weapon_master` | 4 оружия | оружие, покрытое токенами `simple` / `martial` / … |
+| `linguist` | 3 языка | уже в `languages` персонажа |
+
+Канон в коде: `core/feat_visibility.py` (`build_feat_selection_context`, `feat_visible_for_selection`), `core/feats.py` (`list_feats_for_selection`), `ui/menus/feats.py` (`_pick_skills_or_tools`, `_pick_weapons_for_feat`). Тесты: `tests/test_feats.py` (параметризация по всем подклассам PHB).
 
 ### Запланировано (Phase 2)
 

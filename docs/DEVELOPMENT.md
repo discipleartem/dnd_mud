@@ -4,7 +4,7 @@
 
 ### Предварительные требования
 
-- Python 3.12+ (синтаксис и tooling — [`.cursor/rules/dnd-mud-python-312.mdc`](../.cursor/rules/dnd-mud-python-312.mdc))
+- Python 3.12+ (синтаксис и tooling — [`.cursor/rules/dnd-mud-python.mdc`](../.cursor/rules/dnd-mud-python.mdc))
 - Git
 
 ### Установка
@@ -201,37 +201,83 @@ pytest tests/test_menus_character.py -v
 
 ## Git Workflow
 
-Канон: [`AGENTS.md`](../AGENTS.md) (оркестрация) · [`01-operations.mdc`](~/.cursor/rules/01-operations.mdc) (git) · [`dnd-mud-verify.mdc`](../.cursor/rules/dnd-mud-verify.mdc) (overrides, процедуры → skills). Sync FAQ: [`~/.cursor/docs/git-dev-main-sync.md`](~/.cursor/docs/git-dev-main-sync.md).
+Канон agent: [`.cursor/rules/dnd-mud-workflow.mdc`](../.cursor/rules/dnd-mud-workflow.mdc) · оркестрация [`AGENTS.md`](../AGENTS.md) · global [`01-operations.mdc`](~/.cursor/rules/01-operations.mdc). Sync FAQ: [`~/.cursor/docs/git-dev-main-sync.md`](~/.cursor/docs/git-dev-main-sync.md).
 
 IDE: расширения **GitHub Pull Requests** и **GitHub Actions** — настройки [`.vscode/settings.json`](../.vscode/settings.json) (squash merge, фильтры PR).
 
 ### Цикл задачи
 
 ```
-git-старт → task-ветка → подзадачи (commits) → docs → verify → review → push → PR task→dev
-→ (накопление в dev) → review (vs main) → PR dev→main → Action sync dev←main
+git-старт → task-ветка → подзадачи (commits) → docs → verify → review (light|full) → push → PR task→dev
+→ (накопление в dev) → PR dev→main → Action sync dev←main
 ```
 
 ### Git-старт (перед работой)
+
+См. [`dnd-mud-workflow.mdc`](../.cursor/rules/dnd-mud-workflow.mdc) §Git и [`01-operations.mdc`](~/.cursor/rules/01-operations.mdc) §Task cycle шаг 1.
 
 ```bash
 git fetch origin
 git checkout main && git pull origin main
 git checkout dev && git pull origin dev
 git log dev..origin/main --oneline   # must be empty
-# если main впереди dev:
-git merge origin/main && make test && git push origin dev
+git merge origin/main && make test && git push origin dev   # если main впереди
 git checkout -b feat/my-task
 ```
 
 ### Завершение task-ветки
 
+См. [`dnd-mud-workflow.mdc`](../.cursor/rules/dnd-mud-workflow.mdc) §Git (delta).
+
 ```bash
+git fetch origin && git rebase origin/dev
 make test
-# skill dnd-mud-review (Bugbot vs dev) — до push/PR
-git push -u origin HEAD
+# skill dnd-mud-review — light или full, один раз, до push/PR
+git push -u origin HEAD        # после rebase на remote: --force-with-lease
 gh pr create --base dev --title "feat: …"   # squash merge
 ```
+
+### Code review (локальный, не GitHub Bugbot)
+
+Канон: skill [`.cursor/skills/dnd-mud-review`](../.cursor/skills/dnd-mud-review/SKILL.md).
+
+| Канал | Использование |
+|-------|----------------|
+| **Light review** (оркестратор, diff vs `dev`) | Мелкие ветки без `core/`/`database/`/`mods/`/`ui/`/`main.py`, ≤5 файлов, ≤~200 строк |
+| **Full review** (subagent `bugbot`) | Рискованные изменения; явный запрос «полный review» |
+| GitHub PR Bugbot (авто на push, `.cursor/BUGBOT.md`) | **Нет** |
+
+Повтор после fix Blocker — **light re-check** (не full bugbot по умолчанию). Release `dev` → `main` — без обязательного bugbot; см. skill [`dnd-mud-release`](../.cursor/skills/dnd-mud-release/SKILL.md).
+
+Quality gate на PR `task → dev`: локальный pytest + локальный review (light или full). CI на task-PR нет; на release `dev → main` — [workflow](../.github/workflows/pr-dev-to-main-check.yml).
+
+#### Рекомендуемые настройки Cursor IDE
+
+Cursor Settings → **Agent Review**:
+
+| Настройка | Значение |
+|-----------|----------|
+| Start Agent Review on Commit | **OFF** |
+| Include Submodules in Agent Review | **OFF** |
+| Include Untracked Files in Agent Review | **OFF** |
+| Default Approach | **Quick** |
+
+Auto-review на каждый commit дублирует skill `dnd-mud-review` и сильно увеличивает расход `agent_review` в [dashboard usage](https://cursor.com/dashboard/usage).
+
+### Экономия токенов Agent
+
+| Практика | Зачем |
+|----------|-------|
+| Короткие task-ветки (1 фича, 1–3 дня) | Меньше контекста и diff |
+| Один чат ≈ одна ветка | Не тащить историю прошлых задач |
+| Review один раз в конце (light или full) | Не дублировать проверку в чате и bugbot |
+| `rebase origin/dev` перед full review | Минимальный diff для bugbot |
+| Plan mode для крупных задач | Меньше итераций fix в Agent |
+| Узкий scope в промпте | Меньше лишних файлов в контексте |
+| Grep/Read вместо Task/explore для 1–2 файлов | Дешевле subagent |
+| `make test` вместо повторных «проверь ещё раз» в чате | Runtime без LLM |
+
+Мониторинг: раз в неделю [cursor.com/dashboard/usage](https://cursor.com/dashboard/usage) — рост `agent_review` vs `auto`.
 
 ### Release (`dev` → `main`)
 

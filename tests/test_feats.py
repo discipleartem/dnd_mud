@@ -1,4 +1,6 @@
-"""Тесты резолвера черт."""
+from pathlib import Path
+
+import pytest
 
 from core.asi import cap_stats
 from core.classes import character_has_spellcasting
@@ -9,6 +11,7 @@ from core.feats import (
     feat_full_description_lines,
     feat_meets_requirements,
     feat_summary_description,
+    feat_visible_for_selection,
     get_feat_skill_ids,
     list_feats_for_selection,
     load_feat,
@@ -16,7 +19,41 @@ from core.feats import (
     resolve_feat_ability_bonuses,
     tough_hp_adjustment_on_acquire,
 )
+from core.io import load_yaml
 from core.stats import apply_bonuses_to_stats
+
+_CREATION_STATS = {
+    "strength": 14,
+    "dexterity": 14,
+    "constitution": 12,
+    "intelligence": 10,
+    "wisdom": 10,
+    "charisma": 10,
+}
+
+
+def _all_class_subclass_levels() -> list[tuple[str, str, int]]:
+    data = load_yaml(Path("database/classes/classes.yaml"))
+    cases: list[tuple[str, str, int]] = []
+    for class_id, info in data.get("classes", {}).items():
+        for sub in info.get("subclasses", []):
+            subclass_id = str(sub.get("id", ""))
+            if not subclass_id:
+                continue
+            for level in (1, 3):
+                cases.append((class_id, subclass_id, level))
+    return cases
+
+
+def _assert_no_redundant_proficiency_feats_in_eligible(
+    ctx: FeatRequirementContext,
+) -> None:
+    eligible, _, _ = list_feats_for_selection(ctx, [])
+    for feat in eligible:
+        feat_id = str(feat.get("id", ""))
+        assert feat_visible_for_selection(
+            feat_id, ctx
+        ), f"{feat_id} eligible but adds no new proficiency"
 
 
 def test_race_feat_step_required_for_variant_human():
@@ -97,10 +134,10 @@ def test_feat_spellcasting_requirement_needs_class_context():
     assert feat_meets_requirements("war_caster", ctx_cleric)
 
 
-def test_feat_ctx_at_creation_includes_class_armor():
-    from ui.menus.feats import _feat_ctx_at_creation
+def test_build_feat_selection_context_includes_class_armor():
+    from core.feat_visibility import build_feat_selection_context
 
-    ctx = _feat_ctx_at_creation(
+    ctx = build_feat_selection_context(
         stats={"strength": 16},
         race_id="human",
         subrace_id="variant_human",
@@ -187,13 +224,183 @@ def test_list_feats_for_selection_splits_by_requirements():
         tool_tokens=[],
         has_spellcasting=False,
     )
-    eligible, blocked = list_feats_for_selection(ctx, [])
+    eligible, blocked, hidden = list_feats_for_selection(ctx, [])
     eligible_ids = {str(f.get("id")) for f in eligible}
     blocked_ids = {str(f.get("id")) for f in blocked}
+    hidden_ids = {str(f.get("id")) for f in hidden}
     assert "defensive_duelist" in blocked_ids
     assert "war_caster" in blocked_ids
     assert "tough" in eligible_ids
     assert "defensive_duelist" not in eligible_ids
+    assert not eligible_ids & hidden_ids
+    assert not blocked_ids & hidden_ids
+
+
+def test_list_feats_for_selection_puts_redundant_armor_feats_in_hidden():
+    ctx = FeatRequirementContext(
+        stats={"strength": 16, "dexterity": 14},
+        weapon_tokens=["simple", "martial"],
+        armor_tokens=["light", "medium", "heavy", "shield"],
+        tool_tokens=[],
+        class_id="fighter",
+        skills=["athletics", "intimidation"],
+    )
+    eligible, blocked, hidden = list_feats_for_selection(ctx, [])
+    eligible_ids = {str(f.get("id")) for f in eligible}
+    hidden_ids = {str(f.get("id")) for f in hidden}
+    redundant = {"heavily_armored", "lightly_armored", "moderately_armored"}
+    assert redundant <= hidden_ids
+    assert redundant.isdisjoint(eligible_ids)
+    assert redundant.isdisjoint({str(f.get("id")) for f in blocked})
+    assert "heavy_armor_master" in eligible_ids
+    assert "tough" in eligible_ids
+
+
+def test_list_feats_for_selection_shows_armor_feat_without_proficiency():
+    ctx = FeatRequirementContext(
+        stats={"strength": 10, "dexterity": 14},
+        weapon_tokens=[],
+        armor_tokens=["light"],
+        tool_tokens=[],
+        skills=[],
+    )
+    eligible, _, hidden = list_feats_for_selection(ctx, [])
+    eligible_ids = {str(f.get("id")) for f in eligible}
+    assert "heavily_armored" not in eligible_ids
+    assert "moderately_armored" in eligible_ids
+
+
+def test_list_feats_for_selection_hides_weapon_master_when_martial_known():
+    ctx = FeatRequirementContext(
+        stats={"strength": 16, "dexterity": 12},
+        weapon_tokens=["simple", "martial"],
+        armor_tokens=[],
+        tool_tokens=[],
+        skills=[],
+    )
+    eligible, _, hidden = list_feats_for_selection(ctx, [])
+    eligible_ids = {str(f.get("id")) for f in eligible}
+    hidden_ids = {str(f.get("id")) for f in hidden}
+    assert "weapon_master" not in eligible_ids
+    assert "weapon_master" in hidden_ids
+
+
+@pytest.mark.parametrize(
+    "class_id,subclass_id,level", _all_class_subclass_levels()
+)
+def test_list_feats_for_selection_no_redundant_proficiency_grants(
+    class_id: str, subclass_id: str, level: int
+) -> None:
+    from core.feat_visibility import build_feat_selection_context
+
+    ctx = build_feat_selection_context(
+        stats=_CREATION_STATS,
+        race_id="human",
+        subrace_id="variant_human",
+        background_id="soldier",
+        class_id=class_id,
+        subclass_id=subclass_id,
+        level=level,
+    )
+    _assert_no_redundant_proficiency_feats_in_eligible(ctx)
+
+
+def test_list_feats_hides_armor_feats_for_mountain_dwarf_fighter():
+    from core.feat_visibility import build_feat_selection_context
+
+    ctx = build_feat_selection_context(
+        stats=_CREATION_STATS,
+        race_id="dwarf",
+        subrace_id="mountain_dwarf",
+        background_id="soldier",
+        class_id="fighter",
+        subclass_id="champion",
+        level=1,
+    )
+    eligible, _, hidden = list_feats_for_selection(ctx, [])
+    eligible_ids = {str(f.get("id")) for f in eligible}
+    hidden_ids = {str(f.get("id")) for f in hidden}
+    redundant = {
+        "heavily_armored",
+        "lightly_armored",
+        "moderately_armored",
+        "weapon_master",
+    }
+    assert eligible_ids.isdisjoint(redundant)
+    assert redundant <= hidden_ids
+
+
+def test_list_feats_bard_valor_hides_medium_and_weapon_master_at_level_three():
+    from core.feat_visibility import build_feat_selection_context
+
+    ctx = build_feat_selection_context(
+        stats=_CREATION_STATS,
+        race_id="human",
+        subrace_id="variant_human",
+        background_id="soldier",
+        class_id="bard",
+        subclass_id="valor_college",
+        level=3,
+    )
+    eligible, _, hidden = list_feats_for_selection(ctx, [])
+    eligible_ids = {str(f.get("id")) for f in eligible}
+    hidden_ids = {str(f.get("id")) for f in hidden}
+    assert "moderately_armored" not in eligible_ids
+    assert "weapon_master" not in eligible_ids
+    assert "lightly_armored" not in eligible_ids
+    hidden_armor_weapon = {
+        "moderately_armored",
+        "weapon_master",
+        "lightly_armored",
+    }
+    assert hidden_armor_weapon <= hidden_ids
+    assert "heavily_armored" in eligible_ids
+
+
+def test_list_feats_cleric_life_hides_heavy_armor_feat():
+    from core.feat_visibility import build_feat_selection_context
+
+    ctx = build_feat_selection_context(
+        stats=_CREATION_STATS,
+        race_id="human",
+        subrace_id="variant_human",
+        background_id="soldier",
+        class_id="cleric",
+        subclass_id="life_domain",
+        level=1,
+    )
+    eligible, _, hidden = list_feats_for_selection(ctx, [])
+    eligible_ids = {str(f.get("id")) for f in eligible}
+    hidden_ids = {str(f.get("id")) for f in hidden}
+    assert "heavily_armored" not in eligible_ids
+    assert "heavily_armored" in hidden_ids
+    assert "heavy_armor_master" in eligible_ids
+
+
+def test_print_feat_selection_menu_shows_hidden_section(capsys, ru_strings):
+    """Скрытые черты — в конце списка, серым, без номера."""
+    from ui.menus.feats import _print_feat_selection_menu
+
+    ctx = FeatRequirementContext(
+        stats={"strength": 16, "dexterity": 14},
+        weapon_tokens=["simple", "martial"],
+        armor_tokens=["light", "medium", "heavy", "shield"],
+        tool_tokens=[],
+        class_id="fighter",
+        skills=["athletics", "intimidation"],
+    )
+    eligible, blocked, hidden = list_feats_for_selection(ctx, [])
+    _print_feat_selection_menu(
+        ru_strings, eligible, blocked, hidden, ctx, "ru"
+    )
+    out = capsys.readouterr().out
+    hidden_idx = out.find("Скрыто")
+    assert hidden_idx >= 0
+    eligible_part = out[:hidden_idx]
+    hidden_part = out[hidden_idx:]
+    assert "Знаток тяжёлых доспехов" in hidden_part
+    assert "Знаток тяжёлых доспехов" not in eligible_part
+    assert "Крепкий" in eligible_part
 
 
 def test_format_feat_requirement_ability_text():
@@ -269,6 +476,175 @@ def test_feat_full_description_fallback_from_features():
     }
     lines = feat_full_description_lines(feat)
     assert "Подробность умения" in lines[0]
+
+
+def test_creation_known_for_feat_picks_includes_race_and_background():
+    from core.feat_visibility import creation_known_for_feat_picks
+
+    skills, tools, weapons = creation_known_for_feat_picks(
+        "human",
+        "variant_human",
+        "soldier",
+        "fighter",
+        "champion",
+        1,
+    )
+    assert "athletics" in skills
+    assert "intimidation" in skills
+    assert "martial" in weapons
+
+
+def test_pick_skills_or_tools_excludes_known(
+    monkeypatch, ru_strings, patch_int_input
+):
+    from ui.menus.feats import _pick_skills_or_tools
+
+    patch_int_input(monkeypatch, [1])
+    result = _pick_skills_or_tools(
+        ru_strings,
+        1,
+        "ru",
+        known_skills=["athletics", "perception"],
+        known_tools=["thieves_tools"],
+    )
+    assert result is not None
+    picked_id = result[0]["id"]
+    assert picked_id not in ("athletics", "perception", "thieves_tools")
+
+
+def test_pick_skills_or_tools_excludes_category_tool_pool(
+    monkeypatch, ru_strings, patch_int_input
+):
+    from ui.menus.feats import _pick_skills_or_tools
+
+    patch_int_input(monkeypatch, [1])
+    result = _pick_skills_or_tools(
+        ru_strings,
+        1,
+        "ru",
+        known_tools=["artisans_tools"],
+    )
+    assert result is not None
+    assert result[0]["id"] != "smith_tools"
+
+
+def test_build_feat_selection_context_merges_prior_feat_skills():
+    """Навыки от уже выбранных черт дополняют контекст видимости."""
+    from core.equipment import all_tool_ids
+    from core.feat_visibility import build_feat_selection_context
+    from core.skills import PHB_SKILL_IDS
+
+    ctx = build_feat_selection_context(
+        _CREATION_STATS,
+        "human",
+        "variant_human",
+        "soldier",
+        "fighter",
+        "champion",
+        1,
+        skills=["arcana"],
+    )
+    assert "arcana" in ctx.skills
+    assert "athletics" in ctx.skills
+
+    exhausted = build_feat_selection_context(
+        _CREATION_STATS,
+        "human",
+        "variant_human",
+        "soldier",
+        "fighter",
+        "champion",
+        1,
+        skills=list(PHB_SKILL_IDS),
+        tool_tokens=list(all_tool_ids()),
+    )
+    assert not feat_visible_for_selection("skilled", exhausted)
+
+
+def test_grant_skill_proficiency_choice_hidden_when_all_skills_known():
+    from core.feat_visibility import _grant_adds_new_proficiency
+    from core.skills import PHB_SKILL_IDS
+
+    ctx = FeatRequirementContext(
+        stats={},
+        weapon_tokens=[],
+        armor_tokens=[],
+        tool_tokens=[],
+        skills=list(PHB_SKILL_IDS),
+    )
+    grant = {"type": "skill_proficiency", "choice": True}
+    assert not _grant_adds_new_proficiency(grant, ctx)
+
+    ctx_empty = FeatRequirementContext(
+        stats={},
+        weapon_tokens=[],
+        armor_tokens=[],
+        tool_tokens=[],
+        skills=[],
+    )
+    assert _grant_adds_new_proficiency(grant, ctx_empty)
+
+
+def test_bonus_proficiencies_visibility_variants():
+    from core.feat_visibility import _grant_adds_new_proficiency
+
+    base_ctx = FeatRequirementContext(
+        stats={},
+        weapon_tokens=["simple"],
+        armor_tokens=["light"],
+        tool_tokens=[],
+        skills=[],
+    )
+    grant_choice = {"type": "bonus_proficiencies", "choice": True}
+    assert _grant_adds_new_proficiency(grant_choice, base_ctx)
+
+    full_weapons = FeatRequirementContext(
+        stats={},
+        weapon_tokens=["simple", "martial"],
+        armor_tokens=[],
+        tool_tokens=[],
+        skills=[],
+    )
+    grant_fixed_weapon = {
+        "type": "bonus_proficiencies",
+        "weapons": ["longsword"],
+    }
+    assert not _grant_adds_new_proficiency(grant_fixed_weapon, full_weapons)
+
+    grant_armor = {"type": "bonus_proficiencies", "armors": ["medium"]}
+    assert _grant_adds_new_proficiency(grant_armor, base_ctx)
+
+    full_armor = FeatRequirementContext(
+        stats={},
+        weapon_tokens=[],
+        armor_tokens=["light", "medium"],
+        tool_tokens=[],
+        skills=[],
+    )
+    assert not _grant_adds_new_proficiency(grant_armor, full_armor)
+
+    grant_both = {
+        "type": "bonus_proficiencies",
+        "weapons": ["longsword"],
+        "armors": ["heavy"],
+    }
+    assert _grant_adds_new_proficiency(grant_both, base_ctx)
+
+
+def test_pick_weapons_for_feat_excludes_martial_proficiency(
+    monkeypatch, ru_strings, patch_int_input
+):
+    from ui.menus.feats import _pick_weapons_for_feat
+
+    patch_int_input(monkeypatch, [1])
+    result = _pick_weapons_for_feat(
+        ru_strings,
+        1,
+        "ru",
+        weapon_proficiencies=["martial"],
+    )
+    assert result is not None
+    assert "longsword" not in result
 
 
 def test_apply_feat_grants_to_character_merges_skills_and_tools():

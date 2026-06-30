@@ -7,7 +7,7 @@ alwaysApply: true
 
 **Stack:** Python **3.12**, console MUD, Colorama, file-based storage, pytest.
 
-**Принцип:** простой код (`dnd-mud-python-simple.mdc`), минимум тестов (`dnd-mud-tests.mdc`).
+**Принцип:** простой код (`dnd-mud-python.mdc`), минимум тестов (`dnd-mud-tests.mdc`).
 
 ## Commands
 
@@ -33,20 +33,16 @@ python main.py  # smoke: затронутое меню
 
 ## Agent-loop и skills
 
-Оркестрация и таблица skills: [`AGENTS.md`](../AGENTS.md).
-
-Политика verify/review/release: [`dnd-mud-verify.mdc`](dnd-mud-verify.mdc).
+Оркестрация: [`AGENTS.md`](../AGENTS.md). Workflow/git/verify: [`dnd-mud-workflow.mdc`](dnd-mud-workflow.mdc).
 
 ## Local rules (index)
 
 | Файл | Globs | Канон |
 |------|-------|-------|
-| `dnd-mud-verify.mdc` | always | overrides, verify/review policy |
-| `dnd-mud-python-312.mdc` | `**/*.py` | Python 3.12, типы, tooling |
-| `dnd-mud-python-simple.mdc` | `core/**`, `ui/**`, `main.py`, `tests/**` | простой Python |
+| `dnd-mud-workflow.mdc` | always | git/verify overrides, review policy |
+| `dnd-mud-python.mdc` | `**/*.py` | Python 3.12, KISS, tooling |
 | `dnd-mud-tests.mdc` | `tests/**` | pytest — только нужные тесты |
 | `dnd-mud-core.mdc` | `core/**`, `ui/**`, `main.py` | слои, локализация, механика |
 | `dnd-mud-data.mdc` | `database/**`, `mods/**`, `**/*.json` | YAML/JSON |
-| `ironbee-devtools-use.mdc` | — | локально; verify — `dnd-mud-verify` |
 
-Global: [`00-global.mdc`](~/.cursor/rules/00-global.mdc) · git: [`01-operations.mdc`](~/.cursor/rules/01-operations.mdc)
+Global: [`00-global.mdc`](~/.cursor/rules/00-global.mdc) · [`01-operations.mdc`](~/.cursor/rules/01-operations.mdc)

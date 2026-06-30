@@ -1,0 +1,59 @@
+---
+description: dnd_mud — Python 3.12, KISS, типизация, tooling
+globs: "**/*.py"
+alwaysApply: false
+---
+
+# dnd_mud — Python
+
+**Минимум:** Python ≥ 3.12 (`pyproject.toml` → `requires-python`). Toolchain: `py312` (ruff, black, mypy).
+
+База: [`python-standards.mdc`](~/.cursor/rules/python-standards.mdc), [`python-architecture.mdc`](~/.cursor/rules/python-architecture.mdc) — паттерны только если **реально** упрощают код в этом MUD.
+
+## KISS (app code: `core/`, `ui/`, `main.py`, `tests/`)
+
+**По умолчанию — самое простое решение, которое работает.**
+
+**Предпочитать:** функции без состояния; `dataclass` для моделей; guard clauses (max 1–2 уровня); явные `if`/`match`; простые comprehensions.
+
+**Избегать:** фабрики/Strategy/Repository для 1–2 вариантов; лишние слои; lambda-dispatch; хелперы на один вызов.
+
+```python
+# ✅ явные if/return
+def handle_menu_choice(choice: int, loc, settings) -> tuple[bool, object]:
+    if choice == 2:
+        return False, settings
+    if choice == 1:
+        return _handle_settings(loc, settings)
+    return True, settings
+```
+
+Тесты — `dnd-mud-tests.mdc`. Verify — `dnd-mud-workflow.mdc`.
+
+## Синтаксис и типы (3.12)
+
+| PEP | Суть | Где в dnd_mud |
+|-----|------|---------------|
+| [604](https://peps.python.org/pep-0604/) | `X \| Y` union | `str \| None`, сигнатуры в `core/` |
+| [585](https://peps.python.org/pep-0585/) | builtin generics | `list[Character]`, `dict[str, int]` |
+| [695](https://peps.python.org/pep-0695/) | `type Alias = …`, `class Foo[T]` | `core/types.py` |
+| [692](https://peps.python.org/pep-0692/) | `Unpack[TypedDict]` | `RuntimeSettings` в `core/types.py` |
+| — | `match` / `case` | главное меню, flow создания персонажа |
+
+UI-строки — из YAML (`database/strings/`); f-strings в коде — форматирование и тесты.
+
+## Tooling
+
+```bash
+make check   # ruff --fix + black + mypy
+make test    # pytest
+```
+
+venv: `python3.12 -m venv .venv` (см. [DEVELOPMENT.md](../../docs/DEVELOPMENT.md)).
+
+## Ограничения
+
+- **Не использовать `distutils`** — setuptools в `pyproject.toml`
+- **Regex** — только raw-строки `r"..."`
+
+Ссылки: [What's New In Python 3.12](https://docs.python.org/3/whatsnew/3.12.html)

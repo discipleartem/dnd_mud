@@ -8,7 +8,7 @@ disable-model-invocation: true
 
 # dnd_mud — verify
 
-Канон: [`dnd-mud-verify.mdc`](.cursor/rules/dnd-mud-verify.mdc). Браузер **запрещён** — только консоль.
+Канон: [`dnd-mud-workflow.mdc`](../../rules/dnd-mud-workflow.mdc). Браузер **запрещён** — только консоль.
 
 ## Когда выполнять
 
@@ -16,7 +16,7 @@ disable-model-invocation: true
 
 ## Предусловия
 
-- [ ] git-старт был в начале сессии
+- [ ] git-старт был в начале сессии ([`dnd-mud-workflow.mdc`](../../rules/dnd-mud-workflow.mdc) §Git)
 - [ ] Коммиты подзадач сделаны
 - [ ] Документация обновлена (или пропущена по правилам)
 
@@ -40,10 +40,4 @@ which python   # must point to .venv/bin/python
 - [ ] `make test` прошёл (если был код)
 - [ ] `make check` прошёл (если нужен)
 - [ ] Smoke пройден (если UI)
-- [ ] Перейти к skill [`dnd-mud-review`](../dnd-mud-review/SKILL.md) (readonly Bugbot **до** push / PR / merge)
-- [ ] **Plan → Build → Agent:** после review → push обязателен → предложить PR → `dev`
-- [ ] **Agent напрямую:** после review → push по запросу → после push предложить PR → `dev`
-
-## Git scope
-
-Не коммитить: `.coverage`, `saves/`.
+- [ ] Перейти к skill [`dnd-mud-review`](../dnd-mud-review/SKILL.md)

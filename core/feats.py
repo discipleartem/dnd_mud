@@ -4,6 +4,7 @@ import re
 from dataclasses import replace
 from typing import Any
 
+from core.feat_visibility import feat_visible_for_selection
 from core.feats_loader import (
     FeatGrant,
     FeatRequirementContext,
@@ -21,6 +22,7 @@ __all__ = [
     "apply_feats_to_stats",
     "can_take_feat",
     "character_has_spellcasting",
+    "feat_visible_for_selection",
     "feat_full_description_lines",
     "feat_has_requirements",
     "feat_meets_requirements",
@@ -278,19 +280,23 @@ def feat_has_requirements(feat_id: str) -> bool:
 def list_feats_for_selection(
     ctx: FeatRequirementContext,
     existing_ids: list[str],
-) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
-    """Черты для меню: (требования выполнены, требования не выполнены)."""
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]], list[dict[str, Any]]]:
+    """Черты для меню: (доступные, требования не выполнены, скрытые)."""
     eligible: list[dict[str, Any]] = []
     blocked: list[dict[str, Any]] = []
+    hidden: list[dict[str, Any]] = []
     for feat in load_feats():
         feat_id = str(feat.get("id", ""))
         if not feat_id or not can_take_feat(feat_id, existing_ids):
+            continue
+        if not feat_visible_for_selection(feat_id, ctx):
+            hidden.append(feat)
             continue
         if feat_meets_requirements(feat_id, ctx):
             eligible.append(feat)
         elif feat_has_requirements(feat_id):
             blocked.append(feat)
-    return eligible, blocked
+    return eligible, blocked, hidden
 
 
 def resolve_feat_ability_bonuses(

@@ -2,6 +2,15 @@
 
 ## [Unreleased]
 
+### Changed
+- Token usage: tiered review (light orchestrator / full bugbot) — `dnd-mud-review`, `dnd-mud-workflow`, `AGENTS.md`, `dnd-mud-fix-plan`, `dnd-mud-release`, `DEVELOPMENT.md`
+- Rules refactor: `dnd-mud-workflow.mdc` (git + verify overrides), `dnd-mud-python.mdc` (3.12 + KISS); `AGENTS.md` — оркестрация; global rules slim (`00-global`, `01-operations`, `user-protocols`)
+- Rules DRY: git workflow проекта — канон [`.cursor/rules/dnd-mud-workflow.mdc`](../.cursor/rules/dnd-mud-workflow.mdc); global `01-operations` — Task cycle, Cursor modes, commit policy
+- Review-политика: локальный subagent (`dnd-mud-review`); GitHub PR Bugbot не используется — `dnd-mud-workflow.mdc`, skills, `DEVELOPMENT.md`
+
+### Removed
+- `.cursor/rules/dnd-mud-git.mdc`, `dnd-mud-verify.mdc`, `dnd-mud-python-312.mdc`, `dnd-mud-python-simple.mdc` — объединены в workflow/python
+
 ### Removed
 - `database/_future/` — дубли активных каталогов
 - `mods/_examples/example_mod.yaml` — устаревший manifest
@@ -11,10 +20,13 @@
 - `core/feats_grants.py` — логика перенесена в `core/feats.py`
 
 ### Added
+- Документация: фильтрация черт по владениям (класс/раса/подкласс) — [`docs/rules/06-feats.md`](rules/06-feats.md) §«Фильтрация списка»
+- `core/feat_visibility.py` — контекст выбора черт (`build_feat_selection_context`) и скрытие без новых владений (`feat_visible_for_selection`)
 - `core/io.save_json`, `core/io.merge_unique` — единый JSON I/O и merge списков
 - `core/progression.process_pending_level_ups` — headless level-up engine с ASI callback
 - `core/classes.get_class_dict` — публичный доступ к сырым данным класса
 - `ui/menus/_display/_labels._label_from_catalog` — lookup подписей из каталога
+- `ui/menus/_display/_labels._localized_string_list` — локализованный список строк из YAML (предыстории)
 - Фикстуры `human_race_with_subraces`, `subrace_strings` в `tests/conftest.py`
 - `core/grant_mechanics.py` — общий парсер proficiency-токенов из grant dict
 - `ui/menus/_common._read_numbered_choice` — DRY ввод номера после кастомного рендера
@@ -31,11 +43,18 @@
 - `core/progression.process_pending_level_ups` — UI-хук `on_level_up`; `level_up.py` — thin wrapper
 - `_CreationState.save_kwargs()` — единый маппинг в `save_character`
 - `ui/menus/_selectors.py` — `_read_numbered_choice` для ввода выбора
+- `list_feats_for_selection` — третья группа `hidden` (черты без новых владений; показ в конце списка)
+- Экраны расы/подрасы/предыстории — локализованный вывод `grants[]` (`ui/menus/_display/_race.py`, `_background.py`, `_labels.py`; ключи в `database/strings/`)
 - Документация: убраны ссылки на Phase 2 stubs (`combat`, `checks`, `_future`)
-- Тесты: 249 → 250
+- Тесты: 249 → 250 → 288 → 293
 
 ### Fixed
 - `Character.from_dict()` — fallback на legacy-ключ `"class"` при загрузке старых сейвов (запись — только `class_id`)
+- `variant_human` — grant `language` (choice из common) в `database/races/races.yaml`
+- `_pick_skills_or_tools` — пул инструментов с учётом категориальных tool-токенов (`has_tool_proficiency`)
+- `feat_visible_for_selection` — choice `skill_proficiency` / `tool_proficiency` скрываются при исчерпанном пуле
+- `build_feat_selection_context` — опциональные `skills` / `weapon_tokens` / `tool_tokens` учитывают владения от уже выбранных черт в том же шаге создания
+- `normalize_armor_token` — публичный API в `core/grant_mechanics.py` (display и visibility)
 
 ### Changed
 - Рефакторинг техдолга: `core/hp_bonuses.py` (разрыв цикла races↔feats); `class_name` → `class_id` (JSON-сейвы только `class_id`)

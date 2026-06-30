@@ -1,75 +1,112 @@
 ---
 name: dnd-mud-review
 description: >-
-  Readonly Bugbot review of branch diff vs dev (or main for release) with dnd_mud
-  checklist. Use after verify, before push, gh pr create, or git merge that
-  integrates code.
+  Локальный readonly review diff vs base: task-ветка → dev, ветка dev → main;
+  light (оркестратор) или full (bugbot subagent). После verify, до push/PR/merge.
+  При Major/Blocker — предложить dnd-mud-fix-plan. GitHub PR Bugbot не используется.
 ---
 
-# dnd_mud — review (Reviewer / Bugbot)
+# dnd_mud — review (light | full)
 
-Канон-политика: [`AGENTS.md`](../../AGENTS.md) §6.5 · verify ≠ review ([`dnd-mud-verify.mdc`](../../rules/dnd-mud-verify.mdc)).
+Канон-политика: [`dnd-mud-workflow.mdc`](../../rules/dnd-mud-workflow.mdc) §Verify / review · [`AGENTS.md`](../../AGENTS.md).
 
-**Verify** (`make test`) — runtime. **Review** — readonly diff + чеклист проекта; не дублирует pytest.
+**Verify** (`make test`) — runtime. **Review** — readonly diff + чеклист; не дублирует pytest.
 
-## Когда выполнять (обязательно)
+## Когда выполнять
 
-После skill [`dnd-mud-verify`](../dnd-mud-verify/SKILL.md) (или эквивалентного verify), **до**:
+После skill [`dnd-mud-verify`](../dnd-mud-verify/SKILL.md), **до** push/PR/merge:
 
-| Действие | Base Branch | Ветка для review |
-|----------|-------------|------------------|
-| `git push` task-ветки | `dev` | текущая task-ветка |
-| `gh pr create --base dev` | `dev` | head PR / task-ветка |
-| `git merge` task → `dev` (локально) | `dev` | merging branch |
-| `gh pr create --base main` (release) | `main` | `dev` |
-| `git push origin dev` перед release PR | `main` | `dev` |
+| Действие | Base branch | Ветка для review | Diff |
+|----------|-------------|------------------|------|
+| `git push` task-ветки | `dev` | текущая task-ветка | `origin/dev...HEAD` |
+| `gh pr create --base dev` | `dev` | head PR / task-ветка | `origin/dev...HEAD` |
+| Review на ветке **`dev`** | **`main`** | `dev` | **`origin/main...HEAD`** |
 
-Запуск skill (`/dnd-mud-review`) или шаг 6.5 в Agent-loop = явный триггер review перед push/PR/merge.
+Release `dev` → `main`: review **не обязателен** — см. [`dnd-mud-release`](../dnd-mud-release/SKILL.md).
+
+## Определение base branch
+
+Перед review: `git fetch origin`, затем:
+
+```bash
+git branch --show-current
+```
+
+| Текущая ветка | Base branch | Команда diff |
+|---------------|-------------|--------------|
+| `dev` | **`main`** | `git diff origin/main...HEAD` |
+| task-ветка (не `main`, не `dev`) | `dev` | `git diff origin/dev...HEAD` |
+| `main` | — | review не типичен; только по явному запросу |
+
+**На `dev`:** сравнивать с `main`, не с `dev` (иначе diff пустой или бессмысленный).
 
 ## Когда пропустить
 
-- Только docs / `.cursor/rules` / `AGENTS.md` / workflows — **без** изменений кода и данных (`database/`, `mods/`)
+- Только docs / `.cursor/rules` / `AGENTS.md` — без изменений кода и данных
 - Пользователь явно просит push/PR/merge **без** review
-- Повторный review после fix: только если были **blocker** findings (см. §После review)
+- Повторный review: только после fix **blocker** findings (максимум один повтор — light re-check)
+
+## Выбор режима review
+
+Перед review: `git fetch origin`, определить base (§**Определение base branch**), оценить diff `origin/<base>...HEAD`.
+
+Для **task-ветки** перед full review: `git rebase origin/dev`. На **`dev`** rebase на `origin/dev` не нужен; убедиться, что `origin/main` актуален (`git fetch origin`).
+
+| Условие | Режим |
+|---------|-------|
+| Только `docs/`, `.cursor/rules`, `AGENTS.md` | **Пропуск** |
+| Пользователь явно просит «полный review» / «bugbot» | **Full** |
+| Diff без `core/`, `database/`, `mods/`, `ui/`, `main.py`; ≤5 файлов; ≤~200 строк (`git diff --shortstat`) | **Light** |
+| Иначе | **Full** |
 
 ## Предусловия
 
-- [ ] Коммиты подзадач сделаны
-- [ ] Docs обновлены (skill `dnd-mud-docs-after-task` или пропуск по правилам)
-- [ ] Verify пройден (`make test` / `make check` / smoke — по условиям)
-- [ ] Рабочее дерево чистое (или только ожидаемые незакоммиченные правки — тогда `Diff: uncommitted changes` не использовать для финального review; сначала commit)
+- [ ] Verify пройден
+- [ ] Рабочее дерево чистое (для финального review — сначала commit)
+- [ ] Перед **full** на task-ветке: `git fetch origin && git rebase origin/dev`
+- [ ] Перед **full** на **`dev`**: `git fetch origin` (base = `main`, rebase не на `dev`)
 
-## Алгоритм (оркестратор)
+## Алгоритм light review (оркестратор)
 
-1. Определить **Base Branch** по таблице выше (`dev` по умолчанию для task-веток).
-2. Убедиться, что review-ветка checkout локально (`git branch --show-current`).
-3. Запустить **ровно один** subagent `bugbot` (канон: skill [`review-bugbot`](~/.cursor/skills-cursor/review-bugbot/SKILL.md)):
-   - `readonly: true`
-   - `run_in_background: false`
-   - `description: "Bugbot"`
-   - `subagent_type: "bugbot"`
-4. Prompt subagent (форма обязательна):
+Без subagent и без Task tool.
+
+1. Определить **base branch** (§**Определение base branch**): task-ветка → `dev`, **`dev` → `main`**.
+2. `git diff --stat origin/<base>...HEAD` и `git diff origin/<base>...HEAD`.
+3. Прочитать **только** файлы из diff.
+4. Чеклист (4 пункта): correctness; git hygiene & secrets; docs drift (если менялось поведение); tests — meaningful gaps only.
+5. Сводка по §**Формат ответа**; при Blocker/Major — предложить [`dnd-mud-fix-plan`](../dnd-mud-fix-plan/SKILL.md).
+6. Оркестратор **не** правит код, пока пользователь не попросил fix.
+
+## Алгоритм full review (bugbot subagent)
+
+1. Определить **base branch** (§**Определение base branch**): task-ветка → `dev`, **`dev` → `main`**.
+2. `git fetch origin`; на task-ветке — `git rebase origin/dev` (на `dev` — не rebase на себя).
+3. `git diff --stat origin/<base>...HEAD` — убедиться, что diff не пуст.
+4. Запустить **ровно один** subagent `bugbot` ([`review-bugbot`](~/.cursor/skills-cursor/review-bugbot/SKILL.md)):
+   - `readonly: true`, `run_in_background: false`, `description: "Bugbot"`, `subagent_type: "bugbot"`
+5. Prompt subagent:
 
 ```text
 Full Repository Path: <absolute repository path>
 Diff: branch changes
-Base Branch: dev
+Base Branch: <main|dev — по §Определение base branch>
 Custom Instructions: <текст из §dnd_mud checklist ниже>
 ```
 
-Для release заменить `Base Branch: dev` → `Base Branch: main` и checkout `dev`.
+6. Сводка по §**Формат ответа**; при Blocker/Major — предложить [`dnd-mud-fix-plan`](../dnd-mud-fix-plan/SKILL.md).
+7. Оркестратор **не** правит код, пока пользователь не попросил fix.
 
-5. После subagent — сводка по формату `review-bugbot` (таблица Severity | Location | Finding).
-6. Решение:
-   - **Blocker** → fix → commit → verify → **один** повтор review (только blockers)
-   - **Non-blocker** → зафиксировать в ответе; push/PR по запросу пользователя
-   - **No issues** → push / PR / merge по политике сессии
+**При ошибке bugbot или пустом diff:** **не** использовать `Diff: natural language`. Сообщить пользователю; исправить git-состояние (`fetch`, clean tree, rebase) и повторить **один** раз с `branch changes`.
 
-Оркестратор **не** правит код по findings, пока пользователь или loop не перешли к fix (кроме явного «исправь blockers»).
+## Light re-check (после fix Blocker)
 
-## dnd_mud checklist (Custom Instructions)
+Без subagent:
 
-Скопировать в `Custom Instructions` subagent (адаптировать base branch в тексте при release):
+1. `git diff` по файлам из Location в findings (или `git diff origin/<base>...HEAD` если много файлов).
+2. Проверить, что Blocker устранены; Major — по запросу.
+3. Full bugbot — только по явному запросу пользователя.
+
+## dnd_mud checklist (Custom Instructions для full review)
 
 ```text
 Reviewer for dnd_mud console MUD (Python 3.12). Readonly code review of branch changes vs base branch.
@@ -78,31 +115,34 @@ Scope: only files in the diff; ignore .coverage, saves/.
 
 Checklist (report findings with severity Blocker / Major / Minor / Nit):
 
-1. Correctness & regressions — logic bugs, edge cases, broken loaders, grant/subrace/mod_loader consistency if YAML or core/ touched.
-2. Project simplicity — dnd-mud-python-simple: no over-abstraction, KISS, match surrounding code style.
-3. Tests — meaningful gaps only (do not re-run pytest); missing tests for new behavior in core/ or database/.
-4. Types & imports — if core/ changed, flag missing type hints or obvious mypy/ruff issues.
-5. Data & mods — database/**/*.yaml, mods/**: grants schema per docs/DATA_SCHEMA.md, legacy compatibility, localization {ru,en} where applicable.
-6. UI — ui/, `_creation_steps`: localization keys, menu flow regressions.
-7. Docs sync — if behavior/API/data changed, docs/ (API, ARCHITECTURE, DATA_SCHEMA, CHANGELOG) should reflect it; flag drift.
-8. Git hygiene — unrelated files, secrets, committed artifacts (.coverage, saves/).
-9. Security — only if auth, file paths, or user input parsing changed; otherwise skip.
+1. Correctness & regressions — logic bugs, edge cases, broken loaders, grant/subrace/mod_loader consistency if YAML or core/ touched; KISS, match surrounding style; flag missing type hints in core/ only if obvious.
+2. Tests — meaningful gaps only (do not re-run pytest); missing tests for new behavior in core/ or database/.
+3. Data & mods — only if database/ or mods/ in diff: grants schema per docs/DATA_SCHEMA.md, legacy compatibility, localization {ru,en}.
+4. UI & localization — only if ui/ in diff: localization keys, menu flow regressions.
+5. Git hygiene & secrets — unrelated files, .coverage, saves/, credentials.
 
-Output: compact findings table. Blocker = would fail in production or breaks tests/docs contract. Do not suggest browser verification.
+Output: two blocks — (1) compact table Blocker/Major/Minor only, columns Severity | Location (file:line) | Finding; (2) if any Nit — separate subsection «Nit (опционально)» with table Location | Finding.
+Blocker = would fail in production or breaks tests/docs contract. Do not suggest browser verification.
 Language: findings in Russian; file paths and identifiers in English.
 ```
 
+## Формат ответа (оркестратор)
+
+Указать режим: **Light** или **Full** и **base branch** (`dev` или `main`).
+
+**1. Findings** — Blocker, Major, Minor:
+
+| Severity | Location | Finding |
+|----------|----------|---------|
+| … | `file:line` | … |
+
+**2. Nit (опционально)** — отдельная таблица, если есть.
+
 ## После review
 
-| Исход | Действие |
-|-------|----------|
-| Blockers | `fix: …` commit(s) → verify → один повтор `dnd-mud-review` |
-| Только Major/Minor/Nit | Сообщить пользователю; push/PR — по запросу |
-| Subagent failed | См. retry в `review-bugbot`; затем `Diff: natural language` как last resort |
-| Empty diff | Сообщить «нет diff для review»; проверить ветку и base |
-
-## Связь с release
-
-Release PR `dev` → `main`: review **до** `gh pr create --base main` с `Base Branch: main`, ветка `dev`. Затем skill [`dnd-mud-release`](../dnd-mud-release/SKILL.md) (trial merge, `make test`, PR).
-
-Sync `main` → `dev`: review опционален; обязателен `make test` (skill `git-dev-main-sync`).
+| Findings | Действие |
+|----------|----------|
+| Blocker | fix-plan → fix → verify → **light re-check** (не full bugbot по умолчанию) |
+| Major | fix-plan (предложить) → fix по запросу |
+| Minor/Nit only | push/PR — по запросу |
+| No issues | push/PR — по политике сессии |
