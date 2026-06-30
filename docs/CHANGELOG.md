@@ -5,10 +5,21 @@
 ### Added
 - `core/character_builder.py` — `ResolvedGrants`, `resolve_creation_grants`, merge helpers для языков/компетентности из черт
 - `tests/test_character_builder.py`
+- `core/catalog_loader.py` — `load_catalog`, `clear_catalog_cache`, `clear_all_catalog_caches`
+- `tests/test_catalog_loader.py`
+- `ui/menus/_creation_handlers.py`, `_creation_navigation.py`, `_creation_finalize.py`, `_creation_state.py`
 
 ### Changed
 - `ui/menus/feats/` — пакет вместо монолитного `feats.py` (`_requirements`, `_subchoices`, `_creation`, `_level_up`)
 - `ui/menus/_display/_grants.py` — grant display вынесен из `_race.py`
+- `ui/menus/_creation_steps.py` — тонкий loop; навигация и финализация в отдельных модулях
+- Каталоги YAML (`classes`, `feats`, `equipment`, `languages`, `abilities`, `constants`, `races`, `backgrounds`) — через `load_catalog` + mod overlay
+- `core/io.py` — `strict` для битых каталогов (`CatalogLoadError`); WARNING-логирование I/O
+- `core/localization.load_strings` — `@lru_cache`; `clear_strings_cache()`
+- `core/character_storage._load_character_file` — `load_json` из `core/io`
+- `core/character.py` — узкий фасад для `_deps` (без proficiencies/skills/expertise re-export)
+- `Character.from_dict` — legacy `"class"` → `_migrate_legacy_fields`
+- `ui/menus/_display/_character.py` — `_print_character_skills_and_expertise`
 
 ### Changed
 - Phase 0 refactor: armor token normalization only in `core/grant_mechanics.normalize_armor_token`; `proficiencies` delegates

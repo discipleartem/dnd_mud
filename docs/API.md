@@ -290,7 +290,19 @@ proficiency_tokens_and_skills_from_grant(grant, choices=None) -> tuple[weapons, 
 
 ---
 
-## core.mod_loader — Overlay модов
+## core.catalog_loader — Единая загрузка каталогов
+
+```python
+load_catalog(path: Path | str, root_key: str) -> dict[str, Any]
+clear_catalog_cache() -> None
+clear_all_catalog_caches() -> None
+```
+
+Deep-merge модов через `mod_loader`; кэш `@lru_cache` на пару (путь, ключ). Используется в `races`, `backgrounds`, `classes`, `feats_loader`, `equipment`, `languages`, `abilities`, `constants`.
+
+---
+
+## core.mod_loader — Overlay модов (низкий уровень)
 
 ```python
 MODS_DIR = Path("mods")
@@ -301,7 +313,7 @@ load_merged_catalog(path_str: str, catalog_key: str) -> dict[str, Any]
 clear_mod_loader_cache() -> None
 ```
 
-`load_merged_catalog` — deep-merge overlay включённых модов (`mods_state.json` → `manifest.yaml` → `overlay.yaml`) поверх базового YAML. Используется в `core/races.py`, `core/backgrounds.py`. Кэш: `@lru_cache` на `load_merged_catalog`.
+`load_merged_catalog` — deep-merge overlay включённых модов. Потребители каталогов — `core/catalog_loader.load_catalog`. Кэш: `@lru_cache` на `load_merged_catalog`.
 
 Формат мода: [`DATA_SCHEMA.md`](DATA_SCHEMA.md) § Mod overlay, [`DEVELOPMENT.md`](DEVELOPMENT.md) § Создание мода.
 

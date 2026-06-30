@@ -77,13 +77,23 @@ dnd_mud/
 │   └── menus/               # Пакет экранов меню
 │       ├── main_menu.py
 │       ├── new_game.py
-│       ├── _creation_steps.py  # Flow «Создать персонажа» + state machine
+│       ├── _creation_steps.py  # Тонкий loop создания персонажа
+│       ├── _creation_handlers.py, `_creation_navigation.py`, `_creation_finalize.py`, `_creation_state.py`
 │       ├── settings.py
 │       ├── stats/           # Генерация характеристик (подпакет)
 │       ├── _common.py       # SEPARATOR, _run_numbered_menu, …
 │       ├── _display/        # Пакет отображения (класс, раса, stats, персонаж)
 │       ├── _selectors.py
-│       └── _deps.py         # Re-export core.character + input_handler (monkeypatch)
+│       └── _deps.py         # Re-export core.character + input_handler (flows only)
+
+### UI → core imports
+
+| Слой | Импорт |
+|------|--------|
+| Flows (`_creation_steps`, `new_game`, `characters_menu`, …) | `ui/menus/_deps` |
+| Экраны (`feats/`, `level_up`, `_display/`) | Прямые `from core.*` |
+
+`core/character.py` синхронизирован с `_deps` — не дублировать leaf-API в фасаде.
 ├── database/                # YAML-справочники D&D 5e
 │   ├── races/
 │   │   └── races.yaml       # Расы и подрасы
