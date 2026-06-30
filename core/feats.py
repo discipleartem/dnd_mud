@@ -4,10 +4,7 @@ import re
 from dataclasses import replace
 from typing import Any
 
-from core.feat_visibility import (
-    feat_adds_new_proficiency,
-    feat_visible_for_selection,
-)
+from core.feat_visibility import feat_visible_for_selection
 from core.feats_loader import (
     FeatGrant,
     FeatRequirementContext,
@@ -25,7 +22,6 @@ __all__ = [
     "apply_feats_to_stats",
     "can_take_feat",
     "character_has_spellcasting",
-    "feat_adds_new_proficiency",
     "feat_visible_for_selection",
     "feat_full_description_lines",
     "feat_has_requirements",

@@ -9,8 +9,13 @@ _ARMOR_ALIASES: dict[str, str] = {
 }
 
 
-def _normalize_armor_token(token: str) -> str:
+def normalize_armor_token(token: str) -> str:
+    """Привести токен доспеха к light/medium/heavy/shield."""
     return _ARMOR_ALIASES.get(token, token)
+
+
+def _normalize_armor_token(token: str) -> str:
+    return normalize_armor_token(token)
 
 
 def proficiency_tokens_and_skills_from_grant(

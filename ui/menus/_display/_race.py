@@ -9,7 +9,7 @@ from core.equipment import (
     get_weapon_name,
     proficiency_token_label,
 )
-from core.grant_mechanics import _normalize_armor_token
+from core.grant_mechanics import normalize_armor_token
 from core.grants import grants_from_entity, grants_of_type
 from core.localization import get_string
 from core.types import StatMap, StringsDict
@@ -30,7 +30,7 @@ def _armor_labels_from_grant(
     raw = grant.get("armor_types", grant.get("armors", []))
     if not isinstance(raw, list) or not raw:
         return ""
-    tokens = [_normalize_armor_token(str(item)) for item in raw]
+    tokens = [normalize_armor_token(str(item)) for item in raw]
     return ", ".join(
         proficiency_token_label(token, strings, language) for token in tokens
     )

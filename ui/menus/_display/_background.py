@@ -5,28 +5,11 @@ from typing import Any
 from core.grants import grants_from_entity
 from core.localization import get_string
 from core.types import StringsDict
+from ui.menus._display._labels import _localized_string_list
 from ui.menus._display._race import (
     _grant_description,
     _grant_display_name,
 )
-
-
-def _localized_string_list(value: Any, language: str) -> list[str]:
-    """Локализованный список строк из YAML (ru/en или плоский list)."""
-    if isinstance(value, dict):
-        raw = value.get(language)
-        if not isinstance(raw, list):
-            for key in (language, "en", "ru"):
-                candidate = value.get(key)
-                if isinstance(candidate, list):
-                    raw = candidate
-                    break
-        if isinstance(raw, list):
-            return [str(item) for item in raw]
-        return []
-    if isinstance(value, list):
-        return [str(item) for item in value]
-    return []
 
 
 def _print_background_grants(

@@ -326,8 +326,8 @@ load_feats() -> list[dict[str, Any]]
 load_feat(feat_id: str) -> dict[str, Any]
 race_feat_step_required(race_id, subrace_id) -> bool
 feat_meets_requirements(feat_id, ctx) -> bool
-feat_visible_for_selection(feat_id, ctx) -> bool  # alias: feat_adds_new_proficiency
-build_feat_selection_context(stats, race_id, subrace_id, background_id, class_id, subclass_id, level) -> FeatRequirementContext
+feat_visible_for_selection(feat_id, ctx) -> bool
+build_feat_selection_context(stats, race_id, subrace_id, background_id, class_id, subclass_id, level, *, skills=None, weapon_tokens=None, tool_tokens=None) -> FeatRequirementContext
 list_feats_for_selection(ctx, existing_ids) -> tuple[eligible, blocked, hidden]
 resolve_feat_grants(feat_id, choices) -> tuple[weapons, armors, tools, skills]
 get_feat_skill_ids(feat_ids, feat_choices) -> list[str]

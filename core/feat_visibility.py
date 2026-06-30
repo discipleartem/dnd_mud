@@ -9,6 +9,8 @@ from typing import Any
 
 from core.classes import character_has_spellcasting
 from core.feats_loader import FeatRequirementContext, load_feat
+from core.grant_mechanics import normalize_armor_token
+from core.io import merge_unique
 from core.skills import apply_racial_proficiencies
 from core.types import StatMap
 
@@ -16,7 +18,6 @@ __all__ = [
     "build_feat_selection_context",
     "build_feat_selection_context_from_character",
     "creation_known_for_feat_picks",
-    "feat_adds_new_proficiency",
     "feat_visible_for_selection",
 ]
 
@@ -68,8 +69,16 @@ def build_feat_selection_context(
     class_id: str,
     subclass_id: str | None,
     level: int,
+    *,
+    skills: list[str] | None = None,
+    weapon_tokens: list[str] | None = None,
+    tool_tokens: list[str] | None = None,
 ) -> FeatRequirementContext:
-    """Контекст видимости и требований черт на шаге создания (после класса)."""
+    """Контекст видимости и требований черт на шаге создания (после класса).
+
+    Опциональные ``skills`` / ``weapon_tokens`` / ``tool_tokens`` дополняют
+    владения расы, класса и предыстории (например, от уже выбранных черт).
+    """
     from core.proficiencies import (
         get_background_tool_proficiencies,
         get_class_proficiency_tokens,
@@ -86,7 +95,7 @@ def build_feat_selection_context(
     bg_tools: list[str] = []
     if background_id:
         bg_tools, _ = get_background_tool_proficiencies(background_id)
-    known_skills, _, _ = creation_known_for_feat_picks(
+    base_skills, _, _ = creation_known_for_feat_picks(
         race_id,
         subrace_id,
         background_id,
@@ -94,11 +103,23 @@ def build_feat_selection_context(
         subclass_id,
         level,
     )
+    if skills is not None:
+        known_skills = merge_unique(base_skills, skills)
+    else:
+        known_skills = base_skills
+    merged_weapons = merge_proficiency_tokens(cw, rw, sw)
+    if weapon_tokens is not None:
+        merged_weapons = merge_proficiency_tokens(
+            merged_weapons, weapon_tokens
+        )
+    merged_tools = merge_proficiency_tokens(ct, rt, st, bg_tools)
+    if tool_tokens is not None:
+        merged_tools = merge_proficiency_tokens(merged_tools, tool_tokens)
     return FeatRequirementContext(
         stats=stats,
-        weapon_tokens=merge_proficiency_tokens(cw, rw, sw),
+        weapon_tokens=merged_weapons,
         armor_tokens=merge_proficiency_tokens(ca, ra, sa),
-        tool_tokens=merge_proficiency_tokens(ct, rt, st, bg_tools),
+        tool_tokens=merged_tools,
         race_id=race_id,
         subrace_id=subrace_id,
         background_id=background_id,
@@ -137,12 +158,10 @@ def build_feat_selection_context_from_character(
 
 
 def _armor_tokens_from_grant(grant: dict[str, Any]) -> list[str]:
-    from core.grant_mechanics import _normalize_armor_token
-
     raw = grant.get("armor_types", grant.get("armors", []))
     if not isinstance(raw, list):
         return []
-    return [_normalize_armor_token(str(armor)) for armor in raw]
+    return [normalize_armor_token(str(armor)) for armor in raw]
 
 
 def _grant_adds_new_proficiency(
@@ -256,6 +275,3 @@ def feat_visible_for_selection(
         for grant in raw_grants
         if isinstance(grant, dict)
     )
-
-
-feat_adds_new_proficiency = feat_visible_for_selection

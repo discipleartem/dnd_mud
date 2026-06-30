@@ -8,10 +8,10 @@ from core.feats import (
     FeatRequirementContext,
     apply_feat_grants_to_character,
     apply_feats_to_stats,
-    feat_adds_new_proficiency,
     feat_full_description_lines,
     feat_meets_requirements,
     feat_summary_description,
+    feat_visible_for_selection,
     get_feat_skill_ids,
     list_feats_for_selection,
     load_feat,
@@ -51,7 +51,7 @@ def _assert_no_redundant_proficiency_feats_in_eligible(
     eligible, _, _ = list_feats_for_selection(ctx, [])
     for feat in eligible:
         feat_id = str(feat.get("id", ""))
-        assert feat_adds_new_proficiency(
+        assert feat_visible_for_selection(
             feat_id, ctx
         ), f"{feat_id} eligible but adds no new proficiency"
 
@@ -134,7 +134,7 @@ def test_feat_spellcasting_requirement_needs_class_context():
     assert feat_meets_requirements("war_caster", ctx_cleric)
 
 
-def test_feat_ctx_at_creation_includes_class_armor():
+def test_build_feat_selection_context_includes_class_armor():
     from core.feat_visibility import build_feat_selection_context
 
     ctx = build_feat_selection_context(
@@ -394,11 +394,13 @@ def test_print_feat_selection_menu_shows_hidden_section(capsys, ru_strings):
         ru_strings, eligible, blocked, hidden, ctx, "ru"
     )
     out = capsys.readouterr().out
-    assert "Скрыто" in out
-    assert "Знаток тяжёлых доспехов" in out
-    assert out.find("Скрыто") > out.find("Знаток лёгких доспехов") or (
-        "Знаток лёгких доспехов" in out
-    )
+    hidden_idx = out.find("Скрыто")
+    assert hidden_idx >= 0
+    eligible_part = out[:hidden_idx]
+    hidden_part = out[hidden_idx:]
+    assert "Знаток тяжёлых доспехов" in hidden_part
+    assert "Знаток тяжёлых доспехов" not in eligible_part
+    assert "Крепкий" in eligible_part
 
 
 def test_format_feat_requirement_ability_text():
@@ -526,6 +528,39 @@ def test_pick_skills_or_tools_excludes_category_tool_pool(
     assert result[0]["id"] != "smith_tools"
 
 
+def test_build_feat_selection_context_merges_prior_feat_skills():
+    """Навыки от уже выбранных черт дополняют контекст видимости."""
+    from core.equipment import all_tool_ids
+    from core.feat_visibility import build_feat_selection_context
+    from core.skills import PHB_SKILL_IDS
+
+    ctx = build_feat_selection_context(
+        _CREATION_STATS,
+        "human",
+        "variant_human",
+        "soldier",
+        "fighter",
+        "champion",
+        1,
+        skills=["arcana"],
+    )
+    assert "arcana" in ctx.skills
+    assert "athletics" in ctx.skills
+
+    exhausted = build_feat_selection_context(
+        _CREATION_STATS,
+        "human",
+        "variant_human",
+        "soldier",
+        "fighter",
+        "champion",
+        1,
+        skills=list(PHB_SKILL_IDS),
+        tool_tokens=list(all_tool_ids()),
+    )
+    assert not feat_visible_for_selection("skilled", exhausted)
+
+
 def test_grant_skill_proficiency_choice_hidden_when_all_skills_known():
     from core.feat_visibility import _grant_adds_new_proficiency
     from core.skills import PHB_SKILL_IDS
@@ -548,6 +583,52 @@ def test_grant_skill_proficiency_choice_hidden_when_all_skills_known():
         skills=[],
     )
     assert _grant_adds_new_proficiency(grant, ctx_empty)
+
+
+def test_bonus_proficiencies_visibility_variants():
+    from core.feat_visibility import _grant_adds_new_proficiency
+
+    base_ctx = FeatRequirementContext(
+        stats={},
+        weapon_tokens=["simple"],
+        armor_tokens=["light"],
+        tool_tokens=[],
+        skills=[],
+    )
+    grant_choice = {"type": "bonus_proficiencies", "choice": True}
+    assert _grant_adds_new_proficiency(grant_choice, base_ctx)
+
+    full_weapons = FeatRequirementContext(
+        stats={},
+        weapon_tokens=["simple", "martial"],
+        armor_tokens=[],
+        tool_tokens=[],
+        skills=[],
+    )
+    grant_fixed_weapon = {
+        "type": "bonus_proficiencies",
+        "weapons": ["longsword"],
+    }
+    assert not _grant_adds_new_proficiency(grant_fixed_weapon, full_weapons)
+
+    grant_armor = {"type": "bonus_proficiencies", "armors": ["medium"]}
+    assert _grant_adds_new_proficiency(grant_armor, base_ctx)
+
+    full_armor = FeatRequirementContext(
+        stats={},
+        weapon_tokens=[],
+        armor_tokens=["light", "medium"],
+        tool_tokens=[],
+        skills=[],
+    )
+    assert not _grant_adds_new_proficiency(grant_armor, full_armor)
+
+    grant_both = {
+        "type": "bonus_proficiencies",
+        "weapons": ["longsword"],
+        "armors": ["heavy"],
+    }
+    assert _grant_adds_new_proficiency(grant_both, base_ctx)
 
 
 def test_pick_weapons_for_feat_excludes_martial_proficiency(

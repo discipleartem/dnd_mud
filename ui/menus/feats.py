@@ -670,6 +670,9 @@ def select_creation_feats(
                 class_id,
                 subclass_id,
                 start_level,
+                skills=known_skills,
+                weapon_tokens=weapon_profs,
+                tool_tokens=known_tools,
             )
             eligible, blocked, hidden = list_feats_for_selection(ctx, feat_ids)
             if not eligible:
