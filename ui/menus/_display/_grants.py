@@ -8,7 +8,7 @@ from core.equipment import (
     proficiency_token_label,
 )
 from core.grant_mechanics import normalize_armor_token
-from core.grants import _ABILITY_INCREASE
+from core.grants import ABILITY_INCREASE
 from core.localization import get_string
 from core.types import StringsDict
 from ui.menus._common import _ability_name, _skill_name
@@ -70,7 +70,7 @@ def _grant_description(
                 "character.grant_hp_per_level",
                 amount=amount,
             )
-    if gtype == _ABILITY_INCREASE and grant.get("choice"):
+    if gtype == ABILITY_INCREASE and grant.get("choice"):
         count = int(grant.get("count", 1))
         amount = int(grant.get("amount", grant.get("value", 1)))
         return get_string(

@@ -44,7 +44,7 @@ def _apply_mod_overlays(
     target = str(target_path).replace("\\", "/")
     result = dict(data)
     for mod_id in _enabled_mod_ids():
-        manifest = load_yaml(_mod_manifest_path(mod_id))
+        manifest = load_yaml(_mod_manifest_path(mod_id), strict=True)
         overlays = manifest.get("overlays", [])
         if not isinstance(overlays, list):
             continue

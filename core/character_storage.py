@@ -1,6 +1,7 @@
 """Сохранение и загрузка персонажей в JSON."""
 
 import logging
+from dataclasses import dataclass
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
@@ -16,17 +17,18 @@ from core.types import GameDifficulty, StatMap
 
 logger = logging.getLogger(__name__)
 
-_corrupt_save_labels: list[str] = []
 
+@dataclass(frozen=True)
+class LoadCharactersResult:
+    """Результат загрузки персонажей и предупреждений о битых сейвах."""
 
-def pop_corrupt_save_warnings() -> list[str]:
-    """Подписи битых сейвов с последнего load_characters.
+    characters: tuple[Character, ...]
+    corrupt_save_warnings: tuple[str, ...] = ()
 
-    Имя персонажа из JSON или save_slug, если имя недоступно.
-    """
-    warnings = list(_corrupt_save_labels)
-    _corrupt_save_labels.clear()
-    return warnings
+    @classmethod
+    def empty(cls) -> "LoadCharactersResult":
+        """Пустой результат без персонажей и предупреждений."""
+        return cls(characters=())
 
 
 def _corrupt_label_from_data(data: dict[str, Any], path: Path) -> str:
@@ -265,13 +267,13 @@ def _character_created_at_timestamp(character: Character, path: Path) -> float:
     return path.stat().st_mtime
 
 
-def load_characters() -> list[Character]:
-    """Загрузить список всех сохранённых персонажей (старые → новые)."""
-    _corrupt_save_labels.clear()
+def load_characters() -> LoadCharactersResult:
+    """Загрузить всех сохранённых персонажей (старые → новые) и битые сейвы."""
     if not CHARACTERS_DIR.exists():
-        return []
+        return LoadCharactersResult.empty()
 
     entries: list[tuple[float, Character]] = []
+    corrupt_labels: list[str] = []
     for path in CHARACTERS_DIR.glob("*.json"):
         character, corrupt_label = _try_load_character_file(path)
         if character is not None:
@@ -280,10 +282,13 @@ def load_characters() -> list[Character]:
             )
         elif corrupt_label is not None:
             logger.warning("Битый файл сохранения персонажа: %s", path)
-            _corrupt_save_labels.append(corrupt_label)
+            corrupt_labels.append(corrupt_label)
 
     entries.sort(key=lambda item: item[0])
-    return [character for _, character in entries]
+    return LoadCharactersResult(
+        characters=tuple(character for _, character in entries),
+        corrupt_save_warnings=tuple(corrupt_labels),
+    )
 
 
 def delete_character(save_slug: str) -> bool:

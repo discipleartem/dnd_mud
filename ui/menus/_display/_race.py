@@ -4,7 +4,7 @@ from typing import Any
 
 from colorama import Fore, Style
 
-from core.grants import _ABILITY_INCREASE, grants_from_entity, grants_of_type
+from core.grants import ABILITY_INCREASE, grants_from_entity, grants_of_type
 from core.localization import get_string
 from core.types import StatMap, StringsDict
 from ui.menus import _deps
@@ -40,7 +40,7 @@ def _print_choice_ability_from_grants(
     info: dict[str, Any], strings: StringsDict
 ) -> None:
     """Выборный бонус характеристик из grants, если нет ability_bonuses."""
-    for grant in grants_of_type(grants_from_entity(info), _ABILITY_INCREASE):
+    for grant in grants_of_type(grants_from_entity(info), ABILITY_INCREASE):
         if not grant.get("choice"):
             continue
         count = int(grant.get("count", 1))

@@ -100,9 +100,12 @@ def show_characters_menu(
     """Меню управления персонажами: список, создание, удаление."""
     corrupt_warning_shown = False
     while True:
-        characters = _deps.load_characters()
+        load_result = _deps.load_characters()
+        characters = list(load_result.characters)
         corrupt_warning_shown = show_corrupt_save_warnings_if_any(
-            strings, already_shown=corrupt_warning_shown
+            strings,
+            corrupt_labels=load_result.corrupt_save_warnings,
+            already_shown=corrupt_warning_shown,
         )
         has_characters = bool(characters)
 

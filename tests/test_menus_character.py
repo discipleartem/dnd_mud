@@ -4,6 +4,7 @@ import re
 
 import pytest
 
+from core.character_storage import LoadCharactersResult
 from core.models import Adventure, Character
 from ui.menus import (
     _creation_steps,
@@ -18,7 +19,11 @@ from ui.menus._selectors import select_class, select_subclass, select_subrace
 def _patch_load_characters(
     monkeypatch: pytest.MonkeyPatch, characters: list[Character]
 ) -> None:
-    monkeypatch.setattr(_deps, "load_characters", lambda: characters)
+    monkeypatch.setattr(
+        _deps,
+        "load_characters",
+        lambda: LoadCharactersResult(characters=tuple(characters)),
+    )
 
 
 def _noop_press_enter(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -327,7 +332,9 @@ def test_select_character_shows_cards_with_difficulty(
     )
 
     monkeypatch.setattr(
-        _deps, "load_characters", lambda: [normal_char, hardcore_char]
+        _deps,
+        "load_characters",
+        lambda: LoadCharactersResult(characters=(normal_char, hardcore_char)),
     )
     patch_int_input(monkeypatch, [0])
 
@@ -374,7 +381,11 @@ def test_select_character_shows_subrace_name(
         current_hp=10,
     )
 
-    monkeypatch.setattr(_deps, "load_characters", lambda: [character])
+    monkeypatch.setattr(
+        _deps,
+        "load_characters",
+        lambda: LoadCharactersResult(characters=(character,)),
+    )
     patch_int_input(monkeypatch, [0])
 
     new_game._select_character(ru_strings, [character])
@@ -393,7 +404,11 @@ def test_select_character_create_via_enter(monkeypatch, capsys, ru_strings):
         class_id="fighter",
         difficulty="normal",
     )
-    monkeypatch.setattr(_deps, "load_characters", lambda: [character])
+    monkeypatch.setattr(
+        _deps,
+        "load_characters",
+        lambda: LoadCharactersResult(characters=(character,)),
+    )
 
     from ui.input_handler import get_int_input
 
@@ -470,8 +485,13 @@ def test_new_game_corrupt_warning_shown_once_per_visit(
     monkeypatch, capsys, ru_strings
 ):
     """Предупреждение о битых сейвах — один раз за визит new game."""
-    monkeypatch.setattr(_deps, "load_characters", lambda: [])
-    monkeypatch.setattr(_deps, "pop_corrupt_save_warnings", lambda: ["Broken"])
+    monkeypatch.setattr(
+        _deps,
+        "load_characters",
+        lambda: LoadCharactersResult(
+            characters=(), corrupt_save_warnings=("Broken",)
+        ),
+    )
     monkeypatch.setattr(
         _creation_steps,
         "show_create_character_flow",
@@ -495,7 +515,9 @@ def test_new_game_no_characters_goes_to_create(monkeypatch):
     def create_flow(strings, language="ru"):
         calls["create"] += 1
 
-    monkeypatch.setattr(_deps, "load_characters", lambda: [])
+    monkeypatch.setattr(
+        _deps, "load_characters", lambda: LoadCharactersResult.empty()
+    )
     monkeypatch.setattr(
         _creation_steps, "show_create_character_flow", create_flow
     )
@@ -522,7 +544,11 @@ def test_new_game_back_returns_one_step(monkeypatch):
         calls["adventure"] += 1
         return None
 
-    monkeypatch.setattr(_deps, "load_characters", lambda: [character])
+    monkeypatch.setattr(
+        _deps,
+        "load_characters",
+        lambda: LoadCharactersResult(characters=(character,)),
+    )
     monkeypatch.setattr(new_game, "_select_character", select_character)
     monkeypatch.setattr(new_game, "_select_adventure", select_adventure)
 
@@ -575,8 +601,13 @@ def test_characters_menu_corrupt_warning_shown_once_per_visit(
     monkeypatch, capsys, ru_strings, patch_int_input
 ):
     """Предупреждение о битых сейвах показывается один раз за визит меню."""
-    monkeypatch.setattr(_deps, "load_characters", lambda: [])
-    monkeypatch.setattr(_deps, "pop_corrupt_save_warnings", lambda: ["Broken"])
+    monkeypatch.setattr(
+        _deps,
+        "load_characters",
+        lambda: LoadCharactersResult(
+            characters=(), corrupt_save_warnings=("Broken",)
+        ),
+    )
     monkeypatch.setattr(
         _creation_steps,
         "show_create_character_flow",

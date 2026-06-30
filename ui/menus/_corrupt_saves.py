@@ -1,19 +1,20 @@
 """Предупреждение о битых файлах сохранений персонажей."""
 
+from collections.abc import Sequence
+
 from colorama import Fore, Style
 
 from core.localization import get_string
 from core.types import StringsDict
-from ui.menus import _deps
 
 
 def show_corrupt_save_warnings_if_any(
     strings: StringsDict,
     *,
+    corrupt_labels: Sequence[str],
     already_shown: bool,
 ) -> bool:
     """Показать предупреждение один раз за визит. Вернуть обновлённый флаг."""
-    corrupt_labels = _deps.pop_corrupt_save_warnings()
     if not corrupt_labels or already_shown:
         return already_shown
     names = ", ".join(corrupt_labels)

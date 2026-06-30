@@ -7,10 +7,10 @@
 from core.adventure import load_adventures
 from core.backgrounds import load_background_full, load_backgrounds
 from core.character_storage import (
+    LoadCharactersResult,
     delete_all_characters,
     delete_character,
     load_characters,
-    pop_corrupt_save_warnings,
     save_character,
     update_character,
 )
@@ -76,7 +76,7 @@ __all__ = [
     "load_background_full",
     "load_backgrounds",
     "load_characters",
-    "pop_corrupt_save_warnings",
+    "LoadCharactersResult",
     "load_class_full",
     "load_classes",
     "load_languages",

@@ -159,9 +159,12 @@ def show_new_game_flow(
     corrupt_warning_shown = False
 
     while True:
-        characters = _deps.load_characters()
+        load_result = _deps.load_characters()
+        characters = list(load_result.characters)
         corrupt_warning_shown = show_corrupt_save_warnings_if_any(
-            strings, already_shown=corrupt_warning_shown
+            strings,
+            corrupt_labels=load_result.corrupt_save_warnings,
+            already_shown=corrupt_warning_shown,
         )
         if not characters:
             character = _creation_steps.show_create_character_flow(

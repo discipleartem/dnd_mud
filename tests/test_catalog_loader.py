@@ -39,3 +39,15 @@ def test_load_catalog_raises_on_corrupt_yaml(tmp_path: Path) -> None:
     clear_catalog_cache()
     with pytest.raises(CatalogLoadError):
         load_catalog(path, "races")
+
+
+def test_load_merged_yaml_raises_on_corrupt_json_syntax(
+    tmp_path: Path,
+) -> None:
+    from core.mod_loader import clear_mod_loader_cache, load_merged_yaml
+
+    path = tmp_path / "catalog.json"
+    path.write_text("{not json", encoding="utf-8")
+    clear_mod_loader_cache()
+    with pytest.raises(CatalogLoadError):
+        load_merged_yaml(path)
