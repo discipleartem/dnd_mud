@@ -466,6 +466,25 @@ def test_select_adventure_choice_returns_adventure(
     assert result.id == "tutorial"
 
 
+def test_new_game_corrupt_warning_shown_once_per_visit(
+    monkeypatch, capsys, ru_strings
+):
+    """Предупреждение о битых сейвах — один раз за визит new game."""
+    monkeypatch.setattr(_deps, "load_characters", lambda: [])
+    monkeypatch.setattr(_deps, "pop_corrupt_save_warnings", lambda: ["Broken"])
+    monkeypatch.setattr(
+        _creation_steps,
+        "show_create_character_flow",
+        lambda _strings, _language: None,
+    )
+
+    new_game.show_new_game_flow(ru_strings, {"language": "ru"})
+    output = capsys.readouterr().out
+
+    assert output.count("Не удалось загрузить сохранения") == 1
+    assert "Broken" in output
+
+
 def test_new_game_no_characters_goes_to_create(monkeypatch):
     """Без персонажей — сразу создание."""
     calls = {"select": 0, "create": 0}
