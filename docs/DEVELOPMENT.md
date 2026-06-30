@@ -40,9 +40,9 @@ dnd_mud
 ### Тестирование
 
 ```bash
-make test
+make test          # полный pytest + coverage (core, ui)
+make verify-scope  # инкрементально на конец task-ветки
 pytest -v
-pytest --cov=.
 ```
 
 ## Структура проекта
@@ -197,7 +197,7 @@ make install-hooks   # или make install — подключает .githooks/pr
 """Тесты UI: выбор персонажа, подрасы, new game, приключения."""
 ```
 
-Покрытие (~189 тестов; ключевые):
+Покрытие (~205 тестов; ключевые):
 - `test_display.py` — формат stats, карточка персонажа, grants на экране расы
 - `test_grants.py` — нормализация grants, legacy features
 - `test_mod_loader.py` — deep-merge overlay модов
