@@ -49,6 +49,7 @@ CORE_MODULE_TESTS: dict[str, list[str]] = {
 
 DATA_PATH_TESTS = [
     "tests/test_catalog_loader.py",
+    "tests/test_data_schema.py",
     "tests/test_io.py",
 ]
 

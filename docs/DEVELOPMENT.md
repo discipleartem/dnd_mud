@@ -122,7 +122,10 @@ dnd_mud/
 │   ├── test_catalog_loader.py  # catalog + mod_loader
 │   ├── test_proficiencies.py   # proficiencies + skills
 │   ├── test_progression.py     # progression, level-up UI, scenario
-│   ├── test_menus_character.py # creation handlers, new game
+│   ├── test_menus_creation.py   # creation handlers, subrace, feat routing
+│   ├── test_menus_new_game.py   # new game, adventure selection
+│   ├── test_menus_characters_hub.py  # characters menu hub
+│   ├── test_data_schema.py      # YAML vs JSON Schema v1
 │   ├── test_subclasses.py      # subclasses + subclass_trainer
 │   ├── test_models.py          # models + adventure load
 │   └── test_verify_targets.py
@@ -187,7 +190,7 @@ make install-hooks   # или make install — подключает .githooks/pr
 - На сценарий — **один** тест на слой: core **или** 0–1 UI smoke (monkeypatch-навигация), не дублировать unit + integration одного пути
 - Похожие кейсы — `@pytest.mark.parametrize`, не копии функций; мелкие домены — в существующий `test_*.py`, не новый файл на 1–2 теста
 - При фиче или фиксе — минимальный diff в `tests/`: столько assert, сколько нужно для изменённого поведения
-- Эталоны стиля: `tests/test_difficulty.py` (короткий unit), `tests/test_menus_character.py` (интеграция UI без тяжёлых моков)
+- Эталоны стиля: `tests/test_difficulty.py` (короткий unit), `tests/test_menus_creation.py` (интеграция UI без тяжёлых моков)
 - Не обязательно закрывать все пробелы из backlog Pre-Alpha — тест добавляется, когда есть реальное поведение, баг или риск регрессии
 
 Подробные правила для агентов: `.cursor/rules/dnd-mud-tests.mdc`.
@@ -203,7 +206,10 @@ make install-hooks   # или make install — подключает .githooks/pr
 | `test_progression.py` | XP, level-up core + UI smoke, scenario grant_xp |
 | `test_feats.py` | черты, visibility, UI выбора |
 | `test_character.py` | save/load, stats, slug |
-| `test_menus_character.py` | подрасы, new game, creation handlers |
+| `test_menus_creation.py` | подрасы, creation handlers, feat routing |
+| `test_menus_new_game.py` | new game, adventure selection |
+| `test_menus_characters_hub.py` | characters menu hub |
+| `test_data_schema.py` | YAML-каталоги vs JSON Schema v1 |
 | `test_menus_stats.py` | генерация характеристик, HardCore 4d6 |
 | `test_subclasses.py` | подклассы, NPC-наставник |
 | `test_models.py` | Character/Adventure, load adventures |
@@ -212,7 +218,8 @@ make install-hooks   # или make install — подключает .githooks/pr
 Запуск конкретного тестового файла:
 
 ```bash
-pytest tests/test_menus_character.py -v
+pytest tests/test_menus_creation.py -v
+pytest tests/test_data_schema.py -v
 ```
 
 ## Git Workflow

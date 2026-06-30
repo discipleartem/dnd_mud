@@ -434,7 +434,10 @@ dnd_mud/
 │   ├── test_input_handler.py
 │   ├── test_localization.py
 │   ├── test_main.py
-│   ├── test_menus_character.py
+│   ├── test_menus_creation.py
+│   ├── test_menus_new_game.py
+│   ├── test_menus_characters_hub.py
+│   ├── test_data_schema.py
 │   ├── test_menus_stats.py
 │   ├── test_models.py
 │   └── test_settings.py

@@ -161,7 +161,7 @@ races:
 
 | ID | Задача | Триггер | Целевые файлы |
 |----|--------|---------|---------------|
-| `json-schema` | JSON Schema в `database/schema/v1/`, pytest `tests/test_data_schema.py` | Частые ошибки в YAML при редактировании / PR с данными | `database/schema/`, `tests/` |
+| `json-schema` | JSON Schema в `database/schema/v1/`, pytest `tests/test_data_schema.py` | ✅ реализовано |
 | `grants-yaml` | Отдельный `database/core/grants.yaml` как машиночитаемый реестр типов | Автогенерация валидатора или UI подсказок из схемы | `database/core/grants.yaml`, loader |
 | `entity-metadata` | Обязательные `schema_version`, `source: phb \| mod:<id>`, `source_ref: { chapter, page }` | Несколько источников книг/DLC; аудит соответствия PHB | все `database/*/*.yaml` |
 

@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://dnd-mud.local/schema/v1/background.json",
+  "title": "Background",
+  "type": "object",
+  "required": ["grants"],
+  "properties": {
+    "name": {
+      "oneOf": [
+        { "type": "object" },
+        { "type": "string" }
+      ]
+    },
+    "description": {
+      "oneOf": [
+        { "type": "object" },
+        { "type": "string" }
+      ]
+    },
+    "grants": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "grant.json" }
+    },
+    "feature": { "type": "object" },
+    "equipment": { "type": "object" }
+  },
+  "additionalProperties": true
+}

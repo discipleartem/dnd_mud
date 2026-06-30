@@ -19,6 +19,10 @@
 - `core/proficiencies.py` → фасад; leaf-модули `proficiency_collect`, `proficiency_checks`
 - Тесты UI: `test_menus_character.py` → `test_menus_creation`, `test_menus_new_game`, `test_menus_characters_hub`
 
+### Added
+- `database/schema/v1/` — JSON Schema для grants, backgrounds, adventures, class progression
+- `tests/test_data_schema.py`, `scripts/validate_data.py`; dev-зависимость `jsonschema`
+
 ### Changed
 - `scripts/verify_targets.py` — маппинг git diff → pytest/lint; `make verify-changed`, `verify-scope`, `verify`
 - `.github/workflows/ci.yml` — полный `make check` + `make test` на PR в `dev` / `main`
