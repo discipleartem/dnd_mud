@@ -19,11 +19,20 @@ def test_core_and_ui_mapping() -> None:
     assert vt.source_to_tests("core/scenario_actions.py") == [
         "tests/test_class_features.py"
     ]
+    assert vt.source_to_tests("core/dice.py") == ["tests/test_stats.py"]
+    assert vt.source_to_tests("core/races.py") == ["tests/test_grants.py"]
+    assert vt.source_to_tests("core/adventure.py") == ["tests/test_models.py"]
+    assert vt.source_to_tests("core/mod_loader.py") == [
+        "tests/test_catalog_loader.py"
+    ]
     assert vt.source_to_tests("ui/menus/class_features.py") == [
         "tests/test_class_features.py"
     ]
     assert vt.source_to_tests("ui/menus/scenario_flow.py") == [
-        "tests/test_scenario.py"
+        "tests/test_progression.py"
+    ]
+    assert vt.source_to_tests("ui/menus/level_up.py") == [
+        "tests/test_progression.py"
     ]
     assert vt.source_to_tests("ui/menus/stats/stats_flow.py") == [
         "tests/test_menus_stats.py"
@@ -31,11 +40,18 @@ def test_core_and_ui_mapping() -> None:
     assert vt.source_to_tests("ui/menus/characters_menu.py") == [
         "tests/test_menus_character.py"
     ]
+    assert vt.source_to_tests("ui/menus/skills.py") == [
+        "tests/test_proficiencies.py"
+    ]
+    assert vt.source_to_tests("ui/menus/subclass_trainer.py") == [
+        "tests/test_subclasses.py"
+    ]
 
 
 def test_database_and_infra_fallbacks() -> None:
     tests = vt.source_to_tests("database/races/races.yaml")
-    assert "tests/test_mod_loader.py" in tests
+    assert "tests/test_catalog_loader.py" in tests
+    assert "tests/test_mod_loader.py" not in tests
     assert vt.requires_full_suite(["tests/conftest.py"]) is True
     lint, full = vt.resolve_lint_paths(["core/types.py"])
     assert full is True
@@ -83,7 +99,7 @@ def test_cmd_resolve_tests_no_py_skip(
     monkeypatch.setattr(
         vt,
         "_git_changed_paths",
-        lambda mode, base: ["docs/DEVELOPMENT.md"],
+        lambda mode, base: ["README.md"],
     )
     args = Namespace(mode="staged", base="origin/dev")
     assert vt.cmd_resolve_tests(args) == 0

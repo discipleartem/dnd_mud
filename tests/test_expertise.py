@@ -4,8 +4,11 @@ from core.expertise import (
     ExpertiseGrant,
     expertise_step_required,
     get_expertise_grants,
+    grant_expertise_satisfied,
+    pending_expertise_grants,
     validate_expertise_selection,
 )
+from core.models import Character
 
 
 def test_rogue_has_expertise_grant_at_level_one():
@@ -25,6 +28,22 @@ def test_bard_no_expertise_at_level_one():
 def test_fighter_no_expertise_step():
     """Воин не имеет шага компетентности."""
     assert not expertise_step_required("fighter", 3)
+
+
+def test_bard_expertise_pending_at_level_three():
+    """Бард 3 ур. без компетентности — grant в очереди."""
+    char = Character(
+        name="Hero",
+        race="elf",
+        class_id="bard",
+        level=3,
+        subclass_id="lore_college",
+        skills=["arcana", "history", "performance"],
+    )
+    pending = pending_expertise_grants(char)
+    assert len(pending) == 1
+    assert pending[0].pick == 2
+    assert not grant_expertise_satisfied(char, pending[0])
 
 
 def test_validate_rogue_two_skills_mode():

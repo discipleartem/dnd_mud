@@ -1,4 +1,4 @@
-"""Тесты нормализации grants."""
+"""Тесты нормализации grants и загрузки рас."""
 
 from core.grants import (
     grants_from_entity,
@@ -9,8 +9,23 @@ from core.races import (
     clear_races_cache,
     collect_race_grants,
     get_race_bonuses,
+    load_races,
     resolve_subrace_id,
 )
+
+
+def test_load_races_returns_non_empty_list() -> None:
+    races = load_races()
+    assert len(races) > 0
+    assert "id" in races[0]
+    assert "name" in races[0]
+
+
+def test_load_races_returns_english_names() -> None:
+    races = load_races("en")
+    names = {race["id"]: race["name"] for race in races}
+    assert names["human"] == "Human"
+    assert names["elf"] == "Elf"
 
 
 def test_normalize_grant_maps_ability_bonus():

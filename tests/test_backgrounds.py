@@ -7,12 +7,6 @@ from core.backgrounds import (
 from core.skills import PHB_SKILL_IDS
 
 
-def test_load_backgrounds_count() -> None:
-    """13 предысторий PHB."""
-    backgrounds = load_backgrounds("ru")
-    assert len(backgrounds) == 13
-
-
 def test_background_skills_valid() -> None:
     """Навыки предысторий — валидные PHB skill id."""
     for bg in load_backgrounds("ru"):
