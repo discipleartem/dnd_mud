@@ -48,30 +48,20 @@ def save_character(
             list(STANDARD_ARRAY), race_id, subrace_id
         )
     if feat_ids:
-        from core.feats import (
-            apply_feats_to_stats,
-            get_feat_expertise_ids,
-            get_feat_language_ids,
+        from core.character_builder import (
+            merge_expertise_with_feats,
+            merge_languages_with_feats,
         )
+        from core.feats import apply_feats_to_stats
 
         if apply_feat_stat_bonuses:
             stats = apply_feats_to_stats(stats, feat_ids, feat_choices)
-        feat_lang_ids = get_feat_language_ids(feat_ids, feat_choices)
-        if feat_lang_ids:
-            from core.io import merge_unique
-
-            languages = merge_unique(
-                list(languages) if languages else [],
-                feat_lang_ids,
-            )
-        feat_expertise = get_feat_expertise_ids(feat_ids, feat_choices)
-        if feat_expertise:
-            from core.io import merge_unique
-
-            skill_expertise = merge_unique(
-                list(skill_expertise) if skill_expertise else [],
-                feat_expertise,
-            )
+        languages = merge_languages_with_feats(
+            languages, feat_ids, feat_choices
+        )
+        skill_expertise = merge_expertise_with_feats(
+            skill_expertise, feat_ids, feat_choices
+        )
 
     if level is None:
         level = start_level_for_difficulty(difficulty)

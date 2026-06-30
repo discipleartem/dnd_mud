@@ -145,9 +145,11 @@ races:
 
 ### Сборка персонажа
 
-| ID | Задача | Триггер | Целевые файлы |
-|----|--------|---------|---------------|
-| `char-builder` | `core/character_builder.py`, dataclass `ResolvedGrants`, единый `resolve_grants(character)` | Game engine или дублирование merge-логики в 3+ местах UI | `core/character_builder.py`, `ui/menus/_creation_steps.py`, `core/proficiencies.py` |
+**Реализовано:** `core/character_builder.py` — `ResolvedGrants`, `resolve_creation_grants`, `merge_languages_with_feats`.
+
+| ID | Задача | Статус |
+|----|--------|--------|
+| `char-builder` | `core/character_builder.py`, dataclass `ResolvedGrants`, единый `resolve_creation_grants` | ✅ реализовано |
 
 ### Классы и progression
 

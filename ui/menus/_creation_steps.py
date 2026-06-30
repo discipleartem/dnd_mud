@@ -3,9 +3,10 @@
 from dataclasses import dataclass, field
 from typing import Any, Literal
 
+from core.character_builder import merge_languages_with_feats
 from core.class_features import class_features_applied_at_creation
 from core.expertise import expertise_step_required
-from core.feats import get_feat_language_ids, race_feat_step_required
+from core.feats import race_feat_step_required
 from core.localization import get_string
 from core.models import Character
 from core.subclasses import (
@@ -166,14 +167,11 @@ def _back_step_from_proficiencies(state: _CreationState) -> CreationStep:
 
 def _merge_feat_languages(state: _CreationState) -> None:
     """Добавить языки из черт к уже выбранным."""
-    feat_langs = get_feat_language_ids(state.feat_ids, state.feat_choices)
-    if not feat_langs:
+    if not state.feat_ids:
         return
-    merged = list(state.languages or [])
-    for lang_id in feat_langs:
-        if lang_id not in merged:
-            merged.append(lang_id)
-    state.languages = merged
+    state.languages = merge_languages_with_feats(
+        state.languages, state.feat_ids, state.feat_choices
+    )
 
 
 def _finalize_creation(

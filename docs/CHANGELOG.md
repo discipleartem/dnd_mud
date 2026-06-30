@@ -2,7 +2,12 @@
 
 ## [Unreleased]
 
+### Added
+- `core/character_builder.py` — `ResolvedGrants`, `resolve_creation_grants`, merge helpers для языков/компетентности из черт
+- `tests/test_character_builder.py`
+
 ### Changed
+- Phase 1: grants aggregation через `resolve_creation_grants` (`proficiencies`, `feat_visibility`, `character_storage`, `_creation_steps`)
 - Phase 0 refactor: armor token normalization only in `core/grant_mechanics.normalize_armor_token`; `proficiencies` delegates
 - Doc drift: `class_id` in `dnd-mud-core.mdc`; `core/scenario_actions.py` in `03-subclasses.md`
 

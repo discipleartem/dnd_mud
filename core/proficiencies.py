@@ -280,19 +280,24 @@ def build_fixed_proficiencies(
     feat_choices: dict[str, dict[str, Any]] | None = None,
 ) -> tuple[list[str], list[str], list[str]]:
     """Собрать фиксированные владения без игровых выборов."""
-    cw, ca, ct = get_class_proficiency_tokens(class_id)
-    rw, ra, rt, _ = get_racial_proficiency_tokens(race_id, subrace_id)
-    sw, sa, st, _ = get_subclass_proficiency_tokens(
-        class_id, subclass_id, level
+    from core.character_builder import resolve_creation_grants
+
+    grants = resolve_creation_grants(
+        race_id,
+        subrace_id,
+        class_id,
+        background_id,
+        subclass_id,
+        level,
+        feat_ids=feat_ids,
+        feat_choices=feat_choices,
+        include_feat_languages=False,
     )
-    bg_tools: list[str] = []
-    if background_id:
-        bg_tools, _ = get_background_tool_proficiencies(background_id)
-    fw, fa, ft = get_feat_proficiency_tokens(feat_ids or [], feat_choices)
-    weapons = merge_proficiency_tokens(cw, rw, sw, fw)
-    armors = merge_proficiency_tokens(ca, ra, sa, fa)
-    tools = merge_proficiency_tokens(ct, rt, st, bg_tools, ft)
-    return weapons, armors, tools
+    return (
+        list(grants.weapon_tokens),
+        list(grants.armor_tokens),
+        list(grants.tool_tokens),
+    )
 
 
 def has_weapon_proficiency(proficiencies: list[str], weapon_id: str) -> bool:

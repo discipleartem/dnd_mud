@@ -226,6 +226,33 @@ get_background_language_choice(background_id: str) -> dict[str, Any] | None
 
 ---
 
+## core.character_builder — Сборка владений
+
+```python
+@dataclass(frozen=True)
+class ResolvedGrants:
+    weapon_tokens: tuple[str, ...]
+    armor_tokens: tuple[str, ...]
+    tool_tokens: tuple[str, ...]
+    skill_ids: tuple[str, ...]
+    language_ids: tuple[str, ...]
+
+resolve_creation_grants(
+    race_id, subrace_id, class_id, background_id, subclass_id, level, *,
+    feat_ids=None, feat_choices=None,
+    extra_skills=None, extra_weapon_tokens=None, extra_tool_tokens=None,
+    extra_languages=None, include_feat_languages=True,
+) -> ResolvedGrants
+
+resolve_grants_from_character(character: Character) -> ResolvedGrants
+merge_languages_with_feats(languages, feat_ids, feat_choices) -> list[str]
+merge_expertise_with_feats(skill_expertise, feat_ids, feat_choices) -> list[str]
+```
+
+`build_fixed_proficiencies`, `creation_known_for_feat_picks`, `build_feat_selection_context` делегируют в `resolve_creation_grants`.
+
+---
+
 ## core.grants — Нормализация grants
 
 Единый формат эффектов из YAML (`grants[]`). Схема типов: [`DATA_SCHEMA.md`](DATA_SCHEMA.md).
