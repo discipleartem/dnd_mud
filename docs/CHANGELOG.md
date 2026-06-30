@@ -7,9 +7,14 @@
 - `tests/test_character_builder.py`
 - `core/catalog_loader.py` — `load_catalog`, `clear_catalog_cache`, `clear_all_catalog_caches`
 - `tests/test_catalog_loader.py`
+- `tests/test_creation_handlers.py`
 - `ui/menus/_creation_handlers.py`, `_creation_navigation.py`, `_creation_finalize.py`, `_creation_state.py`
 
 ### Changed
+- Review fix-plan: `load_catalog` без собственного `@lru_cache` (кэш только в `load_merged_catalog`)
+- `pop_corrupt_save_warnings` — имя персонажа из JSON, иначе save_slug
+- `ui/menus/feats/_creation.py` — weapon grants из YAML обновляют `weapon_profs` при мульти-выборе черт
+- `ui/menus/_display/_grants.py` — `_ABILITY_INCREASE` из `core.grants`
 - Review fixes: conftest catalog cache reset, corrupt save warning in characters menu, `save_character` derives proficiencies via `resolve_creation_grants`, single-layer catalog cache
 - `ui/menus/_display/_grants.py` — grant display вынесен из `_race.py`
 - `ui/menus/_creation_steps.py` — тонкий loop; навигация и финализация в отдельных модулях
