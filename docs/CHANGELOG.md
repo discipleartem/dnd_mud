@@ -11,6 +11,8 @@
 - `ui/menus/_creation_handlers.py`, `_creation_navigation.py`, `_creation_finalize.py`, `_creation_state.py`
 
 ### Changed
+- Review remediation: `_try_load_character_file` — одно чтение JSON при загрузке битых сейвов
+- `tests/test_menus_character.py` — предупреждение о битых сейвах в flow «Новая игра»
 - Review fix-plan: `load_catalog` без собственного `@lru_cache` (кэш только в `load_merged_catalog`)
 - `pop_corrupt_save_warnings` — имя персонажа из JSON, иначе save_slug
 - `ui/menus/feats/_creation.py` — weapon grants из YAML обновляют `weapon_profs` при мульти-выборе черт
