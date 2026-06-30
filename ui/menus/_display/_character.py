@@ -129,6 +129,43 @@ def _print_character_proficiencies(
         )
 
 
+def _print_character_skills_and_expertise(
+    char: Character,
+    strings: StringsDict,
+    *,
+    indent: str = "     ",
+) -> None:
+    """Навыки и компетентность на карточке персонажа."""
+    if char.skills:
+        skills_line = ", ".join(
+            _skill_name(strings, skill_id) for skill_id in char.skills
+        )
+        skills_display = f"{Fore.CYAN}{skills_line}{Style.RESET_ALL}"
+    else:
+        skills_display = _empty_field_value(strings)
+    _print_labeled_field(
+        strings,
+        "choose_character.field_skills",
+        skills_display,
+        indent=indent,
+    )
+
+    expertise_line = format_expertise_display(
+        strings, char.skill_expertise, char.tool_expertise
+    )
+    expertise_display = (
+        f"{Fore.CYAN}{expertise_line}{Style.RESET_ALL}"
+        if expertise_line
+        else _empty_field_value(strings)
+    )
+    _print_labeled_field(
+        strings,
+        "choose_character.field_expertise",
+        expertise_display,
+        indent=indent,
+    )
+
+
 def _print_character_card(
     idx: int,
     char: Character,
@@ -237,34 +274,7 @@ def _print_character_card(
         )
         print(f"{indent}{stats_line}")
 
-    if char.skills:
-        skills_line = ", ".join(
-            _skill_name(strings, skill_id) for skill_id in char.skills
-        )
-        skills_display = f"{Fore.CYAN}{skills_line}{Style.RESET_ALL}"
-    else:
-        skills_display = _empty_field_value(strings)
-    _print_labeled_field(
-        strings,
-        "choose_character.field_skills",
-        skills_display,
-        indent=indent,
-    )
-
-    expertise_line = format_expertise_display(
-        strings, char.skill_expertise, char.tool_expertise
-    )
-    expertise_display = (
-        f"{Fore.CYAN}{expertise_line}{Style.RESET_ALL}"
-        if expertise_line
-        else _empty_field_value(strings)
-    )
-    _print_labeled_field(
-        strings,
-        "choose_character.field_expertise",
-        expertise_display,
-        indent=indent,
-    )
+    _print_character_skills_and_expertise(char, strings, indent=indent)
 
     _print_character_proficiencies(char, strings, language, indent=indent)
 
