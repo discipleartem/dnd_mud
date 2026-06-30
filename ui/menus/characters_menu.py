@@ -5,7 +5,7 @@ from colorama import Fore, Style
 from core.localization import get_string
 from core.models import Character
 from core.types import LanguageCode, StringsDict
-from ui.menus import _deps, character_flow
+from ui.menus import _creation_steps, _deps
 from ui.menus._common import (
     _confirm_yes_no,
     _print_cancelled,
@@ -132,7 +132,7 @@ def show_characters_menu(
         option_delete_all = 3 if has_characters else None
 
         if choice == option_create:
-            character_flow.show_create_character_flow(strings, language)
+            _creation_steps.show_create_character_flow(strings, language)
             continue
 
         if has_characters and choice == option_delete_one:

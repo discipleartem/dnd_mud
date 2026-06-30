@@ -17,92 +17,13 @@ from core.feats import (
 from core.localization import get_string
 from core.models import Character
 from core.progression import (
+    AsiResolution,
     HpGainBreakdown,
-    apply_level_up,
-    has_pending_level_up,
-    hp_gain_breakdown_for_level_up,
+    process_pending_level_ups,
 )
 from core.types import LanguageCode, StringsDict
 from ui.menus._common import _press_enter, _print_screen_header
 from ui.menus.feats import select_level_up_feat_or_asi
-
-
-def run_pending_level_ups(
-    strings: StringsDict,
-    character: Character,
-    language: LanguageCode = "ru",
-) -> Character:
-    """Пошагово применить все ожидающие повышения уровня."""
-    char = character
-    while has_pending_level_up(char):
-        new_level = char.level + 1
-        old_stats = char.stats.copy()
-        con_bonus = 0
-        tough_bonus = 0
-
-        if pending_asi_at_level(char, new_level):
-            had_tough = "tough" in char.feat_ids
-            result = select_level_up_feat_or_asi(
-                strings, char, new_level, language
-            )
-            if result is None:
-                break
-            char, stats, feat_ids, feat_choices, asi_value = result
-            asi_choices = dict(char.asi_choices)
-            asi_choices[str(new_level)] = asi_value
-            con_bonus = con_hp_bonus_from_asi(old_stats, stats, new_level)
-            char = replace(
-                char,
-                stats=stats,
-                feat_ids=feat_ids,
-                feat_choices=feat_choices,
-                asi_choices=asi_choices,
-            )
-            feat_id = feat_id_from_asi_choice(asi_value)
-            if feat_id:
-                char = apply_feat_grants_to_character(
-                    char, feat_id, feat_choices.get(feat_id, {})
-                )
-            if feat_id == "tough" and not had_tough:
-                tough_bonus = tough_hp_adjustment_on_acquire(new_level)
-            if feat_id:
-                feat = load_feat(feat_id)
-                feat_name = feat.get("name", feat_id)
-                msg = get_string(
-                    strings, "level_up.feat_taken", name=feat_name
-                )
-                print(f"{Fore.GREEN}{msg}{Style.RESET_ALL}")
-                print()
-
-        breakdown_feat_ids = list(char.feat_ids)
-        if tough_bonus > 0:
-            breakdown_feat_ids = [
-                feat_id for feat_id in breakdown_feat_ids if feat_id != "tough"
-            ]
-        breakdown = hp_gain_breakdown_for_level_up(
-            char.class_id,
-            char.stats,
-            new_level,
-            char.difficulty,
-            char.race,
-            char.subrace,
-            breakdown_feat_ids,
-        )
-        extra = con_bonus + tough_bonus
-        _print_level_up_screen(strings, char, new_level, breakdown, extra)
-        if con_bonus:
-            msg = get_string(strings, "level_up.con_hp_bonus", bonus=con_bonus)
-            print(f"{Fore.CYAN}{msg}{Style.RESET_ALL}")
-        if tough_bonus:
-            msg = get_string(
-                strings, "level_up.tough_hp_bonus", bonus=tough_bonus
-            )
-            print(f"{Fore.CYAN}{msg}{Style.RESET_ALL}")
-        if con_bonus or tough_bonus:
-            print()
-        _press_enter(strings)
-        char = apply_level_up(char, breakdown.total + extra)
-    return char
 
 
 def _print_level_up_screen(
@@ -184,3 +105,79 @@ def _format_hp_gain_lines(
         get_string(strings, "level_up.hp_gain_total", total=breakdown.total)
     )
     return lines
+
+
+def run_pending_level_ups(
+    strings: StringsDict,
+    character: Character,
+    language: LanguageCode = "ru",
+) -> Character:
+    """Пошагово применить все ожидающие повышения уровня."""
+
+    def resolve_asi_ui(
+        char: Character, new_level: int
+    ) -> AsiResolution | None:
+        if not pending_asi_at_level(char, new_level):
+            return None
+        old_stats = char.stats.copy()
+        had_tough = "tough" in char.feat_ids
+        result = select_level_up_feat_or_asi(
+            strings, char, new_level, language
+        )
+        if result is None:
+            return None
+        updated, stats, feat_ids, feat_choices, asi_value = result
+        asi_choices = dict(updated.asi_choices)
+        asi_choices[str(new_level)] = asi_value
+        con_bonus = con_hp_bonus_from_asi(old_stats, stats, new_level)
+        char = replace(
+            updated,
+            stats=stats,
+            feat_ids=feat_ids,
+            feat_choices=feat_choices,
+            asi_choices=asi_choices,
+        )
+        feat_id = feat_id_from_asi_choice(asi_value)
+        if feat_id:
+            char = apply_feat_grants_to_character(
+                char, feat_id, feat_choices.get(feat_id, {})
+            )
+            feat = load_feat(feat_id)
+            feat_name = feat.get("name", feat_id)
+            msg = get_string(strings, "level_up.feat_taken", name=feat_name)
+            print(f"{Fore.GREEN}{msg}{Style.RESET_ALL}")
+            print()
+        tough_bonus = 0
+        if feat_id == "tough" and not had_tough:
+            tough_bonus = tough_hp_adjustment_on_acquire(new_level)
+        return AsiResolution(
+            character=char, con_bonus=con_bonus, tough_bonus=tough_bonus
+        )
+
+    def on_level_up_ui(
+        char: Character,
+        new_level: int,
+        breakdown: HpGainBreakdown,
+        con_bonus: int,
+        tough_bonus: int,
+    ) -> bool:
+        extra = con_bonus + tough_bonus
+        _print_level_up_screen(strings, char, new_level, breakdown, extra)
+        if con_bonus:
+            msg = get_string(strings, "level_up.con_hp_bonus", bonus=con_bonus)
+            print(f"{Fore.CYAN}{msg}{Style.RESET_ALL}")
+        if tough_bonus:
+            msg = get_string(
+                strings, "level_up.tough_hp_bonus", bonus=tough_bonus
+            )
+            print(f"{Fore.CYAN}{msg}{Style.RESET_ALL}")
+        if con_bonus or tough_bonus:
+            print()
+        _press_enter(strings)
+        return True
+
+    return process_pending_level_ups(
+        character,
+        resolve_asi=resolve_asi_ui,
+        on_level_up=on_level_up_ui,
+    )

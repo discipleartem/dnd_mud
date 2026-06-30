@@ -1,6 +1,8 @@
 """Прогрессия персонажа: опыт и уровни (PHB, макс. 10 уровень)."""
 
+from collections.abc import Callable
 from dataclasses import dataclass, replace
+from typing import Any
 
 from core.classes import get_class_hit_dice
 from core.dice import ability_modifier, roll
@@ -212,12 +214,19 @@ def apply_level_up(character: Character, hp_gain: int) -> Character:
     )
 
 
-def resolve_pending_level_ups(character: Character) -> Character:
-    """Применить все ожидающие повышения без UI.
+@dataclass
+class AsiResolution:
+    """Результат выбора ASI/черты на уровне."""
 
-    Для тестов и apply_experience. На уровнях ASI — авто +2 к ключевой
-    характеристике класса.
-    """
+    character: Character
+    con_bonus: int = 0
+    tough_bonus: int = 0
+
+
+def _headless_asi_resolution(
+    character: Character, new_level: int
+) -> AsiResolution:
+    """Авто-ASI или сохранённый выбор (без UI)."""
     from core.asi import (
         apply_asi_two_one,
         auto_asi_bonus,
@@ -234,46 +243,86 @@ def resolve_pending_level_ups(character: Character) -> Character:
     from core.stats import apply_bonuses_to_stats
 
     char = character
+    old_stats = char.stats.copy()
+    con_bonus = 0
+    tough_bonus = 0
+    asi_key = str(new_level)
+    had_tough = "tough" in char.feat_ids
+    asi_value = ""
+
+    if pending_asi_at_level(char, new_level):
+        prime = next(iter(auto_asi_bonus(char.class_id)))
+        stats = cap_stats(apply_asi_two_one(char.stats, prime))
+        con_bonus = con_hp_bonus_from_asi(old_stats, stats, new_level)
+        asi_choices = dict(char.asi_choices)
+        asi_value = "asi"
+        asi_choices[asi_key] = asi_value
+        char = replace(char, stats=stats, asi_choices=asi_choices)
+    elif asi_key in char.asi_choices:
+        asi_value = char.asi_choices[asi_key]
+        stats = old_stats.copy()
+        feat_ids = list(char.feat_ids)
+        feat_choices = dict(char.feat_choices)
+        feat_id = feat_id_from_asi_choice(asi_value)
+        sub: dict[str, Any] = {}
+        if feat_id and feat_id not in feat_ids:
+            sub = feat_choices.get(feat_id, {})
+            feat_ids.append(feat_id)
+            bonuses = resolve_feat_ability_bonuses(feat_id, sub)
+            stats = cap_stats(apply_bonuses_to_stats(stats, bonuses))
+        con_bonus = con_hp_bonus_from_asi(old_stats, stats, new_level)
+        char = replace(
+            char,
+            stats=stats,
+            feat_ids=feat_ids,
+            feat_choices=feat_choices,
+        )
+        if feat_id:
+            char = apply_feat_grants_to_character(char, feat_id, sub)
+
+    if feat_id_from_asi_choice(asi_value) == "tough" and not had_tough:
+        tough_bonus = tough_hp_adjustment_on_acquire(new_level)
+
+    return AsiResolution(
+        character=char, con_bonus=con_bonus, tough_bonus=tough_bonus
+    )
+
+
+def process_pending_level_ups(
+    character: Character,
+    *,
+    resolve_asi: (
+        Callable[[Character, int], AsiResolution | None] | None
+    ) = None,
+    on_level_up: (
+        Callable[[Character, int, HpGainBreakdown, int, int], bool] | None
+    ) = None,
+) -> Character:
+    """Применить все ожидающие повышения; resolve_asi — UI или headless."""
+    from core.asi import pending_asi_at_level
+
+    char = character
     while has_pending_level_up(char):
         new_level = char.level + 1
-        old_stats = char.stats.copy()
         con_bonus = 0
         tough_bonus = 0
-        asi_key = str(new_level)
-        had_tough = "tough" in char.feat_ids
-        asi_value = ""
 
         if pending_asi_at_level(char, new_level):
-            prime = next(iter(auto_asi_bonus(char.class_id)))
-            stats = cap_stats(apply_asi_two_one(char.stats, prime))
-            con_bonus = con_hp_bonus_from_asi(old_stats, stats, new_level)
-            asi_choices = dict(char.asi_choices)
-            asi_value = "asi"
-            asi_choices[asi_key] = asi_value
-            char = replace(char, stats=stats, asi_choices=asi_choices)
-        elif asi_key in char.asi_choices:
-            asi_value = char.asi_choices[asi_key]
-            stats = old_stats.copy()
-            feat_ids = list(char.feat_ids)
-            feat_choices = dict(char.feat_choices)
-            feat_id = feat_id_from_asi_choice(asi_value)
-            if feat_id and feat_id not in feat_ids:
-                sub = feat_choices.get(feat_id, {})
-                feat_ids.append(feat_id)
-                bonuses = resolve_feat_ability_bonuses(feat_id, sub)
-                stats = cap_stats(apply_bonuses_to_stats(stats, bonuses))
-            con_bonus = con_hp_bonus_from_asi(old_stats, stats, new_level)
-            char = replace(
-                char,
-                stats=stats,
-                feat_ids=feat_ids,
-                feat_choices=feat_choices,
-            )
-            if feat_id:
-                char = apply_feat_grants_to_character(char, feat_id, sub)
-
-        if feat_id_from_asi_choice(asi_value) == "tough" and not had_tough:
-            tough_bonus = tough_hp_adjustment_on_acquire(new_level)
+            resolution: AsiResolution | None
+            if resolve_asi is None:
+                resolution = _headless_asi_resolution(char, new_level)
+            else:
+                resolution = resolve_asi(char, new_level)
+            if resolution is None:
+                break
+            char = resolution.character
+            con_bonus = resolution.con_bonus
+            tough_bonus = resolution.tough_bonus
+        elif str(new_level) in char.asi_choices:
+            resolution = _headless_asi_resolution(char, new_level)
+            char = resolution.character
+            con_bonus = resolution.con_bonus
+            tough_bonus = resolution.tough_bonus
 
         roll_feat_ids = list(char.feat_ids)
         if tough_bonus > 0:
@@ -281,7 +330,7 @@ def resolve_pending_level_ups(character: Character) -> Character:
                 feat_id for feat_id in roll_feat_ids if feat_id != "tough"
             ]
 
-        gain, _ = roll_hp_gain_for_level_up(
+        breakdown = hp_gain_breakdown_for_level_up(
             char.class_id,
             char.stats,
             new_level,
@@ -290,8 +339,17 @@ def resolve_pending_level_ups(character: Character) -> Character:
             char.subrace,
             roll_feat_ids,
         )
-        char = apply_level_up(char, gain + con_bonus + tough_bonus)
+        if on_level_up is not None and not on_level_up(
+            char, new_level, breakdown, con_bonus, tough_bonus
+        ):
+            break
+        char = apply_level_up(char, breakdown.total + con_bonus + tough_bonus)
     return char
+
+
+def resolve_pending_level_ups(character: Character) -> Character:
+    """Применить все ожидающие повышения без UI."""
+    return process_pending_level_ups(character)
 
 
 def apply_experience(character: Character, amount: int) -> Character:

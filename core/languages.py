@@ -4,9 +4,10 @@ from functools import lru_cache
 from pathlib import Path
 from typing import Any, Literal
 
+from core.grants import grants_from_entity, grants_of_type, inherit_flags
 from core.io import load_yaml
 from core.localization import resolve_localized_text
-from core.races import get_race_and_subrace
+from core.races import collect_race_grants, get_race_and_subrace
 
 LANGUAGES_FILE = Path("database/core/languages.yaml")
 LanguagePool = Literal["common", "exotic", "any"]
@@ -48,22 +49,6 @@ def get_language_name(lang_id: str, language: str = "ru") -> str:
     return lang_id
 
 
-def _collect_features(
-    race_id: str, subrace_id: str | None
-) -> list[dict[str, Any]]:
-    """Особенности расы и подрасы для чтения language-механик."""
-    race_info, subrace_info = get_race_and_subrace(race_id, subrace_id)
-    features: list[dict[str, Any]] = []
-    for feat in race_info.get("features", []):
-        if isinstance(feat, dict):
-            features.append(feat)
-    if subrace_id and subrace_info:
-        for feat in subrace_info.get("features", []):
-            if isinstance(feat, dict):
-                features.append(feat)
-    return features
-
-
 def get_fixed_racial_languages(
     race_id: str, subrace_id: str | None = None
 ) -> list[str]:
@@ -94,24 +79,25 @@ def get_fixed_racial_languages(
 def get_racial_language_choices(
     race_id: str, subrace_id: str | None = None
 ) -> list[tuple[dict[str, Any], str]]:
-    """Выборные языки из features: (mechanics, source)."""
+    """Выборные языки из grants: (grant, source)."""
     choices: list[tuple[dict[str, Any], str]] = []
     race_info, subrace_info = get_race_and_subrace(race_id, subrace_id)
 
-    for feat in race_info.get("features", []):
-        if not isinstance(feat, dict) or feat.get("type") != "language":
-            continue
-        mechanics = feat.get("mechanics", {})
-        if isinstance(mechanics, dict) and mechanics.get("choice"):
-            choices.append((mechanics, "race"))
+    if not race_info:
+        return []
 
-    if subrace_id and subrace_info:
-        for feat in subrace_info.get("features", []):
-            if not isinstance(feat, dict) or feat.get("type") != "language":
-                continue
-            mechanics = feat.get("mechanics", {})
-            if isinstance(mechanics, dict) and mechanics.get("choice"):
-                choices.append((mechanics, "subrace"))
+    def scan(grants: list[dict[str, Any]], source: str) -> None:
+        for grant in grants_of_type(grants, "language"):
+            if grant.get("choice"):
+                choices.append((grant, source))
+
+    if subrace_info:
+        _, inherit_grants = inherit_flags(subrace_info)
+        if inherit_grants:
+            scan(grants_from_entity(race_info), "race")
+        scan(grants_from_entity(subrace_info), "subrace")
+    else:
+        scan(collect_race_grants(race_id, subrace_id), "race")
     return choices
 
 

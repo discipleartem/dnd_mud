@@ -32,7 +32,7 @@
 |--------|----------|
 | Статус | **Частично:** каталог YAML + владения + API КД/атаки; инвентарь и стартовое снаряжение — Phase 2 |
 | YAML | [`database/equipment/armor.yaml`](../../database/equipment/armor.yaml), [`weapon.yaml`](../../database/equipment/weapon.yaml), [`equipment.yaml`](../../database/equipment/equipment.yaml), [`tools.yaml`](../../database/equipment/tools.yaml) |
-| Core | [`core/equipment.py`](../../core/equipment.py), [`core/proficiencies.py`](../../core/proficiencies.py), [`core/combat.py`](../../core/combat.py) |
+| Core | [`core/equipment.py`](../../core/equipment.py), [`core/proficiencies.py`](../../core/proficiencies.py) |
 | Заметки | На персонаже — **токены** владений; `armor_id`/`weapon_id` в combat API передаются явно |
 
 ### Владение (PHB)
@@ -51,7 +51,7 @@
 
 **Щит:** +2 к КД всегда при `shield=True` в `compute_ac()`; без владения щитом `armor_wearing_penalty(character, "shield")` → `True`.
 
-**Инструменты:** +бонус мастерства к проверке (`tool_check_modifier`); wiring в `core/checks.py` — Phase 2.
+**Инструменты:** +бонус мастерства к проверке (`tool_check_modifier`); wiring в Phase 2 engine.
 
 **Дубли владений** (PHB гл. 4: замена на другое того же вида) — Phase 2.
 
@@ -62,7 +62,6 @@
 | Загрузка оружия, доспехов, инструментов | `core/equipment.py` |
 | Владения (класс/раса/предыстория/подкласс) | `core/proficiencies.py` |
 | Шаг выбора инструментов при создании | `ui/menus/proficiencies.py` |
-| Расчёт КД, модификатор атаки, штраф за невладение доспехом | `core/combat.py` |
 
 ### Запланировано (Phase 2)
 

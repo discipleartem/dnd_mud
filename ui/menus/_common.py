@@ -123,3 +123,31 @@ def _run_numbered_menu(
     if choice == 0:
         return None
     return choice
+
+
+def _read_numbered_choice(
+    strings: StringsDict,
+    count: int,
+    *,
+    prompt_key: str,
+    back_label_key: str = "character.back",
+    prompt_kwargs: dict[str, Any] | None = None,
+) -> int | None:
+    """Ввод номера после кастомного рендера списка (0 — назад)."""
+    print()
+    print(
+        f"  {Fore.YELLOW}0{Style.RESET_ALL}."
+        f" {get_string(strings, back_label_key)}"
+    )
+    print()
+    kwargs = dict(prompt_kwargs or {})
+    kwargs.setdefault("count", count)
+    choice = _deps.get_int_input(
+        get_string(strings, prompt_key, **kwargs),
+        0,
+        count,
+        strings,
+    )
+    if choice == 0:
+        return None
+    return choice

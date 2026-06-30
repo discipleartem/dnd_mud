@@ -33,7 +33,6 @@ alwaysApply: false
 | Константы PHB (PB, DC) | `database/core/constants.yaml` | `core/constants.py` |
 | Характеристики / навыки (мета) | `database/core/abilities.yaml`, `skills.yaml` | `core/abilities.py` |
 | Черты | `database/progression/feats.yaml` | `core/feats.py` |
-| Архив Phase 2 | `database/_future/` | см. `_future/README.md` |
 | Моды (состояние) | `database/core/mods_state.json` | `core/mod_loader.py` |
 | Сценарии | `adventures/*.yaml` | `core/adventure.py` |
 

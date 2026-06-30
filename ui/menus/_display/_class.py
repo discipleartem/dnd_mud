@@ -10,14 +10,14 @@ from core.subclasses import features_up_to_level
 from core.types import StringsDict
 from ui.menus import _deps
 from ui.menus._common import _ability_name, _skill_name
+from ui.menus._display._labels import _label_from_catalog
 
 
 def _character_class_label(char: Character, language: str = "ru") -> str:
     """Читаемое название класса персонажа."""
-    for cls in _deps.load_classes(language):
-        if cls.get("id") == char.class_id:
-            return str(cls.get("name", char.class_id))
-    return char.class_id
+    return _label_from_catalog(
+        _deps.load_classes(language), char.class_id, default=char.class_id
+    )
 
 
 def _character_subclass_label(
@@ -26,10 +26,11 @@ def _character_subclass_label(
     """Читаемое название подкласса или None."""
     if not char.subclass_id:
         return None
-    for sub in _deps.load_subclasses(char.class_id, language):
-        if sub.get("id") == char.subclass_id:
-            return str(sub.get("name", char.subclass_id))
-    return char.subclass_id
+    return _label_from_catalog(
+        _deps.load_subclasses(char.class_id, language),
+        char.subclass_id,
+        default=char.subclass_id,
+    )
 
 
 def _format_class_proficiencies(

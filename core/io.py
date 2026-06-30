@@ -7,6 +7,16 @@ from typing import Any
 import yaml
 
 
+def merge_unique(*parts: list[str]) -> list[str]:
+    """Объединить списки строк без дублей, сохраняя порядок."""
+    result: list[str] = []
+    for part in parts:
+        for item in part:
+            if item not in result:
+                result.append(item)
+    return result
+
+
 def load_yaml(
     path: Path, default: dict[str, Any] | None = None
 ) -> dict[str, Any]:
@@ -55,3 +65,10 @@ def load_json(
     except (json.JSONDecodeError, OSError):
         pass
     return fallback.copy()
+
+
+def save_json(path: Path, data: dict[str, Any]) -> None:
+    """Записать словарь в JSON-файл."""
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with open(path, "w", encoding="utf-8") as f:
+        json.dump(data, f, ensure_ascii=False, indent=2)

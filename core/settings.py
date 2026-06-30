@@ -3,11 +3,10 @@
 Настройки хранятся в JSON-файле database/core/settings.json.
 """
 
-import json
 from pathlib import Path
 from typing import Any
 
-from core.io import load_json
+from core.io import load_json, save_json
 from core.types import LanguageCode, RuntimeSettings
 
 SETTINGS_PATH = Path("database/core/settings.json")
@@ -52,9 +51,7 @@ def load_settings() -> RuntimeSettings:
 
 def _write_settings(data: dict[str, Any]) -> None:
     """Записать настройки в JSON-файл."""
-    SETTINGS_PATH.parent.mkdir(parents=True, exist_ok=True)
-    with open(SETTINGS_PATH, "w", encoding="utf-8") as f:
-        json.dump(data, f, ensure_ascii=False, indent=2)
+    save_json(SETTINGS_PATH, data)
 
 
 def save_settings(language: LanguageCode) -> None:

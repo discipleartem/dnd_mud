@@ -4,15 +4,13 @@ from typing import Any
 
 from core.abilities import skill_ids
 from core.classes import (
-    _load_classes_yaml,
+    get_class_dict,
     get_subclass_choice_level,
     load_class_full,
 )
-from core.races import (
-    collect_race_features,
-    get_race_and_subrace,
-    grants_as_features,
-)
+from core.grants import grants_from_entity, inherit_flags
+from core.io import merge_unique
+from core.races import collect_race_grants, get_race_and_subrace
 
 PHB_SKILL_IDS: tuple[str, ...] = skill_ids()
 
@@ -33,35 +31,27 @@ def get_class_skill_config(class_id: str) -> tuple[list[str], int]:
     return pool, count
 
 
-def get_merged_race_features(
-    race_id: str, subrace_id: str | None = None
-) -> list[dict[str, Any]]:
-    """Объединить features базовой расы и подрасы (legacy-вид из grants)."""
-    return collect_race_features(race_id, subrace_id)
-
-
 def _skill_proficiency_mechanics(
-    feat: dict[str, Any],
+    entry: dict[str, Any],
 ) -> dict[str, Any] | None:
-    """Механика skill_proficiency из feature или grant."""
-    is_grant = (
-        str(feat.get("type", "")) == "skill_proficiency"
-        and "mechanics" not in feat
-    )
-    if is_grant:
-        return feat
-    mechanics = feat.get("mechanics", {})
+    """Механика skill_proficiency из grant или class feature."""
+    if (
+        str(entry.get("type", "")) == "skill_proficiency"
+        and "mechanics" not in entry
+    ):
+        return entry
+    mechanics = entry.get("mechanics", {})
     if not isinstance(mechanics, dict):
         mechanics = {}
-    mtype = mechanics.get("type") or feat.get("type")
+    mtype = mechanics.get("type") or entry.get("type")
     if mtype != "skill_proficiency":
         return None
     return mechanics
 
 
-def _skills_from_proficiency_feature(feat: dict[str, Any]) -> list[str]:
-    """Фиксированные навыки из feature skill_proficiency."""
-    mechanics = _skill_proficiency_mechanics(feat)
+def _skills_from_proficiency_entry(entry: dict[str, Any]) -> list[str]:
+    """Фиксированные навыки из grant или class feature."""
+    mechanics = _skill_proficiency_mechanics(entry)
     if mechanics is None:
         return []
     if mechanics.get("choice"):
@@ -84,19 +74,19 @@ def apply_racial_proficiencies(
     ]
 
 
-def _collect_fixed_from_features(
-    features: Any,
+def _collect_fixed_from_grants(
+    grants: Any,
     source: str,
     seen: set[str],
     result: list[tuple[str, str]],
 ) -> None:
-    """Добавить фиксированные навыки из списка features."""
-    if not isinstance(features, list):
+    """Добавить фиксированные навыки из grants."""
+    if not isinstance(grants, list):
         return
-    for feat in features:
-        if not isinstance(feat, dict):
+    for entry in grants:
+        if not isinstance(entry, dict):
             continue
-        for skill_id in _skills_from_proficiency_feature(feat):
+        for skill_id in _skills_from_proficiency_entry(entry):
             if skill_id not in seen:
                 seen.add(skill_id)
                 result.append((skill_id, source))
@@ -114,20 +104,17 @@ def get_fixed_racial_proficiencies_with_source(
     seen: set[str] = set()
 
     if subrace_info:
-        from core.grants import grants_from_entity, inherit_flags
-
         _, inherit_grants = inherit_flags(subrace_info)
         if inherit_grants:
-            base_feats = grants_as_features(grants_from_entity(race_info))
-            _collect_fixed_from_features(base_feats, "race", seen, result)
-        sub_feats = grants_as_features(grants_from_entity(subrace_info))
-        _collect_fixed_from_features(sub_feats, "subrace", seen, result)
+            _collect_fixed_from_grants(
+                grants_from_entity(race_info), "race", seen, result
+            )
+        _collect_fixed_from_grants(
+            grants_from_entity(subrace_info), "subrace", seen, result
+        )
     else:
-        _collect_fixed_from_features(
-            collect_race_features(race_id, subrace_id),
-            "race",
-            seen,
-            result,
+        _collect_fixed_from_grants(
+            collect_race_grants(race_id, subrace_id), "race", seen, result
         )
     return result
 
@@ -135,10 +122,10 @@ def get_fixed_racial_proficiencies_with_source(
 def get_race_skill_choices(
     race_id: str, subrace_id: str | None = None
 ) -> list[dict[str, Any]]:
-    """Выборные расовые владения навыками (механика из features)."""
+    """Выборные расовые владения навыками."""
     return [
-        _mechanics
-        for _mechanics, _source in get_race_skill_choices_with_source(
+        mechanics
+        for mechanics, _source in get_race_skill_choices_with_source(
             race_id, subrace_id
         )
     ]
@@ -148,21 +135,19 @@ def get_race_skill_choices_with_source(
     race_id: str, subrace_id: str | None = None
 ) -> list[tuple[dict[str, Any], str]]:
     """Выборные расовые владения: (mechanics, race|subrace)."""
-    from core.grants import grants_from_entity, inherit_flags
-
     race_info, subrace_info = get_race_and_subrace(race_id, subrace_id)
     if not race_info:
         return []
 
     result: list[tuple[dict[str, Any], str]] = []
 
-    def scan(features: Any, source: str) -> None:
-        if not isinstance(features, list):
+    def scan(grants: Any, source: str) -> None:
+        if not isinstance(grants, list):
             return
-        for feat in features:
-            if not isinstance(feat, dict):
+        for entry in grants:
+            if not isinstance(entry, dict):
                 continue
-            mechanics = _skill_proficiency_mechanics(feat)
+            mechanics = _skill_proficiency_mechanics(entry)
             if mechanics is None or not mechanics.get("choice"):
                 continue
             result.append((mechanics, source))
@@ -170,29 +155,27 @@ def get_race_skill_choices_with_source(
     if subrace_info:
         _, inherit_grants = inherit_flags(subrace_info)
         if inherit_grants:
-            scan(grants_as_features(grants_from_entity(race_info)), "race")
-        scan(grants_as_features(grants_from_entity(subrace_info)), "subrace")
+            scan(grants_from_entity(race_info), "race")
+        scan(grants_from_entity(subrace_info), "subrace")
     else:
-        scan(collect_race_features(race_id, subrace_id), "race")
+        scan(collect_race_grants(race_id, subrace_id), "race")
     return result
 
 
 def _subclass_features(
     class_id: str, subclass_id: str | None
 ) -> list[dict[str, Any]]:
-    """Список features выбранного подкласса."""
+    """Список class_features выбранного подкласса."""
     if not subclass_id:
         return []
-    info = _load_classes_yaml().get(class_id, {})
-    if not isinstance(info, dict):
-        return []
+    info = get_class_dict(class_id)
     raw_subs = info.get("subclasses", [])
     if not isinstance(raw_subs, list):
         return []
     for sub in raw_subs:
         if not isinstance(sub, dict) or sub.get("id") != subclass_id:
             continue
-        features = sub.get("features", [])
+        features = sub.get("class_features", [])
         if isinstance(features, list):
             return [f for f in features if isinstance(f, dict)]
     return []
@@ -218,7 +201,7 @@ def get_subclass_fixed_skills(
         feat_level = feat.get("level")
         if isinstance(feat_level, int) and feat_level > level:
             continue
-        for skill_id in _skills_from_proficiency_feature(feat):
+        for skill_id in _skills_from_proficiency_entry(feat):
             if skill_id not in result:
                 result.append(skill_id)
     return result
@@ -262,12 +245,7 @@ def available_skills(pool: list[str], proficient: list[str]) -> list[str]:
 
 def merge_proficiencies(*parts: list[str]) -> list[str]:
     """Объединить списки владений без дублей, в порядке появления."""
-    result: list[str] = []
-    for part in parts:
-        for skill_id in part:
-            if skill_id not in result:
-                result.append(skill_id)
-    return result
+    return merge_unique(*parts)
 
 
 def is_valid_skill_selection(
