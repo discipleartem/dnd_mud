@@ -54,7 +54,7 @@ Verify + review выполнены → push/PR по [`01-operations.mdc`](~/.cur
 
 ### 8. Release (`dev` → `main`)
 
-Skill [`dnd-mud-release`](.cursor/skills/dnd-mud-release/SKILL.md). Review vs `main` до release PR.
+Skill [`dnd-mud-release`](.cursor/skills/dnd-mud-release/SKILL.md). **Только через PR** (`gh pr create --base main --head dev` → CI → squash merge). Локальный merge/push в `main` запрещён. Review vs `main` до release PR.
 
 ## Skills
 
