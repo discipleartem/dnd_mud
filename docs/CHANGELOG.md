@@ -3,6 +3,7 @@
 ## [Unreleased]
 
 ### Changed
+- Token usage: tiered review (light orchestrator / full bugbot) — `dnd-mud-review`, `dnd-mud-workflow`, `AGENTS.md`, `dnd-mud-fix-plan`, `dnd-mud-release`, `DEVELOPMENT.md`
 - Rules refactor: `dnd-mud-workflow.mdc` (git + verify overrides), `dnd-mud-python.mdc` (3.12 + KISS); `AGENTS.md` — оркестрация; global rules slim (`00-global`, `01-operations`, `user-protocols`)
 - Rules DRY: git workflow проекта — канон [`.cursor/rules/dnd-mud-workflow.mdc`](../.cursor/rules/dnd-mud-workflow.mdc); global `01-operations` — Task cycle, Cursor modes, commit policy
 - Review-политика: локальный subagent (`dnd-mud-review`); GitHub PR Bugbot не используется — `dnd-mud-workflow.mdc`, skills, `DEVELOPMENT.md`
