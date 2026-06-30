@@ -41,7 +41,8 @@ dnd_mud
 
 ```bash
 make test          # полный pytest + coverage (core, ui)
-make verify-scope  # инкрементально на конец task-ветки
+make verify-scope  # инкрементально на конец task-ветки (vs origin/dev)
+VERIFY_BASE=origin/main make verify-scope  # на ветке dev — diff vs main
 pytest -v
 ```
 
@@ -156,11 +157,14 @@ dnd_mud/
 ```bash
 make check            # полный: ruff + black --check + mypy
 make verify-changed   # только staged .py (подзадача)
-make verify-scope     # diff origin/dev...HEAD (конец задачи)
+make verify-scope     # diff origin/dev...HEAD (конец task-ветки)
+VERIFY_BASE=origin/main make verify-scope  # на ветке dev
 make verify           # check + test (CI / ручной full)
 ```
 
 Маппинг changed → pytest/lint: [`scripts/verify_targets.py`](../scripts/verify_targets.py).
+
+Инкрементальный `mypy` в `verify-changed` / `verify-scope` проверяет только изменённые `.py`; полный typecheck — `make check` или CI.
 
 ### Pre-commit (локально)
 
