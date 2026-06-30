@@ -12,7 +12,7 @@ from core.equipment import (
 )
 from core.feats import get_feat_proficiency_grants
 from core.models import Character
-from core.races import collect_race_features
+from core.races import collect_race_grants
 
 # Категории доспехов: light -> light_armor в races, normalize both
 ARMOR_ALIASES: dict[str, str] = {
@@ -75,32 +75,40 @@ def _tokens_from_mechanics(
     return weapons, armors, tools
 
 
-def _collect_from_features(
-    features: list[dict[str, Any]],
+def _mechanics_from_entry(entry: dict[str, Any]) -> dict[str, Any]:
+    """Плоский grant или mechanics из class feature."""
+    if "mechanics" in entry:
+        merged = (
+            dict(entry["mechanics"])
+            if isinstance(entry["mechanics"], dict)
+            else {}
+        )
+        if entry.get("type") and "type" not in merged:
+            merged["type"] = entry["type"]
+        return merged
+    return dict(entry)
+
+
+def _collect_from_grants(
+    grants: list[dict[str, Any]],
     level: int,
     *,
     require_level: bool,
 ) -> tuple[list[str], list[str], list[str], list[ProficiencyChoice]]:
-    """Владения и выборы из списка features."""
+    """Владения и выборы из grants или class features."""
     weapons: list[str] = []
     armors: list[str] = []
     tools: list[str] = []
     choices: list[ProficiencyChoice] = []
-    for feat in features:
-        feat_level = feat.get("level")
+    for entry in grants:
+        feat_level = entry.get("level")
         if (
             require_level
             and isinstance(feat_level, int)
             and feat_level > level
         ):
             continue
-        mechanics = feat.get("mechanics", {})
-        if not isinstance(mechanics, dict):
-            mechanics = {}
-        merged = dict(mechanics)
-        feat_type = feat.get("type")
-        if feat_type and "type" not in merged:
-            merged["type"] = feat_type
+        merged = _mechanics_from_entry(entry)
         w, a, t = _tokens_from_mechanics(merged)
         weapons.extend(w)
         armors.extend(a)
@@ -125,6 +133,16 @@ def _collect_from_features(
                 )
             )
     return weapons, armors, tools, choices
+
+
+def _collect_from_features(
+    features: list[dict[str, Any]],
+    level: int,
+    *,
+    require_level: bool,
+) -> tuple[list[str], list[str], list[str], list[ProficiencyChoice]]:
+    """Владения из class features (обратная совместимость)."""
+    return _collect_from_grants(features, level, require_level=require_level)
 
 
 def get_class_proficiency_tokens(
@@ -195,7 +213,7 @@ def get_subclass_proficiency_tokens(
     for sub in raw_subs:
         if not isinstance(sub, dict) or sub.get("id") != subclass_id:
             continue
-        features = sub.get("features", [])
+        features = sub.get("class_features", [])
         if isinstance(features, list):
             return _collect_from_features(
                 [f for f in features if isinstance(f, dict)],
@@ -209,9 +227,9 @@ def get_racial_proficiency_tokens(
     race_id: str,
     subrace_id: str | None = None,
 ) -> tuple[list[str], list[str], list[str], list[ProficiencyChoice]]:
-    """Расовые владения из features."""
-    features = collect_race_features(race_id, subrace_id)
-    return _collect_from_features(features, level=99, require_level=False)
+    """Расовые владения из grants."""
+    grants = collect_race_grants(race_id, subrace_id)
+    return _collect_from_grants(grants, level=99, require_level=False)
 
 
 def get_background_tool_proficiencies(

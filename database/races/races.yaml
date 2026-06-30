@@ -1,22 +1,22 @@
-# База данных рас D&D 5e
-# Стандартный формат: словарь рас с id в качестве ключа
-
 races:
   human:
     name:
-      ru: "Человек"
-      en: "Human"
-    description: "Человечество — самая разнообразная и амбициозная раса"
-    age_range: [16, 100]
-    size: "medium"
+      ru: Человек
+      en: Human
+    description: Человечество — самая разнообразная и амбициозная раса
+    age_range:
+    - 16
+    - 100
+    size: medium
     speed: 30
     subraces:
       standard:
         name:
-          ru: "Человек (стандарт)"
-          en: "Human (standard)"
-        description: "Стандартный вариант человека из PHB"
-        languages: ["common"]
+          ru: Человек (стандарт)
+          en: Human (standard)
+        description: Стандартный вариант человека из PHB
+        languages:
+        - common
         ability_bonuses:
           strength: 1
           dexterity: 1
@@ -25,261 +25,255 @@ races:
           wisdom: 1
           charisma: 1
         grants:
-          - type: language
-            count: 1
-            choice: true
-            pool: common
+        - type: language
+          count: 1
+          choice: true
+          pool: common
       variant_human:
         name:
-          ru: "Человек (вариант)"
-          en: "Human (variant)"
-        description: "Альтернативный вариант создания человека"
+          ru: Человек (вариант)
+          en: Human (variant)
+        description: Альтернативный вариант создания человека
         inherit:
           ability_bonuses: false
           grants: false
         grants:
-          - type: ability_increase
-            count: 2
-            amount: 1
-            choice: true
-            allow_duplicates: false
-          - type: skill_proficiency
-            count: 1
-            choice: true
-            from: all
-          - type: feat
-            count: 1
-            choice: true
-            from: all
-
+        - type: ability_increase
+          count: 2
+          amount: 1
+          choice: true
+          allow_duplicates: false
+        - type: skill_proficiency
+          count: 1
+          choice: true
+          from: all
+        - type: feat
+          count: 1
+          choice: true
+          from: all
   elf:
     name:
-      ru: "Эльф"
-      en: "Elf"
-    description: "Эльфы — изящные и долгоживущие существа с тонкими чувствами"
-    age_range: [20, 750]
-    size: "medium"
+      ru: Эльф
+      en: Elf
+    description: Эльфы — изящные и долгоживущие существа с тонкими чувствами
+    age_range:
+    - 20
+    - 750
+    size: medium
     speed: 30
-    languages: ["common", "elvish"]
+    languages:
+    - common
+    - elvish
     ability_bonuses:
       dexterity: 2
-    features:
-      - name: "Обострённые чувства"
-        description: "Вы владеете навыком Внимательность"
-        type: "skill_proficiency"
-        mechanics:
-          skills: ["perception"]
-      - name: "Тёмное зрение"
-        description: "Можете видеть в условиях слабого освещения на расстоянии 60 футов как в ярком освещении"
-        type: "darkvision"
-        mechanics:
-          range: 60
-      - name: "Наследие фей"
-        description: "Преимущество при спасбросках от очарования"
-        type: "advantage"
-        mechanics:
-          save: "charisma"
-          effect: "charm"
-      - name: "Транс"
-        description: "Медитация вместо сна. 4 часа медитации дают тот же отдых, что и 8 часов сна"
-        type: "rest"
-        mechanics:
-          duration: 4
-          effect: "full_rest"
     subraces:
       high_elf:
         name:
-          ru: "Высший эльф"
-          en: "High Elf"
-        description: "Высшие эльфы ценят знания и магию"
+          ru: Высший эльф
+          en: High Elf
+        description: Высшие эльфы ценят знания и магию
         ability_bonuses:
           intelligence: 1
-        features:
-          - name: "Эльфийская боевая подготовка"
-            description: "Владение длинными мечами, рапирами, короткими мечами, длинными и короткими луками"
-            type: "weapon_proficiency"
-            mechanics:
-              weapons: ["longsword", "rapier", "shortsword", "longbow", "shortbow"]
-          - name: "Дополнительный язык"
-            description: "Вы можете говорить, читать и писать на одном дополнительном языке на ваш выбор"
-            type: "language"
-            mechanics:
-              count: 1
-              choice: true
-              pool: common
-          - name: "Заговор высшего эльфа"
-            description: "Вы знаете один заговор из списка волшебника"
-            type: "cantrip"
-            mechanics:
-              source: "wizard"
-              ability: "intelligence"
-              count: 1
-              choice: true
-
+        grants:
+        - weapons:
+          - longsword
+          - rapier
+          - shortsword
+          - longbow
+          - shortbow
+          type: weapon_proficiency
+          name: Эльфийская боевая подготовка
+        - count: 1
+          choice: true
+          pool: common
+          type: language
+          name: Дополнительный язык
+        - source: wizard
+          ability: intelligence
+          count: 1
+          choice: true
+          type: cantrip
+          name: Заговор высшего эльфа
       wood_elf:
         name:
-          ru: "Лесной эльф"
-          en: "Wood Elf"
-        description: "Лесные эльфы живут в гармонии с природой"
+          ru: Лесной эльф
+          en: Wood Elf
+        description: Лесные эльфы живут в гармонии с природой
         ability_bonuses:
           wisdom: 1
         speed: 35
-        features:
-          - name: "Эльфийская боевая подготовка"
-            description: "Владение длинными мечами, рапирами, короткими мечами, длинными и короткими луками"
-            type: "weapon_proficiency"
-            mechanics:
-              weapons: ["longsword", "rapier", "shortsword", "longbow", "shortbow"]
-          - name: "Быстрота"
-            description: "Базовая скорость передвижения 35 футов"
-            type: "speed_bonus"
-            mechanics:
-              value: 35
-          - name: "Маскировка лесного эльфа"
-            description: "Преимущество при проверках Ловкости (Скрытность) в лесистой местности"
-            type: "advantage"
-            mechanics:
-              skill: "stealth"
-              terrain: "forest"
-
+        grants:
+        - weapons:
+          - longsword
+          - rapier
+          - shortsword
+          - longbow
+          - shortbow
+          type: weapon_proficiency
+          name: Эльфийская боевая подготовка
+        - value: 35
+          type: speed_bonus
+          amount: 35
+          name: Быстрота
+        - skill: stealth
+          terrain: forest
+          type: advantage
+          name: Маскировка лесного эльфа
       dark_elf_drow:
         name:
-          ru: "Дроу"
-          en: "Drow"
-        description: "Тёмные эльфы подземелий"
+          ru: Дроу
+          en: Drow
+        description: Тёмные эльфы подземелий
         ability_bonuses:
           charisma: 1
-        features:
-          - name: "Магия дроу"
-            description: "Вы знаете магию дроу"
-            type: "spellcasting"
-            mechanics:
-              spells:
-                - name: "dancing_lights"
-                  level: 0
-                  uses: "at_will"
-                - name: "faerie_fire"
-                  level: 1
-                  uses: 1
-                  recharge: "long_rest"
-                - name: "darkness"
-                  level: 2
-                  uses: 1
-                  recharge: "long_rest"
-              ability: "charisma"
-          - name: "Боевая подготовка дроу"
-            description: "Владение рапирами, короткими мечами и арбалетами"
-            type: "weapon_proficiency"
-            mechanics:
-              weapons: ["rapier", "shortsword", "hand_crossbow"]
-          - name: "Чувствительность к солнечному свету"
-            description: "Недостаток при атаках и проверках Мудрости (Внимательность) при прямом солнечном свете"
-            type: "disadvantage"
-            mechanics:
-              condition: "direct_sunlight"
-              affected: ["attacks", "perception_checks"]
-
+        grants:
+        - spells:
+          - name: dancing_lights
+            level: 0
+            uses: at_will
+          - name: faerie_fire
+            level: 1
+            uses: 1
+            recharge: long_rest
+          - name: darkness
+            level: 2
+            uses: 1
+            recharge: long_rest
+          ability: charisma
+          type: spellcasting
+          name: Магия дроу
+        - weapons:
+          - rapier
+          - shortsword
+          - hand_crossbow
+          type: weapon_proficiency
+          name: Боевая подготовка дроу
+        - condition: direct_sunlight
+          affected:
+          - attacks
+          - perception_checks
+          type: disadvantage
+          name: Чувствительность к солнечному свету
+    grants:
+    - skills:
+      - perception
+      type: skill_proficiency
+      name: Обострённые чувства
+    - range: 60
+      type: darkvision
+      name: Тёмное зрение
+    - save: charisma
+      effect: charm
+      type: advantage
+      name: Наследие фей
+    - duration: 4
+      effect: full_rest
+      type: rest
+      name: Транс
   dwarf:
     name:
-      ru: "Дварф"
-      en: "Dwarf"
-    description: "Дварфы — крепкие и выносливые мастера гор и ремёсел"
-    age_range: [50, 350]
-    size: "medium"
+      ru: Дварф
+      en: Dwarf
+    description: Дварфы — крепкие и выносливые мастера гор и ремёсел
+    age_range:
+    - 50
+    - 350
+    size: medium
     speed: 25
-    languages: ["common", "dwarvish"]
+    languages:
+    - common
+    - dwarvish
     ability_bonuses:
       constitution: 2
-    features:
-      - name: "Скорость дварфа"
-        description: "Ношение тяжёлых доспехов не снижает вашу скорость"
-        type: "speed_ignore_penalty"
-        mechanics:
-          armor_types: ["heavy_armor"]
-      - name: "Тёмное зрение"
-        description: "На расстоянии в 60 футов вы при тусклом освещении можете видеть так, как будто это яркое освещение, и в темноте так, как будто это тусклое освещение. В темноте вы не можете различать цвета, только оттенки серого"
-        type: "darkvision"
-        mechanics:
-          range: 60
-          color_vision: false
-      - name: "Дварфская устойчивость"
-        description: "Вы совершаете с преимуществом спасброски от яда, и вы получаете сопротивление к урону ядом"
-        type: "resistance"
-        mechanics:
-          damage_types: ["poison"]
-          advantage_saves: ["poison"]
-      - name: "Дварфская боевая подготовка"
-        description: "Владение боевым топором, ручным топором, лёгким молотом и боевым молотом"
-        type: "weapon_proficiency"
-        mechanics:
-          weapons: ["battleaxe", "handaxe", "light_hammer", "warhammer"]
-      - name: "Владение инструментами"
-        description: "Вы владеете ремесленными инструментами на ваш выбор: инструменты кузнеца, пивовара или каменщика"
-        type: "tool_proficiency"
-        mechanics:
-          count: 1
-          choice: true
-          tools: ["smith_tools", "brewer_supplies", "mason_tools"]
-      - name: "Знание камня"
-        description: "Если вы совершаете проверку Интеллекта (История), связанную с происхождением работы по камню, вы считаетесь владеющим навыком История, и добавляете к проверке удвоенный бонус мастерства вместо обычного"
-        type: "skill_bonus"
-        mechanics:
-          skill: "history"
-          context: "stonework_origin"
-          grants_proficiency: true
-          expertise: true
     subraces:
       hill_dwarf:
         name:
-          ru: "Холмовой дварф"
-          en: "Hill Dwarf"
-        description: "Будучи холмовым дварфом вы обладаете обострёнными чувствами, развитой интуицией и замечательной стойкостью"
+          ru: Холмовой дварф
+          en: Hill Dwarf
+        description: Будучи холмовым дварфом вы обладаете обострёнными чувствами, развитой интуицией и замечательной стойкостью
         ability_bonuses:
           wisdom: 1
-        features:
-          - name: "Дварфская выдержка"
-            description: "Максимальное значение ваших хитов увеличивается на 1, и вы получаете 1 дополнительный хит с каждым новым уровнем"
-            type: "hit_point_bonus"
-            mechanics:
-              value: 1
-              per_level: true
-
+        grants:
+        - value: 1
+          per_level: true
+          type: hit_point_bonus
+          amount: 1
+          name: Дварфская выдержка
       mountain_dwarf:
         name:
-          ru: "Горный дварф"
-          en: "Mountain Dwarf"
-        description: "Будучи горным дварфом, вы являетесь сильным и выносливым, приспособленным к жизни в суровой местности"
+          ru: Горный дварф
+          en: Mountain Dwarf
+        description: Будучи горным дварфом, вы являетесь сильным и выносливым, приспособленным к жизни в суровой местности
         ability_bonuses:
           strength: 2
-        features:
-          - name: "Владение доспехами дварфов"
-            description: "Владение лёгкими и средними доспехами"
-            type: "armor_proficiency"
-            mechanics:
-              armor_types: ["light_armor", "medium_armor"]
-
+        grants:
+        - armor_types:
+          - light_armor
+          - medium_armor
+          type: armor_proficiency
+          name: Владение доспехами дварфов
+    grants:
+    - armor_types:
+      - heavy_armor
+      type: speed_ignore_penalty
+      name: Скорость дварфа
+    - range: 60
+      color_vision: false
+      type: darkvision
+      name: Тёмное зрение
+    - damage_types:
+      - poison
+      advantage_saves:
+      - poison
+      type: resistance
+      name: Дварфская устойчивость
+    - weapons:
+      - battleaxe
+      - handaxe
+      - light_hammer
+      - warhammer
+      type: weapon_proficiency
+      name: Дварфская боевая подготовка
+    - count: 1
+      choice: true
+      tools:
+      - smith_tools
+      - brewer_supplies
+      - mason_tools
+      type: tool_proficiency
+      name: Владение инструментами
+    - skill: history
+      context: stonework_origin
+      grants_proficiency: true
+      expertise: true
+      type: skill_bonus
+      name: Знание камня
   half_orc:
     name:
-      ru: "Полуорк"
-      en: "Half-Orc"
-    description: "Полуорки — сильные и выносливые воины"
-    age_range: [14, 80]
-    size: "medium"
+      ru: Полуорк
+      en: Half-Orc
+    description: Полуорки — сильные и выносливые воины
+    age_range:
+    - 14
+    - 80
+    size: medium
     speed: 30
     subraces:
       half_orc:
         name:
-          ru: "Полуорк"
-          en: "Half-Orc"
-        description: "Полуорки — сильные и выносливые воины"
-        languages: ["common", "orcish"]
+          ru: Полуорк
+          en: Half-Orc
+        description: Полуорки — сильные и выносливые воины
+        languages:
+        - common
+        - orcish
         ability_bonuses:
           strength: 2
           constitution: 1
         grants:
-          - type: persistent_endurance
-            trigger: damage_reduces_to_zero
-            effect: remain_at_1_hp
-          - type: damage_bonus
-            trigger: critical_hit
-            effect: reroll_one_damage_die
+        - type: persistent_endurance
+          trigger: damage_reduces_to_zero
+          effect: remain_at_1_hp
+        - type: damage_bonus
+          trigger: critical_hit
+          effect: reroll_one_damage_die

@@ -115,19 +115,19 @@ def feat_full_description_lines(feat: dict[str, Any]) -> list[str]:
         return [str(line) for line in full if str(line).strip()]
 
     lines: list[str] = []
-    raw_features = feat.get("features", [])
-    if isinstance(raw_features, list):
-        for feature in raw_features:
-            if not isinstance(feature, dict):
+    raw_grants = feat.get("grants", [])
+    if isinstance(raw_grants, list):
+        for grant in raw_grants:
+            if not isinstance(grant, dict):
                 continue
-            fdesc = str(feature.get("description", "")).strip()
-            if not fdesc:
+            gdesc = str(grant.get("description", "")).strip()
+            if not gdesc:
                 continue
-            fname = str(feature.get("name", "")).strip()
-            if fname and fname not in fdesc:
-                lines.append(f"• {fname}: {fdesc}")
+            gname = str(grant.get("name", "")).strip()
+            if gname and gname not in gdesc:
+                lines.append(f"• {gname}: {gdesc}")
             else:
-                lines.append(f"• {fdesc}")
+                lines.append(f"• {gdesc}")
     if not lines:
         summary = str(feat.get("description", "")).strip()
         if summary:
@@ -138,23 +138,21 @@ def feat_full_description_lines(feat: dict[str, Any]) -> list[str]:
 def get_race_feat_grants(
     race_id: str, subrace_id: str | None = None
 ) -> list[FeatGrant]:
-    """Слоты выбора черты из features расы/подрасы."""
-    from core.races import collect_race_features
+    """Слоты выбора черты из grants расы/подрасы."""
+    from core.grants import grants_of_type
+    from core.races import collect_race_grants
 
-    grants: list[FeatGrant] = []
-    for feat in collect_race_features(race_id, subrace_id):
-        if feat.get("type") != "feat":
-            continue
-        mechanics = feat.get("mechanics", {})
-        if not isinstance(mechanics, dict):
-            mechanics = {}
-        count = int(mechanics.get("count", 1))
-        from_list = str(mechanics.get("from_list", "all"))
+    result: list[FeatGrant] = []
+    for grant in grants_of_type(
+        collect_race_grants(race_id, subrace_id), "feat"
+    ):
+        count = int(grant.get("count", 1))
+        from_list = str(grant.get("from", grant.get("from_list", "all")))
         source = "subrace" if subrace_id else "race"
-        grants.append(
+        result.append(
             FeatGrant(count=count, from_list=from_list, source=source)
         )
-    return grants
+    return result
 
 
 def race_feat_step_required(
@@ -263,19 +261,17 @@ def get_feat_hp_bonus_sources(feat_ids: list[str]) -> list[HpBonusSource]:
     for feat_id in feat_ids:
         feat = load_feat(feat_id)
         feat_name = str(feat.get("name", feat_id)).strip() or feat_id
-        raw_features = feat.get("features", [])
-        if not isinstance(raw_features, list):
+        raw_grants = feat.get("grants", [])
+        if not isinstance(raw_grants, list):
             continue
-        for feature in raw_features:
-            if not isinstance(feature, dict):
+        for grant in raw_grants:
+            if not isinstance(grant, dict):
                 continue
-            mechanics = feature.get("mechanics", {})
-            if not isinstance(mechanics, dict):
-                mechanics = {}
-            amount = hit_point_bonus_amount(mechanics, feature)
+            amount = hit_point_bonus_amount(grant)
             if amount <= 0:
                 continue
-            sources.append(HpBonusSource(name=feat_name, amount=amount))
+            name = str(grant.get("name", "")).strip() or feat_name
+            sources.append(HpBonusSource(name=name, amount=amount))
     return sources
 
 

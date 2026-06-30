@@ -13,7 +13,7 @@ from core.grants import (
 )
 from core.hp_bonuses import (
     HpBonusSource,
-    hit_point_bonus_sources_from_features,
+    hit_point_bonus_sources_from_grants,
 )
 from core.localization import resolve_localized_text
 from core.mod_loader import load_merged_catalog
@@ -113,33 +113,6 @@ def collect_race_grants(
     return grants_from_entity(race_info)
 
 
-def grants_as_features(grants: list[dict[str, Any]]) -> list[dict[str, Any]]:
-    """Legacy-вид features для существующих парсеров."""
-    result: list[dict[str, Any]] = []
-    for grant in grants:
-        gtype = str(grant.get("type", ""))
-        legacy_type = "ability_bonus" if gtype == _ABILITY_INCREASE else gtype
-        mechanics = dict(grant)
-        if "type" in mechanics:
-            del mechanics["type"]
-        if "amount" in mechanics and "value" not in mechanics:
-            mechanics["value"] = mechanics["amount"]
-        if legacy_type == "feat" and "from" in mechanics:
-            mechanics.setdefault("from_list", mechanics["from"])
-        entry: dict[str, Any] = {"type": legacy_type, "mechanics": mechanics}
-        if grant.get("name"):
-            entry["name"] = grant["name"]
-        result.append(entry)
-    return result
-
-
-def collect_race_features(
-    race_id: str, subrace_id: str | None = None
-) -> list[dict[str, Any]]:
-    """Особенности расы и подрасы (legacy features из grants)."""
-    return grants_as_features(collect_race_grants(race_id, subrace_id))
-
-
 def get_choice_ability_bonus_mechanics(
     race_id: str, subrace_id: str | None = None
 ) -> dict[str, Any] | None:
@@ -175,9 +148,9 @@ def build_bonuses_from_choices(
 def get_racial_hp_bonus_sources(
     race_id: str, subrace_id: str | None = None
 ) -> list[HpBonusSource]:
-    """Именованные бонусы HP за уровень из особенностей расы/подрасы."""
-    return hit_point_bonus_sources_from_features(
-        collect_race_features(race_id, subrace_id)
+    """Именованные бонусы HP за уровень из grants расы/подрасы."""
+    return hit_point_bonus_sources_from_grants(
+        collect_race_grants(race_id, subrace_id)
     )
 
 

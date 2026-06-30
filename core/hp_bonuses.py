@@ -13,27 +13,43 @@ class HpBonusSource:
 
 
 def hit_point_bonus_amount(
-    mechanics: dict[str, Any], feat: dict[str, Any]
+    mechanics: dict[str, Any], feat: dict[str, Any] | None = None
 ) -> int:
-    """Значение hit_point_bonus из feature, если per_level."""
-    mtype = feat.get("type") or mechanics.get("type")
+    """Значение hit_point_bonus из grant или legacy feature."""
+    feat = feat or {}
+    mtype = mechanics.get("type") or feat.get("type")
     if mtype != "hit_point_bonus" or not mechanics.get("per_level"):
         return 0
     return int(mechanics.get("value", mechanics.get("amount", 0)))
 
 
+def hit_point_bonus_sources_from_grants(
+    grants: list[dict[str, Any]],
+) -> list[HpBonusSource]:
+    """Бонусы HP за уровень из grants."""
+    sources: list[HpBonusSource] = []
+    for grant in grants:
+        amount = hit_point_bonus_amount(grant)
+        if amount <= 0:
+            continue
+        name = str(grant.get("name", "")).strip() or "?"
+        sources.append(HpBonusSource(name=name, amount=amount))
+    return sources
+
+
 def hit_point_bonus_sources_from_features(
     features: list[dict[str, Any]],
 ) -> list[HpBonusSource]:
-    """Бонусы HP за уровень из features (имя — поле name особенности)."""
-    sources: list[HpBonusSource] = []
+    """Бонусы HP за уровень из features (legacy-обёртка для grants)."""
+    grants: list[dict[str, Any]] = []
     for feat in features:
         mechanics = feat.get("mechanics", {})
         if not isinstance(mechanics, dict):
             mechanics = {}
-        amount = hit_point_bonus_amount(mechanics, feat)
-        if amount <= 0:
-            continue
-        name = str(feat.get("name", "")).strip() or "?"
-        sources.append(HpBonusSource(name=name, amount=amount))
-    return sources
+        merged = dict(mechanics)
+        if feat.get("type") and "type" not in merged:
+            merged["type"] = feat["type"]
+        if feat.get("name"):
+            merged["name"] = feat["name"]
+        grants.append(merged)
+    return hit_point_bonus_sources_from_grants(grants)

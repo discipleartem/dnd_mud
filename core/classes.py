@@ -97,7 +97,7 @@ def _subclass_feature_ids_and_names(
     for entry in raw_subclasses:
         if not isinstance(entry, dict):
             continue
-        raw_features = entry.get("features", [])
+        raw_features = entry.get("class_features", [])
         if not isinstance(raw_features, list):
             continue
         for feat in raw_features:
@@ -114,7 +114,7 @@ def _subclass_feature_ids_and_names(
 
 def _class_features_only(class_info: dict[str, Any]) -> list[dict[str, Any]]:
     """Умения класса без дублей из подклассов (по id или name)."""
-    raw_features = class_info.get("features", [])
+    raw_features = class_info.get("class_features", [])
     if not isinstance(raw_features, list):
         return []
     subclass_ids, subclass_names = _subclass_feature_ids_and_names(class_info)
@@ -207,7 +207,7 @@ def load_subclasses(
                 "name": str(name),
                 "description": entry.get("description", ""),
                 "parent_class": entry.get("parent_class", class_id),
-                "features": entry.get("features", []),
+                "features": entry.get("class_features", []),
             }
         )
     return result

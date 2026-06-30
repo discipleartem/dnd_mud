@@ -97,16 +97,13 @@ def resolve_feat_grants(
     armors: list[str] = []
     tools: list[str] = []
     skills: list[str] = []
-    raw_features = feat.get("features", [])
-    if not isinstance(raw_features, list):
+    raw_grants = feat.get("grants", [])
+    if not isinstance(raw_grants, list):
         return weapons, armors, tools, skills
-    for feature in raw_features:
-        if not isinstance(feature, dict):
+    for grant in raw_grants:
+        if not isinstance(grant, dict):
             continue
-        mechanics = feature.get("mechanics", {})
-        if not isinstance(mechanics, dict):
-            continue
-        w, a, t, s = _grants_from_mechanics(mechanics, choices)
+        w, a, t, s = _grants_from_mechanics(grant, choices)
         weapons.extend(w)
         armors.extend(a)
         tools.extend(t)

@@ -24,7 +24,7 @@ def class_grants_asi_at_level(class_id: str, level: int) -> bool:
     class_info = _load_classes_yaml().get(class_id, {})
     if not isinstance(class_info, dict):
         return False
-    raw_features = class_info.get("features", [])
+    raw_features = class_info.get("class_features", [])
     if not isinstance(raw_features, list):
         return False
     for feat in raw_features:
