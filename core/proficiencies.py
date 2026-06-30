@@ -3,7 +3,11 @@
 from dataclasses import dataclass
 from typing import Any
 
-from core.classes import get_class_dict, get_subclass_choice_level
+from core.classes import (
+    get_class_dict,
+    get_subclass_choice_level,
+    iter_class_grants,
+)
 from core.equipment import (
     armor_category,
     resolve_tool_pool,
@@ -169,13 +173,11 @@ def get_subclass_proficiency_tokens(
     for sub in raw_subs:
         if not isinstance(sub, dict) or sub.get("id") != subclass_id:
             continue
-        features = sub.get("class_features", [])
-        if isinstance(features, list):
-            return _collect_from_grants(
-                [f for f in features if isinstance(f, dict)],
-                level,
-                require_level=True,
-            )
+        return _collect_from_grants(
+            iter_class_grants(sub),
+            level,
+            require_level=True,
+        )
     return [], [], [], []
 
 

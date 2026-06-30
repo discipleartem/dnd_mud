@@ -214,7 +214,7 @@ class Adventure:
     id: str
     name: dict[str, str] | str = field(default_factory=dict)
     description: str = ""
-    difficulty: str = "normal"
+    content_tier: str = "normal"
     author: str = ""
     version: str = "1.0"
     allowed_game_difficulties: list[str] | None = None
@@ -233,7 +233,7 @@ class Adventure:
             id=data.get("id", ""),
             name=data.get("name", {}),
             description=data.get("description", ""),
-            difficulty=data.get("difficulty", "normal"),
+            content_tier=data.get("content_tier", "normal"),
             author=data.get("author", ""),
             version=data.get("version", "1.0"),
             allowed_game_difficulties=data.get("allowed_game_difficulties"),

@@ -48,7 +48,7 @@ grants:
 ### Legacy → grants (удалено)
 
 Ранее loader [`core/grants.py`](../core/grants.py) конвертировал `features[]` в `grants[]`.  
-С **2026-06** активные YAML используют только `grants[]`; классовые умения — `class_features[]`.
+С **2026-06** активные YAML используют только `grants[]`; классовые умения — `progression.<level>.grants` (с **2026-07**).
 
 ## Mod overlay
 
@@ -154,7 +154,7 @@ races:
 
 | ID | Задача | Триггер | Целевые файлы |
 |----|--------|---------|---------------|
-| `class-progression` | `progression.<level>.grants` вместо плоского `features[]` с повторяющимися ASI | Левелап применяет классовые умения из YAML автоматически | `database/classes/classes.yaml`, `core/classes.py` |
+| `class-progression` | `progression.<level>.grants` вместо плоского `class_features[]` | ✅ YAML + accessor (`iter_class_grants`); авто-применение при левелапе — Phase 2 |
 | `combat-usage` | Поле `usage: passive \| action \| bonus_action \| reaction` у grants/features | Реализация [`rules/09-combat.md`](rules/09-combat.md) | `database/classes/*.yaml`, combat resolver |
 
 ### Валидация и метаданные

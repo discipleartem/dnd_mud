@@ -3,6 +3,16 @@
 ## [Unreleased]
 
 ### Added
+- `core/classes.py` — `iter_class_grants`, `grants_at_level` (чтение `progression.<level>.grants`)
+
+### Changed
+- **Breaking:** `database/content/adventures.yaml` — `difficulty` → `content_tier`; `Adventure.content_tier` вместо `Adventure.difficulty`
+- **Breaking:** `database/classes/classes.yaml` — `class_features[]` → `progression.<level>.grants`
+- **Breaking:** `database/backgrounds/backgrounds.yaml` — только `grants[]` (удалены дубли `skills`, `languages`, `tool_proficiencies`)
+- **Breaking:** `database/races/races.yaml` — grants используют только `amount` (без `value`)
+- Строки UI: placeholder `{content_tier}` в списке приключений
+
+### Added
 - `scripts/verify_targets.py` — маппинг git diff → pytest/lint; `make verify-changed`, `verify-scope`, `verify`
 - `.github/workflows/ci.yml` — полный `make check` + `make test` на PR в `dev` / `main`
 - `tests/test_verify_targets.py`

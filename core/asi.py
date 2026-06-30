@@ -1,6 +1,6 @@
 """Увеличение характеристик (ASI) при повышении уровня."""
 
-from core.classes import get_class_dict
+from core.classes import get_class_dict, iter_class_grants
 from core.dice import ability_modifier
 from core.models import Character
 from core.stats import ABILITY_SCORE_MAX, STAT_NAMES, apply_bonuses_to_stats
@@ -24,12 +24,7 @@ def class_grants_asi_at_level(class_id: str, level: int) -> bool:
     class_info = get_class_dict(class_id)
     if not class_info:
         return False
-    raw_features = class_info.get("class_features", [])
-    if not isinstance(raw_features, list):
-        return False
-    for feat in raw_features:
-        if not isinstance(feat, dict):
-            continue
+    for feat in iter_class_grants(class_info):
         if feat.get("id") != ASI_FEATURE_ID:
             continue
         if feat.get("level") == level:

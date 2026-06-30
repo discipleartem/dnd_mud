@@ -21,6 +21,69 @@ def get_class_dict(class_id: str) -> dict[str, Any]:
     return info if isinstance(info, dict) else {}
 
 
+def _grants_from_progression(
+    entity: dict[str, Any],
+    *,
+    max_level: int | None = None,
+) -> list[dict[str, Any]]:
+    """Grants из progression.<level>.grants с полем level."""
+    progression = entity.get("progression", {})
+    if not isinstance(progression, dict):
+        return []
+    result: list[dict[str, Any]] = []
+    for level_key, level_data in progression.items():
+        try:
+            level = int(level_key)
+        except (TypeError, ValueError):
+            continue
+        if max_level is not None and level > max_level:
+            continue
+        if not isinstance(level_data, dict):
+            continue
+        raw_grants = level_data.get("grants", [])
+        if not isinstance(raw_grants, list):
+            continue
+        for grant in raw_grants:
+            if not isinstance(grant, dict):
+                continue
+            entry = dict(grant)
+            entry["level"] = level
+            result.append(entry)
+    return result
+
+
+def iter_class_grants(
+    class_info: dict[str, Any],
+    *,
+    max_level: int | None = None,
+) -> list[dict[str, Any]]:
+    """Все grants класса из progression."""
+    return _grants_from_progression(class_info, max_level=max_level)
+
+
+def grants_at_level(
+    class_info: dict[str, Any], level: int
+) -> list[dict[str, Any]]:
+    """Grants класса на указанном уровне."""
+    progression = class_info.get("progression", {})
+    if not isinstance(progression, dict):
+        return []
+    level_data = progression.get(level) or progression.get(str(level))
+    if not isinstance(level_data, dict):
+        return []
+    raw_grants = level_data.get("grants", [])
+    if not isinstance(raw_grants, list):
+        return []
+    result: list[dict[str, Any]] = []
+    for grant in raw_grants:
+        if not isinstance(grant, dict):
+            continue
+        entry = dict(grant)
+        entry["level"] = level
+        result.append(entry)
+    return result
+
+
 def get_class_hit_dice(class_id: str) -> int:
     """Получить кость здоровья класса."""
     hit_dice = get_class_dict(class_id).get("hit_dice", 8)
@@ -91,12 +154,7 @@ def _subclass_feature_ids_and_names(
     for entry in raw_subclasses:
         if not isinstance(entry, dict):
             continue
-        raw_features = entry.get("class_features", [])
-        if not isinstance(raw_features, list):
-            continue
-        for feat in raw_features:
-            if not isinstance(feat, dict):
-                continue
+        for feat in iter_class_grants(entry):
             fid = feat.get("id")
             if fid is not None:
                 ids.add(str(fid))
@@ -108,14 +166,9 @@ def _subclass_feature_ids_and_names(
 
 def _class_features_only(class_info: dict[str, Any]) -> list[dict[str, Any]]:
     """Умения класса без дублей из подклассов (по id или name)."""
-    raw_features = class_info.get("class_features", [])
-    if not isinstance(raw_features, list):
-        return []
     subclass_ids, subclass_names = _subclass_feature_ids_and_names(class_info)
     result: list[dict[str, Any]] = []
-    for feat in raw_features:
-        if not isinstance(feat, dict):
-            continue
+    for feat in iter_class_grants(class_info):
         fid = str(feat.get("id", ""))
         fname = str(feat.get("name", ""))
         if fid in subclass_ids or fname in subclass_names:
@@ -201,7 +254,7 @@ def load_subclasses(
                 "name": str(name),
                 "description": entry.get("description", ""),
                 "parent_class": entry.get("parent_class", class_id),
-                "features": entry.get("class_features", []),
+                "features": iter_class_grants(entry),
             }
         )
     return result
