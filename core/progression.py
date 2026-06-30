@@ -294,6 +294,9 @@ def process_pending_level_ups(
     resolve_asi: (
         Callable[[Character, int], AsiResolution | None] | None
     ) = None,
+    on_level_up: (
+        Callable[[Character, int, HpGainBreakdown, int, int], bool] | None
+    ) = None,
 ) -> Character:
     """Применить все ожидающие повышения; resolve_asi — UI или headless."""
     from core.asi import pending_asi_at_level
@@ -327,7 +330,7 @@ def process_pending_level_ups(
                 feat_id for feat_id in roll_feat_ids if feat_id != "tough"
             ]
 
-        gain, _ = roll_hp_gain_for_level_up(
+        breakdown = hp_gain_breakdown_for_level_up(
             char.class_id,
             char.stats,
             new_level,
@@ -336,7 +339,11 @@ def process_pending_level_ups(
             char.subrace,
             roll_feat_ids,
         )
-        char = apply_level_up(char, gain + con_bonus + tough_bonus)
+        if on_level_up is not None and not on_level_up(
+            char, new_level, breakdown, con_bonus, tough_bonus
+        ):
+            break
+        char = apply_level_up(char, breakdown.total + con_bonus + tough_bonus)
     return char
 
 
