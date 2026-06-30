@@ -5,6 +5,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
+from core.io import save_json
 from core.levels import clamp_level
 from core.models import Character
 from core.progression import max_hp_for_level
@@ -57,18 +58,20 @@ def save_character(
             stats = apply_feats_to_stats(stats, feat_ids, feat_choices)
         feat_lang_ids = get_feat_language_ids(feat_ids, feat_choices)
         if feat_lang_ids:
-            merged_langs = list(languages) if languages else []
-            for lang_id in feat_lang_ids:
-                if lang_id not in merged_langs:
-                    merged_langs.append(lang_id)
-            languages = merged_langs
+            from core.io import merge_unique
+
+            languages = merge_unique(
+                list(languages) if languages else [],
+                feat_lang_ids,
+            )
         feat_expertise = get_feat_expertise_ids(feat_ids, feat_choices)
         if feat_expertise:
-            merged_expertise = list(skill_expertise) if skill_expertise else []
-            for skill_id in feat_expertise:
-                if skill_id not in merged_expertise:
-                    merged_expertise.append(skill_id)
-            skill_expertise = merged_expertise
+            from core.io import merge_unique
+
+            skill_expertise = merge_unique(
+                list(skill_expertise) if skill_expertise else [],
+                feat_expertise,
+            )
 
     if level is None:
         level = start_level_for_difficulty(difficulty)
@@ -172,13 +175,14 @@ def _save_character_file(character: Character) -> None:
         raise ValueError("У персонажа должен быть save_slug")
 
     CHARACTERS_DIR.mkdir(parents=True, exist_ok=True)
-    data = {
-        "schema_version": CHARACTERS_SCHEMA_VERSION,
-        **character.to_dict(),
-    }
     path = _character_file_path(character.save_slug)
-    with open(path, "w", encoding="utf-8") as f:
-        json.dump(data, f, ensure_ascii=False, indent=2)
+    save_json(
+        path,
+        {
+            "schema_version": CHARACTERS_SCHEMA_VERSION,
+            **character.to_dict(),
+        },
+    )
 
 
 def _load_character_file(path: Path) -> Character | None:

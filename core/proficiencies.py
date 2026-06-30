@@ -11,6 +11,7 @@ from core.equipment import (
     weapon_matches_category,
 )
 from core.feats import get_feat_proficiency_grants
+from core.io import merge_unique
 from core.models import Character
 from core.races import collect_race_grants
 
@@ -39,12 +40,7 @@ def _normalize_armor_token(token: str) -> str:
 
 def merge_proficiency_tokens(*parts: list[str]) -> list[str]:
     """Объединить списки владений без дублей."""
-    result: list[str] = []
-    for part in parts:
-        for token in part:
-            if token not in result:
-                result.append(token)
-    return result
+    return merge_unique(*parts)
 
 
 def _tokens_from_mechanics(

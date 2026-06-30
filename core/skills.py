@@ -9,6 +9,7 @@ from core.classes import (
     load_class_full,
 )
 from core.grants import grants_from_entity, inherit_flags
+from core.io import merge_unique
 from core.races import collect_race_grants, get_race_and_subrace
 
 PHB_SKILL_IDS: tuple[str, ...] = skill_ids()
@@ -246,12 +247,7 @@ def available_skills(pool: list[str], proficient: list[str]) -> list[str]:
 
 def merge_proficiencies(*parts: list[str]) -> list[str]:
     """Объединить списки владений без дублей, в порядке появления."""
-    result: list[str] = []
-    for part in parts:
-        for item in part:
-            if item not in result:
-                result.append(item)
-    return result
+    return merge_unique(*parts)
 
 
 def is_valid_skill_selection(
