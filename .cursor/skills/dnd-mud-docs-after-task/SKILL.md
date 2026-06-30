@@ -8,9 +8,7 @@ description: >-
 
 # dnd_mud — документация после задачи
 
-Канон-политика: [`00-global.mdc`](~/.cursor/rules/00-global.mdc) §Документация после задачи · шаг 3 [`01-operations.mdc`](~/.cursor/rules/01-operations.mdc) §Task cycle.
-
-**Запуск skill (`/dnd-mud-docs-after-task`) = явное разрешение на коммит docs** (отдельный `docs: …`), даже если в сессии действует общее правило «коммит только по запросу».
+Канон: [`01-operations.mdc`](~/.cursor/rules/01-operations.mdc) §Task cycle шаг 3.
 
 ## Когда выполнять
 
@@ -18,28 +16,20 @@ description: >-
 
 ## Когда пропустить
 
-- Задача была **только** про `docs/` или `.cursor/rules/` (без предшествующего коммита реализации) — skill не запускают; docs-коммит по обычному запросу пользователя
+- Задача была **только** про `docs/` или `.cursor/rules/` (без предшествующего коммита реализации)
 - Косметика / рефакторинг без смены поведения, API или данных
-- Документация уже обновлена в том же коммите, что и код — шаги 2–3 не нужны
+- Документация уже обновлена в том же коммите, что и код
 
 ## Алгоритм
 
-1. По `git diff` (или списку изменённых файлов) определить затронутые области.
+1. По `git diff` определить затронутые области.
 2. Обновить **только** релевантные файлы из таблицы ниже — факты, не дублирование.
-3. **Обязательный коммит** — если после шага 2 есть незакоммиченные правки в `docs/`, `.cursor/rules/` (индекс docs), `README.md`, `AGENTS.md` (только если менялся вместе с docs):
+3. **Коммит** — если после шага 2 есть незакоммиченные правки в `docs/`, `.cursor/rules/`, `README.md`, `AGENTS.md`:
    - сообщение: `docs: <краткое описание>` (Conventional Commits, английский)
    - процедура: [`user-protocols.mdc`](~/.cursor/rules/user-protocols.mdc) §Commit procedure
-   - не коммитить `.coverage`, `saves/`
+   - не коммитить `.coverage`, `saves/` ([`dnd-mud-workflow.mdc`](../../rules/dnd-mud-workflow.mdc) §Git)
    - если diff пустой — коммит пропустить
-4. Перейти к skill `dnd-mud-verify` → затем `dnd-mud-review` (см. [`AGENTS.md`](../../AGENTS.md) §6–6.5).
-
-## Коммит (шаг 3 — детали)
-
-Параллельно: `git status`, `git diff`, `git log -5` (стиль сообщений).
-
-Stage только файлы документации из шага 2 (+ `CHANGELOG.md`, если затронут). HEREDOC для сообщения. После коммита — `git status`.
-
-Не смешивать docs-коммит с кодом реализации.
+4. Перейти к skill `dnd-mud-verify` → `dnd-mud-review`.
 
 ## Какой файл обновлять
 
@@ -50,13 +40,12 @@ Stage только файлы документации из шага 2 (+ `CHANG
 | D&D-механика, правила игры | `docs/DND_RULES.md`, `docs/rules/*.md` |
 | Продуктовые требования, scope | `docs/MUD_PRD.md` |
 | Заметные фичи / фиксы для пользователей | `docs/CHANGELOG.md` |
-| Workflow разработки, команды | `docs/DEVELOPMENT.md`, `.cursor/rules/dnd-mud-git.mdc` |
-| Python-версия, tooling | `.cursor/rules/dnd-mud-python-312.mdc` |
+| Workflow разработки, команды | `docs/DEVELOPMENT.md`, `.cursor/rules/dnd-mud-workflow.mdc` |
+| Python-версия, tooling | `.cursor/rules/dnd-mud-python.mdc` |
 
-Индекс: [`00-project.mdc`](.cursor/rules/00-project.mdc) §Docs.
+Индекс: [`00-project.mdc`](../../rules/00-project.mdc) §Docs.
 
 ## Принципы
 
 - Минимальный diff: только изменившиеся факты
 - Не копировать код в docs — ссылка на модуль/функцию достаточно
-- Доменные правила (`docs/rules/`) — если менялась механика или UX выбора

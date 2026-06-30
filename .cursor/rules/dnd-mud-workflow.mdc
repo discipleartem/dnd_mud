@@ -1,0 +1,69 @@
+---
+description: dnd_mud — git/verify overrides, parallel dev, review policy (console MUD)
+alwaysApply: true
+---
+
+# dnd_mud — workflow
+
+Базовая политика: [`01-operations.mdc`](~/.cursor/rules/01-operations.mdc) §Git workflow · §Task cycle · §Commits.
+
+Оркестрация: [`AGENTS.md`](../AGENTS.md). Человекочитаемо: [`docs/DEVELOPMENT.md`](../docs/DEVELOPMENT.md) §Git Workflow.
+
+Console MUD — browser forbidden. Переопределяет `ironbee-devtools-use.mdc` и `browser-automation.mdc`.
+
+## Overrides
+
+| Global | dnd_mud |
+|--------|---------|
+| Agent напрямую — git-flow не обязателен | **git-старт обязателен** для правок кода/docs/git |
+| Browser / IronBee verify | **`make test`**, smoke `python main.py` |
+| Push по запросу | **auto-commit подзадач**; push по запросу; Plan → Build → Agent — push обязателен |
+
+## Git (delta)
+
+**Git scope:** не коммитить `.coverage`, `saves/`.
+
+**Git-старт:** [`01-operations.mdc`](~/.cursor/rules/01-operations.mdc) §Task cycle шаг 1. Если `main` впереди `dev`:
+
+```bash
+git merge origin/main && make test && git push origin dev
+```
+
+**Parallel dev:** после каждого `rebase`/`merge origin/dev` и после конфликта — **`make test`** перед push/PR.
+
+```bash
+git fetch origin && git rebase origin/dev && make test
+# конфликт: git add <files> && git rebase --continue && make test
+# push после rebase на remote: --force-with-lease (только своя ветка)
+```
+
+| Подход | Когда |
+|--------|-------|
+| `git rebase origin/dev` | По умолчанию |
+| `git merge origin/dev` | Ветка расшарена; force-push — согласовать |
+
+**Завершение task-ветки:** docs + verify + **review** (skill `dnd-mud-review`) → push/PR:
+
+```bash
+git fetch origin && git rebase origin/dev && make test
+git push -u origin HEAD   # после rebase: --force-with-lease
+gh pr create --base dev --title "feat: …"   # PR по запросу; squash merge
+```
+
+Release `dev` → `main`: skill [`dnd-mud-release`](../skills/dnd-mud-release/SKILL.md). Sync `dev`←`main`: [`git-dev-main-sync.md`](~/.cursor/docs/git-dev-main-sync.md).
+
+## Verify / review (policy)
+
+**Review обязателен** один раз в конце task-ветки, после verify, **до** push/PR/merge.
+
+| Шаг | Skill |
+|-----|-------|
+| Docs после реализации | [`dnd-mud-docs-after-task`](../skills/dnd-mud-docs-after-task/SKILL.md) |
+| Verify (runtime) | [`dnd-mud-verify`](../skills/dnd-mud-verify/SKILL.md) |
+| Review (readonly, до push/PR/merge) | [`dnd-mud-review`](../skills/dnd-mud-review/SKILL.md) |
+| Fix plan (Major+ или по запросу) | [`dnd-mud-fix-plan`](../skills/dnd-mud-fix-plan/SKILL.md) |
+| Release `dev` → `main` | [`dnd-mud-release`](../skills/dnd-mud-release/SKILL.md) |
+
+Verify ≠ review. Runtime не нужен для docs-only / rules-only.
+
+**Review:** только локальный Cursor subagent (`dnd-mud-review`). **GitHub PR Bugbot не используется** — не включать в Cursor dashboard, `.cursor/BUGBOT.md` не вести.

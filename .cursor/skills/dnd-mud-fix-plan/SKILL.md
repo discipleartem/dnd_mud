@@ -9,7 +9,7 @@ disable-model-invocation: true
 
 # dnd_mud — fix plan (план исправлений после review)
 
-Канон-политика: [`AGENTS.md`](../../AGENTS.md) §6.6 · после [`dnd-mud-review`](../dnd-mud-review/SKILL.md).
+Канон-политика: [`AGENTS.md`](../../AGENTS.md) · [`dnd-mud-workflow.mdc`](../../rules/dnd-mud-workflow.mdc) · после [`dnd-mud-review`](../dnd-mud-review/SKILL.md).
 
 **Fix plan** — readonly: структурированный план **без** правок кода, commit и push.  
 Реализация — в Agent mode по запросу пользователя («исправь по плану», «исправь blockers»).
@@ -93,7 +93,7 @@ disable-model-invocation: true
               Major+ или /dnd-mud-fix-plan
 ```
 
-После выдачи плана — ждать явного запроса на реализацию (user rules: commit только по запросу).
+После выдачи плана — ждать явного запроса на реализацию.
 
 ## Plan Mode (опционально)
 

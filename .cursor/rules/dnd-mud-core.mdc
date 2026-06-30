@@ -6,7 +6,7 @@ alwaysApply: false
 
 # dnd_mud core and UI
 
-Стиль и тесты: `dnd-mud-python-simple.mdc`, `dnd-mud-tests.mdc`. Данные: `dnd-mud-data.mdc`.
+Стиль и тесты: `dnd-mud-python.mdc`, `dnd-mud-tests.mdc`. Данные: `dnd-mud-data.mdc`.
 
 ## Слои
 
