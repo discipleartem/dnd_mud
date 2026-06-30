@@ -13,6 +13,7 @@ from ui.menus._common import (
     _print_success_and_wait,
     _run_numbered_menu,
 )
+from ui.menus._corrupt_saves import show_corrupt_save_warnings_if_any
 from ui.menus._display import _print_characters_list
 
 
@@ -97,8 +98,17 @@ def show_characters_menu(
     strings: StringsDict, language: LanguageCode = "ru"
 ) -> None:
     """Меню управления персонажами: список, создание, удаление."""
+    load_result = None
+    corrupt_warning_shown = False
     while True:
-        characters = _deps.load_characters()
+        if load_result is None:
+            load_result = _deps.load_characters()
+            corrupt_warning_shown = show_corrupt_save_warnings_if_any(
+                strings,
+                corrupt_labels=load_result.corrupt_save_warnings,
+                already_shown=corrupt_warning_shown,
+            )
+        characters = list(load_result.characters)
         has_characters = bool(characters)
 
         _print_screen_header(get_string(strings, "characters_menu.caption"))
@@ -133,11 +143,14 @@ def show_characters_menu(
 
         if choice == option_create:
             _creation_steps.show_create_character_flow(strings, language)
+            load_result = None
             continue
 
         if has_characters and choice == option_delete_one:
             _delete_one_character(strings, characters, language)
+            load_result = None
             continue
 
         if has_characters and choice == option_delete_all:
             _delete_all_characters(strings, len(characters))
+            load_result = None

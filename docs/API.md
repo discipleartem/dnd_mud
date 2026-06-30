@@ -96,7 +96,9 @@ CLASSES_FILE = Path("database/classes/classes.yaml")
 ```python
 save_character(...) -> Character
 update_character(character: Character) -> Character
-load_characters() -> list[Character]
+load_characters() -> LoadCharactersResult
+# LoadCharactersResult.characters — tuple[Character, ...]
+# LoadCharactersResult.corrupt_save_warnings — имя или save_slug битых JSON
 load_races(language: str = "ru") -> list[dict[str, Any]]
 load_race_full(race_id: str, language: str = "ru") -> dict[str, Any]
 load_classes(language: str = "ru") -> list[dict[str, Any]]
@@ -226,6 +228,31 @@ get_background_language_choice(background_id: str) -> dict[str, Any] | None
 
 ---
 
+## core.character_builder — Сборка владений
+
+```python
+@dataclass(frozen=True)
+class ResolvedGrants:
+    weapon_tokens: tuple[str, ...]
+    armor_tokens: tuple[str, ...]
+    tool_tokens: tuple[str, ...]
+    skill_ids: tuple[str, ...]
+    language_ids: tuple[str, ...]
+
+resolve_creation_grants(
+    race_id, subrace_id, class_id, background_id, subclass_id, level, *,
+    feat_ids=None, feat_choices=None,
+    extra_skills=None, extra_weapon_tokens=None, extra_tool_tokens=None,
+    extra_languages=None, include_feat_languages=True,
+) -> ResolvedGrants
+merge_languages_with_feats(languages, feat_ids, feat_choices) -> list[str]
+merge_expertise_with_feats(skill_expertise, feat_ids, feat_choices) -> list[str]
+```
+
+`build_fixed_proficiencies`, `creation_known_for_feat_picks`, `build_feat_selection_context` делегируют в `resolve_creation_grants`.
+
+---
+
 ## core.grants — Нормализация grants
 
 Единый формат эффектов из YAML (`grants[]`). Схема типов: [`DATA_SCHEMA.md`](DATA_SCHEMA.md).
@@ -263,7 +290,19 @@ proficiency_tokens_and_skills_from_grant(grant, choices=None) -> tuple[weapons, 
 
 ---
 
-## core.mod_loader — Overlay модов
+## core.catalog_loader — Единая загрузка каталогов
+
+```python
+load_catalog(path: Path | str, root_key: str) -> dict[str, Any]
+clear_catalog_cache() -> None
+clear_all_catalog_caches() -> None
+```
+
+Deep-merge модов через `mod_loader` (overlay по полю `target` — путь к базовому YAML в `manifest.yaml`); кэш `@lru_cache` на `load_catalog` и `load_merged_catalog`.
+
+---
+
+## core.mod_loader — Overlay модов (низкий уровень)
 
 ```python
 MODS_DIR = Path("mods")
@@ -274,7 +313,7 @@ load_merged_catalog(path_str: str, catalog_key: str) -> dict[str, Any]
 clear_mod_loader_cache() -> None
 ```
 
-`load_merged_catalog` — deep-merge overlay включённых модов (`mods_state.json` → `manifest.yaml` → `overlay.yaml`) поверх базового YAML. Используется в `core/races.py`, `core/backgrounds.py`. Кэш: `@lru_cache` на `load_merged_catalog`.
+`load_merged_catalog` — deep-merge overlay включённых модов. Потребители каталогов — `core/catalog_loader.load_catalog`. Кэш: `@lru_cache` на `load_merged_catalog`.
 
 Формат мода: [`DATA_SCHEMA.md`](DATA_SCHEMA.md) § Mod overlay, [`DEVELOPMENT.md`](DEVELOPMENT.md) § Создание мода.
 
@@ -333,7 +372,7 @@ load_skill_info(skill_id: str) -> dict[str, Any]
 
 ## core.feats — Черты
 
-Источник: `database/progression/feats.yaml`. Загрузка — `core/feats_loader.py`; гранты и apply — в `core/feats.py`; скрытие в меню выбора — `core/feat_visibility.py`. Выбор при создании (variant human) и при левелапе (ASI или черта).
+Источник: `database/progression/feats.yaml`. Загрузка — `core/feats_loader.py`; гранты и apply — в `core/feats.py`; скрытие в меню выбора — `core/feat_visibility.py`. UI: пакет `ui/menus/feats/` (`select_creation_feats`, `select_level_up_feat_or_asi`).
 
 ```python
 load_feats() -> list[dict[str, Any]]
@@ -390,7 +429,7 @@ get_class_saving_throws(class_id: str) -> list[str]
 apply_subclass_proficiencies_to_character(character) -> Character
 ```
 
-Re-export: `core.character`.
+Импорт из `core.proficiencies` (не re-export в `core.character`).
 
 ---
 

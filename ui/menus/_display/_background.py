@@ -5,11 +5,11 @@ from typing import Any
 from core.grants import grants_from_entity
 from core.localization import get_string
 from core.types import StringsDict
-from ui.menus._display._labels import _localized_string_list
-from ui.menus._display._race import (
+from ui.menus._display._grants import (
     _grant_description,
     _grant_display_name,
 )
+from ui.menus._display._labels import _localized_string_list
 
 
 def _print_background_grants(

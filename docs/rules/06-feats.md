@@ -25,7 +25,7 @@
 | Статус | **Реализовано** (создание + ASI/feat при левелапе) |
 | YAML | [`database/progression/feats.yaml`](../../database/progression/feats.yaml) |
 | Core | [`core/feats.py`](../../core/feats.py), [`core/feat_visibility.py`](../../core/feat_visibility.py), [`core/feats_loader.py`](../../core/feats_loader.py), [`core/asi.py`](../../core/asi.py) |
-| UI | [`ui/menus/feats.py`](../../ui/menus/feats.py), [`ui/menus/asi.py`](../../ui/menus/asi.py), шаг `feats` в [`_creation_steps.py`](../../ui/menus/_creation_steps.py) |
+| UI | [`ui/menus/feats/`](../../ui/menus/feats/), [`ui/menus/asi.py`](../../ui/menus/asi.py), шаг `feats` в [`_creation_steps.py`](../../ui/menus/_creation_steps.py) |
 
 ### Реализовано
 
@@ -131,7 +131,7 @@
 | `weapon_master` | 4 оружия | оружие, покрытое токенами `simple` / `martial` / … |
 | `linguist` | 3 языка | уже в `languages` персонажа |
 
-Канон в коде: `core/feat_visibility.py` (`build_feat_selection_context`, `feat_visible_for_selection`), `core/feats.py` (`list_feats_for_selection`), `ui/menus/feats.py` (`_pick_skills_or_tools`, `_pick_weapons_for_feat`). Тесты: `tests/test_feats.py` (параметризация по всем подклассам PHB).
+Канон в коде: `core/feat_visibility.py` (`build_feat_selection_context`, `feat_visible_for_selection`), `core/feats.py` (`list_feats_for_selection`), `ui/menus/feats/_selection.py`, `ui/menus/feats/_subchoices.py`. Тесты: `tests/test_feats.py` (параметризация по всем подклассам PHB).
 
 ### Запланировано (Phase 2)
 

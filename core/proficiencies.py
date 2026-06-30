@@ -11,16 +11,10 @@ from core.equipment import (
     weapon_matches_category,
 )
 from core.feats import get_feat_proficiency_grants
+from core.grant_mechanics import normalize_armor_token
 from core.io import merge_unique
 from core.models import Character
 from core.races import collect_race_grants
-
-# Категории доспехов: light -> light_armor в races, normalize both
-ARMOR_ALIASES: dict[str, str] = {
-    "light_armor": "light",
-    "medium_armor": "medium",
-    "heavy_armor": "heavy",
-}
 
 
 @dataclass
@@ -31,11 +25,6 @@ class ProficiencyChoice:
     pool: str
     source: str
     options: list[str] | None = None
-
-
-def _normalize_armor_token(token: str) -> str:
-    """Привести токен доспеха к light/medium/heavy/shield."""
-    return ARMOR_ALIASES.get(token, token)
 
 
 def merge_proficiency_tokens(*parts: list[str]) -> list[str]:
@@ -112,16 +101,6 @@ def _collect_from_grants(
     return weapons, armors, tools, choices
 
 
-def _collect_from_features(
-    features: list[dict[str, Any]],
-    level: int,
-    *,
-    require_level: bool,
-) -> tuple[list[str], list[str], list[str], list[ProficiencyChoice]]:
-    """Владения из class features (обратная совместимость)."""
-    return _collect_from_grants(features, level, require_level=require_level)
-
-
 def get_class_proficiency_tokens(
     class_id: str,
 ) -> tuple[list[str], list[str], list[str]]:
@@ -136,7 +115,7 @@ def get_class_proficiency_tokens(
     weapons = [str(w) for w in raw_w] if isinstance(raw_w, list) else []
     raw_a = prof.get("armor", [])
     armors = (
-        [_normalize_armor_token(str(a)) for a in raw_a]
+        [normalize_armor_token(str(a)) for a in raw_a]
         if isinstance(raw_a, list)
         else []
     )
@@ -192,7 +171,7 @@ def get_subclass_proficiency_tokens(
             continue
         features = sub.get("class_features", [])
         if isinstance(features, list):
-            return _collect_from_features(
+            return _collect_from_grants(
                 [f for f in features if isinstance(f, dict)],
                 level,
                 require_level=True,
@@ -301,19 +280,24 @@ def build_fixed_proficiencies(
     feat_choices: dict[str, dict[str, Any]] | None = None,
 ) -> tuple[list[str], list[str], list[str]]:
     """Собрать фиксированные владения без игровых выборов."""
-    cw, ca, ct = get_class_proficiency_tokens(class_id)
-    rw, ra, rt, _ = get_racial_proficiency_tokens(race_id, subrace_id)
-    sw, sa, st, _ = get_subclass_proficiency_tokens(
-        class_id, subclass_id, level
+    from core.character_builder import resolve_creation_grants
+
+    grants = resolve_creation_grants(
+        race_id,
+        subrace_id,
+        class_id,
+        background_id,
+        subclass_id,
+        level,
+        feat_ids=feat_ids,
+        feat_choices=feat_choices,
+        include_feat_languages=False,
     )
-    bg_tools: list[str] = []
-    if background_id:
-        bg_tools, _ = get_background_tool_proficiencies(background_id)
-    fw, fa, ft = get_feat_proficiency_tokens(feat_ids or [], feat_choices)
-    weapons = merge_proficiency_tokens(cw, rw, sw, fw)
-    armors = merge_proficiency_tokens(ca, ra, sa, fa)
-    tools = merge_proficiency_tokens(ct, rt, st, bg_tools, ft)
-    return weapons, armors, tools
+    return (
+        list(grants.weapon_tokens),
+        list(grants.armor_tokens),
+        list(grants.tool_tokens),
+    )
 
 
 def has_weapon_proficiency(proficiencies: list[str], weapon_id: str) -> bool:
@@ -331,7 +315,7 @@ def has_armor_proficiency(proficiencies: list[str], armor_id: str) -> bool:
     cat = armor_category(armor_id)
     if not cat:
         return False
-    normalized = _normalize_armor_token(cat)
+    normalized = normalize_armor_token(cat)
     return normalized in proficiencies or cat in proficiencies
 
 

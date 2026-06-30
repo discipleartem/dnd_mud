@@ -1,11 +1,10 @@
 """Загрузка каталога черт из YAML."""
 
 from dataclasses import dataclass, field
-from functools import lru_cache
 from pathlib import Path
 from typing import Any
 
-from core.io import load_yaml
+from core.catalog_loader import load_catalog
 from core.types import StatMap
 
 FEATS_FILE = Path("database/progression/feats.yaml")
@@ -38,14 +37,9 @@ class FeatRequirementContext:
     skills: list[str] = field(default_factory=list)
 
 
-@lru_cache(maxsize=1)
 def _load_feats_yaml() -> dict[str, Any]:
     """Загрузить feats из YAML."""
-    data = load_yaml(FEATS_FILE)
-    feats = data.get("feats", {})
-    if isinstance(feats, dict):
-        return feats
-    return {}
+    return load_catalog(FEATS_FILE, "feats")
 
 
 def load_feats() -> list[dict[str, Any]]:

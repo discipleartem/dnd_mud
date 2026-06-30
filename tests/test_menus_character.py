@@ -4,6 +4,7 @@ import re
 
 import pytest
 
+from core.character_storage import LoadCharactersResult
 from core.models import Adventure, Character
 from ui.menus import (
     _creation_steps,
@@ -18,7 +19,11 @@ from ui.menus._selectors import select_class, select_subclass, select_subrace
 def _patch_load_characters(
     monkeypatch: pytest.MonkeyPatch, characters: list[Character]
 ) -> None:
-    monkeypatch.setattr(_deps, "load_characters", lambda: characters)
+    monkeypatch.setattr(
+        _deps,
+        "load_characters",
+        lambda: LoadCharactersResult(characters=tuple(characters)),
+    )
 
 
 def _noop_press_enter(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -327,7 +332,9 @@ def test_select_character_shows_cards_with_difficulty(
     )
 
     monkeypatch.setattr(
-        _deps, "load_characters", lambda: [normal_char, hardcore_char]
+        _deps,
+        "load_characters",
+        lambda: LoadCharactersResult(characters=(normal_char, hardcore_char)),
     )
     patch_int_input(monkeypatch, [0])
 
@@ -374,7 +381,11 @@ def test_select_character_shows_subrace_name(
         current_hp=10,
     )
 
-    monkeypatch.setattr(_deps, "load_characters", lambda: [character])
+    monkeypatch.setattr(
+        _deps,
+        "load_characters",
+        lambda: LoadCharactersResult(characters=(character,)),
+    )
     patch_int_input(monkeypatch, [0])
 
     new_game._select_character(ru_strings, [character])
@@ -393,7 +404,11 @@ def test_select_character_create_via_enter(monkeypatch, capsys, ru_strings):
         class_id="fighter",
         difficulty="normal",
     )
-    monkeypatch.setattr(_deps, "load_characters", lambda: [character])
+    monkeypatch.setattr(
+        _deps,
+        "load_characters",
+        lambda: LoadCharactersResult(characters=(character,)),
+    )
 
     from ui.input_handler import get_int_input
 
@@ -466,6 +481,30 @@ def test_select_adventure_choice_returns_adventure(
     assert result.id == "tutorial"
 
 
+def test_new_game_corrupt_warning_shown_once_per_visit(
+    monkeypatch, capsys, ru_strings
+):
+    """Предупреждение о битых сейвах — один раз за визит new game."""
+    monkeypatch.setattr(
+        _deps,
+        "load_characters",
+        lambda: LoadCharactersResult(
+            characters=(), corrupt_save_warnings=("Broken",)
+        ),
+    )
+    monkeypatch.setattr(
+        _creation_steps,
+        "show_create_character_flow",
+        lambda _strings, _language: None,
+    )
+
+    new_game.show_new_game_flow(ru_strings, {"language": "ru"})
+    output = capsys.readouterr().out
+
+    assert output.count("Не удалось загрузить сохранения") == 1
+    assert "Broken" in output
+
+
 def test_new_game_no_characters_goes_to_create(monkeypatch):
     """Без персонажей — сразу создание."""
     calls = {"select": 0, "create": 0}
@@ -476,7 +515,9 @@ def test_new_game_no_characters_goes_to_create(monkeypatch):
     def create_flow(strings, language="ru"):
         calls["create"] += 1
 
-    monkeypatch.setattr(_deps, "load_characters", lambda: [])
+    monkeypatch.setattr(
+        _deps, "load_characters", lambda: LoadCharactersResult.empty()
+    )
     monkeypatch.setattr(
         _creation_steps, "show_create_character_flow", create_flow
     )
@@ -503,13 +544,47 @@ def test_new_game_back_returns_one_step(monkeypatch):
         calls["adventure"] += 1
         return None
 
-    monkeypatch.setattr(_deps, "load_characters", lambda: [character])
+    monkeypatch.setattr(
+        _deps,
+        "load_characters",
+        lambda: LoadCharactersResult(characters=(character,)),
+    )
     monkeypatch.setattr(new_game, "_select_character", select_character)
     monkeypatch.setattr(new_game, "_select_adventure", select_adventure)
 
     new_game.show_new_game_flow({}, {"language": "ru"})
 
     assert calls == {"character": 2, "adventure": 1}
+
+
+def test_new_game_back_reuses_cached_character_list(monkeypatch):
+    """Назад из приключения не перечитывает saves без изменений."""
+    calls = {"load": 0, "character": 0, "adventure": 0}
+    character = Character(
+        name="Test Hero",
+        race="human",
+        class_id="fighter",
+    )
+
+    def load_characters():
+        calls["load"] += 1
+        return LoadCharactersResult(characters=(character,))
+
+    def select_character(strings, characters, language="ru"):
+        calls["character"] += 1
+        return character if calls["character"] == 1 else None
+
+    def select_adventure(strings, language, char):
+        calls["adventure"] += 1
+        return None
+
+    monkeypatch.setattr(_deps, "load_characters", load_characters)
+    monkeypatch.setattr(new_game, "_select_character", select_character)
+    monkeypatch.setattr(new_game, "_select_adventure", select_adventure)
+
+    new_game.show_new_game_flow({}, {"language": "ru"})
+
+    assert calls == {"load": 1, "character": 2, "adventure": 1}
 
 
 def test_languages_menu_order_depends_on_locale(
@@ -550,6 +625,31 @@ def test_characters_menu_shows_hub_options(
     assert "Создать персонажа" in output
     assert "Удалить персонажа" in output
     assert "Удалить всех персонажей" in output
+
+
+def test_characters_menu_corrupt_warning_shown_once_per_visit(
+    monkeypatch, capsys, ru_strings, patch_int_input
+):
+    """Предупреждение о битых сейвах показывается один раз за визит меню."""
+    monkeypatch.setattr(
+        _deps,
+        "load_characters",
+        lambda: LoadCharactersResult(
+            characters=(), corrupt_save_warnings=("Broken",)
+        ),
+    )
+    monkeypatch.setattr(
+        _creation_steps,
+        "show_create_character_flow",
+        lambda _strings, _language: None,
+    )
+    patch_int_input(monkeypatch, [1, 0])
+
+    characters_menu.show_characters_menu(ru_strings)
+    output = capsys.readouterr().out
+
+    assert output.count("Не удалось загрузить сохранения") == 1
+    assert "Broken" in output
 
 
 def test_characters_menu_delete_one_confirmed(

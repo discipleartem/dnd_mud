@@ -2,6 +2,51 @@
 
 ## [Unreleased]
 
+### Added
+- `core/character_builder.py` — `ResolvedGrants`, `resolve_creation_grants`, merge helpers для языков/компетентности из черт
+- `tests/test_character_builder.py`
+- `core/catalog_loader.py` — `load_catalog`, `clear_catalog_cache`, `clear_all_catalog_caches`
+- `tests/test_catalog_loader.py`
+- `tests/test_creation_handlers.py` — guard-clauses handlers создания персонажа
+- `tests/test_catalog_loader.py` — `CatalogLoadError` на битом JSON-синтаксисе
+- `tests/test_mod_loader.py` — битый manifest мода не роняет загрузку каталога
+- `ui/menus/_creation_handlers.py`, `_creation_navigation.py`, `_creation_finalize.py`, `_creation_state.py`
+
+### Changed
+- Docs: sync mod overlay table, feats package paths, `LoadCharactersResult`, `character_builder`, easy mode status
+- Review fix-plan: `ui/menus/new_game.py`, `characters_menu.py` — кэш `LoadCharactersResult`, reload после create/delete
+- Review fix-plan: `ui/menus/feats/__init__.py` — только публичный API (`select_creation_feats`, `select_level_up_feat_or_asi`)
+- Fix-plan remediation: `load_characters()` → `LoadCharactersResult` (без глобальной очереди `pop_corrupt_save_warnings`)
+- `core/mod_loader` — `strict=True` для YAML каталогов игры; manifest модов — graceful skip при ошибке
+- `core/grants.ABILITY_INCREASE` — публичная константа для UI (вместо `_ABILITY_INCREASE`)
+
+### Changed
+- Review remediation: `_try_load_character_file` — одно чтение JSON при загрузке битых сейвов
+- `tests/test_menus_character.py` — предупреждение о битых сейвах в flow «Новая игра»
+- Review fix-plan: `load_catalog` без собственного `@lru_cache` (кэш только в `load_merged_catalog`)
+- `pop_corrupt_save_warnings` — имя персонажа из JSON, иначе save_slug *(заменено на `LoadCharactersResult.corrupt_save_warnings`)*
+- `ui/menus/_display/_grants.py` — `ABILITY_INCREASE` из `core.grants`
+- Review fixes: conftest catalog cache reset, corrupt save warning in characters menu, `save_character` derives proficiencies via `resolve_creation_grants`, single-layer catalog cache
+- `ui/menus/_display/_grants.py` — grant display вынесен из `_race.py`
+- `ui/menus/_creation_steps.py` — тонкий loop; навигация и финализация в отдельных модулях
+- Каталоги YAML (`classes`, `feats`, `equipment`, `languages`, `abilities`, `constants`, `races`, `backgrounds`) — через `load_catalog` + mod overlay
+- `core/io.py` — `strict` для битых каталогов (`CatalogLoadError`); WARNING-логирование I/O
+- `core/localization.load_strings` — `@lru_cache`; `clear_strings_cache()`
+- `core/character_storage._load_character_file` — `load_json` из `core/io`
+- `core/character.py` — узкий фасад для `_deps` (без proficiencies/skills/expertise re-export)
+- `Character.from_dict` — legacy `"class"` → `_migrate_legacy_fields`
+- `ui/menus/_display/_character.py` — `_print_character_skills_and_expertise`
+
+### Changed
+- Phase 0 refactor: armor token normalization only in `core/grant_mechanics.normalize_armor_token`; `proficiencies` delegates
+- Doc drift: `class_id` in `dnd-mud-core.mdc`; `core/scenario_actions.py` in `03-subclasses.md`
+
+### Removed
+- `pop_corrupt_save_warnings()` — предупреждения о битых сейвах в `LoadCharactersResult`
+- `hit_point_bonus_sources_from_features` (unused legacy) in `core/hp_bonuses.py`
+- `_collect_from_features` legacy wrapper in `core/proficiencies.py`
+- Duplicate `_normalize_armor_token` in `core/grant_mechanics.py`
+
 ### Changed
 - Token usage: tiered review (light orchestrator / full bugbot) — `dnd-mud-review`, `dnd-mud-workflow`, `AGENTS.md`, `dnd-mud-fix-plan`, `dnd-mud-release`, `DEVELOPMENT.md`
 - Rules refactor: `dnd-mud-workflow.mdc` (git + verify overrides), `dnd-mud-python.mdc` (3.12 + KISS); `AGENTS.md` — оркестрация; global rules slim (`00-global`, `01-operations`, `user-protocols`)

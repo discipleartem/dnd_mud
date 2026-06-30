@@ -52,13 +52,12 @@ grants:
 
 ## Mod overlay
 
-[`core/mod_loader.py`](../core/mod_loader.py) — `load_merged_catalog(path, catalog_key)` с deep-merge overlay включённых модов.
+[`core/catalog_loader.py`](../core/catalog_loader.py) → [`core/mod_loader.py`](../core/mod_loader.py) — `load_catalog` / `load_merged_catalog` с deep-merge overlay включённых модов. Кэш `@lru_cache` — на `load_merged_catalog`.
 
 | Каталог | Mod overlay | Loader |
 |---------|-------------|--------|
-| `database/races/races.yaml` | ✅ | `core/races.py` |
-| `database/backgrounds/backgrounds.yaml` | ✅ | `core/backgrounds.py` |
-| Остальные (`classes`, `feats`, …) | ❌ | `core/io.load_yaml` + `@lru_cache` |
+| Игровые справочники (`races`, `classes`, `backgrounds`, `feats`, `equipment`, `languages`, `abilities`, `skills`, `constants`) | ✅ | `core/catalog_loader.load_catalog` |
+| Приключения, сценарии, строки UI | ❌ | `core/io.load_yaml` напрямую |
 
 Единственный рабочий mod в репозитории: `mods/dragonborn_pack/`.
 
@@ -145,9 +144,11 @@ races:
 
 ### Сборка персонажа
 
-| ID | Задача | Триггер | Целевые файлы |
-|----|--------|---------|---------------|
-| `char-builder` | `core/character_builder.py`, dataclass `ResolvedGrants`, единый `resolve_grants(character)` | Game engine или дублирование merge-логики в 3+ местах UI | `core/character_builder.py`, `ui/menus/_creation_steps.py`, `core/proficiencies.py` |
+**Реализовано:** `core/character_builder.py` — `ResolvedGrants`, `resolve_creation_grants`, `merge_languages_with_feats`.
+
+| ID | Задача | Статус |
+|----|--------|--------|
+| `char-builder` | `core/character_builder.py`, dataclass `ResolvedGrants`, единый `resolve_creation_grants` | ✅ реализовано |
 
 ### Классы и progression
 

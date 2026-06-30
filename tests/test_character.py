@@ -3,6 +3,7 @@
 import json
 
 import core.character as character_mod
+from core.character_storage import load_characters
 from core.progression import max_hp_for_level
 
 
@@ -171,7 +172,7 @@ def test_save_with_subclass_persisted(characters_dir):
         subclass_id="life_domain",
         stats=dict.fromkeys(character_mod.STAT_NAMES, 10),
     )
-    loaded = character_mod.load_characters()[-1]
+    loaded = character_mod.load_characters().characters[-1]
     assert loaded.subclass_id == "life_domain"
 
 
@@ -200,7 +201,7 @@ def test_save_skills_and_expertise_persisted(characters_dir):
     assert data["skills"] == saved.skills
     assert data["skill_expertise"] == saved.skill_expertise
 
-    loaded = character_mod.load_characters()[-1]
+    loaded = character_mod.load_characters().characters[-1]
     assert loaded.skills == saved.skills
     assert loaded.skill_expertise == saved.skill_expertise
 
@@ -224,7 +225,7 @@ def test_save_languages_and_background_persisted(characters_dir):
     assert data["languages"] == saved.languages
     assert data["background"] == "sage"
 
-    loaded = character_mod.load_characters()[-1]
+    loaded = character_mod.load_characters().characters[-1]
     assert loaded.languages == saved.languages
     assert loaded.background_id == saved.background_id
 
@@ -320,7 +321,7 @@ def test_save_and_load_character(characters_dir):
     assert saved.race == "human"
     assert saved.save_slug == "hero"
 
-    loaded = character_mod.load_characters()
+    loaded = character_mod.load_characters().characters
     assert len(loaded) == 1
     assert loaded[0].name == "Hero"
     assert loaded[0].class_id == "fighter"
@@ -362,7 +363,7 @@ def test_load_characters_sorted_by_creation_date(characters_dir):
         json.dumps(old_data), encoding="utf-8"
     )
 
-    loaded = character_mod.load_characters()
+    loaded = character_mod.load_characters().characters
 
     assert [c.name for c in loaded] == ["Zeta", "Alpha"]
 
@@ -395,7 +396,7 @@ def test_save_slug_collision(characters_dir):
     assert second.save_slug == "hero_2"
     assert (characters_dir / "hero.json").exists()
     assert (characters_dir / "hero_2.json").exists()
-    assert len(character_mod.load_characters()) == 2
+    assert len(character_mod.load_characters().characters) == 2
 
 
 def test_delete_character(characters_dir):
@@ -407,7 +408,7 @@ def test_delete_character(characters_dir):
     )
     assert saved.save_slug is not None
     assert character_mod.delete_character(saved.save_slug) is True
-    assert len(character_mod.load_characters()) == 0
+    assert len(character_mod.load_characters().characters) == 0
     assert not (characters_dir / "hero.json").exists()
     assert character_mod.delete_character("missing") is False
 
@@ -428,7 +429,7 @@ def test_delete_all_characters(characters_dir):
     deleted = character_mod.delete_all_characters()
 
     assert deleted == 2
-    assert len(character_mod.load_characters()) == 0
+    assert len(character_mod.load_characters().characters) == 0
     assert list(characters_dir.glob("*.json")) == []
 
 
@@ -467,3 +468,57 @@ def test_save_character_skips_feat_stat_bonuses_when_stats_final(
         apply_feat_stat_bonuses=False,
     )
     assert saved.stats["constitution"] == 14
+
+
+def test_load_characters_skips_corrupt_save(characters_dir):
+    """Битый JSON пропускается; slug в corrupt_save_warnings."""
+    characters_dir.mkdir(parents=True, exist_ok=True)
+    (characters_dir / "bad.json").write_text("{not json", encoding="utf-8")
+    result = load_characters()
+    assert result.characters == ()
+    assert result.corrupt_save_warnings == ("bad",)
+
+
+def test_load_characters_skips_empty_save_file(characters_dir):
+    """Пустой JSON-файл пропускается с предупреждением."""
+    characters_dir.mkdir(parents=True, exist_ok=True)
+    (characters_dir / "empty.json").write_text("", encoding="utf-8")
+    result = load_characters()
+    assert result.characters == ()
+    assert result.corrupt_save_warnings == ("empty",)
+
+
+def test_load_characters_skips_semantically_invalid_save(characters_dir):
+    """Сейв с name, но невалидными полями, не роняет load_characters."""
+    characters_dir.mkdir(parents=True, exist_ok=True)
+    (characters_dir / "broken.json").write_text(
+        '{"name": "Broken", "current_hp": "not-a-number"}',
+        encoding="utf-8",
+    )
+    result = load_characters()
+    assert result.characters == ()
+    assert result.corrupt_save_warnings == ("Broken",)
+
+
+def test_corrupt_warning_uses_name_when_readable(characters_dir):
+    """Битый сейв с читаемым name показывает имя, а не save_slug."""
+    characters_dir.mkdir(parents=True, exist_ok=True)
+    (characters_dir / "hero_save.json").write_text(
+        '{"name": "Герой", "current_hp": "bad"}',
+        encoding="utf-8",
+    )
+    result = load_characters()
+    assert result.characters == ()
+    assert result.corrupt_save_warnings == ("Герой",)
+
+
+def test_save_character_derives_proficiencies_when_omitted(characters_dir):
+    """save_character без proficiencies делегирует в character_builder."""
+    saved = character_mod.save_character(
+        name="AutoProf",
+        race_id="human",
+        class_id="fighter",
+        stats=dict.fromkeys(character_mod.STAT_NAMES, 10),
+    )
+    assert "simple" in saved.weapon_proficiencies
+    assert saved.armor_proficiencies

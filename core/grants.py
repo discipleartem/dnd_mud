@@ -2,8 +2,9 @@
 
 from typing import Any
 
+ABILITY_INCREASE = "ability_increase"
 _ABILITY_BONUS = "ability_bonus"
-_ABILITY_INCREASE = "ability_increase"
+_ABILITY_INCREASE = ABILITY_INCREASE
 
 
 def _coerce_bool(value: Any, default: bool = True) -> bool:
