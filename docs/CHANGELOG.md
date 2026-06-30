@@ -2,6 +2,28 @@
 
 ## [Unreleased]
 
+### Removed
+- `database/_future/` — дубли активных каталогов
+- `mods/_examples/example_mod.yaml` — устаревший manifest
+- `core/combat.py`, `core/checks.py` и их тесты (Phase 2 stubs)
+- Legacy-парсер `feature_to_grants` и блоки `features:` в активных YAML (только `grants[]`)
+- `ui/menus/character_flow.py` — flow перенесён в `_creation_steps.py`
+
+### Added
+- `core/io.save_json`, `core/io.merge_unique` — единый JSON I/O и merge списков
+- `core/progression.process_pending_level_ups` — headless level-up engine с ASI callback
+- `core/classes.get_class_dict` — публичный доступ к сырым данным класса
+- `ui/menus/_display/_labels._label_from_catalog` — lookup подписей из каталога
+- Фикстуры `human_race_with_subraces`, `subrace_strings` в `tests/conftest.py`
+
+### Changed
+- YAML races/classes/feats — grants-only; классовые умения — `class_features[]`
+- `show_create_character_flow` — в `ui/menus/_creation_steps.py`; `_CreationState.start_level` property
+- `core/asi.py`, `core/proficiencies.py`, `core/skills.py` — `get_class_dict` вместо `_load_classes_yaml`
+- Тесты: 261 → 249 (удалены combat/checks); `test_dice.py` — monkeypatch вместо MagicMock
+
+- `ui/menus/feats._resolve_feat_subchoices` — читает `grants[]` вместо legacy `features[]`
+
 ### Fixed
 - `Character.from_dict()` — fallback на legacy-ключ `"class"` при загрузке старых сейвов (запись — только `class_id`)
 

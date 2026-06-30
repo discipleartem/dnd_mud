@@ -77,12 +77,11 @@ dnd_mud/
 │   └── menus/               # Пакет экранов меню
 │       ├── main_menu.py
 │       ├── new_game.py
-│       ├── character_flow.py  # Точка входа «Создать персонажа»
+│       ├── _creation_steps.py  # Flow «Создать персонажа» + state machine
 │       ├── settings.py
 │       ├── stats/           # Генерация характеристик (подпакет)
 │       ├── _common.py       # SEPARATOR, _run_numbered_menu, …
 │       ├── _display/        # Пакет отображения (класс, раса, stats, персонаж)
-│       ├── _creation_steps.py
 │       ├── _selectors.py
 │       └── _deps.py         # Re-export core.character + input_handler (monkeypatch)
 ├── database/                # YAML-справочники D&D 5e
@@ -107,7 +106,7 @@ dnd_mud/
 │   └── lost_mine.yaml
 ├── mods/
 │   └── dragonborn_pack/     # Пример mod overlay (manifest + overlay.yaml)
-├── tests/                   # pytest (261 тест в 36 файлах)
+├── tests/                   # pytest (249 тестов)
 │   ├── conftest.py
 │   ├── test_adventure.py
 │   ├── test_character.py
@@ -174,7 +173,7 @@ make install-hooks   # или make install — подключает .githooks/pr
 """Тесты UI: выбор персонажа, подрасы, new game, приключения."""
 ```
 
-Покрытие (261 тест; ключевые):
+Покрытие (249 тестов; ключевые):
 - `test_grants.py` — нормализация grants, legacy features
 - `test_mod_loader.py` — deep-merge overlay модов
 - `test_adventure.py` — загрузка приключений, поля `hardcore_only`
@@ -333,11 +332,11 @@ races:
 - ✅ `ui/menus/` — главное меню, настройки, languages, flows
 - ✅ `ui/menus/stats/` — генерация характеристик (standard / point-buy / random)
 - ✅ Flow «Новая игра» (персонаж → приключение → `scenario_flow.run_scenario`)
-- ✅ Flow «Создать персонажа» — `character_flow.py` → `_creation_steps.py` (state machine)
+- ✅ Flow «Создать персонажа» — `ui/menus/_creation_steps.py` (`show_create_character_flow`)
 - ✅ Flow «Загрузить игру» — заглушка (`errors.load_not_implemented`)
 
 ### Тестирование
-- ✅ 261 тест (см. выше)
+- ✅ 249 тестов (см. выше)
 - ⏳ Backlog (добавляются по необходимости, см. [философию](#философия) выше):
   - E2E smoke через `python main.py` (ручная проверка меню)
 

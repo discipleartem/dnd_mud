@@ -235,12 +235,11 @@ get_background_language_choice(background_id: str) -> dict[str, Any] | None
 
 ## core.grants — Нормализация grants
 
-Единый формат эффектов из YAML (`grants[]` или legacy `features`/`mechanics`). Схема типов: [`DATA_SCHEMA.md`](DATA_SCHEMA.md).
+Единый формат эффектов из YAML (`grants[]`). Схема типов: [`DATA_SCHEMA.md`](DATA_SCHEMA.md).
 
 ```python
 inherit_flags(entity: dict[str, Any]) -> tuple[bool, bool]
 normalize_grant(raw: dict[str, Any]) -> dict[str, Any]
-feature_to_grants(feature: dict[str, Any]) -> list[dict[str, Any]]
 grants_from_entity(entity: dict[str, Any]) -> list[dict[str, Any]]
 merge_entity_grants(
     parent: dict[str, Any] | None,
@@ -544,6 +543,7 @@ def clamp_level(level: int) -> int
 ## core.classes — Классы
 
 ```python
+get_class_dict(class_id: str) -> dict[str, Any]
 load_classes(language: str = "ru") -> list[dict[str, Any]]
 load_class_full(class_id: str, language: str = "ru") -> dict[str, Any]
 load_subclasses(class_id: str, language: str = "ru") -> list[dict[str, Any]]
@@ -591,6 +591,11 @@ def grant_experience(character: Character, amount: int) -> Character
 def has_pending_level_up(character: Character) -> bool
 def apply_level_up(character: Character, hp_gain: int) -> Character
 def resolve_pending_level_ups(character: Character) -> Character
+def process_pending_level_ups(
+    character: Character,
+    *,
+    resolve_asi: Callable[[Character, int], Character | None],
+) -> Character
 def apply_experience(character: Character, amount: int) -> Character
 ```
 
@@ -691,7 +696,7 @@ show_main_menu(strings: dict) -> int
 select_difficulty(strings: dict) -> str | None
 show_new_game_flow(strings: dict, settings: dict) -> None
 show_load_game_flow(strings: dict) -> None
-show_create_character_flow(strings: dict, language: str = "ru") -> Character | None
+show_create_character_flow(strings: dict, language: str = "ru") -> Character | None  # ui/menus/_creation_steps.py
 show_stats_generation_flow(strings: StringsDict, race_id: str, subrace_id: str | None, difficulty: GameDifficulty) -> StatMap | None
 show_settings(strings: dict, settings: dict) -> dict
 show_languages_menu(strings: dict, settings: dict) -> dict
