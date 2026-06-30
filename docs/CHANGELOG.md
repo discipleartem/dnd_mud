@@ -14,9 +14,12 @@
 
 ### Changed
 - **Breaking:** удалены legacy fallback в core: `normalize_grant` алиасы, `inherit_base_*`, backgrounds top-level fields, `"class"` в JSON, dual `value`/`amount`, equipment prof fallback в UI
-- `core/grants.py` — `normalize_grant` passthrough; `inherit_flags` только через `inherit:`
+### Changed
+- `core/feats.py` → фасад; leaf-модули `feat_descriptions`, `feat_requirements`, `feat_apply`
+- `core/proficiencies.py` → фасад; leaf-модули `proficiency_collect`, `proficiency_checks`
+- Тесты UI: `test_menus_character.py` → `test_menus_creation`, `test_menus_new_game`, `test_menus_characters_hub`
 
-### Added
+### Changed
 - `scripts/verify_targets.py` — маппинг git diff → pytest/lint; `make verify-changed`, `verify-scope`, `verify`
 - `.github/workflows/ci.yml` — полный `make check` + `make test` на PR в `dev` / `main`
 - `tests/test_verify_targets.py`
