@@ -127,6 +127,7 @@ dnd_mud/
 │   ├── test_menus_main.py
 │   ├── test_menus_stats.py
 │   ├── test_models.py
+│   ├── test_races.py
 │   ├── test_verify_targets.py
 │   ├── test_settings.py
 │   ├── test_stats.py
