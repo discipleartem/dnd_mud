@@ -7,10 +7,13 @@ from core.feats import (
     FeatRequirementContext,
     apply_feat_grants_to_character,
     apply_feats_to_stats,
+    feat_full_description_lines,
     feat_meets_requirements,
+    feat_summary_description,
     feat_visible_for_selection,
     get_feat_skill_ids,
     list_feats_for_selection,
+    load_feat,
     race_feat_step_required,
     resolve_feat_ability_bonuses,
     tough_hp_adjustment_on_acquire,
@@ -299,3 +302,134 @@ def test_apply_feat_grants_to_character_merges_skills_and_tools() -> None:
     )
     assert "athletics" in updated.skills
     assert "thieves_tools" in updated.tool_proficiencies
+
+
+def test_print_feat_selection_menu_shows_hidden_section(
+    capsys: pytest.CaptureFixture[str],
+    ru_strings: dict[str, Any],
+) -> None:
+    """Скрытые черты — в конце списка, серым, без номера."""
+    from ui.menus.feats._selection import _print_feat_selection_menu
+
+    ctx = FeatRequirementContext(
+        stats={"strength": 16, "dexterity": 14},
+        weapon_tokens=["simple", "martial"],
+        armor_tokens=["light", "medium", "heavy", "shield"],
+        tool_tokens=[],
+        class_id="fighter",
+        skills=["athletics", "intimidation"],
+    )
+    eligible, blocked, hidden = list_feats_for_selection(ctx, [])
+    _print_feat_selection_menu(
+        ru_strings, eligible, blocked, hidden, ctx, "ru"
+    )
+    out = capsys.readouterr().out
+    hidden_idx = out.find("Скрыто")
+    assert hidden_idx >= 0
+    eligible_part = out[:hidden_idx]
+    hidden_part = out[hidden_idx:]
+    assert "Знаток тяжёлых доспехов" in hidden_part
+    assert "Знаток тяжёлых доспехов" not in eligible_part
+    assert "Крепкий" in eligible_part
+
+
+def test_format_feat_requirement_ability_text() -> None:
+    from ui.menus.feats._requirements import _format_requirement_text
+
+    strings = {
+        "character": {
+            "feat_req_ability": "{ability} {value}+ (сейчас {current})",
+        },
+        "stats": {"dexterity": "Ловкость"},
+    }
+    ctx = FeatRequirementContext(
+        stats={"dexterity": 12},
+        weapon_tokens=[],
+        armor_tokens=[],
+        tool_tokens=[],
+    )
+    text = _format_requirement_text(
+        strings,
+        {"type": "ability_score", "target": "dexterity", "value": 13},
+        ctx,
+        "ru",
+    )
+    assert text == "Ловкость 13+ (сейчас 12)"
+
+
+def test_format_or_ability_requirements_ritual_caster() -> None:
+    from core.localization import load_strings
+    from ui.menus.feats._requirements import (
+        _format_or_ability_requirements,
+        _split_feat_requirements,
+    )
+
+    feat = load_feat("ritual_caster")
+    _, or_reqs = _split_feat_requirements(feat)
+    strings = load_strings("ru")
+    text = _format_or_ability_requirements(strings, or_reqs)
+    assert text == "Интеллект или Мудрость 13 или выше"
+
+
+def test_feat_full_description_benefits_only() -> None:
+    feat = load_feat("spell_sniper")
+    lines = feat_full_description_lines(feat)
+    text = "\n".join(lines)
+    assert "получаете следующие преимущества" not in text
+    assert "дистанция заклинания удваивается" in text
+
+
+def test_healer_full_description_from_yaml() -> None:
+    feat = load_feat("healer")
+    assert "stabilise" not in feat_summary_description(feat).lower()
+    assert "медик" in feat_summary_description(feat).lower()
+    lines = feat_full_description_lines(feat)
+    text = "\n".join(lines)
+    assert "комплект целителя" in text
+    assert "1к6 + 4" in text
+    assert "Костей Хитов" in text
+
+
+def test_feat_full_description_fallback_from_features() -> None:
+    feat = {
+        "description": "Кратко.",
+        "grants": [{"name": "Умение", "description": "Подробность умения."}],
+    }
+    lines = feat_full_description_lines(feat)
+    assert "Подробность умения" in lines[0]
+
+
+def test_creation_known_for_feat_picks_includes_race_and_background() -> None:
+    from core.feat_visibility import creation_known_for_feat_picks
+
+    skills, tools, weapons = creation_known_for_feat_picks(
+        "human",
+        "variant_human",
+        "soldier",
+        "fighter",
+        "champion",
+        1,
+    )
+    assert "athletics" in skills
+    assert "intimidation" in skills
+    assert "martial" in weapons
+
+
+def test_pick_skills_or_tools_excludes_known(
+    monkeypatch: pytest.MonkeyPatch,
+    ru_strings: dict[str, Any],
+    patch_int_input: Any,
+) -> None:
+    from ui.menus.feats._subchoices import _pick_skills_or_tools
+
+    patch_int_input(monkeypatch, [1])
+    result = _pick_skills_or_tools(
+        ru_strings,
+        1,
+        "ru",
+        known_skills=["athletics", "perception"],
+        known_tools=["thieves_tools"],
+    )
+    assert result is not None
+    picked_id = result[0]["id"]
+    assert picked_id not in ("athletics", "perception", "thieves_tools")

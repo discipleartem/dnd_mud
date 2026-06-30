@@ -72,6 +72,16 @@ def test_generate_stats_and_point_buy() -> None:
         character_mod.generate_stats_standard_array(values, "elf")["dexterity"]
         == 16
     )
+    full_pool = [15, 14, 13, 12, 10, 8]
+    assert character_mod.remaining_standard_array_pool([]) == full_pool
+    assert character_mod.remaining_standard_array_pool([15, 14]) == [
+        13,
+        12,
+        10,
+        8,
+    ]
+    assert character_mod.point_buy_total_cost([8, 8, 8, 8, 8, 8]) == 0
+    assert character_mod.point_buy_total_cost([15, 15, 15, 8, 8, 8]) == 27
     stats = dict.fromkeys(character_mod.STAT_NAMES, 8)
     assert character_mod.can_assign_point_buy_value(stats, "strength", 15)
     stats["strength"] = stats["dexterity"] = stats["constitution"] = 15
@@ -123,6 +133,48 @@ def test_save_and_load_character(characters_dir: Path) -> None:
     assert loaded.skills == ["athletics"]
     with open(characters_dir / "hero.json", encoding="utf-8") as f:
         assert json.load(f)["background"] == "soldier"
+
+
+def test_save_skills_and_expertise_persisted(characters_dir: Path) -> None:
+    """Навыки и компетентность сохраняются в JSON."""
+    saved = character_mod.save_character(
+        name="RogueHero",
+        race_id="human",
+        class_id="rogue",
+        stats=dict.fromkeys(character_mod.STAT_NAMES, 10),
+        skills=["stealth", "perception", "athletics", "deception"],
+        skill_expertise=["stealth", "athletics"],
+        tool_expertise=[],
+    )
+    assert saved.skill_expertise == ["stealth", "athletics"]
+    with open(characters_dir / "roguehero.json", encoding="utf-8") as f:
+        data = json.load(f)
+    assert data["skills"] == saved.skills
+    assert data["skill_expertise"] == saved.skill_expertise
+    loaded = character_mod.load_characters().characters[-1]
+    assert loaded.skill_expertise == saved.skill_expertise
+
+
+def test_starting_max_hp_floor_and_max_hp_field(characters_dir: Path) -> None:
+    """HP на 1 уровне (normal): max(1, кость + CON), current_hp == max_hp."""
+    stats = {
+        "strength": 10,
+        "dexterity": 10,
+        "constitution": 8,
+        "intelligence": 10,
+        "wisdom": 10,
+        "charisma": 10,
+    }
+    saved = character_mod.save_character(
+        name="LowCon",
+        race_id="human",
+        class_id="bard",
+        stats=stats,
+        difficulty="normal",
+    )
+    assert saved.max_hp == 7
+    assert saved.current_hp == saved.max_hp
+    assert saved.max_hp >= 1
 
 
 def test_slug_collision_and_delete(characters_dir: Path) -> None:

@@ -2,6 +2,10 @@
 
 from __future__ import annotations
 
+from argparse import Namespace
+
+import pytest
+
 import scripts.verify_targets as vt
 
 
@@ -37,3 +41,41 @@ def test_database_and_infra_fallbacks() -> None:
     assert full is True
     tests, full = vt.resolve_test_paths(["tools/unknown_helper.py"])
     assert full is True
+
+
+def test_cmd_resolve_tests_staged(
+    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    monkeypatch.setattr(
+        vt,
+        "_git_changed_paths",
+        lambda mode, base: ["core/difficulty.py"],
+    )
+    args = Namespace(mode="staged", base="origin/dev")
+    assert vt.cmd_resolve_tests(args) == 0
+    assert capsys.readouterr().out.strip() == "tests/test_difficulty.py"
+
+
+def test_cmd_resolve_lint_infra_full(
+    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    monkeypatch.setattr(
+        vt,
+        "_git_changed_paths",
+        lambda mode, base: ["Makefile"],
+    )
+    assert vt.cmd_resolve_lint(Namespace(mode="scope", base="origin/dev")) == 0
+    assert capsys.readouterr().out.strip() == "__FULL__"
+
+
+def test_cmd_resolve_tests_no_py_skip(
+    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    monkeypatch.setattr(
+        vt,
+        "_git_changed_paths",
+        lambda mode, base: ["docs/DEVELOPMENT.md"],
+    )
+    args = Namespace(mode="staged", base="origin/dev")
+    assert vt.cmd_resolve_tests(args) == 0
+    assert capsys.readouterr().out.strip() == "__SKIP__"
