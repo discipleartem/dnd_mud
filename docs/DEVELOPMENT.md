@@ -4,7 +4,7 @@
 
 ### Предварительные требования
 
-- Python 3.12+ (синтаксис и tooling — [`.cursor/rules/dnd-mud-python-312.mdc`](../.cursor/rules/dnd-mud-python-312.mdc))
+- Python 3.12+ (синтаксис и tooling — [`.cursor/rules/dnd-mud-python.mdc`](../.cursor/rules/dnd-mud-python.mdc))
 - Git
 
 ### Установка
@@ -201,7 +201,7 @@ pytest tests/test_menus_character.py -v
 
 ## Git Workflow
 
-Канон agent: [`.cursor/rules/dnd-mud-git.mdc`](../.cursor/rules/dnd-mud-git.mdc) · оркестрация [`AGENTS.md`](../AGENTS.md) · global [`01-operations.mdc`](~/.cursor/rules/01-operations.mdc). Sync FAQ: [`~/.cursor/docs/git-dev-main-sync.md`](~/.cursor/docs/git-dev-main-sync.md).
+Канон agent: [`.cursor/rules/dnd-mud-workflow.mdc`](../.cursor/rules/dnd-mud-workflow.mdc) · оркестрация [`AGENTS.md`](../AGENTS.md) · global [`01-operations.mdc`](~/.cursor/rules/01-operations.mdc). Sync FAQ: [`~/.cursor/docs/git-dev-main-sync.md`](~/.cursor/docs/git-dev-main-sync.md).
 
 IDE: расширения **GitHub Pull Requests** и **GitHub Actions** — настройки [`.vscode/settings.json`](../.vscode/settings.json) (squash merge, фильтры PR).
 
@@ -214,7 +214,7 @@ git-старт → task-ветка → подзадачи (commits) → docs →
 
 ### Git-старт (перед работой)
 
-См. [`dnd-mud-git.mdc`](../.cursor/rules/dnd-mud-git.mdc) §Git-старт и [`01-operations.mdc`](~/.cursor/rules/01-operations.mdc) §Task cycle шаг 1.
+См. [`dnd-mud-workflow.mdc`](../.cursor/rules/dnd-mud-workflow.mdc) §Git и [`01-operations.mdc`](~/.cursor/rules/01-operations.mdc) §Task cycle шаг 1.
 
 ```bash
 git fetch origin
@@ -227,7 +227,7 @@ git checkout -b feat/my-task
 
 ### Завершение task-ветки
 
-См. [`dnd-mud-git.mdc`](../.cursor/rules/dnd-mud-git.mdc) §Завершение task-ветки · §Parallel development.
+См. [`dnd-mud-workflow.mdc`](../.cursor/rules/dnd-mud-workflow.mdc) §Git (delta).
 
 ```bash
 git fetch origin && git rebase origin/dev

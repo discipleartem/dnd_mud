@@ -3,9 +3,12 @@
 ## [Unreleased]
 
 ### Changed
-- Rules DRY: git workflow проекта — канон [`.cursor/rules/dnd-mud-git.mdc`](../.cursor/rules/dnd-mud-git.mdc); global `01-operations` — только общие принципы parallel dev
-- Git workflow: parallel dev и PR — канон `dnd-mud-git.mdc`; общие принципы — `01-operations.mdc` §Parallel development
-- Review-политика: только локальный Cursor subagent (`dnd-mud-review`); GitHub PR Bugbot не используется — зафиксировано в skills, `AGENTS.md`, `dnd-mud-verify.mdc`, `DEVELOPMENT.md`
+- Rules refactor: `dnd-mud-workflow.mdc` (git + verify overrides), `dnd-mud-python.mdc` (3.12 + KISS); `AGENTS.md` — оркестрация; global rules slim (`00-global`, `01-operations`, `user-protocols`)
+- Rules DRY: git workflow проекта — канон [`.cursor/rules/dnd-mud-workflow.mdc`](../.cursor/rules/dnd-mud-workflow.mdc); global `01-operations` — Task cycle, Cursor modes, commit policy
+- Review-политика: локальный subagent (`dnd-mud-review`); GitHub PR Bugbot не используется — `dnd-mud-workflow.mdc`, skills, `DEVELOPMENT.md`
+
+### Removed
+- `.cursor/rules/dnd-mud-git.mdc`, `dnd-mud-verify.mdc`, `dnd-mud-python-312.mdc`, `dnd-mud-python-simple.mdc` — объединены в workflow/python
 
 ### Removed
 - `database/_future/` — дубли активных каталогов
