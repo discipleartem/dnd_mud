@@ -7,19 +7,15 @@ alwaysApply: true
 
 Console MUD — browser forbidden. Переопределяет `ironbee-devtools-use.mdc` и `browser-automation.mdc`.
 
-Оркестрация: [`AGENTS.md`](../AGENTS.md). Git-flow: [`01-operations.mdc`](~/.cursor/rules/01-operations.mdc).
+Оркестрация: [`AGENTS.md`](../AGENTS.md). Git-flow: [`dnd-mud-git.mdc`](dnd-mud-git.mdc).
 
 ## Переопределения global
 
 | Global | dnd_mud |
 |--------|---------|
-| Agent напрямую — git-flow не обязателен | **git-старт обязателен** для правок кода/docs/git |
 | Browser / IronBee verify | **`make test`**, smoke `python main.py` |
-| Push по запросу | **auto-commit подзадач**; push по запросу; Plan → Build → Agent — push обязателен |
 
-## Git scope
-
-Не коммитить: `.coverage`, `saves/`.
+Git-старт, push, parallel dev — [`dnd-mud-git.mdc`](dnd-mud-git.mdc).
 
 ## Процедуры (канон в skills)
 
@@ -27,7 +23,10 @@ Console MUD — browser forbidden. Переопределяет `ironbee-devtool
 |-----|-------|
 | Docs после реализации | [`dnd-mud-docs-after-task`](../skills/dnd-mud-docs-after-task/SKILL.md) |
 | Verify (runtime) | [`dnd-mud-verify`](../skills/dnd-mud-verify/SKILL.md) |
-| Review (readonly, до push/PR/merge) | [`dnd-mud-review`](../skills/dnd-mud-review/SKILL.md) |
+| Review (локальный subagent, до push/PR/merge) | [`dnd-mud-review`](../skills/dnd-mud-review/SKILL.md) |
+| Fix plan (после review, Major+ или по запросу) | [`dnd-mud-fix-plan`](../skills/dnd-mud-fix-plan/SKILL.md) |
 | Release `dev` → `main` | [`dnd-mud-release`](../skills/dnd-mud-release/SKILL.md) |
 
 Verify ≠ review. Оба — **один раз** в конце task-ветки, после docs. Runtime не нужен для docs-only / rules-only.
+
+**Review:** только локальный Cursor subagent (`dnd-mud-review`). **GitHub PR Bugbot не используется** — не включать в Cursor dashboard, `.cursor/BUGBOT.md` не вести.

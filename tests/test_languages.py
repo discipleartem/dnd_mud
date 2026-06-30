@@ -24,6 +24,17 @@ def test_elf_fixed_languages():
     assert fixed == ["common", "elvish"]
 
 
+def test_variant_human_fixed_and_choice_languages():
+    """Вариант человека: Общий + один язык на выбор (PHB)."""
+    fixed = get_fixed_racial_languages("human", "variant_human")
+    assert fixed == ["common"]
+    choices = get_racial_language_choices("human", "variant_human")
+    assert len(choices) == 1
+    mechanics, source = choices[0]
+    assert source == "subrace"
+    assert mechanics.get("pool") == "common"
+
+
 def test_high_elf_language_choice_pool_common():
     """High elf: дополнительный язык только из common."""
     choices = get_racial_language_choices("elf", "high_elf")

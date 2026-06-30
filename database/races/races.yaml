@@ -34,6 +34,8 @@ races:
           ru: Человек (вариант)
           en: Human (variant)
         description: Альтернативный вариант создания человека
+        languages:
+        - common
         inherit:
           ability_bonuses: false
           grants: false
@@ -51,6 +53,10 @@ races:
           count: 1
           choice: true
           from: all
+        - type: language
+          count: 1
+          choice: true
+          pool: common
   elf:
     name:
       ru: Эльф

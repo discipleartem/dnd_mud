@@ -50,7 +50,7 @@ Stage только файлы документации из шага 2 (+ `CHANG
 | D&D-механика, правила игры | `docs/DND_RULES.md`, `docs/rules/*.md` |
 | Продуктовые требования, scope | `docs/MUD_PRD.md` |
 | Заметные фичи / фиксы для пользователей | `docs/CHANGELOG.md` |
-| Workflow разработки, команды | `docs/DEVELOPMENT.md` |
+| Workflow разработки, команды | `docs/DEVELOPMENT.md`, `.cursor/rules/dnd-mud-git.mdc` |
 | Python-версия, tooling | `.cursor/rules/dnd-mud-python-312.mdc` |
 
 Индекс: [`00-project.mdc`](.cursor/rules/00-project.mdc) §Docs.

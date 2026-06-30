@@ -201,7 +201,7 @@ pytest tests/test_menus_character.py -v
 
 ## Git Workflow
 
-Канон: [`AGENTS.md`](../AGENTS.md) (оркестрация) · [`01-operations.mdc`](~/.cursor/rules/01-operations.mdc) (git) · [`dnd-mud-verify.mdc`](../.cursor/rules/dnd-mud-verify.mdc) (overrides, процедуры → skills). Sync FAQ: [`~/.cursor/docs/git-dev-main-sync.md`](~/.cursor/docs/git-dev-main-sync.md).
+Канон agent: [`.cursor/rules/dnd-mud-git.mdc`](../.cursor/rules/dnd-mud-git.mdc) · оркестрация [`AGENTS.md`](../AGENTS.md) · global [`01-operations.mdc`](~/.cursor/rules/01-operations.mdc). Sync FAQ: [`~/.cursor/docs/git-dev-main-sync.md`](~/.cursor/docs/git-dev-main-sync.md).
 
 IDE: расширения **GitHub Pull Requests** и **GitHub Actions** — настройки [`.vscode/settings.json`](../.vscode/settings.json) (squash merge, фильтры PR).
 
@@ -214,24 +214,41 @@ git-старт → task-ветка → подзадачи (commits) → docs →
 
 ### Git-старт (перед работой)
 
+См. [`dnd-mud-git.mdc`](../.cursor/rules/dnd-mud-git.mdc) §Git-старт и [`01-operations.mdc`](~/.cursor/rules/01-operations.mdc) §Task cycle шаг 1.
+
 ```bash
 git fetch origin
 git checkout main && git pull origin main
 git checkout dev && git pull origin dev
 git log dev..origin/main --oneline   # must be empty
-# если main впереди dev:
-git merge origin/main && make test && git push origin dev
+git merge origin/main && make test && git push origin dev   # если main впереди
 git checkout -b feat/my-task
 ```
 
 ### Завершение task-ветки
 
+См. [`dnd-mud-git.mdc`](../.cursor/rules/dnd-mud-git.mdc) §Завершение task-ветки · §Parallel development.
+
 ```bash
+git fetch origin && git rebase origin/dev
 make test
-# skill dnd-mud-review (Bugbot vs dev) — до push/PR
-git push -u origin HEAD
+# skill dnd-mud-review — один раз, до push/PR
+git push -u origin HEAD        # после rebase на remote: --force-with-lease
 gh pr create --base dev --title "feat: …"   # squash merge
 ```
+
+### Code review (локальный, не GitHub Bugbot)
+
+Канон: skill [`.cursor/skills/dnd-mud-review`](../.cursor/skills/dnd-mud-review/SKILL.md).
+
+| Канал | Использование |
+|-------|----------------|
+| Локальный subagent `bugbot` в Cursor Agent | **Да** — после `make test`, до push/PR; один раз на task-ветку |
+| GitHub PR Bugbot (авто на push, `.cursor/BUGBOT.md`) | **Нет** |
+
+Правила `.cursor/rules/*.mdc` задают контекст Agent при разработке; для review достаточно чеклиста в skill (`Custom Instructions` subagent). Повтор review — только после fix blocker findings.
+
+Quality gate на PR `task → dev`: локальный pytest + локальный review. CI на task-PR нет; на release `dev → main` — [workflow](../.github/workflows/pr-dev-to-main-check.yml).
 
 ### Release (`dev` → `main`)
 

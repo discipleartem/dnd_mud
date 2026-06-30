@@ -50,7 +50,8 @@ def test_variant_human_grants_no_inherit():
     types = [g.get("type") for g in grants]
     assert "ability_increase" in types
     assert "feat" in types
-    assert "language" not in types
+    assert "language" in types
+    assert types.count("language") == 1
 
 
 def test_inherit_flags_new_and_legacy():

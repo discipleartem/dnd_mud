@@ -9,7 +9,7 @@ disable-model-invocation: true
 
 # dnd_mud — release (`dev` → `main`)
 
-Канон-политика: [`AGENTS.md`](../../AGENTS.md) §8 · [`dnd-mud-verify.mdc`](../../rules/dnd-mud-verify.mdc) · CI: `.github/workflows/pr-dev-to-main-check.yml`.
+Канон-политика: [`AGENTS.md`](../../AGENTS.md) §8 · [`dnd-mud-git.mdc`](../../rules/dnd-mud-git.mdc) · CI: `.github/workflows/pr-dev-to-main-check.yml`.
 
 ## Когда выполнять
 
@@ -29,7 +29,7 @@ disable-model-invocation: true
 
 ## Перед PR
 
-Review (skill [`dnd-mud-review`](../dnd-mud-review/SKILL.md)): readonly Bugbot, `Base Branch: main`, ветка `dev` — **до** создания release PR.
+Review (skill [`dnd-mud-review`](../dnd-mud-review/SKILL.md)): локальный subagent, `Base Branch: main`, ветка `dev` — **один раз**, **до** создания release PR (GitHub PR Bugbot не используется).
 
 ```bash
 source .venv/bin/activate

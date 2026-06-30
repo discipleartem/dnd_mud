@@ -12,7 +12,8 @@ from core.backgrounds import (
 from core.localization import get_string
 from core.types import StringsDict
 from ui.menus import _deps
-from ui.menus._common import _print_screen_header, _skill_name
+from ui.menus._common import _print_screen_header
+from ui.menus._display._background import _print_background_info
 
 
 def select_creation_background(
@@ -36,26 +37,7 @@ def select_creation_background(
             f"  {Fore.YELLOW}{idx}{Style.RESET_ALL}. "
             f"{Fore.CYAN}{Style.BRIGHT}{bg.get('name', '?')}{Style.RESET_ALL}"
         )
-        desc = bg.get("description", "")
-        if desc:
-            print(f"     {desc}")
-        skills = get_background_skills(str(bg.get("id", "")))
-        if skills:
-            skill_names = ", ".join(_skill_name(strings, s) for s in skills)
-            skills_label = get_string(
-                strings,
-                "character.background_skills_label",
-                list=skill_names,
-            )
-            print(f"     {skills_label}")
-        feature = bg.get("feature", {})
-        if isinstance(feature, dict) and feature.get("name"):
-            feat_label = get_string(
-                strings,
-                "character.background_feature_label",
-                name=feature["name"],
-            )
-            print(f"     {feat_label}")
+        _print_background_info(bg, strings, language)
 
     print()
     print(

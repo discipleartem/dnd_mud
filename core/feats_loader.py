@@ -1,6 +1,6 @@
 """Загрузка каталога черт из YAML."""
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from functools import lru_cache
 from pathlib import Path
 from typing import Any
@@ -28,10 +28,14 @@ class FeatRequirementContext:
     weapon_tokens: list[str]
     armor_tokens: list[str]
     tool_tokens: list[str]
+    race_id: str | None = None
+    subrace_id: str | None = None
+    background_id: str | None = None
     class_id: str | None = None
     subclass_id: str | None = None
     level: int = 1
     has_spellcasting: bool = False
+    skills: list[str] = field(default_factory=list)
 
 
 @lru_cache(maxsize=1)

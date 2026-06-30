@@ -2,6 +2,41 @@
 
 from typing import Any
 
+from core.localization import get_string
+from core.types import StringsDict
+
+
+def _grant_type_label(strings: StringsDict, gtype: str) -> str:
+    """Локализованное имя типа grant без поля name в YAML."""
+    if not gtype:
+        return ""
+    return get_string(strings, f"character.grant_type_{gtype}", default=gtype)
+
+
+def _grant_pool_label(
+    strings: StringsDict, pool: str, *, gtype: str = ""
+) -> str:
+    """Локализованная подпись пула выбора (all, common, …)."""
+    if not pool:
+        return ""
+    if pool == "all":
+        if gtype == "skill_proficiency":
+            return get_string(
+                strings,
+                "character.grant_pool_all_skills",
+                default=pool,
+            )
+        if gtype == "feat":
+            return get_string(
+                strings,
+                "character.grant_pool_all_feats",
+                default=pool,
+            )
+    direct = get_string(strings, f"character.grant_pool_{pool}", default="")
+    if direct:
+        return direct
+    return pool
+
 
 def _label_from_catalog(
     catalog: list[dict[str, Any]],

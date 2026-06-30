@@ -1,16 +1,28 @@
 ---
 name: dnd-mud-review
 description: >-
-  Readonly Bugbot review of branch diff vs dev (or main for release) with dnd_mud
-  checklist. Use after verify, before push, gh pr create, or git merge that
-  integrates code.
+  Локальный readonly review (Cursor bugbot subagent) diff vs dev/main с чеклистом
+  dnd_mud. После verify, до push/PR/merge. При Major/Blocker — предложить
+  dnd-mud-fix-plan. GitHub PR Bugbot не используется.
 ---
 
-# dnd_mud — review (Reviewer / Bugbot)
+# dnd_mud — review (локальный subagent)
 
 Канон-политика: [`AGENTS.md`](../../AGENTS.md) §6.5 · verify ≠ review ([`dnd-mud-verify.mdc`](../../rules/dnd-mud-verify.mdc)).
 
 **Verify** (`make test`) — runtime. **Review** — readonly diff + чеклист проекта; не дублирует pytest.
+
+## Политика Bugbot
+
+| Канал | Статус |
+|-------|--------|
+| **Локальный** subagent `bugbot` в Cursor Agent (skill [`review-bugbot`](~/.cursor/skills-cursor/review-bugbot/SKILL.md)) | **Да** — единственный review-канал |
+| **GitHub PR Bugbot** (авто-review на push, `.cursor/BUGBOT.md`) | **Нет** — не включать в dashboard, файл не вести |
+
+- `.cursor/rules/*.mdc` — только для Agent/IDE при разработке; PR Bugbot их не читает.
+- **Один** локальный review **в конце task-ветки** (не после каждого коммита, не в середине задачи).
+- Повтор — **только** после fix **blocker** findings (максимум один повтор).
+- Не вызывать `/review-bugbot` вне skill-loop без явного запроса пользователя.
 
 ## Когда выполнять (обязательно)
 
@@ -59,13 +71,15 @@ Custom Instructions: <текст из §dnd_mud checklist ниже>
 
 Для release заменить `Base Branch: dev` → `Base Branch: main` и checkout `dev`.
 
-5. После subagent — сводка по формату `review-bugbot` (таблица Severity | Location | Finding).
-6. Решение:
-   - **Blocker** → fix → commit → verify → **один** повтор review (только blockers)
-   - **Non-blocker** → зафиксировать в ответе; push/PR по запросу пользователя
+5. После subagent — сводка по §**Формат ответа** (основная таблица + отдельная Nit).
+6. По таблице findings — **findings → следующий skill** (§После review); при Blocker/Major **предложить** [`dnd-mud-fix-plan`](../dnd-mud-fix-plan/SKILL.md).
+7. Решение (fix / push — только по запросу или явному «исправь blockers»):
+   - **Blocker** → предложить fix-plan → fix → commit → verify → **один** повтор review
+   - **Major** (без Blocker) → предложить fix-plan; push/PR — по запросу после fix или defer
+   - **Только Minor/Nit** → зафиксировать в ответе; fix-plan опционально (Minor); push/PR — по запросу
    - **No issues** → push / PR / merge по политике сессии
 
-Оркестратор **не** правит код по findings, пока пользователь или loop не перешли к fix (кроме явного «исправь blockers»).
+Оркестратор **не** правит код по findings, пока пользователь или loop не перешли к fix (кроме явного «исправь blockers» / «исправь по плану»).
 
 ## dnd_mud checklist (Custom Instructions)
 
@@ -88,18 +102,66 @@ Checklist (report findings with severity Blocker / Major / Minor / Nit):
 8. Git hygiene — unrelated files, secrets, committed artifacts (.coverage, saves/).
 9. Security — only if auth, file paths, or user input parsing changed; otherwise skip.
 
-Output: compact findings table. Blocker = would fail in production or breaks tests/docs contract. Do not suggest browser verification.
+Output: two blocks — (1) compact table Blocker/Major/Minor only, columns Severity | Location (file:line) | Finding, sorted by severity; (2) if any Nit — separate subsection «Nit (опционально)» with table Location (file:line) | Finding (no Severity column). Do not mix Nit into the main table.
+Blocker = would fail in production or breaks tests/docs contract. Do not suggest browser verification.
 Language: findings in Russian; file paths and identifiers in English.
 ```
 
+## Формат ответа (оркестратор)
+
+После subagent или ручного fallback — **два блока** (Nit **не** в основной таблице):
+
+**1. Findings** — только Blocker, Major, Minor:
+
+| Severity | Location | Finding |
+|----------|----------|---------|
+| … | `file:line` | … |
+
+Сортировка: Blocker → Major → Minor. Если issues нет — одна строка: «Blocker/Major/Minor: нет».
+
+**2. Nit (опционально)** — отдельная таблица (только если есть Nit):
+
+| Location | Finding |
+|----------|---------|
+| `file:line` | … |
+
+Если Nit нет — блок не выводить или одна строка: «Nit: нет».
+
+При manual review: разнести Nit из общего списка в блок 2 до вывода пользователю.
+
 ## После review
+
+### Findings → следующий skill
+
+| Findings | Следующий skill | Примечание |
+|----------|-----------------|------------|
+| Нет issues | push / PR — по запросу | fix-plan не нужен |
+| Только Nit | — | Не предлагать fix-plan |
+| Minor (без Major/Blocker) | [`dnd-mud-fix-plan`](../dnd-mud-fix-plan/SKILL.md) — **опционально** | Одна строка в ответе review |
+| Major | **`dnd-mud-fix-plan`** — предложить | Затем fix в Agent по запросу |
+| Blocker | **`dnd-mud-fix-plan`** — предложить | Затем fix → verify → один повтор review |
+| Subagent failed | retry / manual review | Затем та же таблица по severity |
+| Empty diff | — | Проверить ветку и base |
+
+### Исходы и действия
 
 | Исход | Действие |
 |-------|----------|
-| Blockers | `fix: …` commit(s) → verify → один повтор `dnd-mud-review` |
-| Только Major/Minor/Nit | Сообщить пользователю; push/PR — по запросу |
+| Blockers | fix-plan (предложить) → `fix: …` commit(s) → verify → один повтор `dnd-mud-review` |
+| Major без Blocker | fix-plan (предложить) → fix по запросу → verify |
+| Только Minor/Nit | Сообщить пользователю (Nit — отдельной таблицей §Формат ответа); push/PR — по запросу |
 | Subagent failed | См. retry в `review-bugbot`; затем `Diff: natural language` как last resort |
 | Empty diff | Сообщить «нет diff для review»; проверить ветку и base |
+
+### Agent-loop (после review)
+
+```
+… → verify → review → [fix-plan?] → fix (Agent) → verify → review (если blockers) → push
+                      ↑
+              Major+ или /dnd-mud-fix-plan
+```
+
+Канон: [`AGENTS.md`](../../AGENTS.md) §6.6.
 
 ## Связь с release
 

@@ -10,23 +10,25 @@ from core.equipment import (
     all_weapon_ids,
     proficiency_token_label,
 )
+from core.feat_visibility import (
+    build_feat_selection_context,
+    build_feat_selection_context_from_character,
+    creation_known_for_feat_picks,
+)
 from core.feats import (
     FeatRequirementContext,
     apply_feats_to_stats,
-    character_has_spellcasting,
     feat_full_description_lines,
     feat_summary_description,
+    get_feat_skill_ids,
     get_race_feat_grants,
     list_feats_for_selection,
     load_feat,
     requirement_met,
     resolve_feat_ability_bonuses,
 )
+from core.grant_mechanics import proficiency_tokens_and_skills_from_grant
 from core.localization import get_string
-from core.proficiencies import (
-    get_background_tool_proficiencies,
-    get_racial_proficiency_tokens,
-)
 from core.skills import PHB_SKILL_IDS
 from core.types import StatMap, StringsDict
 from ui.menus import _deps
@@ -55,62 +57,6 @@ MAGIC_INITIATE_CLASSES = [
     "warlock",
     "wizard",
 ]
-
-
-def _feat_ctx_at_creation(
-    stats: StatMap,
-    race_id: str,
-    subrace_id: str | None,
-    background_id: str | None,
-    class_id: str,
-    subclass_id: str | None,
-    level: int,
-) -> FeatRequirementContext:
-    """Контекст требований черт на шаге создания (после класса)."""
-    from core.proficiencies import (
-        get_class_proficiency_tokens,
-        get_subclass_proficiency_tokens,
-        merge_proficiency_tokens,
-    )
-
-    rw, ra, rt, _ = get_racial_proficiency_tokens(race_id, subrace_id)
-    cw, ca, ct = get_class_proficiency_tokens(class_id)
-    sw, sa, st, _ = get_subclass_proficiency_tokens(
-        class_id, subclass_id, level
-    )
-    bg_tools: list[str] = []
-    if background_id:
-        bg_tools, _ = get_background_tool_proficiencies(background_id)
-    return FeatRequirementContext(
-        stats=stats,
-        weapon_tokens=merge_proficiency_tokens(cw, rw, sw),
-        armor_tokens=merge_proficiency_tokens(ca, ra, sa),
-        tool_tokens=merge_proficiency_tokens(ct, rt, st, bg_tools),
-        class_id=class_id,
-        subclass_id=subclass_id,
-        level=level,
-        has_spellcasting=character_has_spellcasting(
-            class_id, subclass_id, level
-        ),
-    )
-
-
-def _feat_ctx_for_character(character: Any) -> FeatRequirementContext:
-    """Контекст требований при левелапе."""
-    return FeatRequirementContext(
-        stats=character.stats,
-        weapon_tokens=list(character.weapon_proficiencies),
-        armor_tokens=list(character.armor_proficiencies),
-        tool_tokens=list(character.tool_proficiencies),
-        class_id=character.class_id,
-        subclass_id=character.subclass_id,
-        level=character.level + 1,
-        has_spellcasting=character_has_spellcasting(
-            character.class_id,
-            character.subclass_id,
-            character.level + 1,
-        ),
-    )
 
 
 def _split_feat_requirements(
@@ -313,10 +259,11 @@ def _print_feat_selection_menu(
     strings: StringsDict,
     eligible: list[dict[str, Any]],
     blocked: list[dict[str, Any]],
+    hidden: list[dict[str, Any]],
     ctx: FeatRequirementContext,
     language: str,
 ) -> None:
-    """Список черт: доступные и с невыполненными требованиями."""
+    """Список черт: доступные, с невыполненными требованиями и скрытые."""
     for idx, feat in enumerate(eligible, 1):
         if idx > 1:
             print(f"  {Fore.LIGHTBLACK_EX}{SEPARATOR}{Style.RESET_ALL}")
@@ -349,11 +296,28 @@ def _print_feat_selection_menu(
                 muted=True,
             )
 
+    if hidden:
+        print()
+        heading = get_string(strings, "character.feat_hidden_heading")
+        print(f"  {Fore.LIGHTBLACK_EX}" f"{heading}" f"{Style.RESET_ALL}")
+        for feat in hidden:
+            print()
+            print(f"  {Fore.LIGHTBLACK_EX}—{Style.RESET_ALL}. ", end="")
+            _print_feat_details(
+                strings,
+                feat,
+                ctx,
+                language,
+                color=Fore.LIGHTBLACK_EX,
+                muted=True,
+            )
+
 
 def _pick_feat_from_lists(
     strings: StringsDict,
     eligible: list[dict[str, Any]],
     blocked: list[dict[str, Any]],
+    hidden: list[dict[str, Any]],
     ctx: FeatRequirementContext,
     language: str,
 ) -> dict[str, Any] | None:
@@ -361,7 +325,9 @@ def _pick_feat_from_lists(
     if not eligible:
         return None
     while True:
-        _print_feat_selection_menu(strings, eligible, blocked, ctx, language)
+        _print_feat_selection_menu(
+            strings, eligible, blocked, hidden, ctx, language
+        )
         print()
         choice = _deps.get_int_input(
             get_string(strings, "character.feat_prompt", count=len(eligible)),
@@ -403,13 +369,24 @@ def _pick_weapons_for_feat(
     strings: StringsDict,
     count: int,
     language: str,
+    *,
+    weapon_proficiencies: list[str] | None = None,
 ) -> list[str] | None:
     """Выбор видов оружия для weapon_master."""
-    pool = all_weapon_ids()
+    from core.proficiencies import has_weapon_proficiency
+
+    proficiencies = weapon_proficiencies or []
+    pool = [
+        w
+        for w in all_weapon_ids()
+        if not has_weapon_proficiency(proficiencies, w)
+    ]
     picked: list[str] = []
     for pick_num in range(1, count + 1):
         _print_screen_header(get_string(strings, "character.feat_caption"))
         available = [w for w in pool if w not in picked]
+        if not available:
+            return None
         labels = [
             proficiency_token_label(w, strings, language) for w in available
         ]
@@ -435,11 +412,15 @@ def _pick_skills_or_tools(
     known_tools: list[str] | None = None,
 ) -> list[dict[str, str]] | None:
     """Выбор навыков или инструментов для skilled."""
+    from core.proficiencies import has_tool_proficiency
+
     known_skills = known_skills or []
     known_tools = known_tools or []
     picked: list[dict[str, str]] = []
     skill_pool = [s for s in PHB_SKILL_IDS if s not in known_skills]
-    tool_pool = [t for t in all_tool_ids() if t not in known_tools]
+    tool_pool = [
+        t for t in all_tool_ids() if not has_tool_proficiency(known_tools, t)
+    ]
 
     for pick_num in range(1, count + 1):
         _print_screen_header(get_string(strings, "character.feat_caption"))
@@ -577,6 +558,9 @@ def _resolve_feat_subchoices(
     language: str,
     *,
     known_languages: list[str] | None = None,
+    known_skills: list[str] | None = None,
+    known_tools: list[str] | None = None,
+    weapon_proficiencies: list[str] | None = None,
 ) -> dict[str, Any] | None:
     """Подвыборы внутри одной черты."""
     feat = load_feat(feat_id)
@@ -594,13 +578,24 @@ def _resolve_feat_subchoices(
         mtype = grant.get("type", "")
         if mtype == "weapon_proficiency" and grant.get("choice"):
             count = int(grant.get("count", 1))
-            weapons = _pick_weapons_for_feat(strings, count, language)
+            weapons = _pick_weapons_for_feat(
+                strings,
+                count,
+                language,
+                weapon_proficiencies=weapon_proficiencies,
+            )
             if weapons is None:
                 return None
             choices["weapons"] = weapons
         elif mtype == "multiple_proficiency" and grant.get("choice"):
             count = int(grant.get("count", 1))
-            picks = _pick_skills_or_tools(strings, count, language)
+            picks = _pick_skills_or_tools(
+                strings,
+                count,
+                language,
+                known_skills=known_skills,
+                known_tools=known_tools,
+            )
             if picks is None:
                 return None
             choices["skills_tools"] = picks
@@ -655,11 +650,19 @@ def select_creation_feats(
     working_stats = stats.copy()
     pick_total = sum(g.count for g in grants)
     pick_current = 0
+    known_skills, known_tools, weapon_profs = creation_known_for_feat_picks(
+        race_id,
+        subrace_id,
+        background_id,
+        class_id,
+        subclass_id,
+        start_level,
+    )
 
     for grant in grants:
         for _ in range(grant.count):
             pick_current += 1
-            ctx = _feat_ctx_at_creation(
+            ctx = build_feat_selection_context(
                 working_stats,
                 race_id,
                 subrace_id,
@@ -668,7 +671,7 @@ def select_creation_feats(
                 subclass_id,
                 start_level,
             )
-            eligible, blocked = list_feats_for_selection(ctx, feat_ids)
+            eligible, blocked, hidden = list_feats_for_selection(ctx, feat_ids)
             if not eligible:
                 _print_screen_header(
                     get_string(strings, "character.feat_caption")
@@ -688,7 +691,7 @@ def select_creation_feats(
             )
             print()
             selected = _pick_feat_from_lists(
-                strings, eligible, blocked, ctx, language
+                strings, eligible, blocked, hidden, ctx, language
             )
             if selected is None:
                 return None
@@ -699,6 +702,9 @@ def select_creation_feats(
                 working_stats,
                 language,
                 known_languages=known_languages,
+                known_skills=known_skills,
+                known_tools=known_tools,
+                weapon_proficiencies=weapon_profs,
             )
             if sub is None:
                 return None
@@ -709,6 +715,24 @@ def select_creation_feats(
             working_stats = cap_stats(
                 _deps.apply_bonuses_to_stats(working_stats, bonuses)
             )
+            for g in load_feat(feat_id).get("grants", []):
+                if not isinstance(g, dict):
+                    continue
+                _w, _a, tools, skills = (
+                    proficiency_tokens_and_skills_from_grant(g, sub)
+                )
+                for skill_id in skills:
+                    if skill_id not in known_skills:
+                        known_skills.append(skill_id)
+                for tool_id in tools:
+                    if tool_id not in known_tools:
+                        known_tools.append(tool_id)
+            for skill_id in get_feat_skill_ids([feat_id], {feat_id: sub}):
+                if skill_id not in known_skills:
+                    known_skills.append(skill_id)
+            for weapon_id in sub.get("weapons", []):
+                if weapon_id not in weapon_profs:
+                    weapon_profs.append(str(weapon_id))
 
     final_stats = apply_feats_to_stats(stats, feat_ids, feat_choices)
     return feat_ids, feat_choices, final_stats
@@ -757,20 +781,29 @@ def select_level_up_feat_or_asi(
         updated = replace(character, stats=stats)
         return updated, stats, feat_ids, feat_choices, "asi"
 
-    ctx = _feat_ctx_for_character(character)
-    eligible, blocked = list_feats_for_selection(ctx, feat_ids)
+    ctx = build_feat_selection_context_from_character(character)
+    eligible, blocked, hidden = list_feats_for_selection(ctx, feat_ids)
     if not eligible:
         print(get_string(strings, "character.feat_none_available"))
         print()
         return None
 
     _print_screen_header(get_string(strings, "character.feat_caption"))
-    selected = _pick_feat_from_lists(strings, eligible, blocked, ctx, language)
+    selected = _pick_feat_from_lists(
+        strings, eligible, blocked, hidden, ctx, language
+    )
     if selected is None:
         return None
     feat_id = str(selected.get("id", ""))
     sub = _resolve_feat_subchoices(
-        strings, feat_id, stats, language, known_languages=character.languages
+        strings,
+        feat_id,
+        stats,
+        language,
+        known_languages=character.languages,
+        known_skills=list(character.skills),
+        known_tools=list(character.tool_proficiencies),
+        weapon_proficiencies=list(character.weapon_proficiencies),
     )
     if sub is None:
         return None

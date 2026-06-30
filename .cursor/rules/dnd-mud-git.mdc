@@ -1,0 +1,83 @@
+---
+description: dnd_mud — git workflow, parallel dev, PR (project canon)
+alwaysApply: true
+---
+
+# dnd_mud — Git workflow
+
+Базовая политика git: [`01-operations.mdc`](~/.cursor/rules/01-operations.mdc) §Git workflow · §Parallel development · §Task cycle · §Commits.
+
+Оркестрация: [`AGENTS.md`](../AGENTS.md). Человекочитаемо: [`docs/DEVELOPMENT.md`](../docs/DEVELOPMENT.md) §Git Workflow.
+
+## Переопределения global
+
+| Global | dnd_mud |
+|--------|---------|
+| Agent напрямую — git-flow не обязателен | **git-старт обязателен** для правок кода/docs/git |
+| Push по запросу | **auto-commit подзадач**; push по запросу; Plan → Build → Agent — push обязателен |
+
+Verify/browser — [`dnd-mud-verify.mdc`](dnd-mud-verify.mdc).
+
+## Git scope
+
+Не коммитить: `.coverage`, `saves/`.
+
+## Git-старт
+
+[`01-operations.mdc`](~/.cursor/rules/01-operations.mdc) §Task cycle шаг 1. Если `main` впереди `dev`:
+
+```bash
+git merge origin/main && make test && git push origin dev
+```
+
+## Parallel development
+
+Общие принципы — [`01-operations.mdc`](~/.cursor/rules/01-operations.mdc) §Parallel development.
+
+**Проект:** после каждого `rebase`/`merge origin/dev` и после разрешения конфликта — **`make test`** перед push/PR.
+
+```
+dev ──A──B──────────────────C   ← PR коллеги (squash merge)
+       \
+        └── feat/my-task        ← перед PR: rebase на C
+```
+
+**Синхронизация** (ветка живёт больше 1–2 дней):
+
+```bash
+git fetch origin
+git rebase origin/dev
+make test
+```
+
+**Конфликт:**
+
+```bash
+git fetch origin
+git checkout feat/my-task
+git rebase origin/dev
+git add <files>
+git rebase --continue
+make test
+git push --force-with-lease origin HEAD   # только если ветка уже на remote
+```
+
+| Подход | Когда |
+|--------|-------|
+| `git rebase origin/dev` | По умолчанию; squash merge в `dev` схлопывает коммиты |
+| `git merge origin/dev` | Ветка расшарена; force-push — согласовать с командой |
+
+**Профилактика:** короткоживущие ветки; мелкие PR; периодический rebase; договориться, если двое меняют один модуль.
+
+## Завершение task-ветки (push / PR)
+
+После docs + verify + review ([`dnd-mud-verify.mdc`](dnd-mud-verify.mdc)):
+
+```bash
+git fetch origin && git rebase origin/dev
+make test
+git push -u origin HEAD   # после rebase на remote: --force-with-lease
+gh pr create --base dev --title "feat: …"   # squash merge; PR по запросу
+```
+
+Release `dev` → `main`: skill [`dnd-mud-release`](../skills/dnd-mud-release/SKILL.md). Sync `dev`←`main`: [`git-dev-main-sync.md`](~/.cursor/docs/git-dev-main-sync.md).

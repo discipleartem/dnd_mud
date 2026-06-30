@@ -54,7 +54,7 @@ def select_subrace(
             f"{Fore.CYAN}{subrace_info.get('name', '?')}"
             f"{Style.RESET_ALL}"
         )
-        _print_race_info(subrace_info, strings)
+        _print_race_info(subrace_info, strings, language)
 
     choice = _read_numbered_choice(
         strings,
