@@ -7,7 +7,11 @@ from colorama import Fore, Style
 from core.localization import get_string
 from core.types import StringsDict
 from ui.menus import _deps
-from ui.menus._common import SEPARATOR, _print_screen_header
+from ui.menus._common import (
+    SEPARATOR,
+    _print_screen_header,
+    _read_numbered_choice,
+)
 from ui.menus._display import (
     _print_class_info,
     _print_class_summary,
@@ -52,19 +56,12 @@ def select_subrace(
         )
         _print_race_info(subrace_info, strings)
 
-    print()
-    print(
-        f"  {Fore.YELLOW}0{Style.RESET_ALL}."
-        f" {get_string(strings, 'character.back')}"
-    )
-    print()
-    choice = _deps.get_int_input(
-        get_string(strings, "character.subrace_prompt"),
-        0,
-        len(choices),
+    choice = _read_numbered_choice(
         strings,
+        len(choices),
+        prompt_key="character.subrace_prompt",
     )
-    if choice == 0:
+    if choice is None:
         return False, None
 
     subrace_id, _ = choices[choice - 1]
@@ -95,19 +92,12 @@ def select_class(
         )
         _print_class_summary(class_info, strings)
 
-    print()
-    print(
-        f"  {Fore.YELLOW}0{Style.RESET_ALL}."
-        f" {get_string(strings, 'character.back')}"
-    )
-    print()
-    choice = _deps.get_int_input(
-        get_string(strings, "character.class_prompt"),
-        0,
-        len(class_details),
+    choice = _read_numbered_choice(
         strings,
+        len(class_details),
+        prompt_key="character.class_prompt",
     )
-    if choice == 0:
+    if choice is None:
         return None
     return class_details[choice - 1]
 
@@ -150,19 +140,12 @@ def select_subclass(
         )
         _print_subclass_info(sub_info, strings)
 
-    print()
-    print(
-        f"  {Fore.YELLOW}0{Style.RESET_ALL}."
-        f" {get_string(strings, 'character.back')}"
-    )
-    print()
-    choice = _deps.get_int_input(
-        get_string(strings, "character.subclass_prompt"),
-        0,
-        len(subclasses),
+    choice = _read_numbered_choice(
         strings,
+        len(subclasses),
+        prompt_key="character.subclass_prompt",
     )
-    if choice == 0:
+    if choice is None:
         return None
 
     selected = subclasses[choice - 1]

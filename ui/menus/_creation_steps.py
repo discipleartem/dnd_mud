@@ -73,6 +73,36 @@ class _CreationState:
         """Стартовый уровень по сложности (вычисляется один раз на чтение)."""
         return start_level_for_difficulty(self.difficulty)
 
+    def save_kwargs(self) -> dict[str, Any]:
+        """Аргументы для save_character из состояния создания."""
+        if self.race_id is None or self.stats is None or self.class_id is None:
+            return {}
+        start_level = self.start_level
+        features_applied = class_features_applied_at_creation(
+            self.class_id, self.subclass_id, start_level
+        )
+        return {
+            "name": self.name,
+            "race_id": str(self.race_id),
+            "class_id": str(self.class_id),
+            "difficulty": self.difficulty,
+            "subrace_id": str(self.subrace_id) if self.subrace_id else None,
+            "stats": self.stats,
+            "subclass_id": self.subclass_id,
+            "languages": self.languages,
+            "background_id": self.background_id,
+            "skills": self.skills,
+            "skill_expertise": self.skill_expertise,
+            "tool_expertise": self.tool_expertise,
+            "weapon_proficiencies": self.weapon_proficiencies,
+            "armor_proficiencies": self.armor_proficiencies,
+            "tool_proficiencies": self.tool_proficiencies,
+            "feat_ids": self.feat_ids or None,
+            "feat_choices": self.feat_choices or None,
+            "class_features_applied": features_applied,
+            "apply_feat_stat_bonuses": False,
+        }
+
 
 def show_create_character_flow(
     strings: StringsDict, language: str = "ru"
@@ -160,35 +190,10 @@ def _finalize_creation(
 
 def _save_created_character(state: _CreationState) -> Character | None:
     """Сохранить персонажа из состояния создания."""
-    if state.race_id is None or state.stats is None or state.class_id is None:
+    kwargs = state.save_kwargs()
+    if not kwargs:
         return None
-
-    start_level = state.start_level
-    features_applied = class_features_applied_at_creation(
-        state.class_id, state.subclass_id, start_level
-    )
-
-    return _deps.save_character(
-        name=state.name,
-        race_id=str(state.race_id),
-        class_id=str(state.class_id),
-        difficulty=state.difficulty,
-        subrace_id=str(state.subrace_id) if state.subrace_id else None,
-        stats=state.stats,
-        subclass_id=state.subclass_id,
-        languages=state.languages,
-        background_id=state.background_id,
-        skills=state.skills,
-        skill_expertise=state.skill_expertise,
-        tool_expertise=state.tool_expertise,
-        weapon_proficiencies=state.weapon_proficiencies,
-        armor_proficiencies=state.armor_proficiencies,
-        tool_proficiencies=state.tool_proficiencies,
-        feat_ids=state.feat_ids or None,
-        feat_choices=state.feat_choices or None,
-        class_features_applied=features_applied,
-        apply_feat_stat_bonuses=False,
-    )
+    return _deps.save_character(**kwargs)
 
 
 def run_creation_steps(
