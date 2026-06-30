@@ -42,7 +42,7 @@ git fetch origin && git rebase origin/dev && make test
 | `git rebase origin/dev` | По умолчанию |
 | `git merge origin/dev` | Ветка расшарена; force-push — согласовать |
 
-**Завершение task-ветки:** docs + verify + **review** (skill `dnd-mud-review`) → push/PR:
+**Завершение task-ветки:** docs + verify + **review** light|full (skill `dnd-mud-review`) → push/PR. Перед push — `rebase origin/dev`; subagent review **не** в середине ветки:
 
 ```bash
 git fetch origin && git rebase origin/dev && make test
@@ -54,7 +54,7 @@ Release `dev` → `main`: skill [`dnd-mud-release`](../skills/dnd-mud-release/SK
 
 ## Verify / review (policy)
 
-**Review обязателен** один раз в конце task-ветки, после verify, **до** push/PR/merge.
+**Review обязателен** один раз в конце task-ветки (light или full по skill `dnd-mud-review`), после verify, **до** push/PR/merge. Bugbot subagent — только для **full**.
 
 | Шаг | Skill |
 |-----|-------|
@@ -66,4 +66,6 @@ Release `dev` → `main`: skill [`dnd-mud-release`](../skills/dnd-mud-release/SK
 
 Verify ≠ review. Runtime не нужен для docs-only / rules-only.
 
-**Review:** только локальный Cursor subagent (`dnd-mud-review`). **GitHub PR Bugbot не используется** — не включать в Cursor dashboard, `.cursor/BUGBOT.md` не вести.
+**Review:** skill `dnd-mud-review` — light (оркестратор) или full (локальный bugbot subagent). **GitHub PR Bugbot не используется** — не включать в Cursor dashboard, `.cursor/BUGBOT.md` не вести.
+
+**Cursor IDE (экономия токенов):** Agent Review on Commit — OFF; Include Submodules / Untracked Files — OFF; Default Approach — Quick.

@@ -29,7 +29,11 @@ disable-model-invocation: true
 
 ## Перед PR
 
-Review (skill [`dnd-mud-review`](../dnd-mud-review/SKILL.md)): локальный subagent, `Base Branch: main`, ветка `dev` — **один раз**, **до** создания release PR (GitHub PR Bugbot не используется).
+По умолчанию **без** full bugbot `dev` vs `main` — каждая task-ветка уже прошла review при merge в `dev`.
+
+Обязательно: `make test`, trial merge, CI [`pr-dev-to-main-check.yml`](../../.github/workflows/pr-dev-to-main-check.yml).
+
+Full bugbot release-review ([`dnd-mud-review`](../dnd-mud-review/SKILL.md), `Base Branch: main`, ветка `dev`) — только если: (a) в release попали коммиты без task-review; (b) пользователь явно просит; (c) hotfix напрямую в `dev`.
 
 ```bash
 source .venv/bin/activate

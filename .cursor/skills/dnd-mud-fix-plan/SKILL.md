@@ -27,7 +27,7 @@ disable-model-invocation: true
 
 ## Предусловия
 
-- [ ] Выполнен [`dnd-mud-review`](../dnd-mud-review/SKILL.md) (или пользователь приложил таблицу findings)
+- [ ] Выполнен [`dnd-mud-review`](../dnd-mud-review/SKILL.md) — light, full или light re-check (или пользователь приложил таблицу findings)
 - [ ] Известны ветка и base branch review (`dev` / `main`)
 - [ ] Рабочее дерево чистое (или явно указано, что план включает незакоммиченные правки)
 
@@ -53,7 +53,7 @@ disable-model-invocation: true
 4. Границы коммитов: atomic; не смешивать unrelated (код vs docs vs `.cursor/`).
 5. Финальный блок **After fixes**:
    - verify один раз в конце блока must-fix
-   - повтор [`dnd-mud-review`](../dnd-mud-review/SKILL.md) — **только** если были Blocker
+   - **light re-check** по [`dnd-mud-review`](../dnd-mud-review/SKILL.md) §Light re-check — **только** если были Blocker; full bugbot — по запросу пользователя
    - push/PR — по запросу пользователя
 6. **Не** править код, **не** `git commit`, **не** push.
 
@@ -79,7 +79,7 @@ disable-model-invocation: true
 
 ### After fixes
 - [ ] verify (…)
-- [ ] повтор dnd-mud-review — только при Blocker в must-fix
+- [ ] light re-check (dnd-mud-review) — только при Blocker в must-fix; full bugbot — по запросу
 - [ ] push/PR — по запросу
 ```
 
@@ -88,7 +88,7 @@ disable-model-invocation: true
 ## Связь с Agent-loop
 
 ```
-… → verify → review → [fix-plan?] → fix (Agent) → verify → review (если blockers) → push
+… → verify → review → [fix-plan?] → fix (Agent) → verify → light re-check (если blockers) → push
                       ↑
               Major+ или /dnd-mud-fix-plan
 ```
