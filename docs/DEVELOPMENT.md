@@ -106,7 +106,7 @@ dnd_mud/
 │   └── lost_mine.yaml
 ├── mods/
 │   └── dragonborn_pack/     # Пример mod overlay (manifest + overlay.yaml)
-├── tests/                   # pytest (249 тестов)
+├── tests/                   # pytest (250 тестов)
 │   ├── conftest.py
 │   ├── test_adventure.py
 │   ├── test_character.py
@@ -173,7 +173,8 @@ make install-hooks   # или make install — подключает .githooks/pr
 """Тесты UI: выбор персонажа, подрасы, new game, приключения."""
 ```
 
-Покрытие (249 тестов; ключевые):
+Покрытие (250 тестов; ключевые):
+- `test_display.py` — формат stats, карточка персонажа, grants на экране расы
 - `test_grants.py` — нормализация grants, legacy features
 - `test_mod_loader.py` — deep-merge overlay модов
 - `test_adventure.py` — загрузка приключений, поля `hardcore_only`
@@ -336,7 +337,7 @@ races:
 - ✅ Flow «Загрузить игру» — заглушка (`errors.load_not_implemented`)
 
 ### Тестирование
-- ✅ 249 тестов (см. выше)
+- ✅ 250 тестов (см. выше)
 - ⏳ Backlog (добавляются по необходимости, см. [философию](#философия) выше):
   - E2E smoke через `python main.py` (ручная проверка меню)
 
