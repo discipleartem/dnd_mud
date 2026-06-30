@@ -249,6 +249,20 @@ grants_of_type(grants: list[dict[str, Any]], type_name: str) -> list[dict[str, A
 
 ---
 
+## core.grant_mechanics — Парсинг proficiency-grants
+
+Разбор владений из `grants[]` (расы, классы, черты). См. также `core/feat_visibility` для скрытия черт в меню.
+
+```python
+normalize_armor_token(token: str) -> str
+proficiency_tokens_from_grant(grant, choices=None) -> tuple[weapons, armors, tools]
+proficiency_tokens_and_skills_from_grant(grant, choices=None) -> tuple[weapons, armors, tools, skills]
+```
+
+`normalize_armor_token` — алиасы YAML (`light_armor` → `light` и т.д.).
+
+---
+
 ## core.mod_loader — Overlay модов
 
 ```python

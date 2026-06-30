@@ -75,10 +75,9 @@
 | `armor_proficiency` | все категории доспехов из grant уже в `armor_tokens` |
 | `weapon_proficiency` (фикс. список) | все виды оружия уже покрыты токенами (`simple`, `martial`, …) |
 | `weapon_proficiency` + `choice` (**Мастер оружия**) | любое PHB-оружие уже покрыто токенами |
-| `skill_proficiency` | все перечисленные навыки уже в `skills` |
-| `tool_proficiency` | все перечисленные инструменты уже в `tool_tokens` |
+| `skill_proficiency` (фикс. список или `choice`) | перечисленные навыки уже в `skills`; при `choice` — нет свободных навыков в пуле PHB |
+| `tool_proficiency` (фикс. список или `choice`) | перечисленные инструменты уже в `tool_tokens`; при `choice` — нет свободных инструментов в пуле PHB |
 | `multiple_proficiency` (**Одарённый**) | все 18 навыков **и** все инструменты каталога уже известны |
-| `skill_proficiency` / `tool_proficiency` + `choice` | нет свободных навыков / инструментов в пуле PHB |
 
 Если в `grants[]` есть **хотя бы один** grant другого типа (`damage_reduction`, `lucky`, `medium_armor_master`, `hit_point_bonus`, …), черта **остаётся** в списке — даже при полном перекрытии владений. Примеры: **Мастер тяжёлых доспехов** (`heavy_armor_master`), **Мастер средних доспехов**, **Мастер щитов**, **Крепкий**, **Атлетичный**.
 
