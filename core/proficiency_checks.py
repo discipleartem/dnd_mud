@@ -67,6 +67,11 @@ def get_class_saving_throws(class_id: str) -> list[str]:
     return []
 
 
+def has_save_proficiency(proficiencies: list[str], ability_id: str) -> bool:
+    """Владение спасброском по характеристике."""
+    return ability_id in proficiencies
+
+
 def subclass_proficiencies_active(
     class_id: str, subclass_id: str | None, level: int
 ) -> bool:
