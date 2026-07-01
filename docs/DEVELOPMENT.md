@@ -395,11 +395,5 @@ API: `core/character.py`, UI: `show_stats_generation_flow` в `ui/menus/stats/st
 - ✅ Локализация: `strings/ru.yaml`, `strings/en.yaml`
 
 ### Не реализовано
-- ❌ Gating модов по режиму (`requires_game_difficulty` в manifest)
-- ❌ Параметризация game_engine по режиму сложности
-- ❌ Полноценный game engine (сценарии — минимальный runner в `scenario_flow.py`)
-- ❌ Боевая система
-- ❌ Сохранение/загрузка состояния игры (flow «Загрузить игру»)
-- ❌ Сценарии приключений — базовый runner (`tutorial`, `lost_mine`); без боевой системы
-- ❌ Отдельные пункты меню «Модификации» / «Приключения» (приключения — внутри «Новая игра»)
-- ❌ Обработка модов во время выполнения
+
+Открытые задачи Pre-Alpha и Phase 2 — [BACKLOG.md](BACKLOG.md).

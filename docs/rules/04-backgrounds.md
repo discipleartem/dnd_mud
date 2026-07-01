@@ -34,7 +34,7 @@
 
 ### YAML-схема
 
-Канон: [`docs/DATA_SCHEMA.md`](../DATA_SCHEMA.md). Механика — в `grants[]`; legacy поля (`skills`, `languages`, `tools`) loader нормализует через [`core/grants.py`](../../core/grants.py).
+Канон: [`docs/DATA_SCHEMA.md`](../DATA_SCHEMA.md). Механика — только в `grants[]`.
 
 ```yaml
 backgrounds:
@@ -59,7 +59,7 @@ backgrounds:
 
 ### Модель и сохранение
 
-- `Character.background_id` → JSON `"background"`.
+- `Character.background_id` в JSON сейва.
 - Навыки предыстории входят в `Character.skills` с источником `background` при выборе классовых навыков.
 
 ### Не реализовано
