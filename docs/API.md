@@ -431,7 +431,7 @@ tough_hp_adjustment_on_acquire(level) -> int
 
 `list_feats_for_selection` — eligible (требования OK + новые владения), blocked (требования не выполнены) и hidden (нет новых владений; показываются в конце списка, не выбираются). Уже взятые черты не возвращаются. См. [`06-feats.md`](rules/06-feats.md) §«Фильтрация списка».
 
-**Запланировано (Phase 2):** постоянная проверка требований — `feat_is_active`, `active_feat_ids`, `feat_requirement_context_from_character`; владение спасброском Resilient (`save_proficiency`); см. [`06-feats.md`](rules/06-feats.md) §«Запланировано».
+**Запланировано (Phase 2):** постоянная проверка требований — `feat_is_active`, `active_feat_ids`, `feat_requirement_context_from_character`; см. [`06-feats.md`](rules/06-feats.md) §«Запланировано». **Resilient** (`save_proficiency` в YAML): владение спасброском применяется **при создании** через `get_feat_save_proficiencies` → `save_proficiencies` на `Character`.
 
 ## core.asi — Увеличение характеристик
 
