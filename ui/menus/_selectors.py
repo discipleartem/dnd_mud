@@ -36,9 +36,7 @@ def select_subrace(
 
     race_name = race_full.get("name", race_id)
     print(f"{Fore.CYAN}{race_name}{Style.RESET_ALL}")
-    desc = race_full.get("description", "")
-    if desc:
-        print(get_string(strings, "character.race_description", desc=desc))
+    _print_race_info(race_full, strings, language)
     print()
 
     print(get_string(strings, "character.subraces_label"))

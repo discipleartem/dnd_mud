@@ -1,5 +1,10 @@
 """Тесты UI меню — создание персонажа."""
 
+from collections.abc import Callable
+from typing import Any
+
+import pytest
+
 import ui.menus._creation_handlers as creation_handlers
 from core.stats import STAT_NAMES
 from ui.menus import _creation_steps, _deps
@@ -36,6 +41,20 @@ def test_select_subrace_human_menu(
     assert selected is True
     assert subrace_id == "standard"
     assert "Человек (вариант)" in output
+
+
+def test_select_subrace_shows_base_race_grants(
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+    patch_int_input: Callable[[pytest.MonkeyPatch, list[int]], None],
+    ru_strings: dict[str, Any],
+) -> None:
+    """На экране подрасы выводятся особенности базовой расы."""
+    patch_int_input(monkeypatch, [1])
+    _selected, _subrace_id = select_subrace(ru_strings, "dwarf")
+    output = capsys.readouterr().out
+    assert "Тёмное зрение" in output
+    assert "Дварфская боевая подготовка" in output
 
 
 def test_create_character_back_from_subrace_exits(
