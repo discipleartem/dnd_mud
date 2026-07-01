@@ -11,6 +11,8 @@ from core.models import Adventure, Character
 from core.progression import (
     apply_experience,
     grant_experience,
+    hp_gain_breakdown_for_level_up,
+    hp_gain_for_level,
     level_from_xp,
     max_hp_for_level,
     resolve_pending_level_ups,
@@ -48,6 +50,23 @@ def test_max_hp_for_level_with_bonuses() -> None:
         feat_ids=["tough"],
     )
     assert tough_hp == 34
+
+
+def test_hp_gain_hardcore_floors_class_part_to_one(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """HardCore: прирост от кости + CON не опускается ниже 1."""
+    monkeypatch.setattr(
+        "core.progression.roll", lambda count, sides, modifier=0: 1 + modifier
+    )
+    stats = {"constitution": 8}  # модификатор −1
+    gain = hp_gain_for_level(2, 6, -1, "hardcore")
+    assert gain == 1
+    breakdown = hp_gain_breakdown_for_level_up(
+        "bard", stats, 2, "hardcore", race_id="dwarf", subrace_id="hill_dwarf"
+    )
+    assert breakdown.class_part == 1
+    assert breakdown.total == 2  # +1 от Dwarven Toughness
 
 
 def test_resolve_pending_level_ups_matches_apply_experience(
