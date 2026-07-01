@@ -450,6 +450,175 @@ equipment:
     cost: { value: 1, currency: "gold" }
     weight: 5
 
+  backpack:
+    name: "Рюкзак"
+    category: "tools_and_kits"
+    cost: { value: 2, currency: "gold" }
+    weight: 5
+
+  hammer:
+    name: "Молоток"
+    category: "tools_and_kits"
+    cost: { value: 1, currency: "gold" }
+    weight: 3
+
+  rations:
+    name: "Сухой паёк"
+    category: "tools_and_kits"
+    cost: { value: 5, currency: "silver" }
+    weight: 2
+
+  explorers_pack:
+    name: "Набор путешественника"
+    category: "pack"
+    cost: { value: 10, currency: "gold" }
+    weight: null
+    contents:
+      - { kind: equipment, id: backpack, qty: 1 }
+      - { kind: equipment, id: bedroll, qty: 1 }
+      - { kind: equipment, id: mess_kit, qty: 1 }
+      - { kind: equipment, id: tinderbox, qty: 1 }
+      - { kind: equipment, id: torch, qty: 10 }
+      - { kind: equipment, id: rations, qty: 10 }
+      - { kind: equipment, id: waterskin, qty: 1 }
+      - { kind: equipment, id: hempen_rope, qty: 1 }
+
+  dungeoneers_pack:
+    name: "Набор исследователя подземелий"
+    category: "pack"
+    cost: { value: 12, currency: "gold" }
+    weight: null
+    contents:
+      - { kind: equipment, id: backpack, qty: 1 }
+      - { kind: equipment, id: crowbar, qty: 1 }
+      - { kind: equipment, id: hammer, qty: 1 }
+      - { kind: equipment, id: piton, qty: 10 }
+      - { kind: equipment, id: torch, qty: 10 }
+      - { kind: equipment, id: tinderbox, qty: 1 }
+      - { kind: equipment, id: rations, qty: 10 }
+      - { kind: equipment, id: waterskin, qty: 1 }
+      - { kind: equipment, id: hempen_rope, qty: 1 }
+
+  burglars_pack:
+    name: "Набор взломщика"
+    category: "pack"
+    cost: { value: 16, currency: "gold" }
+    weight: null
+    contents:
+      - { kind: equipment, id: backpack, qty: 1 }
+      - { kind: equipment, id: crowbar, qty: 1 }
+      - { kind: equipment, id: hammer, qty: 1 }
+      - { kind: equipment, id: piton, qty: 10 }
+      - { kind: equipment, id: hooded_lantern, qty: 1 }
+      - { kind: equipment, id: oil, qty: 2 }
+      - { kind: equipment, id: rations, qty: 5 }
+      - { kind: equipment, id: tinderbox, qty: 1 }
+      - { kind: equipment, id: waterskin, qty: 1 }
+
+  priests_pack:
+    name: "Набор священника"
+    category: "pack"
+    cost: { value: 19, currency: "gold" }
+    weight: null
+    contents:
+      - { kind: equipment, id: backpack, qty: 1 }
+      - { kind: equipment, id: rations, qty: 2 }
+      - { kind: equipment, id: waterskin, qty: 1 }
+
+  diplomats_pack:
+    name: "Набор дипломата"
+    category: "pack"
+    cost: { value: 39, currency: "gold" }
+    weight: null
+    contents:
+      - { kind: equipment, id: chest, qty: 1 }
+      - { kind: equipment, id: paper, qty: 10 }
+      - { kind: equipment, id: ink, qty: 1 }
+
+  entertainers_pack:
+    name: "Набор артиста"
+    category: "pack"
+    cost: { value: 40, currency: "gold" }
+    weight: null
+    contents:
+      - { kind: equipment, id: backpack, qty: 1 }
+      - { kind: equipment, id: bedroll, qty: 1 }
+      - { kind: tool, id: disguise_kit, qty: 1 }
+      - { kind: equipment, id: rations, qty: 5 }
+      - { kind: equipment, id: waterskin, qty: 1 }
+
+  common_clothes:
+    name: "Обычная одежда"
+    category: "adventuring_gear"
+    cost: { value: 5, currency: "silver" }
+    weight: 3
+
+  fine_clothes:
+    name: "Отличная одежда"
+    category: "adventuring_gear"
+    cost: { value: 15, currency: "gold" }
+    weight: 6
+
+  travelers_clothes:
+    name: "Одежда путешественника"
+    category: "adventuring_gear"
+    cost: { value: 2, currency: "gold" }
+    weight: 4
+
+  costume:
+    name: "Костюм"
+    category: "adventuring_gear"
+    cost: { value: 5, currency: "gold" }
+    weight: 4
+
+  vestments:
+    name: "Облачение"
+    category: "adventuring_gear"
+    cost: { value: 0, currency: "gold" }
+    weight: 4
+
+  incense:
+    name: "Палочка благовоний"
+    category: "adventuring_gear"
+    cost: { value: 0, currency: "gold" }
+    weight: null
+
+  hunting_trap:
+    name: "Капкан"
+    category: "adventuring_gear"
+    cost: { value: 5, currency: "gold" }
+    weight: 25
+
+  trophy:
+    name: "Трофей"
+    category: "adventuring_gear"
+    cost: { value: 0, currency: "gold" }
+    weight: null
+
+  trinket:
+    name: "Безделушка"
+    category: "adventuring_gear"
+    cost: { value: 0, currency: "gold" }
+    weight: null
+
+  quill:
+    name: "Перьевая ручка"
+    category: "tools_and_kits"
+    cost: { value: 2, currency: "copper" }
+    weight: null
+
+  guild_letter:
+    name: "Письмо гильдии"
+    category: "adventuring_gear"
+    cost: { value: 0, currency: "gold" }
+    weight: null
+
+  letter:
+    name: "Письмо"
+    category: "adventuring_gear"
+    cost: { value: 0, currency: "gold" }
+    weight: null
+
   poison:
     name: "Яд простой"
     category: "tools_and_kits"
