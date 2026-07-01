@@ -35,11 +35,10 @@ CORE_MODULE_TESTS: dict[str, list[str]] = {
     "core/feats_loader.py": ["tests/test_feats.py"],
     "core/character_storage.py": ["tests/test_character.py"],
     "core/scenario_actions.py": [
-        "tests/test_scenario.py",
+        "tests/test_models.py",
         "tests/test_class_features.py",
     ],
-    "core/abilities.py": ["tests/test_abilities.py"],
-    "core/grant_mechanics.py": ["tests/test_grant_mechanics.py"],
+    "core/grant_mechanics.py": ["tests/test_grants.py"],
     "core/grants.py": ["tests/test_grants.py"],
     "core/classes.py": [
         "tests/test_subclasses.py",
@@ -49,12 +48,15 @@ CORE_MODULE_TESTS: dict[str, list[str]] = {
     "core/hp_bonuses.py": ["tests/test_progression.py"],
     "core/dice.py": ["tests/test_stats.py"],
     "core/constants.py": ["tests/test_stats.py"],
+    "core/difficulty.py": ["tests/test_stats.py"],
     "core/races.py": ["tests/test_grants.py"],
     "core/adventure.py": ["tests/test_models.py"],
+    "core/backgrounds.py": ["tests/test_models.py"],
     "core/mod_loader.py": ["tests/test_catalog_loader.py"],
     "core/skills.py": ["tests/test_proficiencies.py"],
     "core/proficiency_collect.py": ["tests/test_proficiencies.py"],
     "core/proficiency_checks.py": ["tests/test_proficiencies.py"],
+    "core/settings.py": ["tests/test_menus_main.py"],
 }
 
 DATA_PATH_TESTS = [
@@ -68,8 +70,8 @@ UI_MENU_TESTS: dict[str, str] = {
     "main_menu": "tests/test_menus_main.py",
     "new_game": "tests/test_menus_new_game.py",
     "scenario_flow": "tests/test_progression.py",
-    "settings": "tests/test_settings.py",
-    "backgrounds": "tests/test_backgrounds.py",
+    "settings": "tests/test_menus_main.py",
+    "backgrounds": "tests/test_models.py",
     "languages": "tests/test_languages.py",
     "skills": "tests/test_proficiencies.py",
     "proficiencies": "tests/test_proficiencies.py",
@@ -84,7 +86,7 @@ UI_MENU_TESTS: dict[str, str] = {
 
 UI_PREFIX_TESTS: list[tuple[str, str]] = [
     ("ui/menus/_creation_", "tests/test_menus_creation.py"),
-    ("ui/menus/_display/", "tests/test_display.py"),
+    ("ui/menus/_display/", "tests/test_equipment.py"),
     ("ui/menus/feats/", "tests/test_feats.py"),
     ("ui/menus/stats/", "tests/test_menus_stats.py"),
 ]
@@ -181,9 +183,6 @@ def source_to_tests(path: str) -> list[str]:
     if path.startswith(("database/", "mods/")):
         return [p for p in DATA_PATH_TESTS if _existing_test(p)]
 
-    if path == "main.py":
-        return [p for p in ["tests/test_main.py"] if _existing_test(p)]
-
     if path.startswith("tests/") and path.endswith(".py"):
         return [path] if _existing_test(path) else []
 
@@ -195,6 +194,9 @@ def source_to_tests(path: str) -> list[str]:
 
     if path.startswith("ui/") and path.endswith(".py"):
         return _ui_menu_tests(path)
+
+    if path == "main.py":
+        return _glob_core_tests("menus_main")
 
     return []
 
@@ -233,6 +235,16 @@ def resolve_test_paths(changed: list[str]) -> tuple[list[str], bool]:
         return [], True
 
     py_changed = [p for p in changed if p.endswith(".py")]
+    data_changed = [
+        p
+        for p in changed
+        if p.startswith(("database/", "mods/")) and not p.endswith(".py")
+    ]
+
+    if not py_changed and data_changed:
+        data_tests = [p for p in DATA_PATH_TESTS if _existing_test(p)]
+        return sorted(data_tests), False
+
     if not py_changed:
         return [], False
 
@@ -287,14 +299,7 @@ def cmd_run_test(args: argparse.Namespace) -> int:
         )
         return 1
     if full:
-        return _run(
-            [
-                str(pytest),
-                "--cov=core",
-                "--cov=ui",
-                "--cov-report=term-missing",
-            ]
-        )
+        return _run([str(pytest)])
     if not paths:
         print("verify_targets: нет тестов для diff — skip")
         return 0

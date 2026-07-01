@@ -1,4 +1,8 @@
-"""Тесты загрузки снаряжения."""
+"""Тесты снаряжения и форматирования карточек (_display)."""
+
+from typing import Any
+
+import pytest
 
 from core.equipment import (
     load_armor,
@@ -10,52 +14,76 @@ from core.equipment import (
     weapon_matches_category,
 )
 from core.localization import load_strings
+from core.models import Character
+from ui.menus._display._character import _print_character_card
+from ui.menus._display._stats import _format_character_stats_compact
+
+pytestmark = pytest.mark.usefixtures("catalog_caches_cleared")
 
 
-def test_load_weapon_has_category():
-    """Оружие загружается с категорией."""
-    info = load_weapon("longsword")
-    assert info.get("category") == "martial_melee"
-
-
-def test_weapon_matches_simple_category():
-    """Простое оружие распознаётся по категории simple."""
+def test_weapon_and_tool_catalog() -> None:
+    assert load_weapon("longsword").get("category") == "martial_melee"
     assert weapon_matches_category("simple", "club")
     assert not weapon_matches_category("martial", "club")
-
-
-def test_tools_by_category_musical():
-    """Музыкальные инструменты в категории."""
+    assert load_armor("shield").get("category") == "shield"
+    assert load_tool("thieves_tools").get("name")
     pool = tools_by_category("musical_instruments")
     assert "lute" in pool or len(pool) > 0
+    assert "land_vehicles" in resolve_tool_pool("land_vehicles")
 
 
-def test_resolve_tool_pool_land_vehicles():
-    """Пул land_vehicles содержит land_vehicles."""
-    pool = resolve_tool_pool("land_vehicles")
-    assert "land_vehicles" in pool
+def test_proficiency_token_label() -> None:
+    ru = load_strings("ru")
+    assert proficiency_token_label("longbow", ru, "ru") == "длинные луки"
+    en = load_strings("en")
+    assert proficiency_token_label("smith_tools", en, "en") == "Smith's tools"
 
 
-def test_load_armor_shield():
-    """Щит загружается."""
-    info = load_armor("shield")
-    assert info.get("category") == "shield"
+def test_format_character_stats_and_card(
+    capsys: pytest.CaptureFixture[str], ru_strings: dict[str, Any]
+) -> None:
+    char = Character(
+        name="Арагорн",
+        race="human",
+        class_id="fighter",
+        level=3,
+        subclass_id="champion",
+        current_hp=28,
+        max_hp=28,
+        stats={"strength": 16, "dexterity": 14, "constitution": 14},
+    )
+    compact = _format_character_stats_compact(char, ru_strings)
+    assert "16" in compact
+    _print_character_card(1, char, ru_strings, "ru")
+    output = capsys.readouterr().out
+    assert "Арагорн" in output
+    assert "Воин" in output
 
 
-def test_load_tool_thieves():
-    """Воровские инструменты."""
-    info = load_tool("thieves_tools")
-    assert info.get("name")
+def test_print_race_info_grants(
+    capsys: pytest.CaptureFixture[str], ru_strings: dict[str, Any]
+) -> None:
+    from ui.menus._display._race import _print_race_info
 
-
-def test_proficiency_token_label_longbow_ru():
-    """Токен longbow локализуется через proficiency.*."""
-    strings = load_strings("ru")
-    assert proficiency_token_label("longbow", strings, "ru") == "длинные луки"
-
-
-def test_proficiency_token_label_tool_fallback_en():
-    """Инструмент локализуется через tools.*."""
-    strings = load_strings("en")
-    label = proficiency_token_label("smith_tools", strings, "en")
-    assert label == "Smith's tools"
+    high_elf = {
+        "name": "Высший эльф",
+        "description": "Описание",
+        "grants": [
+            {
+                "type": "weapon_proficiency",
+                "name": "Эльфийская боевая подготовка",
+                "weapons": ["longsword", "longbow"],
+            },
+            {
+                "type": "language",
+                "name": "Дополнительный язык",
+                "choice": True,
+                "count": 1,
+                "pool": "common",
+            },
+        ],
+    }
+    _print_race_info(high_elf, ru_strings, "ru")
+    output = capsys.readouterr().out
+    assert "Эльфийская боевая подготовка" in output
+    assert "Длинный меч" in output

@@ -1,4 +1,4 @@
-.PHONY: help venv-recreate venv install install-hooks reinstall clean lint format format-check typecheck check test verify verify-changed verify-scope test-changed test-scope check-changed check-scope
+.PHONY: help venv-recreate venv install install-hooks reinstall clean lint format format-check typecheck check test test-fast test-cov verify verify-changed verify-scope test-changed test-scope check-changed check-scope
 
 VENV      := .venv
 PYTHON    := python3.12
@@ -65,8 +65,16 @@ typecheck:
 .PHONY: check
 check: lint format-check typecheck
 
+.PHONY: test-fast
+test-fast:
+	$(VENV)/bin/pytest -q
+
 .PHONY: test
 test:
+	$(VENV)/bin/pytest --cov=core --cov=ui
+
+.PHONY: test-cov
+test-cov:
 	$(VENV)/bin/pytest --cov=core --cov=ui --cov-report=term-missing
 
 .PHONY: verify
@@ -107,7 +115,9 @@ help:
 	@echo "  make clean           — очистить кеш и временные файлы"
 	@echo "  make check           — полная проверка: ruff + black --check + mypy"
 	@echo "  make format          — применить black (исправить форматирование)"
-	@echo "  make test            — полный pytest + coverage"
+	@echo "  make test-fast       — pytest без coverage (быстрый локальный цикл)"
+	@echo "  make test            — полный pytest + coverage (CI)"
+	@echo "  make test-cov        — pytest + coverage + term-missing (детальный отчёт)"
 	@echo "  make verify          — make check + make test (CI / ручной full)"
 	@echo "  make verify-changed  — lint + test только staged .py (подзадача)"
 	@echo "  make verify-scope    — lint + test diff $(VERIFY_BASE)...HEAD (конец задачи)"

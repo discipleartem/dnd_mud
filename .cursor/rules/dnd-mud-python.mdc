@@ -28,7 +28,7 @@ def handle_menu_choice(choice: int, loc, settings) -> tuple[bool, object]:
     return True, settings
 ```
 
-Тесты — `dnd-mud-tests.mdc`. Verify — skill [`dnd-mud-verify`](.cursor/skills/dnd-mud-verify/SKILL.md).
+Тесты — `dnd-mud-tests.mdc` (бюджет на PR). Verify — skill [`dnd-mud-verify`](.cursor/skills/dnd-mud-verify/SKILL.md).
 
 ## Синтаксис и типы (3.12)
 

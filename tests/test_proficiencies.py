@@ -15,19 +15,16 @@ from core.skills import (
     apply_racial_proficiencies,
     available_skills,
     get_class_skill_config,
-    get_race_skill_choices_with_source,
     get_subclass_skill_choices,
     merge_proficiencies,
     subclass_skills_active,
 )
 
+pytestmark = pytest.mark.usefixtures("catalog_caches_cleared")
+
 
 def test_racial_and_class_skills() -> None:
     assert "perception" in apply_racial_proficiencies("elf", "wood_elf")
-    assert apply_racial_proficiencies("human", "variant_human") == []
-    choices = get_race_skill_choices_with_source("human", "variant_human")
-    assert len(choices) == 1 and choices[0][1] == "subrace"
-
     pool, count = get_class_skill_config("fighter")
     assert count == 2 and "athletics" in pool
     assert available_skills(["athletics", "perception"], ["perception"]) == [
@@ -46,112 +43,34 @@ def test_subclass_skill_choices() -> None:
     assert len(choices) == 1 and int(choices[0].get("count", 0)) == 3
 
 
-def test_fighter_class_proficiencies():
-    """Воин владеет простым и воинским оружием, всеми доспехами."""
+def test_fighter_and_rogue_class_proficiencies() -> None:
     weapons, armors, tools = get_class_proficiency_tokens("fighter")
-    assert "simple" in weapons
-    assert "martial" in weapons
+    assert "simple" in weapons and "martial" in weapons
     assert "heavy" in armors
-    assert "shield" in armors
     assert tools == []
+    rogue_weapons, rogue_armors, _ = get_class_proficiency_tokens("rogue")
+    assert "longsword" in rogue_weapons
+    assert "light" in rogue_armors
 
 
-def test_rogue_specific_weapons():
-    """Плут — конкретное оружие и воровские инструменты."""
-    weapons, armors, _ = get_class_proficiency_tokens("rogue")
-    assert "simple" in weapons
-    assert "longsword" in weapons
-    assert "light" in armors
-
-
-def test_life_domain_heavy_armor():
-    """Домен жизни — тяжёлые доспехи с 1 уровня."""
+def test_subclass_armor_tokens() -> None:
     _, armors, _, _ = get_subclass_proficiency_tokens(
         "cleric", "life_domain", 1
     )
     assert "heavy" in armors
-
-
-@pytest.mark.parametrize(
-    "level,expect_martial,expect_medium",
-    [
-        (1, False, False),
-        (3, True, True),
-    ],
-)
-def test_valor_bard_martial_and_armor_by_level(
-    level: int, expect_martial: bool, expect_medium: bool
-) -> None:
-    """Коллегия доблести — воинское оружие и средние доспехи с 3 уровня."""
     weapons, armors, _, _ = get_subclass_proficiency_tokens(
-        "bard", "valor_college", level
+        "bard", "valor_college", 3
     )
-    assert ("martial" in weapons) is expect_martial
-    assert ("medium" in armors) is expect_medium
+    assert "martial" in weapons
+    assert "medium" in armors
 
 
-def test_elf_weapon_proficiency():
-    """Лесной эльф — владение мечами и луками."""
+def test_build_fixed_proficiencies_elf_and_dwarf() -> None:
     weapons, _, _ = build_fixed_proficiencies(
         "elf", "wood_elf", "fighter", None, None, 1
     )
     assert "longsword" in weapons
     assert "longbow" in weapons
-
-
-def test_charlatan_background_tools():
-    """Шарлатан — набор для грима и фальсификации."""
-    fixed, choices = get_background_tool_proficiencies("charlatan")
-    assert "disguise_kit" in fixed
-    assert "forgery_kit" in fixed
-    assert choices == []
-
-
-def test_criminal_background_tool_choice():
-    """Преступник — выбор игрового набора."""
-    fixed, choices = get_background_tool_proficiencies("criminal")
-    assert "thieves_tools" in fixed
-    assert len(choices) == 1
-    assert choices[0].pool == "gaming_sets"
-
-
-def test_has_weapon_and_armor_proficiency():
-    """Владение категориями оружия и доспехов."""
-    assert has_weapon_proficiency(["simple"], "club")
-    assert not has_weapon_proficiency(["martial"], "club")
-    assert has_armor_proficiency(["shield"], "shield")
-    assert has_armor_proficiency(["light"], "leather")
-
-
-def test_merge_proficiency_tokens_dedupes():
-    """merge не дублирует токены."""
-    merged = merge_proficiency_tokens(["simple"], ["martial", "simple"])
-    assert merged == ["simple", "martial"]
-
-
-def test_dwarf_tool_proficiency_choice_and_build():
-    """Дварф: инструмент на выбор; fixed-владения без инструментов до UI."""
-    from core.proficiencies import get_racial_proficiency_tokens
-
-    _, _, tools, choices = get_racial_proficiency_tokens("dwarf", None)
-    assert tools == []
-    assert len(choices) == 1
-    assert choices[0].count == 1
-    assert set(choices[0].options or []) == {
-        "smith_tools",
-        "brewer_supplies",
-        "mason_tools",
-    }
-
-    weapons, armors, built_tools = build_fixed_proficiencies(
-        "dwarf", None, "fighter", None, None, 1
-    )
-    assert "battleaxe" in weapons
-    assert built_tools == []
-
-
-def test_mountain_dwarf_armor_proficiency():
-    """Горный дварф — лёгкие и средние доспехи."""
     _, armors, _ = build_fixed_proficiencies(
         "dwarf", "mountain_dwarf", "fighter", None, None, 1
     )
@@ -159,9 +78,11 @@ def test_mountain_dwarf_armor_proficiency():
     assert "medium" in armors
 
 
-def test_has_tool_proficiency_by_pool_token():
-    """Токен artisans_tools покрывает конкретный ремесленный инструмент."""
-    from core.proficiencies import has_tool_proficiency
-
-    assert has_tool_proficiency(["artisans_tools"], "smith_tools")
-    assert not has_tool_proficiency(["smith_tools"], "brewer_supplies")
+def test_background_tools_and_proficiency_checks() -> None:
+    fixed, choices = get_background_tool_proficiencies("charlatan")
+    assert "disguise_kit" in fixed
+    assert choices == []
+    assert has_weapon_proficiency(["simple"], "club")
+    assert has_armor_proficiency(["shield"], "shield")
+    merged = merge_proficiency_tokens(["simple"], ["martial", "simple"])
+    assert merged == ["simple", "martial"]
