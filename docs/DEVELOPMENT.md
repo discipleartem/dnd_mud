@@ -239,7 +239,7 @@ Quality gate PR `task → dev`: `make verify-scope` + review (light/full). Full 
 | Plan mode для крупных задач | Меньше итераций fix в Agent |
 | Узкий scope в промпте | Меньше лишних файлов в контексте |
 | Grep/Read вместо Task/explore для 1–2 файлов | Дешевле subagent |
-| `make test` вместо повторных «проверь ещё раз» в чате | Runtime без LLM |
+| `make test-fast` / `make test` вместо повторных «проверь ещё раз» в чате | Быстрый feedback без coverage; полный прогон — перед PR |
 
 Мониторинг: раз в неделю [cursor.com/dashboard/usage](https://cursor.com/dashboard/usage) — рост `agent_review` vs `auto`.
 

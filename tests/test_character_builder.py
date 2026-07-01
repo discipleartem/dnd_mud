@@ -16,7 +16,7 @@ def test_resolve_creation_grants_fighter_human_acolyte() -> None:
     ctx = fighter_acolyte_creation()
     grants = resolve_creation_grants(
         ctx["race_id"],
-        "standard",
+        ctx["subrace_id"],
         ctx["class_id"],
         ctx["background_id"],
         ctx["subclass_id"],

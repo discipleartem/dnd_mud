@@ -54,6 +54,9 @@ def test_core_and_ui_mapping() -> None:
     assert vt.source_to_tests("ui/menus/skills.py") == [
         "tests/test_proficiencies.py"
     ]
+    assert vt.source_to_tests("ui/menus/backgrounds.py") == [
+        "tests/test_models.py"
+    ]
     assert vt.source_to_tests("ui/menus/subclass_trainer.py") == [
         "tests/test_subclasses.py"
     ]

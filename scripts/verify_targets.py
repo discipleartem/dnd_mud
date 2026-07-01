@@ -57,7 +57,6 @@ CORE_MODULE_TESTS: dict[str, list[str]] = {
     "core/proficiency_collect.py": ["tests/test_proficiencies.py"],
     "core/proficiency_checks.py": ["tests/test_proficiencies.py"],
     "core/settings.py": ["tests/test_menus_main.py"],
-    "core/abilities.py": ["tests/test_proficiencies.py"],
 }
 
 DATA_PATH_TESTS = [
@@ -72,6 +71,7 @@ UI_MENU_TESTS: dict[str, str] = {
     "new_game": "tests/test_menus_new_game.py",
     "scenario_flow": "tests/test_progression.py",
     "settings": "tests/test_menus_main.py",
+    "backgrounds": "tests/test_models.py",
     "languages": "tests/test_languages.py",
     "skills": "tests/test_proficiencies.py",
     "proficiencies": "tests/test_proficiencies.py",

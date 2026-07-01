@@ -7,6 +7,7 @@ import pytest
 
 import core.character as character_mod
 from core.character_storage import load_characters
+from core.models import Character
 from core.slug import make_save_slug
 
 
@@ -78,6 +79,24 @@ def test_save_character_roundtrip(characters_dir: Path) -> None:
     ) as f:
         data = json.load(f)
     assert data["background_id"] == "soldier"
+
+
+def test_character_json_uses_canonical_field_names() -> None:
+    char = Character(
+        name="Hero",
+        race="human",
+        class_id="fighter",
+        subclass_id="champion",
+        background_id="soldier",
+    )
+    data = char.to_dict()
+    assert "subclass_id" in data
+    assert "background_id" in data
+    assert "subclass" not in data
+    assert "background" not in data
+    restored = Character.from_dict(data)
+    assert restored.subclass_id == "champion"
+    assert restored.background_id == "soldier"
 
 
 def test_starting_max_hp_and_hardcore(
