@@ -7,6 +7,7 @@ from core.classes import character_has_spellcasting
 from core.dice import ability_modifier
 from core.equipment import (
     armor_category,
+    default_ammunition_pack_size,
     get_armor_name,
     get_equipment_item_name,
     get_tool_name,
@@ -14,12 +15,16 @@ from core.equipment import (
     load_armor,
     load_equipment_item,
     load_weapon,
+    meets_armor_strength_requirement,
+    weapon_ammunition_item_id,
+    weapon_range,
 )
 from core.models import Character
 from core.proficiency_checks import (
     has_armor_proficiency,
     has_weapon_proficiency,
 )
+from core.types import StringsDict
 
 ItemKind = Literal["weapon", "armor", "tool", "equipment"]
 
@@ -174,6 +179,17 @@ def _weapon_base_damage_dice(weapon_id: str) -> str:
     return "1d4"
 
 
+def _weapon_is_versatile(weapon_id: str) -> bool:
+    return bool(_weapon_properties(weapon_id).get("versatile"))
+
+
+def _weapon_versatile_damage_dice(weapon_id: str) -> str:
+    versatile = _weapon_properties(weapon_id).get("versatile")
+    if versatile:
+        return str(versatile)
+    return _weapon_base_damage_dice(weapon_id)
+
+
 def _weapon_one_handed_damage(weapon_id: str) -> float:
     """Средний урон одной рукой (без versatile в двухручном режиме)."""
     if _weapon_is_two_handed(weapon_id):
@@ -182,10 +198,30 @@ def _weapon_one_handed_damage(weapon_id: str) -> float:
 
 
 def _weapon_auto_equip_damage(weapon_id: str) -> tuple[float, bool]:
-    """Урон для авто-экипировки: versatile всегда одной рукой."""
+    """Урон для авто-экипировки и флаг «нативно двуручное»."""
     if _weapon_is_two_handed(weapon_id):
         return _parse_dice_average(_weapon_base_damage_dice(weapon_id)), True
+    if _weapon_is_versatile(weapon_id):
+        dice = _weapon_versatile_damage_dice(weapon_id)
+        return _parse_dice_average(dice), False
     return _weapon_one_handed_damage(weapon_id), False
+
+
+def main_hand_uses_both_hands(equipped: dict[str, Any]) -> bool:
+    """Основное оружие занимает обе руки (двуручное или универсальное)."""
+    main = equipped.get("main_hand")
+    if not isinstance(main, str) or not main:
+        return False
+    if _weapon_is_two_handed(main):
+        return True
+    if not _weapon_is_versatile(main):
+        return False
+    grip = equipped.get("main_hand_grip")
+    if grip == "two_handed":
+        return True
+    if grip == "one_handed":
+        return False
+    return not equipped.get("shield") and not equipped.get("off_hand")
 
 
 def _pick_main_weapon(weapons: list[str]) -> tuple[str | None, bool]:
@@ -247,6 +283,7 @@ def equip_defaults(character: Character) -> dict[str, Any]:
     """Авто-экипировка: лучший доспех, щит и оружие из инвентаря."""
     equipped = default_equipped()
     armor_profs = character.armor_proficiencies
+    strength = int(character.stats.get("strength", 10))
 
     armor_ids = [
         str(item["id"])
@@ -254,6 +291,7 @@ def equip_defaults(character: Character) -> dict[str, Any]:
         if item.get("kind") == "armor"
         and armor_category(str(item["id"])) in ("light", "medium", "heavy")
         and has_armor_proficiency(armor_profs, str(item["id"]))
+        and meets_armor_strength_requirement(str(item["id"]), strength)
     ]
     if armor_ids:
         equipped["armor"] = max(armor_ids, key=_armor_sort_key)
@@ -276,11 +314,17 @@ def equip_defaults(character: Character) -> dict[str, Any]:
 
     if can_use_shield:
         equipped["shield"] = True
+        if main_hand and _weapon_is_versatile(main_hand):
+            equipped["main_hand_grip"] = "one_handed"
         return equipped
 
     if character_has_spellcasting(
         character.class_id, character.subclass_id, character.level
     ):
+        return equipped
+
+    if main_hand and _weapon_is_versatile(main_hand):
+        equipped["main_hand_grip"] = "two_handed"
         return equipped
 
     off_hand = _pick_off_hand_weapon(weapons, main_hand or "")
@@ -369,22 +413,185 @@ def format_inventory_line(
     return ", ".join(parts)
 
 
+def _versatile_can_switch_to_two_hands(equipped: dict[str, Any]) -> bool:
+    """Можно ли взять универсальное оружие двумя руками."""
+    if equipped.get("shield"):
+        return False
+    off = equipped.get("off_hand")
+    return not (isinstance(off, str) and off)
+
+
+def _versatile_active_grip(
+    equipped: dict[str, Any], weapon_id: str
+) -> Literal["one_handed", "two_handed"]:
+    """Текущий режим универсального оружия."""
+    grip = equipped.get("main_hand_grip")
+    if grip == "one_handed":
+        return "one_handed"
+    if grip == "two_handed":
+        return "two_handed"
+    if main_hand_uses_both_hands(equipped):
+        return "two_handed"
+    return "one_handed"
+
+
+def _versatile_grip_hint(
+    weapon_id: str,
+    equipped: dict[str, Any],
+    strings: StringsDict,
+) -> str:
+    """Подсказка хвата универсального оружия (одна / две руки)."""
+    from core.localization import get_string
+
+    if not _weapon_is_versatile(weapon_id):
+        return ""
+    if _versatile_active_grip(equipped, weapon_id) == "two_handed":
+        key = "choose_character.field_equipped_versatile_grip_two"
+    else:
+        key = "choose_character.field_equipped_versatile_grip_one"
+    return get_string(strings, key)
+
+
+def format_versatile_damage_dice(
+    weapon_id: str,
+    equipped: dict[str, Any],
+    strings: StringsDict,
+    language: str = "ru",
+) -> tuple[str, str, str] | None:
+    """Кости универсального оружия и активный режим: (1к8, 1к10, one|two)."""
+    from core.equipment import (
+        _format_dice_for_display,
+        _weapon_damage_dice,
+        _weapon_versatile_dice,
+    )
+
+    if not _weapon_is_versatile(weapon_id):
+        return None
+    one_dice = _format_dice_for_display(
+        _weapon_damage_dice(weapon_id), language
+    )
+    two_dice = _format_dice_for_display(
+        _weapon_versatile_dice(weapon_id), language
+    )
+    active = (
+        "two"
+        if _versatile_active_grip(equipped, weapon_id) == "two_handed"
+        else "one"
+    )
+    return one_dice, two_dice, active
+
+
+def inventory_item_quantity(
+    inventory: list[dict[str, Any]], kind: str, item_id: str
+) -> int:
+    """Суммарное количество предмета kind+id в инвентаре."""
+    total = 0
+    for item in inventory:
+        if item.get("kind") == kind and item.get("id") == item_id:
+            total += int(item.get("qty", 1))
+    return total
+
+
+def _loaded_ammunition_qty(
+    inventory: list[dict[str, Any]], ammo_item_id: str
+) -> int:
+    """Боеприпасы «под рукой»: из инвентаря, до ёмкости колчана/сумки."""
+    in_inv = inventory_item_quantity(inventory, "equipment", ammo_item_id)
+    pack = default_ammunition_pack_size(ammo_item_id)
+    return min(in_inv, pack) if in_inv > 0 else 0
+
+
+def _equipped_weapon_for_range(equipped: dict[str, Any]) -> str | None:
+    """Оружие для строки дистанции (основная рука, затем вторая)."""
+    for slot in ("main_hand", "off_hand"):
+        weapon_id = equipped.get(slot)
+        if isinstance(weapon_id, str) and weapon_range(weapon_id):
+            return weapon_id
+    return None
+
+
 def get_equipped_display(
     character: Character,
     language: str = "ru",
-) -> dict[str, str]:
-    """Локализованные подписи экипированных предметов."""
+) -> tuple[dict[str, str], bool]:
+    """Локализованные подписи экипировки; bool — серая подпись второй руки."""
+    from core.equipment import armor_equipped_hint, weapon_property_hint
+    from core.localization import get_string, load_strings
+
+    strings = load_strings(language)
+    empty = get_string(strings, "choose_character.field_equipped_empty")
     equipped = character.equipped or default_equipped()
     result: dict[str, str] = {}
+    off_hand_muted = False
     armor_id = equipped.get("armor")
     if isinstance(armor_id, str) and armor_id:
         result["armor"] = item_display_name("armor", armor_id, language)
-    if equipped.get("shield"):
-        result["shield"] = get_armor_name("shield", language)
+        armor_hint = armor_equipped_hint(armor_id, strings, language)
+        if armor_hint:
+            result["armor_hint"] = armor_hint
+    else:
+        result["armor"] = empty
     main_hand = equipped.get("main_hand")
     if isinstance(main_hand, str) and main_hand:
         result["main_hand"] = item_display_name("weapon", main_hand, language)
-    off_hand = equipped.get("off_hand")
-    if isinstance(off_hand, str) and off_hand:
-        result["off_hand"] = item_display_name("weapon", off_hand, language)
-    return result
+        hint_parts: list[str] = []
+        prop_hint = weapon_property_hint(main_hand, strings, language)
+        if prop_hint:
+            hint_parts.append(prop_hint)
+        grip_hint = _versatile_grip_hint(main_hand, equipped, strings)
+        if grip_hint:
+            hint_parts.append(grip_hint)
+        if hint_parts:
+            result["main_hand_hint"] = ", ".join(hint_parts)
+        damage_dice = format_versatile_damage_dice(
+            main_hand, equipped, strings, language
+        )
+        if damage_dice:
+            one, two, active = damage_dice
+            result["damage_one_dice"] = one
+            result["damage_two_dice"] = two
+            result["damage_active"] = active
+    else:
+        result["main_hand"] = empty
+    if main_hand_uses_both_hands(equipped) and isinstance(main_hand, str):
+        if _weapon_is_two_handed(main_hand):
+            label_key = "choose_character.field_equipped_off_two_handed"
+        else:
+            label_key = "choose_character.field_equipped_off_versatile"
+        result["off_hand"] = get_string(strings, label_key)
+        off_hand_muted = True
+    elif equipped.get("shield"):
+        result["off_hand"] = get_armor_name("shield", language)
+    else:
+        off_hand = equipped.get("off_hand")
+        if isinstance(off_hand, str) and off_hand:
+            result["off_hand"] = item_display_name(
+                "weapon", off_hand, language
+            )
+            hint = weapon_property_hint(off_hand, strings, language)
+            if hint:
+                result["off_hand_hint"] = hint
+        else:
+            result["off_hand"] = empty
+    ammo_weapon = main_hand if isinstance(main_hand, str) else None
+    if ammo_weapon:
+        ammo_id = weapon_ammunition_item_id(ammo_weapon)
+        if ammo_id:
+            qty = _loaded_ammunition_qty(character.inventory, ammo_id)
+            result["ammunition"] = get_string(
+                strings,
+                "choose_character.field_equipped_ammunition_value",
+                type=get_equipment_item_name(ammo_id, language),
+                qty=qty,
+            )
+    range_weapon = _equipped_weapon_for_range(equipped)
+    if range_weapon:
+        rng = weapon_range(range_weapon)
+        if rng:
+            result["distance"] = get_string(
+                strings,
+                "choose_character.field_equipped_range_value",
+                normal=rng["normal"],
+                long=rng["long"],
+            )
+    return result, off_hand_muted

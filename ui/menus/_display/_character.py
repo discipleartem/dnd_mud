@@ -226,26 +226,68 @@ def _print_character_equipment(
             ac_display,
             indent=indent,
         )
-        equipped = get_equipped_display(char, language)
-        if equipped:
-            header = get_string(strings, "choose_character.field_equipped")
-            print(f"{indent}{Fore.LIGHTBLACK_EX}{header}{Style.RESET_ALL}")
-            sub_indent = f"{indent}  "
-            mapping = (
-                ("armor", "choose_character.field_equipped_armor"),
-                ("shield", "choose_character.field_equipped_shield"),
-                ("main_hand", "choose_character.field_equipped_main"),
-                ("off_hand", "choose_character.field_equipped_off"),
-            )
-            for key, label_key in mapping:
-                if key not in equipped:
+        equipped, off_hand_muted = get_equipped_display(char, language)
+        header = get_string(strings, "choose_character.field_equipped")
+        print(f"{indent}{Fore.LIGHTBLACK_EX}{header}{Style.RESET_ALL}")
+        sub_indent = f"{indent}  "
+        empty = get_string(strings, "choose_character.field_equipped_empty")
+        slot_order = (
+            ("armor", "choose_character.field_equipped_armor"),
+            ("main_hand", "choose_character.field_equipped_main"),
+            ("damage", "choose_character.field_equipped_damage"),
+            ("off_hand", "choose_character.field_equipped_off"),
+            ("ammunition", "choose_character.field_equipped_ammunition"),
+            ("distance", "choose_character.field_equipped_range"),
+        )
+        hint_keys = {
+            "armor": "armor_hint",
+            "main_hand": "main_hand_hint",
+            "off_hand": "off_hand_hint",
+        }
+        for key, label_key in slot_order:
+            if key == "damage":
+                if "damage_one_dice" not in equipped:
                     continue
-                cat_label = get_string(strings, label_key)
+            elif key not in equipped:
+                continue
+            cat_label = get_string(strings, label_key)
+            if key == "damage":
+                one = equipped["damage_one_dice"]
+                two = equipped["damage_two_dice"]
+                active = equipped["damage_active"]
+                sep = f"{Fore.LIGHTBLACK_EX} | {Style.RESET_ALL}"
+                if active == "one":
+                    dice_line = (
+                        f"{Fore.CYAN}{one}{Style.RESET_ALL}{sep}"
+                        f"{Fore.LIGHTBLACK_EX}{two}{Style.RESET_ALL}"
+                    )
+                else:
+                    dice_line = (
+                        f"{Fore.LIGHTBLACK_EX}{one}{Style.RESET_ALL}{sep}"
+                        f"{Fore.CYAN}{two}{Style.RESET_ALL}"
+                    )
                 print(
                     f"{sub_indent}{Fore.LIGHTBLACK_EX}"
-                    f"{cat_label}{Style.RESET_ALL} "
-                    f"{Fore.CYAN}{equipped[key]}{Style.RESET_ALL}"
+                    f"{cat_label}{Style.RESET_ALL} {dice_line}"
                 )
+                continue
+            value = equipped.get(key, empty)
+            hint = equipped.get(hint_keys.get(key, ""), "")
+            muted_off = key == "off_hand" and off_hand_muted
+            if value == empty or muted_off:
+                value_color = Fore.LIGHTBLACK_EX
+            else:
+                value_color = Fore.CYAN
+            print(
+                f"{sub_indent}{Fore.LIGHTBLACK_EX}"
+                f"{cat_label}{Style.RESET_ALL} "
+                f"{value_color}{value}{Style.RESET_ALL}",
+                end="",
+            )
+            if hint and key in hint_keys:
+                print(f" {Fore.LIGHTBLACK_EX}({hint})" f"{Style.RESET_ALL}")
+            else:
+                print()
     if char.inventory:
         inv_line = format_inventory_line(
             char.inventory, language, equipped=char.equipped

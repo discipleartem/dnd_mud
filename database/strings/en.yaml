@@ -277,7 +277,17 @@ choose_character:
   field_equipped_shield: "shield:"
   field_equipped_main: "main hand:"
   field_equipped_off: "off hand:"
+  field_equipped_off_two_handed: "two-handed"
+  field_equipped_off_versatile: "versatile"
+  field_equipped_ammunition: "ammunition:"
+  field_equipped_ammunition_value: "type: {type}, quantity: {qty}"
+  field_equipped_range: "range:"
+  field_equipped_range_value: "normal {normal}, long: {long}"
+  field_equipped_damage: "damage:"
+  field_equipped_versatile_grip_one: "one hand"
+  field_equipped_versatile_grip_two: "two hands"
   field_inventory: "Inventory:"
+  field_equipped_empty: "empty"
   field_empty: "—"
   field_difficulty: "Difficulty:"
   vitals_line: "HP: {hp}   XP: {xp}"
@@ -394,6 +404,31 @@ skills:
   sleight_of_hand: "Sleight of Hand"
   stealth: "Stealth"
   survival: "Survival"
+
+armor_category:
+  light: "light"
+  medium: "medium"
+  heavy: "heavy"
+
+armor_equipped_hint:
+  light: "{category}, AC {ac} + Dex"
+  medium: "{category}, AC {ac} + Dex, max 2"
+  heavy: "{category}, AC {ac}"
+  strength: "Str {value}"
+  stealth: "stealth disadvantage"
+
+weapon_property:
+  light: "light"
+  finesse: "finesse"
+  two_handed: "two-handed"
+  versatile: "versatile {dice}"
+  versatile_catalog: "versatile: {one_dice} / {two_dice}"
+  thrown: "thrown {normal}/{long}"
+  ammunition: "ammunition {normal}/{long}"
+  heavy: "heavy"
+  reach: "reach"
+  loading: "loading"
+  special: "special"
 
 proficiency:
   simple: "simple weapons"

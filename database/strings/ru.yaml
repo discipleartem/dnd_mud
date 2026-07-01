@@ -277,7 +277,17 @@ choose_character:
   field_equipped_shield: "щит:"
   field_equipped_main: "основная рука:"
   field_equipped_off: "вторая рука:"
+  field_equipped_off_two_handed: "двуручное"
+  field_equipped_off_versatile: "универсальное"
+  field_equipped_ammunition: "боеприпас:"
+  field_equipped_ammunition_value: "тип: {type}, количество: {qty}"
+  field_equipped_range: "дистанция:"
+  field_equipped_range_value: "оптимальная {normal}, допустимая: {long}"
+  field_equipped_damage: "урон:"
+  field_equipped_versatile_grip_one: "одна рука"
+  field_equipped_versatile_grip_two: "две руки"
   field_inventory: "инвентарь:"
+  field_equipped_empty: "пусто"
   field_empty: "—"
   field_difficulty: "Сложность:"
   vitals_line: "HP: {hp}   XP: {xp}"
@@ -394,6 +404,31 @@ skills:
   sleight_of_hand: "Ловкость рук"
   stealth: "Скрытность"
   survival: "Выживание"
+
+armor_category:
+  light: "лёгкий"
+  medium: "средний"
+  heavy: "тяжёлый"
+
+armor_equipped_hint:
+  light: "{category}, КД {ac} + Лов"
+  medium: "{category}, КД {ac} + Лов, макс. 2"
+  heavy: "{category}, КД {ac}"
+  strength: "Сил {value}"
+  stealth: "помеха скрытности"
+
+weapon_property:
+  light: "лёгкое"
+  finesse: "фехтовальное"
+  two_handed: "двуручное"
+  versatile: "универсальное {dice}"
+  versatile_catalog: "универсальное: {one_dice} / {two_dice}"
+  thrown: "метательное {normal}/{long}"
+  ammunition: "боеприпас {normal}/{long}"
+  heavy: "тяжёлое"
+  reach: "досягаемость"
+  loading: "перезарядка"
+  special: "особое"
 
 proficiency:
   simple: "простое оружие"

@@ -42,6 +42,7 @@ def test_equip_defaults_picks_armor_and_weapons() -> None:
         name="Test",
         race="human",
         class_id="fighter",
+        stats={"strength": 14, "dexterity": 10},
         weapon_proficiencies=["simple", "martial", "longsword", "dagger"],
         armor_proficiencies=["light", "medium", "heavy", "shield"],
         inventory=[
@@ -57,6 +58,22 @@ def test_equip_defaults_picks_armor_and_weapons() -> None:
     assert equipped["shield"] is True
     assert equipped["main_hand"] == "longsword"
     assert equipped["off_hand"] is None
+
+
+def test_equip_defaults_skips_armor_below_strength() -> None:
+    char = Character(
+        name="Cleric",
+        race="dwarf",
+        class_id="cleric",
+        stats={"strength": 9, "dexterity": 13},
+        armor_proficiencies=["light", "medium", "heavy", "shield"],
+        inventory=[
+            {"kind": "armor", "id": "chain_mail", "qty": 1},
+            {"kind": "armor", "id": "scale_mail", "qty": 1},
+        ],
+    )
+    equipped = equip_defaults(char)
+    assert equipped["armor"] == "scale_mail"
 
 
 def test_equip_defaults_rogue_rapier_and_dagger() -> None:
@@ -138,8 +155,150 @@ def test_equip_defaults_no_shield_dual_wield_light() -> None:
     )
     equipped = equip_defaults(char)
     assert equipped["main_hand"] == "longsword"
-    assert equipped["off_hand"] == "handaxe"
+    assert equipped["main_hand_grip"] == "two_handed"
+    assert equipped["off_hand"] is None
     assert equipped["shield"] is False
+
+
+def test_equip_defaults_versatile_one_handed_with_shield() -> None:
+    char = Character(
+        name="Cleric",
+        race="dwarf",
+        class_id="cleric",
+        weapon_proficiencies=[
+            "simple",
+            "warhammer",
+            "battleaxe",
+            "handaxe",
+            "light_hammer",
+        ],
+        armor_proficiencies=["light", "medium", "heavy", "shield"],
+        inventory=[
+            {"kind": "armor", "id": "chain_mail", "qty": 1},
+            {"kind": "armor", "id": "shield", "qty": 1},
+            {"kind": "weapon", "id": "warhammer", "qty": 1},
+        ],
+    )
+    equipped = equip_defaults(char)
+    assert equipped["main_hand"] == "warhammer"
+    assert equipped["main_hand_grip"] == "one_handed"
+    assert equipped["shield"] is True
+    assert equipped["off_hand"] is None
+
+
+def test_equip_defaults_versatile_two_handed_without_shield() -> None:
+    char = Character(
+        name="Fighter",
+        race="dwarf",
+        class_id="fighter",
+        weapon_proficiencies=["simple", "martial", "warhammer"],
+        inventory=[{"kind": "weapon", "id": "warhammer", "qty": 1}],
+    )
+    equipped = equip_defaults(char)
+    assert equipped["main_hand"] == "warhammer"
+    assert equipped["main_hand_grip"] == "two_handed"
+    assert equipped["off_hand"] is None
+
+
+def test_get_equipped_display_hands_and_occupied() -> None:
+    from core.inventory import get_equipped_display
+
+    char = Character(
+        name="Test",
+        race="human",
+        class_id="fighter",
+        equipped={
+            "main_hand": "greataxe",
+            "shield": False,
+        },
+    )
+    labels, muted = get_equipped_display(char, "ru")
+    assert labels["main_hand"] == "Секира"
+    assert labels["off_hand"] == "двуручное"
+    assert muted is True
+
+    versatile = Character(
+        name="Fighter",
+        race="dwarf",
+        class_id="fighter",
+        equipped={
+            "main_hand": "warhammer",
+            "main_hand_grip": "two_handed",
+            "shield": False,
+        },
+    )
+    vers_labels, vers_muted = get_equipped_display(versatile, "ru")
+    assert vers_labels["main_hand_hint"] == "две руки"
+    assert vers_labels["damage_one_dice"] == "1к8"
+    assert vers_labels["damage_two_dice"] == "1к10"
+    assert vers_labels["damage_active"] == "two"
+    assert vers_labels["off_hand"] == "универсальное"
+    assert vers_muted is True
+
+    cleric = Character(
+        name="Cleric",
+        race="dwarf",
+        class_id="cleric",
+        equipped={
+            "armor": "chain_mail",
+            "shield": True,
+            "main_hand": "warhammer",
+            "main_hand_grip": "one_handed",
+        },
+    )
+    cleric_labels, cleric_muted = get_equipped_display(cleric, "ru")
+    assert cleric_labels["armor"] == "Кольчуга"
+    assert cleric_labels["armor_hint"] == (
+        "тяжёлый, КД 16, Сил 13, помеха скрытности"
+    )
+    assert cleric_labels["main_hand"] == "Боевой молот"
+    assert cleric_labels["main_hand_hint"] == "одна рука"
+    assert cleric_labels["damage_one_dice"] == "1к8"
+    assert cleric_labels["damage_two_dice"] == "1к10"
+    assert cleric_labels["damage_active"] == "one"
+    assert cleric_labels["off_hand"] == "Щит"
+    assert cleric_muted is False
+    assert "shield" not in cleric_labels
+
+    crossbow_char = Character(
+        name="Cleric",
+        race="human",
+        class_id="cleric",
+        equipped={
+            "main_hand": "light_crossbow",
+            "main_hand_grip": "two_handed",
+            "shield": False,
+        },
+        inventory=[
+            {"kind": "equipment", "id": "crossbow_bolts", "qty": 20},
+        ],
+    )
+    cb_labels, cb_muted = get_equipped_display(crossbow_char, "ru")
+    assert cb_labels["main_hand"] == "Арбалет лёгкий"
+    assert cb_labels["main_hand_hint"] == "двуручное, перезарядка"
+    assert cb_labels["ammunition"] == "тип: Арбалетные болты, количество: 20"
+    assert cb_labels["distance"] == "оптимальная 80, допустимая: 320"
+    assert cb_muted is True
+
+
+def test_get_equipped_display_empty_armor_slot() -> None:
+    from core.inventory import get_equipped_display
+
+    char = Character(
+        name="Cleric",
+        race="dwarf",
+        class_id="cleric",
+        equipped={
+            "main_hand": "warhammer",
+            "main_hand_grip": "one_handed",
+            "shield": True,
+        },
+    )
+    labels, muted = get_equipped_display(char, "ru")
+    assert labels["armor"] == "пусто"
+    assert labels["main_hand"] == "Боевой молот"
+    assert labels["off_hand"] == "Щит"
+    assert muted is False
 
 
 def test_add_items_merges_quantities() -> None:
