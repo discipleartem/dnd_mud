@@ -6,7 +6,7 @@
 - Главное меню: пункт переключения языка кросс-локально (`ru` → «Languages», `en` → «Языки»)
 
 ### Changed
-- Git workflow: ruleset **`dev_rules`** на `dev` — только squash merge PR, required check `quality`; таблица merge policy в `DEVELOPMENT.md`
+- Git workflow: merge policy в `DEVELOPMENT.md` — прямой push в `dev` разрешён; squash task→`dev` по практике; `main_rules` только на `main` (без `dev_rules`)
 - Git workflow: **все** ветки `merged/*` — только локальный архив; запрещены push/upstream/PR на `origin`; legacy `origin/merged/*` удалять (`dnd-mud-workflow.mdc`, `01-operations.mdc`, `user-protocols.mdc`)
 
 ### Added
