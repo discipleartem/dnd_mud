@@ -3,6 +3,7 @@
 from typing import Any
 
 import pytest
+from colorama import Fore
 
 from core.equipment import (
     load_armor,
@@ -82,17 +83,124 @@ def test_armor_menu_shows_unavailable_chain_mail(
             "armor",
             groups["armor"],
             ["simple"],
-            ["light", "medium", "shield"],
+            ["light", "medium", "shield", "heavy"],
             [],
             "ru",
+            9,
         )
         output = buf.getvalue()
     assert "Кольчуга (тяжёлые доспехи)" in output
+    assert "(Сил 13)" in output
+    assert Fore.RED in output or "\x1b[31m" in output
     assert output.count("Чешуйчатый") == 1
     assert output.count("Кожаный") == 1
 
 
+def test_weapon_menu_warhammer_available_for_dwarf_weapon_proficiency(
+    ru_strings: dict[str, Any],
+) -> None:
+    from io import StringIO
+    from unittest.mock import patch
+
+    from core.starting_equipment import list_equipment_options_by_group
+    from ui.menus.equipment import _pick_option_for_group
+
+    groups = list_equipment_options_by_group("cleric")
+    dwarf_weapons = [
+        "simple",
+        "battleaxe",
+        "handaxe",
+        "light_hammer",
+        "warhammer",
+    ]
+    with (
+        patch("ui.menus._deps.get_int_input", return_value=0),
+        patch("sys.stdout", new_callable=StringIO) as buf,
+    ):
+        _pick_option_for_group(
+            ru_strings,
+            "weapon",
+            groups["weapon"],
+            dwarf_weapons,
+            ["light", "medium", "shield"],
+            [],
+            "ru",
+            10,
+        )
+        output = buf.getvalue()
+    assert "а) Булава" in output
+    assert "\x1b[36mб) Боевой молот (воинское оружие)\x1b[0m" in output
+
+
+def test_weapon_menu_shows_unavailable_warhammer_without_proficiency(
+    ru_strings: dict[str, Any],
+) -> None:
+    from io import StringIO
+    from unittest.mock import patch
+
+    from core.starting_equipment import list_equipment_options_by_group
+    from ui.menus.equipment import _pick_option_for_group
+
+    groups = list_equipment_options_by_group("cleric")
+    with (
+        patch("ui.menus._deps.get_int_input", return_value=0),
+        patch("sys.stdout", new_callable=StringIO) as buf,
+    ):
+        _pick_option_for_group(
+            ru_strings,
+            "weapon",
+            groups["weapon"],
+            ["simple"],
+            ["light", "medium", "shield"],
+            [],
+            "ru",
+            10,
+        )
+        output = buf.getvalue()
+    assert "а) Булава" in output
+    assert "б) Боевой молот (воинское оружие)" in output
+    assert "2. б) Боевой молот" not in output
+    assert Fore.LIGHTBLACK_EX in output or "\x1b[90m" in output
+
+
 def test_weapon_and_tool_catalog() -> None:
+    from core.equipment import (
+        armor_equipped_hint,
+        format_versatile_catalog_hint,
+        format_weapon_property_labels,
+        get_equipment_item_name,
+        weapon_ammunition_item_id,
+        weapon_property_hint,
+        weapon_range,
+    )
+
+    ru_strings = load_strings("ru")
+    assert armor_equipped_hint("leather", ru_strings) == "лёгкий, КД 11 + Лов"
+    assert armor_equipped_hint("breastplate", ru_strings) == (
+        "средний, КД 14 + Лов, макс. 2"
+    )
+    assert armor_equipped_hint("chain_mail", ru_strings) == (
+        "тяжёлый, КД 16, Сил 13, помеха скрытности"
+    )
+    assert armor_equipped_hint("padded", ru_strings) == (
+        "лёгкий, КД 11 + Лов, помеха скрытности"
+    )
+    assert format_weapon_property_labels("warhammer", ru_strings) == []
+    assert format_versatile_catalog_hint("warhammer", ru_strings) == (
+        "универсальное: 1к8 / 1к10"
+    )
+    assert "фехтовальное" in weapon_property_hint("dagger", ru_strings)
+    assert "метательное" not in weapon_property_hint("dagger", ru_strings)
+    assert format_weapon_property_labels("mace", ru_strings) == []
+    assert format_weapon_property_labels("light_crossbow", ru_strings) == [
+        "двуручное",
+        "перезарядка",
+    ]
+    assert weapon_range("light_crossbow") == {"normal": 80, "long": 320}
+    assert weapon_range("dagger") == {"normal": 20, "long": 60}
+    assert weapon_ammunition_item_id("light_crossbow") == "crossbow_bolts"
+    assert get_equipment_item_name("crossbow_case", "ru") == "Сумка для болтов"
+
     assert load_weapon("longsword").get("category") == "martial_melee"
     assert weapon_matches_category("simple", "club")
     assert not weapon_matches_category("martial", "club")
@@ -101,6 +209,7 @@ def test_weapon_and_tool_catalog() -> None:
     pool = tools_by_category("musical_instruments")
     assert "lute" in pool or len(pool) > 0
     assert "land_vehicles" in resolve_tool_pool("land_vehicles")
+    assert resolve_tool_pool("soldier_gaming") == ["dice_set", "playing_cards"]
 
 
 def test_proficiency_token_label() -> None:

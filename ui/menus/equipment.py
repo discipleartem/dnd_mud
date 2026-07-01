@@ -4,7 +4,12 @@ from typing import Any
 
 from colorama import Fore, Style
 
-from core.equipment import get_tool_name, get_weapon_name
+from core.equipment import (
+    format_versatile_catalog_hint,
+    get_tool_name,
+    get_weapon_name,
+    weapon_property_hint,
+)
 from core.localization import get_string
 from core.proficiency_checks import (
     has_tool_proficiency,
@@ -13,6 +18,7 @@ from core.proficiency_checks import (
 from core.starting_equipment import (
     all_weapons_in_pool,
     equipment_option_available,
+    equipment_option_strength_warning,
     format_equipment_option_label,
     list_equipment_options_by_group,
     list_fixed_items,
@@ -28,6 +34,25 @@ from ui.menus._common import (
     _run_numbered_menu,
     _sort_ids_by_proficiency,
 )
+
+
+def _format_weapon_menu_label(
+    weapon_id: str,
+    proficient: bool,
+    strings: StringsDict,
+    language: str,
+) -> str:
+    """Подпись оружия в меню: имя + свойства PHB серым."""
+    name = get_weapon_name(weapon_id, language)
+    line = _format_pick_menu_label(name, proficient)
+    catalog = format_versatile_catalog_hint(weapon_id, strings, language)
+    if catalog:
+        line += f" {Fore.LIGHTBLACK_EX}({catalog}){Style.RESET_ALL}"
+    else:
+        hint = weapon_property_hint(weapon_id, strings, language)
+        if hint:
+            line += f" {Fore.LIGHTBLACK_EX}({hint}){Style.RESET_ALL}"
+    return line
 
 
 def _pick_weapon_from_pool(
@@ -46,9 +71,11 @@ def _pick_weapon_from_pool(
     if not weapons:
         return None
     labels = [
-        _format_pick_menu_label(
-            get_weapon_name(weapon_id, language),
+        _format_weapon_menu_label(
+            weapon_id,
             has_weapon_proficiency(weapon_proficiencies, weapon_id),
+            strings,
+            language,
         )
         for weapon_id in weapons
     ]
@@ -100,6 +127,20 @@ def _pick_tool_from_pool(
     return tools[choice - 1]
 
 
+def _format_equipment_menu_label(
+    option: dict[str, Any],
+    strings: StringsDict,
+    language: str,
+    strength: int,
+) -> str:
+    """Подпись опции с красным предупреждением о недостаточной Силе."""
+    label = format_equipment_option_label(option, strings, language)
+    warning = equipment_option_strength_warning(option, strength, strings)
+    if warning:
+        label += f" {Fore.RED}({warning}){Style.RESET_ALL}"
+    return label
+
+
 def _pick_option_for_group(
     strings: StringsDict,
     choice_id: str,
@@ -108,6 +149,7 @@ def _pick_option_for_group(
     armor_proficiencies: list[str],
     tool_proficiencies: list[str],
     language: str,
+    strength: int,
 ) -> dict[str, str] | None:
     """Выбор одной группы снаряжения; возвращает фрагмент equipment_choices."""
     selectable = [
@@ -121,7 +163,7 @@ def _pick_option_for_group(
         get_string(strings, "character.equipment_choice_heading", id=choice_id)
     )
     for opt in options:
-        label = format_equipment_option_label(opt, strings, language)
+        label = _format_equipment_menu_label(opt, strings, language, strength)
         if equipment_option_available(
             opt, weapon_proficiencies, armor_proficiencies
         ):
@@ -167,6 +209,7 @@ def select_creation_equipment(
     armor_proficiencies: list[str],
     tool_proficiencies: list[str],
     language: str = "ru",
+    strength: int = 10,
 ) -> dict[str, str] | None:
     """Шаг выбора стартового снаряжения класса."""
     option_groups = list_equipment_options_by_group(class_id)
@@ -209,6 +252,7 @@ def select_creation_equipment(
             armor_proficiencies,
             tool_proficiencies,
             language,
+            strength,
         )
         if picked is None:
             return None

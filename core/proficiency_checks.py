@@ -20,6 +20,25 @@ def has_weapon_proficiency(proficiencies: list[str], weapon_id: str) -> bool:
     return False
 
 
+def has_weapon_pool_proficiency(
+    pool: str, weapon_proficiencies: list[str]
+) -> bool:
+    """Владение категорией оружия (simple, martial), не отдельным видом."""
+    if pool in weapon_proficiencies:
+        return True
+    if pool == "martial":
+        return any(
+            token in weapon_proficiencies
+            for token in ("martial_melee", "martial_ranged")
+        )
+    if pool == "simple":
+        return any(
+            token in weapon_proficiencies
+            for token in ("simple_melee", "simple_ranged")
+        )
+    return False
+
+
 def has_armor_proficiency(proficiencies: list[str], armor_id: str) -> bool:
     """Владение доспехом или щитом."""
     cat = armor_category(armor_id)

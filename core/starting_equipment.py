@@ -6,6 +6,7 @@ from core.classes import get_class_dict
 from core.equipment import (
     all_weapon_ids,
     armor_category,
+    armor_strength_requirement,
     resolve_tool_pool,
     weapon_matches_category,
 )
@@ -15,7 +16,10 @@ from core.inventory import (
     normalize_inventory_item,
 )
 from core.localization import get_string, resolve_localized_text
-from core.proficiency_checks import has_weapon_proficiency
+from core.proficiency_checks import (
+    has_weapon_pool_proficiency,
+    has_weapon_proficiency,
+)
 from core.types import StringsDict
 
 _PROFICIENCY_LABEL_SUFFIXES = (
@@ -59,6 +63,27 @@ def get_class_starting_equipment_config(class_id: str) -> dict[str, Any]:
     return dict(raw) if isinstance(raw, dict) else {}
 
 
+def _option_weapon_items_proficient(
+    option: dict[str, Any],
+    weapon_proficiencies: list[str],
+) -> bool:
+    """Владение всем оружием из items опции (например warhammer у дварфа)."""
+    raw_items = option.get("items", [])
+    if not isinstance(raw_items, list):
+        return False
+    weapon_ids = [
+        str(entry.get("id", ""))
+        for entry in raw_items
+        if isinstance(entry, dict) and entry.get("kind") == "weapon"
+    ]
+    if not weapon_ids:
+        return False
+    return all(
+        has_weapon_proficiency(weapon_proficiencies, weapon_id)
+        for weapon_id in weapon_ids
+    )
+
+
 def _option_available(
     option: dict[str, Any],
     weapon_proficiencies: list[str],
@@ -70,8 +95,9 @@ def _option_available(
         return False
     req_weapon = option.get("requires_weapon_pool")
     if isinstance(req_weapon, str):
-        pool_weapons = weapons_for_pool(req_weapon, weapon_proficiencies)
-        if not pool_weapons:
+        pool_ok = has_weapon_pool_proficiency(req_weapon, weapon_proficiencies)
+        item_ok = _option_weapon_items_proficient(option, weapon_proficiencies)
+        if not pool_ok and not item_ok:
             return False
     return True
 
@@ -286,6 +312,36 @@ def _strip_proficiency_label_suffix(text: str) -> str:
         if text.endswith(suffix):
             return text[: -len(suffix)]
     return text
+
+
+def option_armor_strength_requirement(option: dict[str, Any]) -> int | None:
+    """Требование Силы для опции (максимум среди доспехов в items)."""
+    max_req: int | None = None
+    raw_items = option.get("items", [])
+    if not isinstance(raw_items, list):
+        return None
+    for entry in raw_items:
+        if not isinstance(entry, dict) or entry.get("kind") != "armor":
+            continue
+        armor_id = str(entry.get("id", ""))
+        if armor_category(armor_id) == "shield":
+            continue
+        req = armor_strength_requirement(armor_id)
+        if req is not None:
+            max_req = req if max_req is None else max(max_req, req)
+    return max_req
+
+
+def equipment_option_strength_warning(
+    option: dict[str, Any],
+    strength: int,
+    strings: StringsDict,
+) -> str | None:
+    """Подпись «Сил N», если персонаж не тянет доспех опции."""
+    req = option_armor_strength_requirement(option)
+    if req is None or strength >= req:
+        return None
+    return get_string(strings, "armor_equipped_hint.strength", value=req)
 
 
 def equipment_option_requirement_key(option: dict[str, Any]) -> str | None:

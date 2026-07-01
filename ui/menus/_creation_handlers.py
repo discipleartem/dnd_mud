@@ -256,6 +256,7 @@ def _handle_equipment(
         list(state.armor_proficiencies or []),
         list(state.tool_proficiencies or []),
         language,
+        strength=int((state.stats or {}).get("strength", 10)),
     )
     if equipment is None:
         return _advance(back_step_from_equipment(state))

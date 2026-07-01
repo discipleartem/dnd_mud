@@ -7,9 +7,11 @@ import pytest
 from core.starting_equipment import (
     all_weapons_in_pool,
     equipment_option_available,
+    equipment_option_strength_warning,
     format_equipment_option_label,
     get_class_starting_equipment_config,
     list_equipment_options_by_group,
+    option_armor_strength_requirement,
     resolve_starting_items,
     summarize_class_starting_equipment,
     weapons_for_pool,
@@ -86,6 +88,16 @@ def test_cleric_equipment_option_availability() -> None:
     assert equipment_option_available(
         weapon_opts["warhammer"], simple_only + ["martial"], []
     )
+    dwarf_weapons = [
+        "simple",
+        "battleaxe",
+        "handaxe",
+        "light_hammer",
+        "warhammer",
+    ]
+    assert equipment_option_available(
+        weapon_opts["warhammer"], dwarf_weapons, []
+    )
 
     armor_opts = {opt["id"]: opt for opt in groups["armor"]}
     assert equipment_option_available(armor_opts["leather"], [], light_medium)
@@ -97,6 +109,21 @@ def test_cleric_equipment_option_availability() -> None:
     )
     assert equipment_option_available(
         armor_opts["chain_mail"], [], light_medium + ["heavy"]
+    )
+
+
+def test_equipment_option_strength_warning(
+    ru_strings: dict[str, Any],
+) -> None:
+    groups = list_equipment_options_by_group("cleric")
+    armor_opts = {opt["id"]: opt for opt in groups["armor"]}
+    chain = armor_opts["chain_mail"]
+    assert option_armor_strength_requirement(chain) == 13
+    assert equipment_option_strength_warning(chain, 9, ru_strings) == "Сил 13"
+    assert equipment_option_strength_warning(chain, 13, ru_strings) is None
+    assert (
+        equipment_option_strength_warning(armor_opts["leather"], 8, ru_strings)
+        is None
     )
 
 
