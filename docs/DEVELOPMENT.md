@@ -243,6 +243,32 @@ Quality gate PR `task → dev`: `make verify-scope` + review (light/full). Full 
 
 Мониторинг: раз в неделю [cursor.com/dashboard/usage](https://cursor.com/dashboard/usage) — рост `agent_review` vs `auto`.
 
+### Merge policy (GitHub Rulesets)
+
+Один squash-коммит на PR — канон для обеих интеграционных веток.
+
+| Куда | Push напрямую | Через PR | Merge method на PR |
+|------|---------------|----------|-------------------|
+| `dev` | **да** — `git push origin dev` | task-ветки → `dev` | squash (практика + default UI) |
+| `main` | **нет** — только PR | `dev` → `main` | squash (`main_rules`) |
+
+| PR | Enforcement | Required checks | Linear history |
+|----|-------------|-----------------|----------------|
+| `feat/…` → `dev` | squash по процессу; CI на PR | `quality` ([`ci.yml`](../.github/workflows/ci.yml)) | нет — sync `main`→`dev` добавляет merge-коммит |
+| `dev` → `main` | ruleset **`main_rules`** | `dev-sync-and-mergeable` ([`pr-dev-to-main-check.yml`](../.github/workflows/pr-dev-to-main-check.yml)) | да |
+
+**Прямой push в `dev` разрешён** — docs, мелкие fix, ручной sync; также [`sync-dev-with-main.yml`](../.github/workflows/sync-dev-with-main.yml) после релиза. На `dev` **нет** branch ruleset: ruleset с `pull_request` запретил бы и это.
+
+**Почему нет `dev_rules`:** нельзя одновременно требовать «все изменения только через PR» и разрешать прямой push. Squash task→`dev` — дисциплина процесса + default **Squash** в GitHub UI, не ruleset.
+
+Практика:
+
+- feature-код → task-ветка → PR → **Squash and merge** в `dev` → rename в `merged/…` (локально) — [`.cursor/rules/dnd-mud-workflow.mdc`](../.cursor/rules/dnd-mud-workflow.mdc).
+- `dev` → `main`: **только PR**, **Squash and merge** / `gh pr merge --squash` — skill [`.cursor/skills/dnd-mud-release`](../.cursor/skills/dnd-mud-release/SKILL.md).
+- Вкладка **Commits** release PR может показывать много коммитов (расходящаяся ancestry после squash); ориентир — **Files changed** или `git diff origin/main...origin/dev`.
+
+Rulesets: **Settings → Rules**. Только **`main_rules`** на `refs/heads/main`.
+
 ### Release (`dev` → `main`)
 
 **Только через PR** — без PR в `main` не релизим (локальный merge/push в `main` запрещён).
@@ -258,7 +284,7 @@ gh pr create --base main --head dev --title "release: …"
 
 CI: [`.github/workflows/pr-dev-to-main-check.yml`](../.github/workflows/pr-dev-to-main-check.yml) (только PR `dev` → `main`, события open/sync). После merge в `main` — [`.github/workflows/sync-dev-with-main.yml`](../.github/workflows/sync-dev-with-main.yml).
 
-**GitHub (Rules → `main_rules`):** required status check — **`dev-sync-and-mergeable`** (имя job, не имя workflow/файла); merge method — squash.
+Merge policy и rulesets — § [Merge policy (GitHub Rulesets)](#merge-policy-github-rulesets) выше.
 
 ## Создание мода
 
@@ -305,6 +331,8 @@ welcome:
 ```python
 get_string(strings, 'welcome.version', version='0.1.0')
 ```
+
+**Кросс-локальная подпись переключателя языка:** ключ `menu.languages` намеренно на «чужом» языке — при ru UI пункт **Languages**, при en UI — **Языки**, чтобы пользователь мог найти переключатель без знания текущей локали.
 
 ## Добавление новой расы/класса
 

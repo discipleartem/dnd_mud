@@ -10,7 +10,7 @@ menu:
   load_game: "Загрузить игру"
   characters: "Персонажи"
   settings: "Настройки"
-  languages: "Языки"
+  languages: "Languages"  # кросс-локаль: пункт на «чужом» языке
   exit: "Выход"
   prompt: "Выберите пункт: "
 
