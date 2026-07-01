@@ -23,17 +23,12 @@ def inherit_flags(entity: dict[str, Any]) -> tuple[bool, bool]:
     return True, True
 
 
-def normalize_grant(raw: dict[str, Any]) -> dict[str, Any]:
-    """Привести grant к плоскому виду."""
-    return dict(raw)
-
-
 def grants_from_entity(entity: dict[str, Any]) -> list[dict[str, Any]]:
     """Grants сущности из ключа grants."""
     raw_grants = entity.get("grants", [])
     if not isinstance(raw_grants, list):
         return []
-    return [normalize_grant(g) for g in raw_grants if isinstance(g, dict)]
+    return [dict(g) for g in raw_grants if isinstance(g, dict)]
 
 
 def merge_entity_grants(

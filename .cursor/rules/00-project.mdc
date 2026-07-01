@@ -27,7 +27,7 @@ Verify-уровни — skill [`dnd-mud-verify`](.cursor/skills/dnd-mud-verify/S
 ## Docs
 
 - [docs/DND_RULES.md](docs/DND_RULES.md) · [docs/DATA_SCHEMA.md](docs/DATA_SCHEMA.md) · [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)
-- [docs/API.md](docs/API.md) · [docs/CHANGELOG.md](docs/CHANGELOG.md) · [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md) · [docs/MUD_PRD.md](docs/MUD_PRD.md)
+- [docs/API.md](docs/API.md) · [docs/BACKLOG.md](docs/BACKLOG.md) · [docs/CHANGELOG.md](docs/CHANGELOG.md) · [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md) · [docs/MUD_PRD.md](docs/MUD_PRD.md)
 
 ## Agent-loop
 

@@ -8,6 +8,8 @@ import pytest
 
 import core.character as character_mod
 from core.character_storage import load_characters
+from core.models import Character
+from core.slug import make_save_slug
 
 
 @pytest.mark.parametrize(
@@ -116,7 +118,7 @@ def test_save_character_start_level(characters_dir: Path) -> None:
                 "feat_ids": ["resilient"],
                 "feat_choices": {"resilient": {"ability": "constitution"}},
             },
-            {"background": "soldier"},
+            {"background_id": "soldier"},
             {"skills": ["athletics"], "slug": "hero", "con": 13},
         ),
         (
@@ -206,6 +208,28 @@ def test_starting_max_hp_floor_and_max_hp_field(characters_dir: Path) -> None:
     assert saved.max_hp == 7
     assert saved.current_hp == saved.max_hp
     assert saved.max_hp >= 1
+
+
+def test_make_save_slug_transliterates_cyrillic() -> None:
+    assert make_save_slug("Герой") == "geroy"
+
+
+def test_character_json_uses_canonical_field_names() -> None:
+    char = Character(
+        name="Hero",
+        race="human",
+        class_id="fighter",
+        subclass_id="champion",
+        background_id="soldier",
+    )
+    data = char.to_dict()
+    assert "subclass_id" in data
+    assert "background_id" in data
+    assert "subclass" not in data
+    assert "background" not in data
+    restored = Character.from_dict(data)
+    assert restored.subclass_id == "champion"
+    assert restored.background_id == "soldier"
 
 
 def test_slug_collision_and_delete(characters_dir: Path) -> None:

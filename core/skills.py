@@ -4,8 +4,8 @@ from typing import Any
 
 from core.abilities import skill_ids
 from core.classes import (
-    get_class_dict,
     get_subclass_choice_level,
+    get_subclass_dict,
     iter_class_grants,
     load_class_full,
 )
@@ -169,15 +169,10 @@ def _subclass_features(
     """Grants выбранного подкласса из progression."""
     if not subclass_id:
         return []
-    info = get_class_dict(class_id)
-    raw_subs = info.get("subclasses", [])
-    if not isinstance(raw_subs, list):
+    sub = get_subclass_dict(class_id, subclass_id)
+    if sub is None:
         return []
-    for sub in raw_subs:
-        if not isinstance(sub, dict) or sub.get("id") != subclass_id:
-            continue
-        return iter_class_grants(sub)
-    return []
+    return iter_class_grants(sub)
 
 
 def subclass_skills_active(

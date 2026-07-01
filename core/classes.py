@@ -102,6 +102,20 @@ def get_subclass_choice_level(class_id: str) -> int:
     return DEFAULT_SUBCLASS_CHOICE_LEVEL
 
 
+def get_subclass_dict(
+    class_id: str, subclass_id: str
+) -> dict[str, Any] | None:
+    """Сырые данные подкласса из YAML или None."""
+    class_info = get_class_dict(class_id)
+    raw_subclasses = class_info.get("subclasses", [])
+    if not isinstance(raw_subclasses, list):
+        return None
+    for entry in raw_subclasses:
+        if isinstance(entry, dict) and str(entry.get("id", "")) == subclass_id:
+            return entry
+    return None
+
+
 def _spellcasting_from_entry(
     entry: dict[str, Any], level: int, default_start: int
 ) -> bool:
@@ -129,17 +143,11 @@ def character_has_spellcasting(
         return True
     if not subclass_id:
         return False
-    raw_subclasses = class_info.get("subclasses", [])
-    if not isinstance(raw_subclasses, list):
+    subclass = get_subclass_dict(class_id, subclass_id)
+    if subclass is None:
         return False
     choice_level = get_subclass_choice_level(class_id)
-    for entry in raw_subclasses:
-        if not isinstance(entry, dict):
-            continue
-        if str(entry.get("id", "")) != subclass_id:
-            continue
-        return _spellcasting_from_entry(entry, level, choice_level)
-    return False
+    return _spellcasting_from_entry(subclass, level, choice_level)
 
 
 def _subclass_feature_ids_and_names(

@@ -2,6 +2,20 @@
 
 ## [Unreleased]
 
+### Added
+- `docs/BACKLOG.md` — открытые задачи Pre-Alpha; выполненное только в CHANGELOG
+- `core/classes.get_subclass_dict` — единый accessor подкласса из YAML
+- `core/grant_mechanics.mechanics_from_grant_entry` — разбор grant / class feature
+- Тесты: `test_abilities`, `test_grant_mechanics`, `test_scenario`
+
+### Changed
+- **Breaking:** JSON сейвов персонажа — канонические ключи `subclass_id`, `background_id` (без `subclass` / `background`)
+- Refactor wave 2: DRY subclass/grant parsing; `scenario_flow` → `_deps.update_character`
+- `ui/menus/_creation_handlers` — прямые импорты экранов (без F401 seam в `_creation_steps`)
+- Удалён `normalize_grant` из `core/grants.py`
+- PRD §11 удалён; backlog — `docs/BACKLOG.md`
+- Docs: purge legacy mentions в rules/, API, DATA_SCHEMA
+
 ### Changed
 - Rules DRY: один канон на факт — `AGENTS.md` (loop/steps/skills), `dnd-mud-workflow.mdc` (git delta), skills (verify/review); `DEVELOPMENT.md` §Git — индекс ссылок
 - Agent-loop: skill `dnd-mud-docs-after-task` — после завершения реализации, перед commit финализации

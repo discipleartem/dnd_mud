@@ -1,10 +1,10 @@
 """Интерактивный исполнитель YAML-сценариев приключений."""
 
+from collections.abc import Callable
 from typing import Any
 
 from colorama import Fore, Style
 
-from core.character_storage import update_character
 from core.localization import get_string, resolve_localized_text
 from core.models import Adventure, Character
 from core.scenario_actions import (
@@ -39,6 +39,37 @@ def _show_action_message(
     print()
 
 
+def _persist_menu_result(
+    updated: Character | None,
+    character: Character,
+) -> Character:
+    """Сохранить персонажа после UI-меню или вернуть исходного."""
+    if updated is not None:
+        return updated
+    _deps.update_character(character)
+    return character
+
+
+def _run_character_menu_action(
+    strings: StringsDict,
+    character: Character,
+    language: LanguageCode,
+    menu_fn: Callable[
+        [StringsDict, Character, LanguageCode],
+        Character | None,
+    ],
+    *,
+    message_key: str | None = None,
+) -> Character:
+    """Выполнить UI-меню и сохранить результат."""
+    character = _persist_menu_result(
+        menu_fn(strings, character, language),
+        character,
+    )
+    _show_action_message(strings, message_key)
+    return character
+
+
 def _handle_action_result(
     result: ScenarioActionResult,
     strings: StringsDict,
@@ -49,22 +80,20 @@ def _handle_action_result(
     if result.level_up_pending:
         character = run_pending_level_ups(strings, character, language)
     if result.pick_subclass:
-        updated = assign_subclass_from_menu(strings, character, language)
-        if updated is not None:
-            character = updated
-        else:
-            update_character(character)
-        _show_action_message(strings, result.message_key)
-        return character
+        return _run_character_menu_action(
+            strings,
+            character,
+            language,
+            assign_subclass_from_menu,
+            message_key=result.message_key,
+        )
     if result.apply_class_features:
-        updated = apply_pending_class_features(strings, character, language)
-        if updated is not None:
-            character = updated
-        else:
-            update_character(character)
-        return character
+        return _persist_menu_result(
+            apply_pending_class_features(strings, character, language),
+            character,
+        )
 
-    update_character(character)
+    _deps.update_character(character)
     _show_action_message(strings, result.message_key)
     return character
 
