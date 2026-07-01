@@ -113,3 +113,30 @@ def get_background_tool_proficiencies(
         if isinstance(raw, list):
             fixed.extend(str(t) for t in raw)
     return fixed, choices
+
+
+def get_background_equipment_items(
+    background_id: str,
+    background_tool_picks: list[str] | None = None,
+) -> list[dict[str, Any]]:
+    """Предметы стартового снаряжения предыстории (не владения)."""
+    from core.inventory import merge_inventory_items, normalize_inventory_item
+
+    items: list[dict[str, Any]] = []
+    for grant in grants_of_type(
+        _background_grants(background_id), "equipment_item"
+    ):
+        raw_items = grant.get("items", [])
+        if not isinstance(raw_items, list):
+            continue
+        for entry in raw_items:
+            if isinstance(entry, dict):
+                normalized = normalize_inventory_item(entry)
+                if normalized:
+                    items.append(normalized)
+
+    for tool_id in background_tool_picks or []:
+        if isinstance(tool_id, str) and tool_id:
+            items.append({"kind": "tool", "id": tool_id, "qty": 1})
+
+    return merge_inventory_items(items)
