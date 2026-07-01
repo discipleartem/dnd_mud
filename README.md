@@ -134,7 +134,10 @@ dnd_mud/
 │   ├── test_input_handler.py
 │   ├── test_localization.py
 │   ├── test_main.py
-│   ├── test_menus_character.py
+│   ├── test_menus_creation.py
+│   ├── test_menus_new_game.py
+│   ├── test_menus_characters_hub.py
+│   ├── test_data_schema.py
 │   ├── test_menus_stats.py
 │   ├── test_models.py
 │   └── test_settings.py
@@ -205,12 +208,7 @@ refactor: вынесена логика валидации ввода в input_h
 chore: обновлены зависимости в pyproject.toml
 ```
 
-**Правила Git** (подробнее — [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md)):
-- Две базовые ветки: `main` (protected) и `dev` (интеграционная, не отстаёт от `main`)
-- Задача — ветка от `dev` с именем по сути; сложные задачи — commit на подзадачу
-- PR: task branch → `dev` → `main`; merge — squash (один коммит в целевой ветке)
-- После merge task→`dev` — переименовать ветку в `merged/<исходное-имя>` (актуальные vs завершённые)
-- Прямые коммиты в `main` и `dev` запрещены
+**Правила Git** — [`AGENTS.md`](AGENTS.md) · [`docs/DEVELOPMENT.md`](docs/DEVELOPMENT.md) §Git Workflow
 
 ### Линтинг и форматирование
 

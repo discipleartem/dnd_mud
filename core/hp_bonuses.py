@@ -12,15 +12,13 @@ class HpBonusSource:
     amount: int
 
 
-def hit_point_bonus_amount(
-    mechanics: dict[str, Any], feat: dict[str, Any] | None = None
-) -> int:
-    """Значение hit_point_bonus из grant или legacy feature."""
-    feat = feat or {}
-    mtype = mechanics.get("type") or feat.get("type")
-    if mtype != "hit_point_bonus" or not mechanics.get("per_level"):
+def hit_point_bonus_amount(mechanics: dict[str, Any]) -> int:
+    """Значение hit_point_bonus из grant."""
+    if mechanics.get("type") != "hit_point_bonus" or not mechanics.get(
+        "per_level"
+    ):
         return 0
-    return int(mechanics.get("value", mechanics.get("amount", 0)))
+    return int(mechanics.get("amount", 0))
 
 
 def hit_point_bonus_sources_from_grants(

@@ -117,8 +117,7 @@ races:
           - shortbow
           type: weapon_proficiency
           name: Эльфийская боевая подготовка
-        - value: 35
-          type: speed_bonus
+        - type: speed_bonus
           amount: 35
           name: Быстрота
         - skill: stealth
@@ -200,8 +199,7 @@ races:
         ability_bonuses:
           wisdom: 1
         grants:
-        - value: 1
-          per_level: true
+        - per_level: true
           type: hit_point_bonus
           amount: 1
           name: Дварфская выдержка

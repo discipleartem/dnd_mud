@@ -11,13 +11,6 @@ from core.localization import resolve_localized_text
 from core.types import GameDifficulty, StatMap
 
 
-def _migrate_legacy_fields(data: dict[str, Any]) -> dict[str, Any]:
-    """Нормализовать устаревшие ключи JSON-сохранений."""
-    if "class_id" not in data and "class" in data:
-        return {**data, "class_id": data["class"]}
-    return data
-
-
 @dataclass
 class Character:
     """Модель персонажа."""
@@ -98,7 +91,6 @@ class Character:
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> "Character":
         """Создать из словаря."""
-        data = _migrate_legacy_fields(data)
         subrace = data.get("subrace")
         subclass_raw = data.get("subclass")
         languages_raw = data.get("languages", [])
@@ -214,7 +206,7 @@ class Adventure:
     id: str
     name: dict[str, str] | str = field(default_factory=dict)
     description: str = ""
-    difficulty: str = "normal"
+    content_tier: str = "normal"
     author: str = ""
     version: str = "1.0"
     allowed_game_difficulties: list[str] | None = None
@@ -233,7 +225,7 @@ class Adventure:
             id=data.get("id", ""),
             name=data.get("name", {}),
             description=data.get("description", ""),
-            difficulty=data.get("difficulty", "normal"),
+            content_tier=data.get("content_tier", "normal"),
             author=data.get("author", ""),
             version=data.get("version", "1.0"),
             allowed_game_difficulties=data.get("allowed_game_difficulties"),

@@ -5,7 +5,7 @@ from typing import Any
 
 from core.catalog_loader import clear_catalog_cache, load_catalog
 from core.grants import (
-    _ABILITY_INCREASE,
+    ABILITY_INCREASE,
     grants_from_entity,
     grants_of_type,
     inherit_flags,
@@ -116,12 +116,10 @@ def get_choice_ability_bonus_mechanics(
 ) -> dict[str, Any] | None:
     """Механика выборного бонуса к характеристикам из grants."""
     for grant in grants_of_type(
-        collect_race_grants(race_id, subrace_id), _ABILITY_INCREASE
+        collect_race_grants(race_id, subrace_id), ABILITY_INCREASE
     ):
         if grant.get("choice"):
             mechanics = dict(grant)
-            if "amount" in mechanics and "value" not in mechanics:
-                mechanics["value"] = mechanics["amount"]
             return mechanics
     return None
 

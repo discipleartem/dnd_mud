@@ -6,7 +6,7 @@ adventures:
       en: "Tutorial"
     description: "Короткое обучение основам игры"
     type: training
-    difficulty: easy
+    content_tier: easy
     min_level: 1
     allowed_game_difficulties: [easy, normal, hardcore]
     script_file: "adventures/tutorial.yaml"
@@ -17,7 +17,7 @@ adventures:
       en: "Lost Mine of Phandelver"
     description: "Классическое приключение для начинающих искателей приключений"
     type: adventure
-    difficulty: normal
+    content_tier: normal
     min_level: 1
     hardcore_only: true
     script_file: "adventures/lost_mine.yaml"

@@ -24,16 +24,11 @@ def test_character_round_trip_with_subrace():
 
 
 def test_character_from_dict_reads_class_id():
-    """from_dict читает class_id; legacy-ключ class — fallback."""
-    from_class_id = Character.from_dict(
+    """from_dict читает class_id."""
+    character = Character.from_dict(
         {"name": "X", "race": "human", "class_id": "wizard"}
     )
-    from_legacy = Character.from_dict(
-        {"name": "Y", "race": "elf", "class": "rogue"}
-    )
-
-    assert from_class_id.class_id == "wizard"
-    assert from_legacy.class_id == "rogue"
+    assert character.class_id == "wizard"
 
 
 def test_character_from_dict_defaults():

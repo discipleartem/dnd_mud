@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://dnd-mud.local/schema/v1/class_progression.json",
+  "title": "ClassProgression",
+  "type": "object",
+  "required": ["progression"],
+  "properties": {
+    "progression": {
+      "type": "object",
+      "minProperties": 1,
+      "patternProperties": {
+        "^[0-9]+$": {
+          "type": "object",
+          "required": ["grants"],
+          "properties": {
+            "grants": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["id"],
+                "properties": {
+                  "id": { "type": "string", "minLength": 1 },
+                  "level": { "type": "integer" },
+                  "feature_type": { "type": "string" },
+                  "mechanics": { "type": "object" },
+                  "expertise_mechanics": { "type": "object" }
+                },
+                "additionalProperties": true
+              }
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": true
+}

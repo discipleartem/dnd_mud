@@ -2,7 +2,32 @@
 
 ## [Unreleased]
 
+### Changed
+- Rules DRY: один канон на факт — `AGENTS.md` (loop/steps/skills), `dnd-mud-workflow.mdc` (git delta), skills (verify/review); `DEVELOPMENT.md` §Git — индекс ссылок
+- Agent-loop: skill `dnd-mud-docs-after-task` — после завершения реализации, перед commit финализации
+
 ### Added
+- `core/classes.py` — `iter_class_grants`, `grants_at_level` (чтение `progression.<level>.grants`)
+
+### Changed
+- **Breaking:** `database/content/adventures.yaml` — `difficulty` → `content_tier`; `Adventure.content_tier` вместо `Adventure.difficulty`
+- **Breaking:** `database/classes/classes.yaml` — `class_features[]` → `progression.<level>.grants`
+- **Breaking:** `database/backgrounds/backgrounds.yaml` — только `grants[]` (удалены дубли `skills`, `languages`, `tool_proficiencies`)
+- **Breaking:** `database/races/races.yaml` — grants используют только `amount` (без `value`)
+- Строки UI: placeholder `{content_tier}` в списке приключений
+
+### Changed
+- **Breaking:** удалены legacy fallback в core: `normalize_grant` алиасы, `inherit_base_*`, backgrounds top-level fields, `"class"` в JSON, dual `value`/`amount`, equipment prof fallback в UI
+### Changed
+- `core/feats.py` → фасад; leaf-модули `feat_descriptions`, `feat_requirements`, `feat_apply`
+- `core/proficiencies.py` → фасад; leaf-модули `proficiency_collect`, `proficiency_checks`
+- Тесты UI: `test_menus_character.py` → `test_menus_creation`, `test_menus_new_game`, `test_menus_characters_hub`
+
+### Added
+- `database/schema/v1/` — JSON Schema для grants, backgrounds, adventures, class progression
+- `tests/test_data_schema.py`, `scripts/validate_data.py`; dev-зависимость `jsonschema`
+
+### Changed
 - `scripts/verify_targets.py` — маппинг git diff → pytest/lint; `make verify-changed`, `verify-scope`, `verify`
 - `.github/workflows/ci.yml` — полный `make check` + `make test` на PR в `dev` / `main`
 - `tests/test_verify_targets.py`
@@ -12,6 +37,7 @@
 
 ### Changed
 - Тесты: агрессивный рефакторинг — слияние мелких файлов (`dice`/`constants`→`stats`, `mod_loader`→`catalog_loader`, `skills`→`proficiencies`, `creation_handlers`→`menus_character`, `subclass_trainer`→`subclasses`, `adventure`→`models`, `level_up`/`scenario`→`progression`); dedup core/UI; обновлён `verify_targets`
+- Git workflow: запрос «сделай PR into dev» включает обязательный rename в `merged/…` после squash merge (`dnd-mud-workflow.mdc`, `AGENTS.md`, `user-protocols.mdc`)
 - Git workflow: после squash merge PR task→`dev` — переименование ветки в `merged/<исходное-имя>` (`dnd-mud-workflow.mdc`, `AGENTS.md`, `DEVELOPMENT.md`)
 - Pre-commit: `make verify-changed` вместо полного `make check` + `make test`
 - Verify workflow: подзадача → `verify-changed`, конец task-ветки → `verify-scope`, full → CI

@@ -28,7 +28,7 @@ def handle_menu_choice(choice: int, loc, settings) -> tuple[bool, object]:
     return True, settings
 ```
 
-Тесты — `dnd-mud-tests.mdc`. Verify — `dnd-mud-workflow.mdc`.
+Тесты — `dnd-mud-tests.mdc`. Verify — skill [`dnd-mud-verify`](.cursor/skills/dnd-mud-verify/SKILL.md).
 
 ## Синтаксис и типы (3.12)
 
@@ -44,14 +44,9 @@ UI-строки — из YAML (`database/strings/`); f-strings в коде — �
 
 ## Tooling
 
-```bash
-make verify-changed   # подзадача: lint + test staged .py
-make verify-scope     # конец задачи: diff origin/dev...HEAD
-make verify           # full: check + test (CI)
-make check            # ruff + black --check + mypy (весь проект)
-```
+Verify — skill [`dnd-mud-verify`](.cursor/skills/dnd-mud-verify/SKILL.md). Lint: `make check` (ruff + black + mypy).
 
-venv: `python3.12 -m venv .venv` (см. [DEVELOPMENT.md](../../docs/DEVELOPMENT.md)).
+venv: [`01-operations.mdc`](~/.cursor/rules/01-operations.mdc) §Virtual environment.
 
 ## Ограничения
 

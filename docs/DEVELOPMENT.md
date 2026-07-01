@@ -122,7 +122,10 @@ dnd_mud/
 │   ├── test_catalog_loader.py  # catalog + mod_loader
 │   ├── test_proficiencies.py   # proficiencies + skills
 │   ├── test_progression.py     # progression, level-up UI, scenario
-│   ├── test_menus_character.py # creation handlers, new game
+│   ├── test_menus_creation.py   # creation handlers, subrace, feat routing
+│   ├── test_menus_new_game.py   # new game, adventure selection
+│   ├── test_menus_characters_hub.py  # characters menu hub
+│   ├── test_data_schema.py      # YAML vs JSON Schema v1
 │   ├── test_subclasses.py      # subclasses + subclass_trainer
 │   ├── test_models.py          # models + adventure load
 │   └── test_verify_targets.py
@@ -187,7 +190,7 @@ make install-hooks   # или make install — подключает .githooks/pr
 - На сценарий — **один** тест на слой: core **или** 0–1 UI smoke (monkeypatch-навигация), не дублировать unit + integration одного пути
 - Похожие кейсы — `@pytest.mark.parametrize`, не копии функций; мелкие домены — в существующий `test_*.py`, не новый файл на 1–2 теста
 - При фиче или фиксе — минимальный diff в `tests/`: столько assert, сколько нужно для изменённого поведения
-- Эталоны стиля: `tests/test_difficulty.py` (короткий unit), `tests/test_menus_character.py` (интеграция UI без тяжёлых моков)
+- Эталоны стиля: `tests/test_difficulty.py` (короткий unit), `tests/test_menus_creation.py` (интеграция UI без тяжёлых моков)
 - Не обязательно закрывать все пробелы из backlog Pre-Alpha — тест добавляется, когда есть реальное поведение, баг или риск регрессии
 
 Подробные правила для агентов: `.cursor/rules/dnd-mud-tests.mdc`.
@@ -203,7 +206,10 @@ make install-hooks   # или make install — подключает .githooks/pr
 | `test_progression.py` | XP, level-up core + UI smoke, scenario grant_xp |
 | `test_feats.py` | черты, visibility, UI выбора |
 | `test_character.py` | save/load, stats, slug |
-| `test_menus_character.py` | подрасы, new game, creation handlers |
+| `test_menus_creation.py` | подрасы, creation handlers, feat routing |
+| `test_menus_new_game.py` | new game, adventure selection |
+| `test_menus_characters_hub.py` | characters menu hub |
+| `test_data_schema.py` | YAML-каталоги vs JSON Schema v1 |
 | `test_menus_stats.py` | генерация характеристик, HardCore 4d6 |
 | `test_subclasses.py` | подклассы, NPC-наставник |
 | `test_models.py` | Character/Adventure, load adventures |
@@ -212,104 +218,42 @@ make install-hooks   # или make install — подключает .githooks/pr
 Запуск конкретного тестового файла:
 
 ```bash
-pytest tests/test_menus_character.py -v
+pytest tests/test_menus_creation.py -v
+pytest tests/test_data_schema.py -v
 ```
 
 ## Git Workflow
 
-Канон agent: [`.cursor/rules/dnd-mud-workflow.mdc`](../.cursor/rules/dnd-mud-workflow.mdc) · оркестрация [`AGENTS.md`](../AGENTS.md) · global [`01-operations.mdc`](~/.cursor/rules/01-operations.mdc). Sync FAQ: [`~/.cursor/docs/git-dev-main-sync.md`](~/.cursor/docs/git-dev-main-sync.md).
+Канон для агентов — **не дублировать команды здесь**:
 
-IDE: расширения **GitHub Pull Requests** и **GitHub Actions** — настройки [`.vscode/settings.json`](../.vscode/settings.json) (squash merge, фильтры PR).
+| Тема | Канон |
+|------|-------|
+| Agent-loop, steps, skills | [`AGENTS.md`](../AGENTS.md) |
+| Git-старт, rebase, multi-branch, PR, rename | [`.cursor/rules/dnd-mud-workflow.mdc`](../.cursor/rules/dnd-mud-workflow.mdc) |
+| Task cycle (global) | [`01-operations.mdc`](~/.cursor/rules/01-operations.mdc) §Task cycle |
+| Verify | skill [`.cursor/skills/dnd-mud-verify`](../.cursor/skills/dnd-mud-verify/SKILL.md) |
+| Review | skill [`.cursor/skills/dnd-mud-review`](../.cursor/skills/dnd-mud-review/SKILL.md) |
+| Release `dev` → `main` | skill [`.cursor/skills/dnd-mud-release`](../.cursor/skills/dnd-mud-release/SKILL.md) |
+| Sync `dev`←`main` | [`git-dev-main-sync.md`](~/.cursor/docs/git-dev-main-sync.md) |
 
-### Цикл задачи
+IDE: расширения **GitHub Pull Requests** и **GitHub Actions** — [`.vscode/settings.json`](../.vscode/settings.json).
 
-```
-git-старт → task-ветка → подзадачи (commits) → docs → verify → review (light|full) → push → PR task→dev
-→ squash merge → rename task → merged/… → (накопление в dev) → PR dev→main → Action sync dev←main
-```
+### Code review
 
-### Git-старт (перед работой)
+Канон: skill [`.cursor/skills/dnd-mud-review`](../.cursor/skills/dnd-mud-review/SKILL.md). GitHub PR Bugbot — **нет**.
 
-См. [`dnd-mud-workflow.mdc`](../.cursor/rules/dnd-mud-workflow.mdc) §Git и [`01-operations.mdc`](~/.cursor/rules/01-operations.mdc) §Task cycle шаг 1.
+Quality gate PR `task → dev`: `make verify-scope` + review (light/full). Full pytest/lint — CI [`ci.yml`](../.github/workflows/ci.yml).
 
-```bash
-git fetch origin
-git checkout main && git pull origin main
-git checkout dev && git pull origin dev
-git log dev..origin/main --oneline   # must be empty
-git merge origin/main && make verify-scope && git push origin dev   # если main впереди
-git checkout -b feat/my-task
-```
+### Cursor IDE (Agent Review)
 
-### Завершение task-ветки
-
-См. [`dnd-mud-workflow.mdc`](../.cursor/rules/dnd-mud-workflow.mdc) §Git (delta).
-
-```bash
-git fetch origin && git rebase origin/dev
-make verify-scope
-# skill dnd-mud-review — light или full, один раз, до push/PR
-git push -u origin HEAD        # после rebase на remote: --force-with-lease
-gh pr create --base dev --title "feat: …"   # squash merge
-```
-
-### После merge task-ветки в `dev`
-
-Канон: [`dnd-mud-workflow.mdc`](../.cursor/rules/dnd-mud-workflow.mdc) §Git (delta).
-
-После squash merge PR переименовать task-ветку в `merged/<исходное-имя>` — на `origin` и локально. Так в списке веток видно, что **актуальные** (`feat/…`, `fix/…`) ещё в работе, а **`merged/…`** уже влиты в `dev`.
-
-| Статус | Пример |
-|--------|--------|
-| В работе | `feat/character-stats-menu` |
-| Завершена | `merged/feat/character-stats-menu` |
-
-```bash
-TASK=feat/my-task
-MERGED=merged/feat/my-task
-git fetch origin
-git checkout dev && git pull origin dev
-git push origin "refs/heads/${TASK}:refs/heads/${MERGED}"
-git push origin --delete "${TASK}"
-git branch -m "${TASK}" "${MERGED}" 2>/dev/null || git branch -D "${TASK}" 2>/dev/null || true
-git fetch origin --prune
-```
-
-`main` и `dev` не переименовывать. Если имя уже начинается с `merged/` — повторный префикс не добавлять.
-
-### Code review (локальный, не GitHub Bugbot)
-
-Канон: skill [`.cursor/skills/dnd-mud-review`](../.cursor/skills/dnd-mud-review/SKILL.md).
-
-| Канал | Использование |
-|-------|----------------|
-| **Light review** (оркестратор, diff vs `dev`) | Узкий diff без `core/`/`database/`/`mods/`/`ui/`/`main.py` — критерии и метрики: skill [`dnd-mud-review`](../.cursor/skills/dnd-mud-review/SKILL.md) (`git diff --shortstat`, `--name-only`) |
-| **Full review** (subagent `bugbot`) | Рискованные изменения; явный запрос «полный review» |
-| GitHub PR Bugbot (авто на push, `.cursor/BUGBOT.md`) | **Нет** |
-
-Повтор после fix Blocker — **light re-check** (не full bugbot по умолчанию). Release `dev` → `main` — без обязательного bugbot; см. skill [`dnd-mud-release`](../.cursor/skills/dnd-mud-release/SKILL.md).
-
-Quality gate на PR `task → dev`: локальный `make verify-scope` + review (light или full). Полный pytest/lint — CI [`ci.yml`](../.github/workflows/ci.yml) на PR в `dev`/`main`; sync-check release — [`pr-dev-to-main-check.yml`](../.github/workflows/pr-dev-to-main-check.yml).
-
-#### Рекомендуемые настройки Cursor IDE
-
-Cursor Settings → **Agent Review**:
-
-| Настройка | Значение |
-|-----------|----------|
-| Start Agent Review on Commit | **OFF** |
-| Include Submodules in Agent Review | **OFF** |
-| Include Untracked Files in Agent Review | **OFF** |
-| Default Approach | **Quick** |
-
-Auto-review на каждый commit дублирует skill `dnd-mud-review` и сильно увеличивает расход `agent_review` в [dashboard usage](https://cursor.com/dashboard/usage).
+Канон: [`.cursor/rules/dnd-mud-workflow.mdc`](../.cursor/rules/dnd-mud-workflow.mdc) §Verify / review — Agent Review on Commit **OFF**, Default Approach **Quick**.
 
 ### Экономия токенов Agent
 
 | Практика | Зачем |
 |----------|-------|
 | Короткие task-ветки (1 фича, 1–3 дня) | Меньше контекста и diff |
-| Один чат ≈ одна ветка | Не тащить историю прошлых задач |
+| Один чат ≈ одна интеграционная ветка к PR | Вспомогательные ветки по плану — ок, но перед PR слить в одну |
 | Review один раз в конце (light или full) | Не дублировать проверку в чате и bugbot |
 | `rebase origin/dev` перед full review | Минимальный diff для bugbot |
 | Plan mode для крупных задач | Меньше итераций fix в Agent |

@@ -6,16 +6,6 @@ backgrounds:
     description:
       ru: Служитель храма, посвящённого богу или пантеону.
       en: A temple servant devoted to a god or pantheon.
-    skills:
-    - insight
-    - religion
-    languages:
-      count: 2
-      choice: true
-      pool: common
-    tools: []
-    tool_proficiencies:
-      fixed: []
     equipment:
       ru:
       - священный символ
@@ -54,21 +44,6 @@ backgrounds:
     description:
       ru: Мастер обмана, интриг и подделок.
       en: A master of deception, intrigue, and forgery.
-    skills:
-    - sleight_of_hand
-    - deception
-    languages: {}
-    tools:
-      ru:
-      - набор для грима
-      - набор для фальсификации
-      en:
-      - disguise kit
-      - forgery kit
-    tool_proficiencies:
-      fixed:
-      - disguise_kit
-      - forgery_kit
     equipment:
       ru:
       - отличная одежда
@@ -105,23 +80,6 @@ backgrounds:
     description:
       ru: Преступник с тёмным прошлым, привыкший жить вне закона.
       en: An outlaw accustomed to living outside the law.
-    skills:
-    - deception
-    - stealth
-    languages: {}
-    tools:
-      ru:
-      - воровские инструменты
-      - один игровой набор
-      en:
-      - thieves' tools
-      - one gaming set
-    tool_proficiencies:
-      fixed:
-      - thieves_tools
-      choices:
-      - count: 1
-        pool: gaming_sets
     equipment:
       ru:
       - ломик
@@ -157,23 +115,6 @@ backgrounds:
     description:
       ru: Странствующий артист, мастер выступлений.
       en: A traveling performer skilled in the performing arts.
-    skills:
-    - acrobatics
-    - performance
-    languages: {}
-    tools:
-      ru:
-      - набор для грима
-      - музыкальный инструмент
-      en:
-      - disguise kit
-      - musical instrument
-    tool_proficiencies:
-      fixed:
-      - disguise_kit
-      choices:
-      - count: 1
-        pool: musical_instruments
     equipment:
       ru:
       - музыкальный инструмент
@@ -211,23 +152,6 @@ backgrounds:
     description:
       ru: Защитник простых людей из народа.
       en: A champion of the common folk.
-    skills:
-    - survival
-    - animal_handling
-    languages: {}
-    tools:
-      ru:
-      - ремесленные инструменты
-      - наземный транспорт
-      en:
-      - artisan's tools
-      - land vehicles
-    tool_proficiencies:
-      fixed:
-      - land_vehicles
-      choices:
-      - count: 1
-        pool: artisans_tools
     equipment:
       ru:
       - ремесленные инструменты
@@ -267,22 +191,6 @@ backgrounds:
     description:
       ru: Член гильдии ремесленников, мастер своего дела.
       en: A member of a guild of artisans and master crafters.
-    skills:
-    - insight
-    - persuasion
-    languages:
-      count: 1
-      choice: true
-      pool: common
-    tools:
-      ru:
-      - ремесленные инструменты
-      en:
-      - artisan's tools
-    tool_proficiencies:
-      choices:
-      - count: 1
-        pool: artisans_tools
     equipment:
       ru:
       - ремесленные инструменты
@@ -321,21 +229,6 @@ backgrounds:
     description:
       ru: Живущий в уединении искатель истины.
       en: A recluse who lived in seclusion seeking truth.
-    skills:
-    - medicine
-    - religion
-    languages:
-      count: 1
-      choice: true
-      pool: common
-    tools:
-      ru:
-      - набор травника
-      en:
-      - herbalism kit
-    tool_proficiencies:
-      fixed:
-      - herbalism_kit
     equipment:
       ru:
       - контейнер для свитков
@@ -375,22 +268,6 @@ backgrounds:
     description:
       ru: Представитель знатного рода.
       en: Scion of a noble family.
-    skills:
-    - history
-    - persuasion
-    languages:
-      count: 1
-      choice: true
-      pool: common
-    tools:
-      ru:
-      - игровой набор
-      en:
-      - gaming set
-    tool_proficiencies:
-      choices:
-      - count: 1
-        pool: gaming_sets
     equipment:
       ru:
       - отличная одежда
@@ -429,22 +306,6 @@ backgrounds:
     description:
       ru: Выросший в глуши, вдали от цивилизации.
       en: Raised in the wilds, far from civilization.
-    skills:
-    - athletics
-    - survival
-    languages:
-      count: 1
-      choice: true
-      pool: common
-    tools:
-      ru:
-      - музыкальный инструмент
-      en:
-      - musical instrument
-    tool_proficiencies:
-      choices:
-      - count: 1
-        pool: musical_instruments
     equipment:
       ru:
       - посох
@@ -485,16 +346,6 @@ backgrounds:
     description:
       ru: Учёный, посвятивший жизнь знаниям.
       en: A scholar devoted to knowledge.
-    skills:
-    - history
-    - arcana
-    languages:
-      count: 2
-      choice: true
-      pool: common
-    tools: []
-    tool_proficiencies:
-      fixed: []
     equipment:
       ru:
       - чёрнильница
@@ -535,21 +386,6 @@ backgrounds:
     description:
       ru: Мореплаватель, проведший годы на корабле.
       en: A seafarer who spent years aboard ship.
-    skills:
-    - athletics
-    - perception
-    languages: {}
-    tools:
-      ru:
-      - инструменты навигатора
-      - водный транспорт
-      en:
-      - navigator's tools
-      - water vehicles
-    tool_proficiencies:
-      fixed:
-      - navigator_tools
-      - water_vehicles
     equipment:
       ru:
       - бelaying pin
@@ -588,23 +424,6 @@ backgrounds:
     description:
       ru: Ветеран военных конфликтов.
       en: A veteran of military campaigns.
-    skills:
-    - athletics
-    - intimidation
-    languages: {}
-    tools:
-      ru:
-      - игровой набор
-      - наземный транспорт
-      en:
-      - gaming set
-      - land vehicles
-    tool_proficiencies:
-      fixed:
-      - land_vehicles
-      choices:
-      - count: 1
-        pool: gaming_sets
     equipment:
       ru:
       - знак отличия
@@ -644,21 +463,6 @@ backgrounds:
     description:
       ru: Выросший на улицах города.
       en: Grew up on the city streets.
-    skills:
-    - sleight_of_hand
-    - stealth
-    languages: {}
-    tools:
-      ru:
-      - воровские инструменты
-      - набор для грима
-      en:
-      - thieves' tools
-      - disguise kit
-    tool_proficiencies:
-      fixed:
-      - thieves_tools
-      - disguise_kit
     equipment:
       ru:
       - маленький нож
