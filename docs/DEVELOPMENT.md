@@ -224,114 +224,29 @@ pytest tests/test_data_schema.py -v
 
 ## Git Workflow
 
-Канон agent: [`.cursor/rules/dnd-mud-workflow.mdc`](../.cursor/rules/dnd-mud-workflow.mdc) · оркестрация [`AGENTS.md`](../AGENTS.md) · global [`01-operations.mdc`](~/.cursor/rules/01-operations.mdc). Sync FAQ: [`~/.cursor/docs/git-dev-main-sync.md`](~/.cursor/docs/git-dev-main-sync.md).
+Канон для агентов — **не дублировать команды здесь**:
 
-IDE: расширения **GitHub Pull Requests** и **GitHub Actions** — настройки [`.vscode/settings.json`](../.vscode/settings.json) (squash merge, фильтры PR).
+| Тема | Канон |
+|------|-------|
+| Agent-loop, steps, skills | [`AGENTS.md`](../AGENTS.md) |
+| Git-старт, rebase, multi-branch, PR, rename | [`.cursor/rules/dnd-mud-workflow.mdc`](../.cursor/rules/dnd-mud-workflow.mdc) |
+| Task cycle (global) | [`01-operations.mdc`](~/.cursor/rules/01-operations.mdc) §Task cycle |
+| Verify | skill [`.cursor/skills/dnd-mud-verify`](../.cursor/skills/dnd-mud-verify/SKILL.md) |
+| Review | skill [`.cursor/skills/dnd-mud-review`](../.cursor/skills/dnd-mud-review/SKILL.md) |
+| Release `dev` → `main` | skill [`.cursor/skills/dnd-mud-release`](../.cursor/skills/dnd-mud-release/SKILL.md) |
+| Sync `dev`←`main` | [`git-dev-main-sync.md`](~/.cursor/docs/git-dev-main-sync.md) |
 
-### Цикл задачи
+IDE: расширения **GitHub Pull Requests** и **GitHub Actions** — [`.vscode/settings.json`](../.vscode/settings.json).
 
-```
-git-старт → task-ветка → подзадачи (commits) → [слияние вспомогательных веток]* → docs → verify → review (light|full) → push → PR task→dev
-→ squash merge → rename task → merged/… → (накопление в dev) → PR dev→main → Action sync dev←main
-```
+### Code review
 
-\* Если план задачи предусматривал несколько веток — перед docs слить их в одну интеграционную task-ветку. Канон: [`dnd-mud-workflow.mdc`](../.cursor/rules/dnd-mud-workflow.mdc) §Несколько веток по плану.
+Канон: skill [`.cursor/skills/dnd-mud-review`](../.cursor/skills/dnd-mud-review/SKILL.md). GitHub PR Bugbot — **нет**.
 
-### Git-старт (перед работой)
+Quality gate PR `task → dev`: `make verify-scope` + review (light/full). Full pytest/lint — CI [`ci.yml`](../.github/workflows/ci.yml).
 
-См. [`dnd-mud-workflow.mdc`](../.cursor/rules/dnd-mud-workflow.mdc) §Git и [`01-operations.mdc`](~/.cursor/rules/01-operations.mdc) §Task cycle шаг 1.
+### Cursor IDE (Agent Review)
 
-```bash
-git fetch origin
-git checkout main && git pull origin main
-git checkout dev && git pull origin dev
-git log dev..origin/main --oneline   # must be empty
-git merge origin/main && make verify-scope && git push origin dev   # если main впереди
-git checkout -b feat/my-task
-```
-
-### Несколько веток по плану
-
-Если план (Plan mode, Agent, `.plan.md`) предусматривает **несколько веток** — параллельные подзадачи, изолированные части — работать можно на вспомогательных ветках (`feat/<slug>-<part>`), но **перед docs / verify / PR** обязательно слить всё в одну **интеграционную** ветку (`feat/<slug>` с git-старт).
-
-Канон: [`dnd-mud-workflow.mdc`](../.cursor/rules/dnd-mud-workflow.mdc) §Несколько веток по плану.
-
-```bash
-TASK=feat/my-task
-git fetch origin
-git checkout "${TASK}" && git rebase origin/dev
-git merge --no-ff feat/my-task-part-a   # повторить для каждой вспомогательной
-make verify-scope
-git push -u origin "${TASK}"
-git push origin --delete feat/my-task-part-a   # удалить вспомогательные на origin
-```
-
-### Завершение task-ветки (PR + rename)
-
-См. [`dnd-mud-workflow.mdc`](../.cursor/rules/dnd-mud-workflow.mdc) §PR task → dev.
-
-Запрос **«сделай PR into dev»** на task-ветке — не только `gh pr create`, но и **обязательный rename** в `merged/…` после squash merge.
-
-```bash
-git fetch origin && git rebase origin/dev
-make verify-scope
-# skill dnd-mud-review — light или full, один раз, до push/PR
-git push -u origin HEAD        # после rebase на remote: --force-with-lease
-gh pr create --base dev --title "feat: …"
-# после squash merge в dev (или сразу, если PR уже MERGED):
-# rename → merged/<исходное-имя> — команды ниже
-```
-
-### Rename после squash merge в `dev`
-
-Канон: [`dnd-mud-workflow.mdc`](../.cursor/rules/dnd-mud-workflow.mdc) §PR task → dev.
-
-Переименовать task-ветку в `merged/<исходное-имя>` на `origin` и локально — **до merge не делать** (head открытого PR). Агент выполняет rename в том же turn, если PR уже смержен; иначе — по подтверждению пользователя («смержил», «PR merged»).
-
-| Статус | Пример |
-|--------|--------|
-| В работе / PR открыт | `feat/character-stats-menu` |
-| Завершена (после squash merge) | `merged/feat/character-stats-menu` |
-
-```bash
-TASK=feat/my-task
-MERGED=merged/feat/my-task
-git fetch origin
-git checkout dev && git pull origin dev
-git push origin "refs/heads/${TASK}:refs/heads/${MERGED}"
-git push origin --delete "${TASK}"
-git branch -m "${TASK}" "${MERGED}" 2>/dev/null || git branch -D "${TASK}" 2>/dev/null || true
-git fetch origin --prune
-```
-
-`main` и `dev` не переименовывать. Если имя уже начинается с `merged/` — повторный префикс не добавлять.
-
-### Code review (локальный, не GitHub Bugbot)
-
-Канон: skill [`.cursor/skills/dnd-mud-review`](../.cursor/skills/dnd-mud-review/SKILL.md).
-
-| Канал | Использование |
-|-------|----------------|
-| **Light review** (оркестратор, diff vs `dev`) | Узкий diff без `core/`/`database/`/`mods/`/`ui/`/`main.py` — критерии и метрики: skill [`dnd-mud-review`](../.cursor/skills/dnd-mud-review/SKILL.md) (`git diff --shortstat`, `--name-only`) |
-| **Full review** (subagent `bugbot`) | Рискованные изменения; явный запрос «полный review» |
-| GitHub PR Bugbot (авто на push, `.cursor/BUGBOT.md`) | **Нет** |
-
-Повтор после fix Blocker — **light re-check** (не full bugbot по умолчанию). Release `dev` → `main` — без обязательного bugbot; см. skill [`dnd-mud-release`](../.cursor/skills/dnd-mud-release/SKILL.md).
-
-Quality gate на PR `task → dev`: локальный `make verify-scope` + review (light или full). Полный pytest/lint — CI [`ci.yml`](../.github/workflows/ci.yml) на PR в `dev`/`main`; sync-check release — [`pr-dev-to-main-check.yml`](../.github/workflows/pr-dev-to-main-check.yml).
-
-#### Рекомендуемые настройки Cursor IDE
-
-Cursor Settings → **Agent Review**:
-
-| Настройка | Значение |
-|-----------|----------|
-| Start Agent Review on Commit | **OFF** |
-| Include Submodules in Agent Review | **OFF** |
-| Include Untracked Files in Agent Review | **OFF** |
-| Default Approach | **Quick** |
-
-Auto-review на каждый commit дублирует skill `dnd-mud-review` и сильно увеличивает расход `agent_review` в [dashboard usage](https://cursor.com/dashboard/usage).
+Канон: [`.cursor/rules/dnd-mud-workflow.mdc`](../.cursor/rules/dnd-mud-workflow.mdc) §Verify / review — Agent Review on Commit **OFF**, Default Approach **Quick**.
 
 ### Экономия токенов Agent
 

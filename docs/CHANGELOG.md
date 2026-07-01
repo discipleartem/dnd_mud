@@ -3,7 +3,8 @@
 ## [Unreleased]
 
 ### Changed
-- Git workflow: если план задачи предусматривает несколько веток — перед завершением слить их в одну интеграционную (`dnd-mud-workflow.mdc`, `AGENTS.md`, `01-operations.mdc`, `DEVELOPMENT.md`)
+- Rules DRY: один канон на факт — `AGENTS.md` (loop/steps/skills), `dnd-mud-workflow.mdc` (git delta), skills (verify/review); `DEVELOPMENT.md` §Git — индекс ссылок
+- Agent-loop: skill `dnd-mud-docs-after-task` — после завершения реализации, перед commit финализации
 
 ### Added
 - `core/classes.py` — `iter_class_grants`, `grants_at_level` (чтение `progression.<level>.grants`)

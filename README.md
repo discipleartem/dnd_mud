@@ -208,12 +208,7 @@ refactor: вынесена логика валидации ввода в input_h
 chore: обновлены зависимости в pyproject.toml
 ```
 
-**Правила Git** (подробнее — [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md)):
-- Две базовые ветки: `main` (protected) и `dev` (интеграционная, не отстаёт от `main`)
-- Задача — ветка от `dev` с именем по сути; сложные задачи — commit на подзадачу; несколько веток по плану — перед PR слить в одну интеграционную
-- PR: task branch → `dev` → `main`; merge — squash (один коммит в целевой ветке)
-- Запрос «сделай PR into dev» → `gh pr create` **и** rename в `merged/<исходное-имя>` после squash merge (сразу, если PR уже merged)
-- Прямые коммиты в `main` и `dev` запрещены
+**Правила Git** — [`AGENTS.md`](AGENTS.md) · [`docs/DEVELOPMENT.md`](docs/DEVELOPMENT.md) §Git Workflow
 
 ### Линтинг и форматирование
 

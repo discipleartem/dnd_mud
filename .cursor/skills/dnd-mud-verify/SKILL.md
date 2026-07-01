@@ -8,7 +8,7 @@ disable-model-invocation: true
 
 # dnd_mud — verify
 
-Канон: [`dnd-mud-workflow.mdc`](../../rules/dnd-mud-workflow.mdc). Браузер **запрещён** — только консоль.
+Канон: [`AGENTS.md`](../AGENTS.md) · skill [`dnd-mud-verify`](../../skills/dnd-mud-verify/SKILL.md). Policy: [`dnd-mud-workflow.mdc`](../../rules/dnd-mud-workflow.mdc) §Verify / review.
 
 ## Три уровня verify
 
@@ -23,14 +23,13 @@ disable-model-invocation: true
 ## Когда выполнять
 
 - **Подзадача:** `make verify-changed` после правок (или полагается на pre-commit).
-- **Конец task-ветки:** один раз **после** docs (skill `dnd-mud-docs-after-task`), **перед** review — `make verify-scope`.
+- **Конец task-ветки:** один раз **после** docs и commit финализации (skill `dnd-mud-docs-after-task`), **перед** review — `make verify-scope`.
 - **Full локально** — по желанию перед push; **обязателен** в CI ([`.github/workflows/ci.yml`](../../.github/workflows/ci.yml)) на PR в `dev` / `main`.
 
 ## Предусловия
 
 - [ ] git-старт был в начале сессии ([`dnd-mud-workflow.mdc`](../../rules/dnd-mud-workflow.mdc) §Git)
-- [ ] Коммиты подзадач сделаны
-- [ ] Документация обновлена (или пропущена по правилам)
+- [ ] Реализация завершена; skill `dnd-mud-docs-after-task` выполнен (docs + commit финализации)
 
 ## Команды (из `.venv`)
 
