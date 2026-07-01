@@ -6,9 +6,21 @@ from typing import Any
 import pytest
 
 import core.settings as settings_mod
+from core.localization import get_string
 from ui.input_handler import get_int_input, get_str_input
 from ui.menus import main_menu
 from ui.menus import settings as settings_menu
+
+
+@pytest.mark.parametrize(
+    ("fixture_name", "expected"),
+    [("ru_strings", "Languages"), ("en_strings", "Языки")],
+)
+def test_menu_languages_cross_locale_label(
+    fixture_name: str, expected: str, request: pytest.FixtureRequest
+) -> None:
+    strings = request.getfixturevalue(fixture_name)
+    assert get_string(strings, "menu.languages") == expected
 
 
 def test_show_main_menu_and_load_game_stub(
