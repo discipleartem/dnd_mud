@@ -36,6 +36,8 @@ message = "New Game"                            # ❌
 
 ## D&D механика
 
+Источник истины PHB — [`00-project.mdc`](00-project.mdc) §D&D 5e (2023) — источник истины (`docs/PHB_ D&D_2023 RUS.pdf`).
+
 - Модели в `core/models.py` — `dataclass` для `Character`, `Adventure`
 - `class_id: str` на `Character`; `CharacterClass` Enum — целевой рефакторинг, не блокер
 - Баланс из YAML — без magic numbers в Python

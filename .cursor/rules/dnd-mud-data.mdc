@@ -6,6 +6,8 @@ alwaysApply: false
 
 # dnd_mud data layer
 
+Источник истины расы/классы/снаряжение PHB — [`00-project.mdc`](00-project.mdc) §D&D 5e (2023) — источник истины (`docs/PHB_ D&D_2023 RUS.pdf`).
+
 Проект **не использует SQL-БД**. Данные — файлы YAML и JSON.
 
 ## Когда какой формат

@@ -29,6 +29,10 @@ Verify-уровни — skill [`dnd-mud-verify`](.cursor/skills/dnd-mud-verify/S
 - [docs/DND_RULES.md](docs/DND_RULES.md) · [docs/DATA_SCHEMA.md](docs/DATA_SCHEMA.md) · [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)
 - [docs/API.md](docs/API.md) · [docs/BACKLOG.md](docs/BACKLOG.md) · [docs/CHANGELOG.md](docs/CHANGELOG.md) · [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md) · [docs/MUD_PRD.md](docs/MUD_PRD.md)
 
+## D&D 5e (2023) — источник истины
+
+**Источник истины** по правилам настольной D&D 5e (рус. PHB 2023): `docs/PHB_ D&D_2023 RUS.pdf` (локально; в git не коммитится, см. `.gitignore`). Нужно узнать или уточнить правило — изучи этот PDF. [`docs/DND_RULES.md`](docs/DND_RULES.md), `docs/rules/*.md`, код и YAML — вторичны; при расхождении верен PDF. Не опирайся на память модели. Если PDF отсутствует локально — сообщи пользователю; не выдумывай правила.
+
 ## Agent-loop
 
 [`AGENTS.md`](../AGENTS.md) · git/verify/review — [`dnd-mud-workflow.mdc`](dnd-mud-workflow.mdc).
