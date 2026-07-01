@@ -2,6 +2,9 @@
 
 ## [Unreleased]
 
+### Changed
+- Git workflow: **все** ветки `merged/*` — только локальный архив; запрещены push/upstream/PR на `origin`; legacy `origin/merged/*` удалять (`dnd-mud-workflow.mdc`, `01-operations.mdc`, `user-protocols.mdc`)
+
 ### Added
 - `make test-fast` / `make test-cov` — быстрый pytest и детальный coverage-отчёт
 - `tests/creation_helpers.py` — golden-path контекст создания персонажа

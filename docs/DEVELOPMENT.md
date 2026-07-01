@@ -209,7 +209,7 @@ pytest tests/test_data_schema.py -v
 | Тема | Канон |
 |------|-------|
 | Agent-loop, steps, skills | [`AGENTS.md`](../AGENTS.md) |
-| Git-старт, rebase, multi-branch, PR, rename | [`.cursor/rules/dnd-mud-workflow.mdc`](../.cursor/rules/dnd-mud-workflow.mdc) |
+| Git-старт, rebase, multi-branch, PR, `merged/*` (локально) | [`.cursor/rules/dnd-mud-workflow.mdc`](../.cursor/rules/dnd-mud-workflow.mdc) |
 | Task cycle (global) | [`01-operations.mdc`](~/.cursor/rules/01-operations.mdc) §Task cycle |
 | Verify | skill [`.cursor/skills/dnd-mud-verify`](../.cursor/skills/dnd-mud-verify/SKILL.md) |
 | Review | skill [`.cursor/skills/dnd-mud-review`](../.cursor/skills/dnd-mud-review/SKILL.md) |
