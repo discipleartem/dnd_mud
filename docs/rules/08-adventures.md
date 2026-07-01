@@ -39,6 +39,7 @@
 |--------|----------|
 | Статус | **Запланировано** (game engine, Phase 2) |
 | YAML | [`database/content/adventures.yaml`](../../database/content/adventures.yaml), сценарии [`adventures/*.yaml`](../../adventures/) |
+| Уровень контента | `content_tier` в каталоге (`easy`, `normal`) — не путать с `Character.difficulty` |
 | Core | [`core/adventure.py`](../../core/adventure.py) — только каталог; [`core/difficulty.py`](../../core/difficulty.py) — фильтр по режиму |
 | UI | [`ui/menus/new_game.py`](../../ui/menus/new_game.py) — выбор персонажа и приключения |
 | Режимы | `adventure_allows_difficulty()` — gating приключений по `Character.difficulty` |

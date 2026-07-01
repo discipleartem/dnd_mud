@@ -89,7 +89,7 @@ races:
 
 - **Все расы** — выбор подрасы; одна подраса → автовыбор в UI.
 - Базовая раса — общие поля (`name`, `size`, `speed`, …); механика в `subraces`.
-- `inherit` (алиас `inherit_base_bonuses` / `inherit_base_features`): наследование от базовой расы.
+- `inherit: { ability_bonuses, grants }` — наследование grants и бонусов от базовой расы (см. §Legacy → grants).
 - Saves: `race: human`, `subrace: null` → `standard` (fallback в loader).
 
 ## Предыстории (`database/backgrounds/backgrounds.yaml`)

@@ -85,7 +85,7 @@
 **Терминология**
 
 - **Режим сложности игры** (`game difficulty`) — выбор игрока при «Новая игра» / «Создать персонажа». Хранится в `Character.difficulty`.
-- **Уровень контента приключения** — поле `difficulty` в `database/content/adventures.yaml` (`easy`, `normal`). Описательная метка контента в каталоге; **не** режим игрока. Целевое имя поля при рефакторинге YAML: `content_tier`.
+- **Уровень контента приключения** — поле `content_tier` в `database/content/adventures.yaml` (`easy`, `normal`). Описательная метка контента в каталоге; **не** режим игрока (`Character.difficulty`).
 
 **Текущие режимы (Pre-Alpha)**
 
@@ -132,7 +132,7 @@
 - Режим сложности сессии — `Character.difficulty` выбранного персонажа (задаётся при создании, §3.4.1).
 
 #### 3.3.2. Выбор приключения
-- Список приключений (из `database/content/adventures.yaml`) с отображением: Название, тип (обучение/сюжетное/короткое), уровень (от-до), уровень контента (`difficulty` в YAML — см. §3.2.1).
+- Список приключений (из `database/content/adventures.yaml`) с отображением: Название, тип (обучение/сюжетное/короткое), уровень (от-до), уровень контента (`content_tier` в YAML — см. §3.2.1).
 - **Реализовано**: фильтрация по `min_level` и режиму игры (`adventure_unavailable_reason`); недоступные приключения — серым списком с причиной.
 - Тип ввода: **integer** по нумерованному списку.
 - Уровень персонажа должен быть не ниже `min_level` приключения.
@@ -519,15 +519,15 @@ adventures:
       ru: "Обучение"
       en: "Tutorial"
     type: training
-    difficulty: easy          # уровень контента (content tier), НЕ режим игрока — см. §3.2.1
-    allowed_game_difficulties: [normal, hardcore]  # целевое поле: допустимые режимы игры
+    content_tier: easy          # уровень контента, НЕ режим игрока — см. §3.2.1
+    allowed_game_difficulties: [normal, hardcore]  # допустимые режимы игры
     script_file: "adventures/tutorial.yaml"
   - id: lost_mine
     name:
       ru: "Затеряные рудники Фанделвера"
       en: "Lost Mine of Phandelver"
     type: adventure
-    difficulty: normal          # уровень контента
+    content_tier: normal        # уровень контента
     allowed_game_difficulties: [hardcore]           # только HardCore (целевая модель)
     hardcore_only: true         # альтернативная запись (целевая модель)
     script_file: "adventures/lost_mine.yaml"
