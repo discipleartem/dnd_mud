@@ -1,6 +1,6 @@
 # Глава 5: Снаряжение
 
-> Источник: PHB, стр. 143–162. Полный текст — `docs/PHB_ D&D_2023 RUS.pdf` (локально).
+> Источник: PHB, стр. 143–161. **Справочник по главе** — [05-equipment-reference.md](05-equipment-reference.md). Полный текст — `docs/PHB_ D&D_2023 RUS.pdf` (локально).
 
 ## Для игроков
 
@@ -30,7 +30,7 @@
 
 | Аспект | Значение |
 |--------|----------|
-| Статус | **Частично:** каталог YAML + владения + API КД/атаки; инвентарь и стартовое снаряжение — Phase 2 |
+| Статус | **Частично:** каталог YAML + владения + API КД/атаки; **инвентарь и стартовое снаряжение класса при создании**; боевой цикл — Phase 2 |
 | YAML | [`database/equipment/armor.yaml`](../../database/equipment/armor.yaml), [`weapon.yaml`](../../database/equipment/weapon.yaml), [`equipment.yaml`](../../database/equipment/equipment.yaml), [`tools.yaml`](../../database/equipment/tools.yaml) |
 | Core | [`core/equipment.py`](../../core/equipment.py), [`core/proficiencies.py`](../../core/proficiencies.py) |
 | Заметки | На персонаже — **токены** владений; `armor_id`/`weapon_id` в combat API передаются явно |

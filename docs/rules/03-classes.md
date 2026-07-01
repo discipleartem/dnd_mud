@@ -57,7 +57,7 @@
 
 | Аспект | Значение |
 |--------|----------|
-| Статус | Частично: 4 класса в YAML; выбор класса в UI; HP по режиму сложности |
+| Статус | Частично: 4 класса в YAML; выбор класса в UI; HP по режиму сложности; **спасброски и стартовое снаряжение** при создании |
 | YAML | [`database/classes/classes.yaml`](../../database/classes/classes.yaml) |
 | Core | [`core/classes.py`](../../core/classes.py): `load_classes()`, `get_class_hit_dice()` |
 | UI | [`ui/menus/_selectors.py`](../../ui/menus/_selectors.py) — `select_class` |
@@ -94,8 +94,9 @@ classes:
     hit_dice: 10
     prime_ability: strength
     saving_throws: [strength, constitution]
-    skill_choices: [athletics, ...]
-    skill_choices_count: 2
+    starting_equipment:
+      choices: [...]
+      fixed: [...]
     features: [...]
     subclasses: [...]
 ```
@@ -103,7 +104,7 @@ classes:
 ### Не реализовано
 
 - Применение `features` в бою и сценариях (ячейки заклинаний, пассивные умения)
-- Стартовое снаряжение класса
 
 Выбор навыков и владений при создании — **реализовано** (`_creation_steps`, `proficiencies.py`, `skills.py`).  
+**Спасброски и стартовое снаряжение класса** — **реализовано** (`core/checks.py`, `core/starting_equipment.py`, `core/inventory.py`, шаг `equipment` в flow).  
 Выбор подкласса и прогрессия умений — см. [03-subclasses.md](03-subclasses.md).

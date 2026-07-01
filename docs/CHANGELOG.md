@@ -12,6 +12,9 @@
 - Git workflow: **все** ветки `merged/*` — только локальный архив; запрещены push/upstream/PR на `origin`; legacy `origin/merged/*` удалять (`dnd-mud-workflow.mdc`, `01-operations.mdc`, `user-protocols.mdc`)
 
 ### Added
+- **Спасброски класса:** `saving_throws` в `classes.yaml`, поле `save_proficiencies` на `Character`, `core/checks.py` (`saving_throw_modifier`, `saving_throw`)
+- **Стартовое снаряжение:** `starting_equipment` в YAML, шаг `equipment` при создании, `core/starting_equipment.py`, `core/inventory.py` (инвентарь, экипировка, `compute_ac`)
+- PHB-наборы (`explorers_pack`, `dungeoneers_pack`, …) в `database/equipment/equipment.yaml`
 - `make test-fast` / `make test-cov` — быстрый pytest и детальный coverage-отчёт
 - `tests/creation_helpers.py` — golden-path контекст создания персонажа
 - Incremental verify: YAML-only diff в `database/` / `mods/` → `DATA_PATH_TESTS`

@@ -77,7 +77,7 @@
 
 | Аспект | Значение |
 |--------|----------|
-| Статус | **Частично:** модификатор, генерация stats; проверки/навыки/спасброски — Phase 2 engine |
+| Статус | **Частично:** модификатор, генерация stats; **спасброски при создании** (`core/checks.py`); проверки навыков в engine — Phase 2 |
 | YAML | [`database/core/abilities.yaml`](../../database/core/abilities.yaml), [`database/core/skills.yaml`](../../database/core/skills.yaml), [`database/core/constants.yaml`](../../database/core/constants.yaml) |
 | Core | [`core/dice.py`](../../core/dice.py), [`core/stats.py`](../../core/stats.py), [`core/abilities.py`](../../core/abilities.py) |
 | Режимы | HardCore: целевые полные проверки в engine; Normal: может упрощаться в сценариях |
@@ -97,7 +97,8 @@
 
 | Механика | Целевая реализация |
 |----------|-------------------|
-| `ability_check`, `skill_check`, `saving_throw`, `passive_skill` | Phase 2 engine API |
+| `ability_check`, `skill_check`, `passive_skill` | Phase 2 engine API |
+| `saving_throw`, `saving_throw_modifier`, `roll_d20` | `core/checks.py` (создание/карточка; engine — Phase 2) |
 | Преимущество/помеха на к20 | Phase 2 engine API |
 
 - Использование проверок в сценариях приключений (`adventures/*.yaml`)
