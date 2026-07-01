@@ -88,6 +88,21 @@ def level_from_xp(experience: int) -> int:
     return min(level, MAX_CHARACTER_LEVEL)
 
 
+def xp_for_level(level: int) -> int:
+    """Минимальный накопленный опыт PHB для достижения уровня.
+
+    Используется при создании персонажа. В игре опыт только растёт
+    (`grant_experience`); после левелапа избыток над порогом сохраняется.
+    """
+    level = clamp_level(level)
+    return XP_THRESHOLDS[level - 1]
+
+
+def xp_covers_level(experience: int, level: int) -> bool:
+    """Достаточно ли опыта для текущего уровня (>= минимального порога)."""
+    return experience >= xp_for_level(level)
+
+
 def hp_gain_for_level(
     level: int,
     hit_dice: int,
@@ -186,7 +201,7 @@ def max_hp_for_level(
 
 
 def grant_experience(character: Character, amount: int) -> Character:
-    """Добавить опыт без повышения уровня."""
+    """Добавить опыт без повышения уровня (накопительно, без обрезки)."""
     if amount <= 0:
         return character
     return replace(character, experience=character.experience + amount)
@@ -200,7 +215,10 @@ def has_pending_level_up(character: Character) -> bool:
 
 
 def apply_level_up(character: Character, hp_gain: int) -> Character:
-    """Повысить персонажа на один уровень с заданным приростом HP."""
+    """Повысить персонажа на один уровень с заданным приростом HP.
+
+    Поле ``experience`` не меняется — избыток над порогом уровня сохраняется.
+    """
     if not has_pending_level_up(character):
         return character
     new_level = character.level + 1

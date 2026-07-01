@@ -45,6 +45,20 @@ def _parse_difficulty(raw: object) -> GameDifficulty:
     return "normal"
 
 
+def _coerce_inventory(raw: object) -> list[dict[str, Any]]:
+    """Инвентарь из JSON."""
+    if not isinstance(raw, list):
+        return []
+    return [dict(item) for item in raw if isinstance(item, dict)]
+
+
+def _coerce_equipped(raw: object) -> dict[str, Any]:
+    """Экипировка из JSON."""
+    if isinstance(raw, dict):
+        return dict(raw)
+    return {}
+
+
 @dataclass
 class Character:
     """Модель персонажа."""
@@ -71,6 +85,10 @@ class Character:
     feat_ids: list[str] = field(default_factory=list)
     feat_choices: dict[str, dict[str, Any]] = field(default_factory=dict)
     asi_choices: dict[str, str] = field(default_factory=dict)
+    save_proficiencies: list[str] = field(default_factory=list)
+    inventory: list[dict[str, Any]] = field(default_factory=list)
+    equipped: dict[str, Any] = field(default_factory=dict)
+    equipment_choices: dict[str, str] = field(default_factory=dict)
     class_features_applied: bool = False
     save_slug: str | None = None
     created_at: str | None = None
@@ -114,6 +132,14 @@ class Character:
             data["feat_choices"] = self.feat_choices
         if self.asi_choices:
             data["asi_choices"] = self.asi_choices
+        if self.save_proficiencies:
+            data["save_proficiencies"] = self.save_proficiencies
+        if self.inventory:
+            data["inventory"] = self.inventory
+        if self.equipped:
+            data["equipped"] = self.equipped
+        if self.equipment_choices:
+            data["equipment_choices"] = self.equipment_choices
         if self.class_features_applied:
             data["class_features_applied"] = True
         if self.save_slug is not None:
@@ -166,6 +192,14 @@ class Character:
             feat_ids=_coerce_str_list(data.get("feat_ids", [])),
             feat_choices=_coerce_feat_choices(data.get("feat_choices", {})),
             asi_choices=_coerce_str_dict(data.get("asi_choices", {})),
+            save_proficiencies=_coerce_str_list(
+                data.get("save_proficiencies", [])
+            ),
+            inventory=_coerce_inventory(data.get("inventory", [])),
+            equipped=_coerce_equipped(data.get("equipped", {})),
+            equipment_choices=_coerce_str_dict(
+                data.get("equipment_choices", {})
+            ),
             class_features_applied=bool(
                 data.get("class_features_applied", False)
             ),

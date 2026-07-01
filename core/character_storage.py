@@ -9,7 +9,7 @@ from typing import Any
 from core.io import load_json, save_json
 from core.levels import clamp_level
 from core.models import Character
-from core.progression import max_hp_for_level
+from core.progression import max_hp_for_level, xp_for_level
 from core.slug import make_save_slug
 from core.stats import STANDARD_ARRAY, generate_stats_standard_array
 from core.subclasses import start_level_for_difficulty
@@ -78,9 +78,13 @@ def save_character(
     weapon_proficiencies: list[str] | None = None,
     armor_proficiencies: list[str] | None = None,
     tool_proficiencies: list[str] | None = None,
+    background_tool_picks: list[str] | None = None,
     feat_ids: list[str] | None = None,
     feat_choices: dict[str, dict[str, Any]] | None = None,
     asi_choices: dict[str, str] | None = None,
+    save_proficiencies: list[str] | None = None,
+    inventory: list[dict[str, Any]] | None = None,
+    equipment_choices: dict[str, str] | None = None,
     level: int | None = None,
     class_features_applied: bool = False,
     apply_feat_stat_bonuses: bool = True,
@@ -142,6 +146,43 @@ def save_character(
             tool_proficiencies = list(grants.tool_tokens)
         if skills is None:
             skills = list(grants.skill_ids)
+        if save_proficiencies is None:
+            save_proficiencies = list(grants.save_ids)
+
+    if save_proficiencies is None:
+        from core.character_builder import resolve_creation_grants
+
+        grants = resolve_creation_grants(
+            race_id,
+            subrace_id,
+            class_id,
+            background_id,
+            subclass_id,
+            level,
+            feat_ids=feat_ids,
+            feat_choices=feat_choices,
+            include_feat_languages=False,
+        )
+        save_proficiencies = list(grants.save_ids)
+
+    if inventory is None:
+        from core.backgrounds import get_background_equipment_items
+        from core.inventory import add_items_to_inventory
+        from core.starting_equipment import resolve_starting_items
+
+        inventory = resolve_starting_items(
+            class_id,
+            equipment_choices or {},
+            list(weapon_proficiencies or []),
+            list(armor_proficiencies or []),
+        )
+        if background_id:
+            inventory = add_items_to_inventory(
+                inventory,
+                get_background_equipment_items(
+                    background_id, list(background_tool_picks or [])
+                ),
+            )
 
     hp = max_hp_for_level(
         class_id,
@@ -161,7 +202,7 @@ def save_character(
         stats=stats,
         current_hp=hp,
         max_hp=hp,
-        experience=0,
+        experience=xp_for_level(level),
         difficulty=difficulty,
         subrace=subrace_id,
         subclass_id=subclass_id,
@@ -182,10 +223,18 @@ def save_character(
         feat_ids=list(feat_ids) if feat_ids else [],
         feat_choices=dict(feat_choices) if feat_choices else {},
         asi_choices=dict(asi_choices) if asi_choices else {},
+        save_proficiencies=(
+            list(save_proficiencies) if save_proficiencies else []
+        ),
+        inventory=list(inventory) if inventory else [],
+        equipment_choices=dict(equipment_choices) if equipment_choices else {},
         class_features_applied=class_features_applied,
         save_slug=_unique_save_slug(name),
         created_at=datetime.now(UTC).isoformat(),
     )
+    from core.inventory import equip_defaults
+
+    character.equipped = equip_defaults(character)
 
     _save_character_file(character)
 

@@ -11,11 +11,14 @@ from core.models import Adventure, Character
 from core.progression import (
     apply_experience,
     grant_experience,
+    has_pending_level_up,
     hp_gain_breakdown_for_level_up,
     hp_gain_for_level,
     level_from_xp,
     max_hp_for_level,
     resolve_pending_level_ups,
+    xp_covers_level,
+    xp_for_level,
 )
 from ui.menus import level_up as level_up_menu
 from ui.menus.scenario_flow import run_scenario
@@ -28,6 +31,30 @@ def test_character_level_cap_and_xp() -> None:
     assert clamp_level(15) == 10
     assert level_from_xp(900) == 3
     assert level_from_xp(999_999) == 10
+    assert xp_for_level(1) == 0
+    assert xp_for_level(3) == 900
+    assert xp_for_level(10) == 64000
+    assert xp_for_level(15) == 64000
+    assert xp_covers_level(1500, 3)
+    assert not xp_covers_level(899, 3)
+
+
+def test_level_up_preserves_excess_xp(
+    monkeypatch: pytest.MonkeyPatch,
+    fighter_l1_hardcore: Character,
+) -> None:
+    """Левелап не обрезает опыт до порога уровня."""
+    monkeypatch.setattr(
+        "core.progression.roll",
+        lambda count, sides, modifier=0: 8 + modifier,
+    )
+    char = grant_experience(fighter_l1_hardcore, 1500)
+    assert level_from_xp(char.experience) == 3
+    updated = resolve_pending_level_ups(char)
+    assert updated.level == 3
+    assert updated.experience == 1500
+    assert xp_covers_level(updated.experience, updated.level)
+    assert not has_pending_level_up(updated)
 
 
 def test_max_hp_for_level_with_bonuses() -> None:
@@ -178,4 +205,4 @@ def test_run_scenario_grant_xp_levels_character(
     patch_int_input(monkeypatch, [1, 1])
     result = run_scenario(adventure, character, ru_strings, "ru")
     assert result.level == 3
-    assert result.experience == 900
+    assert result.experience >= xp_for_level(3)

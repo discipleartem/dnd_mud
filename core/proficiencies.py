@@ -3,6 +3,7 @@
 from core.proficiency_checks import (
     get_class_saving_throws,
     has_armor_proficiency,
+    has_save_proficiency,
     has_tool_proficiency,
     has_weapon_proficiency,
     is_valid_tool_selection,
@@ -29,6 +30,7 @@ __all__ = [
     "get_background_tool_proficiencies",
     "get_class_proficiency_tokens",
     "get_class_saving_throws",
+    "has_save_proficiency",
     "get_class_tool_choices",
     "get_feat_proficiency_tokens",
     "get_proficiency_choices",
