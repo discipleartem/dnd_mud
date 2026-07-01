@@ -7,15 +7,16 @@
 ## Agent-loop
 
 ```
-git-старт → подзадачи (commits) → docs → verify → review (light|full) → [fix-plan?] → fix → verify → light re-check* → push / PR task→dev (+ rename после squash merge) → merged/…
+git-старт → подзадачи (commits) → [слияние вспомогательных веток → интеграционная]* → docs → verify → review (light|full) → [fix-plan?] → fix → verify → light re-check* → push / PR task→dev (+ rename после squash merge) → merged/…
                                                                                               ↑ blockers only
                                                                     ↑ Major+ или /dnd-mud-fix-plan
+                                                                 ↑ только если план предусматривал несколько веток
 ```
 
 | Режим | Цикл |
 |-------|------|
-| Agent напрямую | git-старт → реализация → commit → docs → verify → review (light\|full) → push/PR (по запросу) |
-| Plan → Build → Agent | [`01-operations.mdc`](~/.cursor/rules/01-operations.mdc) §Cursor modes; commit + push обязательны |
+| Agent напрямую | git-старт → реализация → commit → [слияние веток по плану]* → docs → verify → review (light\|full) → push/PR (по запросу) |
+| Plan → Build → Agent | [`01-operations.mdc`](~/.cursor/rules/01-operations.mdc) §Cursor modes; commit + push обязательны; [слияние веток по плану]* перед docs |
 
 ## Skills
 
@@ -33,6 +34,7 @@ Personal: `git-dev-main-sync` (`~/.cursor/skills/git-dev-main-sync/`).
 
 1. **Git-старт** — [`dnd-mud-workflow.mdc`](.cursor/rules/dnd-mud-workflow.mdc) §Git · [`01-operations.mdc`](~/.cursor/rules/01-operations.mdc) §Task cycle шаг 1
 2. **Commits** — [`01-operations.mdc`](~/.cursor/rules/01-operations.mdc) §Commits · [`user-protocols.mdc`](~/.cursor/rules/user-protocols.mdc) §Commit procedure
+2b. **Слияние веток по плану** — если план задачи предусматривал несколько веток: [`dnd-mud-workflow.mdc`](.cursor/rules/dnd-mud-workflow.mdc) §Несколько веток по плану — **до** docs
 3. **Docs** — skill [`dnd-mud-docs-after-task`](.cursor/skills/dnd-mud-docs-after-task/SKILL.md)
 4. **Verify** — skill [`dnd-mud-verify`](.cursor/skills/dnd-mud-verify/SKILL.md) (см. таблицу ниже)
 5. **Review** — skill [`dnd-mud-review`](.cursor/skills/dnd-mud-review/SKILL.md) (light или full, до push/PR/merge)

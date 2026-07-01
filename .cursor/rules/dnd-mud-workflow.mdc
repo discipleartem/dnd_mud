@@ -42,6 +42,32 @@ git fetch origin && git rebase origin/dev && make verify-scope
 | `git rebase origin/dev` | По умолчанию |
 | `git merge origin/dev` | Ветка расшарена; force-push — согласовать |
 
+### Несколько веток по плану
+
+Если **план задачи** (Cursor Plan, Agent с планом в чате, `.plan.md`, skill split-to-PRs и т.п.) предусматривает **несколько веток** — параллельные подзадачи, изолированные части, эксперименты:
+
+| Роль | Ветка |
+|------|-------|
+| **Интеграционная** (одна на задачу) | `feat/<slug>` — создаётся на git-старт |
+| **Вспомогательные** | `feat/<slug>-<part>` — от интеграционной или `dev`; общий префикс `<slug>` |
+
+**Обязательно перед завершением задачи** (до docs / verify-scope / review / PR): слить все вспомогательные ветки **в интеграционную**. Задача **не завершена**, пока изменения не собраны в одной ветке.
+
+```bash
+TASK=feat/my-task
+git fetch origin
+git checkout "${TASK}" && git rebase origin/dev
+# для каждой вспомогательной PART (feat/my-task-a, feat/my-task-b, …):
+git merge --no-ff "feat/my-task-a"   # или rebase part на TASK и fast-forward merge
+# конфликты — разрешать на интеграционной; после каждого merge/rebase origin/dev:
+make verify-scope
+git push -u origin "${TASK}"         # после rebase на remote: --force-with-lease
+# вспомогательные на origin — удалить после успешного слияния:
+git push origin --delete feat/my-task-a
+```
+
+Далее стандартный цикл только с **интеграционной** ветки: docs → verify-scope → review → push/PR → rename `merged/…`.
+
 **Завершение task-ветки:** docs + verify + **review** light|full (skill `dnd-mud-review`) → push/PR → **rename** `merged/…`. Перед push — `rebase origin/dev`; subagent review **не** в середине ветки.
 
 ### PR task → `dev` (по запросу)
