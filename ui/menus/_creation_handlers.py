@@ -10,7 +10,23 @@ from core.subclasses import subclass_offered_at_creation
 from core.types import StringsDict
 from ui.menus import _deps
 from ui.menus._common import _print_screen_header, _run_numbered_menu
+from ui.menus._creation_finalize import merge_feat_languages
+from ui.menus._creation_navigation import (
+    back_step_from_feats,
+    back_step_from_proficiencies,
+    back_step_from_skills,
+    step_after_class_choice,
+)
 from ui.menus._creation_state import CreationStep, _CreationState
+from ui.menus._creation_steps import finalize_creation
+from ui.menus._selectors import select_class, select_subclass, select_subrace
+from ui.menus.backgrounds import select_creation_background
+from ui.menus.expertise import select_creation_expertise
+from ui.menus.feats import select_creation_feats
+from ui.menus.languages import select_creation_languages
+from ui.menus.proficiencies import select_creation_proficiencies
+from ui.menus.skills import select_creation_skills
+from ui.menus.stats.stats_flow import show_stats_generation_flow
 
 
 @dataclass
@@ -30,9 +46,7 @@ def _abort() -> StepResult:
 
 
 def _done(strings: StringsDict, state: _CreationState) -> StepResult:
-    from ui.menus import _creation_steps as flow
-
-    return StepResult(character=flow.finalize_creation(strings, state))
+    return StepResult(character=finalize_creation(strings, state))
 
 
 def _handle_race(
@@ -56,11 +70,9 @@ def _handle_race(
 def _handle_subrace(
     strings: StringsDict, state: _CreationState, language: str
 ) -> StepResult:
-    from ui.menus import _creation_steps as flow
-
     if state.race_id is None:
         return _advance("race")
-    subrace_selected, subrace_id = flow.select_subrace(
+    subrace_selected, subrace_id = select_subrace(
         strings, state.race_id, language
     )
     if not subrace_selected:
@@ -74,14 +86,12 @@ def _handle_subrace(
 def _handle_stats(
     strings: StringsDict, state: _CreationState, _language: str
 ) -> StepResult:
-    from ui.menus import _creation_steps as flow
-
     if state.race_id is None:
         return _advance("race")
     hardcore_rolls = (
         state.hardcore_rolls if state.difficulty == "hardcore" else None
     )
-    stats = flow.show_stats_generation_flow(
+    stats = show_stats_generation_flow(
         strings,
         state.race_id,
         state.subrace_id,
@@ -97,9 +107,7 @@ def _handle_stats(
 def _handle_background(
     strings: StringsDict, state: _CreationState, language: str
 ) -> StepResult:
-    from ui.menus import _creation_steps as flow
-
-    bg_result = flow.select_creation_background(strings, language)
+    bg_result = select_creation_background(strings, language)
     if bg_result is None:
         return _advance("stats")
     bg_id, bg_skills = bg_result
@@ -111,11 +119,9 @@ def _handle_background(
 def _handle_languages(
     strings: StringsDict, state: _CreationState, language: str
 ) -> StepResult:
-    from ui.menus import _creation_steps as flow
-
     if state.race_id is None or state.background_id is None:
         return _advance("background")
-    langs = flow.select_creation_languages(
+    langs = select_creation_languages(
         strings,
         state.race_id,
         state.subrace_id,
@@ -131,42 +137,36 @@ def _handle_languages(
 def _handle_class(
     strings: StringsDict, state: _CreationState, language: str
 ) -> StepResult:
-    from ui.menus import _creation_steps as flow
-
     if state.race_id is None or state.stats is None:
         return _advance("languages")
-    cls = flow.select_class(strings, language)
+    cls = select_class(strings, language)
     if cls is None:
         return _advance("languages")
     state.class_id = str(cls.get("id") or cls.get("name"))
     if subclass_offered_at_creation(state.difficulty, state.class_id):
         return _advance("subclass")
-    return _advance(flow.step_after_class_choice(state))
+    return _advance(step_after_class_choice(state))
 
 
 def _handle_subclass(
     strings: StringsDict, state: _CreationState, language: str
 ) -> StepResult:
-    from ui.menus import _creation_steps as flow
-
     if state.class_id is None:
         return _advance("class")
-    subclass_id = flow.select_subclass(strings, state.class_id, language)
+    subclass_id = select_subclass(strings, state.class_id, language)
     if subclass_id is None:
         return _advance("class")
     state.subclass_id = subclass_id
-    return _advance(flow.step_after_class_choice(state))
+    return _advance(step_after_class_choice(state))
 
 
 def _handle_feats(
     strings: StringsDict, state: _CreationState, language: str
 ) -> StepResult:
-    from ui.menus import _creation_steps as flow
-
     if state.race_id is None or state.stats is None or state.class_id is None:
         return _advance("class")
     start_level = state.start_level
-    feat_result = flow.select_creation_feats(
+    feat_result = select_creation_feats(
         strings,
         state.race_id,
         state.subrace_id,
@@ -179,23 +179,21 @@ def _handle_feats(
         known_languages=state.languages,
     )
     if feat_result is None:
-        return _advance(flow.back_step_from_feats(state))
+        return _advance(back_step_from_feats(state))
     feat_ids, feat_choices, updated_stats = feat_result
     state.feat_ids = feat_ids
     state.feat_choices = feat_choices
     state.stats = updated_stats
-    flow.merge_feat_languages(state)
+    merge_feat_languages(state)
     return _advance("proficiencies")
 
 
 def _handle_proficiencies(
     strings: StringsDict, state: _CreationState, language: str
 ) -> StepResult:
-    from ui.menus import _creation_steps as flow
-
     if state.race_id is None or state.class_id is None:
         return _advance("class")
-    profs = flow.select_creation_proficiencies(
+    profs = select_creation_proficiencies(
         strings,
         state.race_id,
         state.subrace_id,
@@ -208,7 +206,7 @@ def _handle_proficiencies(
         feat_choices=state.feat_choices,
     )
     if profs is None:
-        return _advance(flow.back_step_from_proficiencies(state))
+        return _advance(back_step_from_proficiencies(state))
     (
         state.weapon_proficiencies,
         state.armor_proficiencies,
@@ -220,12 +218,10 @@ def _handle_proficiencies(
 def _handle_skills(
     strings: StringsDict, state: _CreationState, language: str
 ) -> StepResult:
-    from ui.menus import _creation_steps as flow
-
     if state.race_id is None or state.class_id is None:
         return _advance("proficiencies")
     start_level = state.start_level
-    skills = flow.select_creation_skills(
+    skills = select_creation_skills(
         strings,
         state.race_id,
         state.subrace_id,
@@ -238,7 +234,7 @@ def _handle_skills(
         feat_choices=state.feat_choices,
     )
     if skills is None:
-        return _advance(flow.back_step_from_skills(state))
+        return _advance(back_step_from_skills(state))
     state.skills = skills
     if expertise_step_required(state.class_id, start_level):
         return _advance("expertise")
@@ -248,12 +244,10 @@ def _handle_skills(
 def _handle_expertise(
     strings: StringsDict, state: _CreationState, language: str
 ) -> StepResult:
-    from ui.menus import _creation_steps as flow
-
     if state.class_id is None or state.skills is None:
         return _advance("skills")
     start_level = state.start_level
-    expertise_result = flow.select_creation_expertise(
+    expertise_result = select_creation_expertise(
         strings,
         state.class_id,
         start_level,
