@@ -3,8 +3,6 @@
 from typing import Any
 
 ABILITY_INCREASE = "ability_increase"
-_ABILITY_BONUS = "ability_bonus"
-_ABILITY_INCREASE = ABILITY_INCREASE
 
 
 def _coerce_bool(value: Any, default: bool = True) -> bool:
@@ -22,27 +20,12 @@ def inherit_flags(entity: dict[str, Any]) -> tuple[bool, bool]:
             _coerce_bool(inherit.get("ability_bonuses"), True),
             _coerce_bool(inherit.get("grants"), True),
         )
-    bonuses = entity.get("inherit_base_bonuses", True)
-    features = entity.get("inherit_base_features", True)
-    return (
-        _coerce_bool(bonuses, True),
-        _coerce_bool(features, True),
-    )
+    return True, True
 
 
 def normalize_grant(raw: dict[str, Any]) -> dict[str, Any]:
     """Привести grant к плоскому виду."""
-    grant = dict(raw)
-    grant_type = str(grant.get("type", ""))
-    if grant_type == _ABILITY_BONUS:
-        grant["type"] = _ABILITY_INCREASE
-    if "value" in grant and "amount" not in grant:
-        grant["amount"] = grant["value"]
-    if grant.get("from_list") and not grant.get("from"):
-        grant["from"] = grant["from_list"]
-    if grant.get("from") == "all_skills":
-        grant["from"] = "all"
-    return grant
+    return dict(raw)
 
 
 def grants_from_entity(entity: dict[str, Any]) -> list[dict[str, Any]]:

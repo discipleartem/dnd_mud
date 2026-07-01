@@ -75,7 +75,7 @@ class Adventure:
 - `get_name(language: str = "ru") -> str` — локализованное название
 - `from_dict(data: dict[str, Any]) -> Adventure` — десериализация
 
-> Поле `Adventure.difficulty` — **уровень контента** (`easy`, `normal`). Это не режим сложности игры (`Character.difficulty`). Ограничения (`allowed_game_difficulties`, `hardcore_only`, `min_level`) загружаются из YAML и проверяются через `adventure_unavailable_reason()` в `_select_adventure()`. HardCore-персонаж не блокируется на приключениях без требования HardCore.
+> Поле `Adventure.content_tier` — **уровень контента** (`easy`, `normal`). Это не режим сложности игры (`Character.difficulty`). Ограничения (`allowed_game_difficulties`, `hardcore_only`, `min_level`) загружаются из YAML и проверяются через `adventure_unavailable_reason()` в `_select_adventure()`. HardCore-персонаж не блокируется на приключениях без требования HardCore.
 
 ---
 
@@ -220,7 +220,7 @@ get_background_skills(background_id: str) -> list[str]
 get_background_language_choice(background_id: str) -> dict[str, Any] | None
 ```
 
-Каталог: `database/backgrounds/backgrounds.yaml` (13 PHB); механика — `grants[]` (legacy поля нормализуются в loader).
+Каталог: `database/backgrounds/backgrounds.yaml` (13 PHB); механика — только `grants[]` (top-level `skills`, `languages`, `tool_proficiencies` не читаются).
 
 **UI:** `select_creation_background(strings, language) -> tuple[str, list[str]] | None` (`ui/menus/backgrounds.py`) — `(background_id, skills)`.
 
@@ -271,7 +271,8 @@ grant_type(grant: dict[str, Any]) -> str
 grants_of_type(grants: list[dict[str, Any]], type_name: str) -> list[dict[str, Any]]
 ```
 
-`inherit_flags` — `(ability_bonuses, grants)` из `inherit` или legacy `inherit_base_*`.  
+`inherit_flags` — `(ability_bonuses, grants)` из блока `inherit` в YAML подрасы; без блока — `(True, True)`.  
+`normalize_grant` — копия grant без алиасов (legacy `ability_bonus`, `value`→`amount`, `from_list`, `inherit_base_*` удалены).  
 `merge_entity_grants` — grants подрасы с наследованием от базовой расы.
 
 ---
@@ -468,7 +469,7 @@ apply_subclass_proficiencies_to_character(character) -> Character
 
 Имя файла — slug из `core/slug.make_save_slug()`; при коллизии — `hero_2.json`, `hero_3.json` и т.д.
 
-> **Legacy:** сейвы до переименования поля могли содержать `"class"` вместо `"class_id"`; `from_dict()` читает оба ключа, `to_dict()` пишет только `class_id`.
+> **Save format:** `to_dict()` / `from_dict()` используют только `class_id` (ключ `"class"` не поддерживается).
 
 ---
 
@@ -600,9 +601,12 @@ load_class_full(class_id: str, language: str = "ru") -> dict[str, Any]
 load_subclasses(class_id: str, language: str = "ru") -> list[dict[str, Any]]
 get_subclass_choice_level(class_id: str) -> int
 get_class_hit_dice(class_id: str) -> int
+iter_class_grants(class_info: dict[str, Any], *, max_level: int | None = None) -> list[dict[str, Any]]
+grants_at_level(class_info: dict[str, Any], level: int) -> list[dict[str, Any]]
 ```
 
-`load_class_full` — полный dict класса с локализованными `name`, `description`, `features`, `skill_choices`, `equipment`, `subclasses`.  
+`load_class_full` — полный dict класса с локализованными `name`, `description`, `features`, `skill_choices`, `equipment`, `subclasses`. Поле `features` строится через `iter_class_grants` из YAML `progression.<level>.grants` (у каждого grant добавляется `level`).  
+`iter_class_grants` / `grants_at_level` — единый доступ к progression класса и подкласса; ключи уровня в YAML могут быть int или str.  
 `get_subclass_choice_level` — уровень выбора подкласса из YAML (`subclass_choice_level`; по умолчанию 3).
 
 ---

@@ -7,45 +7,40 @@ alwaysApply: true
 
 **Stack:** Python **3.12**, console MUD, Colorama, file-based storage, pytest.
 
-**Принцип:** простой код (`dnd-mud-python.mdc`), минимум тестов (`dnd-mud-tests.mdc`).
+**Принцип:** [`dnd-mud-python.mdc`](dnd-mud-python.mdc), [`dnd-mud-tests.mdc`](dnd-mud-tests.mdc).
 
 ## Commands
 
-Из активированного `.venv` ([`01-operations.mdc`](~/.cursor/rules/01-operations.mdc) §Virtual environment):
+`.venv` обязателен — [`01-operations.mdc`](~/.cursor/rules/01-operations.mdc) §Virtual environment.
 
 ```bash
-source .venv/bin/activate
-make install    # venv + pip install -e ".[dev]"
-make verify-changed # подзадача: lint + test staged
-make verify-scope   # конец задачи: diff vs origin/dev
-make verify         # full check + test (CI)
-make test           # pytest + coverage (full)
-make check          # ruff + black + mypy (full)
-python main.py  # smoke: затронутое меню
+make install          # venv + pip install -e ".[dev]"
+make verify-changed   # подзадача
+make verify-scope     # конец task-ветки
+make verify           # full (CI)
+make test / make check
+python main.py        # smoke меню
 ```
+
+Verify-уровни — skill [`dnd-mud-verify`](.cursor/skills/dnd-mud-verify/SKILL.md).
 
 ## Docs
 
-- [docs/DND_RULES.md](docs/DND_RULES.md)
-- [docs/DATA_SCHEMA.md](docs/DATA_SCHEMA.md)
-- [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)
-- [docs/API.md](docs/API.md)
-- [docs/CHANGELOG.md](docs/CHANGELOG.md)
-- [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md)
-- [docs/MUD_PRD.md](docs/MUD_PRD.md)
+- [docs/DND_RULES.md](docs/DND_RULES.md) · [docs/DATA_SCHEMA.md](docs/DATA_SCHEMA.md) · [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)
+- [docs/API.md](docs/API.md) · [docs/CHANGELOG.md](docs/CHANGELOG.md) · [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md) · [docs/MUD_PRD.md](docs/MUD_PRD.md)
 
-## Agent-loop и skills
+## Agent-loop
 
-Оркестрация: [`AGENTS.md`](../AGENTS.md). Workflow/git/verify: [`dnd-mud-workflow.mdc`](dnd-mud-workflow.mdc).
+[`AGENTS.md`](../AGENTS.md) · git/verify/review — [`dnd-mud-workflow.mdc`](dnd-mud-workflow.mdc).
 
 ## Local rules (index)
 
 | Файл | Globs | Канон |
 |------|-------|-------|
-| `dnd-mud-workflow.mdc` | always | git/verify overrides, review policy |
-| `dnd-mud-python.mdc` | `**/*.py` | Python 3.12, KISS, tooling |
-| `dnd-mud-tests.mdc` | `tests/**` | pytest — только нужные тесты |
-| `dnd-mud-core.mdc` | `core/**`, `ui/**`, `main.py` | слои, локализация, механика |
+| `dnd-mud-workflow.mdc` | always | git/verify/review overrides |
+| `dnd-mud-python.mdc` | `**/*.py` | Python 3.12, KISS |
+| `dnd-mud-tests.mdc` | `tests/**` | pytest |
+| `dnd-mud-core.mdc` | `core/**`, `ui/**`, `main.py` | слои, механика |
 | `dnd-mud-data.mdc` | `database/**`, `mods/**`, `**/*.json` | YAML/JSON |
 
 Global: [`00-global.mdc`](~/.cursor/rules/00-global.mdc) · [`01-operations.mdc`](~/.cursor/rules/01-operations.mdc)

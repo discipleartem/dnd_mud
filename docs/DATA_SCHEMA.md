@@ -47,8 +47,8 @@ grants:
 
 ### Legacy → grants (удалено)
 
-Ранее loader [`core/grants.py`](../core/grants.py) конвертировал `features[]` в `grants[]`.  
-С **2026-06** активные YAML используют только `grants[]`; классовые умения — `class_features[]`.
+Ранее loader [`core/grants.py`](../core/grants.py) конвертировал `features[]` в `grants[]` и нормализовал алиасы полей (`ability_bonus`, `value`, `from_list`, `inherit_base_*`).  
+С **2026-07** YAML и JSON используют канонические поля без fallback в Python.
 
 ## Mod overlay
 
@@ -89,7 +89,7 @@ races:
 
 - **Все расы** — выбор подрасы; одна подраса → автовыбор в UI.
 - Базовая раса — общие поля (`name`, `size`, `speed`, …); механика в `subraces`.
-- `inherit` (алиас `inherit_base_bonuses` / `inherit_base_features`): наследование от базовой расы.
+- `inherit: { ability_bonuses, grants }` — наследование grants и бонусов от базовой расы (см. §Legacy → grants).
 - Saves: `race: human`, `subrace: null` → `standard` (fallback в loader).
 
 ## Предыстории (`database/backgrounds/backgrounds.yaml`)
@@ -154,14 +154,14 @@ races:
 
 | ID | Задача | Триггер | Целевые файлы |
 |----|--------|---------|---------------|
-| `class-progression` | `progression.<level>.grants` вместо плоского `features[]` с повторяющимися ASI | Левелап применяет классовые умения из YAML автоматически | `database/classes/classes.yaml`, `core/classes.py` |
+| `class-progression` | `progression.<level>.grants` вместо плоского `class_features[]` | ✅ YAML + accessor (`iter_class_grants`); авто-применение при левелапе — Phase 2 |
 | `combat-usage` | Поле `usage: passive \| action \| bonus_action \| reaction` у grants/features | Реализация [`rules/09-combat.md`](rules/09-combat.md) | `database/classes/*.yaml`, combat resolver |
 
 ### Валидация и метаданные
 
 | ID | Задача | Триггер | Целевые файлы |
 |----|--------|---------|---------------|
-| `json-schema` | JSON Schema в `database/schema/v1/`, pytest `tests/test_data_schema.py` | Частые ошибки в YAML при редактировании / PR с данными | `database/schema/`, `tests/` |
+| `json-schema` | JSON Schema в `database/schema/v1/`, pytest `tests/test_data_schema.py` | ✅ реализовано |
 | `grants-yaml` | Отдельный `database/core/grants.yaml` как машиночитаемый реестр типов | Автогенерация валидатора или UI подсказок из схемы | `database/core/grants.yaml`, loader |
 | `entity-metadata` | Обязательные `schema_version`, `source: phb \| mod:<id>`, `source_ref: { chapter, page }` | Несколько источников книг/DLC; аудит соответствия PHB | все `database/*/*.yaml` |
 

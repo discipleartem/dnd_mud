@@ -28,12 +28,10 @@ def test_load_races_returns_english_names() -> None:
     assert names["elf"] == "Elf"
 
 
-def test_normalize_grant_maps_ability_bonus():
-    grant = normalize_grant(
-        {"type": "ability_bonus", "count": 2, "value": 1, "choice": True}
-    )
-    assert grant["type"] == "ability_increase"
-    assert grant["amount"] == 1
+def test_normalize_grant_passthrough():
+    raw = {"type": "ability_increase", "count": 2, "amount": 1, "choice": True}
+    grant = normalize_grant(raw)
+    assert grant == raw
 
 
 def test_grants_from_entity_skill_proficiency():
@@ -69,13 +67,11 @@ def test_variant_human_grants_no_inherit():
     assert types.count("language") == 1
 
 
-def test_inherit_flags_new_and_legacy():
+def test_inherit_flags_from_inherit_block():
     assert inherit_flags(
         {"inherit": {"ability_bonuses": False, "grants": False}}
     ) == (False, False)
-    assert inherit_flags(
-        {"inherit_base_bonuses": False, "inherit_base_features": True}
-    ) == (False, True)
+    assert inherit_flags({}) == (True, True)
 
 
 def test_grants_from_entity_ignores_missing_key():

@@ -1,61 +1,46 @@
 # Agent rules — dnd_mud
 
-**Канон:** [`.cursor/rules/00-project.mdc`](.cursor/rules/00-project.mdc) · workflow [`dnd-mud-workflow.mdc`](.cursor/rules/dnd-mud-workflow.mdc) · global [`00-global.mdc`](~/.cursor/rules/00-global.mdc)
+**Канон:** [`00-project.mdc`](.cursor/rules/00-project.mdc) · [`dnd-mud-workflow.mdc`](.cursor/rules/dnd-mud-workflow.mdc) · global [`00-global.mdc`](~/.cursor/rules/00-global.mdc)
 
-**Приоритет:** project local → User Rules / global ([`user-rules-minimal.md`](~/.cursor/docs/user-rules-minimal.md))
+**Приоритет:** [`user-rules-minimal.md`](~/.cursor/docs/user-rules-minimal.md) §Иерархия
 
 ## Agent-loop
 
 ```
-git-старт → подзадачи (commits) → docs → verify → review (light|full) → [fix-plan?] → fix → verify → light re-check* → push / PR task→dev (+ rename после squash merge) → merged/…
-                                                                                              ↑ blockers only
-                                                                    ↑ Major+ или /dnd-mud-fix-plan
+git-старт → подзадачи (промежуточные commits) → [слияние веток по плану]* → docs → commit → verify → review (light|full) → [fix-plan?] → push/PR task→dev (+ rename) → merged/…
 ```
 
-| Режим | Цикл |
-|-------|------|
-| Agent напрямую | git-старт → реализация → commit → docs → verify → review (light\|full) → push/PR (по запросу) |
-| Plan → Build → Agent | [`01-operations.mdc`](~/.cursor/rules/01-operations.mdc) §Cursor modes; commit + push обязательны |
+\* [`dnd-mud-workflow.mdc`](.cursor/rules/dnd-mud-workflow.mdc) §Несколько веток по плану · docs — skill [`dnd-mud-docs-after-task`](.cursor/skills/dnd-mud-docs-after-task/SKILL.md) **перед** commit финализации
+
+| Режим | Delta vs [`01-operations.mdc`](~/.cursor/rules/01-operations.mdc) |
+|-------|---------------------------------------------------------------------|
+| Agent напрямую | **git-старт обязателен**; push по запросу |
+| Plan → Build → Agent | push обязателен |
+
+Git/verify/review/rename — [`dnd-mud-workflow.mdc`](.cursor/rules/dnd-mud-workflow.mdc). Global Task cycle — [`01-operations.mdc`](~/.cursor/rules/01-operations.mdc) §Task cycle.
 
 ## Skills
 
 | Skill | Когда |
 |-------|-------|
-| [`dnd-mud-docs-after-task`](.cursor/skills/dnd-mud-docs-after-task/SKILL.md) | После commit реализации, перед verify |
-| [`dnd-mud-verify`](.cursor/skills/dnd-mud-verify/SKILL.md) | После docs, перед review |
-| [`dnd-mud-review`](.cursor/skills/dnd-mud-review/SKILL.md) | После verify, до push / PR / merge — light или full по критериям skill |
-| [`dnd-mud-fix-plan`](.cursor/skills/dnd-mud-fix-plan/SKILL.md) | После review при Major/Blocker или по запросу |
-| [`dnd-mud-release`](.cursor/skills/dnd-mud-release/SKILL.md) | Release PR `dev` → `main` |
+| [`dnd-mud-docs-after-task`](.cursor/skills/dnd-mud-docs-after-task/SKILL.md) | После реализации, **перед** commit финализации |
+| [`dnd-mud-verify`](.cursor/skills/dnd-mud-verify/SKILL.md) | После docs+commit, **перед** review |
+| [`dnd-mud-review`](.cursor/skills/dnd-mud-review/SKILL.md) | После verify, до push/PR — light или full |
+| [`dnd-mud-fix-plan`](.cursor/skills/dnd-mud-fix-plan/SKILL.md) | Major/Blocker после review |
+| [`dnd-mud-release`](.cursor/skills/dnd-mud-release/SKILL.md) | PR `dev` → `main` |
 
 Personal: `git-dev-main-sync` (`~/.cursor/skills/git-dev-main-sync/`).
 
-## Steps (one-liners)
+## Steps
 
-1. **Git-старт** — [`dnd-mud-workflow.mdc`](.cursor/rules/dnd-mud-workflow.mdc) §Git · [`01-operations.mdc`](~/.cursor/rules/01-operations.mdc) §Task cycle шаг 1
-2. **Commits** — [`01-operations.mdc`](~/.cursor/rules/01-operations.mdc) §Commits · [`user-protocols.mdc`](~/.cursor/rules/user-protocols.mdc) §Commit procedure
-3. **Docs** — skill [`dnd-mud-docs-after-task`](.cursor/skills/dnd-mud-docs-after-task/SKILL.md)
-4. **Verify** — skill [`dnd-mud-verify`](.cursor/skills/dnd-mud-verify/SKILL.md) (см. таблицу ниже)
-5. **Review** — skill [`dnd-mud-review`](.cursor/skills/dnd-mud-review/SKILL.md) (light или full, до push/PR/merge)
-6. **Fix plan** — skill [`dnd-mud-fix-plan`](.cursor/skills/dnd-mud-fix-plan/SKILL.md) при Major/Blocker
-7. **Push / PR task→`dev`** — [`dnd-mud-workflow.mdc`](.cursor/rules/dnd-mud-workflow.mdc) §PR task → dev (rebase, `make verify-scope`, push, `gh pr create`)
-8. **Rename** — **обязательно** после squash merge PR в `dev` → `merged/<исходное-имя>`; если merge уже есть — в том же turn, что и PR; иначе — по «смержил» / «PR merged»; см. [`dnd-mud-workflow.mdc`](.cursor/rules/dnd-mud-workflow.mdc) §PR task → dev
-9. **Release** — skill [`dnd-mud-release`](.cursor/skills/dnd-mud-release/SKILL.md)
-
-## Verify (lint + pytest)
-
-Канон: [`dnd-mud-verify`](.cursor/skills/dnd-mud-verify/SKILL.md) · маппинг: [`scripts/verify_targets.py`](scripts/verify_targets.py).
-
-| Когда | Команда | Что гоняется |
-|-------|---------|--------------|
-| После подзадачи / перед commit | `make verify-changed` | ruff + black + mypy + pytest **только staged `.py`** |
-| Конец task-ветки, после rebase/merge | `make verify-scope` | то же для diff `origin/dev...HEAD` |
-| CI на PR; release локально | `make verify` | полный `make check` + `make test` (coverage) |
-
-**Не** запускать `make test` / `make check` после каждой правки — только уровень из таблицы.
-
-| Ситуация | Действие |
-|----------|----------|
-| Только `docs/`, `.cursor/`, `AGENTS.md`, workflows | verify **пропустить** |
-| Затронут `ui/` или меню | + smoke `python main.py` |
-| Infra или `.py` без mapped-тестов в diff (`Makefile`, `conftest.py`, …) | incremental → **full suite** (fallback в `verify_targets.py`) |
-| Pre-commit | хук уже вызывает `make verify-changed` |
+| # | Шаг | Канон |
+|---|-----|-------|
+| 1 | Git-старт | [`dnd-mud-workflow.mdc`](.cursor/rules/dnd-mud-workflow.mdc) §Git · [`01-operations.mdc`](~/.cursor/rules/01-operations.mdc) §Task cycle ш.1 |
+| 2 | Реализация | Промежуточные commits — [`01-operations.mdc`](~/.cursor/rules/01-operations.mdc) §Commits |
+| 2b | Слияние веток по плану | [`dnd-mud-workflow.mdc`](.cursor/rules/dnd-mud-workflow.mdc) §Несколько веток по плану |
+| 3–4 | Docs + commit финализации | skill [`dnd-mud-docs-after-task`](.cursor/skills/dnd-mud-docs-after-task/SKILL.md) |
+| 5 | Verify | skill [`dnd-mud-verify`](.cursor/skills/dnd-mud-verify/SKILL.md) |
+| 6 | Review | skill [`dnd-mud-review`](.cursor/skills/dnd-mud-review/SKILL.md) |
+| 7 | Fix plan | skill [`dnd-mud-fix-plan`](.cursor/skills/dnd-mud-fix-plan/SKILL.md) |
+| 8–9 | Push / PR / rename | [`dnd-mud-workflow.mdc`](.cursor/rules/dnd-mud-workflow.mdc) §PR task → dev |
+| 10 | Release | skill [`dnd-mud-release`](.cursor/skills/dnd-mud-release/SKILL.md) |

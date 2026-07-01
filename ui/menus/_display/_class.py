@@ -55,16 +55,6 @@ def _format_class_proficiencies(
                 parts.append(", ".join(labels))
         if parts:
             return "; ".join(parts)
-    equipment = class_info.get("equipment", {})
-    if isinstance(equipment, dict):
-        legacy: list[str] = []
-        weapons = equipment.get("weapons", [])
-        armor = equipment.get("armor", [])
-        if isinstance(weapons, list) and weapons:
-            legacy.append(", ".join(str(w) for w in weapons))
-        if isinstance(armor, list) and armor:
-            legacy.append(", ".join(str(a) for a in armor))
-        return "; ".join(legacy)
     return ""
 
 

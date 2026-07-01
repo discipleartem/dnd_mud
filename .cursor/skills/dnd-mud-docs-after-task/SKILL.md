@@ -1,34 +1,37 @@
 ---
 name: dnd-mud-docs-after-task
 description: >-
-  Updates dnd_mud project docs in docs/ after the main implementation commit,
-  then commits docs automatically (docs: …). Use when finishing a feature task,
-  before verify, or when the user asks to sync documentation with code changes.
+  Updates dnd_mud project docs in docs/ after task implementation is complete,
+  before the finalization commit, then commits (docs: … or together with code).
+  Use when finishing a feature task, before verify, or when the user asks to sync
+  documentation with code changes.
 ---
 
 # dnd_mud — документация после задачи
 
-Канон: [`01-operations.mdc`](~/.cursor/rules/01-operations.mdc) §Task cycle шаг 3.
+Канон: [`01-operations.mdc`](~/.cursor/rules/01-operations.mdc) §Task cycle ш.3 · оркестрация [`AGENTS.md`](../../AGENTS.md) §Steps.
 
 ## Когда выполнять
 
-После коммита **основной** реализации (не git-старт), **до** verify.
+После **завершения реализации** задачи (подзадачи, слияние веток по плану), **перед** commit финализации, **до** verify.
+
+Промежуточные commits подзадач во время работы — по [`01-operations.mdc`](~/.cursor/rules/01-operations.mdc) §Commits; skill на **конце** задачи, до финального commit.
 
 ## Когда пропустить
 
 - Задача была **только** про `docs/` или `.cursor/rules/` (без предшествующего коммита реализации)
 - Косметика / рефакторинг без смены поведения, API или данных
-- Документация уже обновлена в том же коммите, что и код
+- Документация уже актуальна и diff после шага 2 пустой
 
 ## Алгоритм
 
-1. По `git diff` определить затронутые области.
+1. По `git diff` (working tree, staged; при необходимости `origin/dev...HEAD`) определить затронутые области.
 2. Обновить **только** релевантные файлы из таблицы ниже — факты, не дублирование.
-3. **Коммит** — если после шага 2 есть незакоммиченные правки в `docs/`, `.cursor/rules/`, `README.md`, `AGENTS.md`:
-   - сообщение: `docs: <краткое описание>` (Conventional Commits, английский)
-   - процедура: [`user-protocols.mdc`](~/.cursor/rules/user-protocols.mdc) §Commit procedure
+3. **Commit финализации** — после шагов 1–2, по [`user-protocols.mdc`](~/.cursor/rules/user-protocols.mdc) §Commit procedure:
+   - незакоммиченный код + docs: один коммит `feat:`/`fix:`/… (docs в том же коммите), если уместно; иначе сначала код, затем `docs:`
+   - код уже в подзадачах, изменились только docs: `docs: <краткое описание>` (Conventional Commits, английский)
    - не коммитить `.coverage`, `saves/` ([`dnd-mud-workflow.mdc`](../../rules/dnd-mud-workflow.mdc) §Git)
-   - если diff пустой — коммит пропустить
+   - если diff пустой — commit пропустить
 4. Перейти к skill `dnd-mud-verify` → `dnd-mud-review`.
 
 ## Какой файл обновлять

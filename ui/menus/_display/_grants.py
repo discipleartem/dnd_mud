@@ -63,7 +63,7 @@ def _grant_description(
     if explicit:
         return explicit
     if gtype == "hit_point_bonus" and grant.get("per_level"):
-        amount = int(grant.get("value", grant.get("amount", 0)))
+        amount = int(grant.get("amount", 0))
         if amount > 0:
             return get_string(
                 strings,
@@ -72,7 +72,7 @@ def _grant_description(
             )
     if gtype == ABILITY_INCREASE and grant.get("choice"):
         count = int(grant.get("count", 1))
-        amount = int(grant.get("amount", grant.get("value", 1)))
+        amount = int(grant.get("amount", 1))
         return get_string(
             strings,
             "character.stats_choice_bonus_subrace_info",
@@ -173,7 +173,7 @@ def _grant_description(
                 types=save_labels,
             )
     if gtype == "speed_bonus":
-        speed = grant.get("value", grant.get("amount"))
+        speed = grant.get("amount")
         if speed is not None:
             return get_string(
                 strings,

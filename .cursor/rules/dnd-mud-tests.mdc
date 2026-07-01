@@ -27,7 +27,7 @@ alwaysApply: false
 | Monkeypatch через `ui.menus._deps` для меню | `@pytest.mark.parametrize` на десятки кейсов без нужды |
 | Имя `test_<what>_<condition>_<expected>` | Погоня за % coverage; unit + integration одного сценария |
 
-Эталоны: [`tests/test_difficulty.py`](tests/test_difficulty.py), [`tests/test_menus_character.py`](tests/test_menus_character.py).
+Эталоны: [`tests/test_difficulty.py`](tests/test_difficulty.py), [`tests/test_menus_creation.py`](tests/test_menus_creation.py).
 
 ## Перед добавлением
 

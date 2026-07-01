@@ -87,11 +87,7 @@ disable-model-invocation: true
 
 ## Связь с Agent-loop
 
-```
-… → verify → review → [fix-plan?] → fix (Agent) → verify → light re-check (если blockers) → push
-                      ↑
-              Major+ или /dnd-mud-fix-plan
-```
+Канон: [`AGENTS.md`](../../AGENTS.md) §Agent-loop — ветка `[fix-plan?]` после review.
 
 После выдачи плана — ждать явного запроса на реализацию.
 

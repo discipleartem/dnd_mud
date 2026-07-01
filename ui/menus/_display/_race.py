@@ -44,7 +44,7 @@ def _print_choice_ability_from_grants(
         if not grant.get("choice"):
             continue
         count = int(grant.get("count", 1))
-        amount = int(grant.get("amount", grant.get("value", 1)))
+        amount = int(grant.get("amount", 1))
         choice_info = get_string(
             strings,
             "character.stats_choice_bonus_subrace_info",
@@ -147,7 +147,7 @@ def _print_race_bonuses(
     mechanics = _deps.get_choice_ability_bonus_mechanics(race_id, subrace_id)
     if mechanics:
         count = int(mechanics.get("count", 1))
-        value = int(mechanics.get("value", 1))
+        value = int(mechanics.get("amount", 1))
         pending_msg = get_string(
             strings,
             "character.stats_choice_bonus_pending",

@@ -24,7 +24,7 @@ def _select_choice_ability_bonuses(
         return {}
 
     count = int(mechanics.get("count", 1))
-    value = int(mechanics.get("value", 1))
+    value = int(mechanics.get("amount", 1))
     allow_duplicates = bool(mechanics.get("allow_duplicates", True))
     chosen_stats: list[str] = []
 

@@ -29,6 +29,9 @@ CROSS_CUTTING_MODULES = frozenset(
 
 CORE_MODULE_TESTS: dict[str, list[str]] = {
     "core/feat_visibility.py": ["tests/test_feats.py"],
+    "core/feat_descriptions.py": ["tests/test_feats.py"],
+    "core/feat_requirements.py": ["tests/test_feats.py"],
+    "core/feat_apply.py": ["tests/test_feats.py"],
     "core/feats_loader.py": ["tests/test_feats.py"],
     "core/character_storage.py": ["tests/test_character.py"],
     "core/scenario_actions.py": ["tests/test_class_features.py"],
@@ -40,17 +43,20 @@ CORE_MODULE_TESTS: dict[str, list[str]] = {
     "core/adventure.py": ["tests/test_models.py"],
     "core/mod_loader.py": ["tests/test_catalog_loader.py"],
     "core/skills.py": ["tests/test_proficiencies.py"],
+    "core/proficiency_collect.py": ["tests/test_proficiencies.py"],
+    "core/proficiency_checks.py": ["tests/test_proficiencies.py"],
 }
 
 DATA_PATH_TESTS = [
     "tests/test_catalog_loader.py",
+    "tests/test_data_schema.py",
     "tests/test_io.py",
 ]
 
 UI_MENU_TESTS: dict[str, str] = {
-    "characters_menu": "tests/test_menus_character.py",
+    "characters_menu": "tests/test_menus_characters_hub.py",
     "main_menu": "tests/test_menus_main.py",
-    "new_game": "tests/test_menus_character.py",
+    "new_game": "tests/test_menus_new_game.py",
     "scenario_flow": "tests/test_progression.py",
     "settings": "tests/test_settings.py",
     "backgrounds": "tests/test_backgrounds.py",
@@ -63,12 +69,12 @@ UI_MENU_TESTS: dict[str, str] = {
     "class_features": "tests/test_class_features.py",
     "subclass_trainer": "tests/test_subclasses.py",
     "_creation_handlers": "tests/test_creation_handlers.py",
-    "_deps": "tests/test_menus_character.py",
+    "_deps": "tests/test_menus_new_game.py",
     "_common": "tests/test_menus_main.py",
 }
 
 UI_PREFIX_TESTS: list[tuple[str, str]] = [
-    ("ui/menus/_creation_", "tests/test_menus_character.py"),
+    ("ui/menus/_creation_", "tests/test_menus_creation.py"),
     ("ui/menus/_display/", "tests/test_display.py"),
     ("ui/menus/feats/", "tests/test_feats.py"),
     ("ui/menus/stats/", "tests/test_menus_stats.py"),

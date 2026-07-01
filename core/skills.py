@@ -6,6 +6,7 @@ from core.abilities import skill_ids
 from core.classes import (
     get_class_dict,
     get_subclass_choice_level,
+    iter_class_grants,
     load_class_full,
 )
 from core.grants import grants_from_entity, inherit_flags
@@ -165,7 +166,7 @@ def get_race_skill_choices_with_source(
 def _subclass_features(
     class_id: str, subclass_id: str | None
 ) -> list[dict[str, Any]]:
-    """Список class_features выбранного подкласса."""
+    """Grants выбранного подкласса из progression."""
     if not subclass_id:
         return []
     info = get_class_dict(class_id)
@@ -175,9 +176,7 @@ def _subclass_features(
     for sub in raw_subs:
         if not isinstance(sub, dict) or sub.get("id") != subclass_id:
             continue
-        features = sub.get("class_features", [])
-        if isinstance(features, list):
-            return [f for f in features if isinstance(f, dict)]
+        return iter_class_grants(sub)
     return []
 
 

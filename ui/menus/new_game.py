@@ -118,7 +118,7 @@ def _select_adventure(
                 strings,
                 "adventures.unavailable_line",
                 name=adv.get_name(language),
-                difficulty=adv.difficulty,
+                content_tier=adv.content_tier,
                 desc=adv.description,
                 reason=reason,
             )
@@ -129,7 +129,7 @@ def _select_adventure(
             strings,
             "adventures.adventure_line",
             name=adv.get_name(language),
-            difficulty=adv.difficulty,
+            content_tier=adv.content_tier,
             desc=adv.description,
         )
         for adv in matching

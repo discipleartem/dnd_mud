@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://dnd-mud.local/schema/v1/adventure.json",
+  "title": "AdventureCatalogEntry",
+  "type": "object",
+  "required": ["id", "content_tier"],
+  "properties": {
+    "id": { "type": "string", "minLength": 1 },
+    "name": {
+      "oneOf": [
+        { "type": "object" },
+        { "type": "string" }
+      ]
+    },
+    "description": { "type": "string" },
+    "type": { "type": "string" },
+    "content_tier": {
+      "type": "string",
+      "enum": ["easy", "normal"]
+    },
+    "min_level": { "type": "integer", "minimum": 1 },
+    "hardcore_only": { "type": "boolean" },
+    "allowed_game_difficulties": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": ["easy", "normal", "hardcore"]
+      }
+    },
+    "script_file": { "type": "string" }
+  },
+  "additionalProperties": true
+}
