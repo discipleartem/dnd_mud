@@ -128,6 +128,27 @@ def test_starting_max_hp_and_hardcore(
     assert hard.max_hp == 7
 
 
+def test_hardcore_l1_hp_floor_on_create(
+    characters_dir: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """HardCore на 1 ур.: save_character применяет пол max(1, бросок + CON)."""
+    stats = dict.fromkeys(character_mod.STAT_NAMES, 10)
+    stats["constitution"] = 8  # модификатор −1
+    monkeypatch.setattr(
+        "core.progression.roll",
+        lambda count, sides, modifier=0: 1 + modifier,
+    )
+    saved = character_mod.save_character(
+        name="HardLow",
+        race_id="human",
+        class_id="bard",
+        stats=stats,
+        difficulty="hardcore",
+    )
+    assert saved.max_hp == 1
+    assert saved.current_hp == 1
+
+
 def test_make_save_slug_and_slug_collision(characters_dir: Path) -> None:
     assert make_save_slug("Герой") == "geroy"
     first = character_mod.save_character(

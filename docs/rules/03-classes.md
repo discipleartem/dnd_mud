@@ -40,8 +40,8 @@
 
 | Уровень | Normal / Easy | HardCore |
 |---------|---------------|----------|
-| 1 | `max(1, hit_dice + CON)` | бросок `hit_dice` + CON |
-| 2+ | среднее кости `(hit_dice // 2 + 1) + CON` | бросок `hit_dice` + CON |
+| 1 | `max(1, hit_dice + CON)` | `max(1, roll(hit_dice) + CON)` |
+| 2+ | среднее кости `(hit_dice // 2 + 1) + CON` | `max(1, roll(hit_dice) + CON)` |
 
 Среднее кости — PHB (для к10 → 6). Кость берётся из `hit_dice` в [`classes.yaml`](../../database/classes/classes.yaml).
 
@@ -83,7 +83,7 @@ max_hp_for_level(class_id, stats, level, difficulty)
 ```
 
 - **Normal / Easy:** 1 ур. — `max(1, hit_dice + CON)`; 2+ — `(hit_dice // 2 + 1) + CON` за каждый уровень.
-- **HardCore:** на каждом уровне — `roll(1, hit_dice) + CON` (без пола на 1 ур.).
+- **HardCore:** на каждом уровне — `max(1, roll(1, hit_dice) + CON)`; расовые/чертовые бонусы сверху.
 - При левелапе HardCore прирост **добавляется** к текущему `max_hp` (`apply_experience`), не пересчитывается по среднему.
 
 ### Формат YAML (фрагмент)
