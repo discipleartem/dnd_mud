@@ -43,7 +43,8 @@ dnd_mud
 make test-fast     # pytest без coverage (быстрый локальный цикл)
 make test          # pytest + coverage (CI)
 make test-cov      # coverage + term-missing (детальный отчёт)
-make verify-scope  # инкрементально на конец task-ветки (vs origin/dev)
+make verify-changed  # staged .py (pre-commit на подзадаче)
+# make verify-scope  — один раз в dnd-mud-review (конец task-ветки)
 VERIFY_BASE=origin/main make verify-scope  # на ветке dev — diff vs main
 pytest -v
 ```
@@ -143,12 +144,14 @@ dnd_mud/
 ## Линтинг и форматирование
 
 ```bash
-make check            # полный: ruff + black --check + mypy
-make verify-changed   # только staged .py (подзадача)
-make verify-scope     # diff origin/dev...HEAD (конец task-ветки)
+make check            # полный: ruff + black --check + mypy (CI / по запросу)
+make verify-changed   # только staged .py (pre-commit на подзадаче)
+# make verify-scope   # diff origin/dev...HEAD — skill dnd-mud-review, конец task-ветки
 VERIFY_BASE=origin/main make verify-scope  # на ветке dev
-make verify           # check + test (CI / ручной full)
+make verify           # check + test (CI)
 ```
+
+**Агент на task-ветке:** между подзадачами — только pre-commit `verify-changed`; **не** вызывать `make test`, `make check`, `make verify-scope` вручную. Полный прогон — **один раз** в skill [`dnd-mud-review`](../.cursor/skills/dnd-mud-review/SKILL.md).
 
 Маппинг changed → pytest/lint: [`scripts/verify_targets.py`](../scripts/verify_targets.py). Если хотя бы один изменённый `.py` не смапился — full suite (не только когда mapped-тестов нет совсем).
 
@@ -222,7 +225,7 @@ IDE: расширения **GitHub Pull Requests** и **GitHub Actions** — [`.
 
 Канон: skill [`.cursor/skills/dnd-mud-review`](../.cursor/skills/dnd-mud-review/SKILL.md). GitHub PR Bugbot — **нет**.
 
-Quality gate PR `task → dev`: `make verify-scope` + review (light/full). Full pytest/lint — CI [`ci.yml`](../.github/workflows/ci.yml).
+Quality gate PR `task → dev`: один раз [`dnd-mud-review`](../.cursor/skills/dnd-mud-review/SKILL.md) (включает `verify-scope`) до push. Full pytest/lint — CI [`ci.yml`](../.github/workflows/ci.yml).
 
 ### Cursor IDE (Agent Review)
 
@@ -234,12 +237,11 @@ Quality gate PR `task → dev`: `make verify-scope` + review (light/full). Full 
 |----------|-------|
 | Короткие task-ветки (1 фича, 1–3 дня) | Меньше контекста и diff |
 | Один чат ≈ одна интеграционная ветка к PR | Вспомогательные ветки по плану — ок, но перед PR слить в одну |
-| Review один раз в конце (light или full) | Не дублировать проверку в чате и bugbot |
-| `rebase origin/dev` перед full review | Минимальный diff для bugbot |
+| Review **один раз** в конце task-ветки (`dnd-mud-review` = verify-scope + diff) | Не гонять full test/lint между подзадачами |
+| `rebase origin/dev` перед review | Минимальный diff для bugbot |
 | Plan mode для крупных задач | Меньше итераций fix в Agent |
 | Узкий scope в промпте | Меньше лишних файлов в контексте |
 | Grep/Read вместо Task/explore для 1–2 файлов | Дешевле subagent |
-| `make test-fast` / `make test` вместо повторных «проверь ещё раз» в чате | Быстрый feedback без coverage; полный прогон — перед PR |
 
 Мониторинг: раз в неделю [cursor.com/dashboard/usage](https://cursor.com/dashboard/usage) — рост `agent_review` vs `auto`.
 

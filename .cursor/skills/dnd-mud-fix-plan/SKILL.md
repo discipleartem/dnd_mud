@@ -49,11 +49,11 @@ disable-model-invocation: true
 3. Для каждого пункта must/optional указать:
    - файл(ы) и суть правки (1–2 предложения)
    - предлагаемый commit message (Conventional Commits, **why**)
-   - verify после пункта: `make verify-changed`; после блока must-fix: `make verify-scope`
+   - verify после пункта: только pre-commit `verify-changed` (агент **не** вызывает `verify-scope` между fix-коммитами)
 4. Границы коммитов: atomic; не смешивать unrelated (код vs docs vs `.cursor/`).
 5. Финальный блок **After fixes**:
-   - verify один раз в конце блока must-fix
-   - **light re-check** по [`dnd-mud-review`](../dnd-mud-review/SKILL.md) §Light re-check — **только** если были Blocker; full bugbot — по запросу пользователя
+   - **light re-check** (без повторного `verify-scope`, если fix точечный) — §Light re-check в review skill
+   - повторный full `verify-scope` / bugbot — только по запросу пользователя
    - push/PR — по запросу пользователя
 6. **Не** править код, **не** `git commit`, **не** push.
 
@@ -78,9 +78,8 @@ disable-model-invocation: true
 - [Nit] `<location>` — …
 
 ### After fixes
-- [ ] verify-scope (…); full test — CI на PR
-- [ ] light re-check (dnd-mud-review) — только при Blocker в must-fix; full bugbot — по запросу
-- [ ] push/PR — по запросу
+- [ ] light re-check ([`dnd-mud-review`](../dnd-mud-review/SKILL.md) §Light re-check) — при Blocker в must-fix
+- [ ] push/PR — по запросу; полный pytest — CI на PR
 ```
 
 Язык: русский; пути и идентификаторы — English.

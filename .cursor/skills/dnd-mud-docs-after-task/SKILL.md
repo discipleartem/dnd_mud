@@ -13,9 +13,9 @@ description: >-
 
 ## Когда выполнять
 
-После **завершения реализации** задачи (подзадачи, слияние веток по плану), **перед** commit финализации, **до** verify.
+После **завершения реализации** задачи (подзадачи, слияние веток по плану), **перед** commit финализации.
 
-Промежуточные commits подзадач во время работы — по [`01-operations.mdc`](~/.cursor/rules/01-operations.mdc) §Commits; skill на **конце** задачи, до финального commit.
+Промежуточные commits подзадач — pre-commit `verify-changed` only; **не** запускать `make verify-scope` / `make test` до [`dnd-mud-review`](../dnd-mud-review/SKILL.md).
 
 ## Когда пропустить
 
@@ -32,7 +32,7 @@ description: >-
    - код уже в подзадачах, изменились только docs: `docs: <краткое описание>` (Conventional Commits, английский)
    - не коммитить `.coverage`, `saves/` ([`dnd-mud-workflow.mdc`](../../rules/dnd-mud-workflow.mdc) §Git)
    - если diff пустой — commit пропустить
-4. Перейти к skill `dnd-mud-verify` → `dnd-mud-review`.
+4. Перейти к skill [`dnd-mud-review`](../dnd-mud-review/SKILL.md) (**один раз** на task-ветку).
 
 ## Какой файл обновлять
 

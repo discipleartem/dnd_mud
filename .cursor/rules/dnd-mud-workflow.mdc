@@ -14,7 +14,7 @@ Console MUD — browser forbidden. Переопределяет `ironbee-devtool
 | Global | dnd_mud |
 |--------|---------|
 | Agent напрямую — git-flow не обязателен | **git-старт обязателен** для правок кода/docs/git |
-| Browser / IronBee verify | `make verify-changed` / `make verify-scope` + smoke `python main.py` — skill [`dnd-mud-verify`](../skills/dnd-mud-verify/SKILL.md) |
+| Browser / IronBee verify | На task-ветке агент **не** запускает full verify — только pre-commit `verify-changed`; полный прогон **один раз** в skill [`dnd-mud-review`](../skills/dnd-mud-review/SKILL.md) |
 | Push по запросу | auto-commit подзадач; Plan → Build → Agent — push обязателен |
 | Ветки `merged/*` | **только локально** — никогда push/upstream/PR на `origin` (§Ветки merged/*) |
 
@@ -25,14 +25,16 @@ Console MUD — browser forbidden. Переопределяет `ironbee-devtool
 **Git-старт:** [`01-operations.mdc`](~/.cursor/rules/01-operations.mdc) §Task cycle ш.1. Если `main` впереди `dev`:
 
 ```bash
-git merge origin/main && make verify-scope && git push origin dev
+git merge origin/main && git push origin dev
 ```
 
-**Parallel dev:** после `rebase`/`merge origin/dev` и после конфликта — `make verify-scope` перед push/PR.
+(Полный `make verify-scope` на `dev` — по запросу или CI; не часть цикла агента на task-ветке.)
+
+**Parallel dev:** после `rebase`/`merge origin/dev` и после конфликта — commit в task-ветке; **не** запускать `make verify-scope` до финального [`dnd-mud-review`](../skills/dnd-mud-review/SKILL.md).
 
 ```bash
-git fetch origin && git rebase origin/dev && make verify-scope
-# конфликт: git add <files> && git rebase --continue && make verify-scope
+git fetch origin && git rebase origin/dev
+# конфликт: git add <files> && git rebase --continue
 # push после rebase на remote: --force-with-lease (только своя ветка)
 ```
 
@@ -57,7 +59,6 @@ TASK=feat/my-task
 git fetch origin
 git checkout "${TASK}" && git rebase origin/dev
 git merge --no-ff "feat/my-task-a"   # для каждой вспомогательной
-make verify-scope
 git push -u origin "${TASK}"         # после rebase: --force-with-lease
 git push origin --delete feat/my-task-a
 ```
@@ -79,7 +80,8 @@ git push origin --delete feat/my-task-a
 Триггеры: «сделай PR», `gh pr create --base dev` на task-ветке. Procedure: [`user-protocols.mdc`](~/.cursor/rules/user-protocols.mdc) §PR procedure.
 
 ```bash
-git fetch origin && git rebase origin/dev && make verify-scope
+git fetch origin && git rebase origin/dev
+# dnd-mud-review (один раз; включает make verify-scope)
 git push -u origin HEAD   # после rebase: --force-with-lease
 gh pr create --base dev --title "feat: …"
 ```
@@ -115,13 +117,23 @@ Release `dev` → `main`: skill [`dnd-mud-release`](../skills/dnd-mud-release/SK
 
 ## Verify / review (policy)
 
-Команды verify — skill [`dnd-mud-verify`](../skills/dnd-mud-verify/SKILL.md). Skills-цепочка — [`AGENTS.md`](../AGENTS.md) §Skills.
+Справочник команд verify — skill [`dnd-mud-verify`](../skills/dnd-mud-verify/SKILL.md). **Оркестрация агента на task-ветке** — ниже.
 
-**Review обязателен** один раз в конце task-ветки (skill [`dnd-mud-review`](../skills/dnd-mud-review/SKILL.md)), после verify, до push/PR. Bugbot subagent — только **full**. GitHub PR Bugbot — **нет**.
+### На task-ветке (агент)
+
+| Разрешено | Запрещено агенту вручную |
+|-----------|---------------------------|
+| `make verify-changed` — **только** через pre-commit при commit | `make test`, `make test-fast`, `make check`, `make verify`, `make verify-scope` |
+| Промежуточные commits подзадач | Повторный `dnd-mud-review` без Blocker-fix |
+| | `pytest` на всём suite «для проверки» между подзадачами |
+
+**Конец task-ветки (один раз):** skill [`dnd-mud-review`](../skills/dnd-mud-review/SKILL.md) — после всех подзадач, docs-after-task и commit финализации; **внутри review** — `make verify-scope` (+ smoke UI при необходимости), затем light/full readonly review. До push/PR.
+
+**Review обязателен** один раз на task-ветку. Bugbot subagent — только **full**. GitHub PR Bugbot — **нет**.
 
 **Cursor IDE:** Agent Review on Commit — OFF; Submodules / Untracked — OFF; Default Approach — Quick.
 
-Verify ≠ review. Runtime не нужен для docs-only / rules-only.
+Verify ≠ review. Полный pytest/lint на PR — CI ([`ci.yml`](../.github/workflows/ci.yml)). Runtime smoke не нужен для docs-only / rules-only diff.
 
 ## Динамические метрики
 

@@ -1,117 +1,110 @@
 ---
 name: dnd-mud-review
 description: >-
-  Локальный readonly review diff vs base: task-ветка → dev, ветка dev → main;
-  light (оркестратор) или full (bugbot subagent). После verify, до push/PR/merge.
-  При Major/Blocker — предложить dnd-mud-fix-plan. GitHub PR Bugbot не используется.
+  Один раз в конце task-ветки: make verify-scope (+ smoke UI), затем readonly
+  review diff vs dev (light или full bugbot). Не запускать между подзадачами.
+  После Major/Blocker — dnd-mud-fix-plan. GitHub PR Bugbot не используется.
 ---
 
 # dnd_mud — review (light | full)
 
 Канон-политика: [`dnd-mud-workflow.mdc`](../../rules/dnd-mud-workflow.mdc) §Verify / review · [`AGENTS.md`](../../AGENTS.md).
 
-**Verify** (`make verify-scope` локально; `make verify` в CI) — runtime. **Review** — readonly diff + чеклист; не дублирует pytest.
+**Единственная точка полного verify на task-ветке:** этот skill. Агент **не** запускает `make verify-scope` / `make test` / `make check` вне review.
 
-## Когда выполнять
+## Когда выполнять (один раз)
 
-После skill [`dnd-mud-verify`](../dnd-mud-verify/SKILL.md), **до** push/PR/merge:
+После **всех** подзадач и основной задачи, skill [`dnd-mud-docs-after-task`](../dnd-mud-docs-after-task/SKILL.md) и commit финализации, **до** push/PR/merge:
 
-| Действие | Base branch | Ветка для review | Diff |
-|----------|-------------|------------------|------|
-| `git push` task-ветки | `dev` | текущая task-ветка | `origin/dev...HEAD` |
-| `gh pr create --base dev` | `dev` | head PR / task-ветка | `origin/dev...HEAD` |
-| Review на ветке **`dev`** | **`main`** | `dev` | **`origin/main...HEAD`** |
+| Действие | Base branch | Diff |
+|----------|-------------|------|
+| Завершение task-ветки | `dev` | `origin/dev...HEAD` |
+| `git push` / `gh pr create --base dev` | `dev` | `origin/dev...HEAD` |
+| Review на ветке **`dev`** | **`main`** | `origin/main...HEAD` |
 
-Release `dev` → `main`: review **не обязателен** — см. [`dnd-mud-release`](../dnd-mud-release/SKILL.md).
+Release `dev` → `main`: review **не обязателен** — [`dnd-mud-release`](../dnd-mud-release/SKILL.md).
 
-## Определение base branch
-
-Перед review: `git fetch origin`, затем:
-
-```bash
-git branch --show-current
-```
-
-| Текущая ветка | Base branch | Команда diff |
-|---------------|-------------|--------------|
-| `dev` | **`main`** | `git diff origin/main...HEAD` |
-| task-ветка (не `main`, не `dev`) | `dev` | `git diff origin/dev...HEAD` |
-| `main` | — | review не типичен; только по явному запросу |
-
-**На `dev`:** сравнивать с `main`, не с `dev` (иначе diff пустой или бессмысленный).
+**Не выполнять** между подзадачами, после каждого commit, после docs-only правки в середине задачи.
 
 ## Когда пропустить
 
-- Только docs / `.cursor/rules` / `AGENTS.md` — без изменений кода и данных
-- Пользователь явно просит push/PR/merge **без** review
-- Повторный review: только после fix **blocker** findings (максимум один повтор — light re-check)
+- Задача **только** `docs/` / `.cursor/rules` / `AGENTS.md` без кода и данных — review опционален
+- Пользователь явно просит push/PR **без** review
+- **Повторный** full review: только по явному запросу; после Blocker-fix — §Light re-check
+
+## Определение base branch
+
+```bash
+git fetch origin
+git branch --show-current
+```
+
+| Текущая ветка | Base | Diff |
+|---------------|------|------|
+| task-ветка | `dev` | `git diff origin/dev...HEAD` |
+| `dev` | `main` | `git diff origin/main...HEAD` |
+
+## Предусловия
+
+- [ ] Все подзадачи завершены; вспомогательные ветки слиты ([`dnd-mud-workflow.mdc`](../../rules/dnd-mud-workflow.mdc) §Несколько веток)
+- [ ] `dnd-mud-docs-after-task` выполнен (если была реализация кода/данных)
+- [ ] Рабочее дерево чистое
+- [ ] На task-ветке: `git rebase origin/dev` (на `dev` — fetch `origin/main`)
+
+## Алгоритм (общий — начало)
+
+**Шаг 0 — verify (один раз на task-ветку):**
+
+1. Если diff затрагивает код/данные (`core/`, `database/`, `mods/`, `ui/`, `main.py`, `tests/`):
+   - `make verify-scope` (из `.venv`)
+   - при UI в diff — smoke `python main.py` (затронутое меню)
+2. Если только docs/rules — шаг 0 пропустить.
+
+**Шаг 1+ — readonly review** (light или full ниже).
+
+Справочник команд verify: [`dnd-mud-verify`](../dnd-mud-verify/SKILL.md).
 
 ## Выбор режима review
-
-Перед review: `git fetch origin`, определить base (§**Определение base branch**), **снять метрики diff** (не опираться на числа из docs — suite и diff меняются):
 
 ```bash
 git diff --shortstat origin/<base>...HEAD
 git diff --name-only origin/<base>...HEAD
 ```
 
-При необходимости указать число тестов в ответе: `pytest --collect-only -q` (из `.venv`).
-
-Для **task-ветки** перед full review: `git rebase origin/dev`. На **`dev`** rebase на `origin/dev` не нужен; убедиться, что `origin/main` актуален (`git fetch origin`).
-
 | Условие | Режим |
 |---------|-------|
-| Только `docs/`, `.cursor/rules`, `AGENTS.md` | **Пропуск** |
-| Пользователь явно просит «полный review» / «bugbot» | **Full** |
-| Diff **не** затрагивает `core/`, `database/`, `mods/`, `ui/`, `main.py`; узкий scope по `--shortstat` / `--name-only` (преимущественно docs, rules, skills, infra/tests без продуктового кода) | **Light** |
+| Пользователь просит «полный review» / «bugbot» | **Full** |
+| Diff не затрагивает `core/`, `database/`, `mods/`, `ui/`, `main.py`; узкий scope (docs, rules, skills) | **Light** |
 | Иначе | **Full** |
-
-## Предусловия
-
-- [ ] Verify пройден
-- [ ] Рабочее дерево чистое (для финального review — сначала commit)
-- [ ] Перед **full** на task-ветке: `git fetch origin && git rebase origin/dev`
-- [ ] Перед **full** на **`dev`**: `git fetch origin` (base = `main`, rebase не на `dev`)
 
 ## Алгоритм light review (оркестратор)
 
-Без subagent и без Task tool.
+После шага 0 (verify):
 
-1. Определить **base branch** (§**Определение base branch**): task-ветка → `dev`, **`dev` → `main`**.
-2. `git diff --stat origin/<base>...HEAD` и `git diff origin/<base>...HEAD`.
-3. Прочитать **только** файлы из diff.
-4. Чеклист (4 пункта): correctness; git hygiene & secrets; docs drift (если менялось поведение); tests — meaningful gaps only.
-5. Сводка по §**Формат ответа**; при Blocker/Major — предложить [`dnd-mud-fix-plan`](../dnd-mud-fix-plan/SKILL.md).
-6. Оркестратор **не** правит код, пока пользователь не попросил fix.
+1. `git diff --stat origin/<base>...HEAD` и выборочно `git diff`
+2. Прочитать **только** файлы из diff
+3. Чеклист: correctness; git hygiene; docs drift; tests — meaningful gaps only
+4. Сводка по §**Формат ответа**; Blocker/Major → [`dnd-mud-fix-plan`](../dnd-mud-fix-plan/SKILL.md)
+5. **Не** править код без запроса
 
 ## Алгоритм full review (bugbot subagent)
 
-1. Определить **base branch** (§**Определение base branch**): task-ветка → `dev`, **`dev` → `main`**.
-2. `git fetch origin`; на task-ветке — `git rebase origin/dev` (на `dev` — не rebase на себя).
-3. `git diff --stat origin/<base>...HEAD` — убедиться, что diff не пуст.
-4. Запустить **ровно один** subagent `bugbot` ([`review-bugbot`](~/.cursor/skills-cursor/review-bugbot/SKILL.md)):
-   - `readonly: true`, `run_in_background: false`, `description: "Bugbot"`, `subagent_type: "bugbot"`
-5. Prompt subagent:
+После шага 0 (verify):
 
-```text
-Full Repository Path: <absolute repository path>
-Diff: branch changes
-Base Branch: <main|dev — по §Определение base branch>
-Custom Instructions: <текст из §dnd_mud checklist ниже>
-```
+1. `git diff --stat origin/<base>...HEAD` — diff не пуст
+2. **Ровно один** subagent `bugbot` (`readonly: true`, `description: "Bugbot"`)
+3. Prompt: `Diff: branch changes`, `Base Branch: <dev|main>`, Custom Instructions — §checklist ниже
+4. Сводка; Blocker/Major → fix-plan
 
-6. Сводка по §**Формат ответа**; при Blocker/Major — предложить [`dnd-mud-fix-plan`](../dnd-mud-fix-plan/SKILL.md).
-7. Оркестратор **не** правит код, пока пользователь не попросил fix.
-
-**При ошибке bugbot или пустом diff:** **не** использовать `Diff: natural language`. Сообщить пользователю; исправить git-состояние (`fetch`, clean tree, rebase) и повторить **один** раз с `branch changes`.
+**Ошибка bugbot:** один retry с `branch changes`; не `Diff: natural language`.
 
 ## Light re-check (после fix Blocker)
 
-Без subagent:
+Без subagent, **без** повторного `make verify-scope` (если fix только в файлах из findings):
 
-1. `git diff` по файлам из Location в findings (или `git diff origin/<base>...HEAD` если много файлов).
-2. Проверить, что Blocker устранены; Major — по запросу.
-3. Full bugbot — только по явному запросу пользователя.
+1. `git diff` по исправленным файлам
+2. Blocker устранены
+3. Full bugbot — только по запросу
 
 ## dnd_mud checklist (Custom Instructions для full review)
 
@@ -135,21 +128,25 @@ Language: findings in Russian; file paths and identifiers in English.
 
 ## Формат ответа (оркестратор)
 
-Указать режим: **Light** или **Full** и **base branch** (`dev` или `main`).
+Указать: **Light** или **Full**, **base branch**, результат **verify-scope** (pass/skip).
 
-**1. Findings** — Blocker, Major, Minor:
+### Findings
 
 | Severity | Location | Finding |
 |----------|----------|---------|
 | … | `file:line` | … |
 
-**2. Nit (опционально)** — отдельная таблица, если есть.
+### Nit (опционально)
+
+| Location | Finding |
+|----------|---------|
+| … | … |
 
 ## После review
 
 | Findings | Действие |
 |----------|----------|
-| Blocker | fix-plan → fix → verify → **light re-check** (не full bugbot по умолчанию) |
-| Major | fix-plan (предложить) → fix по запросу |
+| Blocker | fix-plan → fix (только `verify-changed` на commits) → light re-check |
+| Major | fix-plan по запросу |
 | Minor/Nit only | push/PR — по запросу |
-| No issues | push/PR — по политике сессии |
+| No issues | push/PR — по запросу |

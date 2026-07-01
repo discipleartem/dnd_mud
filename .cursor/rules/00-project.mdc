@@ -15,14 +15,14 @@ alwaysApply: true
 
 ```bash
 make install          # venv + pip install -e ".[dev]"
-make verify-changed   # подзадача
-make verify-scope     # конец task-ветки
-make verify           # full (CI)
-make test / make check
-python main.py        # smoke меню
+make verify-changed   # подзадача (pre-commit)
+# verify-scope — только в dnd-mud-review (конец task-ветки)
+# make verify       — CI / release
+make test / make check  # по запросу или CI
+python main.py        # smoke меню (в review при UI-diff)
 ```
 
-Verify-уровни — skill [`dnd-mud-verify`](.cursor/skills/dnd-mud-verify/SKILL.md).
+Verify: pre-commit `verify-changed` на подзадачах; полный прогон — skill [`dnd-mud-review`](.cursor/skills/dnd-mud-review/SKILL.md). Справочник команд — [`dnd-mud-verify`](.cursor/skills/dnd-mud-verify/SKILL.md).
 
 ## Docs
 

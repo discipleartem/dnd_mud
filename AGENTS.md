@@ -7,7 +7,7 @@
 ## Agent-loop
 
 ```
-git-старт → подзадачи (промежуточные commits) → [слияние веток по плану]* → docs → commit → verify → review (light|full) → [fix-plan?] → push/PR task→dev (+ локальный rename) → merged/…
+git-старт → подзадачи (commits; pre-commit verify-changed) → [слияние веток]* → docs-after-task → commit → review (verify-scope + light|full, **один раз**) → [fix-plan?] → push/PR → merged/…
 ```
 
 \* [`dnd-mud-workflow.mdc`](.cursor/rules/dnd-mud-workflow.mdc) §Несколько веток по плану · docs — skill [`dnd-mud-docs-after-task`](.cursor/skills/dnd-mud-docs-after-task/SKILL.md) **перед** commit финализации
@@ -24,8 +24,8 @@ Git/verify/review/rename — [`dnd-mud-workflow.mdc`](.cursor/rules/dnd-mud-work
 | Skill | Когда |
 |-------|-------|
 | [`dnd-mud-docs-after-task`](.cursor/skills/dnd-mud-docs-after-task/SKILL.md) | После реализации, **перед** commit финализации |
-| [`dnd-mud-verify`](.cursor/skills/dnd-mud-verify/SKILL.md) | После docs+commit, **перед** review |
-| [`dnd-mud-review`](.cursor/skills/dnd-mud-review/SKILL.md) | После verify, до push/PR — light или full |
+| [`dnd-mud-verify`](.cursor/skills/dnd-mud-verify/SKILL.md) | Справочник команд; агент **не** вызывает scope/full на task-ветке |
+| [`dnd-mud-review`](.cursor/skills/dnd-mud-review/SKILL.md) | **Один раз** в конце task-ветки: `verify-scope` + readonly review |
 | [`dnd-mud-fix-plan`](.cursor/skills/dnd-mud-fix-plan/SKILL.md) | Major/Blocker после review |
 | [`dnd-mud-release`](.cursor/skills/dnd-mud-release/SKILL.md) | PR `dev` → `main` |
 
@@ -39,8 +39,7 @@ Personal: `git-dev-main-sync` (`~/.cursor/skills/git-dev-main-sync/`).
 | 2 | Реализация | Промежуточные commits — [`01-operations.mdc`](~/.cursor/rules/01-operations.mdc) §Commits |
 | 2b | Слияние веток по плану | [`dnd-mud-workflow.mdc`](.cursor/rules/dnd-mud-workflow.mdc) §Несколько веток по плану |
 | 3–4 | Docs + commit финализации | skill [`dnd-mud-docs-after-task`](.cursor/skills/dnd-mud-docs-after-task/SKILL.md) |
-| 5 | Verify | skill [`dnd-mud-verify`](.cursor/skills/dnd-mud-verify/SKILL.md) |
-| 6 | Review | skill [`dnd-mud-review`](.cursor/skills/dnd-mud-review/SKILL.md) |
-| 7 | Fix plan | skill [`dnd-mud-fix-plan`](.cursor/skills/dnd-mud-fix-plan/SKILL.md) |
-| 8–9 | Push / PR / rename → `merged/*` (локально) | [`dnd-mud-workflow.mdc`](.cursor/rules/dnd-mud-workflow.mdc) §Ветки `merged/*` · §PR task → dev |
-| 10 | Release | skill [`dnd-mud-release`](.cursor/skills/dnd-mud-release/SKILL.md) |
+| 5 | Review (включает `verify-scope`) | skill [`dnd-mud-review`](.cursor/skills/dnd-mud-review/SKILL.md) — **один раз** |
+| 6 | Fix plan | skill [`dnd-mud-fix-plan`](.cursor/skills/dnd-mud-fix-plan/SKILL.md) |
+| 7–8 | Push / PR / rename → `merged/*` (локально) | [`dnd-mud-workflow.mdc`](.cursor/rules/dnd-mud-workflow.mdc) §Ветки `merged/*` · §PR task → dev |
+| 9 | Release | skill [`dnd-mud-release`](.cursor/skills/dnd-mud-release/SKILL.md) |
