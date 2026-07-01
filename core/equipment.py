@@ -136,6 +136,12 @@ def get_tool_name(tool_id: str, language: str = "ru") -> str:
     return _item_name(info.get("name", tool_id), language, tool_id)
 
 
+def get_equipment_item_name(item_id: str, language: str = "ru") -> str:
+    """Локализованное имя предмета снаряжения."""
+    info = load_equipment_item(item_id)
+    return _item_name(info.get("name", item_id), language, item_id)
+
+
 def proficiency_token_label(
     token: str,
     strings: StringsDict,
