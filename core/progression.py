@@ -55,10 +55,8 @@ class HpGainBreakdown:
     @property
     def class_part(self) -> int:
         """Часть от кости хитов и модификатора Телосложения."""
-        if self.is_first_level:
+        if self.is_first_level or self.dice_roll is not None:
             return max(1, self.die_part + self.con_mod)
-        if self.dice_roll is not None:
-            return self.dice_roll + self.con_mod
         return self.die_part + self.con_mod
 
     @property
@@ -99,7 +97,7 @@ def hp_gain_for_level(
 ) -> int:
     """Прирост максимальных HP за один уровень класса."""
     if difficulty == "hardcore":
-        return roll(1, hit_dice) + con_mod + racial_hp_bonus
+        return max(1, roll(1, hit_dice) + con_mod) + racial_hp_bonus
     if level <= 1:
         return max(1, hit_dice + con_mod) + racial_hp_bonus
     return hit_dice // 2 + 1 + con_mod + racial_hp_bonus
