@@ -7,6 +7,8 @@
 **Инструменты:** Python 3.12, colorama, PyYAML, pyproject.toml
 **БД:** YAML-справочники в `database/` + JSON для настроек и сейвов
 
+**Открытые задачи:** [BACKLOG.md](BACKLOG.md)
+
 ---
 
 ## 1. Цель проекта
@@ -266,7 +268,7 @@
 #### 3.4.7. Выбор предыстории (реализовано)
 - Источник: `database/backgrounds/backgrounds.yaml` (13 PHB).
 - Экран по образцу выбора расы: имя, описание, 2 навыка, умение (feature).
-- После выбора: `background_id` → JSON `"background"`; навыки предыстории добавляются в state для шага навыков.
+- После выбора: `background_id` в JSON; навыки предыстории добавляются в state для шага навыков.
 - Предыстория выбирается **до** класса (PHB: навыки предыстории учитываются при выборе классовых навыков).
 - Инструменты предыстории — `tool_proficiencies` в YAML; выбор на шаге владений (§3.4.12). Стартовое снаряжение и механика feature — Phase 2.
 - См. [`04-backgrounds.md`](rules/04-backgrounds.md).
@@ -293,7 +295,7 @@
 #### 3.4.10. Выбор подкласса (реализовано)
 - Экран по образцу выбора **подрасы**: полный обзор выбранного класса + список архетипов с деталями (`description`, умения подкласса до 10 ур.).
 - Условия показа — см. таблицу режимов в §3.2.1.
-- `subclass_id` сохраняется в JSON (`"subclass"`); на карточке персонажа — с пометкой «(с N ур.)», если ещё не активен.
+- `subclass_id` в JSON сейва; на карточке персонажа — с пометкой «(с N ур.)», если ещё не активен.
 - Повторный выбор: меню персонажей «Получить подкласс у наставника» (`subclass_trainer`) или действие сценария `subclass_training`.
 - После выбора (или пропуска на hardcore) — §3.4.12 (владения), затем §3.4.11 (навыки) или сохранение.
 
@@ -310,7 +312,7 @@
 - Компетентность (expertise) — отдельный шаг для классов с `expertise_count > 0` (напр. плут).
 - После навыков (и expertise при необходимости) персонаж сохраняется в `saves/characters/{save_slug}.json`.
 
-JSON персонажа включает `"languages": [...]`, `"background": "<id>"`, `"skills": [...]`, `"weapon_proficiencies"`, `"armor_proficiencies"`, `"tool_proficiencies"`.
+JSON персонажа включает `"languages": [...]`, `"background_id"`, `"subclass_id"`, `"skills": [...]`, `"weapon_proficiencies"`, `"armor_proficiencies"`, `"tool_proficiencies"`.
 
 ### 3.5. Меню «Настройки» (реализовано)
 - Заглушка: экран с пунктом «0. Назад».
@@ -571,7 +573,7 @@ races:
 - `difficulty.py` – `adventure_allows_difficulty()` для фильтрации приключений по режиму.
 - `localization.py` – `load_strings()`, `get_string()` (YAML-словари, fallback на английский).
 - `settings.py` – `load_settings()`, `save_settings(language)`; JSON в `database/core/settings.json`.
-- `grants.py` – нормализация `grants[]` и legacy `features`/`mechanics`.
+- `grants.py` – чтение `grants[]` из YAML (`grants_from_entity`, `merge_entity_grants`).
 - `mod_loader.py` – deep-merge overlay модов в каталоги YAML (`races`, `backgrounds`, …).
 - **Запланировано:** `game_engine.py`.
 
@@ -704,32 +706,4 @@ races:
 - [x] Ограничения приключений в `adventures.yaml` (`allowed_game_difficulties`, `hardcore_only`, `min_level`); gating модов по режиму HardCore — запланировано (`requires_game_difficulty`, §5.4).
 - [ ] Весь текст корректно переносится при изменении размера терминала.
 
-## 11. План исправления ошибок
-
-Задачи ниже — **несоответствия между уже реализованной механикой, UI и документацией проекта**, которые нужно устранить. Отличия от PHB по дизайну (порядок шагов создания, HardCore 4d6, режимы сложности) — см. [`01-character-creation.md`](rules/01-character-creation.md), §3.4.5; **не входят** в этот план.
-
-### 11.1. Механика и модель данных
-
-| # | Проблема | Целевое исправление | Ссылки | Статус |
-|---|----------|---------------------|--------|--------|
-| 1 | HP на 1 уровне: нет нижней границы 1 при отрицательном модификаторе Телосложения (PHB) | `max(1, hit_dice + con_mod)` в `starting_max_hp()` | `core/character_storage.py`, `01-character-creation.md` | ✅ |
-| 2 | В `Character` нет `max_hp`; текущие HP не сравниваются с максимумом | Поле `max_hp`; синхронизация при создании (лечение — с engine) | `core/models.py` | ✅ |
-| 3 | Нет явной проверки потолка характеристик 20 после всех бонусов | `validate_final_stats()` при финализации stats | `core/stats.py`, UI stats | ✅ |
-| 4 | Уровень персонажа vs приключение: проверка `min_level` | Поле в `Adventure` + `adventure_unavailable_reason` | `core/models.py`, `ui/menus/new_game.py` | ✅ |
-| 5 | В `adventures.yaml` не заданы ограничения | Каталог заполнен | `database/content/adventures.yaml` | ✅ |
-
-### 11.2. Локализация и терминология
-
-| # | Проблема | Целевое исправление | Ссылки | Статус |
-|---|----------|---------------------|--------|--------|
-| 6 | CON в `ru.yaml` — «Выносливость» | «Телосложение» в `stats.constitution` | `database/strings/ru.yaml` | ✅ |
-| 7 | CON в legacy `_future/core/abilities.yaml` | Исправлено при промоуте: «Телосложение» | `database/core/abilities.yaml` | ✅ |
-
-### 11.3. Согласованность документации проекта
-
-| # | Проблема | Целевое исправление | Ссылки | Статус |
-|---|----------|---------------------|--------|--------|
-| 8 | `README.md`: классы «воин, плут, **волшебник**, жрец» | fighter, rogue, cleric, **bard** | `README.md`, `database/classes/classes.yaml` | ✅ |
-| 9 | §3.4.3: «модель Race — dataclass» | Расы — dict из YAML через `core/races.py` | §3.4.3 | ✅ PRD v1.4 |
-| 10 | §3.4.5: `STAT_NAMES` в `core/character.py` | Ссылка на `core/stats.py` | `core/stats.py` | ✅ PRD v1.4 |
-| 11 | `docs/` в §5.2 без `DND_RULES.md`, `rules/` | Дополнить дерево документации | §5.2 | ✅ PRD v1.4 |
+См. также открытые задачи в [BACKLOG.md](BACKLOG.md).

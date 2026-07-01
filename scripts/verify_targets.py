@@ -34,7 +34,17 @@ CORE_MODULE_TESTS: dict[str, list[str]] = {
     "core/feat_apply.py": ["tests/test_feats.py"],
     "core/feats_loader.py": ["tests/test_feats.py"],
     "core/character_storage.py": ["tests/test_character.py"],
-    "core/scenario_actions.py": ["tests/test_class_features.py"],
+    "core/scenario_actions.py": [
+        "tests/test_scenario.py",
+        "tests/test_class_features.py",
+    ],
+    "core/abilities.py": ["tests/test_abilities.py"],
+    "core/grant_mechanics.py": ["tests/test_grant_mechanics.py"],
+    "core/grants.py": ["tests/test_grants.py"],
+    "core/classes.py": [
+        "tests/test_subclasses.py",
+        "tests/test_proficiencies.py",
+    ],
     "core/levels.py": ["tests/test_progression.py"],
     "core/hp_bonuses.py": ["tests/test_progression.py"],
     "core/dice.py": ["tests/test_stats.py"],
@@ -68,7 +78,6 @@ UI_MENU_TESTS: dict[str, str] = {
     "level_up": "tests/test_progression.py",
     "class_features": "tests/test_class_features.py",
     "subclass_trainer": "tests/test_subclasses.py",
-    "_creation_handlers": "tests/test_creation_handlers.py",
     "_deps": "tests/test_menus_new_game.py",
     "_common": "tests/test_menus_main.py",
 }

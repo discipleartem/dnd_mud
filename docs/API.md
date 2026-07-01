@@ -259,7 +259,6 @@ merge_expertise_with_feats(skill_expertise, feat_ids, feat_choices) -> list[str]
 
 ```python
 inherit_flags(entity: dict[str, Any]) -> tuple[bool, bool]
-normalize_grant(raw: dict[str, Any]) -> dict[str, Any]
 grants_from_entity(entity: dict[str, Any]) -> list[dict[str, Any]]
 merge_entity_grants(
     parent: dict[str, Any] | None,
@@ -272,7 +271,7 @@ grants_of_type(grants: list[dict[str, Any]], type_name: str) -> list[dict[str, A
 ```
 
 `inherit_flags` — `(ability_bonuses, grants)` из блока `inherit` в YAML подрасы; без блока — `(True, True)`.  
-`normalize_grant` — копия grant без алиасов (legacy `ability_bonus`, `value`→`amount`, `from_list`, `inherit_base_*` удалены).  
+`grants_from_entity` — копии dict из `grants[]`.  
 `merge_entity_grants` — grants подрасы с наследованием от базовой расы.
 
 ---
@@ -283,6 +282,7 @@ grants_of_type(grants: list[dict[str, Any]], type_name: str) -> list[dict[str, A
 
 ```python
 normalize_armor_token(token: str) -> str
+mechanics_from_grant_entry(entry: dict[str, Any]) -> dict[str, Any]
 proficiency_tokens_from_grant(grant, choices=None) -> tuple[weapons, armors, tools]
 proficiency_tokens_and_skills_from_grant(grant, choices=None) -> tuple[weapons, armors, tools, skills]
 ```
@@ -444,8 +444,8 @@ apply_subclass_proficiencies_to_character(character) -> Character
   "race": "human",
   "subrace": "variant_human",
   "class_id": "fighter",
-  "subclass": "champion",
-  "background": "folk_hero",
+  "subclass_id": "champion",
+  "background_id": "folk_hero",
   "languages": ["common", "elvish"],
   "skills": ["survival", "animal_handling", "athletics", "intimidation"],
   "weapon_proficiencies": ["simple", "martial"],
@@ -596,6 +596,7 @@ def clamp_level(level: int) -> int
 
 ```python
 get_class_dict(class_id: str) -> dict[str, Any]
+get_subclass_dict(class_id: str, subclass_id: str) -> dict[str, Any] | None
 load_classes(language: str = "ru") -> list[dict[str, Any]]
 load_class_full(class_id: str, language: str = "ru") -> dict[str, Any]
 load_subclasses(class_id: str, language: str = "ru") -> list[dict[str, Any]]

@@ -49,6 +49,28 @@ def test_characters_menu_shows_hub_options(
     assert "Удалить всех персонажей" in output
 
 
+def test_characters_menu_corrupt_warning_once(
+    monkeypatch, capsys, ru_strings, patch_int_input
+):
+    """Предупреждение о битых сейвах показывается в hub персонажей."""
+    monkeypatch.setattr(
+        _deps,
+        "load_characters",
+        lambda: LoadCharactersResult(
+            characters=(),
+            corrupt_save_warnings=("Broken",),
+        ),
+    )
+    patch_int_input(monkeypatch, [0])
+    _noop_press_enter(monkeypatch)
+
+    characters_menu.show_characters_menu(ru_strings)
+    output = capsys.readouterr().out
+
+    assert "Broken" in output
+    assert output.count("Не удалось загрузить сохранения") == 1
+
+
 def test_characters_menu_delete_one_confirmed(
     monkeypatch, ru_strings, patch_int_input
 ):

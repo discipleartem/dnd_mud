@@ -3,7 +3,6 @@
 from core.grants import (
     grants_from_entity,
     inherit_flags,
-    normalize_grant,
 )
 from core.races import (
     clear_races_cache,
@@ -28,10 +27,11 @@ def test_load_races_returns_english_names() -> None:
     assert names["elf"] == "Elf"
 
 
-def test_normalize_grant_passthrough():
+def test_grants_from_entity_copies_dict():
     raw = {"type": "ability_increase", "count": 2, "amount": 1, "choice": True}
-    grant = normalize_grant(raw)
-    assert grant == raw
+    grants = grants_from_entity({"grants": [raw]})
+    assert grants[0] == raw
+    assert grants[0] is not raw
 
 
 def test_grants_from_entity_skill_proficiency():

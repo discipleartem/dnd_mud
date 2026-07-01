@@ -11,6 +11,40 @@ from core.localization import resolve_localized_text
 from core.types import GameDifficulty, StatMap
 
 
+def _coerce_str_list(raw: object) -> list[str]:
+    """Список строк из JSON."""
+    if isinstance(raw, list):
+        return [str(item) for item in raw]
+    return []
+
+
+def _coerce_str_dict(raw: object) -> dict[str, str]:
+    """Словарь str→str из JSON."""
+    if isinstance(raw, dict):
+        return {str(key): str(value) for key, value in raw.items()}
+    return {}
+
+
+def _coerce_feat_choices(raw: object) -> dict[str, dict[str, Any]]:
+    """feat_choices из JSON."""
+    if not isinstance(raw, dict):
+        return {}
+    return {
+        str(key): value
+        for key, value in raw.items()
+        if isinstance(value, dict)
+    }
+
+
+def _parse_difficulty(raw: object) -> GameDifficulty:
+    """Режим сложности из JSON."""
+    if raw == "hardcore":
+        return "hardcore"
+    if raw == "easy":
+        return "easy"
+    return "normal"
+
+
 @dataclass
 class Character:
     """Модель персонажа."""
@@ -57,11 +91,11 @@ class Character:
         if self.subrace is not None:
             data["subrace"] = self.subrace
         if self.subclass_id is not None:
-            data["subclass"] = self.subclass_id
+            data["subclass_id"] = self.subclass_id
         if self.languages:
             data["languages"] = self.languages
         if self.background_id is not None:
-            data["background"] = self.background_id
+            data["background_id"] = self.background_id
         if self.skills:
             data["skills"] = self.skills
         if self.skill_expertise:
@@ -92,108 +126,49 @@ class Character:
     def from_dict(cls, data: dict[str, Any]) -> "Character":
         """Создать из словаря."""
         subrace = data.get("subrace")
-        subclass_raw = data.get("subclass")
-        languages_raw = data.get("languages", [])
-        background_raw = data.get("background")
-        skills_raw = data.get("skills", [])
-        skill_expertise_raw = data.get("skill_expertise", [])
-        tool_expertise_raw = data.get("tool_expertise", [])
-        weapon_prof_raw = data.get("weapon_proficiencies", [])
-        armor_prof_raw = data.get("armor_proficiencies", [])
-        tool_prof_raw = data.get("tool_proficiencies", [])
-        feat_ids_raw = data.get("feat_ids", [])
-        feat_choices_raw = data.get("feat_choices", {})
-        asi_choices_raw = data.get("asi_choices", {})
-        class_features_applied = bool(
-            data.get("class_features_applied", False)
-        )
-        save_slug = data.get("save_slug")
-        created_at = data.get("created_at")
         current_hp = int(data.get("current_hp", 0))
         max_hp_raw = data.get("max_hp")
         max_hp = int(max_hp_raw) if max_hp_raw is not None else current_hp
-        difficulty_raw = data.get("difficulty", "normal")
-        if difficulty_raw == "hardcore":
-            difficulty: GameDifficulty = "hardcore"
-        elif difficulty_raw == "easy":
-            difficulty = "easy"
-        else:
-            difficulty = "normal"
-        level_raw = int(data.get("level", 1))
-        level = clamp_level(level_raw)
-        class_id_raw = data.get("class_id") or ""
+        save_slug = data.get("save_slug")
+        created_at = data.get("created_at")
+        subclass_raw = data.get("subclass_id")
+        background_raw = data.get("background_id")
         return cls(
-            name=data.get("name", ""),
-            race=data.get("race", ""),
-            class_id=str(class_id_raw),
-            level=level,
+            name=str(data.get("name", "")),
+            race=str(data.get("race", "")),
+            class_id=str(data.get("class_id") or ""),
+            level=clamp_level(int(data.get("level", 1))),
             stats=data.get("stats", {}),
             current_hp=current_hp,
             max_hp=max_hp,
-            experience=data.get("experience", 0),
-            difficulty=difficulty,
+            experience=int(data.get("experience", 0)),
+            difficulty=_parse_difficulty(data.get("difficulty", "normal")),
             subrace=str(subrace) if subrace is not None else None,
             subclass_id=(
                 str(subclass_raw) if subclass_raw is not None else None
             ),
-            languages=(
-                [str(lang) for lang in languages_raw]
-                if isinstance(languages_raw, list)
-                else []
-            ),
+            languages=_coerce_str_list(data.get("languages", [])),
             background_id=(
                 str(background_raw) if background_raw is not None else None
             ),
-            skills=(
-                [str(s) for s in skills_raw]
-                if isinstance(skills_raw, list)
-                else []
+            skills=_coerce_str_list(data.get("skills", [])),
+            skill_expertise=_coerce_str_list(data.get("skill_expertise", [])),
+            tool_expertise=_coerce_str_list(data.get("tool_expertise", [])),
+            weapon_proficiencies=_coerce_str_list(
+                data.get("weapon_proficiencies", [])
             ),
-            skill_expertise=(
-                [str(s) for s in skill_expertise_raw]
-                if isinstance(skill_expertise_raw, list)
-                else []
+            armor_proficiencies=_coerce_str_list(
+                data.get("armor_proficiencies", [])
             ),
-            tool_expertise=(
-                [str(t) for t in tool_expertise_raw]
-                if isinstance(tool_expertise_raw, list)
-                else []
+            tool_proficiencies=_coerce_str_list(
+                data.get("tool_proficiencies", [])
             ),
-            weapon_proficiencies=(
-                [str(w) for w in weapon_prof_raw]
-                if isinstance(weapon_prof_raw, list)
-                else []
+            feat_ids=_coerce_str_list(data.get("feat_ids", [])),
+            feat_choices=_coerce_feat_choices(data.get("feat_choices", {})),
+            asi_choices=_coerce_str_dict(data.get("asi_choices", {})),
+            class_features_applied=bool(
+                data.get("class_features_applied", False)
             ),
-            armor_proficiencies=(
-                [str(a) for a in armor_prof_raw]
-                if isinstance(armor_prof_raw, list)
-                else []
-            ),
-            tool_proficiencies=(
-                [str(t) for t in tool_prof_raw]
-                if isinstance(tool_prof_raw, list)
-                else []
-            ),
-            feat_ids=(
-                [str(f) for f in feat_ids_raw]
-                if isinstance(feat_ids_raw, list)
-                else []
-            ),
-            feat_choices=(
-                {
-                    str(k): v
-                    for k, v in feat_choices_raw.items()
-                    if isinstance(v, dict)
-                }
-                if isinstance(feat_choices_raw, dict)
-                else {}
-            ),
-            asi_choices=(
-                {str(k): str(v) for k, v in asi_choices_raw.items()}
-                if isinstance(asi_choices_raw, dict)
-                else {}
-            ),
-            class_features_applied=class_features_applied,
             save_slug=str(save_slug) if save_slug is not None else None,
             created_at=str(created_at) if created_at is not None else None,
         )

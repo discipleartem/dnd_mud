@@ -2,11 +2,15 @@
 
 from typing import Any
 
+from core.abilities import skill_ids
+
 _ARMOR_ALIASES: dict[str, str] = {
     "light_armor": "light",
     "medium_armor": "medium",
     "heavy_armor": "heavy",
 }
+
+PHB_SKILL_IDS: tuple[str, ...] = skill_ids()
 
 
 def normalize_armor_token(token: str) -> str:
@@ -14,13 +18,25 @@ def normalize_armor_token(token: str) -> str:
     return _ARMOR_ALIASES.get(token, token)
 
 
+def mechanics_from_grant_entry(entry: dict[str, Any]) -> dict[str, Any]:
+    """Плоский grant или mechanics из class feature."""
+    if "mechanics" in entry:
+        merged = (
+            dict(entry["mechanics"])
+            if isinstance(entry["mechanics"], dict)
+            else {}
+        )
+        if entry.get("type") and "type" not in merged:
+            merged["type"] = entry["type"]
+        return merged
+    return dict(entry)
+
+
 def proficiency_tokens_and_skills_from_grant(
     grant: dict[str, Any],
     choices: dict[str, Any] | None = None,
 ) -> tuple[list[str], list[str], list[str], list[str]]:
     """Оружие, доспехи, инструменты и навыки из grant."""
-    from core.skills import PHB_SKILL_IDS
-
     choices = choices or {}
     weapons: list[str] = []
     armors: list[str] = []

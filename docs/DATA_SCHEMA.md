@@ -45,10 +45,7 @@ grants:
 
 Типы вроде `darkvision`, `resistance` — в YAML допустимы; combat engine (Phase 2) пока не читает.
 
-### Legacy → grants (удалено)
-
-Ранее loader [`core/grants.py`](../core/grants.py) конвертировал `features[]` в `grants[]` и нормализовал алиасы полей (`ability_bonus`, `value`, `from_list`, `inherit_base_*`).  
-С **2026-07** YAML и JSON используют канонические поля без fallback в Python.
+Канонические поля grant — без fallback-нормализации в Python; см. [`CHANGELOG.md`](CHANGELOG.md).
 
 ## Mod overlay
 

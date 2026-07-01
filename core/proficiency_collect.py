@@ -5,11 +5,15 @@ from typing import Any
 
 from core.classes import (
     get_class_dict,
+    get_subclass_dict,
     iter_class_grants,
 )
 from core.equipment import resolve_tool_pool
 from core.feats import get_feat_proficiency_grants
-from core.grant_mechanics import normalize_armor_token
+from core.grant_mechanics import (
+    mechanics_from_grant_entry,
+    normalize_armor_token,
+)
 from core.io import merge_unique
 from core.models import Character
 from core.races import collect_race_grants
@@ -41,16 +45,7 @@ def _tokens_from_mechanics(
 
 def _mechanics_from_entry(entry: dict[str, Any]) -> dict[str, Any]:
     """Плоский grant или mechanics из class feature."""
-    if "mechanics" in entry:
-        merged = (
-            dict(entry["mechanics"])
-            if isinstance(entry["mechanics"], dict)
-            else {}
-        )
-        if entry.get("type") and "type" not in merged:
-            merged["type"] = entry["type"]
-        return merged
-    return dict(entry)
+    return mechanics_from_grant_entry(entry)
 
 
 def _collect_from_grants(
@@ -158,21 +153,14 @@ def get_subclass_proficiency_tokens(
     """Владения подкласса с учётом уровня feature."""
     if not subclass_id:
         return [], [], [], []
-    info = get_class_dict(class_id)
-    if not info:
+    sub = get_subclass_dict(class_id, subclass_id)
+    if sub is None:
         return [], [], [], []
-    raw_subs = info.get("subclasses", [])
-    if not isinstance(raw_subs, list):
-        return [], [], [], []
-    for sub in raw_subs:
-        if not isinstance(sub, dict) or sub.get("id") != subclass_id:
-            continue
-        return _collect_from_grants(
-            iter_class_grants(sub),
-            level,
-            require_level=True,
-        )
-    return [], [], [], []
+    return _collect_from_grants(
+        iter_class_grants(sub),
+        level,
+        require_level=True,
+    )
 
 
 def get_racial_proficiency_tokens(

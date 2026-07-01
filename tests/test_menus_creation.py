@@ -4,7 +4,7 @@ from typing import Any
 
 import pytest
 
-from core.models import Character
+import ui.menus._creation_handlers as creation_handlers
 from core.stats import STAT_NAMES
 from ui.menus import (
     _creation_steps,
@@ -18,10 +18,11 @@ from ui.menus._creation_navigation import (
     back_step_from_feats,
     back_step_from_proficiencies,
     back_step_from_skills,
+    feats_step_required,
+    step_after_class_choice,
 )
 from ui.menus._creation_state import _CreationState
 from ui.menus._selectors import select_subrace
-from ui.menus.stats import stats_methods
 
 
 def _flat_stats(value: int = 10) -> dict[str, int]:
@@ -123,7 +124,7 @@ def test_create_character_back_from_subrace_exits(
         subrace_calls["n"] += 1
         return False, None
 
-    monkeypatch.setattr(_creation_steps, "select_subrace", fake_subrace)
+    monkeypatch.setattr(creation_handlers, "select_subrace", fake_subrace)
     patch_int_input(monkeypatch, [1, 0])
 
     result = _creation_steps.show_create_character_flow(ru_strings)
@@ -132,99 +133,26 @@ def test_create_character_back_from_subrace_exits(
     assert subrace_calls["n"] == 1
 
 
-def test_hardcore_back_to_race_clears_rolls(
-    monkeypatch, ru_strings, patch_int_input
-):
-    """HardCore: возврат к выбору расы сбрасывает сохранённые броски."""
+def test_hardcore_back_from_subrace_clears_rolls(
+    monkeypatch: pytest.MonkeyPatch,
+    ru_strings: dict[str, Any],
+) -> None:
+    """HardCore: возврат с подрасы к расе сбрасывает сохранённые броски."""
+    from ui.menus._creation_handlers import _handle_subrace
+
+    state = _CreationState(name="Hero", difficulty="hardcore", race_id="elf")
+    state.hardcore_rolls.extend([10, 10, 10, 10])
 
     monkeypatch.setattr(
-        _creation_steps,
-        "select_difficulty",
-        lambda strings: "hardcore",
-    )
-    monkeypatch.setattr(
-        _deps,
-        "get_str_input",
-        lambda *args, **kwargs: "Hero",
-    )
-    monkeypatch.setattr(
-        _deps,
-        "load_races",
-        lambda language="ru": [{"id": "elf", "name": "Эльф"}],
-    )
-    subrace_calls = {"n": 0}
-
-    def fake_subrace(strings, race_id, language="ru"):
-        subrace_calls["n"] += 1
-        if subrace_calls["n"] == 1:
-            return True, "wood_elf"
-        if subrace_calls["n"] == 2:
-            return False, None
-        return True, "wood_elf"
-
-    monkeypatch.setattr(_creation_steps, "select_subrace", fake_subrace)
-    monkeypatch.setattr(
-        _creation_steps,
-        "select_creation_languages",
-        lambda *args, **kwargs: ["common", "elvish"],
+        creation_handlers,
+        "select_subrace",
+        lambda *args, **kwargs: (False, None),
     )
 
-    def fake_background(*args, **kwargs):
-        return ("soldier", ["athletics", "intimidation"])
+    result = _handle_subrace(ru_strings, state, "ru")
 
-    monkeypatch.setattr(
-        _creation_steps,
-        "select_creation_background",
-        fake_background,
-    )
-    monkeypatch.setattr(
-        _creation_steps,
-        "select_creation_proficiencies",
-        lambda *args, **kwargs: (
-            ["simple", "martial"],
-            ["light", "medium", "heavy", "shield"],
-            ["dice_set"],
-        ),
-    )
-    monkeypatch.setattr(
-        _creation_steps,
-        "select_class",
-        lambda strings, language="ru": {"id": "fighter"},
-    )
-    monkeypatch.setattr(
-        _creation_steps,
-        "select_creation_skills",
-        lambda *args, **kwargs: ["athletics", "intimidation"],
-    )
-    monkeypatch.setattr(
-        _creation_steps,
-        "select_creation_expertise",
-        lambda *args, **kwargs: ([], []),
-    )
-    monkeypatch.setattr(
-        _creation_steps,
-        "_save_created_character",
-        lambda state: Character(name="Hero", race="elf", class_id="fighter"),
-    )
-    monkeypatch.setattr(
-        _creation_steps,
-        "_print_success_and_wait",
-        lambda strings, message: None,
-    )
-    roll_sequence = iter([10, 10, 10, 10, 10, 10, 11, 11, 11, 11, 11, 11])
-    roll_calls = {"count": 0}
-
-    def fake_roll() -> int:
-        roll_calls["count"] += 1
-        return next(roll_sequence)
-
-    monkeypatch.setattr(_deps, "roll_ability_score", fake_roll)
-    monkeypatch.setattr(stats_methods, "_press_enter", lambda strings: None)
-    patch_int_input(monkeypatch, [1, 0, 1, 1])
-
-    _creation_steps.show_create_character_flow(ru_strings)
-
-    assert roll_calls["count"] == 12
+    assert result.next_step == "race"
+    assert state.hardcore_rolls == []
 
 
 @pytest.mark.parametrize(
@@ -263,15 +191,11 @@ def test_creation_feat_step_routing(
     expected_back: str | None,
 ) -> None:
     """Маршрутизация шага черт для variant human vs elf."""
-    state = _creation_steps._CreationState(**state_kwargs)
-    assert (
-        _creation_steps._feats_step_required(state) is expected_feats_required
-    )
-    assert (
-        _creation_steps._step_after_class_choice(state) == expected_after_class
-    )
+    state = _CreationState(**state_kwargs)
+    assert feats_step_required(state) is expected_feats_required
+    assert step_after_class_choice(state) == expected_after_class
     if expected_back is not None:
-        assert _creation_steps._back_step_from_feats(state) == expected_back
+        assert back_step_from_feats(state) == expected_back
 
 
 def test_back_step_from_skills_and_feats_without_class() -> None:
