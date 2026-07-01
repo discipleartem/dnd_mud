@@ -738,7 +738,7 @@ main() -> int
 | 2 | Загрузить игру | `show_load_game_flow` (заглушка) |
 | 3 | Создать персонажа | `show_create_character_flow` |
 | 4 | Настройки | `show_settings` |
-| 5 | Languages | `show_languages_menu` |
+| 5 | Languages / Языки (кросс-локально: ru → `Languages`, en → `Языки`) | `show_languages_menu` |
 | 0 | Выход | завершение |
 
 После изменения настроек или языка вызывается `_save_and_reload_settings`.

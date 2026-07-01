@@ -10,7 +10,7 @@ menu:
   load_game: "Load Game"
   characters: "Characters"
   settings: "Settings"
-  languages: "Languages"
+  languages: "Языки"  # cross-locale: menu item in the other language
   exit: "Exit"
   prompt: "Choose option: "
 

@@ -306,6 +306,8 @@ welcome:
 get_string(strings, 'welcome.version', version='0.1.0')
 ```
 
+**Кросс-локальная подпись переключателя языка:** ключ `menu.languages` намеренно на «чужом» языке — при ru UI пункт **Languages**, при en UI — **Языки**, чтобы пользователь мог найти переключатель без знания текущей локали.
+
 ## Добавление новой расы/класса
 
 1. Открыть `database/races/races.yaml` или `database/classes/classes.yaml`

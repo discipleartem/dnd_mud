@@ -2,6 +2,9 @@
 
 ## [Unreleased]
 
+### Fixed
+- Главное меню: пункт переключения языка кросс-локально (`ru` → «Languages», `en` → «Языки»)
+
 ### Changed
 - Git workflow: **все** ветки `merged/*` — только локальный архив; запрещены push/upstream/PR на `origin`; legacy `origin/merged/*` удалять (`dnd-mud-workflow.mdc`, `01-operations.mdc`, `user-protocols.mdc`)
 
