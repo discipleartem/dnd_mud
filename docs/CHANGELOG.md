@@ -3,6 +3,16 @@
 ## [Unreleased]
 
 ### Added
+- `make test-fast` / `make test-cov` — быстрый pytest и детальный coverage-отчёт
+- `tests/creation_helpers.py` — golden-path контекст создания персонажа
+- Incremental verify: YAML-only diff в `database/` / `mods/` → `DATA_PATH_TESTS`
+
+### Changed
+- **Tests:** агрессивный slim-down (221 → ~116): слияние мелких файлов, удаление дублей `variant_human`, scoped `catalog_caches_cleared`
+- `make test` — coverage без `term-missing` (быстрее CI); `verify_targets` full suite — pytest без coverage
+- Docs/rules: бюджет тестов и антипаттерны в `dnd-mud-tests.mdc`; группы файлов в `DEVELOPMENT.md`
+
+### Added
 - `docs/BACKLOG.md` — открытые задачи Pre-Alpha; выполненное только в CHANGELOG
 - `core/classes.get_subclass_dict` — единый accessor подкласса из YAML
 - `core/grant_mechanics.mechanics_from_grant_entry` — разбор grant / class feature

@@ -40,7 +40,9 @@ dnd_mud
 ### Тестирование
 
 ```bash
-make test          # полный pytest + coverage (core, ui)
+make test-fast     # pytest без coverage (быстрый локальный цикл)
+make test          # pytest + coverage (CI)
+make test-cov      # coverage + term-missing (детальный отчёт)
 make verify-scope  # инкрементально на конец task-ветки (vs origin/dev)
 VERIFY_BASE=origin/main make verify-scope  # на ветке dev — diff vs main
 pytest -v
@@ -113,22 +115,11 @@ dnd_mud/
 │   └── lost_mine.yaml
 ├── mods/
 │   └── dragonborn_pack/     # Пример mod overlay (manifest + overlay.yaml)
-├── tests/                   # pytest (~29 файлов; см. pytest --collect-only -q)
+├── tests/                   # pytest (число: pytest --collect-only -q)
 │   ├── conftest.py
-│   ├── test_character.py
-│   ├── test_difficulty.py
-│   ├── test_stats.py        # stats, dice, constants
-│   ├── test_grants.py       # grants + races load
-│   ├── test_catalog_loader.py  # catalog + mod_loader
-│   ├── test_proficiencies.py   # proficiencies + skills
-│   ├── test_progression.py     # progression, level-up UI, scenario
-│   ├── test_menus_creation.py   # creation handlers, subrace, feat routing
-│   ├── test_menus_new_game.py   # new game, adventure selection
-│   ├── test_menus_characters_hub.py  # characters menu hub
-│   ├── test_data_schema.py      # YAML vs JSON Schema v1
-│   ├── test_subclasses.py      # subclasses + subclass_trainer
-│   ├── test_models.py          # models + adventure load
-│   └── test_verify_targets.py
+│   ├── creation_helpers.py  # общие константы golden-path
+│   ├── test_*.py            # ~20 файлов: core / menus / data / meta
+│   └── …                    # см. группы в §Тестирование ниже
 └── docs/                    # Документация
     ├── DATA_SCHEMA.md       # Схема YAML (grants, subraces, mods)
     ├── DND_RULES.md         # Правила D&D 5e (справочник по PHB)
@@ -190,30 +181,19 @@ make install-hooks   # или make install — подключает .githooks/pr
 - На сценарий — **один** тест на слой: core **или** 0–1 UI smoke (monkeypatch-навигация), не дублировать unit + integration одного пути
 - Похожие кейсы — `@pytest.mark.parametrize`, не копии функций; мелкие домены — в существующий `test_*.py`, не новый файл на 1–2 теста
 - При фиче или фиксе — минимальный diff в `tests/`: столько assert, сколько нужно для изменённого поведения
-- Эталоны стиля: `tests/test_difficulty.py` (короткий unit), `tests/test_menus_creation.py` (интеграция UI без тяжёлых моков)
-- Не обязательно закрывать все пробелы из backlog Pre-Alpha — тест добавляется, когда есть реальное поведение, баг или риск регрессии
+- Эталоны стиля: `tests/test_stats.py` (короткий unit), `tests/test_menus_creation.py` (UI smoke)
+- Бюджет и антипаттерны: `.cursor/rules/dnd-mud-tests.mdc` §Бюджет на PR
 
-Подробные правила для агентов: `.cursor/rules/dnd-mud-tests.mdc`.
+Покрытие — актуальный список: `pytest --collect-only -q`. Группы файлов:
 
-Покрытие — актуальный список: `pytest --collect-only -q`. Ключевые файлы:
+| Группа | Файлы (примеры) |
+|--------|-----------------|
+| **core** | `test_stats`, `test_grants`, `test_character`, `test_character_builder`, `test_proficiencies`, `test_progression`, `test_feats`, `test_subclasses`, `test_asi`, `test_expertise`, `test_languages`, `test_class_features`, `test_equipment` |
+| **menus** | `test_menus_main`, `test_menus_creation`, `test_menus_new_game`, `test_menus_characters_hub`, `test_menus_stats` |
+| **data** | `test_catalog_loader`, `test_data_schema`, `test_io`, `test_models` (adventures/backgrounds) |
+| **meta** | `test_verify_targets`, `test_localization` |
 
-| Файл | Область |
-|------|---------|
-| `test_stats.py` | point-buy, dice, proficiency bonus, DC |
-| `test_grants.py` | grants, загрузка рас |
-| `test_catalog_loader.py` | каталоги YAML, mod overlay |
-| `test_proficiencies.py` | владения, навыки при создании |
-| `test_progression.py` | XP, level-up core + UI smoke, scenario grant_xp |
-| `test_feats.py` | черты, visibility, UI выбора |
-| `test_character.py` | save/load, stats, slug |
-| `test_menus_creation.py` | подрасы, creation handlers, feat routing |
-| `test_menus_new_game.py` | new game, adventure selection |
-| `test_menus_characters_hub.py` | characters menu hub |
-| `test_data_schema.py` | YAML-каталоги vs JSON Schema v1 |
-| `test_menus_stats.py` | генерация характеристик, HardCore 4d6 |
-| `test_subclasses.py` | подклассы, NPC-наставник |
-| `test_models.py` | Character/Adventure, load adventures |
-| `test_verify_targets.py` | маппинг incremental verify (`scripts/verify_targets.py`) |
+Подробные правила для агентов: `.cursor/rules/dnd-mud-tests.mdc`. Не обязательно закрывать все пробелы из backlog Pre-Alpha — тест добавляется при реальном поведении, баге или риске регрессии.
 
 Запуск конкретного тестового файла:
 
