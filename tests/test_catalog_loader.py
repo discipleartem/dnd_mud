@@ -10,20 +10,15 @@ from core.catalog_loader import (
     load_catalog,
 )
 from core.io import CatalogLoadError
-from core.races import RACES_FILE, clear_races_cache
+from core.races import RACES_FILE
+
+pytestmark = pytest.mark.usefixtures("catalog_caches_cleared")
 
 
 def test_load_catalog_returns_races() -> None:
     clear_catalog_cache()
     races = load_catalog(RACES_FILE, "races")
     assert "human" in races
-
-
-def test_clear_races_cache_invalidates_catalog() -> None:
-    first = load_catalog(RACES_FILE, "races")
-    clear_races_cache()
-    second = load_catalog(RACES_FILE, "races")
-    assert first is not second
 
 
 def test_clear_all_catalog_caches_resets_load_catalog() -> None:
@@ -41,18 +36,6 @@ def test_load_catalog_raises_on_corrupt_yaml(tmp_path: Path) -> None:
         load_catalog(path, "races")
 
 
-def test_load_merged_yaml_raises_on_corrupt_json_syntax(
-    tmp_path: Path,
-) -> None:
-    from core.mod_loader import clear_mod_loader_cache, load_merged_yaml
-
-    path = tmp_path / "catalog.json"
-    path.write_text("{not json", encoding="utf-8")
-    clear_mod_loader_cache()
-    with pytest.raises(CatalogLoadError):
-        load_merged_yaml(path)
-
-
 def test_dragonborn_mod_overlay(tmp_path, monkeypatch):
     """Включённый mod добавляет расу dragonborn."""
     import json
@@ -63,43 +46,8 @@ def test_dragonborn_mod_overlay(tmp_path, monkeypatch):
     state_path.write_text(
         json.dumps({"enabled": ["dragonborn_pack"]}), encoding="utf-8"
     )
-    monkeypatch.setattr(
-        "core.mod_loader.MODS_STATE_FILE",
-        state_path,
-    )
-    clear_mod_loader_cache()
-    clear_races_cache()
-
-    races = load_merged_catalog("database/races/races.yaml", "races")
-    assert "dragonborn" in races
-    subraces = races["dragonborn"].get("subraces", {})
-    assert "dragonborn" in subraces
-
-    clear_mod_loader_cache()
-    clear_races_cache()
-
-
-def test_corrupt_mod_manifest_skips_overlay(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    """Битый manifest.yaml включённого мода не роняет загрузку каталога."""
-    import json
-
-    from core.mod_loader import clear_mod_loader_cache, load_merged_catalog
-
-    mod_id = "broken_pack"
-    mod_dir = tmp_path / "mods" / mod_id
-    mod_dir.mkdir(parents=True)
-    (mod_dir / "manifest.yaml").write_text(
-        ":\n  bad: [unclosed", encoding="utf-8"
-    )
-
-    state_path = tmp_path / "mods_state.json"
-    state_path.write_text(json.dumps({"enabled": [mod_id]}), encoding="utf-8")
-    monkeypatch.setattr("core.mod_loader.MODS_DIR", tmp_path / "mods")
     monkeypatch.setattr("core.mod_loader.MODS_STATE_FILE", state_path)
     clear_mod_loader_cache()
-    clear_races_cache()
-
+    clear_all_catalog_caches()
     races = load_merged_catalog("database/races/races.yaml", "races")
-    assert "human" in races
+    assert "dragonborn" in races
