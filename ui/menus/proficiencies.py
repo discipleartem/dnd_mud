@@ -13,10 +13,15 @@ from core.proficiencies import (
     is_valid_tool_selection,
     merge_proficiency_tokens,
 )
+from core.proficiency_checks import has_tool_proficiency
 from core.subclasses import start_level_for_difficulty
 from core.types import GameDifficulty, StringsDict
 from ui.menus import _deps
-from ui.menus._common import _print_screen_header
+from ui.menus._common import (
+    _format_pick_menu_label,
+    _print_screen_header,
+    _sort_ids_by_proficiency,
+)
 
 
 def _token_label(strings: StringsDict, token: str, language: str) -> str:
@@ -91,24 +96,29 @@ def _pick_tools(
             )
             print(f"{Fore.CYAN}{prompt}{Style.RESET_ALL}")
             print()
-            selectable: list[str] = []
-            for tool_id in pool:
+            taken_ids = [tool_id for tool_id in pool if tool_id in current]
+            for tool_id in taken_ids:
                 name = get_tool_name(tool_id, language)
-                if tool_id in current:
-                    taken = get_string(
-                        strings, "character.proficiencies_taken_suffix"
-                    )
-                    print(
-                        f"  {Fore.LIGHTBLACK_EX}{name} {taken}"
-                        f"{Style.RESET_ALL}"
-                    )
-                else:
-                    selectable.append(tool_id)
-                    idx = len(selectable)
-                    print(
-                        f"  {Fore.YELLOW}{idx}{Style.RESET_ALL}. "
-                        f"{Fore.CYAN}{name}{Style.RESET_ALL}"
-                    )
+                taken = get_string(
+                    strings, "character.proficiencies_taken_suffix"
+                )
+                print(
+                    f"  {Fore.LIGHTBLACK_EX}{name} {taken}"
+                    f"{Style.RESET_ALL}"
+                )
+            selectable = _sort_ids_by_proficiency(
+                [tool_id for tool_id in pool if tool_id not in current],
+                known_tools,
+                has_tool_proficiency,
+                name_key=lambda tool_id: get_tool_name(tool_id, language),
+            )
+            for idx, tool_id in enumerate(selectable, 1):
+                name = get_tool_name(tool_id, language)
+                label = _format_pick_menu_label(
+                    name,
+                    has_tool_proficiency(known_tools, tool_id),
+                )
+                print(f"  {Fore.YELLOW}{idx}{Style.RESET_ALL}. {label}")
             print()
             print(
                 f"  {Fore.YELLOW}0{Style.RESET_ALL}. "
@@ -141,8 +151,8 @@ def select_creation_proficiencies(
     language: str = "ru",
     feat_ids: list[str] | None = None,
     feat_choices: dict[str, dict[str, Any]] | None = None,
-) -> tuple[list[str], list[str], list[str]] | None:
-    """Выбор владений; None — назад."""
+) -> tuple[list[str], list[str], list[str], list[str]] | None:
+    """Выбор владений; None — назад. [4] — инструменты предыстории."""
     start_level = start_level_for_difficulty(difficulty)
     choices = get_proficiency_choices(
         race_id,
@@ -163,12 +173,13 @@ def select_creation_proficiencies(
         feat_choices=feat_choices,
     )
     if not choices:
-        return weapons, armors, tools
+        return weapons, armors, tools, []
 
     caption = get_string(strings, "character.proficiencies_caption")
     _print_screen_header(caption)
     _print_summary(strings, weapons, armors, tools, language)
 
+    background_tool_picks: list[str] = []
     pick_total = sum(c.count for c in choices)
     pick_offset = 0
     for choice in choices:
@@ -186,6 +197,8 @@ def select_creation_proficiencies(
         if not is_valid_tool_selection(picked, pool, choice.count):
             return None
         tools = merge_proficiency_tokens(tools, picked)
+        if choice.source == "background":
+            background_tool_picks.extend(picked)
         pick_offset += choice.count
 
-    return weapons, armors, tools
+    return weapons, armors, tools, background_tool_picks

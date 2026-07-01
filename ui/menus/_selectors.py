@@ -90,7 +90,7 @@ def select_class(
             f"{class_info.get('name', '?')}"
             f"{Style.RESET_ALL}"
         )
-        _print_class_summary(class_info, strings)
+        _print_class_summary(class_info, strings, language=language)
 
     choice = _read_numbered_choice(
         strings,
