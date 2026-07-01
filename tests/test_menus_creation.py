@@ -8,7 +8,11 @@ import pytest
 import ui.menus._creation_handlers as creation_handlers
 from core.stats import STAT_NAMES
 from ui.menus import _creation_steps, _deps
-from ui.menus._creation_handlers import _handle_feats, _handle_skills
+from ui.menus._creation_handlers import (
+    _handle_equipment,
+    _handle_feats,
+    _handle_skills,
+)
 from ui.menus._creation_navigation import (
     back_step_from_feats,
     feats_step_required,
@@ -112,3 +116,64 @@ def test_handlers_without_class_id() -> None:
     )
     assert _handle_feats({}, state, "ru").next_step == "class"
     assert _handle_skills({}, state, "ru").next_step == "proficiencies"
+
+
+def test_handle_skills_routes_to_equipment(
+    monkeypatch: pytest.MonkeyPatch,
+    ru_strings: dict[str, Any],
+) -> None:
+    """После навыков (без expertise) flow переходит на шаг снаряжения."""
+    state = _CreationState(
+        name="Hero",
+        difficulty="normal",
+        race_id="human",
+        subrace_id="standard",
+        class_id="fighter",
+        stats=_flat_stats(),
+    )
+    monkeypatch.setattr(
+        creation_handlers,
+        "select_creation_skills",
+        lambda *args, **kwargs: ["athletics", "perception"],
+    )
+    result = _handle_skills(ru_strings, state, "ru")
+    assert result.next_step == "equipment"
+    assert state.skills == ["athletics", "perception"]
+
+
+def test_handle_equipment_stores_choices_and_finalizes(
+    monkeypatch: pytest.MonkeyPatch,
+    ru_strings: dict[str, Any],
+) -> None:
+    """Шаг equipment сохраняет выборы и завершает создание."""
+    from core.models import Character
+
+    state = _CreationState(
+        name="Hero",
+        difficulty="normal",
+        race_id="human",
+        class_id="fighter",
+        stats=_flat_stats(),
+        weapon_proficiencies=["simple", "martial"],
+        armor_proficiencies=["light", "medium", "heavy", "shield"],
+    )
+    choices = {"armor": "chain_mail", "weapon_primary": "martial_shield"}
+    monkeypatch.setattr(
+        creation_handlers,
+        "select_creation_equipment",
+        lambda *args, **kwargs: choices,
+    )
+    fake_char = Character(
+        name="Hero",
+        race="human",
+        class_id="fighter",
+        equipment_choices=choices,
+    )
+    monkeypatch.setattr(
+        creation_handlers,
+        "finalize_creation",
+        lambda strings, st: fake_char,
+    )
+    result = _handle_equipment(ru_strings, state, "ru")
+    assert state.equipment_choices == choices
+    assert result.character is fake_char
