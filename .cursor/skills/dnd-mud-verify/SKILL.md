@@ -44,6 +44,7 @@ which python   # must point to .venv/bin/python
 | Конец задачи (diff `origin/dev...HEAD`) | `make verify-scope` |
 | Затронут UI (`ui/`, меню) | `python main.py` — smoke затронутого меню |
 | Полный прогон (CI / вручную) | `make verify` |
+| Быстрый pytest локально | `make test-fast` |
 
 **Пропустить runtime**, если только docs, `.cursor/`, `AGENTS.md`, workflows — без изменений кода.
 

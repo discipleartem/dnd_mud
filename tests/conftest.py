@@ -9,9 +9,9 @@ from typing import Any
 import pytest
 
 
-@pytest.fixture(autouse=True)
-def _reset_catalog_caches() -> Generator[None, None, None]:
-    """Сбросить кэши каталогов между тестами."""
+@pytest.fixture
+def catalog_caches_cleared() -> Generator[None, None, None]:
+    """Сбросить кэши каталогов до и после теста."""
     from core.catalog_loader import clear_all_catalog_caches
 
     clear_all_catalog_caches()

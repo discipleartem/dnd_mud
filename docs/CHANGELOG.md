@@ -2,6 +2,20 @@
 
 ## [Unreleased]
 
+### Changed
+- Git workflow: **все** ветки `merged/*` — только локальный архив; запрещены push/upstream/PR на `origin`; legacy `origin/merged/*` удалять (`dnd-mud-workflow.mdc`, `01-operations.mdc`, `user-protocols.mdc`)
+
+### Added
+- `make test-fast` / `make test-cov` — быстрый pytest и детальный coverage-отчёт
+- `tests/creation_helpers.py` — golden-path контекст создания персонажа
+- Incremental verify: YAML-only diff в `database/` / `mods/` → `DATA_PATH_TESTS`
+
+### Changed
+- **Tests:** агрессивный slim-down (221 → ~116): слияние мелких файлов, удаление дублей `variant_human`, scoped `catalog_caches_cleared`
+- Post-review slim-down: восстановлены регрессии (language UI smoke, corrupt mod manifest, canonical `to_dict` keys); `verify_targets` — убран ложный маппинг `core/abilities.py`, добавлен `ui/menus/backgrounds.py` → `test_models`
+- `make test` — coverage без `term-missing` (быстрее CI); `verify_targets` full suite — pytest без coverage
+- Docs/rules: бюджет тестов и антипаттерны в `dnd-mud-tests.mdc`; группы файлов в `DEVELOPMENT.md`
+
 ### Added
 - `docs/BACKLOG.md` — открытые задачи Pre-Alpha; выполненное только в CHANGELOG
 - `core/classes.get_subclass_dict` — единый accessor подкласса из YAML

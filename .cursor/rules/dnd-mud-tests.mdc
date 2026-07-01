@@ -6,9 +6,27 @@ alwaysApply: false
 
 # dnd_mud tests
 
-**Runners:** `make verify-changed` / `make verify-scope` / `make verify` (full + CI)
+**Runners:** `make test-fast` (локально) · `make verify-changed` / `make verify-scope` · `make test` / CI
 
 Один тест на изменённое поведение или реальный риск регрессии. Похожие кейсы — `@pytest.mark.parametrize`, не копии функций. Код теста — так же простой, как прод-код (`dnd-mud-python.mdc`).
+
+## Бюджет на PR
+
+| Контекст | Лимит |
+|----------|-------|
+| Новая фича | ≤ 3–5 тестов (1 core + 0–1 UI smoke + 0–1 data) |
+| Багфикс | 1 тест на воспроизведённый баг |
+| Рефакторинг без смены поведения | 0 новых тестов |
+
+## Какой слой тестировать
+
+```
+core/* изменение     → прямой вызов core.* (test_<domain>.py)
+UI flow              → 1 monkeypatch smoke ИЛИ только core, если UI тонкий
+database/*.yaml      → test_data_schema (+ test_catalog_loader при loader)
+```
+
+На сценарий — **один** тест на слой: core **или** 0–1 UI smoke, не оба для одного пути.
 
 ## Когда писать / не писать
 
@@ -24,13 +42,23 @@ alwaysApply: false
 | Делать | Не делать |
 |--------|-----------|
 | `assert`, прямой вызов `core.*` / `ui.*` | Фабрики, базовые классы, тяжёлый mock |
-| Monkeypatch через `ui.menus._deps` для меню | `@pytest.mark.parametrize` на десятки кейсов без нужды |
-| Имя `test_<what>_<condition>_<expected>` | Погоня за % coverage; unit + integration одного сценария |
+| Monkeypatch через `ui.menus._deps` для меню | `@pytest.mark.parametrize` >3 кейсов без разных веток |
+| `pytestmark = usefixtures("catalog_caches_cleared")` только где нужны каталоги | autouse сброс кэша на весь сьют |
+| Golden-path в `tests/creation_helpers.py` | Копипаста variant_human в 3+ файлах |
+| Имя `test_<what>_<condition>_<expected>` | Погоня за % coverage; import smoke |
 
-Эталоны: [`tests/test_difficulty.py`](tests/test_difficulty.py), [`tests/test_menus_creation.py`](tests/test_menus_creation.py).
+## Антипаттерны
+
+- Один сценарий (напр. `variant_human` creation) в 3+ файлах
+- Отдельный `test_*.py` на 1–2 функции
+- Тесты констант / `import main`
+- Дублирование cache invalidation
+- Unit + integration одного пути
+
+Эталоны: [`tests/test_stats.py`](tests/test_stats.py), [`tests/test_menus_creation.py`](tests/test_menus_creation.py).
 
 ## Перед добавлением
 
 1. Какую регрессию ловит?
 2. Можно объединить с parametrize вместо новой функции?
-3. Уже есть похожий тест?
+3. Уже есть похожий тест в другом слое?

@@ -428,21 +428,9 @@ dnd_mud/
 │   └── lost_mine.yaml
 ├── mods/                            # примеры модов
 │   └── _examples/example_mod.yaml
-├── tests/                           # Тесты (pytest)
-│   ├── test_adventure.py
-│   ├── test_character.py
-│   ├── test_difficulty.py
-│   ├── test_dice.py
-│   ├── test_input_handler.py
-│   ├── test_localization.py
-│   ├── test_main.py
-│   ├── test_menus_creation.py
-│   ├── test_menus_new_game.py
-│   ├── test_menus_characters_hub.py
-│   ├── test_data_schema.py
-│   ├── test_menus_stats.py
-│   ├── test_models.py
-│   └── test_settings.py
+├── tests/                           # pytest (pytest --collect-only -q)
+│   ├── conftest.py, creation_helpers.py
+│   └── test_*.py                    # core / menus / data / meta — см. DEVELOPMENT.md §Тестирование
 └── docs/                            # документация
     ├── DND_RULES.md                 # справочник правил D&D 5e
     ├── rules/                       # главы справочника (по PHB)

@@ -10,6 +10,8 @@ import jsonschema
 import pytest
 import yaml
 
+pytestmark = pytest.mark.usefixtures("catalog_caches_cleared")
+
 ROOT = Path(__file__).resolve().parent.parent
 SCHEMA_DIR = ROOT / "database" / "schema" / "v1"
 
