@@ -243,6 +243,23 @@ Quality gate PR `task → dev`: `make verify-scope` + review (light/full). Full 
 
 Мониторинг: раз в неделю [cursor.com/dashboard/usage](https://cursor.com/dashboard/usage) — рост `agent_review` vs `auto`.
 
+### Merge policy (GitHub Rulesets)
+
+Один squash-коммит на PR — канон для обеих интеграционных веток. Настройки репозитория: **Settings → Rules → Rulesets**.
+
+| PR | Ruleset | Merge method | Required checks | Linear history |
+|----|---------|--------------|-----------------|----------------|
+| `feat/…` → `dev` | **`dev_rules`** (`refs/heads/dev`) | **squash only** | `quality` ([`ci.yml`](../.github/workflows/ci.yml)) | нет — после релиза в `dev` попадает merge-коммит sync |
+| `dev` → `main` | **`main_rules`** (`refs/heads/main`) | **squash only** | `dev-sync-and-mergeable` ([`pr-dev-to-main-check.yml`](../.github/workflows/pr-dev-to-main-check.yml)) | да |
+
+Практика:
+
+- task → `dev`: **Squash and merge** → один коммит в `dev`; ветку переименовать в `merged/…` (локально) — [`.cursor/rules/dnd-mud-workflow.mdc`](../.cursor/rules/dnd-mud-workflow.mdc).
+- `dev` → `main`: **Squash and merge** / `gh pr merge --squash` — skill [`.cursor/skills/dnd-mud-release`](../.cursor/skills/dnd-mud-release/SKILL.md).
+- Вкладка **Commits** release PR может показывать много коммитов (расходящаяся ancestry после squash); ориентир — **Files changed** или `git diff origin/main...origin/dev`.
+
+Repo-level (Settings → General → Pull Requests): merge commit и rebase merge могут быть включены, но rulesets **перекрывают** их для `dev` и `main`.
+
 ### Release (`dev` → `main`)
 
 **Только через PR** — без PR в `main` не релизим (локальный merge/push в `main` запрещён).
@@ -258,7 +275,7 @@ gh pr create --base main --head dev --title "release: …"
 
 CI: [`.github/workflows/pr-dev-to-main-check.yml`](../.github/workflows/pr-dev-to-main-check.yml) (только PR `dev` → `main`, события open/sync). После merge в `main` — [`.github/workflows/sync-dev-with-main.yml`](../.github/workflows/sync-dev-with-main.yml).
 
-**GitHub (Rules → `main_rules`):** required status check — **`dev-sync-and-mergeable`** (имя job, не имя workflow/файла); merge method — squash.
+Merge policy и rulesets — § [Merge policy (GitHub Rulesets)](#merge-policy-github-rulesets) выше.
 
 ## Создание мода
 
