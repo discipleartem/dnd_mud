@@ -26,6 +26,17 @@ def test_select_difficulty_returns_hardcore(
     assert settings_menu.select_difficulty(ru_strings) == "hardcore"
 
 
+def test_show_load_game_flow_shows_stub(
+    monkeypatch: pytest.MonkeyPatch,
+    ru_strings: dict[str, Any],
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    monkeypatch.setattr(main_menu, "_press_enter", lambda strings: None)
+    main_menu.show_load_game_flow(ru_strings)
+    output = capsys.readouterr().out
+    assert "ещё не реализована" in output
+
+
 def test_show_main_menu_returns_choice(
     monkeypatch: pytest.MonkeyPatch,
     ru_strings: dict[str, Any],
