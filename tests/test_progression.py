@@ -233,7 +233,7 @@ def test_run_scenario_grant_xp_levels_character(
     def fake_update(char: Character) -> None:
         saved.append(char)
 
-    monkeypatch.setattr("ui.menus.scenario_flow.update_character", fake_update)
+    monkeypatch.setattr("ui.menus._deps.update_character", fake_update)
     monkeypatch.setattr(
         "ui.menus.scenario_flow.assign_subclass_from_menu",
         lambda *args, **kwargs: None,
