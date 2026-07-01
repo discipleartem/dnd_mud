@@ -6,6 +6,11 @@ from colorama import Fore, Style
 
 from core.localization import get_string
 from core.models import Character
+from core.starting_equipment import (
+    STARTING_EQUIPMENT_SECTION_KEYS,
+    STARTING_EQUIPMENT_SECTION_ORDER,
+    summarize_class_starting_equipment,
+)
 from core.subclasses import features_up_to_level
 from core.types import StringsDict
 from ui.menus import _deps
@@ -76,6 +81,53 @@ def _format_class_skills(
             list=skill_names,
         )
     return skill_names
+
+
+def _format_class_saving_throws(
+    strings: StringsDict,
+    class_info: dict[str, Any],
+) -> str:
+    """Строка спасбросков класса."""
+    saves = class_info.get("saving_throws", [])
+    if not isinstance(saves, list) or not saves:
+        return ""
+    names = ", ".join(_ability_name(strings, str(s)) for s in saves)
+    return get_string(
+        strings,
+        "character.class_saving_throws_label",
+        list=names,
+    )
+
+
+def _print_class_starting_equipment(
+    class_info: dict[str, Any],
+    strings: StringsDict,
+    language: str,
+) -> None:
+    """Краткий обзор стартового снаряжения класса по категориям."""
+    class_id = str(class_info.get("id", ""))
+    if not class_id:
+        return
+    sections = summarize_class_starting_equipment(class_id, strings, language)
+    if not sections:
+        return
+    label = get_string(strings, "character.class_starting_equipment_label")
+    print(f"  {Fore.LIGHTBLACK_EX}{label.strip()}{Style.RESET_ALL}")
+    for section_key in STARTING_EQUIPMENT_SECTION_ORDER:
+        lines = sections.get(section_key)
+        if not lines:
+            continue
+        heading = get_string(
+            strings, STARTING_EQUIPMENT_SECTION_KEYS[section_key]
+        )
+        print(f"  {Fore.LIGHTBLACK_EX}{heading}{Style.RESET_ALL}")
+        for line in lines:
+            item_line = get_string(
+                strings,
+                "character.class_starting_equipment_choice",
+                label=line,
+            )
+            print(f"  {Fore.LIGHTBLACK_EX}{item_line}{Style.RESET_ALL}")
 
 
 def _print_class_description(desc: str) -> None:
@@ -162,6 +214,7 @@ def _print_class_summary(
     *,
     include_features: bool = True,
     skills_summary: bool = True,
+    language: str = "ru",
 ) -> None:
     """Краткая карточка класса в списке выбора."""
     desc = class_info.get("description", "")
@@ -212,6 +265,12 @@ def _print_class_summary(
             f"  {Fore.LIGHTBLACK_EX}{label}:{Style.RESET_ALL} "
             f"{Fore.CYAN}{skills_line}{Style.RESET_ALL}"
         )
+
+    saves_line = _format_class_saving_throws(strings, class_info)
+    if saves_line:
+        print(f"  {Fore.LIGHTBLACK_EX}{saves_line.strip()}{Style.RESET_ALL}")
+
+    _print_class_starting_equipment(class_info, strings, language)
 
     features = class_info.get("features", [])
     if include_features and isinstance(features, list):

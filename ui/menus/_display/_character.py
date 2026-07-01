@@ -4,12 +4,17 @@ from colorama import Fore, Style
 
 from core.classes import get_subclass_choice_level
 from core.equipment import proficiency_token_label
-from core.localization import get_string
+from core.inventory import (
+    compute_ac,
+    format_inventory_line,
+    get_equipped_display,
+)
+from core.localization import get_string, resolve_localized_text
 from core.models import Character
 from core.subclasses import subclass_is_active
 from core.types import StringsDict
 from ui.menus import _deps
-from ui.menus._common import _skill_name
+from ui.menus._common import _ability_name, _skill_name
 from ui.menus._display._class import (
     _character_class_label,
     _character_subclass_label,
@@ -17,6 +22,22 @@ from ui.menus._display._class import (
 from ui.menus._display._difficulty import _difficulty_color, _difficulty_label
 from ui.menus._display._stats import _format_character_stats_compact
 from ui.menus.expertise import format_expertise_display
+
+
+def _format_character_feats(char: Character, language: str = "ru") -> str:
+    """Список названий черт персонажа через запятую."""
+    from core.feats_loader import load_feat
+
+    names: list[str] = []
+    for feat_id in char.feat_ids:
+        feat = load_feat(feat_id)
+        raw_name = feat.get("name", feat_id)
+        if isinstance(raw_name, dict):
+            name = resolve_localized_text(raw_name, language, fallback=feat_id)
+        else:
+            name = str(raw_name)
+        names.append(name)
+    return ", ".join(names)
 
 
 def _character_base_race_label(char: Character, language: str = "ru") -> str:
@@ -166,6 +187,79 @@ def _print_character_skills_and_expertise(
     )
 
 
+def _print_character_saving_throws(
+    char: Character,
+    strings: StringsDict,
+    *,
+    indent: str = "     ",
+) -> None:
+    """Спасброски на карточке персонажа."""
+    if not char.save_proficiencies:
+        return
+    parts: list[str] = []
+    for ability_id in char.save_proficiencies:
+        name = _ability_name(strings, ability_id)
+        parts.append(name)
+    value = f"{Fore.CYAN}{', '.join(parts)}{Style.RESET_ALL}"
+    _print_labeled_field(
+        strings,
+        "choose_character.field_saving_throws",
+        value,
+        indent=indent,
+    )
+
+
+def _print_character_equipment(
+    char: Character,
+    strings: StringsDict,
+    language: str,
+    *,
+    indent: str = "     ",
+) -> None:
+    """Экипировка, КД и инвентарь на карточке персонажа."""
+    if char.equipped or char.inventory:
+        ac = compute_ac(char)
+        ac_display = f"{Fore.GREEN}{ac}{Style.RESET_ALL}"
+        _print_labeled_field(
+            strings,
+            "choose_character.field_ac",
+            ac_display,
+            indent=indent,
+        )
+        equipped = get_equipped_display(char, language)
+        if equipped:
+            header = get_string(strings, "choose_character.field_equipped")
+            print(f"{indent}{Fore.LIGHTBLACK_EX}{header}{Style.RESET_ALL}")
+            sub_indent = f"{indent}  "
+            mapping = (
+                ("armor", "choose_character.field_equipped_armor"),
+                ("shield", "choose_character.field_equipped_shield"),
+                ("main_hand", "choose_character.field_equipped_main"),
+                ("off_hand", "choose_character.field_equipped_off"),
+            )
+            for key, label_key in mapping:
+                if key not in equipped:
+                    continue
+                cat_label = get_string(strings, label_key)
+                print(
+                    f"{sub_indent}{Fore.LIGHTBLACK_EX}"
+                    f"{cat_label}{Style.RESET_ALL} "
+                    f"{Fore.CYAN}{equipped[key]}{Style.RESET_ALL}"
+                )
+    if char.inventory:
+        inv_line = format_inventory_line(
+            char.inventory, language, equipped=char.equipped
+        )
+        if inv_line:
+            inv_display = f"{Fore.CYAN}{inv_line}{Style.RESET_ALL}"
+            _print_labeled_field(
+                strings,
+                "choose_character.field_inventory",
+                inv_display,
+                indent=indent,
+            )
+
+
 def _print_character_card(
     idx: int,
     char: Character,
@@ -227,6 +321,15 @@ def _print_character_card(
         bg_display,
         indent=indent,
     )
+    if char.feat_ids:
+        feats_text = _format_character_feats(char, language)
+        feats_display = f"{Fore.CYAN}{feats_text}{Style.RESET_ALL}"
+        _print_labeled_field(
+            strings,
+            "choose_character.field_feats",
+            feats_display,
+            indent=indent,
+        )
     _print_labeled_field(
         strings,
         "choose_character.field_class",
@@ -277,6 +380,10 @@ def _print_character_card(
     _print_character_skills_and_expertise(char, strings, indent=indent)
 
     _print_character_proficiencies(char, strings, language, indent=indent)
+
+    _print_character_saving_throws(char, strings, indent=indent)
+
+    _print_character_equipment(char, strings, language, indent=indent)
 
     _print_labeled_field(
         strings,
