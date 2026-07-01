@@ -84,7 +84,6 @@ backgrounds:
       items:
       - { kind: equipment, id: fine_clothes, qty: 1 }
       - { kind: tool, id: disguise_kit, qty: 1 }
-      - { kind: tool, id: forgery_kit, qty: 1 }
   criminal:
     name:
       ru: Преступник
@@ -123,8 +122,7 @@ backgrounds:
     - type: equipment_item
       items:
       - { kind: equipment, id: crowbar, qty: 1 }
-      - { kind: equipment, id: common_clothes, qty: 1 }
-      - { kind: tool, id: thieves_tools, qty: 1 }
+      - { kind: equipment, id: dark_common_clothes, qty: 1 }
   entertainer:
     name:
       ru: Артист
@@ -137,12 +135,14 @@ backgrounds:
       - музыкальный инструмент
       - подарок от поклонника
       - костюм
-      - 2 зм
+      - 15 зм
       en:
       - musical instrument
       - admiration gift
       - costume
-      - 2 gp
+      - 15 gp
+    inventory_tool_pools:
+      - musical_instruments
     feature:
       name:
         ru: По многочисленным просьбам
@@ -186,6 +186,8 @@ backgrounds:
       - iron pot
       - common clothes
       - 10 gp
+    inventory_tool_pools:
+      - artisans_tools
     feature:
       name:
         ru: Деревенское гостеприимство
@@ -228,6 +230,8 @@ backgrounds:
       - guild letter of introduction
       - traveler's clothes
       - 15 gp
+    inventory_tool_pools:
+      - artisans_tools
     feature:
       name:
         ru: Членство в гильдии
@@ -489,15 +493,17 @@ backgrounds:
       ru:
       - знак отличия
       - трофей
-      - игровой набор
+      - набор игровых костей или колода карт
       - обычная одежда
       - 10 зм
       en:
       - insignia of rank
       - trophy
-      - gaming set
+      - bone dice or deck of cards
       - common clothes
       - 10 gp
+    inventory_tool_pools:
+      - soldier_gaming
     feature:
       name:
         ru: Воинское звание
@@ -516,7 +522,7 @@ backgrounds:
     - type: tool_proficiency
       count: 1
       choice: true
-      pool: gaming_sets
+      pool: soldier_gaming
     - type: equipment_item
       items:
       - { kind: equipment, id: emblem, qty: 1 }

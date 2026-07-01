@@ -279,7 +279,12 @@ equipment:
     weight: 3
 
   crossbow_case:
-    name: "Контейнер для арбалетных болтов"
+    name:
+      ru: "Сумка для болтов"
+      en: "Bolt case"
+    description:
+      ru: "Деревянный контейнер на 20 арбалетных болтов."
+      en: "Wooden case that holds 20 crossbow bolts."
     category: "tools_and_kits"
     cost: { value: 1, currency: "gold" }
     weight: 1
@@ -549,6 +554,12 @@ equipment:
 
   common_clothes:
     name: "Обычная одежда"
+    category: "adventuring_gear"
+    cost: { value: 5, currency: "silver" }
+    weight: 3
+
+  dark_common_clothes:
+    name: "Тёмная одежда с капюшоном"
     category: "adventuring_gear"
     cost: { value: 5, currency: "silver" }
     weight: 3
