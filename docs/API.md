@@ -656,7 +656,7 @@ def process_pending_level_ups(
 def apply_experience(character: Character, amount: int) -> Character
 ```
 
-**HP по режиму:** Normal/Easy — макс. кость на 1 ур., среднее на 2+; HardCore — бросок кости на каждом уровне.
+**HP по режиму:** Normal/Easy — макс. кость на 1 ур. (`max(1, …)`), среднее на 2+; HardCore — бросок кости на каждом уровне с полом `max(1, кость + CON)`.
 
 **Левелап:** сценарии и UI начисляют XP через `grant_experience`; повышение — по одному уровню (`apply_level_up` + экран `ui/menus/level_up.py`). `apply_experience` — convenience для тестов (XP + все уровни без UI).
 

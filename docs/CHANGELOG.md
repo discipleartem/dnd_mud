@@ -3,6 +3,7 @@
 ## [Unreleased]
 
 ### Fixed
+- HardCore: прирост HP от «кость + CON» не опускается ниже 1 на любом уровне (`core/progression.py`)
 - Главное меню: пункт переключения языка кросс-локально (`ru` → «Languages», `en` → «Языки»)
 
 ### Changed
