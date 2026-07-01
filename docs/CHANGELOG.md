@@ -11,6 +11,7 @@
 
 ### Changed
 - MUD_PRD §3.2.1: перекрёстная ссылка на правила расчёта HP по режимам сложности
+- Docs/rules: индекс `DND_RULES.md`, `05-equipment`, `04-backgrounds`, `ARCHITECTURE`, `MUD_PRD` — статус инвентаря и шага `equipment` синхронизирован с кодом
 - Git workflow: merge policy в `DEVELOPMENT.md` — прямой push в `dev` разрешён; squash task→`dev` по практике; `main_rules` только на `main` (без `dev_rules`)
 - Git workflow: **все** ветки `merged/*` — только локальный архив; запрещены push/upstream/PR на `origin`; legacy `origin/merged/*` удалять (`dnd-mud-workflow.mdc`, `01-operations.mdc`, `user-protocols.mdc`)
 

@@ -26,7 +26,7 @@
 
 | Аспект | Значение |
 |--------|----------|
-| Статус | **Частично** — выбор предыстории, навыки и языки в flow; personality/inspiration/equipment runtime — Phase 2 |
+| Статус | **Частично** — выбор предыстории, навыки, языки, **стартовое снаряжение в инвентаре**; personality/inspiration/feature runtime — Phase 2 |
 | YAML | [`database/backgrounds/backgrounds.yaml`](../../database/backgrounds/backgrounds.yaml) |
 | Core | [`core/backgrounds.py`](../../core/backgrounds.py) |
 | UI | [`ui/menus/backgrounds.py`](../../ui/menus/backgrounds.py) |
@@ -48,7 +48,12 @@ backgrounds:
         count: 2
         choice: true
         pool: common
-    equipment: { ru: [...], en: [...] }
+      - type: equipment_item
+        items:
+          - { kind: equipment, id: emblem, qty: 1 }
+    inventory_tool_pools:   # опционально: picks → инвентарь PHB
+      - musical_instruments
+    equipment: { ru: [...], en: [...] }   # flavor для UI; предметы — в equipment_item
     feature:   # flavor; не game engine
       name: { ru: "...", en: "..." }
       description: { ru: "...", en: "..." }
@@ -61,10 +66,9 @@ backgrounds:
 
 - `Character.background_id` в JSON сейва.
 - Навыки предыстории входят в `Character.skills` с источником `background` при выборе классовых навыков.
+- Стартовое снаряжение: grant `equipment_item` + picks из `inventory_tool_pools` → `core/backgrounds.get_background_equipment_items`, merge в `save_character`.
 
 ### Не реализовано
 
 - Таблицы personality (черты, идеалы, привязанности, изъяны) и Inspiration.
-- Выбор инструментов предыстории в UI.
-- Стартовое снаряжение предыстории в инвентаре.
 - Механика background feature в engine.

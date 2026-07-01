@@ -92,14 +92,15 @@
 | Привязка навыков к характеристикам | `core/abilities.py` |
 | Бонус мастерства по уровню | `core/constants.proficiency_bonus()` |
 | Владение навыками при создании | `core/skills.py`, UI |
+| Спасброски при создании (`saving_throw_modifier`, `saving_throw`) | `core/checks.py`, `Character.save_proficiencies` |
 
 ### Запланировано (game engine)
 
 | Механика | Целевая реализация |
 |----------|-------------------|
 | `ability_check`, `skill_check`, `passive_skill` | Phase 2 engine API |
-| `saving_throw`, `saving_throw_modifier`, `roll_d20` | `core/checks.py` (создание/карточка; engine — Phase 2) |
-| Преимущество/помеха на к20 | Phase 2 engine API |
+| Спасброски в сценариях и бою (вызов `saving_throw` из engine) | Phase 2 engine API |
+| Преимущество/помеха на к20 в приключениях | Phase 2 engine API |
 
 - Использование проверок в сценариях приключений (`adventures/*.yaml`)
 - Соревновательные проверки
