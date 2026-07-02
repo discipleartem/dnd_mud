@@ -1,0 +1,48 @@
+---
+phb_chapter: 11
+phb_section: Изгоняющая Кара
+phb_pages:
+- 211
+- 289
+phb_part: 3
+id: izgonyayushchaya_kara
+tags:
+- spell
+- abjuration
+- level-5
+mud_status: planned
+type: spell
+---
+
+# Изгоняющая Кара
+
+> Источник: PHB, гл. 11. Пересказ правил, не дословная копия PHB.
+
+## Параметры
+
+<!-- phb:auto:parameters -->
+| Параметр | Значение |
+|----------|----------|
+| Уровень | 5 уровень |
+| Школа | Ограждение (`abjuration`) |
+| Время | 1 бонусное действие |
+| Дистанция | На себя |
+| Компоненты | В |
+| Длительность | Концентрация, вплоть до 1 минуты |
+<!-- /phb:auto:parameters -->
+
+## Эффект
+
+<!-- phb:auto:effect -->
+_См. PHB PDF._
+<!-- /phb:auto:effect -->
+
+## Реализация в MUD
+
+<!-- mud:implementation -->
+| Аспект | Значение |
+|--------|----------|
+| Статус | planned |
+| YAML | — |
+| Core | — |
+<!-- /mud:implementation -->
