@@ -81,6 +81,9 @@ races:
         ability_bonuses:
           intelligence: 1
         grants:
+        - range: 60
+          type: darkvision
+          name: Тёмное зрение
         - weapons:
           - longsword
           - rapier
@@ -109,6 +112,9 @@ races:
           wisdom: 1
         speed: 35
         grants:
+        - range: 60
+          type: darkvision
+          name: Тёмное зрение
         - weapons:
           - longsword
           - rapier
@@ -164,9 +170,6 @@ races:
       - perception
       type: skill_proficiency
       name: Обострённые чувства
-    - range: 60
-      type: darkvision
-      name: Тёмное зрение
     - save: charisma
       effect: charm
       type: advantage
