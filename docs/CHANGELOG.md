@@ -8,7 +8,7 @@
 
 ### Changed
 - `docs/DND_RULES.md` — оглавление по частям PHB 1–3, ссылки на `toc.yaml` и подкаталоги; `10-spells.md` → `10-spellcasting.md` + `11-spells.md`
-- `.cursor/rules/00-project.mdc` — точка входа агентов: `docs/rules/toc.yaml`
+- Docs/rules: алгоритм поиска правил (rules → PDF → веб 5e до 2024) в `00-project.mdc`, `AGENTS.md`, `DND_RULES.md`
 
 ### Fixed
 - HardCore: прирост HP от «кость + CON» не опускается ниже 1 на любом уровне (`core/progression.py`)
