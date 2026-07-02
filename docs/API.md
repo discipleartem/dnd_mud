@@ -387,6 +387,7 @@ weapons_for_pool(pool: str, weapon_proficiencies: list[str]) -> list[str]
 
 ```python
 proficiency_bonus(level: int) -> int
+ability_modifier(score: int) -> int  # clamp 1–30, таблица ability_modifiers из YAML
 difficulty_class(tier: str) -> int
 cover_bonus(tier: str) -> int | str | None
 size_label(size_id: str) -> str
