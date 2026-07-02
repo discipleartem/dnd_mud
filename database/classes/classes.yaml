@@ -1013,7 +1013,6 @@ classes:
           name: Высшее божественное вмешательство
           description: Божественное вмешательство автоматически успешно; 1 раз за 7 дней
           feature_type: active
-          uses_per_rest: 1
           requires_action: true
   bard:
     name:
