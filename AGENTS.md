@@ -4,6 +4,16 @@
 
 **Приоритет:** [`user-rules-minimal.md`](~/.cursor/docs/user-rules-minimal.md) §Иерархия
 
+## Поиск правил D&D (PHB)
+
+Канон процедуры — [`00-project.mdc`](.cursor/rules/00-project.mdc) §D&D 5e — источник истины и поиск правил.
+
+1. **`docs/rules/`** — `toc.yaml`, затем целевой файл; для заклинаний — `spells/_index-by-*.md`
+2. **`docs/PHB_ D&D_2023 RUS.pdf`** — если в справочнике нет или неполно
+3. **Веб** — D&D 5e (PHB 2014 / до редакции 2024), только если шаги 1–2 не дали ответа
+
+Не использовать память модели. При конфликте: PDF > `docs/rules/` > веб.
+
 ## Agent-loop
 
 ```
