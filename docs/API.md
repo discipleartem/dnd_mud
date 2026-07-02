@@ -386,6 +386,8 @@ weapons_for_pool(pool: str, weapon_proficiencies: list[str]) -> list[str]
 Источник: `database/core/constants.yaml`.
 
 ```python
+ABILITY_MODIFIER_SCORE_MIN = 1
+ABILITY_MODIFIER_SCORE_MAX = 30
 proficiency_bonus(level: int) -> int
 ability_modifier(score: int) -> int  # clamp 1–30, таблица ability_modifiers из YAML
 difficulty_class(tier: str) -> int

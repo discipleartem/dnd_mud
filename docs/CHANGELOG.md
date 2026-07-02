@@ -2,6 +2,17 @@
 
 ## [Unreleased]
 
+### Added
+- **Модификаторы характеристик:** `ability_modifier()` из таблицы PHB в `constants.yaml` (clamp 1–30); константы `ABILITY_SCORE_MIN` / `DEFAULT` / `MAX` для валидации PC (1–20)
+- **UI грантов:** описания spellcasting, skill_proficiency, immunity, disadvantage, cantrip, advantage+terrain в меню создания
+- **Dual wielder:** авто-экипировка второй руки без «лёгкое» при черте; +1 КД при двух рукопашных (`core/inventory.py`, `core/feat_apply.py`)
+
+### Changed
+- **Экран расы/подрасы:** выборный язык в строке «Языки»; подрасы без дубля grants родителя; полуорк всегда с экраном выбора и «Назад»
+- **Экран класса:** схлопнутый ASI по уровням; `proficiency_token_label` в меню владений и стартового снаряжения
+- **Авто-экипировка:** при наличии пары одноручных предпочитается dual-wield вместо двуручного хвата versatile (старые сейвы не пересчитываются автоматически)
+- **Данные рас:** язык человека на уровне расы; variant human наследует grant; описание «Наследие фей» у эльфа
+
 ### Changed
 - **Каталоги `database/` ↔ PHB:** расы (`half_orc`, наследие фей; тёмное зрение эльфов в подрасах — дроу 120 фт.), прогрессия 4 классов (fighter/rogue/cleric/bard), grants 9 черт, предыстории (`equipment_item`), снаряжение (lance/pike, фонари, piton, vestments); `language_types.common` в `constants.yaml`
 - **Документация `docs/`:** индекс [`docs/README.md`](README.md); ссылки на `rules/chapters/`; глоссарии → `rules/reference/glossaries/`
