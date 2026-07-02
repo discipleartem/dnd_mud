@@ -1,0 +1,2731 @@
+layout: agent-v2
+spells:
+  aura_of_vitality:
+    en: aura_of_vitality
+    ru: Аура Живучести
+    aliases:
+    - аура живучести
+    - аура живучести
+    - aura_of_vitality
+    level: 3
+    school: evocation
+    file: entities/spells/aura_of_vitality.md
+  aura_of_life:
+    en: aura_of_life
+    ru: Аура Жизни
+    aliases:
+    - аура жизни
+    - аура жизни
+    - aura_of_life
+    level: 4
+    school: abjuration
+    file: entities/spells/aura_of_life.md
+  aura_of_purity:
+    en: aura_of_purity
+    ru: Аура Очищения
+    aliases:
+    - аура очищения
+    - аура очищения
+    - aura_of_purity
+    level: 4
+    school: abjuration
+    file: entities/spells/aura_of_purity.md
+  aura_svyatosti:
+    en: aura_svyatosti
+    ru: Аура Святости
+    aliases:
+    - аура святости
+    - аура святости
+    - aura_svyatosti
+    level: 8
+    school: abjuration
+    file: entities/spells/aura_svyatosti.md
+  pass_without_trace:
+    en: pass_without_trace
+    ru: Бесследное Передвижение
+    aliases:
+    - бесследное передвижение
+    - бесследное передвижение
+    - pass_without_trace
+    level: 2
+    school: abjuration
+    file: entities/spells/pass_without_trace.md
+  bless:
+    en: bless
+    ru: Благословение
+    aliases:
+    - благословение
+    - благословение
+    - bless
+    level: 1
+    school: enchantment
+    file: entities/spells/bless.md
+  bozhestvennoe_blagovolenie:
+    en: bozhestvennoe_blagovolenie
+    ru: Божественное Благоволение
+    aliases:
+    - божественное благоволение
+    - божественное благоволение
+    - bozhestvennoe_blagovolenie
+    level: 1
+    school: evocation
+    file: entities/spells/bozhestvennoe_blagovolenie.md
+  bozhestvennoe_oruzhie:
+    en: bozhestvennoe_oruzhie
+    ru: Божественное Оружие
+    aliases:
+    - божественное оружие
+    - божественное оружие
+    - bozhestvennoe_oruzhie
+    level: 2
+    school: evocation
+    file: entities/spells/bozhestvennoe_oruzhie.md
+  bozhestvennoe_slovo:
+    en: bozhestvennoe_slovo
+    ru: Божественное Слово
+    aliases:
+    - божественное слово
+    - божественное слово
+    - bozhestvennoe_slovo
+    level: 7
+    school: evocation
+    file: entities/spells/bozhestvennoe_slovo.md
+  bystryy_kolchan:
+    en: bystryy_kolchan
+    ru: Быстрый Колчан
+    aliases:
+    - быстрый колчан
+    - быстрый колчан
+    - bystryy_kolchan
+    level: 5
+    school: transmutation
+    file: entities/spells/bystryy_kolchan.md
+  velikolepnyy_osobnyak_mordenkaynena:
+    en: velikolepnyy_osobnyak_mordenkaynena
+    ru: Великолепный Особняк Морденкайнена
+    aliases:
+    - великолепный особняк морденкайнена
+    - великолепный особняк морденкайнена
+    - velikolepnyy_osobnyak_mordenkaynena
+    level: 7
+    school: conjuration
+    file: entities/spells/velikolepnyy_osobnyak_mordenkaynena.md
+  veshchiy_son:
+    en: veshchiy_son
+    ru: Вещий Сон
+    aliases:
+    - вещий сон
+    - вещий сон
+    - veshchiy_son
+    level: 5
+    school: illusion
+    file: entities/spells/veshchiy_son.md
+  videnie_nevidimogo:
+    en: videnie_nevidimogo
+    ru: Видение Невидимого
+    aliases:
+    - видение невидимого
+    - видение невидимого
+    - videnie_nevidimogo
+    level: 2
+    school: divination
+    file: entities/spells/videnie_nevidimogo.md
+  vlast_nad_pogodoy:
+    en: vlast_nad_pogodoy
+    ru: Власть Над Погодой
+    aliases:
+    - власть над погодой
+    - власть над погодой
+    - vlast_nad_pogodoy
+    level: 8
+    school: transmutation
+    file: entities/spells/vlast_nad_pogodoy.md
+  vozrozhdenie:
+    en: vozrozhdenie
+    ru: Возрождение
+    aliases:
+    - возрождение
+    - возрождение
+    - vozrozhdenie
+    level: 3
+    school: necromancy
+    file: entities/spells/vozrozhdenie.md
+  volna_groma:
+    en: volna_groma
+    ru: Волна Грома
+    aliases:
+    - волна грома
+    - волна грома
+    - volna_groma
+    level: 1
+    school: evocation
+    file: entities/spells/volna_groma.md
+  magic_missile:
+    en: magic_missile
+    ru: Волшебная Стрела
+    aliases:
+    - волшебная стрела
+    - волшебная стрела
+    - magic_missile
+    level: 1
+    school: evocation
+    file: entities/spells/magic_missile.md
+  major_image:
+    en: major_image
+    ru: Волшебные Уста
+    aliases:
+    - волшебные уста
+    - волшебные уста
+    - major_image
+    level: 2
+    school: иллюзия (ритуал)
+    file: entities/spells/major_image.md
+  volshebnyy_zamok:
+    en: volshebnyy_zamok
+    ru: Волшебный Замок
+    aliases:
+    - волшебный замок
+    - волшебный замок
+    - volshebnyy_zamok
+    level: 2
+    school: abjuration
+    file: entities/spells/volshebnyy_zamok.md
+  volshebnyy_sosud:
+    en: volshebnyy_sosud
+    ru: Волшебный Сосуд
+    aliases:
+    - волшебный сосуд
+    - волшебный сосуд
+    - volshebnyy_sosud
+    level: 6
+    school: necromancy
+    file: entities/spells/volshebnyy_sosud.md
+  voobrazhaemaya_sila:
+    en: voobrazhaemaya_sila
+    ru: Воображаемая Сила
+    aliases:
+    - воображаемая сила
+    - воображаемая сила
+    - voobrazhaemaya_sila
+    level: 2
+    school: illusion
+    file: entities/spells/voobrazhaemaya_sila.md
+  voobrazhaemyy_ubiytsa:
+    en: voobrazhaemyy_ubiytsa
+    ru: Воображаемый Убийца
+    aliases:
+    - воображаемый убийца
+    - воображаемый убийца
+    - voobrazhaemyy_ubiytsa
+    level: 4
+    school: illusion
+    file: entities/spells/voobrazhaemyy_ubiytsa.md
+  resurrection:
+    en: resurrection
+    ru: Воскрешение
+    aliases:
+    - воскрешение
+    - воскрешение
+    - resurrection
+    level: 7
+    school: necromancy
+    file: entities/spells/resurrection.md
+  vosplamenyayushchayasya_tucha:
+    en: vosplamenyayushchayasya_tucha
+    ru: Воспламеняющаяся Туча
+    aliases:
+    - воспламеняющаяся туча
+    - воспламеняющаяся туча
+    - vosplamenyayushchayasya_tucha
+    level: 8
+    school: conjuration
+    file: entities/spells/vosplamenyayushchayasya_tucha.md
+  vosstavshiy_trup:
+    en: vosstavshiy_trup
+    ru: Восставший Труп
+    aliases:
+    - восставший труп
+    - восставший труп
+    - vosstavshiy_trup
+    level: 3
+    school: necromancy
+    file: entities/spells/vosstavshiy_trup.md
+  vyzov_na_duel:
+    en: vyzov_na_duel
+    ru: Вызов На Дуэль
+    aliases:
+    - вызов на дуэль
+    - вызов на дуэль
+    - vyzov_na_duel
+    level: 1
+    school: enchantment
+    file: entities/spells/vyzov_na_duel.md
+  vysshaya_nevidimost:
+    en: vysshaya_nevidimost
+    ru: Высшая Невидимость
+    aliases:
+    - высшая невидимость
+    - высшая невидимость
+    - vysshaya_nevidimost
+    level: 4
+    school: illusion
+    file: entities/spells/vysshaya_nevidimost.md
+  vysshee_vosstanovlenie:
+    en: vysshee_vosstanovlenie
+    ru: Высшее Восстановление
+    aliases:
+    - высшее восстановление
+    - высшее восстановление
+    - vysshee_vosstanovlenie
+    level: 5
+    school: abjuration
+    file: entities/spells/vysshee_vosstanovlenie.md
+  gaseous_form:
+    en: gaseous_form
+    ru: Газообразная Форма
+    aliases:
+    - газообразная форма
+    - газообразная форма
+    - gaseous_form
+    level: 3
+    school: transmutation
+    file: entities/spells/gaseous_form.md
+  heroism:
+    en: heroism
+    ru: Героизм
+    aliases:
+    - героизм
+    - героизм
+    - heroism
+    level: 1
+    school: enchantment
+    file: entities/spells/heroism.md
+  gigantskoe_nasekomoe:
+    en: gigantskoe_nasekomoe
+    ru: Гигантское Насекомое
+    aliases:
+    - гигантское насекомое
+    - гигантское насекомое
+    - gigantskoe_nasekomoe
+    level: 4
+    school: transmutation
+    file: entities/spells/gigantskoe_nasekomoe.md
+  gipnoticheskiy_uzor:
+    en: gipnoticheskiy_uzor
+    ru: Гипнотический Узор
+    aliases:
+    - гипнотический узор
+    - гипнотический узор
+    - gipnoticheskiy_uzor
+    level: 3
+    school: illusion
+    file: entities/spells/gipnoticheskiy_uzor.md
+  gnevnaya_kara:
+    en: gnevnaya_kara
+    ru: Гневная Кара
+    aliases:
+    - гневная кара
+    - гневная кара
+    - gnevnaya_kara
+    level: 1
+    school: evocation
+    file: entities/spells/gnevnaya_kara.md
+  golod_khadara:
+    en: golod_khadara
+    ru: Голод Хадара
+    aliases:
+    - голод хадара
+    - голод хадара
+    - golod_khadara
+    level: 3
+    school: conjuration
+    file: entities/spells/golod_khadara.md
+  goryashchiy_klinok:
+    en: goryashchiy_klinok
+    ru: Горящий Клинок
+    aliases:
+    - горящий клинок
+    - горящий клинок
+    - goryashchiy_klinok
+    level: 2
+    school: evocation
+    file: entities/spells/goryashchiy_klinok.md
+  grad:
+    en: grad
+    ru: Град
+    aliases:
+    - град
+    - град
+    - grad
+    level: 4
+    school: evocation
+    file: entities/spells/grad.md
+  grad_shipov:
+    en: grad_shipov
+    ru: Град Шипов
+    aliases:
+    - град шипов
+    - град шипов
+    - grad_shipov
+    level: 1
+    school: conjuration
+    file: entities/spells/grad_shipov.md
+  groza_gneva:
+    en: groza_gneva
+    ru: Гроза Гнева
+    aliases:
+    - гроза гнева
+    - гроза гнева
+    - groza_gneva
+    level: 9
+    school: conjuration
+    file: entities/spells/groza_gneva.md
+  dvizhenie_pochvy:
+    en: dvizhenie_pochvy
+    ru: Движение Почвы
+    aliases:
+    - движение почвы
+    - движение почвы
+    - dvizhenie_pochvy
+    level: 6
+    school: transmutation
+    file: entities/spells/dvizhenie_pochvy.md
+  dvoynik:
+    en: dvoynik
+    ru: Двойник
+    aliases:
+    - двойник
+    - двойник
+    - dvoynik
+    level: 8
+    school: necromancy
+    file: entities/spells/dvoynik.md
+  demiplan:
+    en: demiplan
+    ru: Демиплан
+    aliases:
+    - демиплан
+    - демиплан
+    - demiplan
+    level: 8
+    school: conjuration
+    file: entities/spells/demiplan.md
+  dissoniruyushchiy_shepot:
+    en: dissoniruyushchiy_shepot
+    ru: Диссонирующий Шёпот
+    aliases:
+    - диссонирующий шёпот
+    - диссонирующий шёпот
+    - dissoniruyushchiy_shepot
+    level: 1
+    school: enchantment
+    file: entities/spells/dissoniruyushchiy_shepot.md
+  dlan_bigbi:
+    en: dlan_bigbi
+    ru: Длань Бигби
+    aliases:
+    - длань бигби
+    - длань бигби
+    - dlan_bigbi
+    level: 5
+    school: evocation
+    file: entities/spells/dlan_bigbi.md
+  dnevnoy_svet:
+    en: dnevnoy_svet
+    ru: Дневной Свет
+    aliases:
+    - дневной свет
+    - дневной свет
+    - dnevnoy_svet
+    level: 3
+    school: evocation
+    file: entities/spells/dnevnoy_svet.md
+  dospekh_agatisa:
+    en: dospekh_agatisa
+    ru: Доспех Агатиса
+    aliases:
+    - доспех агатиса
+    - доспех агатиса
+    - dospekh_agatisa
+    level: 1
+    school: abjuration
+    file: entities/spells/dospekh_agatisa.md
+  dospekhi_maga:
+    en: dospekhi_maga
+    ru: Доспехи Мага
+    aliases:
+    - доспехи мага
+    - доспехи мага
+    - dospekhi_maga
+    level: 1
+    school: abjuration
+    file: entities/spells/dospekhi_maga.md
+  drebezgi:
+    en: drebezgi
+    ru: Дребезги
+    aliases:
+    - дребезги
+    - дребезги
+    - drebezgi
+    level: 2
+    school: evocation
+    file: entities/spells/drebezgi.md
+  drevesnyy_put:
+    en: drevesnyy_put
+    ru: Древесный Путь
+    aliases:
+    - древесный путь
+    - древесный путь
+    - drevesnyy_put
+    level: 5
+    school: conjuration
+    file: entities/spells/drevesnyy_put.md
+  dromidzhevo_poyavlenie:
+    en: dromidzhevo_poyavlenie
+    ru: Дромиджево Появление
+    aliases:
+    - дромиджево появление
+    - дромиджево появление
+    - dromidzhevo_poyavlenie
+    level: 6
+    school: вызов (ритуал)
+    file: entities/spells/dromidzhevo_poyavlenie.md
+  druzhba_s_zhivotnymi:
+    en: druzhba_s_zhivotnymi
+    ru: Дружба С Животными
+    aliases:
+    - дружба с животными
+    - дружба с животными
+    - druzhba_s_zhivotnymi
+    level: 1
+    school: enchantment
+    file: entities/spells/druzhba_s_zhivotnymi.md
+  zhivotnye_chuvstva:
+    en: zhivotnye_chuvstva
+    ru: Животные Чувства
+    aliases:
+    - животные чувства
+    - животные чувства
+    - zhivotnye_chuvstva
+    level: 2
+    school: прорицание (ритуал)
+    file: entities/spells/zhivotnye_chuvstva.md
+  zhutkiy_smekh_tashi:
+    en: zhutkiy_smekh_tashi
+    ru: Жуткий Смех Таши
+    aliases:
+    - жуткий смех таши
+    - жуткий смех таши
+    - zhutkiy_smekh_tashi
+    level: 1
+    school: enchantment
+    file: entities/spells/zhutkiy_smekh_tashi.md
+  zavesa_strel:
+    en: zavesa_strel
+    ru: Завеса Стрел
+    aliases:
+    - завеса стрел
+    - завеса стрел
+    - zavesa_strel
+    level: 2
+    school: transmutation
+    file: entities/spells/zavesa_strel.md
+  zadannaya_illyuziya:
+    en: zadannaya_illyuziya
+    ru: Заданная Иллюзия
+    aliases:
+    - заданная иллюзия
+    - заданная иллюзия
+    - zadannaya_illyuziya
+    level: 6
+    school: illusion
+    file: entities/spells/zadannaya_illyuziya.md
+  zamedlenie:
+    en: zamedlenie
+    ru: Замедление
+    aliases:
+    - замедление
+    - замедление
+    - zamedlenie
+    level: 3
+    school: transmutation
+    file: entities/spells/zamedlenie.md
+  zamedlennyy_ognennyy_shar:
+    en: zamedlennyy_ognennyy_shar
+    ru: Замедленный Огненный Шар
+    aliases:
+    - замедленный огненный шар
+    - замедленный огненный шар
+    - zamedlennyy_ognennyy_shar
+    level: 7
+    school: evocation
+    file: entities/spells/zamedlennyy_ognennyy_shar.md
+  zapret:
+    en: zapret
+    ru: Запрет
+    aliases:
+    - запрет
+    - запрет
+    - zapret
+    level: 6
+    school: ограждение (ритуал)
+    file: entities/spells/zapret.md
+  zarazhenie:
+    en: zarazhenie
+    ru: Заражение
+    aliases:
+    - заражение
+    - заражение
+    - zarazhenie
+    level: 5
+    school: necromancy
+    file: entities/spells/zarazhenie.md
+  zatochenie:
+    en: zatochenie
+    ru: Заточение
+    aliases:
+    - заточение
+    - заточение
+    - zatochenie
+    level: 9
+    school: abjuration
+    file: entities/spells/zatochenie.md
+  zashchita_ot_dobra_i_zla:
+    en: zashchita_ot_dobra_i_zla
+    ru: Защита От Добра И Зла
+    aliases:
+    - защита от добра и зла
+    - защита от добра и зла
+    - zashchita_ot_dobra_i_zla
+    level: 1
+    school: abjuration
+    file: entities/spells/zashchita_ot_dobra_i_zla.md
+  zashchita_ot_smerti:
+    en: zashchita_ot_smerti
+    ru: Защита От Смерти
+    aliases:
+    - защита от смерти
+    - защита от смерти
+    - zashchita_ot_smerti
+    level: 4
+    school: abjuration
+    file: entities/spells/zashchita_ot_smerti.md
+  zashchita_ot_energii:
+    en: zashchita_ot_energii
+    ru: Защита От Энергии
+    aliases:
+    - защита от энергии
+    - защита от энергии
+    - zashchita_ot_energii
+    level: 3
+    school: abjuration
+    file: entities/spells/zashchita_ot_energii.md
+  zashchita_ot_yada:
+    en: zashchita_ot_yada
+    ru: Защита От Яда
+    aliases:
+    - защита от яда
+    - защита от яда
+    - zashchita_ot_yada
+    level: 2
+    school: abjuration
+    file: entities/spells/zashchita_ot_yada.md
+  zemletryasenie:
+    en: zemletryasenie
+    ru: Землетрясение
+    aliases:
+    - землетрясение
+    - землетрясение
+    - zemletryasenie
+    level: 8
+    school: evocation
+    file: entities/spells/zemletryasenie.md
+  zlovonnoe_oblako:
+    en: zlovonnoe_oblako
+    ru: Зловонное Облако
+    aliases:
+    - зловонное облако
+    - зловонное облако
+    - zlovonnoe_oblako
+    level: 3
+    school: conjuration
+    file: entities/spells/zlovonnoe_oblako.md
+  znak:
+    en: znak
+    ru: Знак
+    aliases:
+    - знак
+    - знак
+    - znak
+    level: 7
+    school: abjuration
+    file: entities/spells/znak.md
+  izgnanie:
+    en: izgnanie
+    ru: Изгнание
+    aliases:
+    - изгнание
+    - изгнание
+    - izgnanie
+    level: 4
+    school: abjuration
+    file: entities/spells/izgnanie.md
+  izgonyayushchaya_kara:
+    en: izgonyayushchaya_kara
+    ru: Изгоняющая Кара
+    aliases:
+    - изгоняющая кара
+    - изгоняющая кара
+    - izgonyayushchaya_kara
+    level: 5
+    school: abjuration
+    file: entities/spells/izgonyayushchaya_kara.md
+  izgotovlenie:
+    en: izgotovlenie
+    ru: Изготовление
+    aliases:
+    - изготовление
+    - изготовление
+    - izgotovlenie
+    level: 4
+    school: transmutation
+    file: entities/spells/izgotovlenie.md
+  izmenenie_pamyati:
+    en: izmenenie_pamyati
+    ru: Изменение Памяти
+    aliases:
+    - изменение памяти
+    - изменение памяти
+    - izmenenie_pamyati
+    level: 5
+    school: enchantment
+    file: entities/spells/izmenenie_pamyati.md
+  izmenenie_tyagoteniya:
+    en: izmenenie_tyagoteniya
+    ru: Изменение Тяготения
+    aliases:
+    - изменение тяготения
+    - изменение тяготения
+    - izmenenie_tyagoteniya
+    level: 7
+    school: transmutation
+    file: entities/spells/izmenenie_tyagoteniya.md
+  izmenenie_formy_kamnya:
+    en: izmenenie_formy_kamnya
+    ru: Изменение Формы Камня
+    aliases:
+    - изменение формы камня
+    - изменение формы камня
+    - izmenenie_formy_kamnya
+    level: 4
+    school: transmutation
+    file: entities/spells/izmenenie_formy_kamnya.md
+  izolyatsiya:
+    en: izolyatsiya
+    ru: Изоляция
+    aliases:
+    - изоляция
+    - изоляция
+    - izolyatsiya
+    level: 7
+    school: transmutation
+    file: entities/spells/izolyatsiya.md
+  ispolnenie_zhelaniy:
+    en: ispolnenie_zhelaniy
+    ru: Исполнение Желаний
+    aliases:
+    - исполнение желаний
+    - исполнение желаний
+    - ispolnenie_zhelaniy
+    level: 9
+    school: conjuration
+    file: entities/spells/ispolnenie_zhelaniy.md
+  istinnoe_voskreshenie:
+    en: istinnoe_voskreshenie
+    ru: Истинное Воскрешение
+    aliases:
+    - истинное воскрешение
+    - истинное воскрешение
+    - istinnoe_voskreshenie
+    level: 9
+    school: necromancy
+    file: entities/spells/istinnoe_voskreshenie.md
+  istinnoe_zrenie:
+    en: istinnoe_zrenie
+    ru: Истинное Зрение
+    aliases:
+    - истинное зрение
+    - истинное зрение
+    - istinnoe_zrenie
+    level: 6
+    school: divination
+    file: entities/spells/istinnoe_zrenie.md
+  kamennaya_kozha:
+    en: kamennaya_kozha
+    ru: Каменная Кожа
+    aliases:
+    - каменная кожа
+    - каменная кожа
+    - kamennaya_kozha
+    level: 4
+    school: abjuration
+    file: entities/spells/kamennaya_kozha.md
+  kamennaya_stena:
+    en: kamennaya_stena
+    ru: Каменная Стена
+    aliases:
+    - каменная стена
+    - каменная стена
+    - kamennaya_stena
+    level: 5
+    school: evocation
+    file: entities/spells/kamennaya_stena.md
+  kleymyashchaya_kara:
+    en: kleymyashchaya_kara
+    ru: Клеймящая Кара
+    aliases:
+    - клеймящая кара
+    - клеймящая кара
+    - kleymyashchaya_kara
+    level: 2
+    school: evocation
+    file: entities/spells/kleymyashchaya_kara.md
+  konus_kholoda:
+    en: konus_kholoda
+    ru: Конус Холода
+    aliases:
+    - конус холода
+    - конус холода
+    - konus_kholoda
+    level: 5
+    school: evocation
+    file: entities/spells/konus_kholoda.md
+  korona_bezumiya:
+    en: korona_bezumiya
+    ru: Корона Безумия
+    aliases:
+    - корона безумия
+    - корона безумия
+    - korona_bezumiya
+    level: 2
+    school: enchantment
+    file: entities/spells/korona_bezumiya.md
+  krug_smerti:
+    en: krug_smerti
+    ru: Круг Смерти
+    aliases:
+    - круг смерти
+    - круг смерти
+    - krug_smerti
+    level: 6
+    school: necromancy
+    file: entities/spells/krug_smerti.md
+  krug_teleportatsii:
+    en: krug_teleportatsii
+    ru: Круг Телепортации
+    aliases:
+    - круг телепортации
+    - круг телепортации
+    - krug_teleportatsii
+    level: 5
+    school: conjuration
+    file: entities/spells/krug_teleportatsii.md
+  labirint:
+    en: labirint
+    ru: Лабиринт
+    aliases:
+    - лабиринт
+    - лабиринт
+    - labirint
+    level: 8
+    school: conjuration
+    file: entities/spells/labirint.md
+  levitatsiya:
+    en: levitatsiya
+    ru: Левитация
+    aliases:
+    - левитация
+    - левитация
+    - levitatsiya
+    level: 2
+    school: transmutation
+    file: entities/spells/levitatsiya.md
+  ledyanaya_stena:
+    en: ledyanaya_stena
+    ru: Ледяная Стена
+    aliases:
+    - ледяная стена
+    - ледяная стена
+    - ledyanaya_stena
+    level: 6
+    school: evocation
+    file: entities/spells/ledyanaya_stena.md
+  leomundov_potaynoy_sunduk:
+    en: leomundov_potaynoy_sunduk
+    ru: Леомундов Потайной Сундук
+    aliases:
+    - леомундов потайной сундук
+    - леомундов потайной сундук
+    - leomundov_potaynoy_sunduk
+    level: 4
+    school: conjuration
+    file: entities/spells/leomundov_potaynoy_sunduk.md
+  leomundova_khizhina:
+    en: leomundova_khizhina
+    ru: Леомундова Хижина
+    aliases:
+    - леомундова хижина
+    - леомундова хижина
+    - leomundova_khizhina
+    level: 3
+    school: воплощение (ритуал)
+    file: entities/spells/leomundova_khizhina.md
+  healing_word:
+    en: healing_word
+    ru: Лечащее Слово
+    aliases:
+    - лечащее слово
+    - лечащее слово
+    - healing_word
+    level: 1
+    school: evocation
+    file: entities/spells/healing_word.md
+  cure_wounds:
+    en: cure_wounds
+    ru: Лечение Ран
+    aliases:
+    - лечение ран
+    - лечение ран
+    - cure_wounds
+    level: 1
+    school: evocation
+    file: entities/spells/cure_wounds.md
+  lunnyy_luch:
+    en: lunnyy_luch
+    ru: Лунный Луч
+    aliases:
+    - лунный луч
+    - лунный луч
+    - lunnyy_luch
+    level: 2
+    school: evocation
+    file: entities/spells/lunnyy_luch.md
+  luch_bolezni:
+    en: luch_bolezni
+    ru: Луч Болезни
+    aliases:
+    - луч болезни
+    - луч болезни
+    - luch_bolezni
+    level: 1
+    school: necromancy
+    file: entities/spells/luch_bolezni.md
+  luch_slabosti:
+    en: luch_slabosti
+    ru: Луч Слабости
+    aliases:
+    - луч слабости
+    - луч слабости
+    - luch_slabosti
+    level: 2
+    school: necromancy
+    file: entities/spells/luch_slabosti.md
+  magicheskiy_glaz:
+    en: magicheskiy_glaz
+    ru: Магический Глаз
+    aliases:
+    - магический глаз
+    - магический глаз
+    - magicheskiy_glaz
+    level: 4
+    school: divination
+    file: entities/spells/magicheskiy_glaz.md
+  magicheskoe_oruzhie:
+    en: magicheskoe_oruzhie
+    ru: Магическое Оружие
+    aliases:
+    - магическое оружие
+    - магическое оружие
+    - magicheskoe_oruzhie
+    level: 2
+    school: transmutation
+    file: entities/spells/magicheskoe_oruzhie.md
+  maloe_vosstanovlenie:
+    en: maloe_vosstanovlenie
+    ru: Малое Восстановление
+    aliases:
+    - малое восстановление
+    - малое восстановление
+    - maloe_vosstanovlenie
+    level: 2
+    school: abjuration
+    file: entities/spells/maloe_vosstanovlenie.md
+  mantiya_krestonostsa:
+    en: mantiya_krestonostsa
+    ru: Мантия Крестоносца
+    aliases:
+    - мантия крестоносца
+    - мантия крестоносца
+    - mantiya_krestonostsa
+    level: 3
+    school: evocation
+    file: entities/spells/mantiya_krestonostsa.md
+  maskirovka:
+    en: maskirovka
+    ru: Маскировка
+    aliases:
+    - маскировка
+    - маскировка
+    - maskirovka
+    level: 1
+    school: illusion
+    file: entities/spells/maskirovka.md
+  mayak_nadezhdy:
+    en: mayak_nadezhdy
+    ru: Маяк Надежды
+    aliases:
+    - маяк надежды
+    - маяк надежды
+    - mayak_nadezhdy
+    level: 3
+    school: abjuration
+    file: entities/spells/mayak_nadezhdy.md
+  mentalnaya_svyaz_reri:
+    en: mentalnaya_svyaz_reri
+    ru: Ментальная Связь Рэри
+    aliases:
+    - ментальная связь рэри
+    - ментальная связь рэри
+    - mentalnaya_svyaz_reri
+    level: 5
+    school: прорицание (ритуал)
+    file: entities/spells/mentalnaya_svyaz_reri.md
+  mertsanie:
+    en: mertsanie
+    ru: Мерцание
+    aliases:
+    - мерцание
+    - мерцание
+    - mertsanie
+    level: 3
+    school: transmutation
+    file: entities/spells/mertsanie.md
+  meteor_swarm:
+    en: meteor_swarm
+    ru: Метеоритный Дождь
+    aliases:
+    - метеоритный дождь
+    - метеоритный дождь
+    - meteor_swarm
+    level: 9
+    school: evocation
+    file: entities/spells/meteor_swarm.md
+  metka_okhotnika:
+    en: metka_okhotnika
+    ru: Метка Охотника
+    aliases:
+    - метка охотника
+    - метка охотника
+    - metka_okhotnika
+    level: 1
+    school: divination
+    file: entities/spells/metka_okhotnika.md
+  mech_mordenkaynena:
+    en: mech_mordenkaynena
+    ru: Меч Морденкайнена
+    aliases:
+    - меч морденкайнена
+    - меч морденкайнена
+    - mech_mordenkaynena
+    level: 7
+    school: evocation
+    file: entities/spells/mech_mordenkaynena.md
+  mirazh:
+    en: mirazh
+    ru: Мираж
+    aliases:
+    - мираж
+    - мираж
+    - mirazh
+    level: 4
+    school: illusion
+    file: entities/spells/mirazh.md
+  mnozhestvennoe_vnushenie:
+    en: mnozhestvennoe_vnushenie
+    ru: Множественное Внушение
+    aliases:
+    - множественное внушение
+    - множественное внушение
+    - mnozhestvennoe_vnushenie
+    level: 6
+    school: enchantment
+    file: entities/spells/mnozhestvennoe_vnushenie.md
+  moleben_lecheniya:
+    en: moleben_lecheniya
+    ru: Молебен Лечения
+    aliases:
+    - молебен лечения
+    - молебен лечения
+    - moleben_lecheniya
+    level: 2
+    school: evocation
+    file: entities/spells/moleben_lecheniya.md
+  mnozhestvennoe_lechenie_ran:
+    en: mnozhestvennoe_lechenie_ran
+    ru: Множественное Лечение Ран
+    aliases:
+    - множественное лечение ран
+    - множественное лечение ран
+    - mnozhestvennoe_lechenie_ran
+    level: 5
+    school: evocation
+    file: entities/spells/mnozhestvennoe_lechenie_ran.md
+  nablyudenie:
+    en: nablyudenie
+    ru: Наблюдение
+    aliases:
+    - наблюдение
+    - наблюдение
+    - nablyudenie
+    level: 5
+    school: divination
+    file: entities/spells/nablyudenie.md
+  nanesenie_ran:
+    en: nanesenie_ran
+    ru: Нанесение Ран
+    aliases:
+    - нанесение ран
+    - нанесение ран
+    - nanesenie_ran
+    level: 1
+    school: necromancy
+    file: entities/spells/nanesenie_ran.md
+  napravlennyy_snaryad:
+    en: napravlennyy_snaryad
+    ru: Направленный Снаряд
+    aliases:
+    - направленный снаряд
+    - направленный снаряд
+    - napravlennyy_snaryad
+    level: 1
+    school: evocation
+    file: entities/spells/napravlennyy_snaryad.md
+  nakhodchivost:
+    en: nakhodchivost
+    ru: Находчивость
+    aliases:
+    - находчивость
+    - находчивость
+    - nakhodchivost
+    level: 8
+    school: transmutation
+    file: entities/spells/nakhodchivost.md
+  nashestvie_nasekomykh:
+    en: nashestvie_nasekomykh
+    ru: Нашествие Насекомых
+    aliases:
+    - нашествие насекомых
+    - нашествие насекомых
+    - nashestvie_nasekomykh
+    level: 5
+    school: conjuration
+    file: entities/spells/nashestvie_nasekomykh.md
+  nebesnyy_ogon:
+    en: nebesnyy_ogon
+    ru: Небесный Огонь
+    aliases:
+    - небесный огонь
+    - небесный огонь
+    - nebesnyy_ogon
+    level: 5
+    school: evocation
+    file: entities/spells/nebesnyy_ogon.md
+  nevidimoe_pismo:
+    en: nevidimoe_pismo
+    ru: Невидимое Письмо
+    aliases:
+    - невидимое письмо
+    - невидимое письмо
+    - nevidimoe_pismo
+    level: 1
+    school: иллюзия (ритуал)
+    file: entities/spells/nevidimoe_pismo.md
+  invisibility:
+    en: invisibility
+    ru: Невидимость
+    aliases:
+    - невидимость
+    - невидимость
+    - invisibility
+    level: 2
+    school: illusion
+    file: entities/spells/invisibility.md
+  nevidimyy_sluga:
+    en: nevidimyy_sluga
+    ru: Невидимый Слуга
+    aliases:
+    - невидимый слуга
+    - невидимый слуга
+    - nevidimyy_sluga
+    level: 1
+    school: вызов (ритуал)
+    file: entities/spells/nevidimyy_sluga.md
+  neobnaruzhimost:
+    en: neobnaruzhimost
+    ru: Необнаружимость
+    aliases:
+    - необнаружимость
+    - необнаружимость
+    - neobnaruzhimost
+    level: 3
+    school: abjuration
+    file: entities/spells/neobnaruzhimost.md
+  netlennye_ostanki:
+    en: netlennye_ostanki
+    ru: Нетленные Останки
+    aliases:
+    - нетленные останки
+    - нетленные останки
+    - netlennye_ostanki
+    level: 2
+    school: некромантия (ритуал)
+    file: entities/spells/netlennye_ostanki.md
+  nistulova_lozhnaya_magiya:
+    en: nistulova_lozhnaya_magiya
+    ru: Нистулова Ложная Магия
+    aliases:
+    - нистулова ложная магия
+    - нистулова ложная магия
+    - nistulova_lozhnaya_magiya
+    level: 2
+    school: illusion
+    file: entities/spells/nistulova_lozhnaya_magiya.md
+  obet:
+    en: obet
+    ru: Обет
+    aliases:
+    - обет
+    - обет
+    - obet
+    level: 5
+    school: enchantment
+    file: entities/spells/obet.md
+  detect_magic:
+    en: detect_magic
+    ru: Обнаружение Магии
+    aliases:
+    - обнаружение магии
+    - обнаружение магии
+    - detect_magic
+    level: 1
+    school: прорицание (ритуал)
+    file: entities/spells/detect_magic.md
+  obnaruzhenie_mysley:
+    en: obnaruzhenie_mysley
+    ru: Обнаружение Мыслей
+    aliases:
+    - обнаружение мыслей
+    - обнаружение мыслей
+    - obnaruzhenie_mysley
+    level: 2
+    school: divination
+    file: entities/spells/obnaruzhenie_mysley.md
+  obraz:
+    en: obraz
+    ru: Образ
+    aliases:
+    - образ
+    - образ
+    - obraz
+    level: 3
+    school: illusion
+    file: entities/spells/obraz.md
+  obshchenie:
+    en: obshchenie
+    ru: Общение
+    aliases:
+    - общение
+    - общение
+    - obshchenie
+    level: 5
+    school: прорицание (ритуал)
+    file: entities/spells/obshchenie.md
+  obshchenie_s_prirodoy:
+    en: obshchenie_s_prirodoy
+    ru: Общение С Природой
+    aliases:
+    - общение с природой
+    - общение с природой
+    - obshchenie_s_prirodoy
+    level: 5
+    school: прорицание (ритуал)
+    file: entities/spells/obshchenie_s_prirodoy.md
+  oglushayushchaya_kara:
+    en: oglushayushchaya_kara
+    ru: Оглушающая Кара
+    aliases:
+    - оглушающая кара
+    - оглушающая кара
+    - oglushayushchaya_kara
+    level: 4
+    school: evocation
+    file: entities/spells/oglushayushchaya_kara.md
+  ognennaya_burya:
+    en: ognennaya_burya
+    ru: Огненная Буря
+    aliases:
+    - огненная буря
+    - огненная буря
+    - ognennaya_burya
+    level: 7
+    school: evocation
+    file: entities/spells/ognennaya_burya.md
+  ognennaya_stena:
+    en: ognennaya_stena
+    ru: Огненная Стена
+    aliases:
+    - огненная стена
+    - огненная стена
+    - ognennaya_stena
+    level: 4
+    school: evocation
+    file: entities/spells/ognennaya_stena.md
+  burning_hands:
+    en: burning_hands
+    ru: Огненные Ладони
+    aliases:
+    - огненные ладони
+    - огненные ладони
+    - burning_hands
+    level: 1
+    school: evocation
+    file: entities/spells/burning_hands.md
+  fireball:
+    en: fireball
+    ru: Огненный Шар
+    aliases:
+    - огненный шар
+    - огненный шар
+    - fireball
+    level: 3
+    school: evocation
+    file: entities/spells/fireball.md
+  faerie_fire:
+    en: faerie_fire
+    ru: Огонь Фей
+    aliases:
+    - огонь фей
+    - огонь фей
+    - faerie_fire
+    level: 1
+    school: evocation
+    file: entities/spells/faerie_fire.md
+  ozhivlenie:
+    en: ozhivlenie
+    ru: Оживление
+    aliases:
+    - оживление
+    - оживление
+    - ozhivlenie
+    level: 5
+    school: necromancy
+    file: entities/spells/ozhivlenie.md
+  okamenenie:
+    en: okamenenie
+    ru: Окаменение
+    aliases:
+    - окаменение
+    - окаменение
+    - okamenenie
+    level: 6
+    school: transmutation
+    file: entities/spells/okamenenie.md
+  oputyvayushchiy_udar:
+    en: oputyvayushchiy_udar
+    ru: Опутывающий Удар
+    aliases:
+    - опутывающий удар
+    - опутывающий удар
+    - oputyvayushchiy_udar
+    level: 1
+    school: conjuration
+    file: entities/spells/oputyvayushchiy_udar.md
+  oputyvanie:
+    en: oputyvanie
+    ru: Опутывание
+    aliases:
+    - опутывание
+    - опутывание
+    - oputyvanie
+    level: 1
+    school: conjuration
+    file: entities/spells/oputyvanie.md
+  ostanovka_vremeni:
+    en: ostanovka_vremeni
+    ru: Остановка Времени
+    aliases:
+    - остановка времени
+    - остановка времени
+    - ostanovka_vremeni
+    level: 9
+    school: transmutation
+    file: entities/spells/ostanovka_vremeni.md
+  otilyukov_ledyanoy_shar:
+    en: otilyukov_ledyanoy_shar
+    ru: Отилюков Ледяной Шар
+    aliases:
+    - отилюков ледяной шар
+    - отилюков ледяной шар
+    - otilyukov_ledyanoy_shar
+    level: 6
+    school: evocation
+    file: entities/spells/otilyukov_ledyanoy_shar.md
+  otilyukov_uprugiy_shar:
+    en: otilyukov_uprugiy_shar
+    ru: Отилюков Упругий Шар
+    aliases:
+    - отилюков упругий шар
+    - отилюков упругий шар
+    - otilyukov_uprugiy_shar
+    level: 4
+    school: evocation
+    file: entities/spells/otilyukov_uprugiy_shar.md
+  otkryvanie:
+    en: otkryvanie
+    ru: Открывание
+    aliases:
+    - открывание
+    - открывание
+    - otkryvanie
+    level: 2
+    school: transmutation
+    file: entities/spells/otkryvanie.md
+  otrazheniya:
+    en: otrazheniya
+    ru: Отражения
+    aliases:
+    - отражения
+    - отражения
+    - otrazheniya
+    level: 2
+    school: illusion
+    file: entities/spells/otrazheniya.md
+  okhrannye_runy:
+    en: okhrannye_runy
+    ru: Охранные Руны
+    aliases:
+    - охранные руны
+    - охранные руны
+    - okhrannye_runy
+    level: 3
+    school: abjuration
+    file: entities/spells/okhrannye_runy.md
+  charm_person:
+    en: charm_person
+    ru: Очарование Личности
+    aliases:
+    - очарование личности
+    - очарование личности
+    - charm_person
+    level: 1
+    school: enchantment
+    file: entities/spells/charm_person.md
+  ochishchenie_pishchi_i_pitya:
+    en: ochishchenie_pishchi_i_pitya
+    ru: Очищение Пищи И Питья
+    aliases:
+    - очищение пищи и питья
+    - очищение пищи и питья
+    - ochishchenie_pishchi_i_pitya
+    level: 1
+    school: преобразование (ритуал)
+    file: entities/spells/ochishchenie_pishchi_i_pitya.md
+  palyashchaya_kara:
+    en: palyashchaya_kara
+    ru: Палящая Кара
+    aliases:
+    - палящая кара
+    - палящая кара
+    - palyashchaya_kara
+    level: 1
+    school: evocation
+    file: entities/spells/palyashchaya_kara.md
+  palyashchiy_luch:
+    en: palyashchiy_luch
+    ru: Палящий Луч
+    aliases:
+    - палящий луч
+    - палящий луч
+    - palyashchiy_luch
+    level: 2
+    school: evocation
+    file: entities/spells/palyashchiy_luch.md
+  pauk:
+    en: pauk
+    ru: Паук
+    aliases:
+    - паук
+    - паук
+    - pauk
+    level: 2
+    school: transmutation
+    file: entities/spells/pauk.md
+  pautina:
+    en: pautina
+    ru: Паутина
+    aliases:
+    - паутина
+    - паутина
+    - pautina
+    level: 2
+    school: conjuration
+    file: entities/spells/pautina.md
+  perenosyashchaya_dver:
+    en: perenosyashchaya_dver
+    ru: Переносящая Дверь
+    aliases:
+    - переносящая дверь
+    - переносящая дверь
+    - perenosyashchaya_dver
+    level: 4
+    school: conjuration
+    file: entities/spells/perenosyashchaya_dver.md
+  perst_smerti:
+    en: perst_smerti
+    ru: Перст Смерти
+    aliases:
+    - перст смерти
+    - перст смерти
+    - perst_smerti
+    level: 7
+    school: necromancy
+    file: entities/spells/perst_smerti.md
+  planarnye_uzy:
+    en: planarnye_uzy
+    ru: Планарные Узы
+    aliases:
+    - планарные узы
+    - планарные узы
+    - planarnye_uzy
+    level: 5
+    school: abjuration
+    file: entities/spells/planarnye_uzy.md
+  planarnyy_soyuznik:
+    en: planarnyy_soyuznik
+    ru: Планарный Союзник
+    aliases:
+    - планарный союзник
+    - планарный союзник
+    - planarnyy_soyuznik
+    level: 6
+    school: conjuration
+    file: entities/spells/planarnyy_soyuznik.md
+  plyashushchaya_molniya:
+    en: plyashushchaya_molniya
+    ru: Пляшущая Молния
+    aliases:
+    - пляшущая молния
+    - пляшущая молния
+    - plyashushchaya_molniya
+    level: 6
+    school: evocation
+    file: entities/spells/plyashushchaya_molniya.md
+  podvodnoe_dykhanie:
+    en: podvodnoe_dykhanie
+    ru: Подводное Дыхание
+    aliases:
+    - подводное дыхание
+    - подводное дыхание
+    - podvodnoe_dykhanie
+    level: 3
+    school: преобразование (ритуал)
+    file: entities/spells/podvodnoe_dykhanie.md
+  podmoga:
+    en: podmoga
+    ru: Подмога
+    aliases:
+    - подмога
+    - подмога
+    - podmoga
+    level: 2
+    school: abjuration
+    file: entities/spells/podmoga.md
+  podobie:
+    en: podobie
+    ru: Подобие
+    aliases:
+    - подобие
+    - подобие
+    - podobie
+    level: 7
+    school: illusion
+    file: entities/spells/podobie.md
+  podsmatrivanie:
+    en: podsmatrivanie
+    ru: Подсматривание
+    aliases:
+    - подсматривание
+    - подсматривание
+    - podsmatrivanie
+    level: 3
+    school: divination
+    file: entities/spells/podsmatrivanie.md
+  podchinenie_zverya:
+    en: podchinenie_zverya
+    ru: Подчинение Зверя
+    aliases:
+    - подчинение зверя
+    - подчинение зверя
+    - podchinenie_zverya
+    level: 4
+    school: enchantment
+    file: entities/spells/podchinenie_zverya.md
+  podchinenie_lichnosti:
+    en: podchinenie_lichnosti
+    ru: Подчинение Личности
+    aliases:
+    - подчинение личности
+    - подчинение личности
+    - podchinenie_lichnosti
+    level: 5
+    school: enchantment
+    file: entities/spells/podchinenie_lichnosti.md
+  podchinenie_chudovishcha:
+    en: podchinenie_chudovishcha
+    ru: Подчинение Чудовища
+    aliases:
+    - подчинение чудовища
+    - подчинение чудовища
+    - podchinenie_chudovishcha
+    level: 8
+    school: enchantment
+    file: entities/spells/podchinenie_chudovishcha.md
+  poisk_zhivotnykh_ili_rasteniy:
+    en: poisk_zhivotnykh_ili_rasteniy
+    ru: Поиск Животных Или Растений
+    aliases:
+    - поиск животных или растений
+    - поиск животных или растений
+    - poisk_zhivotnykh_ili_rasteniy
+    level: 2
+    school: прорицание (ритуал)
+    file: entities/spells/poisk_zhivotnykh_ili_rasteniy.md
+  poisk_lovushek:
+    en: poisk_lovushek
+    ru: Поиск Ловушек
+    aliases:
+    - поиск ловушек
+    - поиск ловушек
+    - poisk_lovushek
+    level: 2
+    school: divination
+    file: entities/spells/poisk_lovushek.md
+  poisk_puti:
+    en: poisk_puti
+    ru: Поиск Пути
+    aliases:
+    - поиск пути
+    - поиск пути
+    - poisk_puti
+    level: 6
+    school: divination
+    file: entities/spells/poisk_puti.md
+  poisk_skakuna:
+    en: poisk_skakuna
+    ru: Поиск Скакуна
+    aliases:
+    - поиск скакуна
+    - поиск скакуна
+    - poisk_skakuna
+    level: 2
+    school: conjuration
+    file: entities/spells/poisk_skakuna.md
+  poisk_sushchestva:
+    en: poisk_sushchestva
+    ru: Поиск Существа
+    aliases:
+    - поиск существа
+    - поиск существа
+    - poisk_sushchestva
+    level: 4
+    school: divination
+    file: entities/spells/poisk_sushchestva.md
+  poisk_familyara:
+    en: poisk_familyara
+    ru: Поиск Фамильяра
+    aliases:
+    - поиск фамильяра
+    - поиск фамильяра
+    - poisk_familyara
+    level: 1
+    school: вызов (ритуал)
+    file: entities/spells/poisk_familyara.md
+  fly:
+    en: fly
+    ru: Полёт
+    aliases:
+    - полёт
+    - полёт
+    - fly
+    level: 3
+    school: transmutation
+    file: entities/spells/fly.md
+  polnoe_istselenie:
+    en: polnoe_istselenie
+    ru: Полное Исцеление
+    aliases:
+    - полное исцеление
+    - полное исцеление
+    - polnoe_istselenie
+    level: 6
+    school: evocation
+    file: entities/spells/polnoe_istselenie.md
+  polnoe_prevrashchenie:
+    en: polnoe_prevrashchenie
+    ru: Полное Превращение
+    aliases:
+    - полное превращение
+    - полное превращение
+    - polnoe_prevrashchenie
+    level: 9
+    school: transmutation
+    file: entities/spells/polnoe_prevrashchenie.md
+  ponimanie_yazykov:
+    en: ponimanie_yazykov
+    ru: Понимание Языков
+    aliases:
+    - понимание языков
+    - понимание языков
+    - ponimanie_yazykov
+    level: 1
+    school: прорицание (ритуал)
+    file: entities/spells/ponimanie_yazykov.md
+  porcha:
+    en: porcha
+    ru: Порча
+    aliases:
+    - порча
+    - порча
+    - porcha
+    level: 1
+    school: enchantment
+    file: entities/spells/porcha.md
+  poryv_vetra:
+    en: poryv_vetra
+    ru: Порыв Ветра
+    aliases:
+    - порыв ветра
+    - порыв ветра
+    - poryv_vetra
+    level: 2
+    school: evocation
+    file: entities/spells/poryv_vetra.md
+  poslanie:
+    en: poslanie
+    ru: Послание
+    aliases:
+    - послание
+    - послание
+    - poslanie
+    level: 3
+    school: evocation
+    file: entities/spells/poslanie.md
+  pospeshnoe_otstuplenie:
+    en: pospeshnoe_otstuplenie
+    ru: Поспешное Отступление
+    aliases:
+    - поспешное отступление
+    - поспешное отступление
+    - pospeshnoe_otstuplenie
+    level: 1
+    school: transmutation
+    file: entities/spells/pospeshnoe_otstuplenie.md
+  pochtovoe_zhivotnoe:
+    en: pochtovoe_zhivotnoe
+    ru: Почтовое Животное
+    aliases:
+    - почтовое животное
+    - почтовое животное
+    - pochtovoe_zhivotnoe
+    level: 2
+    school: очарование (ритуал)
+    file: entities/spells/pochtovoe_zhivotnoe.md
+  prevrashchenie_v_zhivotnykh:
+    en: prevrashchenie_v_zhivotnykh
+    ru: Превращение В Животных
+    aliases:
+    - превращение в животных
+    - превращение в животных
+    - prevrashchenie_v_zhivotnykh
+    level: 8
+    school: transmutation
+    file: entities/spells/prevrashchenie_v_zhivotnykh.md
+  pregrada_magii:
+    en: pregrada_magii
+    ru: Преграда Магии
+    aliases:
+    - преграда магии
+    - преграда магии
+    - pregrada_magii
+    level: 8
+    school: abjuration
+    file: entities/spells/pregrada_magii.md
+  predvidenie:
+    en: predvidenie
+    ru: Предвидение
+    aliases:
+    - предвидение
+    - предвидение
+    - predvidenie
+    level: 9
+    school: divination
+    file: entities/spells/predvidenie.md
+  predostorozhnost:
+    en: predostorozhnost
+    ru: Предосторожность
+    aliases:
+    - предосторожность
+    - предосторожность
+    - predostorozhnost
+    level: 6
+    school: evocation
+    file: entities/spells/predostorozhnost.md
+  predskazanie:
+    en: predskazanie
+    ru: Предсказание
+    aliases:
+    - предсказание
+    - предсказание
+    - predskazanie
+    level: 4
+    school: прорицание (ритуал)
+    file: entities/spells/predskazanie.md
+  prizyv_zhivotnykh:
+    en: prizyv_zhivotnykh
+    ru: Призыв Животных
+    aliases:
+    - призыв животных
+    - призыв животных
+    - prizyv_zhivotnykh
+    level: 3
+    school: conjuration
+    file: entities/spells/prizyv_zhivotnykh.md
+  prizyv_zagrazhdeniya:
+    en: prizyv_zagrazhdeniya
+    ru: Призыв Заграждения
+    aliases:
+    - призыв заграждения
+    - призыв заграждения
+    - prizyv_zagrazhdeniya
+    level: 3
+    school: conjuration
+    file: entities/spells/prizyv_zagrazhdeniya.md
+  prizyv_zalpa:
+    en: prizyv_zalpa
+    ru: Призыв Залпа
+    aliases:
+    - призыв залпа
+    - призыв залпа
+    - prizyv_zalpa
+    level: 5
+    school: conjuration
+    file: entities/spells/prizyv_zalpa.md
+  prizyv_lesnykh_obitateley:
+    en: prizyv_lesnykh_obitateley
+    ru: Призыв Лесных Обитателей
+    aliases:
+    - призыв лесных обитателей
+    - призыв лесных обитателей
+    - prizyv_lesnykh_obitateley
+    level: 4
+    school: conjuration
+    file: entities/spells/prizyv_lesnykh_obitateley.md
+  prizyv_malykh_elementaley:
+    en: prizyv_malykh_elementaley
+    ru: Призыв Малых Элементалей
+    aliases:
+    - призыв малых элементалей
+    - призыв малых элементалей
+    - prizyv_malykh_elementaley
+    level: 4
+    school: conjuration
+    file: entities/spells/prizyv_malykh_elementaley.md
+  prizyv_molnii:
+    en: prizyv_molnii
+    ru: Призыв Молнии
+    aliases:
+    - призыв молнии
+    - призыв молнии
+    - prizyv_molnii
+    level: 3
+    school: conjuration
+    file: entities/spells/prizyv_molnii.md
+  prizyv_nebozhitelya:
+    en: prizyv_nebozhitelya
+    ru: Призыв Небожителя
+    aliases:
+    - призыв небожителя
+    - призыв небожителя
+    - prizyv_nebozhitelya
+    level: 7
+    school: conjuration
+    file: entities/spells/prizyv_nebozhitelya.md
+  prizyv_fei:
+    en: prizyv_fei
+    ru: Призыв Феи
+    aliases:
+    - призыв феи
+    - призыв феи
+    - prizyv_fei
+    level: 6
+    school: conjuration
+    file: entities/spells/prizyv_fei.md
+  prizyv_elementalya:
+    en: prizyv_elementalya
+    ru: Призыв Элементаля
+    aliases:
+    - призыв элементаля
+    - призыв элементаля
+    - prizyv_elementalya
+    level: 5
+    school: conjuration
+    file: entities/spells/prizyv_elementalya.md
+  prikaz:
+    en: prikaz
+    ru: Приказ
+    aliases:
+    - приказ
+    - приказ
+    - prikaz
+    level: 1
+    school: enchantment
+    file: entities/spells/prikaz.md
+  prikosnovenie_vampira:
+    en: prikosnovenie_vampira
+    ru: Прикосновение Вампира
+    aliases:
+    - прикосновение вампира
+    - прикосновение вампира
+    - prikosnovenie_vampira
+    level: 3
+    school: necromancy
+    file: entities/spells/prikosnovenie_vampira.md
+  prinuzhdenie:
+    en: prinuzhdenie
+    ru: Принуждение
+    aliases:
+    - принуждение
+    - принуждение
+    - prinuzhdenie
+    level: 4
+    school: enchantment
+    file: entities/spells/prinuzhdenie.md
+  prizrachnyy_skakun:
+    en: prizrachnyy_skakun
+    ru: Призрачный Скакун
+    aliases:
+    - призрачный скакун
+    - призрачный скакун
+    - prizrachnyy_skakun
+    level: 3
+    school: иллюзия (ритуал)
+    file: entities/spells/prizrachnyy_skakun.md
+  pritvornaya_smert:
+    en: pritvornaya_smert
+    ru: Притворная Смерть
+    aliases:
+    - притворная смерть
+    - притворная смерть
+    - pritvornaya_smert
+    level: 3
+    school: некромантия (ритуал)
+    file: entities/spells/pritvornaya_smert.md
+  pritvorstvo:
+    en: pritvorstvo
+    ru: Притворство
+    aliases:
+    - притворство
+    - притворство
+    - pritvorstvo
+    level: 5
+    school: illusion
+    file: entities/spells/pritvorstvo.md
+  probuzhdenie_razuma:
+    en: probuzhdenie_razuma
+    ru: Пробуждение Разума
+    aliases:
+    - пробуждение разума
+    - пробуждение разума
+    - probuzhdenie_razuma
+    level: 5
+    school: transmutation
+    file: entities/spells/probuzhdenie_razuma.md
+  proektsiya:
+    en: proektsiya
+    ru: Проекция
+    aliases:
+    - проекция
+    - проекция
+    - proektsiya
+    level: 7
+    school: illusion
+    file: entities/spells/proektsiya.md
+  proklyatie:
+    en: proklyatie
+    ru: Проклятие
+    aliases:
+    - проклятие
+    - проклятие
+    - proklyatie
+    level: 3
+    school: necromancy
+    file: entities/spells/proklyatie.md
+  pryzhok:
+    en: pryzhok
+    ru: Прыжок
+    aliases:
+    - прыжок
+    - прыжок
+    - pryzhok
+    level: 1
+    school: transmutation
+    file: entities/spells/pryzhok.md
+  psevdozhizn:
+    en: psevdozhizn
+    ru: Псевдожизнь
+    aliases:
+    - псевдожизнь
+    - псевдожизнь
+    - psevdozhizn
+    level: 1
+    school: necromancy
+    file: entities/spells/psevdozhizn.md
+  puteshestvie_cherez_rasteniya:
+    en: puteshestvie_cherez_rasteniya
+    ru: Путешествие Через Растения
+    aliases:
+    - путешествие через растения
+    - путешествие через растения
+    - puteshestvie_cherez_rasteniya
+    level: 6
+    school: conjuration
+    file: entities/spells/puteshestvie_cherez_rasteniya.md
+  pylayushchiy_shar:
+    en: pylayushchiy_shar
+    ru: Пылающий Шар
+    aliases:
+    - пылающий шар
+    - пылающий шар
+    - pylayushchiy_shar
+    level: 2
+    school: conjuration
+    file: entities/spells/pylayushchiy_shar.md
+  raduzhnaya_stena:
+    en: raduzhnaya_stena
+    ru: Радужная Стена
+    aliases:
+    - радужная стена
+    - радужная стена
+    - raduzhnaya_stena
+    level: 9
+    school: abjuration
+    file: entities/spells/raduzhnaya_stena.md
+  raduzhnye_bryzgi:
+    en: raduzhnye_bryzgi
+    ru: Радужные Брызги
+    aliases:
+    - радужные брызги
+    - радужные брызги
+    - raduzhnye_bryzgi
+    level: 7
+    school: evocation
+    file: entities/spells/raduzhnye_bryzgi.md
+  razgovor_s_zhivotnymi:
+    en: razgovor_s_zhivotnymi
+    ru: Разговор С Животными
+    aliases:
+    - разговор с животными
+    - разговор с животными
+    - razgovor_s_zhivotnymi
+    level: 1
+    school: прорицание (ритуал)
+    file: entities/spells/razgovor_s_zhivotnymi.md
+  razgovor_s_mertvymi:
+    en: razgovor_s_mertvymi
+    ru: Разговор С Мёртвыми
+    aliases:
+    - разговор с мёртвыми
+    - разговор с мёртвыми
+    - razgovor_s_mertvymi
+    level: 3
+    school: necromancy
+    file: entities/spells/razgovor_s_mertvymi.md
+  razgovor_s_rasteniyami:
+    en: razgovor_s_rasteniyami
+    ru: Разговор С Растениями
+    aliases:
+    - разговор с растениями
+    - разговор с растениями
+    - razgovor_s_rasteniyami
+    level: 3
+    school: transmutation
+    file: entities/spells/razgovor_s_rasteniyami.md
+  razmytyy_obraz:
+    en: razmytyy_obraz
+    ru: Размытый Образ
+    aliases:
+    - размытый образ
+    - размытый образ
+    - razmytyy_obraz
+    level: 2
+    school: illusion
+    file: entities/spells/razmytyy_obraz.md
+  razrushitelnaya_volna:
+    en: razrushitelnaya_volna
+    ru: Разрушительная Волна
+    aliases:
+    - разрушительная волна
+    - разрушительная волна
+    - razrushitelnaya_volna
+    level: 5
+    school: evocation
+    file: entities/spells/razrushitelnaya_volna.md
+  razyashchee_oko:
+    en: razyashchee_oko
+    ru: Разящее Око
+    aliases:
+    - разящее око
+    - разящее око
+    - razyashchee_oko
+    level: 6
+    school: necromancy
+    file: entities/spells/razyashchee_oko.md
+  raskalennyy_metall:
+    en: raskalennyy_metall
+    ru: Раскалённый Металл
+    aliases:
+    - раскалённый металл
+    - раскалённый металл
+    - raskalennyy_metall
+    level: 2
+    school: transmutation
+    file: entities/spells/raskalennyy_metall.md
+  raspad:
+    en: raspad
+    ru: Распад
+    aliases:
+    - распад
+    - распад
+    - raspad
+    level: 6
+    school: transmutation
+    file: entities/spells/raspad.md
+  regeneratsiya:
+    en: regeneratsiya
+    ru: Регенерация
+    aliases:
+    - регенерация
+    - регенерация
+    - regeneratsiya
+    level: 7
+    school: transmutation
+    file: entities/spells/regeneratsiya.md
+  dispel_magic:
+    en: dispel_magic
+    ru: Рассеивание Магии
+    aliases:
+    - рассеивание магии
+    - рассеивание магии
+    - dispel_magic
+    level: 3
+    school: abjuration
+    file: entities/spells/dispel_magic.md
+  rech_zlatousta:
+    en: rech_zlatousta
+    ru: Речь Златоуста
+    aliases:
+    - речь златоуста
+    - речь златоуста
+    - rech_zlatousta
+    level: 2
+    school: enchantment
+    file: entities/spells/rech_zlatousta.md
+  rost_rasteniy:
+    en: rost_rasteniy
+    ru: Рост Растений
+    aliases:
+    - рост растений
+    - рост растений
+    - rost_rasteniy
+    level: 3
+    school: transmutation
+    file: entities/spells/rost_rasteniy.md
+  ruki_khadara:
+    en: ruki_khadara
+    ru: Руки Хадара
+    aliases:
+    - руки хадара
+    - руки хадара
+    - ruki_khadara
+    level: 1
+    school: conjuration
+    file: entities/spells/ruki_khadara.md
+  sverkayushchie_bryzgi:
+    en: sverkayushchie_bryzgi
+    ru: Сверкающие Брызги
+    aliases:
+    - сверкающие брызги
+    - сверкающие брызги
+    - sverkayushchie_bryzgi
+    level: 1
+    school: illusion
+    file: entities/spells/sverkayushchie_bryzgi.md
+  svoboda_peremeshcheniya:
+    en: svoboda_peremeshcheniya
+    ru: Свобода Перемещения
+    aliases:
+    - свобода перемещения
+    - свобода перемещения
+    - svoboda_peremeshcheniya
+    level: 4
+    school: abjuration
+    file: entities/spells/svoboda_peremeshcheniya.md
+  svyaz_s_inym_mirom:
+    en: svyaz_s_inym_mirom
+    ru: Связь С Иным Миром
+    aliases:
+    - связь с иным миром
+    - связь с иным миром
+    - svyaz_s_inym_mirom
+    level: 5
+    school: прорицание (ритуал)
+    file: entities/spells/svyaz_s_inym_mirom.md
+  svyatilishche:
+    en: svyatilishche
+    ru: Святилище
+    aliases:
+    - святилище
+    - святилище
+    - svyatilishche
+    level: 5
+    school: evocation
+    file: entities/spells/svyatilishche.md
+  sglaz:
+    en: sglaz
+    ru: Сглаз
+    aliases:
+    - сглаз
+    - сглаз
+    - sglaz
+    level: 1
+    school: enchantment
+    file: entities/spells/sglaz.md
+  signal_trevogi:
+    en: signal_trevogi
+    ru: Сигнал Тревоги
+    aliases:
+    - сигнал тревоги
+    - сигнал тревоги
+    - signal_trevogi
+    level: 1
+    school: ограждение (ритуал)
+    file: entities/spells/signal_trevogi.md
+  silovaya_stena:
+    en: silovaya_stena
+    ru: Силовая Стена
+    aliases:
+    - силовая стена
+    - силовая стена
+    - silovaya_stena
+    level: 5
+    school: evocation
+    file: entities/spells/silovaya_stena.md
+  skolzhenie:
+    en: skolzhenie
+    ru: Скольжение
+    aliases:
+    - скольжение
+    - скольжение
+    - skolzhenie
+    level: 1
+    school: conjuration
+    file: entities/spells/skolzhenie.md
+  slaboumie:
+    en: slaboumie
+    ru: Слабоумие
+    aliases:
+    - слабоумие
+    - слабоумие
+    - slaboumie
+    level: 8
+    school: enchantment
+    file: entities/spells/slaboumie.md
+  sliyanie_s_kamnem:
+    en: sliyanie_s_kamnem
+    ru: Слияние С Камнем
+    aliases:
+    - слияние с камнем
+    - слияние с камнем
+    - sliyanie_s_kamnem
+    level: 3
+    school: преобразование (ритуал)
+    file: entities/spells/sliyanie_s_kamnem.md
+  smertnyy_uzhas:
+    en: smertnyy_uzhas
+    ru: Смертный Ужас
+    aliases:
+    - смертный ужас
+    - смертный ужас
+    - smertnyy_uzhas
+    level: 9
+    school: illusion
+    file: entities/spells/smertnyy_uzhas.md
+  smyatenie:
+    en: smyatenie
+    ru: Смятение
+    aliases:
+    - смятение
+    - смятение
+    - smyatenie
+    level: 4
+    school: enchantment
+    file: entities/spells/smyatenie.md
+  snyatie_proklyatya:
+    en: snyatie_proklyatya
+    ru: Снятие Проклятья
+    aliases:
+    - снятие проклятья
+    - снятие проклятья
+    - snyatie_proklyatya
+    level: 3
+    school: abjuration
+    file: entities/spells/snyatie_proklyatya.md
+  sozdanie_prokhoda:
+    en: sozdanie_prokhoda
+    ru: Создание Прохода
+    aliases:
+    - создание прохода
+    - создание прохода
+    - sozdanie_prokhoda
+    level: 5
+    school: transmutation
+    file: entities/spells/sozdanie_prokhoda.md
+  sokrytie_razuma:
+    en: sokrytie_razuma
+    ru: Сокрытие Разума
+    aliases:
+    - сокрытие разума
+    - сокрытие разума
+    - sokrytie_razuma
+    level: 8
+    school: abjuration
+    file: entities/spells/sokrytie_razuma.md
+  solnechnyy_luch:
+    en: solnechnyy_luch
+    ru: Солнечный Луч
+    aliases:
+    - солнечный луч
+    - солнечный луч
+    - solnechnyy_luch
+    level: 6
+    school: evocation
+    file: entities/spells/solnechnyy_luch.md
+  solnechnyy_ozhog:
+    en: solnechnyy_ozhog
+    ru: Солнечный Ожог
+    aliases:
+    - солнечный ожог
+    - солнечный ожог
+    - solnechnyy_ozhog
+    level: 8
+    school: evocation
+    file: entities/spells/solnechnyy_ozhog.md
+  sotvorenie:
+    en: sotvorenie
+    ru: Сотворение
+    aliases:
+    - сотворение
+    - сотворение
+    - sotvorenie
+    level: 5
+    school: illusion
+    file: entities/spells/sotvorenie.md
+  sotvorenie_ili_unichtozhenie_vody:
+    en: sotvorenie_ili_unichtozhenie_vody
+    ru: Сотворение Или Уничтожение Воды
+    aliases:
+    - сотворение или уничтожение воды
+    - сотворение или уничтожение воды
+    - sotvorenie_ili_unichtozhenie_vody
+    level: 1
+    school: transmutation
+    file: entities/spells/sotvorenie_ili_unichtozhenie_vody.md
+  sotvorenie_nezhiti:
+    en: sotvorenie_nezhiti
+    ru: Сотворение Нежити
+    aliases:
+    - сотворение нежити
+    - сотворение нежити
+    - sotvorenie_nezhiti
+    level: 6
+    school: necromancy
+    file: entities/spells/sotvorenie_nezhiti.md
+  sotvorenie_pishchi_i_vody:
+    en: sotvorenie_pishchi_i_vody
+    ru: Сотворение Пищи И Воды
+    aliases:
+    - сотворение пищи и воды
+    - сотворение пищи и воды
+    - sotvorenie_pishchi_i_vody
+    level: 3
+    school: conjuration
+    file: entities/spells/sotvorenie_pishchi_i_vody.md
+  stena_vetrov:
+    en: stena_vetrov
+    ru: Стена Ветров
+    aliases:
+    - стена ветров
+    - стена ветров
+    - stena_vetrov
+    level: 3
+    school: evocation
+    file: entities/spells/stena_vetrov.md
+  stena_klinkov:
+    en: stena_klinkov
+    ru: Стена Клинков
+    aliases:
+    - стена клинков
+    - стена клинков
+    - stena_klinkov
+    level: 6
+    school: evocation
+    file: entities/spells/stena_klinkov.md
+  stikhiynoe_oruzhie:
+    en: stikhiynoe_oruzhie
+    ru: Стихийное Оружие
+    aliases:
+    - стихийное оружие
+    - стихийное оружие
+    - stikhiynoe_oruzhie
+    level: 3
+    school: transmutation
+    file: entities/spells/stikhiynoe_oruzhie.md
+  strazh_very:
+    en: strazh_very
+    ru: Страж Веры
+    aliases:
+    - страж веры
+    - страж веры
+    - strazh_very
+    level: 4
+    school: conjuration
+    file: entities/spells/strazh_very.md
+  strazhi:
+    en: strazhi
+    ru: Стражи
+    aliases:
+    - стражи
+    - стражи
+    - strazhi
+    level: 6
+    school: abjuration
+    file: entities/spells/strazhi.md
+  sfera_neuyazvimosti:
+    en: sfera_neuyazvimosti
+    ru: Сфера Неуязвимости
+    aliases:
+    - сфера неуязвимости
+    - сфера неуязвимости
+    - sfera_neuyazvimosti
+    level: 6
+    school: abjuration
+    file: entities/spells/sfera_neuyazvimosti.md
+  tainstvennyy_mirazh:
+    en: tainstvennyy_mirazh
+    ru: Таинственный Мираж
+    aliases:
+    - таинственный мираж
+    - таинственный мираж
+    - tainstvennyy_mirazh
+    level: 7
+    school: illusion
+    file: entities/spells/tainstvennyy_mirazh.md
+  telekinez:
+    en: telekinez
+    ru: Телекинез
+    aliases:
+    - телекинез
+    - телекинез
+    - telekinez
+    level: 5
+    school: transmutation
+    file: entities/spells/telekinez.md
+  telepatiya:
+    en: telepatiya
+    ru: Телепатия
+    aliases:
+    - телепатия
+    - телепатия
+    - telepatiya
+    level: 8
+    school: evocation
+    file: entities/spells/telepatiya.md
+  teleport:
+    en: teleport
+    ru: Телепортация
+    aliases:
+    - телепортация
+    - телепортация
+    - teleport
+    level: 7
+    school: conjuration
+    file: entities/spells/teleport.md
+  temnoe_zrenie:
+    en: temnoe_zrenie
+    ru: Тёмное Зрение
+    aliases:
+    - тёмное зрение
+    - тёмное зрение
+    - temnoe_zrenie
+    level: 2
+    school: transmutation
+    file: entities/spells/temnoe_zrenie.md
+  tenzerov_paryashchiy_disk:
+    en: tenzerov_paryashchiy_disk
+    ru: Тензеров Парящий Диск
+    aliases:
+    - тензеров парящий диск
+    - тензеров парящий диск
+    - tenzerov_paryashchiy_disk
+    level: 1
+    school: вызов (ритуал)
+    file: entities/spells/tenzerov_paryashchiy_disk.md
+  ternovaya_stena:
+    en: ternovaya_stena
+    ru: Терновая Стена
+    aliases:
+    - терновая стена
+    - терновая стена
+    - ternovaya_stena
+    level: 6
+    school: conjuration
+    file: entities/spells/ternovaya_stena.md
+  tishina:
+    en: tishina
+    ru: Тишина
+    aliases:
+    - тишина
+    - тишина
+    - tishina
+    level: 2
+    school: иллюзия (ритуал)
+    file: entities/spells/tishina.md
+  tryuk_s_verevkoy:
+    en: tryuk_s_verevkoy
+    ru: Трюк С Верёвкой
+    aliases:
+    - трюк с верёвкой
+    - трюк с верёвкой
+    - tryuk_s_verevkoy
+    level: 2
+    school: transmutation
+    file: entities/spells/tryuk_s_verevkoy.md
+  tumannoe_oblako:
+    en: tumannoe_oblako
+    ru: Туманное Облако
+    aliases:
+    - туманное облако
+    - туманное облако
+    - tumannoe_oblako
+    level: 1
+    school: conjuration
+    file: entities/spells/tumannoe_oblako.md
+  tumannyy_shag:
+    en: tumannyy_shag
+    ru: Туманный Шаг
+    aliases:
+    - туманный шаг
+    - туманный шаг
+    - tumannyy_shag
+    level: 2
+    school: conjuration
+    file: entities/spells/tumannyy_shag.md
+  tma:
+    en: tma
+    ru: Тьма
+    aliases:
+    - тьма
+    - тьма
+    - tma
+    level: 2
+    school: evocation
+    file: entities/spells/tma.md
+  ubezhishche:
+    en: ubezhishche
+    ru: Убежище
+    aliases:
+    - убежище
+    - убежище
+    - ubezhishche
+    level: 1
+    school: abjuration
+    file: entities/spells/ubezhishche.md
+  uderzhanie_lichnosti:
+    en: uderzhanie_lichnosti
+    ru: Удержание Личности
+    aliases:
+    - удержание личности
+    - удержание личности
+    - uderzhanie_lichnosti
+    level: 2
+    school: enchantment
+    file: entities/spells/uderzhanie_lichnosti.md
+  uderzhanie_chudovishcha:
+    en: uderzhanie_chudovishcha
+    ru: Удержание Чудовища
+    aliases:
+    - удержание чудовища
+    - удержание чудовища
+    - uderzhanie_chudovishcha
+    level: 5
+    school: enchantment
+    file: entities/spells/uderzhanie_chudovishcha.md
+  uzilishche:
+    en: uzilishche
+    ru: Узилище
+    aliases:
+    - узилище
+    - узилище
+    - uzilishche
+    level: 7
+    school: evocation
+    file: entities/spells/uzilishche.md
+  umirotvorenie:
+    en: umirotvorenie
+    ru: Умиротворение
+    aliases:
+    - умиротворение
+    - умиротворение
+    - umirotvorenie
+    level: 2
+    school: enchantment
+    file: entities/spells/umirotvorenie.md
+  uskorenie:
+    en: uskorenie
+    ru: Ускорение
+    aliases:
+    - ускорение
+    - ускорение
+    - uskorenie
+    level: 3
+    school: transmutation
+    file: entities/spells/uskorenie.md
+  sleep:
+    en: sleep
+    ru: Усыпление
+    aliases:
+    - усыпление
+    - усыпление
+    - sleep
+    level: 1
+    school: enchantment
+    file: entities/spells/sleep.md
+  usykhanie:
+    en: usykhanie
+    ru: Усыхание
+    aliases:
+    - усыхание
+    - усыхание
+    - usykhanie
+    level: 4
+    school: necromancy
+    file: entities/spells/usykhanie.md
+  ukhod_v_inoy_mir:
+    en: ukhod_v_inoy_mir
+    ru: Уход В Иной Мир
+    aliases:
+    - уход в иной мир
+    - уход в иной мир
+    - ukhod_v_inoy_mir
+    level: 7
+    school: conjuration
+    file: entities/spells/ukhod_v_inoy_mir.md
+  falshivyy_dvoynik:
+    en: falshivyy_dvoynik
+    ru: Фальшивый Двойник
+    aliases:
+    - фальшивый двойник
+    - фальшивый двойник
+    - falshivyy_dvoynik
+    level: 5
+    school: illusion
+    file: entities/spells/falshivyy_dvoynik.md
+  khozhdenie_po_vetru:
+    en: khozhdenie_po_vetru
+    ru: Хождение По Ветру
+    aliases:
+    - хождение по ветру
+    - хождение по ветру
+    - khozhdenie_po_vetru
+    level: 6
+    school: transmutation
+    file: entities/spells/khozhdenie_po_vetru.md
+  khozhdenie_po_vode:
+    en: khozhdenie_po_vode
+    ru: Хождение По Воде
+    aliases:
+    - хождение по воде
+    - хождение по воде
+    - khozhdenie_po_vode
+    level: 3
+    school: преобразование (ритуал)
+    file: entities/spells/khozhdenie_po_vode.md
+  tsvetnoy_sharik:
+    en: tsvetnoy_sharik
+    ru: Цветной Шарик
+    aliases:
+    - цветной шарик
+    - цветной шарик
+    - tsvetnoy_sharik
+    level: 1
+    school: evocation
+    file: entities/spells/tsvetnoy_sharik.md
+  tsepkaya_loza:
+    en: tsepkaya_loza
+    ru: Цепкая Лоза
+    aliases:
+    - цепкая лоза
+    - цепкая лоза
+    - tsepkaya_loza
+    level: 4
+    school: conjuration
+    file: entities/spells/tsepkaya_loza.md
+  tsunami:
+    en: tsunami
+    ru: Цунами
+    aliases:
+    - цунами
+    - цунами
+    - tsunami
+    level: 8
+    school: conjuration
+    file: entities/spells/tsunami.md
+  shield_of_faith:
+    en: shield_of_faith
+    ru: Щит Веры
+    aliases:
+    - щит веры
+    - щит веры
+    - shield_of_faith
+    level: 1
+    school: abjuration
+    file: entities/spells/shield_of_faith.md
+  lightning_bolt:
+    en: lightning_bolt
+    ru: Молния
+    aliases:
+    - молния
+    - lightning_bolt
+    level: 3
+    school: evocation
+    file: entities/spells/lightning_bolt.md

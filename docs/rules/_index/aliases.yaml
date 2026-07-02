@@ -1,0 +1,462 @@
+layout: agent-v2
+aliases:
+  дварф: dwarf
+  dwarf: dwarf
+  эльф: elf
+  elf: elf
+  полурослик: halfling
+  halfling: halfling
+  человек: human
+  human: human
+  драконорождённый: dragonborn
+  dragonborn: dragonborn
+  гном: gnome
+  gnome: gnome
+  полуэльф: half_elf
+  half_elf: half_elf
+  полуорк: half_orc
+  half_orc: half_orc
+  тифлинг: tiefling
+  tiefling: tiefling
+  варвар: barbarian
+  barbarian: barbarian
+  бард: bard
+  bard: bard
+  жрец: cleric
+  cleric: cleric
+  друид: druid
+  druid: druid
+  воин: fighter
+  fighter: fighter
+  монах: monk
+  monk: monk
+  паладин: paladin
+  paladin: paladin
+  следопыт: ranger
+  ranger: ranger
+  плут: rogue
+  rogue: rogue
+  чародей: sorcerer
+  sorcerer: sorcerer
+  колдун: warlock
+  warlock: warlock
+  волшебник: wizard
+  wizard: wizard
+  прислужник: acolyte
+  acolyte: acolyte
+  шарлатан: charlatan
+  charlatan: charlatan
+  преступник: criminal
+  criminal: criminal
+  артист: entertainer
+  entertainer: entertainer
+  народный герой: folk_hero
+  folk_hero: folk_hero
+  гильдейский ремесленник: guild_artisan
+  guild_artisan: guild_artisan
+  отшельник: hermit
+  hermit: hermit
+  благородный: noble
+  noble: noble
+  чужеземец: outlander
+  outlander: outlander
+  мудрец: sage
+  sage: sage
+  моряк: sailor
+  sailor: sailor
+  солдат: soldier
+  soldier: soldier
+  беспризорник: urchin
+  urchin: urchin
+  бдительный: alert
+  alert: alert
+  боевой заклинатель: war_caster
+  war_caster: war_caster
+  борец: grappler
+  grappler: grappler
+  артистичный: actor
+  actor: actor
+  везунчик: lucky
+  lucky: lucky
+  верховой боец: mounted_combatant
+  mounted_combatant: mounted_combatant
+  внимательный: observant
+  observant: observant
+  воинский адепт: martial_adept
+  martial_adept: martial_adept
+  знаток тяжёлых доспехов: heavily_armored
+  heavily_armored: heavily_armored
+  использование двух оружий: dual_wielder
+  dual_wielder: dual_wielder
+  воодушевляющий лидер: inspiring_leader
+  inspiring_leader: inspiring_leader
+  дикий атакующий: savage_attacker
+  savage_attacker: savage_attacker
+  исследователь подземелий: dungeon_delver
+  dungeon_delver: dungeon_delver
+  драчун: tavern_brawler
+  tavern_brawler: tavern_brawler
+  крепкий: tough
+  tough: tough
+  лекарь: healer
+  healer: healer
+  знаток лёгких доспехов: lightly_armored
+  lightly_armored: lightly_armored
+  знаток средних доспехов: moderately_armored
+  moderately_armored: moderately_armored
+  мастер большого оружия: great_weapon_master
+  great_weapon_master: great_weapon_master
+  мастер древкового оружия: polearm_master
+  polearm_master: polearm_master
+  мастер оружия: weapon_master
+  weapon_master: weapon_master
+  мастер средних доспехов: medium_armor_master
+  medium_armor_master: medium_armor_master
+  мастер тяжёлых доспехов: heavy_armor_master
+  heavy_armor_master: heavy_armor_master
+  налётчик: charger
+  charger: charger
+  мастер щитов: shield_master
+  shield_master: shield_master
+  оборонительный дуэлянт: defensive_duelist
+  defensive_duelist: defensive_duelist
+  одарённый: skilled
+  skilled: skilled
+  отличная память: keen_mind
+  keen_mind: keen_mind
+  меткие заклинания: spell_sniper
+  spell_sniper: spell_sniper
+  меткий стрелок: sharpshooter
+  sharpshooter: sharpshooter
+  подвижный: mobile
+  mobile: mobile
+  посвящённый в магию: magic_initiate
+  magic_initiate: magic_initiate
+  проныра: skulker
+  skulker: skulker
+  страж: sentinel
+  sentinel: sentinel
+  ритуальный заклинатель: ritual_caster
+  ritual_caster: ritual_caster
+  стихийный адепт: elemental_adept
+  elemental_adept: elemental_adept
+  убийца магов: mage_slayer
+  mage_slayer: mage_slayer
+  устойчивый: resilient
+  resilient: resilient
+  эксперт в арбалетах: crossbow_expert
+  crossbow_expert: crossbow_expert
+  языковед: linguist
+  linguist: linguist
+  стойкий: durable
+  durable: durable
+  атлетичный: athlete
+  athlete: athlete
+  введение: 00-introduction
+  00-introduction: 00-introduction
+  создание персонажа: 01-character-creation
+  01-character-creation: 01-character-creation
+  расы: 02-races
+  02-races: 02-races
+  классы: 03-classes
+  03-classes: 03-classes
+  подклассы: 03-subclasses
+  03-subclasses: 03-subclasses
+  личность и предыстория: 04-backgrounds
+  04-backgrounds: 04-backgrounds
+  снаряжение: 05-equipment
+  05-equipment: 05-equipment
+  справочник снаряжения: 05-equipment-reference
+  05-equipment-reference: 05-equipment-reference
+  индивидуальные опции: 06-individual-options
+  06-individual-options: 06-individual-options
+  мультиклассирование: 06-multiclass
+  06-multiclass: 06-multiclass
+  черты: 06-feats
+  06-feats: 06-feats
+  использование характеристик: 07-ability-scores
+  07-ability-scores: 07-ability-scores
+  приключения: 08-adventures
+  08-adventures: 08-adventures
+  сражение: 09-combat
+  09-combat: 09-combat
+  использование заклинаний: 10-spellcasting
+  10-spellcasting: 10-spellcasting
+  заклинания: 11-spells
+  11-spells: 11-spells
+  приложения: appendices
+  appendices: appendices
+  аура живучести: aura_of_vitality
+  аура жизни: aura_of_life
+  аура очищения: aura_of_purity
+  аура святости: aura_svyatosti
+  бесследное передвижение: pass_without_trace
+  благословение: bless
+  божественное благоволение: bozhestvennoe_blagovolenie
+  божественное оружие: bozhestvennoe_oruzhie
+  божественное слово: bozhestvennoe_slovo
+  быстрый колчан: bystryy_kolchan
+  великолепный особняк морденкайнена: velikolepnyy_osobnyak_mordenkaynena
+  вещий сон: veshchiy_son
+  видение невидимого: videnie_nevidimogo
+  власть над погодой: vlast_nad_pogodoy
+  возрождение: vozrozhdenie
+  волна грома: volna_groma
+  волшебная стрела: magic_missile
+  волшебные уста: major_image
+  волшебный замок: volshebnyy_zamok
+  волшебный сосуд: volshebnyy_sosud
+  воображаемая сила: voobrazhaemaya_sila
+  воображаемый убийца: voobrazhaemyy_ubiytsa
+  воскрешение: resurrection
+  воспламеняющаяся туча: vosplamenyayushchayasya_tucha
+  восставший труп: vosstavshiy_trup
+  вызов на дуэль: vyzov_na_duel
+  высшая невидимость: vysshaya_nevidimost
+  высшее восстановление: vysshee_vosstanovlenie
+  газообразная форма: gaseous_form
+  героизм: heroism
+  гигантское насекомое: gigantskoe_nasekomoe
+  гипнотический узор: gipnoticheskiy_uzor
+  гневная кара: gnevnaya_kara
+  голод хадара: golod_khadara
+  горящий клинок: goryashchiy_klinok
+  град: grad
+  град шипов: grad_shipov
+  гроза гнева: groza_gneva
+  движение почвы: dvizhenie_pochvy
+  двойник: dvoynik
+  демиплан: demiplan
+  диссонирующий шёпот: dissoniruyushchiy_shepot
+  длань бигби: dlan_bigbi
+  дневной свет: dnevnoy_svet
+  доспех агатиса: dospekh_agatisa
+  доспехи мага: dospekhi_maga
+  дребезги: drebezgi
+  древесный путь: drevesnyy_put
+  дромиджево появление: dromidzhevo_poyavlenie
+  дружба с животными: druzhba_s_zhivotnymi
+  животные чувства: zhivotnye_chuvstva
+  жуткий смех таши: zhutkiy_smekh_tashi
+  завеса стрел: zavesa_strel
+  заданная иллюзия: zadannaya_illyuziya
+  замедление: zamedlenie
+  замедленный огненный шар: zamedlennyy_ognennyy_shar
+  запрет: zapret
+  заражение: zarazhenie
+  заточение: zatochenie
+  защита от добра и зла: zashchita_ot_dobra_i_zla
+  защита от смерти: zashchita_ot_smerti
+  защита от энергии: zashchita_ot_energii
+  защита от яда: zashchita_ot_yada
+  землетрясение: zemletryasenie
+  зловонное облако: zlovonnoe_oblako
+  знак: znak
+  изгнание: izgnanie
+  изгоняющая кара: izgonyayushchaya_kara
+  изготовление: izgotovlenie
+  изменение памяти: izmenenie_pamyati
+  изменение тяготения: izmenenie_tyagoteniya
+  изменение формы камня: izmenenie_formy_kamnya
+  изоляция: izolyatsiya
+  исполнение желаний: ispolnenie_zhelaniy
+  истинное воскрешение: istinnoe_voskreshenie
+  истинное зрение: istinnoe_zrenie
+  каменная кожа: kamennaya_kozha
+  каменная стена: kamennaya_stena
+  клеймящая кара: kleymyashchaya_kara
+  конус холода: konus_kholoda
+  корона безумия: korona_bezumiya
+  круг смерти: krug_smerti
+  круг телепортации: krug_teleportatsii
+  лабиринт: labirint
+  левитация: levitatsiya
+  ледяная стена: ledyanaya_stena
+  леомундов потайной сундук: leomundov_potaynoy_sunduk
+  леомундова хижина: leomundova_khizhina
+  лечащее слово: healing_word
+  лечение ран: cure_wounds
+  лунный луч: lunnyy_luch
+  луч болезни: luch_bolezni
+  луч слабости: luch_slabosti
+  магический глаз: magicheskiy_glaz
+  магическое оружие: magicheskoe_oruzhie
+  малое восстановление: maloe_vosstanovlenie
+  мантия крестоносца: mantiya_krestonostsa
+  маскировка: maskirovka
+  маяк надежды: mayak_nadezhdy
+  ментальная связь рэри: mentalnaya_svyaz_reri
+  мерцание: mertsanie
+  метеоритный дождь: meteor_swarm
+  метка охотника: metka_okhotnika
+  меч морденкайнена: mech_mordenkaynena
+  мираж: mirazh
+  множественное внушение: mnozhestvennoe_vnushenie
+  молебен лечения: moleben_lecheniya
+  множественное лечение ран: mnozhestvennoe_lechenie_ran
+  молния: molniya
+  наблюдение: nablyudenie
+  нанесение ран: nanesenie_ran
+  направленный снаряд: napravlennyy_snaryad
+  находчивость: nakhodchivost
+  нашествие насекомых: nashestvie_nasekomykh
+  небесный огонь: nebesnyy_ogon
+  невидимое письмо: nevidimoe_pismo
+  невидимость: invisibility
+  невидимый слуга: nevidimyy_sluga
+  необнаружимость: neobnaruzhimost
+  нетленные останки: netlennye_ostanki
+  нистулова ложная магия: nistulova_lozhnaya_magiya
+  обет: obet
+  обнаружение магии: detect_magic
+  обнаружение мыслей: obnaruzhenie_mysley
+  образ: obraz
+  общение: obshchenie
+  общение с природой: obshchenie_s_prirodoy
+  оглушающая кара: oglushayushchaya_kara
+  огненная буря: ognennaya_burya
+  огненная стена: ognennaya_stena
+  огненные ладони: burning_hands
+  огненный шар: fireball
+  огонь фей: faerie_fire
+  оживление: ozhivlenie
+  окаменение: okamenenie
+  опутывающий удар: oputyvayushchiy_udar
+  опутывание: oputyvanie
+  остановка времени: ostanovka_vremeni
+  отилюков ледяной шар: otilyukov_ledyanoy_shar
+  отилюков упругий шар: otilyukov_uprugiy_shar
+  открывание: otkryvanie
+  отражения: otrazheniya
+  охранные руны: okhrannye_runy
+  очарование личности: charm_person
+  очищение пищи и питья: ochishchenie_pishchi_i_pitya
+  палящая кара: palyashchaya_kara
+  палящий луч: palyashchiy_luch
+  паук: pauk
+  паутина: pautina
+  переносящая дверь: perenosyashchaya_dver
+  перст смерти: perst_smerti
+  планарные узы: planarnye_uzy
+  планарный союзник: planarnyy_soyuznik
+  пляшущая молния: plyashushchaya_molniya
+  подводное дыхание: podvodnoe_dykhanie
+  подмога: podmoga
+  подобие: podobie
+  подсматривание: podsmatrivanie
+  подчинение зверя: podchinenie_zverya
+  подчинение личности: podchinenie_lichnosti
+  подчинение чудовища: podchinenie_chudovishcha
+  поиск животных или растений: poisk_zhivotnykh_ili_rasteniy
+  поиск ловушек: poisk_lovushek
+  поиск пути: poisk_puti
+  поиск скакуна: poisk_skakuna
+  поиск существа: poisk_sushchestva
+  поиск фамильяра: poisk_familyara
+  полёт: fly
+  полное исцеление: polnoe_istselenie
+  полное превращение: polnoe_prevrashchenie
+  понимание языков: ponimanie_yazykov
+  порча: porcha
+  порыв ветра: poryv_vetra
+  послание: poslanie
+  поспешное отступление: pospeshnoe_otstuplenie
+  почтовое животное: pochtovoe_zhivotnoe
+  превращение в животных: prevrashchenie_v_zhivotnykh
+  преграда магии: pregrada_magii
+  предвидение: predvidenie
+  предосторожность: predostorozhnost
+  предсказание: predskazanie
+  призыв животных: prizyv_zhivotnykh
+  призыв заграждения: prizyv_zagrazhdeniya
+  призыв залпа: prizyv_zalpa
+  призыв лесных обитателей: prizyv_lesnykh_obitateley
+  призыв малых элементалей: prizyv_malykh_elementaley
+  призыв молнии: prizyv_molnii
+  призыв небожителя: prizyv_nebozhitelya
+  призыв феи: prizyv_fei
+  призыв элементаля: prizyv_elementalya
+  приказ: prikaz
+  прикосновение вампира: prikosnovenie_vampira
+  принуждение: prinuzhdenie
+  призрачный скакун: prizrachnyy_skakun
+  притворная смерть: pritvornaya_smert
+  притворство: pritvorstvo
+  пробуждение разума: probuzhdenie_razuma
+  проекция: proektsiya
+  проклятие: proklyatie
+  прыжок: pryzhok
+  псевдожизнь: psevdozhizn
+  путешествие через растения: puteshestvie_cherez_rasteniya
+  пылающий шар: pylayushchiy_shar
+  радужная стена: raduzhnaya_stena
+  радужные брызги: raduzhnye_bryzgi
+  разговор с животными: razgovor_s_zhivotnymi
+  разговор с мёртвыми: razgovor_s_mertvymi
+  разговор с растениями: razgovor_s_rasteniyami
+  размытый образ: razmytyy_obraz
+  разрушительная волна: razrushitelnaya_volna
+  разящее око: razyashchee_oko
+  раскалённый металл: raskalennyy_metall
+  распад: raspad
+  регенерация: regeneratsiya
+  рассеивание магии: dispel_magic
+  речь златоуста: rech_zlatousta
+  рост растений: rost_rasteniy
+  руки хадара: ruki_khadara
+  сверкающие брызги: sverkayushchie_bryzgi
+  свобода перемещения: svoboda_peremeshcheniya
+  связь с иным миром: svyaz_s_inym_mirom
+  святилище: svyatilishche
+  сглаз: sglaz
+  сигнал тревоги: signal_trevogi
+  силовая стена: silovaya_stena
+  скольжение: skolzhenie
+  слабоумие: slaboumie
+  слияние с камнем: sliyanie_s_kamnem
+  смертный ужас: smertnyy_uzhas
+  смятение: smyatenie
+  снятие проклятья: snyatie_proklyatya
+  создание прохода: sozdanie_prokhoda
+  сокрытие разума: sokrytie_razuma
+  солнечный луч: solnechnyy_luch
+  солнечный ожог: solnechnyy_ozhog
+  сотворение: sotvorenie
+  сотворение или уничтожение воды: sotvorenie_ili_unichtozhenie_vody
+  сотворение нежити: sotvorenie_nezhiti
+  сотворение пищи и воды: sotvorenie_pishchi_i_vody
+  стена ветров: stena_vetrov
+  стена клинков: stena_klinkov
+  стихийное оружие: stikhiynoe_oruzhie
+  страж веры: strazh_very
+  стражи: strazhi
+  сфера неуязвимости: sfera_neuyazvimosti
+  таинственный мираж: tainstvennyy_mirazh
+  телекинез: telekinez
+  телепатия: telepatiya
+  телепортация: teleport
+  тёмное зрение: temnoe_zrenie
+  тензеров парящий диск: tenzerov_paryashchiy_disk
+  терновая стена: ternovaya_stena
+  тишина: tishina
+  трюк с верёвкой: tryuk_s_verevkoy
+  туманное облако: tumannoe_oblako
+  туманный шаг: tumannyy_shag
+  тьма: tma
+  убежище: ubezhishche
+  удержание личности: uderzhanie_lichnosti
+  удержание чудовища: uderzhanie_chudovishcha
+  узилище: uzilishche
+  умиротворение: umirotvorenie
+  ускорение: uskorenie
+  усыпление: sleep
+  усыхание: usykhanie
+  уход в иной мир: ukhod_v_inoy_mir
+  фальшивый двойник: falshivyy_dvoynik
+  хождение по ветру: khozhdenie_po_vetru
+  хождение по воде: khozhdenie_po_vode
+  цветной шарик: tsvetnoy_sharik
+  цепкая лоза: tsepkaya_loza
+  цунами: tsunami
+  щит веры: shield_of_faith
+  молниевая стрела: lightning_bolt

@@ -1,0 +1,1118 @@
+layout: agent-v2
+entities:
+  dwarf:
+    type: race
+    en: dwarf
+    ru: Дварф
+    aliases:
+    - дварф
+    - dwarf
+    file: entities/races/dwarf.md
+    pages:
+    - 18
+    - 20
+    mud_status: partial
+  elf:
+    type: race
+    en: elf
+    ru: Эльф
+    aliases:
+    - эльф
+    - elf
+    file: entities/races/elf.md
+    pages:
+    - 21
+    - 25
+    mud_status: partial
+  halfling:
+    type: race
+    en: halfling
+    ru: Полурослик
+    aliases:
+    - полурослик
+    - halfling
+    file: entities/races/halfling.md
+    pages:
+    - 26
+    - 28
+    mud_status: planned
+  human:
+    type: race
+    en: human
+    ru: Человек
+    aliases:
+    - человек
+    - human
+    file: entities/races/human.md
+    pages:
+    - 29
+    - 31
+    mud_status: partial
+  dragonborn:
+    type: race
+    en: dragonborn
+    ru: Драконорождённый
+    aliases:
+    - драконорождённый
+    - dragonborn
+    file: entities/races/dragonborn.md
+    pages:
+    - 32
+    - 34
+    mud_status: planned
+  gnome:
+    type: race
+    en: gnome
+    ru: Гном
+    aliases:
+    - гном
+    - gnome
+    file: entities/races/gnome.md
+    pages:
+    - 35
+    - 37
+    mud_status: planned
+  half_elf:
+    type: race
+    en: half_elf
+    ru: Полуэльф
+    aliases:
+    - полуэльф
+    - half_elf
+    file: entities/races/half_elf.md
+    pages:
+    - 38
+    - 39
+    mud_status: planned
+  half_orc:
+    type: race
+    en: half_orc
+    ru: Полуорк
+    aliases:
+    - полуорк
+    - half_orc
+    file: entities/races/half_orc.md
+    pages:
+    - 40
+    - 41
+    mud_status: partial
+  tiefling:
+    type: race
+    en: tiefling
+    ru: Тифлинг
+    aliases:
+    - тифлинг
+    - tiefling
+    file: entities/races/tiefling.md
+    pages:
+    - 42
+    - 44
+    mud_status: planned
+  barbarian:
+    type: class
+    en: barbarian
+    ru: Варвар
+    aliases:
+    - варвар
+    - barbarian
+    file: entities/classes/barbarian.md
+    pages:
+    - 46
+    - 50
+    mud_status: planned
+  bard:
+    type: class
+    en: bard
+    ru: Бард
+    aliases:
+    - бард
+    - bard
+    file: entities/classes/bard.md
+    pages:
+    - 51
+    - 55
+    mud_status: partial
+  cleric:
+    type: class
+    en: cleric
+    ru: Жрец
+    aliases:
+    - жрец
+    - cleric
+    file: entities/classes/cleric.md
+    pages:
+    - 56
+    - 63
+    mud_status: partial
+  druid:
+    type: class
+    en: druid
+    ru: Друид
+    aliases:
+    - друид
+    - druid
+    file: entities/classes/druid.md
+    pages:
+    - 64
+    - 69
+    mud_status: planned
+  fighter:
+    type: class
+    en: fighter
+    ru: Воин
+    aliases:
+    - воин
+    - fighter
+    file: entities/classes/fighter.md
+    pages:
+    - 70
+    - 75
+    mud_status: partial
+  monk:
+    type: class
+    en: monk
+    ru: Монах
+    aliases:
+    - монах
+    - monk
+    file: entities/classes/monk.md
+    pages:
+    - 76
+    - 81
+    mud_status: planned
+  paladin:
+    type: class
+    en: paladin
+    ru: Паладин
+    aliases:
+    - паладин
+    - paladin
+    file: entities/classes/paladin.md
+    pages:
+    - 82
+    - 88
+    mud_status: planned
+  ranger:
+    type: class
+    en: ranger
+    ru: Следопыт
+    aliases:
+    - следопыт
+    - ranger
+    file: entities/classes/ranger.md
+    pages:
+    - 89
+    - 93
+    mud_status: planned
+  rogue:
+    type: class
+    en: rogue
+    ru: Плут
+    aliases:
+    - плут
+    - rogue
+    file: entities/classes/rogue.md
+    pages:
+    - 94
+    - 98
+    mud_status: partial
+  sorcerer:
+    type: class
+    en: sorcerer
+    ru: Чародей
+    aliases:
+    - чародей
+    - sorcerer
+    file: entities/classes/sorcerer.md
+    pages:
+    - 99
+    - 104
+    mud_status: planned
+  warlock:
+    type: class
+    en: warlock
+    ru: Колдун
+    aliases:
+    - колдун
+    - warlock
+    file: entities/classes/warlock.md
+    pages:
+    - 105
+    - 111
+    mud_status: planned
+  wizard:
+    type: class
+    en: wizard
+    ru: Волшебник
+    aliases:
+    - волшебник
+    - wizard
+    file: entities/classes/wizard.md
+    pages:
+    - 112
+    - 120
+    mud_status: planned
+  acolyte:
+    type: background
+    en: acolyte
+    ru: Прислужник
+    aliases:
+    - прислужник
+    - acolyte
+    file: entities/backgrounds/acolyte.md
+    pages:
+    - 125
+    - 127
+    mud_status: partial
+  charlatan:
+    type: background
+    en: charlatan
+    ru: Шарлатан
+    aliases:
+    - шарлатан
+    - charlatan
+    file: entities/backgrounds/charlatan.md
+    pages:
+    - 127
+    - 128
+    mud_status: partial
+  criminal:
+    type: background
+    en: criminal
+    ru: Преступник
+    aliases:
+    - преступник
+    - criminal
+    file: entities/backgrounds/criminal.md
+    pages:
+    - 128
+    - 129
+    mud_status: partial
+  entertainer:
+    type: background
+    en: entertainer
+    ru: Артист
+    aliases:
+    - артист
+    - entertainer
+    file: entities/backgrounds/entertainer.md
+    pages:
+    - 129
+    - 130
+    mud_status: partial
+  folk_hero:
+    type: background
+    en: folk_hero
+    ru: Народный герой
+    aliases:
+    - народный герой
+    - folk_hero
+    file: entities/backgrounds/folk_hero.md
+    pages:
+    - 130
+    - 131
+    mud_status: partial
+  guild_artisan:
+    type: background
+    en: guild_artisan
+    ru: Гильдейский ремесленник
+    aliases:
+    - гильдейский ремесленник
+    - guild_artisan
+    file: entities/backgrounds/guild_artisan.md
+    pages:
+    - 131
+    - 132
+    mud_status: partial
+  hermit:
+    type: background
+    en: hermit
+    ru: Отшельник
+    aliases:
+    - отшельник
+    - hermit
+    file: entities/backgrounds/hermit.md
+    pages:
+    - 132
+    - 133
+    mud_status: partial
+  noble:
+    type: background
+    en: noble
+    ru: Благородный
+    aliases:
+    - благородный
+    - noble
+    file: entities/backgrounds/noble.md
+    pages:
+    - 133
+    - 134
+    mud_status: partial
+  outlander:
+    type: background
+    en: outlander
+    ru: Чужеземец
+    aliases:
+    - чужеземец
+    - outlander
+    file: entities/backgrounds/outlander.md
+    pages:
+    - 134
+    - 135
+    mud_status: partial
+  sage:
+    type: background
+    en: sage
+    ru: Мудрец
+    aliases:
+    - мудрец
+    - sage
+    file: entities/backgrounds/sage.md
+    pages:
+    - 135
+    - 136
+    mud_status: partial
+  sailor:
+    type: background
+    en: sailor
+    ru: Моряк
+    aliases:
+    - моряк
+    - sailor
+    file: entities/backgrounds/sailor.md
+    pages:
+    - 136
+    - 137
+    mud_status: partial
+  soldier:
+    type: background
+    en: soldier
+    ru: Солдат
+    aliases:
+    - солдат
+    - soldier
+    file: entities/backgrounds/soldier.md
+    pages:
+    - 137
+    - 138
+    mud_status: partial
+  urchin:
+    type: background
+    en: urchin
+    ru: Беспризорник
+    aliases:
+    - беспризорник
+    - urchin
+    file: entities/backgrounds/urchin.md
+    pages:
+    - 138
+    - 142
+    mud_status: partial
+  alert:
+    type: feat
+    en: alert
+    ru: Бдительный
+    aliases:
+    - бдительный
+    - alert
+    file: entities/feats/alert.md
+    pages:
+    - 166
+    - 172
+    mud_status: partial
+  war_caster:
+    type: feat
+    en: war_caster
+    ru: Боевой Заклинатель
+    aliases:
+    - боевой заклинатель
+    - war_caster
+    file: entities/feats/war_caster.md
+    pages:
+    - 166
+    - 172
+    mud_status: partial
+  grappler:
+    type: feat
+    en: grappler
+    ru: Борец
+    aliases:
+    - борец
+    - grappler
+    file: entities/feats/grappler.md
+    pages:
+    - 166
+    - 172
+    mud_status: partial
+  actor:
+    type: feat
+    en: actor
+    ru: Артистичный
+    aliases:
+    - артистичный
+    - actor
+    file: entities/feats/actor.md
+    pages:
+    - 166
+    - 172
+    mud_status: partial
+  lucky:
+    type: feat
+    en: lucky
+    ru: Везунчик
+    aliases:
+    - везунчик
+    - lucky
+    file: entities/feats/lucky.md
+    pages:
+    - 166
+    - 172
+    mud_status: partial
+  mounted_combatant:
+    type: feat
+    en: mounted_combatant
+    ru: Верховой Боец
+    aliases:
+    - верховой боец
+    - mounted_combatant
+    file: entities/feats/mounted_combatant.md
+    pages:
+    - 166
+    - 172
+    mud_status: partial
+  observant:
+    type: feat
+    en: observant
+    ru: Внимательный
+    aliases:
+    - внимательный
+    - observant
+    file: entities/feats/observant.md
+    pages:
+    - 166
+    - 172
+    mud_status: partial
+  martial_adept:
+    type: feat
+    en: martial_adept
+    ru: Воинский Адепт
+    aliases:
+    - воинский адепт
+    - martial_adept
+    file: entities/feats/martial_adept.md
+    pages:
+    - 166
+    - 172
+    mud_status: partial
+  heavily_armored:
+    type: feat
+    en: heavily_armored
+    ru: Знаток Тяжёлых Доспехов
+    aliases:
+    - знаток тяжёлых доспехов
+    - heavily_armored
+    file: entities/feats/heavily_armored.md
+    pages:
+    - 166
+    - 172
+    mud_status: partial
+  dual_wielder:
+    type: feat
+    en: dual_wielder
+    ru: Использование Двух Оружий
+    aliases:
+    - использование двух оружий
+    - dual_wielder
+    file: entities/feats/dual_wielder.md
+    pages:
+    - 166
+    - 172
+    mud_status: partial
+  inspiring_leader:
+    type: feat
+    en: inspiring_leader
+    ru: Воодушевляющий Лидер
+    aliases:
+    - воодушевляющий лидер
+    - inspiring_leader
+    file: entities/feats/inspiring_leader.md
+    pages:
+    - 166
+    - 172
+    mud_status: partial
+  savage_attacker:
+    type: feat
+    en: savage_attacker
+    ru: Дикий Атакующий
+    aliases:
+    - дикий атакующий
+    - savage_attacker
+    file: entities/feats/savage_attacker.md
+    pages:
+    - 166
+    - 172
+    mud_status: partial
+  dungeon_delver:
+    type: feat
+    en: dungeon_delver
+    ru: Исследователь Подземелий
+    aliases:
+    - исследователь подземелий
+    - dungeon_delver
+    file: entities/feats/dungeon_delver.md
+    pages:
+    - 166
+    - 172
+    mud_status: partial
+  tavern_brawler:
+    type: feat
+    en: tavern_brawler
+    ru: Драчун
+    aliases:
+    - драчун
+    - tavern_brawler
+    file: entities/feats/tavern_brawler.md
+    pages:
+    - 166
+    - 172
+    mud_status: partial
+  tough:
+    type: feat
+    en: tough
+    ru: Крепкий
+    aliases:
+    - крепкий
+    - tough
+    file: entities/feats/tough.md
+    pages:
+    - 166
+    - 172
+    mud_status: partial
+  healer:
+    type: feat
+    en: healer
+    ru: Лекарь
+    aliases:
+    - лекарь
+    - healer
+    file: entities/feats/healer.md
+    pages:
+    - 166
+    - 172
+    mud_status: partial
+  lightly_armored:
+    type: feat
+    en: lightly_armored
+    ru: Знаток Лёгких Доспехов
+    aliases:
+    - знаток лёгких доспехов
+    - lightly_armored
+    file: entities/feats/lightly_armored.md
+    pages:
+    - 166
+    - 172
+    mud_status: partial
+  moderately_armored:
+    type: feat
+    en: moderately_armored
+    ru: Знаток Средних Доспехов
+    aliases:
+    - знаток средних доспехов
+    - moderately_armored
+    file: entities/feats/moderately_armored.md
+    pages:
+    - 166
+    - 172
+    mud_status: partial
+  great_weapon_master:
+    type: feat
+    en: great_weapon_master
+    ru: Мастер Большого Оружия
+    aliases:
+    - мастер большого оружия
+    - great_weapon_master
+    file: entities/feats/great_weapon_master.md
+    pages:
+    - 166
+    - 172
+    mud_status: partial
+  polearm_master:
+    type: feat
+    en: polearm_master
+    ru: Мастер Древкового Оружия
+    aliases:
+    - мастер древкового оружия
+    - polearm_master
+    file: entities/feats/polearm_master.md
+    pages:
+    - 166
+    - 172
+    mud_status: partial
+  weapon_master:
+    type: feat
+    en: weapon_master
+    ru: Мастер Оружия
+    aliases:
+    - мастер оружия
+    - weapon_master
+    file: entities/feats/weapon_master.md
+    pages:
+    - 166
+    - 172
+    mud_status: partial
+  medium_armor_master:
+    type: feat
+    en: medium_armor_master
+    ru: Мастер Средних Доспехов
+    aliases:
+    - мастер средних доспехов
+    - medium_armor_master
+    file: entities/feats/medium_armor_master.md
+    pages:
+    - 166
+    - 172
+    mud_status: partial
+  heavy_armor_master:
+    type: feat
+    en: heavy_armor_master
+    ru: Мастер Тяжёлых Доспехов
+    aliases:
+    - мастер тяжёлых доспехов
+    - heavy_armor_master
+    file: entities/feats/heavy_armor_master.md
+    pages:
+    - 166
+    - 172
+    mud_status: partial
+  charger:
+    type: feat
+    en: charger
+    ru: Налётчик
+    aliases:
+    - налётчик
+    - charger
+    file: entities/feats/charger.md
+    pages:
+    - 166
+    - 172
+    mud_status: partial
+  shield_master:
+    type: feat
+    en: shield_master
+    ru: Мастер Щитов
+    aliases:
+    - мастер щитов
+    - shield_master
+    file: entities/feats/shield_master.md
+    pages:
+    - 166
+    - 172
+    mud_status: partial
+  defensive_duelist:
+    type: feat
+    en: defensive_duelist
+    ru: Оборонительный Дуэлянт
+    aliases:
+    - оборонительный дуэлянт
+    - defensive_duelist
+    file: entities/feats/defensive_duelist.md
+    pages:
+    - 166
+    - 172
+    mud_status: partial
+  skilled:
+    type: feat
+    en: skilled
+    ru: Одарённый
+    aliases:
+    - одарённый
+    - skilled
+    file: entities/feats/skilled.md
+    pages:
+    - 166
+    - 172
+    mud_status: partial
+  keen_mind:
+    type: feat
+    en: keen_mind
+    ru: Отличная Память
+    aliases:
+    - отличная память
+    - keen_mind
+    file: entities/feats/keen_mind.md
+    pages:
+    - 166
+    - 172
+    mud_status: partial
+  spell_sniper:
+    type: feat
+    en: spell_sniper
+    ru: Меткие Заклинания
+    aliases:
+    - меткие заклинания
+    - spell_sniper
+    file: entities/feats/spell_sniper.md
+    pages:
+    - 166
+    - 172
+    mud_status: partial
+  sharpshooter:
+    type: feat
+    en: sharpshooter
+    ru: Меткий Стрелок
+    aliases:
+    - меткий стрелок
+    - sharpshooter
+    file: entities/feats/sharpshooter.md
+    pages:
+    - 166
+    - 172
+    mud_status: partial
+  mobile:
+    type: feat
+    en: mobile
+    ru: Подвижный
+    aliases:
+    - подвижный
+    - mobile
+    file: entities/feats/mobile.md
+    pages:
+    - 166
+    - 172
+    mud_status: partial
+  magic_initiate:
+    type: feat
+    en: magic_initiate
+    ru: Посвящённый В Магию
+    aliases:
+    - посвящённый в магию
+    - magic_initiate
+    file: entities/feats/magic_initiate.md
+    pages:
+    - 166
+    - 172
+    mud_status: partial
+  skulker:
+    type: feat
+    en: skulker
+    ru: Проныра
+    aliases:
+    - проныра
+    - skulker
+    file: entities/feats/skulker.md
+    pages:
+    - 166
+    - 172
+    mud_status: partial
+  sentinel:
+    type: feat
+    en: sentinel
+    ru: Страж
+    aliases:
+    - страж
+    - sentinel
+    file: entities/feats/sentinel.md
+    pages:
+    - 166
+    - 172
+    mud_status: partial
+  ritual_caster:
+    type: feat
+    en: ritual_caster
+    ru: Ритуальный Заклинатель
+    aliases:
+    - ритуальный заклинатель
+    - ritual_caster
+    file: entities/feats/ritual_caster.md
+    pages:
+    - 166
+    - 172
+    mud_status: partial
+  elemental_adept:
+    type: feat
+    en: elemental_adept
+    ru: Стихийный Адепт
+    aliases:
+    - стихийный адепт
+    - elemental_adept
+    file: entities/feats/elemental_adept.md
+    pages:
+    - 166
+    - 172
+    mud_status: partial
+  mage_slayer:
+    type: feat
+    en: mage_slayer
+    ru: Убийца Магов
+    aliases:
+    - убийца магов
+    - mage_slayer
+    file: entities/feats/mage_slayer.md
+    pages:
+    - 166
+    - 172
+    mud_status: partial
+  resilient:
+    type: feat
+    en: resilient
+    ru: Устойчивый
+    aliases:
+    - устойчивый
+    - resilient
+    file: entities/feats/resilient.md
+    pages:
+    - 166
+    - 172
+    mud_status: partial
+  crossbow_expert:
+    type: feat
+    en: crossbow_expert
+    ru: Эксперт В Арбалетах
+    aliases:
+    - эксперт в арбалетах
+    - crossbow_expert
+    file: entities/feats/crossbow_expert.md
+    pages:
+    - 166
+    - 172
+    mud_status: partial
+  linguist:
+    type: feat
+    en: linguist
+    ru: Языковед
+    aliases:
+    - языковед
+    - linguist
+    file: entities/feats/linguist.md
+    pages:
+    - 166
+    - 172
+    mud_status: partial
+  durable:
+    type: feat
+    en: durable
+    ru: Стойкий
+    aliases:
+    - стойкий
+    - durable
+    file: entities/feats/durable.md
+    pages:
+    - 166
+    - 172
+    mud_status: partial
+  athlete:
+    type: feat
+    en: athlete
+    ru: Атлетичный
+    aliases:
+    - атлетичный
+    - athlete
+    file: entities/feats/athlete.md
+    pages:
+    - 166
+    - 172
+    mud_status: partial
+  00-introduction:
+    type: chapter
+    en: 00-introduction
+    ru: Введение
+    aliases:
+    - введение
+    - 00-introduction
+    file: chapters/00-introduction.md
+    pages:
+    - 5
+    - 9
+    mud_status: partial
+  01-character-creation:
+    type: chapter
+    en: 01-character-creation
+    ru: Создание персонажа
+    aliases:
+    - создание персонажа
+    - 01-character-creation
+    file: chapters/01-character-creation.md
+    pages:
+    - 11
+    - 16
+    mud_status: implemented
+  02-races:
+    type: chapter
+    en: 02-races
+    ru: Расы
+    aliases:
+    - расы
+    - 02-races
+    file: chapters/02-races.md
+    pages:
+    - 17
+    - 44
+    mud_status: partial
+  03-classes:
+    type: chapter
+    en: 03-classes
+    ru: Классы
+    aliases:
+    - классы
+    - 03-classes
+    file: chapters/03-classes.md
+    pages:
+    - 45
+    - 120
+    mud_status: partial
+  03-subclasses:
+    type: chapter
+    en: 03-subclasses
+    ru: Подклассы
+    aliases:
+    - подклассы
+    - 03-subclasses
+    file: chapters/03-subclasses.md
+    pages:
+    - 48
+    - 119
+    mud_status: planned
+  04-backgrounds:
+    type: chapter
+    en: 04-backgrounds
+    ru: Личность и предыстория
+    aliases:
+    - личность и предыстория
+    - 04-backgrounds
+    file: chapters/04-backgrounds.md
+    pages:
+    - 121
+    - 142
+    mud_status: partial
+  05-equipment:
+    type: chapter
+    en: 05-equipment
+    ru: Снаряжение
+    aliases:
+    - снаряжение
+    - 05-equipment
+    file: chapters/05-equipment.md
+    pages:
+    - 143
+    - 161
+    mud_status: partial
+  05-equipment-reference:
+    type: chapter
+    en: 05-equipment-reference
+    ru: Справочник снаряжения
+    aliases:
+    - справочник снаряжения
+    - 05-equipment-reference
+    file: chapters/05-equipment-reference.md
+    pages:
+    - 143
+    - 161
+    mud_status: partial
+  06-individual-options:
+    type: chapter
+    en: 06-individual-options
+    ru: Индивидуальные опции
+    aliases:
+    - индивидуальные опции
+    - 06-individual-options
+    file: chapters/06-individual-options.md
+    pages:
+    - 163
+    - 170
+    mud_status: partial
+  06-multiclass:
+    type: chapter
+    en: 06-multiclass
+    ru: Мультиклассирование
+    aliases:
+    - мультиклассирование
+    - 06-multiclass
+    file: chapters/06-multiclass.md
+    pages:
+    - 163
+    - 165
+    mud_status: forbidden
+  06-feats:
+    type: chapter
+    en: 06-feats
+    ru: Черты
+    aliases:
+    - черты
+    - 06-feats
+    file: chapters/06-feats.md
+    pages:
+    - 166
+    - 172
+    mud_status: partial
+  07-ability-scores:
+    type: chapter
+    en: 07-ability-scores
+    ru: Использование характеристик
+    aliases:
+    - использование характеристик
+    - 07-ability-scores
+    file: chapters/07-ability-scores.md
+    pages:
+    - 173
+    - 180
+    mud_status: partial
+  08-adventures:
+    type: chapter
+    en: 08-adventures
+    ru: Приключения
+    aliases:
+    - приключения
+    - 08-adventures
+    file: chapters/08-adventures.md
+    pages:
+    - 181
+    - 188
+    mud_status: planned
+  09-combat:
+    type: chapter
+    en: 09-combat
+    ru: Сражение
+    aliases:
+    - сражение
+    - 09-combat
+    file: chapters/09-combat.md
+    pages:
+    - 189
+    - 198
+    mud_status: planned
+  10-spellcasting:
+    type: chapter
+    en: 10-spellcasting
+    ru: Использование заклинаний
+    aliases:
+    - использование заклинаний
+    - 10-spellcasting
+    file: chapters/10-spellcasting.md
+    pages:
+    - 201
+    - 206
+    mud_status: planned
+  11-spells:
+    type: chapter
+    en: 11-spells
+    ru: Заклинания
+    aliases:
+    - заклинания
+    - 11-spells
+    file: chapters/11-spells.md
+    pages:
+    - 207
+    - 289
+    mud_status: planned
+  appendices:
+    type: chapter
+    en: appendices
+    ru: Приложения
+    aliases:
+    - приложения
+    - appendices
+    file: chapters/appendices.md
+    pages:
+    - 290
+    - 326
+    mud_status: planned
