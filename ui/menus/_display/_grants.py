@@ -356,14 +356,9 @@ def _print_grant_line(
     grant: dict[str, Any],
     strings: StringsDict,
     language: str,
-    *,
-    inherited: bool = False,
 ) -> None:
     """Вывести одну строку особенности."""
     name = _grant_display_name(grant, strings)
-    if inherited:
-        suffix = get_string(strings, "character.grant_inherited_suffix")
-        name = f"{name}{suffix}"
     desc = _grant_description(grant, strings, language)
     if desc:
         print(

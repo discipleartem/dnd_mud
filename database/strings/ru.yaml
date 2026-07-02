@@ -157,7 +157,6 @@ character:
   grant_affected_perception_checks: "проверки Восприятия"
   grant_condition_direct_sunlight: "прямой солнечный свет"
   grant_terrain_forest: "лесу"
-  grant_inherited_suffix: " (раса)"
   feature_asi_levels: "ур. {levels}"
   grant_damage_poison: "яд"
   stat_line: "{stat}: {value}"

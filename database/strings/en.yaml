@@ -157,7 +157,6 @@ character:
   grant_affected_perception_checks: "Perception checks"
   grant_condition_direct_sunlight: "direct sunlight"
   grant_terrain_forest: "forest"
-  grant_inherited_suffix: " (race)"
   feature_asi_levels: "lvl {levels}"
   grant_damage_poison: "poison"
   stat_line: "{stat}: {value}"
