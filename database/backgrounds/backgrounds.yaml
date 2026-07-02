@@ -40,7 +40,7 @@ backgrounds:
     - type: equipment_item
       items:
       - { kind: equipment, id: emblem, qty: 1 }
-      - { kind: equipment, id: book, qty: 1 }
+      - { kind: equipment, id: prayer_book, qty: 1 }
       - { kind: equipment, id: incense, qty: 5 }
       - { kind: equipment, id: vestments, qty: 1 }
       - { kind: equipment, id: common_clothes, qty: 1 }
@@ -69,6 +69,8 @@ backgrounds:
       description:
         ru: Вторая личность с документами и знакомствами; подделка официальных бумаг.
         en: A second identity with documents and contacts; forge official papers.
+    inventory_tool_pools:
+      - gaming_sets
     grants:
     - type: skill_proficiency
       skills:
@@ -298,7 +300,7 @@ backgrounds:
     - type: equipment_item
       items:
       - { kind: equipment, id: map_case, qty: 1 }
-      - { kind: equipment, id: bedroll, qty: 1 }
+      - { kind: equipment, id: blanket, qty: 1 }
       - { kind: equipment, id: common_clothes, qty: 1 }
       - { kind: tool, id: herbalism_kit, qty: 1 }
   noble:
@@ -343,7 +345,7 @@ backgrounds:
       items:
       - { kind: equipment, id: fine_clothes, qty: 1 }
       - { kind: equipment, id: signet_ring, qty: 1 }
-      - { kind: equipment, id: letter, qty: 1 }
+      - { kind: equipment, id: pedigree_scroll, qty: 1 }
   outlander:
     name:
       ru: Чужеземец
@@ -434,7 +436,7 @@ backgrounds:
       items:
       - { kind: equipment, id: ink, qty: 1 }
       - { kind: equipment, id: quill, qty: 1 }
-      - { kind: equipment, id: paper, qty: 1 }
+      - { kind: equipment, id: parchment, qty: 1 }
       - { kind: weapon, id: dagger, qty: 1 }
       - { kind: equipment, id: letter, qty: 1 }
       - { kind: equipment, id: common_clothes, qty: 1 }
@@ -571,6 +573,7 @@ backgrounds:
     - type: equipment_item
       items:
       - { kind: weapon, id: dagger, qty: 1 }
-      - { kind: equipment, id: map_case, qty: 1 }
+      - { kind: equipment, id: city_map, qty: 1 }
+      - { kind: equipment, id: pet_mouse, qty: 1 }
       - { kind: equipment, id: trinket, qty: 1 }
       - { kind: equipment, id: common_clothes, qty: 1 }

@@ -61,7 +61,7 @@ def test_get_background_equipment_items_acolyte_phb_gear() -> None:
     items = get_background_equipment_items("acolyte")
     ids = {(i["kind"], i["id"]) for i in items}
     assert ("equipment", "emblem") in ids
-    assert ("equipment", "book") in ids
+    assert ("equipment", "prayer_book") in ids
     assert ("equipment", "incense") in ids
     assert ("equipment", "vestments") in ids
     assert ("equipment", "common_clothes") in ids

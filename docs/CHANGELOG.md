@@ -3,6 +3,7 @@
 ## [Unreleased]
 
 ### Changed
+- **Каталоги `database/` ↔ PHB:** расы (`half_orc`, наследие фей; тёмное зрение эльфов в подрасах — дроу 120 фт.), прогрессия 4 классов (fighter/rogue/cleric/bard), grants 9 черт, предыстории (`equipment_item`), снаряжение (lance/pike, фонари, piton, vestments); `language_types.common` в `constants.yaml`
 - **Документация `docs/`:** индекс [`docs/README.md`](README.md); ссылки на `rules/chapters/`; глоссарии → `rules/reference/glossaries/`
 - **Справочник без лора:** карточки рас, предысторий и классов; главы `00`–`03`, `04-backgrounds` — только механика
 - **Справочник для агентов (layout `agent-v2`):** единый [`docs/rules/_index/lookup.yaml`](rules/_index/lookup.yaml) (`by_id`, `by_alias`, `summaries`); поле `quick` в frontmatter; нормализация карточек feats и секций `higher-levels` заклинаний через `scripts/build_rules_index.py`
@@ -17,6 +18,7 @@
 - Стартовое снаряжение предысторий: PHB-наборы (солдат — кости/карты, преступник — тёмная одежда), `inventory_tool_pools`
 - Меню снаряжения класса: владение конкретным оружием (warhammer у дварфа), предупреждение `(Сил N)` для тяжёлых доспехов
 - Карточка персонажа: слоты экипировки всегда видны, PHB-подсказки доспеха/оружия, versatile/ammo/range
+- PHB catalog review: дроу — одно тёмное зрение 120 фт. (базовый grant эльфа перенесён в `high_elf`/`wood_elf`); `supreme_divine_intervention` без неверного `uses_per_rest`; пример acolyte в `DATA_SCHEMA.md` — `prayer_book`
 
 ### Changed
 - MUD_PRD §3.2.1: перекрёстная ссылка на правила расчёта HP по режимам сложности
@@ -25,6 +27,7 @@
 - Git workflow: **все** ветки `merged/*` — только локальный архив; запрещены push/upstream/PR на `origin`; legacy `origin/merged/*` удалять (`dnd-mud-workflow.mdc`, `01-operations.mdc`, `user-protocols.mdc`)
 
 ### Added
+- `tests/test_phb_catalog_alignment.py`, `tests/fixtures/phb_equipment.yaml` — регрессии выравнивания каталогов с PHB (расы, классы, feats, снаряжение)
 - **Спасброски класса:** `saving_throws` в `classes.yaml`, поле `save_proficiencies` на `Character`, `core/checks.py` (`saving_throw_modifier`, `saving_throw`)
 - **Стартовое снаряжение:** `starting_equipment` в YAML, шаг `equipment` при создании, `core/starting_equipment.py`, `core/inventory.py` (инвентарь, экипировка, `compute_ac`)
 - PHB-наборы (`explorers_pack`, `dungeoneers_pack`, …) в `database/equipment/equipment.yaml`

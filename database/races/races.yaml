@@ -81,6 +81,9 @@ races:
         ability_bonuses:
           intelligence: 1
         grants:
+        - range: 60
+          type: darkvision
+          name: Тёмное зрение
         - weapons:
           - longsword
           - rapier
@@ -109,6 +112,9 @@ races:
           wisdom: 1
         speed: 35
         grants:
+        - range: 60
+          type: darkvision
+          name: Тёмное зрение
         - weapons:
           - longsword
           - rapier
@@ -117,9 +123,6 @@ races:
           - shortbow
           type: weapon_proficiency
           name: Эльфийская боевая подготовка
-        - type: speed_bonus
-          amount: 35
-          name: Быстрота
         - skill: stealth
           terrain: forest
           type: advantage
@@ -132,6 +135,9 @@ races:
         ability_bonuses:
           charisma: 1
         grants:
+        - range: 120
+          type: darkvision
+          name: Тёмное зрение
         - spells:
           - name: dancing_lights
             level: 0
@@ -164,12 +170,12 @@ races:
       - perception
       type: skill_proficiency
       name: Обострённые чувства
-    - range: 60
-      type: darkvision
-      name: Тёмное зрение
     - save: charisma
       effect: charm
       type: advantage
+      name: Наследие фей
+    - effect: magical_sleep
+      type: immunity
       name: Наследие фей
     - duration: 4
       effect: full_rest
@@ -275,9 +281,22 @@ races:
           strength: 2
           constitution: 1
         grants:
+        - range: 60
+          type: darkvision
+          name: Тёмное зрение
+        - skills:
+          - intimidation
+          type: skill_proficiency
+          name: Устрашающий вид
         - type: persistent_endurance
           trigger: damage_reduces_to_zero
           effect: remain_at_1_hp
+          name: Неукротимость
+          description: При снижении до 0 хитов, но не убит — остаться с 1 хитом (1/долгий отдых)
         - type: damage_bonus
           trigger: critical_hit
-          effect: reroll_one_damage_die
+          weapon_types:
+          - melee
+          effect: extra_weapon_damage_die
+          name: Свирепые атаки
+          description: При критическом попадании рукопашной атакой — один дополнительный куб урона оружия
