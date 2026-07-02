@@ -230,3 +230,38 @@ def get_feat_proficiency_grants(
 ) -> tuple[list[str], list[str], list[str], list[str]]:
     """Владения из черты: (weapons, armors, tools, skills)."""
     return resolve_feat_grants(feat_id, choices)
+
+
+def _iter_feat_grants(feat_ids: list[str]) -> list[dict[str, Any]]:
+    """Grants из выбранных черт."""
+    grants: list[dict[str, Any]] = []
+    for feat_id in feat_ids:
+        feat = load_feat(feat_id)
+        raw_grants = feat.get("grants", [])
+        if not isinstance(raw_grants, list):
+            continue
+        for grant in raw_grants:
+            if isinstance(grant, dict):
+                grants.append(grant)
+    return grants
+
+
+def has_non_light_dual_wield(feat_ids: list[str]) -> bool:
+    """Черта «Использование двух оружий» — сражение без свойства «лёгкое»."""
+    return any(
+        grant.get("type") == "dual_wielder"
+        and grant.get("non_light_dual_wield")
+        for grant in _iter_feat_grants(feat_ids)
+    )
+
+
+def dual_wielder_ac_bonus_from_feats(feat_ids: list[str]) -> int:
+    """Бонус КД из grant dual_wielder (обычно +1)."""
+    bonus = 0
+    for grant in _iter_feat_grants(feat_ids):
+        if grant.get("type") != "dual_wielder":
+            continue
+        amount = grant.get("ac_bonus", 0)
+        if isinstance(amount, int) and amount > 0:
+            bonus += amount
+    return bonus
