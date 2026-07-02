@@ -31,7 +31,7 @@ Verify: pre-commit `verify-changed` на подзадачах; полный пр
 
 ## D&D 5e (2023) — источник истины
 
-**Источник истины** по правилам настольной D&D 5e (рус. PHB 2023): `docs/PHB_ D&D_2023 RUS.pdf` (локально; в git не коммитится — `.gitignore` → `docs/*.pdf`). Нужно узнать или уточнить правило — изучи этот PDF. [`docs/DND_RULES.md`](docs/DND_RULES.md), `docs/rules/*.md`, код и YAML — вторичны; при расхождении верен PDF. Не опирайся на память модели. Если файла нет на диске — сообщи пользователю; не выдумывай правила.
+**Источник истины** по правилам настольной D&D 5e (рус. PHB 2014 / перевод PHantom): `docs/PHB_ D&D_2023 RUS.pdf` (локально; в git не коммитится — `.gitignore` → `docs/*.pdf`). **Точка входа для агентов:** [`docs/rules/toc.yaml`](docs/rules/toc.yaml) → markdown в `docs/rules/`. Нужно уточнить правило — изучи PDF или соответствующий файл справочника. [`docs/DND_RULES.md`](docs/DND_RULES.md), `docs/rules/`, код и YAML — вторичны; при расхождении верен PDF.
 
 ### Доступ к PHB PDF (агент)
 

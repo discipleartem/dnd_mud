@@ -1,50 +1,76 @@
 # Правила D&D 5e — справочник dnd_mud
 
-Краткий справочник по механикам **Dungeons & Dragons 5-й редакции** для игроков и разработчиков проекта dnd_mud. Структура следует русской **Книге игрока** (Player's Handbook 2014, перевод студии PHantom).
+Справочник по механикам **Dungeons & Dragons 5-й редакции** для игроков и разработчиков проекта dnd_mud. Структура следует русской **Книге игрока** (PHB 2014, перевод студии PHantom, 2016).
 
 ## Источник и авторские права
 
 | Параметр | Значение |
 |----------|----------|
-| Канон | Player's Handbook (рус. перевод PHantom, файл `docs/PHB_ D&D_2023 RUS.pdf`) |
+| Канон | Player's Handbook 2014 (рус. перевод PHantom, файл `docs/PHB_ D&D_2023 RUS.pdf`) |
 | Локальный файл | `docs/PHB_ D&D_2023 RUS.pdf` (331 стр.) |
-| В репозитории | PDF **не коммитится** по умолчанию (см. `.gitignore`) |
+| В репозитории | PDF **не коммитится** (см. `.gitignore`) |
+| Машиночитаемый индекс | [`rules/toc.yaml`](rules/toc.yaml) — точка входа для агентов |
+| Терминология RU↔EN | [`rules/glossaries/ru-en.md`](rules/glossaries/ru-en.md), [`rules/glossaries/en-ru.md`](rules/glossaries/en-ru.md) |
+
+Имя файла PDF «2023» — локальное обозначение копии; это **не** отдельная редакция правил 2024.
 
 ### Политика каталога ядра
 
 В `database/races/races.yaml` и `database/classes/classes.yaml` допускаются **только** официальные расы/подрасы и классы/подклассы из этого PHB. Расширения — моды `type: addon`.
 
-Положите PDF в `docs/` локально для сверки с первоисточником. Текст в этом справочнике — **сжатый пересказ**, не копия PHB. Материалы D&D © Wizards of the Coast; лицензия MIT репозитория на них не распространяется.
+Текст в `docs/rules/` — **пересказ** правил, не дословная копия PHB. Материалы D&D © Wizards of the Coast; лицензия MIT репозитория на них не распространяется.
+
+Генерация справочника из PDF: `python scripts/phb_generate_rules.py` (dev-tool). Валидация: `python scripts/phb_validate_rules.py`.
 
 ## Аудитория
 
-- **Игроки** — как работают правила (формулы, порядок действий, термины).
-- **Разработчики** — что уже реализовано в MUD, где лежат данные (`database/`, `core/`), что запланировано в Phase 2.
+- **Игроки** — обзорные главы `00`–`11` и карточки в подкаталогах.
+- **Разработчики** — блоки «Для разработчиков», `mud_status` в frontmatter, связи с `database/` и `core/`.
 
 Игровые требования к UI и flow — в [MUD_PRD.md](MUD_PRD.md). API модулей — в [API.md](API.md).
 
 ## Оглавление
 
+### Часть 1 — Персонаж (стр. 11–170)
+
+| Глава PHB | Обзор | Детали | Статус в MUD |
+|-----------|-------|--------|--------------|
+| Введение | [00-introduction.md](rules/00-introduction.md) | — | Частично (`core/dice.py`) |
+| 1. Создание персонажа | [01-character-creation.md](rules/01-character-creation.md) | — | Реализовано |
+| 2. Расы | [02-races.md](rules/02-races.md) | [rules/races/](rules/races/) (9 рас) | Частично (4/9 в YAML) |
+| 3. Классы | [03-classes.md](rules/03-classes.md) | [rules/classes/](rules/classes/) (12 классов) | Частично (4/12 в YAML) |
+| 3a. Подклассы | [03-subclasses.md](rules/03-subclasses.md) | в `classes/*.md` | Phase 2 |
+| 4. Предыстория | [04-backgrounds.md](rules/04-backgrounds.md) | [rules/backgrounds/](rules/backgrounds/) (13) | Частично |
+| 5. Снаряжение | [05-equipment.md](rules/05-equipment.md) | [05-equipment-reference.md](rules/05-equipment-reference.md) | Частично |
+| 6. Индивидуальные опции | [06-individual-options.md](rules/06-individual-options.md) | [06-multiclass.md](rules/06-multiclass.md), [06-feats.md](rules/06-feats.md) | feats: да; мультикласс: **запрещён** |
+
+### Часть 2 — Игровой процесс (стр. 173–198)
+
 | Глава PHB | Файл | Статус в MUD |
 |-----------|------|--------------|
-| Введение | [rules/00-introduction.md](rules/00-introduction.md) | Частично (`core/dice.py`) |
-| 1. Создание персонажа | [rules/01-character-creation.md](rules/01-character-creation.md) | Реализовано (в т.ч. стартовое снаряжение класса и предыстории) |
-| 2. Расы | [rules/02-races.md](rules/02-races.md) | Частично (4 из 9 рас PHB) |
-| 3. Классы | [rules/03-classes.md](rules/03-classes.md) | Частично (4 из 12 классов PHB; спасброски и стартовое снаряжение — да) |
-| 3a. Подклассы | [rules/03-subclasses.md](rules/03-subclasses.md) | Phase 2; каталог — только `classes.yaml` |
-| 4. Личность и предыстория | [rules/04-backgrounds.md](rules/04-backgrounds.md) | Частично (выбор, навыки, стартовое снаряжение в инвентаре) |
-| 5. Снаряжение | [rules/05-equipment.md](rules/05-equipment.md) · [справочник PHB стр. 143–161](rules/05-equipment-reference.md) | Частично (каталог, инвентарь, экипировка, КД; бой — Phase 2) |
-| 6. Мультиклассирование | [rules/06-multiclass.md](rules/06-multiclass.md) | **Запрещено** (один класс на персонажа) |
-| 6a. Черты (feats) | [rules/06-feats.md](rules/06-feats.md) | Реализовано (создание + ASI/feat при левелапе); ongoing-требования и бой — Phase 2 |
-| 7. Использование характеристик | [rules/07-ability-scores.md](rules/07-ability-scores.md) | Частично (checks API, PB по уровню) |
-| 8. Приключения | [rules/08-adventures.md](rules/08-adventures.md) | Запланировано (engine) |
-| 9. Сражение | [rules/09-combat.md](rules/09-combat.md) | Запланировано (engine) |
-| 10–11. Заклинания | [rules/10-spells.md](rules/10-spells.md) | Не реализовано |
-| Приложения | [rules/appendices.md](rules/appendices.md) | Запланировано |
+| 7. Использование характеристик | [07-ability-scores.md](rules/07-ability-scores.md) | Частично |
+| 8. Приключения | [08-adventures.md](rules/08-adventures.md) | Запланировано |
+| 9. Сражение | [09-combat.md](rules/09-combat.md) | Запланировано |
 
-## Глоссарий (русская терминология PHB)
+### Часть 3 — Магия (стр. 201–289)
 
-Ключи в коде — английские (`strength`, `dexterity`, …); в UI — через `database/strings/`.
+| Глава PHB | Файл | Детали | Статус в MUD |
+|-----------|------|--------|--------------|
+| 10. Использование заклинаний | [10-spellcasting.md](rules/10-spellcasting.md) | — | Запланировано |
+| 11. Заклинания | [11-spells.md](rules/11-spells.md) | [rules/spells/](rules/spells/) (~270 карточек) | Не реализовано |
+
+Индексы заклинаний: [по уровню](rules/spells/_index-by-level.md), [по школе](rules/spells/_index-by-school.md).
+
+### Приложения и словари (стр. 290–326)
+
+| Раздел | Обзор | Детали |
+|--------|-------|--------|
+| Приложения | [appendices.md](rules/appendices.md) | [rules/appendices/](rules/appendices/) |
+| Словари | [glossaries/ru-en.md](rules/glossaries/ru-en.md) | [glossaries/en-ru.md](rules/glossaries/en-ru.md) |
+
+## Глоссарий (краткий)
+
+Полный словарь — [`rules/glossaries/`](rules/glossaries/). Ключи в коде — английские; в UI — через `database/strings/`.
 
 | RU (PHB) | EN | Ключ в коде |
 |----------|-----|-------------|

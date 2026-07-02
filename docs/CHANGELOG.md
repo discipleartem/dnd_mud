@@ -2,6 +2,14 @@
 
 ## [Unreleased]
 
+### Added
+- **Справочник PHB:** реорганизация `docs/rules/` по оглавлению PHB — гибридная структура (главы `00`–`11` + `races/`, `classes/`, `backgrounds/`, `spells/`, `appendices/`, `glossaries/`), `toc.yaml`, ~270 карточек заклинаний
+- Dev-tools: `scripts/phb_extract.py`, `scripts/phb_generate_rules.py`, `scripts/phb_validate_rules.py`, `scripts/phb_data.py`
+
+### Changed
+- `docs/DND_RULES.md` — оглавление по частям PHB 1–3, ссылки на `toc.yaml` и подкаталоги; `10-spells.md` → `10-spellcasting.md` + `11-spells.md`
+- `.cursor/rules/00-project.mdc` — точка входа агентов: `docs/rules/toc.yaml`
+
 ### Fixed
 - HardCore: прирост HP от «кость + CON» не опускается ниже 1 на любом уровне (`core/progression.py`)
 - Главное меню: пункт переключения языка кросс-локально (`ru` → «Languages», `en` → «Языки»)

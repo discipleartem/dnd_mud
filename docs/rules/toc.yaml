@@ -1,0 +1,282 @@
+source: docs/PHB_ D&D_2023 RUS.pdf
+entries:
+- id: dwarf
+  file: races/dwarf.md
+  pages:
+  - 18
+  - 20
+- id: elf
+  file: races/elf.md
+  pages:
+  - 21
+  - 25
+- id: halfling
+  file: races/halfling.md
+  pages:
+  - 26
+  - 28
+- id: human
+  file: races/human.md
+  pages:
+  - 29
+  - 31
+- id: dragonborn
+  file: races/dragonborn.md
+  pages:
+  - 32
+  - 34
+- id: gnome
+  file: races/gnome.md
+  pages:
+  - 35
+  - 37
+- id: half_elf
+  file: races/half_elf.md
+  pages:
+  - 38
+  - 39
+- id: half_orc
+  file: races/half_orc.md
+  pages:
+  - 40
+  - 41
+- id: tiefling
+  file: races/tiefling.md
+  pages:
+  - 42
+  - 44
+- id: barbarian
+  file: classes/barbarian.md
+  pages:
+  - 46
+  - 50
+- id: bard
+  file: classes/bard.md
+  pages:
+  - 51
+  - 55
+- id: cleric
+  file: classes/cleric.md
+  pages:
+  - 56
+  - 63
+- id: druid
+  file: classes/druid.md
+  pages:
+  - 64
+  - 69
+- id: fighter
+  file: classes/fighter.md
+  pages:
+  - 70
+  - 75
+- id: monk
+  file: classes/monk.md
+  pages:
+  - 76
+  - 81
+- id: paladin
+  file: classes/paladin.md
+  pages:
+  - 82
+  - 88
+- id: ranger
+  file: classes/ranger.md
+  pages:
+  - 89
+  - 93
+- id: rogue
+  file: classes/rogue.md
+  pages:
+  - 94
+  - 98
+- id: sorcerer
+  file: classes/sorcerer.md
+  pages:
+  - 99
+  - 104
+- id: warlock
+  file: classes/warlock.md
+  pages:
+  - 105
+  - 111
+- id: wizard
+  file: classes/wizard.md
+  pages:
+  - 112
+  - 120
+- id: acolyte
+  file: backgrounds/acolyte.md
+  pages:
+  - 125
+  - 127
+- id: charlatan
+  file: backgrounds/charlatan.md
+  pages:
+  - 127
+  - 128
+- id: criminal
+  file: backgrounds/criminal.md
+  pages:
+  - 128
+  - 129
+- id: entertainer
+  file: backgrounds/entertainer.md
+  pages:
+  - 129
+  - 130
+- id: folk_hero
+  file: backgrounds/folk_hero.md
+  pages:
+  - 130
+  - 131
+- id: guild_artisan
+  file: backgrounds/guild_artisan.md
+  pages:
+  - 131
+  - 132
+- id: hermit
+  file: backgrounds/hermit.md
+  pages:
+  - 132
+  - 133
+- id: noble
+  file: backgrounds/noble.md
+  pages:
+  - 133
+  - 134
+- id: outlander
+  file: backgrounds/outlander.md
+  pages:
+  - 134
+  - 135
+- id: sage
+  file: backgrounds/sage.md
+  pages:
+  - 135
+  - 136
+- id: sailor
+  file: backgrounds/sailor.md
+  pages:
+  - 136
+  - 137
+- id: soldier
+  file: backgrounds/soldier.md
+  pages:
+  - 137
+  - 138
+- id: urchin
+  file: backgrounds/urchin.md
+  pages:
+  - 138
+  - 142
+- id: A-conditions
+  file: appendices/A-conditions.md
+  pages:
+  - 290
+  - 293
+- id: B-gods
+  file: appendices/B-gods.md
+  pages:
+  - 293
+  - 300
+- id: C-planes
+  file: appendices/C-planes.md
+  pages:
+  - 300
+  - 304
+- id: D-creatures
+  file: appendices/D-creatures.md
+  pages:
+  - 304
+  - 312
+- id: E-literature
+  file: appendices/E-literature.md
+  pages:
+  - 312
+  - 313
+- id: 00-introduction
+  file: 00-introduction.md
+  pages:
+  - 5
+  - 9
+- id: 01-character-creation
+  file: 01-character-creation.md
+  pages:
+  - 11
+  - 16
+- id: 02-races
+  file: 02-races.md
+  pages:
+  - 17
+  - 44
+- id: 03-classes
+  file: 03-classes.md
+  pages:
+  - 45
+  - 120
+- id: 03-subclasses
+  file: 03-subclasses.md
+  pages:
+  - 48
+  - 119
+- id: 04-backgrounds
+  file: 04-backgrounds.md
+  pages:
+  - 121
+  - 142
+- id: 05-equipment
+  file: 05-equipment.md
+  pages:
+  - 143
+  - 161
+- id: 05-equipment-reference
+  file: 05-equipment-reference.md
+  pages:
+  - 143
+  - 161
+- id: 06-individual-options
+  file: 06-individual-options.md
+  pages:
+  - 163
+  - 170
+- id: 06-multiclass
+  file: 06-multiclass.md
+  pages:
+  - 163
+  - 165
+- id: 06-feats
+  file: 06-feats.md
+  pages:
+  - 165
+  - 170
+- id: 07-ability-scores
+  file: 07-ability-scores.md
+  pages:
+  - 173
+  - 180
+- id: 08-adventures
+  file: 08-adventures.md
+  pages:
+  - 181
+  - 188
+- id: 09-combat
+  file: 09-combat.md
+  pages:
+  - 189
+  - 198
+- id: 10-spellcasting
+  file: 10-spellcasting.md
+  pages:
+  - 201
+  - 206
+- id: 11-spells
+  file: 11-spells.md
+  pages:
+  - 207
+  - 289
+- id: appendices
+  file: appendices.md
+  pages:
+  - 290
+  - 326
