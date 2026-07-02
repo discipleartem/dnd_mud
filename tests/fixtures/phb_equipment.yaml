@@ -1,0 +1,19 @@
+# Эталон PHB 2014 (гл. 5) для сверки database/equipment/*.yaml
+weapons:
+  lance:
+    cost: { value: 10, currency: gold }
+    damage: { dice: "1d12", type: piercing }
+    weight: 6
+  pike:
+    cost: { value: 5, currency: gold }
+    damage: { dice: "1d10", type: piercing }
+    weight: 18
+gear:
+  hooded_lantern:
+    cost: { value: 5, currency: gold }
+  bullseye_lantern:
+    cost: { value: 10, currency: gold }
+  piton:
+    cost: { value: 5, currency: copper }
+  vestments:
+    cost: { value: 1, currency: gold }

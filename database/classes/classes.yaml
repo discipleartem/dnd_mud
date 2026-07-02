@@ -237,26 +237,68 @@ classes:
           feature_type: passive
           requires_action: false
         - id: second_wind
-          name: Восстановление
-          description: Короткий отдых восстанавливает часть здоровья
+          name: Второе дыхание
+          description: Бонусным действием восстановить 1к10 + уровень воина хитов; 1 раз за короткий отдых
           feature_type: active
           uses_per_rest: 1
-          requires_action: true
+          requires_action: false
           bonus_action: true
+      2:
+        grants:
+        - id: action_surge
+          name: Всплеск действий
+          description: Дополнительное действие в свой ход; 1 раз за короткий отдых (2 раза с 17 уровня)
+          feature_type: active
+          uses_per_rest: 1
+          requires_action: false
       5:
         grants:
-        - id: improved_second_wind
-          name: Улучшенное восстановление
-          description: Увеличенное количество здоровья при восстановлении
+        - id: extra_attack
+          name: Дополнительная атака
+          description: Две атаки при действии Атака
           feature_type: passive
+          requires_action: false
+      9:
+        grants:
+        - id: indomitable
+          name: Упорный
+          description: Переброс проваленного спасброска; 1 раз за долгий отдых (2 на 13 ур., 3 на 17 ур.)
+          feature_type: active
+          uses_per_rest: 1
           requires_action: false
       11:
         grants:
-        - id: extra_attack
-          name: Атака дополнительным действием
-          description: Возможность атаковать как дополнительное действие
-          feature_type: active
-          requires_action: true
+        - id: extra_attack_2
+          name: Дополнительная атака
+          description: Три атаки при действии Атака
+          feature_type: passive
+          requires_action: false
+      13:
+        grants:
+        - id: indomitable_2
+          name: Упорный (13 ур.)
+          description: Два использования Упорного за долгий отдых
+          feature_type: passive
+          requires_action: false
+      17:
+        grants:
+        - id: action_surge_2
+          name: Всплеск действий (17 ур.)
+          description: Всплеск действий можно использовать дважда за короткий отдых
+          feature_type: passive
+          requires_action: false
+        - id: indomitable_3
+          name: Упорный (17 ур.)
+          description: Три использования Упорного за долгий отдых
+          feature_type: passive
+          requires_action: false
+      20:
+        grants:
+        - id: extra_attack_3
+          name: Дополнительная атака
+          description: Четыре атаки при действии Атака
+          feature_type: passive
+          requires_action: false
       4:
         grants:
         - id: ability_score_improvement
@@ -552,25 +594,55 @@ classes:
       2:
         grants:
         - id: cunning_action
-          name: Коварная атака
-          description: Использование бонусного действия для атаки или уклонения
+          name: Хитрое действие
+          description: Бонусным действием — Рывок, Отход или Засада
           feature_type: active
           requires_action: false
           bonus_action: true
-      3:
-        grants:
-        - id: improved_sneak_attack
-          name: Улучшенная скрытая атака
-          description: Увеличение урона скрытой атаки
-          feature_type: passive
-          requires_action: false
-      9:
+      5:
         grants:
         - id: uncanny_dodge
-          name: Улучшенная коварная атака
-          description: Дополнительная атака при коварной атаке
+          name: Невероятное уклонение
+          description: Реакцией при видимой атаке — половина урона
           feature_type: active
           reaction: true
+          requires_action: false
+      7:
+        grants:
+        - id: evasion
+          name: Уклонение
+          description: Успех на спасбросках Ловкости при половинном уроне
+          feature_type: passive
+          requires_action: false
+      11:
+        grants:
+        - id: reliable_talent
+          name: Надёжный талант
+          description: '10+ на проверках с компетентностью'
+          feature_type: passive
+          requires_action: false
+      14:
+        grants:
+        - id: blindsense
+          name: Слепое зрение
+          description: Слышите скрытых существ в 10 фт.
+          feature_type: passive
+          requires_action: false
+      18:
+        grants:
+        - id: elusive
+          name: Неуловимость
+          description: Атаки по вам без преимущества не получают преимущество
+          feature_type: passive
+          requires_action: false
+      20:
+        grants:
+        - id: stroke_of_luck
+          name: Удачный случай
+          description: Переброс проваленной проверки, атаки или спасброска; 1/короткий или долгий отдых
+          feature_type: active
+          uses_per_rest: 1
+          requires_action: false
       4:
         grants:
         - id: ability_score_improvement
@@ -871,14 +943,12 @@ classes:
             характеристика — Мудрость
           feature_type: spell
           requires_action: true
-        - id: ritual_casting
-          name: Заклинание ритуала
-          description: Возможность колдовать заклинания как ритуалы
-          feature_type: passive
-          requires_action: false
-        - id: spell_recovery
-          name: Восстановление заклинаний
-          description: Восстановление части заклинаний после короткого отдыха
+      2:
+        grants:
+        - id: channel_divinity
+          name: Божественный канал
+          description: Изгнание нежити и эффект божественного домена; 1 раз за короткий или долгий отдых (2 на 6 ур., 3 на
+            18 ур.)
           feature_type: active
           uses_per_rest: 1
           requires_action: true
@@ -886,9 +956,9 @@ classes:
         grants:
         - id: destroy_undead
           name: Уничтожение нежити
-          description: Способность наносить дополнительный урон нежити
-          feature_type: active
-          requires_action: true
+          description: Божественный канал «Изгнание нежити» уничтожает нежить ниже порога КО по уровню жреца
+          feature_type: passive
+          requires_action: false
       10:
         grants:
         - id: divine_intervention
@@ -937,6 +1007,14 @@ classes:
             возьмите черту.'
           feature_type: passive
           requires_action: false
+      20:
+        grants:
+        - id: supreme_divine_intervention
+          name: Высшее божественное вмешательство
+          description: Божественное вмешательство автоматически успешно; 1 раз за 7 дней
+          feature_type: active
+          uses_per_rest: 1
+          requires_action: true
   bard:
     name:
       ru: Бард
@@ -1187,6 +1265,27 @@ classes:
           description: Два заклинания любого класса (уровень доступных ячеек или заговор); считаются заклинаниями барда
           feature_type: spell
           requires_action: true
+      14:
+        grants:
+        - id: magical_secrets_14
+          name: Тайны магии (14 ур.)
+          description: Ещё два заклинания любого класса
+          feature_type: spell
+          requires_action: true
+      18:
+        grants:
+        - id: magical_secrets_18
+          name: Тайны магии (18 ур.)
+          description: Ещё два заклинания любого класса
+          feature_type: spell
+          requires_action: true
+      20:
+        grants:
+        - id: superior_inspiration
+          name: Превосходное вдохновение
+          description: При броске инициативы, если нет использований вдохновения барда — восстановить одно
+          feature_type: passive
+          requires_action: false
       4:
         grants:
         - id: ability_score_improvement

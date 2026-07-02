@@ -141,6 +141,8 @@ feats:
     - type: charger
       dash_bonus_action: true
       charge_damage_bonus: 5
+      shove_bonus_action: true
+      shove_distance: 10
       name: Налёт
   crossbow_expert:
     name: Эксперт в арбалетах
@@ -160,6 +162,7 @@ feats:
       weapon_type: crossbow
       ignore_loading: true
       bonus_action_attack: true
+      ranged_no_disadvantage_in_melee: true
       name: Мастерство арбалетов
   defensive_duelist:
     name: Оборонительный дуэлянт
@@ -192,6 +195,8 @@ feats:
     grants:
     - type: dual_wielder
       ac_bonus: 1
+      non_light_dual_wield: true
+      draw_stow_two_weapons: true
       name: Два оружия
   dungeon_delver:
     name: Исследователь подземелий
@@ -210,8 +215,14 @@ feats:
       '
     grants:
     - type: trap_mastery
+      advantage_skills:
+      - perception
+      - investigation
+      context: secret_doors
       advantage_saves: traps
-      counter_attack_damage: 1d6
+      resistance:
+      - trap_damage
+      search_traps_normal_speed: true
       name: Мастерство ловушек
   durable:
     name: Стойкий
@@ -294,7 +305,7 @@ feats:
     grants:
     - type: healing
       healer_kit_bonus: true
-      stabilize_no_check: true
+      stabilize_restores_1_hp: true
       heal_dice: 1d6
       heal_flat: 4
       heal_plus_target_max_hit_dice: true
@@ -477,6 +488,10 @@ feats:
     - type: initiative_bonus
       bonus: 5
       name: Бдительность
+    - type: alert
+      cannot_be_surprised_while_conscious: true
+      hidden_attackers_no_advantage: true
+      name: Бдительность
   martial_adept:
     name: Воинский адепт
     description: Два приёма воина и одна кость превосходства (к6).
@@ -538,6 +553,9 @@ feats:
       - investigation
       bonus: 5
       name: Внимательность
+    - type: lip_reading
+      requires_known_language: true
+      name: Чтение по губам
   inspiring_leader:
     name: Воодушевляющий лидер
     description: 10 минут — временные хиты (уровень + модификатор Харизмы) до 6 существ в 30 фт.
@@ -590,6 +608,7 @@ feats:
       unarmed_die: 4
       weapon_proficiency:
       - improvised
+      bonus_action_grapple_on_hit: true
       name: Мордобой
   great_weapon_master:
     name: Мастер большого оружия
@@ -805,6 +824,8 @@ feats:
       count: 3
       choice: true
       name: Языки
+    - type: cipher_writing
+      name: Шифрованные письма
   skulker:
     name: Проныра
     description: Скрытность при слабом укрытии; выстрел не выдаёт позицию; тусклый свет не мешает Внимательности.

@@ -6,7 +6,7 @@ abilities:
     name: "Сила"
     description: "Физическая мощь, атлетизм, грузоподъёмность"
     skills:
-      athletics: "Атлетика — плавание, climbing, прыжки"
+      athletics: "Атлетика — плавание, лазание, прыжки"
 
   dexterity:
     name: "Ловкость"

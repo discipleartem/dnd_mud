@@ -236,6 +236,42 @@ equipment:
     cost: { value: 25, currency: "gold" }
     weight: 5
 
+  prayer_book:
+    name: "Молитвенник"
+    category: "tools_and_kits"
+    cost: { value: 25, currency: "gold" }
+    weight: 5
+
+  blanket:
+    name: "Одеяло"
+    category: "tools_and_kits"
+    cost: { value: 5, currency: "silver" }
+    weight: 3
+
+  parchment:
+    name: "Пергамент (один лист)"
+    category: "tools_and_kits"
+    cost: { value: 1, currency: "silver" }
+    weight: null
+
+  pedigree_scroll:
+    name: "Свиток родословной"
+    category: "tools_and_kits"
+    cost: { value: 1, currency: "gold" }
+    weight: null
+
+  city_map:
+    name: "Карта города"
+    category: "tools_and_kits"
+    cost: { value: 1, currency: "gold" }
+    weight: null
+
+  pet_mouse:
+    name: "Ручная крыса"
+    category: "tools_and_kits"
+    cost: { value: 0, currency: "gold" }
+    weight: null
+
   spellbook:
     name: "Книга заклинаний"
     category: "tools_and_kits"
@@ -412,13 +448,13 @@ equipment:
   hooded_lantern:
     name: "Фонарь закрытый"
     category: "tools_and_kits"
-    cost: { value: 10, currency: "gold" }
+    cost: { value: 5, currency: "gold" }
     weight: 2
 
   bullseye_lantern:
     name: "Фонарь направленный"
     category: "tools_and_kits"
-    cost: { value: 5, currency: "gold" }
+    cost: { value: 10, currency: "gold" }
     weight: 2
 
   chain:
@@ -452,8 +488,8 @@ equipment:
   piton:
     name: "Шлямбур"
     category: "tools_and_kits"
-    cost: { value: 1, currency: "gold" }
-    weight: 5
+    cost: { value: 5, currency: "copper" }
+    weight: 0.25
 
   backpack:
     name: "Рюкзак"
@@ -585,7 +621,7 @@ equipment:
   vestments:
     name: "Облачение"
     category: "adventuring_gear"
-    cost: { value: 0, currency: "gold" }
+    cost: { value: 1, currency: "gold" }
     weight: 4
 
   incense:
