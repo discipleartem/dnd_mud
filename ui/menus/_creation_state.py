@@ -19,6 +19,7 @@ CreationStep = Literal[
     "proficiencies",
     "skills",
     "expertise",
+    "equipment",
 ]
 
 
@@ -42,6 +43,8 @@ class _CreationState:
     weapon_proficiencies: list[str] | None = None
     armor_proficiencies: list[str] | None = None
     tool_proficiencies: list[str] | None = None
+    background_tool_picks: list[str] = field(default_factory=list)
+    equipment_choices: dict[str, str] = field(default_factory=dict)
     feat_ids: list[str] = field(default_factory=list)
     feat_choices: dict[str, dict[str, Any]] = field(default_factory=dict)
     hardcore_rolls: list[int] = field(default_factory=list)
@@ -75,6 +78,8 @@ class _CreationState:
             "weapon_proficiencies": self.weapon_proficiencies,
             "armor_proficiencies": self.armor_proficiencies,
             "tool_proficiencies": self.tool_proficiencies,
+            "background_tool_picks": self.background_tool_picks or None,
+            "equipment_choices": self.equipment_choices or None,
             "feat_ids": self.feat_ids or None,
             "feat_choices": self.feat_choices or None,
             "class_features_applied": features_applied,

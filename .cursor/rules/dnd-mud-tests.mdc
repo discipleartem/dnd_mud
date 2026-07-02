@@ -6,7 +6,7 @@ alwaysApply: false
 
 # dnd_mud tests
 
-**Runners:** `make test-fast` (локально) · `make verify-changed` / `make verify-scope` · `make test` / CI
+**Runners:** pre-commit `verify-changed` (подзадача) · `make verify-scope` — **только** в [`dnd-mud-review`](../skills/dnd-mud-review/SKILL.md) · `make test` — CI
 
 Один тест на изменённое поведение или реальный риск регрессии. Похожие кейсы — `@pytest.mark.parametrize`, не копии функций. Код теста — так же простой, как прод-код (`dnd-mud-python.mdc`).
 
@@ -32,7 +32,7 @@ database/*.yaml      → test_data_schema (+ test_catalog_loader при loader)
 
 | Писать | Не писать |
 |--------|-----------|
-| Новое или изменённое поведение | Рефакторинг без смены поведения (`make verify-scope` достаточно) |
+| Новое или изменённое поведение | Рефакторинг без смены поведения (достаточно pre-commit `verify-changed`) |
 | Риск регрессии (логика, сохранения, меню) | Косметика, уже покрытая соседним тестом |
 | Один сценарий = один тест (или parametrize) | «На всякий случай», тривиальные константы, дубли |
 | Дополнять `test_character.py` и т.п. | Новый `test_*.py` на 1–2 функции |

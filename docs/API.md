@@ -238,6 +238,7 @@ class ResolvedGrants:
     tool_tokens: tuple[str, ...]
     skill_ids: tuple[str, ...]
     language_ids: tuple[str, ...]
+    save_ids: tuple[str, ...]
 
 resolve_creation_grants(
     race_id, subrace_id, class_id, background_id, subclass_id, level, *,
@@ -337,7 +338,43 @@ resolve_tool_pool(pool: str) -> list[str]
 get_weapon_name(weapon_id: str, language: str = "ru") -> str
 get_armor_name(armor_id: str, language: str = "ru") -> str
 get_tool_name(tool_id: str, language: str = "ru") -> str
+get_equipment_item_name(item_id: str, language: str = "ru") -> str
 weapon_matches_category(category: str, weapon_id: str) -> bool
+```
+
+---
+
+## core.checks — Спасброски и к20
+
+```python
+roll_d20(*, advantage: bool = False, disadvantage: bool = False) -> tuple[int, list[int]]
+saving_throw_modifier(character: Character, ability_id: str) -> int
+saving_throw(character, ability_id, *, dc=None, advantage=False, disadvantage=False) -> dict
+```
+
+---
+
+## core.inventory — Инвентарь и КД
+
+```python
+add_items_to_inventory(inventory, new_items) -> list[dict]
+equip_defaults(character: Character) -> dict[str, Any]
+compute_ac(character: Character) -> int
+format_inventory_line(inventory, language="ru") -> str
+get_equipped_display(character, language="ru") -> dict[str, str]
+```
+
+---
+
+## core.starting_equipment — Стартовое снаряжение класса
+
+Источник: `starting_equipment` в `database/classes/classes.yaml`.
+
+```python
+get_class_starting_equipment_config(class_id: str) -> dict
+resolve_starting_items(class_id, choices, weapon_proficiencies, armor_proficiencies) -> list[dict]
+filter_available_options(class_id, weapon_proficiencies, armor_proficiencies) -> dict
+weapons_for_pool(pool: str, weapon_proficiencies: list[str]) -> list[str]
 ```
 
 ---
@@ -394,7 +431,7 @@ tough_hp_adjustment_on_acquire(level) -> int
 
 `list_feats_for_selection` — eligible (требования OK + новые владения), blocked (требования не выполнены) и hidden (нет новых владений; показываются в конце списка, не выбираются). Уже взятые черты не возвращаются. См. [`06-feats.md`](rules/06-feats.md) §«Фильтрация списка».
 
-**Запланировано (Phase 2):** постоянная проверка требований — `feat_is_active`, `active_feat_ids`, `feat_requirement_context_from_character`; владение спасброском Resilient (`save_proficiency`); см. [`06-feats.md`](rules/06-feats.md) §«Запланировано».
+**Запланировано (Phase 2):** постоянная проверка требований — `feat_is_active`, `active_feat_ids`, `feat_requirement_context_from_character`; см. [`06-feats.md`](rules/06-feats.md) §«Запланировано». **Resilient** (`save_proficiency` в YAML): владение спасброском применяется **при создании** через `get_feat_save_proficiencies` → `save_proficiencies` на `Character`.
 
 ## core.asi — Увеличение характеристик
 

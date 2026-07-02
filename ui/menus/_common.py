@@ -151,3 +151,33 @@ def _read_numbered_choice(
     if choice == 0:
         return None
     return choice
+
+
+def _proficiency_menu_marker(proficient: bool) -> str:
+    """Зелёная «*» для пунктов меню с владением."""
+    if proficient:
+        return f"{Fore.GREEN}*{Style.RESET_ALL} "
+    return ""
+
+
+def _sort_ids_by_proficiency(
+    item_ids: list[str],
+    proficiencies: list[str],
+    has_proficiency: Callable[[list[str], str], bool],
+    *,
+    name_key: Callable[[str], str],
+) -> list[str]:
+    """Сначала предметы с владением, внутри группы — по имени."""
+    return sorted(
+        item_ids,
+        key=lambda item_id: (
+            0 if has_proficiency(proficiencies, item_id) else 1,
+            name_key(item_id),
+        ),
+    )
+
+
+def _format_pick_menu_label(name: str, proficient: bool) -> str:
+    """Подпись пункта меню выбора с опциональной «*» владения."""
+    marker = _proficiency_menu_marker(proficient)
+    return f"{marker}{Fore.CYAN}{name}{Style.RESET_ALL}"

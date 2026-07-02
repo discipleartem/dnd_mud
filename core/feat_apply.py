@@ -130,6 +130,35 @@ def get_feat_expertise_ids(
     return skills
 
 
+def get_feat_save_proficiencies(
+    feat_ids: list[str],
+    feat_choices: dict[str, dict[str, Any]] | None = None,
+) -> list[str]:
+    """Владение спасбросками из черт (Resilient)."""
+    feat_choices = feat_choices or {}
+    saves: list[str] = []
+    for feat_id in feat_ids:
+        feat = load_feat(feat_id)
+        choices = feat_choices.get(feat_id, {})
+        raw_grants = feat.get("grants", [])
+        if not isinstance(raw_grants, list):
+            continue
+        for grant in raw_grants:
+            if not isinstance(grant, dict):
+                continue
+            if grant.get("type") != "save_proficiency":
+                continue
+            if grant.get("choice"):
+                picked = choices.get("ability")
+                if isinstance(picked, str) and picked not in saves:
+                    saves.append(picked)
+            else:
+                target = grant.get("ability")
+                if isinstance(target, str) and target not in saves:
+                    saves.append(target)
+    return saves
+
+
 def apply_feats_to_stats(
     stats: StatMap,
     feat_ids: list[str],

@@ -3,7 +3,7 @@
 
 armor:
   padded:
-    name: "Стёганный"
+    name: "Стёганный доспех"
     category: "light"
     cost: { value: 5, currency: "gold" }
     armor_class: 11
@@ -14,7 +14,7 @@ armor:
     weight: 8
 
   leather:
-    name: "Кожаный"
+    name: "Кожаный доспех"
     category: "light"
     cost: { value: 10, currency: "gold" }
     armor_class: 11
@@ -25,7 +25,7 @@ armor:
     weight: 10
 
   studded_leather:
-    name: "Проклёпанная кожа"
+    name: "Проклёпанный кожаный доспех"
     category: "light"
     cost: { value: 45, currency: "gold" }
     armor_class: 12
@@ -36,7 +36,7 @@ armor:
     weight: 13
 
   hide:
-    name: "Шкурный"
+    name: "Шкурный доспех"
     category: "medium"
     cost: { value: 10, currency: "gold" }
     armor_class: 12
@@ -58,7 +58,7 @@ armor:
     weight: 20
 
   scale_mail:
-    name: "Чешуйчатый"
+    name: "Чешуйчатый доспех"
     category: "medium"
     cost: { value: 50, currency: "gold" }
     armor_class: 14
@@ -91,7 +91,7 @@ armor:
     weight: 40
 
   ring_mail:
-    name: "Колечный"
+    name: "Колечный доспех"
     category: "heavy"
     cost: { value: 30, currency: "gold" }
     armor_class: 14
@@ -109,7 +109,7 @@ armor:
     weight: 55
 
   splint:
-    name: "Наборный"
+    name: "Наборный доспех"
     category: "heavy"
     cost: { value: 200, currency: "gold" }
     armor_class: 17

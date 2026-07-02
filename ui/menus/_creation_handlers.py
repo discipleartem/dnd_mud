@@ -12,6 +12,7 @@ from ui.menus import _deps
 from ui.menus._common import _print_screen_header, _run_numbered_menu
 from ui.menus._creation_finalize import merge_feat_languages
 from ui.menus._creation_navigation import (
+    back_step_from_equipment,
     back_step_from_feats,
     back_step_from_proficiencies,
     back_step_from_skills,
@@ -21,6 +22,7 @@ from ui.menus._creation_state import CreationStep, _CreationState
 from ui.menus._creation_steps import finalize_creation
 from ui.menus._selectors import select_class, select_subclass, select_subrace
 from ui.menus.backgrounds import select_creation_background
+from ui.menus.equipment import select_creation_equipment
 from ui.menus.expertise import select_creation_expertise
 from ui.menus.feats import select_creation_feats
 from ui.menus.languages import select_creation_languages
@@ -211,6 +213,7 @@ def _handle_proficiencies(
         state.weapon_proficiencies,
         state.armor_proficiencies,
         state.tool_proficiencies,
+        state.background_tool_picks,
     ) = profs
     return _advance("skills")
 
@@ -238,6 +241,26 @@ def _handle_skills(
     state.skills = skills
     if expertise_step_required(state.class_id, start_level):
         return _advance("expertise")
+    return _advance("equipment")
+
+
+def _handle_equipment(
+    strings: StringsDict, state: _CreationState, language: str
+) -> StepResult:
+    if state.class_id is None:
+        return _advance("skills")
+    equipment = select_creation_equipment(
+        strings,
+        state.class_id,
+        list(state.weapon_proficiencies or []),
+        list(state.armor_proficiencies or []),
+        list(state.tool_proficiencies or []),
+        language,
+        strength=int((state.stats or {}).get("strength", 10)),
+    )
+    if equipment is None:
+        return _advance(back_step_from_equipment(state))
+    state.equipment_choices = equipment
     return _done(strings, state)
 
 
@@ -257,7 +280,7 @@ def _handle_expertise(
     if expertise_result is None:
         return _advance("skills")
     state.skill_expertise, state.tool_expertise = expertise_result
-    return _done(strings, state)
+    return _advance("equipment")
 
 
 _STEP_HANDLERS: dict[
@@ -275,4 +298,5 @@ _STEP_HANDLERS: dict[
     "proficiencies": _handle_proficiencies,
     "skills": _handle_skills,
     "expertise": _handle_expertise,
+    "equipment": _handle_equipment,
 }

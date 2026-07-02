@@ -51,11 +51,11 @@ D&D — настольная ролевая игра о приключениях
 
 | Аспект | Значение |
 |--------|----------|
-| Статус | Частично: только генерация костей |
+| Статус | Частично: генерация костей; **спасброски при создании** (`core/checks.py`); проверки навыков и атаки в engine — Phase 2 |
 | YAML | — |
-| Core | [`core/dice.py`](../../core/dice.py): `roll()`, `roll_ability_score()`, `ability_modifier()` |
+| Core | [`core/dice.py`](../../core/dice.py): `roll()`, `roll_ability_score()`, `ability_modifier()`; [`core/checks.py`](../../core/checks.py): `saving_throw`, `saving_throw_modifier` |
 | Режимы | Одинаковые формулы кубов; режим влияет на контент и строгость engine (Phase 2) |
-| Заметки | Проверки, спасброски, атаки — не реализованы; см. [07-ability-scores.md](07-ability-scores.md), [09-combat.md](09-combat.md) |
+| Заметки | Проверки характеристик и атаки — Phase 2; спасброски — см. [07-ability-scores.md](07-ability-scores.md), бой — [09-combat.md](09-combat.md) |
 
 ### Реализованные функции кубов
 

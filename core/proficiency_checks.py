@@ -20,6 +20,25 @@ def has_weapon_proficiency(proficiencies: list[str], weapon_id: str) -> bool:
     return False
 
 
+def has_weapon_pool_proficiency(
+    pool: str, weapon_proficiencies: list[str]
+) -> bool:
+    """Владение категорией оружия (simple, martial), не отдельным видом."""
+    if pool in weapon_proficiencies:
+        return True
+    if pool == "martial":
+        return any(
+            token in weapon_proficiencies
+            for token in ("martial_melee", "martial_ranged")
+        )
+    if pool == "simple":
+        return any(
+            token in weapon_proficiencies
+            for token in ("simple_melee", "simple_ranged")
+        )
+    return False
+
+
 def has_armor_proficiency(proficiencies: list[str], armor_id: str) -> bool:
     """Владение доспехом или щитом."""
     cat = armor_category(armor_id)
@@ -65,6 +84,11 @@ def get_class_saving_throws(class_id: str) -> list[str]:
     if isinstance(raw, list):
         return [str(s) for s in raw]
     return []
+
+
+def has_save_proficiency(proficiencies: list[str], ability_id: str) -> bool:
+    """Владение спасброском по характеристике."""
+    return ability_id in proficiencies
 
 
 def subclass_proficiencies_active(

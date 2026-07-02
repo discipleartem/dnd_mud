@@ -203,7 +203,7 @@ def _normalize_class_dict(
         "saving_throws": class_info.get("saving_throws", []),
         "skill_choices": class_info.get("skill_choices", []),
         "skill_choices_count": class_info.get("skill_choices_count", 0),
-        "equipment": class_info.get("equipment", {}),
+        "starting_equipment": class_info.get("starting_equipment", {}),
         "proficiencies": class_info.get("proficiencies", {}),
         "features": _class_features_only(class_info),
         "subclasses": class_info.get("subclasses", []),

@@ -77,7 +77,7 @@
 
 | Аспект | Значение |
 |--------|----------|
-| Статус | **Частично:** модификатор, генерация stats; проверки/навыки/спасброски — Phase 2 engine |
+| Статус | **Частично:** модификатор, генерация stats; **спасброски при создании** (`core/checks.py`); проверки навыков в engine — Phase 2 |
 | YAML | [`database/core/abilities.yaml`](../../database/core/abilities.yaml), [`database/core/skills.yaml`](../../database/core/skills.yaml), [`database/core/constants.yaml`](../../database/core/constants.yaml) |
 | Core | [`core/dice.py`](../../core/dice.py), [`core/stats.py`](../../core/stats.py), [`core/abilities.py`](../../core/abilities.py) |
 | Режимы | HardCore: целевые полные проверки в engine; Normal: может упрощаться в сценариях |
@@ -92,13 +92,15 @@
 | Привязка навыков к характеристикам | `core/abilities.py` |
 | Бонус мастерства по уровню | `core/constants.proficiency_bonus()` |
 | Владение навыками при создании | `core/skills.py`, UI |
+| Спасброски при создании (`saving_throw_modifier`, `saving_throw`) | `core/checks.py`, `Character.save_proficiencies` |
 
 ### Запланировано (game engine)
 
 | Механика | Целевая реализация |
 |----------|-------------------|
-| `ability_check`, `skill_check`, `saving_throw`, `passive_skill` | Phase 2 engine API |
-| Преимущество/помеха на к20 | Phase 2 engine API |
+| `ability_check`, `skill_check`, `passive_skill` | Phase 2 engine API |
+| Спасброски в сценариях и бою (вызов `saving_throw` из engine) | Phase 2 engine API |
+| Преимущество/помеха на к20 в приключениях | Phase 2 engine API |
 
 - Использование проверок в сценариях приключений (`adventures/*.yaml`)
 - Соревновательные проверки

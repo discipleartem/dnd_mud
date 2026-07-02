@@ -24,6 +24,7 @@ class ResolvedGrants:
     tool_tokens: tuple[str, ...]
     skill_ids: tuple[str, ...]
     language_ids: tuple[str, ...]
+    save_ids: tuple[str, ...]
 
 
 def resolve_creation_grants(
@@ -44,6 +45,7 @@ def resolve_creation_grants(
 ) -> ResolvedGrants:
     """Собрать владения из расы, класса, предыстории, подкласса и черт."""
     from core.backgrounds import get_background_skills
+    from core.proficiency_checks import get_class_saving_throws
 
     skills = list(apply_racial_proficiencies(race_id, subrace_id))
     if background_id:
@@ -76,12 +78,21 @@ def resolve_creation_grants(
             languages, feat_ids, feat_choices
         )
 
+    save_ids = list(get_class_saving_throws(class_id))
+    if feat_ids:
+        from core.feat_apply import get_feat_save_proficiencies
+
+        for save_id in get_feat_save_proficiencies(feat_ids, feat_choices):
+            if save_id not in save_ids:
+                save_ids.append(save_id)
+
     return ResolvedGrants(
         weapon_tokens=tuple(weapons),
         armor_tokens=tuple(armors),
         tool_tokens=tuple(tools),
         skill_ids=tuple(skills),
         language_ids=tuple(languages),
+        save_ids=tuple(save_ids),
     )
 
 

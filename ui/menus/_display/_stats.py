@@ -2,6 +2,7 @@
 
 from colorama import Fore, Style
 
+from core.dice import ability_modifier
 from core.localization import get_string
 from core.models import Character
 from core.types import StatMap, StringsDict
@@ -10,10 +11,27 @@ from ui.menus._common import SEPARATOR, _ability_name, _stats_caption_line
 from ui.menus._display._race import _print_race_bonuses
 
 
+def _format_ability_modifier(mod: int) -> str:
+    """Модификатор для компактной строки: (+3), (-2) или пусто при 0."""
+    if mod == 0:
+        return ""
+    sign = "+" if mod > 0 else ""
+    return f"({sign}{mod})"
+
+
+def _colored_ability_modifier(mod: int) -> str:
+    """Модификатор с цветом: зелёный для +, красный для −."""
+    text = _format_ability_modifier(mod)
+    if not text:
+        return ""
+    color = Fore.RED if mod < 0 else Fore.GREEN
+    return f"{color}{text}{Style.RESET_ALL}"
+
+
 def _format_character_stats_compact(
     char: Character, strings: StringsDict
 ) -> str:
-    """Компактная строка характеристик: аббревиатура + значение."""
+    """Компактная строка характеристик: значение и модификатор."""
     if not char.stats:
         return ""
 
@@ -23,10 +41,15 @@ def _format_character_stats_compact(
         if value is None:
             continue
         abbr = _ability_name(strings, stat)[:3]
-        parts.append(
+        mod = ability_modifier(int(value))
+        mod_part = _colored_ability_modifier(mod)
+        segment = (
             f"{Fore.CYAN}{abbr}{Style.RESET_ALL} "
             f"{Fore.YELLOW}{value:>2}{Style.RESET_ALL}"
         )
+        if mod_part:
+            segment = f"{segment} {mod_part}"
+        parts.append(segment)
     return "  ".join(parts)
 
 

@@ -37,6 +37,13 @@ backgrounds:
       count: 2
       choice: true
       pool: common
+    - type: equipment_item
+      items:
+      - { kind: equipment, id: emblem, qty: 1 }
+      - { kind: equipment, id: book, qty: 1 }
+      - { kind: equipment, id: incense, qty: 5 }
+      - { kind: equipment, id: vestments, qty: 1 }
+      - { kind: equipment, id: common_clothes, qty: 1 }
   charlatan:
     name:
       ru: Шарлатан
@@ -73,6 +80,10 @@ backgrounds:
     - type: tool_proficiency
       tools:
       - forgery_kit
+    - type: equipment_item
+      items:
+      - { kind: equipment, id: fine_clothes, qty: 1 }
+      - { kind: tool, id: disguise_kit, qty: 1 }
   criminal:
     name:
       ru: Преступник
@@ -108,6 +119,10 @@ backgrounds:
       count: 1
       choice: true
       pool: gaming_sets
+    - type: equipment_item
+      items:
+      - { kind: equipment, id: crowbar, qty: 1 }
+      - { kind: equipment, id: dark_common_clothes, qty: 1 }
   entertainer:
     name:
       ru: Артист
@@ -120,12 +135,14 @@ backgrounds:
       - музыкальный инструмент
       - подарок от поклонника
       - костюм
-      - 2 зм
+      - 15 зм
       en:
       - musical instrument
       - admiration gift
       - costume
-      - 2 gp
+      - 15 gp
+    inventory_tool_pools:
+      - musical_instruments
     feature:
       name:
         ru: По многочисленным просьбам
@@ -145,6 +162,10 @@ backgrounds:
       count: 1
       choice: true
       pool: musical_instruments
+    - type: equipment_item
+      items:
+      - { kind: equipment, id: trinket, qty: 1 }
+      - { kind: equipment, id: costume, qty: 1 }
   folk_hero:
     name:
       ru: Народный герой
@@ -165,6 +186,8 @@ backgrounds:
       - iron pot
       - common clothes
       - 10 gp
+    inventory_tool_pools:
+      - artisans_tools
     feature:
       name:
         ru: Деревенское гостеприимство
@@ -184,6 +207,11 @@ backgrounds:
       count: 1
       choice: true
       pool: artisans_tools
+    - type: equipment_item
+      items:
+      - { kind: equipment, id: shovel, qty: 1 }
+      - { kind: equipment, id: iron_pot, qty: 1 }
+      - { kind: equipment, id: common_clothes, qty: 1 }
   guild_artisan:
     name:
       ru: Гильдейский ремесленник
@@ -202,6 +230,8 @@ backgrounds:
       - guild letter of introduction
       - traveler's clothes
       - 15 gp
+    inventory_tool_pools:
+      - artisans_tools
     feature:
       name:
         ru: Членство в гильдии
@@ -222,6 +252,10 @@ backgrounds:
       count: 1
       choice: true
       pool: artisans_tools
+    - type: equipment_item
+      items:
+      - { kind: equipment, id: guild_letter, qty: 1 }
+      - { kind: equipment, id: travelers_clothes, qty: 1 }
   hermit:
     name:
       ru: Отшельник
@@ -261,6 +295,12 @@ backgrounds:
     - type: tool_proficiency
       tools:
       - herbalism_kit
+    - type: equipment_item
+      items:
+      - { kind: equipment, id: map_case, qty: 1 }
+      - { kind: equipment, id: bedroll, qty: 1 }
+      - { kind: equipment, id: common_clothes, qty: 1 }
+      - { kind: tool, id: herbalism_kit, qty: 1 }
   noble:
     name:
       ru: Благородный
@@ -299,6 +339,11 @@ backgrounds:
       count: 1
       choice: true
       pool: gaming_sets
+    - type: equipment_item
+      items:
+      - { kind: equipment, id: fine_clothes, qty: 1 }
+      - { kind: equipment, id: signet_ring, qty: 1 }
+      - { kind: equipment, id: letter, qty: 1 }
   outlander:
     name:
       ru: Чужеземец
@@ -339,6 +384,12 @@ backgrounds:
       count: 1
       choice: true
       pool: musical_instruments
+    - type: equipment_item
+      items:
+      - { kind: weapon, id: quarterstaff, qty: 1 }
+      - { kind: equipment, id: hunting_trap, qty: 1 }
+      - { kind: equipment, id: trophy, qty: 1 }
+      - { kind: equipment, id: travelers_clothes, qty: 1 }
   sage:
     name:
       ru: Мудрец
@@ -379,6 +430,14 @@ backgrounds:
       count: 2
       choice: true
       pool: common
+    - type: equipment_item
+      items:
+      - { kind: equipment, id: ink, qty: 1 }
+      - { kind: equipment, id: quill, qty: 1 }
+      - { kind: equipment, id: paper, qty: 1 }
+      - { kind: weapon, id: dagger, qty: 1 }
+      - { kind: equipment, id: letter, qty: 1 }
+      - { kind: equipment, id: common_clothes, qty: 1 }
   sailor:
     name:
       ru: Моряк
@@ -417,6 +476,12 @@ backgrounds:
     - type: tool_proficiency
       tools:
       - water_vehicles
+    - type: equipment_item
+      items:
+      - { kind: weapon, id: club, qty: 1 }
+      - { kind: equipment, id: silk_rope, qty: 1 }
+      - { kind: equipment, id: trinket, qty: 1 }
+      - { kind: equipment, id: common_clothes, qty: 1 }
   soldier:
     name:
       ru: Солдат
@@ -428,15 +493,17 @@ backgrounds:
       ru:
       - знак отличия
       - трофей
-      - игровой набор
+      - набор игровых костей или колода карт
       - обычная одежда
       - 10 зм
       en:
       - insignia of rank
       - trophy
-      - gaming set
+      - bone dice or deck of cards
       - common clothes
       - 10 gp
+    inventory_tool_pools:
+      - soldier_gaming
     feature:
       name:
         ru: Воинское звание
@@ -455,7 +522,12 @@ backgrounds:
     - type: tool_proficiency
       count: 1
       choice: true
-      pool: gaming_sets
+      pool: soldier_gaming
+    - type: equipment_item
+      items:
+      - { kind: equipment, id: emblem, qty: 1 }
+      - { kind: equipment, id: trophy, qty: 1 }
+      - { kind: equipment, id: common_clothes, qty: 1 }
   urchin:
     name:
       ru: Беспризорник
@@ -496,3 +568,9 @@ backgrounds:
     - type: tool_proficiency
       tools:
       - disguise_kit
+    - type: equipment_item
+      items:
+      - { kind: weapon, id: dagger, qty: 1 }
+      - { kind: equipment, id: map_case, qty: 1 }
+      - { kind: equipment, id: trinket, qty: 1 }
+      - { kind: equipment, id: common_clothes, qty: 1 }

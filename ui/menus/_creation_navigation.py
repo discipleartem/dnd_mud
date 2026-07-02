@@ -1,5 +1,6 @@
 """Навигация «назад» и ветвление шагов создания персонажа."""
 
+from core.expertise import expertise_step_required
 from core.feats import race_feat_step_required
 from core.subclasses import subclass_offered_at_creation
 from ui.menus._creation_state import CreationStep, _CreationState
@@ -12,7 +13,16 @@ def feats_step_required(state: _CreationState) -> bool:
     return race_feat_step_required(state.race_id, state.subrace_id)
 
 
-def back_step_from_skills(_state: _CreationState) -> CreationStep:
+def back_step_from_equipment(state: _CreationState) -> CreationStep:
+    """Куда вернуться с шага снаряжения."""
+    if state.class_id and expertise_step_required(
+        state.class_id, state.start_level
+    ):
+        return "expertise"
+    return "skills"
+
+
+def back_step_from_skills(state: _CreationState) -> CreationStep:
     """Куда вернуться с шага навыков."""
     return "proficiencies"
 

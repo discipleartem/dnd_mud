@@ -28,12 +28,12 @@
 | Глава PHB | Файл | Статус в MUD |
 |-----------|------|--------------|
 | Введение | [rules/00-introduction.md](rules/00-introduction.md) | Частично (`core/dice.py`) |
-| 1. Создание персонажа | [rules/01-character-creation.md](rules/01-character-creation.md) | Реализовано (языки, предыстория, владения; без стартового снаряжения) |
+| 1. Создание персонажа | [rules/01-character-creation.md](rules/01-character-creation.md) | Реализовано (в т.ч. стартовое снаряжение класса и предыстории) |
 | 2. Расы | [rules/02-races.md](rules/02-races.md) | Частично (4 из 9 рас PHB) |
-| 3. Классы | [rules/03-classes.md](rules/03-classes.md) | Частично (4 из 12 классов PHB) |
+| 3. Классы | [rules/03-classes.md](rules/03-classes.md) | Частично (4 из 12 классов PHB; спасброски и стартовое снаряжение — да) |
 | 3a. Подклассы | [rules/03-subclasses.md](rules/03-subclasses.md) | Phase 2; каталог — только `classes.yaml` |
-| 4. Личность и предыстория | [rules/04-backgrounds.md](rules/04-backgrounds.md) | Частично (выбор предыстории) |
-| 5. Снаряжение | [rules/05-equipment.md](rules/05-equipment.md) | Частично (каталог, владения, КД/атака API) |
+| 4. Личность и предыстория | [rules/04-backgrounds.md](rules/04-backgrounds.md) | Частично (выбор, навыки, стартовое снаряжение в инвентаре) |
+| 5. Снаряжение | [rules/05-equipment.md](rules/05-equipment.md) · [справочник PHB стр. 143–161](rules/05-equipment-reference.md) | Частично (каталог, инвентарь, экипировка, КД; бой — Phase 2) |
 | 6. Мультиклассирование | [rules/06-multiclass.md](rules/06-multiclass.md) | **Запрещено** (один класс на персонажа) |
 | 6a. Черты (feats) | [rules/06-feats.md](rules/06-feats.md) | Реализовано (создание + ASI/feat при левелапе); ongoing-требования и бой — Phase 2 |
 | 7. Использование характеристик | [rules/07-ability-scores.md](rules/07-ability-scores.md) | Частично (checks API, PB по уровню) |

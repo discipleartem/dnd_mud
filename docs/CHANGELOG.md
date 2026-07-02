@@ -5,13 +5,20 @@
 ### Fixed
 - HardCore: прирост HP от «кость + CON» не опускается ниже 1 на любом уровне (`core/progression.py`)
 - Главное меню: пункт переключения языка кросс-локально (`ru` → «Languages», `en` → «Языки»)
+- Стартовое снаряжение предысторий: PHB-наборы (солдат — кости/карты, преступник — тёмная одежда), `inventory_tool_pools`
+- Меню снаряжения класса: владение конкретным оружием (warhammer у дварфа), предупреждение `(Сил N)` для тяжёлых доспехов
+- Карточка персонажа: слоты экипировки всегда видны, PHB-подсказки доспеха/оружия, versatile/ammo/range
 
 ### Changed
 - MUD_PRD §3.2.1: перекрёстная ссылка на правила расчёта HP по режимам сложности
+- Docs/rules: индекс `DND_RULES.md`, `05-equipment`, `04-backgrounds`, `ARCHITECTURE`, `MUD_PRD` — статус инвентаря и шага `equipment` синхронизирован с кодом
 - Git workflow: merge policy в `DEVELOPMENT.md` — прямой push в `dev` разрешён; squash task→`dev` по практике; `main_rules` только на `main` (без `dev_rules`)
 - Git workflow: **все** ветки `merged/*` — только локальный архив; запрещены push/upstream/PR на `origin`; legacy `origin/merged/*` удалять (`dnd-mud-workflow.mdc`, `01-operations.mdc`, `user-protocols.mdc`)
 
 ### Added
+- **Спасброски класса:** `saving_throws` в `classes.yaml`, поле `save_proficiencies` на `Character`, `core/checks.py` (`saving_throw_modifier`, `saving_throw`)
+- **Стартовое снаряжение:** `starting_equipment` в YAML, шаг `equipment` при создании, `core/starting_equipment.py`, `core/inventory.py` (инвентарь, экипировка, `compute_ac`)
+- PHB-наборы (`explorers_pack`, `dungeoneers_pack`, …) в `database/equipment/equipment.yaml`
 - `make test-fast` / `make test-cov` — быстрый pytest и детальный coverage-отчёт
 - `tests/creation_helpers.py` — golden-path контекст создания персонажа
 - Incremental verify: YAML-only diff в `database/` / `mods/` → `DATA_PATH_TESTS`

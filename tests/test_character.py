@@ -72,6 +72,7 @@ def test_save_character_roundtrip(characters_dir: Path) -> None:
         feat_choices={"resilient": {"ability": "constitution"}},
     )
     assert saved.level == 1
+    assert saved.experience == 0
     loaded = character_mod.load_characters().characters[-1]
     assert loaded.skills == ["athletics"]
     with open(
@@ -79,6 +80,19 @@ def test_save_character_roundtrip(characters_dir: Path) -> None:
     ) as f:
         data = json.load(f)
     assert data["background_id"] == "soldier"
+
+
+def test_save_character_easy_start_level_xp(characters_dir: Path) -> None:
+    stats = dict.fromkeys(character_mod.STAT_NAMES, 12)
+    saved = character_mod.save_character(
+        name="EasyHero",
+        race_id="human",
+        class_id="fighter",
+        difficulty="easy",
+        stats=stats,
+    )
+    assert saved.level == 3
+    assert saved.experience == 900
 
 
 def test_character_json_uses_canonical_field_names() -> None:

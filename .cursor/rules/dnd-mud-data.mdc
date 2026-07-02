@@ -92,4 +92,4 @@ overlays:
 
 1. Keep `ru` and `en` in sync for new localization keys
 2. YAML for new races/classes/items; JSON for new save/config shapes
-3. Run `make verify-scope` after changes that affect loading
+3. Полный прогон — в [`dnd-mud-review`](../skills/dnd-mud-review/SKILL.md) (конец task-ветки), не после каждого YAML-правки

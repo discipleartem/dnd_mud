@@ -41,6 +41,7 @@ grants:
 | `tool_proficiency` | `tools[]` или `choice`+`pool` | `core/proficiencies.py` |
 | `language` | `languages[]` или `choice`+`pool` | `core/backgrounds.py`, races |
 | `feat` | `count`, `from` | `core/feats.py` |
+| `save_proficiency` | `ability` или `choice: true` + выбор в `feat_choices` (Resilient) | `core/feat_apply.py` |
 | `hit_point_bonus` | `amount`, `per_level` | `core/feats.py`, `core/races.py` |
 
 Типы вроде `darkvision`, `resistance` — в YAML допустимы; combat engine (Phase 2) пока не читает.
@@ -102,16 +103,91 @@ backgrounds:
         count: 2
         choice: true
         pool: common
+      - type: equipment_item
+        items:
+          - { kind: equipment, id: emblem, qty: 1 }
+          - { kind: equipment, id: book, qty: 1 }
+    inventory_tool_pools:   # опционально: picks инструментов → инвентарь PHB
+      - musical_instruments
     feature:   # flavor до game engine
       name: { ru: "...", en: "..." }
       description: { ru: "...", en: "..." }
 ```
 
-## Классы и черты
+Grant `equipment_item` — фиксированные предметы предыстории (`core/backgrounds.get_background_equipment_items`).
+
+`inventory_tool_pools` — whitelist пулов: выбранные на шаге владений инструменты попадают в инвентарь только если id входит в разрешённый пул (например `soldier_gaming` → `dice_set` / `playing_cards`). Владение без предмета (thieves' tools у преступника) — только `tool_proficiency`, не `equipment_item`.
+
+## Классы (`database/classes/classes.yaml`)
+
+Помимо `features[]`, `subclasses[]`, `proficiencies`:
+
+| Поле | Описание |
+|------|----------|
+| `saving_throws` | Список ability-id (`strength`, …) — два спасброска класса PHB |
+| `starting_equipment` | Машиночитаемое стартовое снаряжение (см. ниже) |
+
+### `starting_equipment`
+
+```yaml
+starting_equipment:
+  choices:
+    - id: armor
+      options:
+        - id: chain_mail
+          label: { ru: "а) Кольчуга", en: "a) Chain mail" }
+          items:
+            - { kind: armor, id: chain_mail, qty: 1 }
+          requires_armor: heavy          # опционально: подсказка в UI
+        - id: martial_shield
+          label: { ru: "…", en: "…" }
+          items:
+            - { kind: armor, id: shield, qty: 1 }
+          weapon_picks:
+            - pool: martial
+          requires_weapon_pool: martial
+  fixed:
+    - { kind: equipment, id: holy_symbol, qty: 1 }
+```
+
+| Поле опции | Назначение |
+|------------|------------|
+| `items[]` | `{ kind, id, qty }` — `weapon`, `armor`, `tool`, `equipment` |
+| `weapon_picks[]` | `{ pool }` — UI выбирает конкретное оружие из каталога |
+| `tool_picks[]` | `{ pool }` — UI выбирает инструмент |
+| `requires_weapon_pool` / `requires_armor` | Фильтр доступности по владениям |
+
+Runtime: `core/starting_equipment.py` → `resolve_starting_items`; выборы игрока — `equipment_choices` на `Character`.
+
+## Снаряжение (`database/equipment/`)
+
+Каталог по id: `weapons.yaml`, `armor.yaml`, `tools.yaml`, `equipment.yaml`.
+
+Наборы PHB (`category: pack`) с одноуровневым `contents[]` — при добавлении в инвентарь pack **разворачивается** (`core/inventory.expand_pack_contents`). Справочник предметов — [`rules/05-equipment-reference.md`](rules/05-equipment-reference.md).
+
+```yaml
+explorers_pack:
+  name: "Набор путешественника"
+  category: pack
+  contents:
+    - { kind: equipment, id: backpack, qty: 1 }
+```
+
+## Save JSON — поля персонажа (инвентарь и спасброски)
+
+Опциональные ключи в `saves/characters/{save_slug}.json` (модель `Character`, `core/models.py`). Отсутствие ключа → `[]` / `{}` (обратная совместимость со старыми сейвами).
+
+| Ключ | Тип | Описание |
+|------|-----|----------|
+| `save_proficiencies` | `string[]` | ability-id владения спасбросками (класс + Resilient) |
+| `inventory` | `{ kind, id, qty }[]` | Стартовый и предысторический инвентарь |
+| `equipped` | object | `armor`, `shield`, `main_hand`, `off_hand`, `main_hand_grip` |
+| `equipment_choices` | `{ choice_id: option_id }` | Аудит выборов а/б при создании |
+
+## Классы и черты (прочее)
 
 - **Классы:** `features[]` с `level` — без `progression.<level>` до Phase 2; при миграции — `grants` внутри feature или параллельно.
 - **Черты:** `grants[]`, `description_full` для UI PHB-текста.
-- **Снаряжение:** dict-by-id в `database/equipment/` — без изменений.
 
 ## Mod overlay
 

@@ -1,6 +1,6 @@
 # Глава 5: Снаряжение
 
-> Источник: PHB, стр. 143–162. Полный текст — `docs/PHB_ D&D_2023 RUS.pdf` (локально).
+> Источник: PHB, стр. 143–161. **Справочник по главе** — [05-equipment-reference.md](05-equipment-reference.md). Полный текст — `docs/PHB_ D&D_2023 RUS.pdf` (локально).
 
 ## Для игроков
 
@@ -30,10 +30,11 @@
 
 | Аспект | Значение |
 |--------|----------|
-| Статус | **Частично:** каталог YAML + владения + API КД/атаки; инвентарь и стартовое снаряжение — Phase 2 |
+| Статус | **Частично:** каталог YAML + владения + API КД/атаки; **инвентарь и стартовое снаряжение класса при создании**; боевой цикл — Phase 2 |
 | YAML | [`database/equipment/armor.yaml`](../../database/equipment/armor.yaml), [`weapon.yaml`](../../database/equipment/weapon.yaml), [`equipment.yaml`](../../database/equipment/equipment.yaml), [`tools.yaml`](../../database/equipment/tools.yaml) |
-| Core | [`core/equipment.py`](../../core/equipment.py), [`core/proficiencies.py`](../../core/proficiencies.py) |
-| Заметки | На персонаже — **токены** владений; `armor_id`/`weapon_id` в combat API передаются явно |
+| Core | [`core/equipment.py`](../../core/equipment.py), [`core/proficiencies.py`](../../core/proficiencies.py), [`core/inventory.py`](../../core/inventory.py), [`core/starting_equipment.py`](../../core/starting_equipment.py) |
+| UI | [`ui/menus/proficiencies.py`](../../ui/menus/proficiencies.py), [`ui/menus/equipment.py`](../../ui/menus/equipment.py) |
+| Заметки | На персонаже — **токены** владений; `inventory` / `equipped` в JSON; `armor_id`/`weapon_id` в combat API передаются явно |
 
 ### Владение (PHB)
 
@@ -59,14 +60,19 @@
 
 | Механика | Модуль |
 |----------|--------|
-| Загрузка оружия, доспехов, инструментов | `core/equipment.py` |
+| Загрузка оружия, доспехов, инструментов, наборов PHB | `core/equipment.py` |
 | Владения (класс/раса/предыстория/подкласс) | `core/proficiencies.py` |
+| Инвентарь, авто-экипировка, `compute_ac` | `core/inventory.py` |
+| Стартовое снаряжение класса (`starting_equipment` в YAML) | `core/starting_equipment.py` |
+| Стартовое снаряжение предыстории | `core/backgrounds.py` → merge в `save_character` |
 | Шаг выбора инструментов при создании | `ui/menus/proficiencies.py` |
+| Шаг выбора снаряжения класса (а/б) | `ui/menus/equipment.py` |
+| Карточка персонажа: инвентарь, экипировка, КД | `ui/menus/_display/_character.py` |
 
 ### Запланировано (Phase 2)
 
-- Инвентарь персонажа (`equipped_armor`, `equipped_weapon`)
-- Стартовое снаряжение класса/предыстории в UI
+- Смена экипировки после создания (меню «надеть/снять»)
+- Покупка за золото, переносимость и encumbrance
 - Полный боевой цикл (урон, инициатива) — см. [09-combat.md](09-combat.md)
 
 ### Зависимости engine

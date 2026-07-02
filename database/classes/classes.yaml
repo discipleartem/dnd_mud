@@ -22,15 +22,91 @@ classes:
     - perception
     - survival
     skill_choices_count: 2
-    equipment:
-      weapons:
-      - все простые
-      - все воинские
-      armor:
-      - все доспехи
-      - щиты
-      tools:
-      - нет
+    starting_equipment:
+      choices:
+      - id: armor
+        options:
+        - id: chain_mail
+          label:
+            ru: а) Кольчуга
+            en: a) Chain mail
+          items:
+          - kind: armor
+            id: chain_mail
+            qty: 1
+        - id: leather_longbow
+          label:
+            ru: б) Кожаный доспех, длинный лук и 20 стрел
+            en: b) Leather armor, longbow and 20 arrows
+          items:
+          - kind: armor
+            id: leather
+            qty: 1
+          - kind: weapon
+            id: longbow
+            qty: 1
+          - kind: equipment
+            id: arrows
+            qty: 1
+      - id: weapon_primary
+        options:
+        - id: martial_shield
+          label:
+            ru: а) Воинское оружие и щит
+            en: a) A martial weapon and a shield
+          items:
+          - kind: armor
+            id: shield
+            qty: 1
+          weapon_picks:
+          - pool: martial
+        - id: two_martial
+          label:
+            ru: б) Два воинских оружия
+            en: b) Two martial weapons
+          weapon_picks:
+          - pool: martial
+          - pool: martial
+      - id: ranged_or_axes
+        options:
+        - id: crossbow
+          label:
+            ru: а) Лёгкий арбалет и 20 болтов
+            en: a) Light crossbow and 20 bolts
+          items:
+          - kind: weapon
+            id: light_crossbow
+            qty: 1
+          - kind: equipment
+            id: crossbow_bolts
+            qty: 1
+        - id: handaxes
+          label:
+            ru: б) Два ручных топора
+            en: b) Two handaxes
+          items:
+          - kind: weapon
+            id: handaxe
+            qty: 2
+      - id: pack
+        options:
+        - id: dungeoneers_pack
+          label:
+            ru: а) Набор исследователя подземелий
+            en: a) Dungeoneer's pack
+          items:
+          - kind: equipment
+            id: dungeoneers_pack
+            qty: 1
+        - id: explorers_pack
+          label:
+            ru: б) Набор путешественника
+            en: b) Explorer's pack
+          items:
+          - kind: equipment
+            id: explorers_pack
+            qty: 1
+      fixed: []
     proficiencies:
       weapons:
       - simple
@@ -247,6 +323,9 @@ classes:
     spellcasting: false
     subclass_choice_level: 3
     prime_ability: dexterity
+    saving_throws:
+    - dexterity
+    - intelligence
     skill_choices:
     - acrobatics
     - athletics
@@ -260,18 +339,83 @@ classes:
     - sleight_of_hand
     - stealth
     skill_choices_count: 4
-    equipment:
-      weapons:
-      - простые
-      - ручные арбалеты
-      - длинные мечи
-      - рапиры
-      - короткие мечи
-      armor:
-      - лёгкие
-      tools:
-      - набор вора
-      - набор отмычек
+    starting_equipment:
+      choices:
+      - id: melee
+        options:
+        - id: rapier
+          label:
+            ru: а) Рапира
+            en: a) Rapier
+          items:
+          - kind: weapon
+            id: rapier
+            qty: 1
+        - id: shortsword
+          label:
+            ru: б) Короткий меч
+            en: b) Shortsword
+          items:
+          - kind: weapon
+            id: shortsword
+            qty: 1
+      - id: ranged
+        options:
+        - id: shortbow
+          label:
+            ru: а) Короткий лук и 20 стрел
+            en: a) Shortbow and 20 arrows
+          items:
+          - kind: weapon
+            id: shortbow
+            qty: 1
+          - kind: equipment
+            id: arrows
+            qty: 1
+        - id: shortsword_alt
+          label:
+            ru: б) Короткий меч
+            en: b) Shortsword
+          items:
+          - kind: weapon
+            id: shortsword
+            qty: 1
+      - id: pack
+        options:
+        - id: burglars_pack
+          label:
+            ru: а) Набор взломщика
+            en: a) Burglar's pack
+          items:
+          - kind: equipment
+            id: burglars_pack
+            qty: 1
+        - id: dungeoneers_pack
+          label:
+            ru: б) Набор исследователя подземелий
+            en: b) Dungeoneer's pack
+          items:
+          - kind: equipment
+            id: dungeoneers_pack
+            qty: 1
+        - id: explorers_pack
+          label:
+            ru: в) Набор путешественника
+            en: c) Explorer's pack
+          items:
+          - kind: equipment
+            id: explorers_pack
+            qty: 1
+      fixed:
+      - kind: armor
+        id: leather
+        qty: 1
+      - kind: weapon
+        id: dagger
+        qty: 2
+      - kind: tool
+        id: thieves_tools
+        qty: 1
     proficiencies:
       weapons:
       - simple
@@ -486,6 +630,9 @@ classes:
     spellcasting_level: 1
     subclass_choice_level: 1
     prime_ability: wisdom
+    saving_throws:
+    - wisdom
+    - charisma
     skill_choices:
     - history
     - insight
@@ -494,15 +641,99 @@ classes:
     - religion
     - persuasion
     skill_choices_count: 2
-    equipment:
-      weapons:
-      - простые
-      armor:
-      - лёгкие
-      - средние
-      - щиты
-      tools:
-      - нет
+    starting_equipment:
+      choices:
+      - id: weapon
+        options:
+        - id: mace
+          label:
+            ru: а) Булава
+            en: a) Mace
+          items:
+          - kind: weapon
+            id: mace
+            qty: 1
+        - id: warhammer
+          label:
+            ru: б) Боевой молот (если владеете)
+            en: b) Warhammer (if proficient)
+          requires_weapon_pool: martial
+          items:
+          - kind: weapon
+            id: warhammer
+            qty: 1
+      - id: armor
+        options:
+        - id: scale_mail
+          label:
+            ru: а) Чешуйчатый доспех
+            en: a) Scale mail
+          requires_armor: medium
+          items:
+          - kind: armor
+            id: scale_mail
+            qty: 1
+        - id: leather
+          label:
+            ru: б) Кожаный доспех
+            en: b) Leather armor
+          items:
+          - kind: armor
+            id: leather
+            qty: 1
+        - id: chain_mail
+          label:
+            ru: в) Кольчуга (если владеете)
+            en: c) Chain mail (if proficient)
+          requires_armor: heavy
+          items:
+          - kind: armor
+            id: chain_mail
+            qty: 1
+      - id: ranged
+        options:
+        - id: crossbow
+          label:
+            ru: а) Лёгкий арбалет и 20 болтов
+            en: a) Light crossbow and 20 bolts
+          items:
+          - kind: weapon
+            id: light_crossbow
+            qty: 1
+          - kind: equipment
+            id: crossbow_bolts
+            qty: 1
+        - id: simple_weapon
+          label:
+            ru: б) Любое простое оружие
+            en: b) Any simple weapon
+          weapon_picks:
+          - pool: simple
+      - id: pack
+        options:
+        - id: priests_pack
+          label:
+            ru: а) Набор священника
+            en: a) Priest's pack
+          items:
+          - kind: equipment
+            id: priests_pack
+            qty: 1
+        - id: explorers_pack
+          label:
+            ru: б) Набор путешественника
+            en: b) Explorer's pack
+          items:
+          - kind: equipment
+            id: explorers_pack
+            qty: 1
+      fixed:
+      - kind: armor
+        id: shield
+        qty: 1
+      - kind: equipment
+        id: emblem
+        qty: 1
     proficiencies:
       weapons:
       - simple
@@ -717,6 +948,9 @@ classes:
     spellcasting_level: 1
     subclass_choice_level: 3
     prime_ability: charisma
+    saving_throws:
+    - dexterity
+    - charisma
     skill_choices:
     - acrobatics
     - animal_handling
@@ -737,17 +971,73 @@ classes:
     - survival
     - performance
     skill_choices_count: 3
-    equipment:
-      weapons:
-      - простые
-      - ручные арбалеты
-      - длинные мечи
-      - рапиры
-      - короткие мечи
-      armor:
-      - лёгкие
-      tools:
-      - три музыкальных инструмента
+    starting_equipment:
+      choices:
+      - id: weapon
+        options:
+        - id: rapier
+          label:
+            ru: а) Рапира
+            en: a) Rapier
+          items:
+          - kind: weapon
+            id: rapier
+            qty: 1
+        - id: longsword
+          label:
+            ru: б) Длинный меч
+            en: b) Longsword
+          items:
+          - kind: weapon
+            id: longsword
+            qty: 1
+        - id: simple_weapon
+          label:
+            ru: в) Любое простое оружие
+            en: c) Any simple weapon
+          weapon_picks:
+          - pool: simple
+      - id: pack
+        options:
+        - id: diplomats_pack
+          label:
+            ru: а) Набор дипломата
+            en: a) Diplomat's pack
+          items:
+          - kind: equipment
+            id: diplomats_pack
+            qty: 1
+        - id: entertainers_pack
+          label:
+            ru: б) Набор артиста
+            en: b) Entertainer's pack
+          items:
+          - kind: equipment
+            id: entertainers_pack
+            qty: 1
+      - id: instrument
+        options:
+        - id: lute
+          label:
+            ru: а) Лютня
+            en: a) Lute
+          items:
+          - kind: tool
+            id: lute
+            qty: 1
+        - id: any_instrument
+          label:
+            ru: б) Любой другой музыкальный инструмент
+            en: b) Any other musical instrument
+          tool_picks:
+          - pool: musical_instruments
+      fixed:
+      - kind: armor
+        id: leather
+        qty: 1
+      - kind: weapon
+        id: dagger
+        qty: 1
     proficiencies:
       weapons:
       - simple
