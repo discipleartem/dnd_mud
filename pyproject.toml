@@ -71,6 +71,9 @@ select = ["E", "F", "W", "I", "N", "UP", "B", "SIM"]
 
 [tool.ruff.lint.per-file-ignores]
 "ui/menus/_deps.py" = ["F401"]
+"scripts/rules_class_data.py" = ["E501"]
+"scripts/build_rules_index.py" = ["E501"]
+"scripts/phb_spell_parse.py" = ["E501", "SIM102"]
 
 [tool.black]
 target-version = ["py312"]
