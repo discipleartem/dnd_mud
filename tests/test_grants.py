@@ -10,6 +10,7 @@ from core.grant_mechanics import (
 from core.grants import grants_from_entity, inherit_flags
 from core.races import (
     collect_race_grants,
+    get_race_and_subrace,
     get_race_bonuses,
     load_races,
     resolve_subrace_id,
@@ -46,13 +47,46 @@ def test_human_race_bonuses_and_subrace() -> None:
     assert resolve_subrace_id("human", None) == "standard"
 
 
-def test_variant_human_grants_no_inherit() -> None:
+def test_variant_human_inherits_race_language_grant() -> None:
+    """Вариант человека наследует выбор языка с уровня расы."""
     grants = collect_race_grants("human", "variant_human")
     types = [g.get("type") for g in grants]
     assert "ability_increase" in types
     assert "feat" in types
     assert "language" in types
     assert types.count("language") == 1
+    _, inherit_grants = inherit_flags(
+        get_race_and_subrace("human", "variant_human")[1] or {}
+    )
+    assert inherit_grants is True
+
+
+def test_subrace_yaml_grants_do_not_duplicate_parent() -> None:
+    """В YAML подраса не повторяют grants базовой расы с тем же type и name."""
+    from core.races import _load_races_yaml
+
+    for race_id, race_info in _load_races_yaml().items():
+        if not isinstance(race_info, dict):
+            continue
+        parent_keys = {
+            (str(g.get("type", "")), str(g.get("name", "")))
+            for g in grants_from_entity(race_info)
+        }
+        subraces = race_info.get("subraces", {})
+        if not isinstance(subraces, dict):
+            continue
+        for subrace_id, subrace_info in subraces.items():
+            if not isinstance(subrace_info, dict):
+                continue
+            _, inherit_grants = inherit_flags(subrace_info)
+            if not inherit_grants:
+                continue
+            for grant in grants_from_entity(subrace_info):
+                key = (str(grant.get("type", "")), str(grant.get("name", "")))
+                assert key not in parent_keys, (
+                    f"{race_id}/{subrace_id}: grant {key} "
+                    "duplicates parent race"
+                )
 
 
 def test_inherit_flags_from_inherit_block() -> None:

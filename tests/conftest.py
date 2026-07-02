@@ -61,6 +61,15 @@ def human_race_with_subraces() -> dict[str, Any]:
     return {
         "name": "Человек",
         "description": "Описание человека",
+        "grants": [
+            {
+                "type": "language",
+                "count": 1,
+                "choice": True,
+                "pool": "common",
+                "name": "Дополнительный язык",
+            }
+        ],
         "subraces": {
             "standard": {
                 "name": "Человек (стандарт)",
@@ -70,7 +79,7 @@ def human_race_with_subraces() -> dict[str, Any]:
             "variant_human": {
                 "name": "Человек (вариант)",
                 "description": "Вариант человека",
-                "inherit": {"ability_bonuses": False, "grants": False},
+                "inherit": {"ability_bonuses": False},
                 "grants": [],
             },
         },

@@ -45,7 +45,7 @@ def test_variant_human_and_language_pools() -> None:
     assert fixed == ["common"]
     choices = get_racial_language_choices("human", "variant_human")
     assert len(choices) == 1
-    assert choices[0][1] == "subrace"
+    assert choices[0][1] == "race"
     common_pool = resolve_language_pool("common", [])
     exotic_pool = resolve_language_pool("exotic", [])
     assert "dwarvish" in common_pool
