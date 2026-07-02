@@ -491,7 +491,7 @@ feats:
     - type: alert
       cannot_be_surprised_while_conscious: true
       hidden_attackers_no_advantage: true
-      name: Бдительность
+      name: Защита от засады
   martial_adept:
     name: Воинский адепт
     description: Два приёма воина и одна кость превосходства (к6).
