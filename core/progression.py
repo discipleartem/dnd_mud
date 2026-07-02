@@ -11,6 +11,7 @@ from core.hp_bonuses import HpBonusSource
 from core.levels import MAX_CHARACTER_LEVEL, clamp_level
 from core.models import Character
 from core.races import get_racial_hp_bonus_sources
+from core.stats import ABILITY_SCORE_DEFAULT
 from core.types import GameDifficulty, StatMap
 
 
@@ -129,7 +130,8 @@ def hp_gain_breakdown_for_level_up(
 ) -> HpGainBreakdown:
     """Разбивка прироста HP за повышение до new_level."""
     hit_dice = get_class_hit_dice(class_id)
-    con_mod = ability_modifier(stats.get("constitution", 10))
+    constitution = stats.get("constitution", ABILITY_SCORE_DEFAULT)
+    con_mod = ability_modifier(constitution)
     bonus_sources = extra_hp_bonus_sources(race_id, subrace_id, feat_ids)
     if difficulty == "hardcore":
         dice = roll(1, hit_dice)
@@ -190,7 +192,8 @@ def max_hp_for_level(
     """Максимум HP на заданном уровне с учётом режима сложности."""
     level = clamp_level(level)
     hit_dice = get_class_hit_dice(class_id)
-    con_mod = ability_modifier(stats.get("constitution", 10))
+    constitution = stats.get("constitution", ABILITY_SCORE_DEFAULT)
+    con_mod = ability_modifier(constitution)
     hp_bonus = extra_hp_per_level(race_id, subrace_id, feat_ids)
     total = 0
     for lvl in range(1, level + 1):

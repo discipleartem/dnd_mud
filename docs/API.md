@@ -120,6 +120,8 @@ remaining_standard_array_pool(used: list[int]) -> list[int]
 point_buy_total_cost(values: list[int]) -> int
 can_assign_point_buy_value(current: StatMap, stat: str, new_value: int) -> bool
 validate_final_stats(stats: StatMap) -> tuple[str, int] | None
+ABILITY_SCORE_MIN = 1
+ABILITY_SCORE_DEFAULT = 10
 ABILITY_SCORE_MAX = 20
 ```
 
@@ -127,7 +129,7 @@ ABILITY_SCORE_MAX = 20
 Параметр `apply_feat_stat_bonuses=False` — если `stats` уже содержат бонусы черт (flow создания после `select_creation_feats`).  
 `max_hp_for_level` — см. `core.progression` (HP на уровне 1–10, включая режим Normal/Easy/HardCore).  
 `update_character` — перезапись JSON после изменений (подкласс, XP и т.д.).
-`validate_final_stats` — первое превышение потолка 20 после всех бонусов; UI вызывает при финализации характеристик.
+`validate_final_stats` — первое нарушение границ PHB (1–20) после всех бонусов; UI вызывает при финализации характеристик.
 
 ### Генерация характеристик
 
@@ -755,7 +757,7 @@ load_adventures() -> list[Adventure]
 ```python
 roll(count=1, sides=20, modifier=0) -> int
 roll_ability_score() -> int
-ability_modifier(score: int) -> int
+ability_modifier(score: int) -> int  # re-export из core.constants
 ```
 
 ---

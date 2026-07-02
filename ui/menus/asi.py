@@ -87,7 +87,7 @@ def _pick_one_stat(
     )
     print()
     for idx, stat in enumerate(available, 1):
-        current = stats.get(stat, 10)
+        current = stats.get(stat, _deps.ABILITY_SCORE_DEFAULT)
         capped = current + amount > 20
         cap_note = ""
         if capped:

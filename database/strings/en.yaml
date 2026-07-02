@@ -93,6 +93,7 @@ character:
   stats_points_overspent: "Overspent points! Reduce some stats."
   stats_points_unspent: "Spend all points! Remaining: {remaining}."
   stats_exceeds_max: "{stat} = {value} exceeds the maximum of {max}!"
+  stats_below_min: "{stat} = {value} is below the minimum of {min}!"
   stats_max_value_15: "Maximum value is 15!"
   stats_not_enough_points: "Not enough points! Reduce another stat."
   stats_generating_random: "Generating stats with 4d6 drop lowest..."

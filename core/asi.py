@@ -3,7 +3,12 @@
 from core.classes import get_class_dict, iter_class_grants
 from core.dice import ability_modifier
 from core.models import Character
-from core.stats import ABILITY_SCORE_MAX, STAT_NAMES, apply_bonuses_to_stats
+from core.stats import (
+    ABILITY_SCORE_DEFAULT,
+    ABILITY_SCORE_MAX,
+    STAT_NAMES,
+    apply_bonuses_to_stats,
+)
 from core.types import StatMap
 
 ASI_FEATURE_ID = "ability_score_improvement"
@@ -69,8 +74,10 @@ def con_hp_bonus_from_asi(
     old_stats: StatMap, new_stats: StatMap, level: int
 ) -> int:
     """При росте модификатора CON — +1 max HP за каждый достигнутый уровень."""
-    old_mod = ability_modifier(old_stats.get("constitution", 10))
-    new_mod = ability_modifier(new_stats.get("constitution", 10))
+    old_con = old_stats.get("constitution", ABILITY_SCORE_DEFAULT)
+    new_con = new_stats.get("constitution", ABILITY_SCORE_DEFAULT)
+    old_mod = ability_modifier(old_con)
+    new_mod = ability_modifier(new_con)
     if new_mod <= old_mod:
         return 0
     return level * (new_mod - old_mod)

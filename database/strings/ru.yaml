@@ -93,6 +93,7 @@ character:
   stats_points_overspent: "Перерасходованы очки! Уменьшите некоторые характеристики."
   stats_points_unspent: "Распределите все очки! Осталось: {remaining}."
   stats_exceeds_max: "Характеристика {stat} = {value} превышает максимум {max}!"
+  stats_below_min: "Характеристика {stat} = {value} ниже минимума {min}!"
   stats_max_value_15: "Максимальное значение 15!"
   stats_not_enough_points: "Недостаточно очков! Уменьшите другую характеристику."
   stats_generating_random: "Генерируем характеристики методом 4d6 drop lowest..."
