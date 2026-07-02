@@ -122,12 +122,18 @@ dnd_mud/
 │   ├── test_*.py            # ~20 файлов: core / menus / data / meta
 │   └── …                    # см. группы в §Тестирование ниже
 └── docs/                    # Документация
+    ├── README.md            # Индекс документации
     ├── DATA_SCHEMA.md       # Схема YAML (grants, subraces, mods)
-    ├── DND_RULES.md         # Правила D&D 5e (справочник по PHB)
-    ├── rules/               # Главы справочника
+    ├── DND_RULES.md         # Правила D&D 5e (оглавление PHB)
+    ├── rules/               # Справочник PHB (layout agent-v2)
+    │   ├── README.md        # Guide для агентов
+    │   ├── _index/lookup.yaml
+    │   ├── chapters/        # Главы 00–11
+    │   └── entities/        # Карточки рас, классов, заклинаний…
     ├── MUD_PRD.md
     ├── ARCHITECTURE.md
     ├── API.md
+    ├── BACKLOG.md
     ├── DEVELOPMENT.md
     └── CHANGELOG.md
 ```

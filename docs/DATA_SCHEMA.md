@@ -163,7 +163,7 @@ Runtime: `core/starting_equipment.py` → `resolve_starting_items`; выборы
 
 Каталог по id: `weapons.yaml`, `armor.yaml`, `tools.yaml`, `equipment.yaml`.
 
-Наборы PHB (`category: pack`) с одноуровневым `contents[]` — при добавлении в инвентарь pack **разворачивается** (`core/inventory.expand_pack_contents`). Справочник предметов — [`rules/05-equipment-reference.md`](rules/05-equipment-reference.md).
+Наборы PHB (`category: pack`) с одноуровневым `contents[]` — при добавлении в инвентарь pack **разворачивается** (`core/inventory.expand_pack_contents`). Справочник предметов — [`rules/chapters/05-equipment-reference.md`](rules/chapters/05-equipment-reference.md).
 
 ```yaml
 explorers_pack:
@@ -228,7 +228,7 @@ races:
 | ID | Задача | Триггер | Целевые файлы |
 |----|--------|---------|---------------|
 | `class-progression` | `progression.<level>.grants` вместо плоского `class_features[]` | ✅ YAML + accessor (`iter_class_grants`); авто-применение при левелапе — Phase 2 |
-| `combat-usage` | Поле `usage: passive \| action \| bonus_action \| reaction` у grants/features | Реализация [`rules/09-combat.md`](rules/09-combat.md) | `database/classes/*.yaml`, combat resolver |
+| `combat-usage` | Поле `usage: passive \| action \| bonus_action \| reaction` у grants/features | Реализация [`rules/chapters/09-combat.md`](rules/chapters/09-combat.md) | `database/classes/*.yaml`, combat resolver |
 
 ### Валидация и метаданные
 

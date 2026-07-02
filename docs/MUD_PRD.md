@@ -51,7 +51,7 @@
 | Спасброски (модификатор, бросок к20) | Частично | При создании и на карточке (`core/checks.py`); в сценариях — Phase 2 |
 | Бонус мастерства | Реализовано | `core/constants.proficiency_bonus(level)` |
 | Бой (инициатива, атаки, урон, смерть, укрытие) | Запланировано | Phase 2 engine; см. `09-combat.md` |
-| Заклинания и ячейки | Запланировано | См. `10-spells.md` |
+| Заклинания и ячейки | Запланировано | См. `10-spellcasting.md`, `11-spells.md` |
 | Снаряжение, КД, оружие | Частично | Каталог, инвентарь, экипировка, шаг `equipment`; бой — Phase 2; см. `05-equipment.md` |
 | Предыстории | Частично | Выбор, навыки, стартовое снаряжение в инвентаре; feature — Phase 2; см. `04-backgrounds.md` |
 | Мультикласс | **Запрещено** | Один класс на персонажа (`class_id`); см. `06-multiclass.md` |
@@ -100,7 +100,7 @@
 
 **Потолок уровня:** в runtime реализованы только уровни **1–10** (`MAX_CHARACTER_LEVEL`). Умения и прогрессия с `level > 10` в YAML — справочные.
 
-**Расчёт HP по режиму** (`core/progression.py`): Normal/Easy — на 1 ур. максимум кости + CON с полом `max(1, …)`, на 2+ — среднее кости + CON; HardCore — бросок кости + CON на **каждом** уровне с тем же полом для части «кость + CON»; бонусы расы и черт добавляются сверху. Подробно: [docs/rules/01-character-creation.md](rules/01-character-creation.md), [docs/rules/03-classes.md](rules/03-classes.md).
+**Расчёт HP по режиму** (`core/progression.py`): Normal/Easy — на 1 ур. максимум кости + CON с полом `max(1, …)`, на 2+ — среднее кости + CON; HardCore — бросок кости + CON на **каждом** уровне с тем же полом для части «кость + CON»; бонусы расы и черт добавляются сверху. Подробно: [`rules/chapters/01-character-creation.md`](rules/chapters/01-character-creation.md), [`rules/chapters/03-classes.md`](rules/chapters/03-classes.md).
 
 **Выбор подкласса по режимам**
 
@@ -200,7 +200,7 @@
 ```
 - Тип ввода: **integer** по нумерованному списку.
 
-**Ограниченный каталог (Pre-Alpha).** В базовой поставке — подмножество PHB (см. [`02-races.md`](rules/02-races.md)): `human`, `elf`, `dwarf`, `half_orc` с подрасами из PHB 2023 RUS в YAML. Остальные расы PHB **осознанно не включены** в ядро; расширение — через механизм **Addon** (официальное дополнение контента, `type: addon` в метаданных мода, §5.4).
+**Ограниченный каталог (Pre-Alpha).** В базовой поставке — подмножество PHB (см. [`rules/chapters/02-races.md`](rules/chapters/02-races.md)): `human`, `elf`, `dwarf`, `half_orc` с подрасами из PHB 2023 RUS в YAML. Остальные расы PHB **осознанно не включены** в ядро; расширение — через механизм **Addon** (официальное дополнение контента, `type: addon` в метаданных мода, §5.4).
 
 **Особенности рас (grants).** На экране выбора показываются название и описание из YAML. **Владения** из `grants[]` (оружие, доспехи, инструменты) применяются через `core/proficiencies.py` (нормализация — `core/grants.py`). Прочая механика (тёмное зрение, сопротивления, владения **навыками** lore college и т.д.) — Phase 2. Исключение: выборные бонусы к характеристикам (`type: ability_increase`, напр. variant human) — реализованы в flow генерации stats (§3.4.6). Схема YAML: [`DATA_SCHEMA.md`](DATA_SCHEMA.md).
 
@@ -274,7 +274,7 @@
 - После выбора: `background_id` в JSON; навыки предыстории добавляются в state для шага навыков.
 - Предыстория выбирается **до** класса (PHB: навыки предыстории учитываются при выборе классовых навыков).
 - Инструменты предыстории — `tool_proficiencies` в YAML; выбор на шаге владений (§3.4.12). Стартовое снаряжение (`equipment_item`, `inventory_tool_pools`) мержится в инвентарь при сохранении; механика feature — Phase 2.
-- См. [`04-backgrounds.md`](rules/04-backgrounds.md).
+- См. [`rules/chapters/04-backgrounds.md`](rules/chapters/04-backgrounds.md).
 
 #### 3.4.8. Языки (реализовано)
 - Шаг **после предыстории**: фиксированные языки расы + выборные из `features` + языки предыстории (`languages.count > 0`).
@@ -289,11 +289,11 @@
 - Тип ввода: **integer** по нумерованному списку.
 - После выбора класса: если `subclass_offered_at_creation(difficulty, class_id)` — переход к §3.4.10; иначе §3.4.12 (владения) → §3.4.11 (навыки).
 
-**Один класс на персонажа.** Мультиклассирование **запрещено** на текущем этапе: при создании выбирается один класс (`class_id`), при повышении уровня класс не меняется. См. [`06-multiclass.md`](rules/06-multiclass.md).
+**Один класс на персонажа.** Мультиклассирование **запрещено** на текущем этапе: при создании выбирается один класс (`class_id`), при повышении уровня класс не меняется. См. [`rules/chapters/06-multiclass.md`](rules/chapters/06-multiclass.md).
 
-**Ограниченный каталог (Pre-Alpha).** В базовой поставке — четыре класса PHB (см. [`03-classes.md`](rules/03-classes.md)): `fighter`, `rogue`, `cleric`, `bard` с подклассами **только из PHB 2023 RUS** (воин: мастер боевых искусств, мистический рыцарь, чемпион; плут: вор, убийца, мистический ловкач; жрец: домены жизни, обмана, света; бард: коллегии доблести и знаний). Остальные классы **осознанно не включены**; расширение — через **Addon** (§5.4).
+**Ограниченный каталог (Pre-Alpha).** В базовой поставке — четыре класса PHB (см. [`rules/chapters/03-classes.md`](rules/chapters/03-classes.md)): `fighter`, `rogue`, `cleric`, `bard` с подклассами **только из PHB 2023 RUS** (воин: мастер боевых искусств, мистический рыцарь, чемпион; плут: вор, убийца, мистический ловкач; жрец: домены жизни, обмана, света; бард: коллегии доблести и знаний). Остальные классы **осознанно не включены**; расширение — через **Addon** (§5.4).
 
-**Особенности классов.** Поля `features`, `subclasses`, `skill_choices`, `starting_equipment`, `saving_throws` в YAML — источник для UI и save. Применение умений в бою, ячейки заклинаний — **запланированы** (Phase 2). Выбор навыков — §3.4.11; снаряжение — §3.4.13; подклассы — §3.4.10 и [`03-subclasses.md`](rules/03-subclasses.md).
+**Особенности классов.** Поля `features`, `subclasses`, `skill_choices`, `starting_equipment`, `saving_throws` в YAML — источник для UI и save. Применение умений в бою, ячейки заклинаний — **запланированы** (Phase 2). Выбор навыков — §3.4.11; снаряжение — §3.4.13; подклассы — §3.4.10 и [`rules/chapters/03-subclasses.md`](rules/chapters/03-subclasses.md).
 
 #### 3.4.10. Выбор подкласса (реализовано)
 - Экран по образцу выбора **подрасы**: полный обзор выбранного класса + список архетипов с деталями (`description`, умения подкласса до 10 ур.).
@@ -307,7 +307,7 @@
 - Выборы инструментов: класс (`proficiencies.tools.choice`), предыстория (`tool_proficiencies.choices`), подкласс (напр. battle master — ремесленные инструменты).
 - Результат: `weapon_proficiencies`, `armor_proficiencies`, `tool_proficiencies` в JSON персонажа.
 - UI: `ui/menus/proficiencies.py`; поздний выбор подкласса — `ui/menus/subclass_trainer.py`.
-- См. [`05-equipment.md`](rules/05-equipment.md).
+- См. [`rules/chapters/05-equipment.md`](rules/chapters/05-equipment.md).
 
 #### 3.4.11. Выбор навыков (реализовано)
 - Объединение: расовые владения + навыки предыстории (из state) + выбор класса.
@@ -320,7 +320,7 @@
 - Шаг **после** навыков (и expertise): выбор опций а/б по группам (оружие, доспех, набор и т.д.); pool-опции — подменю конкретного id с учётом владений.
 - Результат: `equipment_choices` в JSON; `inventory` и `equipped` формируются в `save_character` (`core/starting_equipment.py`, `core/inventory.equip_defaults`).
 - UI: `ui/menus/equipment.py`; карточка персонажа — инвентарь, экипировка, КД.
-- См. [`05-equipment.md`](rules/05-equipment.md), [`01-character-creation.md`](rules/01-character-creation.md).
+- См. [`rules/chapters/05-equipment.md`](rules/chapters/05-equipment.md), [`rules/chapters/01-character-creation.md`](rules/chapters/01-character-creation.md).
 
 JSON персонажа включает `"languages": [...]`, `"background_id"`, `"subclass_id"`, `"skills": [...]`, `"save_proficiencies"`, `"weapon_proficiencies"`, `"armor_proficiencies"`, `"tool_proficiencies"`, `"inventory"`, `"equipped"`, `"equipment_choices"`.
 

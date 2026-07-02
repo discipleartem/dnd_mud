@@ -4,6 +4,27 @@
 
 **Приоритет:** [`user-rules-minimal.md`](~/.cursor/docs/user-rules-minimal.md) §Иерархия
 
+## Поиск правил D&D (PHB)
+
+Канон процедуры — [`00-project.mdc`](.cursor/rules/00-project.mdc) §D&D 5e — источник истины и поиск правил. Guide: [`docs/rules/README.md`](docs/rules/README.md).
+
+1. **`docs/rules/_index/lookup.yaml`** — `by_alias` / `by_id` → `quick` и `file`; детали — `phb:auto` в markdown
+2. **`docs/PHB_ D&D_2023 RUS.pdf`** — если в справочнике нет или неполно (`phb_pages` в frontmatter)
+3. **Веб** — D&D 5e (PHB 2014 / до редакции 2024), только если шаги 1–2 не дали ответа
+
+Для MUD — `mud:*` в файле + `docs/API.md`. Не использовать память модели. При конфликте: PDF > `docs/rules/` > веб.
+
+### Актуализация справочника из PDF
+
+PDF парсят только агенты. После правок — `python scripts/build_rules_index.py` (нормализация индексов, не PDF).
+
+1. Читает нужный раздел PDF (процедура доступа — `00-project.mdc`).
+2. Обновляет `<!-- phb:auto:* -->` и `quick` в frontmatter; при новых сущностях — `toc.yaml`, `_index/entities.yaml` / `_index/spells.yaml`.
+3. Сохраняет `mud:*` и `mud_status` / `mud_refs` без изменений, если задача не про реализацию MUD.
+4. Запускает `scripts/build_rules_index.py`.
+
+Подробнее: [`docs/rules/README.md`](docs/rules/README.md).
+
 ## Agent-loop
 
 ```

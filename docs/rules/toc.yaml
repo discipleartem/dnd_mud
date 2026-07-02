@@ -1,0 +1,696 @@
+layout: agent-v2
+source: docs/PHB_ D&D_2023 RUS.pdf
+agent_entry:
+  readme: README.md
+  lookup: _index/lookup.yaml
+  entities_index: _index/entities.yaml
+  spells_index: _index/spells.yaml
+  spell_by_level: _index/spells/by-level.md
+  spell_by_school: _index/spells/by-school.md
+entries:
+- id: dwarf
+  type: race
+  file: entities/races/dwarf.md
+  pages:
+  - 18
+  - 20
+  mud_status: partial
+- id: elf
+  type: race
+  file: entities/races/elf.md
+  pages:
+  - 21
+  - 25
+  mud_status: partial
+- id: halfling
+  type: race
+  file: entities/races/halfling.md
+  pages:
+  - 26
+  - 28
+  mud_status: planned
+- id: human
+  type: race
+  file: entities/races/human.md
+  pages:
+  - 29
+  - 31
+  mud_status: partial
+- id: dragonborn
+  type: race
+  file: entities/races/dragonborn.md
+  pages:
+  - 32
+  - 34
+  mud_status: planned
+- id: gnome
+  type: race
+  file: entities/races/gnome.md
+  pages:
+  - 35
+  - 37
+  mud_status: planned
+- id: half_elf
+  type: race
+  file: entities/races/half_elf.md
+  pages:
+  - 38
+  - 39
+  mud_status: planned
+- id: half_orc
+  type: race
+  file: entities/races/half_orc.md
+  pages:
+  - 40
+  - 41
+  mud_status: partial
+- id: tiefling
+  type: race
+  file: entities/races/tiefling.md
+  pages:
+  - 42
+  - 44
+  mud_status: planned
+- id: barbarian
+  type: class
+  file: entities/classes/barbarian.md
+  pages:
+  - 46
+  - 50
+  mud_status: planned
+- id: bard
+  type: class
+  file: entities/classes/bard.md
+  pages:
+  - 51
+  - 55
+  mud_status: partial
+- id: cleric
+  type: class
+  file: entities/classes/cleric.md
+  pages:
+  - 56
+  - 63
+  mud_status: partial
+- id: druid
+  type: class
+  file: entities/classes/druid.md
+  pages:
+  - 64
+  - 69
+  mud_status: planned
+- id: fighter
+  type: class
+  file: entities/classes/fighter.md
+  pages:
+  - 70
+  - 75
+  mud_status: partial
+- id: monk
+  type: class
+  file: entities/classes/monk.md
+  pages:
+  - 76
+  - 81
+  mud_status: planned
+- id: paladin
+  type: class
+  file: entities/classes/paladin.md
+  pages:
+  - 82
+  - 88
+  mud_status: planned
+- id: ranger
+  type: class
+  file: entities/classes/ranger.md
+  pages:
+  - 89
+  - 93
+  mud_status: planned
+- id: rogue
+  type: class
+  file: entities/classes/rogue.md
+  pages:
+  - 94
+  - 98
+  mud_status: partial
+- id: sorcerer
+  type: class
+  file: entities/classes/sorcerer.md
+  pages:
+  - 99
+  - 104
+  mud_status: planned
+- id: warlock
+  type: class
+  file: entities/classes/warlock.md
+  pages:
+  - 105
+  - 111
+  mud_status: planned
+- id: wizard
+  type: class
+  file: entities/classes/wizard.md
+  pages:
+  - 112
+  - 120
+  mud_status: planned
+- id: acolyte
+  type: background
+  file: entities/backgrounds/acolyte.md
+  pages:
+  - 125
+  - 127
+  mud_status: partial
+- id: charlatan
+  type: background
+  file: entities/backgrounds/charlatan.md
+  pages:
+  - 127
+  - 128
+  mud_status: partial
+- id: criminal
+  type: background
+  file: entities/backgrounds/criminal.md
+  pages:
+  - 128
+  - 129
+  mud_status: partial
+- id: entertainer
+  type: background
+  file: entities/backgrounds/entertainer.md
+  pages:
+  - 129
+  - 130
+  mud_status: partial
+- id: folk_hero
+  type: background
+  file: entities/backgrounds/folk_hero.md
+  pages:
+  - 130
+  - 131
+  mud_status: partial
+- id: guild_artisan
+  type: background
+  file: entities/backgrounds/guild_artisan.md
+  pages:
+  - 131
+  - 132
+  mud_status: partial
+- id: hermit
+  type: background
+  file: entities/backgrounds/hermit.md
+  pages:
+  - 132
+  - 133
+  mud_status: partial
+- id: noble
+  type: background
+  file: entities/backgrounds/noble.md
+  pages:
+  - 133
+  - 134
+  mud_status: partial
+- id: outlander
+  type: background
+  file: entities/backgrounds/outlander.md
+  pages:
+  - 134
+  - 135
+  mud_status: partial
+- id: sage
+  type: background
+  file: entities/backgrounds/sage.md
+  pages:
+  - 135
+  - 136
+  mud_status: partial
+- id: sailor
+  type: background
+  file: entities/backgrounds/sailor.md
+  pages:
+  - 136
+  - 137
+  mud_status: partial
+- id: soldier
+  type: background
+  file: entities/backgrounds/soldier.md
+  pages:
+  - 137
+  - 138
+  mud_status: partial
+- id: urchin
+  type: background
+  file: entities/backgrounds/urchin.md
+  pages:
+  - 138
+  - 142
+  mud_status: partial
+- id: A-conditions
+  type: appendix
+  file: reference/appendices/A-conditions.md
+  pages:
+  - 290
+  - 293
+  mud_status: planned
+- id: B-gods
+  type: appendix
+  file: reference/appendices/B-gods.md
+  pages:
+  - 293
+  - 300
+  mud_status: n/a
+- id: C-planes
+  type: appendix
+  file: reference/appendices/C-planes.md
+  pages:
+  - 300
+  - 304
+  mud_status: n/a
+- id: D-creatures
+  type: appendix
+  file: reference/appendices/D-creatures.md
+  pages:
+  - 304
+  - 312
+  mud_status: planned
+- id: E-literature
+  type: appendix
+  file: reference/appendices/E-literature.md
+  pages:
+  - 312
+  - 313
+  mud_status: n/a
+- id: alert
+  type: feat
+  file: entities/feats/alert.md
+  pages:
+  - 166
+  - 172
+  mud_status: partial
+- id: war_caster
+  type: feat
+  file: entities/feats/war_caster.md
+  pages:
+  - 166
+  - 172
+  mud_status: partial
+- id: grappler
+  type: feat
+  file: entities/feats/grappler.md
+  pages:
+  - 166
+  - 172
+  mud_status: partial
+- id: actor
+  type: feat
+  file: entities/feats/actor.md
+  pages:
+  - 166
+  - 172
+  mud_status: partial
+- id: lucky
+  type: feat
+  file: entities/feats/lucky.md
+  pages:
+  - 166
+  - 172
+  mud_status: partial
+- id: mounted_combatant
+  type: feat
+  file: entities/feats/mounted_combatant.md
+  pages:
+  - 166
+  - 172
+  mud_status: partial
+- id: observant
+  type: feat
+  file: entities/feats/observant.md
+  pages:
+  - 166
+  - 172
+  mud_status: partial
+- id: martial_adept
+  type: feat
+  file: entities/feats/martial_adept.md
+  pages:
+  - 166
+  - 172
+  mud_status: partial
+- id: heavily_armored
+  type: feat
+  file: entities/feats/heavily_armored.md
+  pages:
+  - 166
+  - 172
+  mud_status: partial
+- id: dual_wielder
+  type: feat
+  file: entities/feats/dual_wielder.md
+  pages:
+  - 166
+  - 172
+  mud_status: partial
+- id: inspiring_leader
+  type: feat
+  file: entities/feats/inspiring_leader.md
+  pages:
+  - 166
+  - 172
+  mud_status: partial
+- id: savage_attacker
+  type: feat
+  file: entities/feats/savage_attacker.md
+  pages:
+  - 166
+  - 172
+  mud_status: partial
+- id: dungeon_delver
+  type: feat
+  file: entities/feats/dungeon_delver.md
+  pages:
+  - 166
+  - 172
+  mud_status: partial
+- id: tavern_brawler
+  type: feat
+  file: entities/feats/tavern_brawler.md
+  pages:
+  - 166
+  - 172
+  mud_status: partial
+- id: tough
+  type: feat
+  file: entities/feats/tough.md
+  pages:
+  - 166
+  - 172
+  mud_status: partial
+- id: healer
+  type: feat
+  file: entities/feats/healer.md
+  pages:
+  - 166
+  - 172
+  mud_status: partial
+- id: lightly_armored
+  type: feat
+  file: entities/feats/lightly_armored.md
+  pages:
+  - 166
+  - 172
+  mud_status: partial
+- id: moderately_armored
+  type: feat
+  file: entities/feats/moderately_armored.md
+  pages:
+  - 166
+  - 172
+  mud_status: partial
+- id: great_weapon_master
+  type: feat
+  file: entities/feats/great_weapon_master.md
+  pages:
+  - 166
+  - 172
+  mud_status: partial
+- id: polearm_master
+  type: feat
+  file: entities/feats/polearm_master.md
+  pages:
+  - 166
+  - 172
+  mud_status: partial
+- id: weapon_master
+  type: feat
+  file: entities/feats/weapon_master.md
+  pages:
+  - 166
+  - 172
+  mud_status: partial
+- id: medium_armor_master
+  type: feat
+  file: entities/feats/medium_armor_master.md
+  pages:
+  - 166
+  - 172
+  mud_status: partial
+- id: heavy_armor_master
+  type: feat
+  file: entities/feats/heavy_armor_master.md
+  pages:
+  - 166
+  - 172
+  mud_status: partial
+- id: charger
+  type: feat
+  file: entities/feats/charger.md
+  pages:
+  - 166
+  - 172
+  mud_status: partial
+- id: shield_master
+  type: feat
+  file: entities/feats/shield_master.md
+  pages:
+  - 166
+  - 172
+  mud_status: partial
+- id: defensive_duelist
+  type: feat
+  file: entities/feats/defensive_duelist.md
+  pages:
+  - 166
+  - 172
+  mud_status: partial
+- id: skilled
+  type: feat
+  file: entities/feats/skilled.md
+  pages:
+  - 166
+  - 172
+  mud_status: partial
+- id: keen_mind
+  type: feat
+  file: entities/feats/keen_mind.md
+  pages:
+  - 166
+  - 172
+  mud_status: partial
+- id: spell_sniper
+  type: feat
+  file: entities/feats/spell_sniper.md
+  pages:
+  - 166
+  - 172
+  mud_status: partial
+- id: sharpshooter
+  type: feat
+  file: entities/feats/sharpshooter.md
+  pages:
+  - 166
+  - 172
+  mud_status: partial
+- id: mobile
+  type: feat
+  file: entities/feats/mobile.md
+  pages:
+  - 166
+  - 172
+  mud_status: partial
+- id: magic_initiate
+  type: feat
+  file: entities/feats/magic_initiate.md
+  pages:
+  - 166
+  - 172
+  mud_status: partial
+- id: skulker
+  type: feat
+  file: entities/feats/skulker.md
+  pages:
+  - 166
+  - 172
+  mud_status: partial
+- id: sentinel
+  type: feat
+  file: entities/feats/sentinel.md
+  pages:
+  - 166
+  - 172
+  mud_status: partial
+- id: ritual_caster
+  type: feat
+  file: entities/feats/ritual_caster.md
+  pages:
+  - 166
+  - 172
+  mud_status: partial
+- id: elemental_adept
+  type: feat
+  file: entities/feats/elemental_adept.md
+  pages:
+  - 166
+  - 172
+  mud_status: partial
+- id: mage_slayer
+  type: feat
+  file: entities/feats/mage_slayer.md
+  pages:
+  - 166
+  - 172
+  mud_status: partial
+- id: resilient
+  type: feat
+  file: entities/feats/resilient.md
+  pages:
+  - 166
+  - 172
+  mud_status: partial
+- id: crossbow_expert
+  type: feat
+  file: entities/feats/crossbow_expert.md
+  pages:
+  - 166
+  - 172
+  mud_status: partial
+- id: linguist
+  type: feat
+  file: entities/feats/linguist.md
+  pages:
+  - 166
+  - 172
+  mud_status: partial
+- id: durable
+  type: feat
+  file: entities/feats/durable.md
+  pages:
+  - 166
+  - 172
+  mud_status: partial
+- id: athlete
+  type: feat
+  file: entities/feats/athlete.md
+  pages:
+  - 166
+  - 172
+  mud_status: partial
+- id: 00-introduction
+  type: chapter
+  file: chapters/00-introduction.md
+  pages:
+  - 5
+  - 9
+  mud_status: partial
+- id: 01-character-creation
+  type: chapter
+  file: chapters/01-character-creation.md
+  pages:
+  - 11
+  - 16
+  mud_status: implemented
+- id: 02-races
+  type: chapter
+  file: chapters/02-races.md
+  pages:
+  - 17
+  - 44
+  mud_status: partial
+- id: 03-classes
+  type: chapter
+  file: chapters/03-classes.md
+  pages:
+  - 45
+  - 120
+  mud_status: partial
+- id: 03-subclasses
+  type: chapter
+  file: chapters/03-subclasses.md
+  pages:
+  - 48
+  - 119
+  mud_status: planned
+- id: 04-backgrounds
+  type: chapter
+  file: chapters/04-backgrounds.md
+  pages:
+  - 121
+  - 142
+  mud_status: partial
+- id: 05-equipment
+  type: chapter
+  file: chapters/05-equipment.md
+  pages:
+  - 143
+  - 161
+  mud_status: partial
+- id: 05-equipment-reference
+  type: chapter
+  file: chapters/05-equipment-reference.md
+  pages:
+  - 143
+  - 161
+  mud_status: partial
+- id: 06-individual-options
+  type: chapter
+  file: chapters/06-individual-options.md
+  pages:
+  - 163
+  - 170
+  mud_status: partial
+- id: 06-multiclass
+  type: chapter
+  file: chapters/06-multiclass.md
+  pages:
+  - 163
+  - 165
+  mud_status: forbidden
+- id: 06-feats
+  type: chapter
+  file: chapters/06-feats.md
+  pages:
+  - 166
+  - 172
+  mud_status: partial
+- id: 07-ability-scores
+  type: chapter
+  file: chapters/07-ability-scores.md
+  pages:
+  - 173
+  - 180
+  mud_status: partial
+- id: 08-adventures
+  type: chapter
+  file: chapters/08-adventures.md
+  pages:
+  - 181
+  - 188
+  mud_status: planned
+- id: 09-combat
+  type: chapter
+  file: chapters/09-combat.md
+  pages:
+  - 189
+  - 198
+  mud_status: planned
+- id: 10-spellcasting
+  type: chapter
+  file: chapters/10-spellcasting.md
+  pages:
+  - 201
+  - 206
+  mud_status: planned
+- id: 11-spells
+  type: chapter
+  file: chapters/11-spells.md
+  pages:
+  - 207
+  - 289
+  mud_status: planned
+- id: appendices
+  type: chapter
+  file: chapters/appendices.md
+  pages:
+  - 290
+  - 326
+  mud_status: planned

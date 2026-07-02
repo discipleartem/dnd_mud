@@ -26,12 +26,27 @@ Verify: pre-commit `verify-changed` на подзадачах; полный пр
 
 ## Docs
 
+- [docs/README.md](docs/README.md) — индекс документации
 - [docs/DND_RULES.md](docs/DND_RULES.md) · [docs/DATA_SCHEMA.md](docs/DATA_SCHEMA.md) · [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)
 - [docs/API.md](docs/API.md) · [docs/BACKLOG.md](docs/BACKLOG.md) · [docs/CHANGELOG.md](docs/CHANGELOG.md) · [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md) · [docs/MUD_PRD.md](docs/MUD_PRD.md)
 
-## D&D 5e (2023) — источник истины
+## D&D 5e — источник истины и поиск правил
 
-**Источник истины** по правилам настольной D&D 5e (рус. PHB 2023): `docs/PHB_ D&D_2023 RUS.pdf` (локально; в git не коммитится — `.gitignore` → `docs/*.pdf`). Нужно узнать или уточнить правило — изучи этот PDF. [`docs/DND_RULES.md`](docs/DND_RULES.md), `docs/rules/*.md`, код и YAML — вторичны; при расхождении верен PDF. Не опирайся на память модели. Если файла нет на диске — сообщи пользователю; не выдумывай правила.
+**Канон редакции:** Player's Handbook **2014** (рус. перевод PHantom, 2016), локальный файл `docs/PHB_ D&D_2023 RUS.pdf` (331 стр.; в git не коммитится — `.gitignore` → `docs/*.pdf`). Имя файла «2023» — локальное обозначение копии, **не** редакция правил 2024.
+
+Код, YAML и [`docs/DND_RULES.md`](docs/DND_RULES.md) описывают **реализацию в MUD**; при расхождении с PHB верен PDF.
+
+### Алгоритм поиска (агенты и разработчики)
+
+Искать информацию **строго по порядку**; переходить к следующему шагу только если на текущем ответа нет или он явно неполный. **Не опираться на память модели** и не выдумывать правила.
+
+| Шаг | Источник | Как искать |
+|-----|----------|------------|
+| **1** | [`docs/rules/`](docs/rules/) | [`_index/lookup.yaml`](docs/rules/_index/lookup.yaml) (`by_alias` / `by_id`); детали — markdown `phb:auto`; обзор — [`docs/rules/README.md`](docs/rules/README.md), [`docs/DND_RULES.md`](docs/DND_RULES.md) |
+| **2** | [`docs/PHB_ D&D_2023 RUS.pdf`](docs/PHB_%20D%26D_2023%20RUS.pdf) | Локальный PHB; см. §Доступ к PHB PDF ниже |
+| **3** | Интернет | Официальные правила **D&D 5e до редакции 2024** (PHB 2014 / SRD 5.1). **Не** использовать правила PHB 2024+ как канон для этого проекта |
+
+**При противоречии между источниками:** PDF (шаг 2) > пересказ в `docs/rules/` (шаг 1) > веб (шаг 3). После уточнения по PDF при необходимости дополняй `docs/rules/` (пересказ, не дословная копия).
 
 ### Доступ к PHB PDF (агент)
 
