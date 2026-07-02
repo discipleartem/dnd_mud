@@ -2,13 +2,14 @@
 
 ## [Unreleased]
 
-### Added
-- **Справочник PHB:** реорганизация `docs/rules/` по оглавлению PHB — гибридная структура (главы `00`–`11` + `races/`, `classes/`, `backgrounds/`, `spells/`, `appendices/`, `glossaries/`), `toc.yaml`, ~270 карточек заклинаний
-- Dev-tools: `scripts/phb_extract.py`, `scripts/phb_generate_rules.py`, `scripts/phb_validate_rules.py`, `scripts/phb_data.py`
-
 ### Changed
-- `docs/DND_RULES.md` — оглавление по частям PHB 1–3, ссылки на `toc.yaml` и подкаталоги; `10-spells.md` → `10-spellcasting.md` + `11-spells.md`
-- Docs/rules: алгоритм поиска правил (rules → PDF → веб 5e до 2024) в `00-project.mdc`, `AGENTS.md`, `DND_RULES.md`
+- **Документация `docs/`:** индекс [`docs/README.md`](README.md); ссылки на `rules/chapters/`; глоссарии → `rules/reference/glossaries/`
+- **Справочник без лора:** карточки рас, предысторий и классов; главы `00`–`03`, `04-backgrounds` — только механика
+- **Справочник для агентов (layout `agent-v2`):** единый [`docs/rules/_index/lookup.yaml`](rules/_index/lookup.yaml) (`by_id`, `by_alias`, `summaries`); поле `quick` в frontmatter; нормализация карточек feats и секций `higher-levels` заклинаний через `scripts/build_rules_index.py`
+- **PHB dev-tools удалены:** все `scripts/phb*.py` и тесты `test_phb_*`; актуализация `docs/rules/` из PDF — агентами ([`docs/rules/README.md`](rules/README.md), [`AGENTS.md`](../AGENTS.md))
+
+### Added (ранее в ветке PHB)
+- Реорганизация `docs/rules/` — `chapters/`, `entities/`, `reference/`, `_index/`; `README.md` для агентов; индексы `entities.yaml` и `spells.yaml`
 
 ### Fixed
 - HardCore: прирост HP от «кость + CON» не опускается ниже 1 на любом уровне (`core/progression.py`)
@@ -147,7 +148,7 @@
 - `core/feats_grants.py` — логика перенесена в `core/feats.py`
 
 ### Added
-- Документация: фильтрация черт по владениям (класс/раса/подкласс) — [`docs/rules/06-feats.md`](rules/06-feats.md) §«Фильтрация списка»
+- Документация: фильтрация черт по владениям (класс/раса/подкласс) — [`docs/rules/chapters/06-feats.md`](rules/chapters/06-feats.md) §«Фильтрация списка»
 - `core/feat_visibility.py` — контекст выбора черт (`build_feat_selection_context`) и скрытие без новых владений (`feat_visible_for_selection`)
 - `core/io.save_json`, `core/io.merge_unique` — единый JSON I/O и merge списков
 - `core/progression.process_pending_level_ups` — headless level-up engine с ASI callback

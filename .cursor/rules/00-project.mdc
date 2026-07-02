@@ -26,6 +26,7 @@ Verify: pre-commit `verify-changed` на подзадачах; полный пр
 
 ## Docs
 
+- [docs/README.md](docs/README.md) — индекс документации
 - [docs/DND_RULES.md](docs/DND_RULES.md) · [docs/DATA_SCHEMA.md](docs/DATA_SCHEMA.md) · [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)
 - [docs/API.md](docs/API.md) · [docs/BACKLOG.md](docs/BACKLOG.md) · [docs/CHANGELOG.md](docs/CHANGELOG.md) · [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md) · [docs/MUD_PRD.md](docs/MUD_PRD.md)
 
@@ -41,7 +42,7 @@ Verify: pre-commit `verify-changed` на подзадачах; полный пр
 
 | Шаг | Источник | Как искать |
 |-----|----------|------------|
-| **1** | [`docs/rules/`](docs/rules/) | [`docs/rules/toc.yaml`](docs/rules/toc.yaml) → нужный markdown; индексы `spells/_index-by-level.md`, `glossaries/`; обзор — [`docs/DND_RULES.md`](docs/DND_RULES.md) |
+| **1** | [`docs/rules/`](docs/rules/) | [`_index/lookup.yaml`](docs/rules/_index/lookup.yaml) (`by_alias` / `by_id`); детали — markdown `phb:auto`; обзор — [`docs/rules/README.md`](docs/rules/README.md), [`docs/DND_RULES.md`](docs/DND_RULES.md) |
 | **2** | [`docs/PHB_ D&D_2023 RUS.pdf`](docs/PHB_%20D%26D_2023%20RUS.pdf) | Локальный PHB; см. §Доступ к PHB PDF ниже |
 | **3** | Интернет | Официальные правила **D&D 5e до редакции 2024** (PHB 2014 / SRD 5.1). **Не** использовать правила PHB 2024+ как канон для этого проекта |
 

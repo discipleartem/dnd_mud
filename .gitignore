@@ -15,7 +15,7 @@ __pycache__/
 .mypy_cache/
 .pytest_cache/
 .coverage
-build/phb_sections/
+build/
 
 # Локальная копия PHB (© WotC); не коммитить
 # docs/*.pdf
