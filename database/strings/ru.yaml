@@ -385,6 +385,11 @@ stats:
   wisdom: "Мудрость"
   charisma: "Харизма"
 
+spells:
+  dancing_lights: "Пляшущие огоньки"
+  faerie_fire: "Огонь фей"
+  darkness: "Тьма"
+
 skills:
   acrobatics: "Акробатика"
   animal_handling: "Уход за животными"

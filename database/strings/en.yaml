@@ -385,6 +385,11 @@ stats:
   wisdom: "Wisdom"
   charisma: "Charisma"
 
+spells:
+  dancing_lights: "Dancing Lights"
+  faerie_fire: "Faerie Fire"
+  darkness: "Darkness"
+
 skills:
   acrobatics: "Acrobatics"
   animal_handling: "Animal Handling"
