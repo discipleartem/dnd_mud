@@ -26,6 +26,38 @@ def _flat_stats(value: int = 10) -> dict[str, int]:
     return dict.fromkeys(STAT_NAMES, value)
 
 
+def test_select_subrace_half_orc_shows_menu_with_back(
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+    patch_int_input: Callable[[pytest.MonkeyPatch, list[int]], None],
+    ru_strings: dict[str, Any],
+) -> None:
+    """Полуорк — экран расы с одной подрасой и пунктом «Назад»."""
+    patch_int_input(monkeypatch, [1])
+    selected, subrace_id = select_subrace(ru_strings, "half_orc")
+    output = capsys.readouterr().out
+    assert selected is True
+    assert subrace_id == "half_orc"
+    assert "ОПИСАНИЕ РАСЫ И ВЫБОР ПОДРАСЫ" in output
+    assert "Полуорк" in output
+    assert "Подрасы:" in output
+    assert "Тёмное зрение" in output
+    assert "Назад" in output
+
+
+def test_select_subrace_half_orc_back_returns_false(
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+    patch_int_input: Callable[[pytest.MonkeyPatch, list[int]], None],
+    ru_strings: dict[str, Any],
+) -> None:
+    """Полуорк — 0 возвращает на выбор расы."""
+    patch_int_input(monkeypatch, [0])
+    selected, subrace_id = select_subrace(ru_strings, "half_orc")
+    assert selected is False
+    assert subrace_id is None
+
+
 def test_select_subrace_human_menu(
     monkeypatch,
     capsys,
@@ -59,6 +91,68 @@ def test_select_subrace_shows_base_race_grants(
     output = capsys.readouterr().out
     assert "Тёмное зрение" in output
     assert "Дварфская боевая подготовка" in output
+
+
+def test_select_subrace_human_shows_race_language_on_base_block(
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+    patch_int_input: Callable[[pytest.MonkeyPatch, list[int]], None],
+    ru_strings: dict[str, Any],
+) -> None:
+    """Дополнительный язык — в строке «Языки» расы, без дублей у подрас."""
+    patch_int_input(monkeypatch, [0])
+    select_subrace(ru_strings, "human")
+    output = capsys.readouterr().out
+    base_block, subrace_section = output.split("Подрасы:", 1)
+    assert "Языки:" in base_block
+    assert "Общий" in base_block
+    assert "на выбор из" in base_block
+    assert "Дополнительный язык" not in base_block
+    assert "Особенности:" not in base_block.split("Подрасы:")[0]
+    assert "Дополнительный язык" not in subrace_section
+    assert "(раса)" not in output
+
+
+def test_select_subrace_elf_drow_shows_only_subrace_grants(
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+    patch_int_input: Callable[[pytest.MonkeyPatch, list[int]], None],
+    ru_strings: dict[str, Any],
+) -> None:
+    """Подраса показывает только свои особенности; общие — в блоке расы."""
+    patch_int_input(monkeypatch, [3])
+    _selected, subrace_id = select_subrace(ru_strings, "elf")
+    output = capsys.readouterr().out
+    assert subrace_id == "dark_elf_drow"
+    base_block, subrace_section = output.split("Подрасы:", 1)
+    assert "Обострённые чувства" in base_block
+    assert "Наследие фей" in base_block
+    drow_idx = subrace_section.find("Дроу")
+    assert drow_idx >= 0
+    drow_block = subrace_section[drow_idx:]
+    assert "Магия дроу" in drow_block
+    assert "Пляшущие огоньки" in drow_block
+    assert "Обострённые чувства" not in drow_block
+    assert "Наследие фей" not in drow_block
+    assert "(раса)" not in drow_block
+
+
+def test_select_subrace_dwarf_hill_no_parent_grant_duplication(
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+    patch_int_input: Callable[[pytest.MonkeyPatch, list[int]], None],
+    ru_strings: dict[str, Any],
+) -> None:
+    """Холмовой дварф не дублирует черты базовой расы."""
+    patch_int_input(monkeypatch, [1])
+    select_subrace(ru_strings, "dwarf")
+    output = capsys.readouterr().out
+    base_block, subrace_section = output.split("Подрасы:", 1)
+    assert "Тёмное зрение" in base_block
+    hill_block = subrace_section.split("2.", 1)[0]
+    assert "Дварфская выдержка" in hill_block
+    assert "Тёмное зрение" not in hill_block
+    assert "Дварфская боевая подготовка" not in hill_block
 
 
 def test_create_character_back_from_subrace_exits(
