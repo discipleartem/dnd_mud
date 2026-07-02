@@ -69,6 +69,24 @@ def test_race_grants_include_phb_features(
 
 
 @pytest.mark.parametrize(
+    ("subrace_id", "expected_range"),
+    [
+        ("high_elf", 60),
+        ("wood_elf", 60),
+        ("dark_elf_drow", 120),
+    ],
+)
+def test_elf_subrace_darkvision_range(
+    subrace_id: str, expected_range: int
+) -> None:
+    """Тёмное зрение эльфийских подрас — один grant с дальностью PHB."""
+    grants = collect_race_grants("elf", subrace_id)
+    darkvision = [g for g in grants if g.get("type") == "darkvision"]
+    assert len(darkvision) == 1
+    assert darkvision[0].get("range") == expected_range
+
+
+@pytest.mark.parametrize(
     ("class_id", "level", "feature_id"),
     [
         ("fighter", 2, "action_surge"),
@@ -120,6 +138,11 @@ def test_phb_equipment_fixture_matches_catalog() -> None:
         "healer",
         "alert",
         "linguist",
+        "crossbow_expert",
+        "charger",
+        "dual_wielder",
+        "observant",
+        "tavern_brawler",
     ],
 )
 def test_feat_grants_no_removed_phb_fields(feat_id: str) -> None:
@@ -142,3 +165,21 @@ def test_feat_grants_no_removed_phb_fields(feat_id: str) -> None:
         assert any(g.get("type") == "alert" for g in grants)
     if feat_id == "linguist":
         assert any(g.get("type") == "cipher_writing" for g in grants)
+    if feat_id == "crossbow_expert":
+        mastery = next(g for g in grants if g.get("type") == "weapon_mastery")
+        assert mastery.get("ranged_no_disadvantage_in_melee") is True
+    if feat_id == "charger":
+        charge = next(g for g in grants if g.get("type") == "charger")
+        assert charge.get("shove_bonus_action") is True
+        assert charge.get("shove_distance") == 10
+    if feat_id == "dual_wielder":
+        dual = next(g for g in grants if g.get("type") == "dual_wielder")
+        assert dual.get("non_light_dual_wield") is True
+        assert dual.get("draw_stow_two_weapons") is True
+    if feat_id == "observant":
+        assert any(g.get("type") == "lip_reading" for g in grants)
+    if feat_id == "tavern_brawler":
+        brawler = next(
+            g for g in grants if g.get("type") == "unarmed_improvised"
+        )
+        assert brawler.get("bonus_action_grapple_on_hit") is True
