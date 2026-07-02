@@ -106,7 +106,7 @@ backgrounds:
       - type: equipment_item
         items:
           - { kind: equipment, id: emblem, qty: 1 }
-          - { kind: equipment, id: book, qty: 1 }
+          - { kind: equipment, id: prayer_book, qty: 1 }
     inventory_tool_pools:   # опционально: picks инструментов → инвентарь PHB
       - musical_instruments
     feature:   # flavor до game engine
