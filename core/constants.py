@@ -8,6 +8,9 @@ from core.levels import clamp_level
 
 CONSTANTS_FILE = Path("database/core/constants.yaml")
 
+ABILITY_MODIFIER_SCORE_MIN = 1
+ABILITY_MODIFIER_SCORE_MAX = 30
+
 # Fallback если YAML недоступен
 _DEFAULT_PROFICIENCY_BONUS: dict[int, int] = {
     1: 2,
@@ -77,6 +80,22 @@ def cover_bonus(tier: str) -> int | str | None:
     if isinstance(cover, dict):
         return cover.get(tier)
     return None
+
+
+def ability_modifier(score: int) -> int:
+    """Модификатор характеристики (PHB): таблица из YAML, clamp 1–30."""
+    clamped = max(
+        ABILITY_MODIFIER_SCORE_MIN,
+        min(ABILITY_MODIFIER_SCORE_MAX, int(score)),
+    )
+    raw = _load_constants().get("ability_modifiers", {})
+    if isinstance(raw, dict):
+        value = raw.get(clamped)
+        if value is None:
+            value = raw.get(str(clamped))
+        if isinstance(value, int):
+            return value
+    return (clamped - 10) // 2
 
 
 def size_label(size_id: str) -> str:

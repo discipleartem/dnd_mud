@@ -155,9 +155,95 @@ def test_equip_defaults_no_shield_dual_wield_light() -> None:
     )
     equipped = equip_defaults(char)
     assert equipped["main_hand"] == "longsword"
-    assert equipped["main_hand_grip"] == "two_handed"
-    assert equipped["off_hand"] is None
+    assert equipped["main_hand_grip"] == "one_handed"
+    assert equipped["off_hand"] == "handaxe"
     assert equipped["shield"] is False
+
+
+def test_equip_defaults_non_light_off_hand_requires_dual_wielder() -> None:
+    base_inventory = [
+        {"kind": "weapon", "id": "rapier", "qty": 1},
+        {"kind": "weapon", "id": "shortsword", "qty": 1},
+    ]
+    profs = ["simple", "martial", "rapier", "shortsword"]
+    without_feat = Character(
+        name="Rogue",
+        race="human",
+        class_id="rogue",
+        weapon_proficiencies=profs,
+        inventory=base_inventory,
+    )
+    equipped = equip_defaults(without_feat)
+    assert equipped["main_hand"] == "rapier"
+    assert equipped["off_hand"] == "shortsword"
+
+    with_longsword = Character(
+        name="Fighter",
+        race="human",
+        class_id="fighter",
+        weapon_proficiencies=["simple", "martial", "rapier", "longsword"],
+        inventory=[
+            {"kind": "weapon", "id": "rapier", "qty": 1},
+            {"kind": "weapon", "id": "longsword", "qty": 1},
+        ],
+    )
+    no_feat = equip_defaults(with_longsword)
+    assert no_feat["main_hand"] == "longsword"
+    assert no_feat.get("main_hand_grip") == "two_handed"
+    assert no_feat["off_hand"] is None
+
+    dual_wielder = Character(
+        name="Fighter",
+        race="human",
+        class_id="fighter",
+        feat_ids=["dual_wielder"],
+        weapon_proficiencies=["simple", "martial", "rapier", "longsword"],
+        inventory=[
+            {"kind": "weapon", "id": "rapier", "qty": 1},
+            {"kind": "weapon", "id": "longsword", "qty": 1},
+        ],
+    )
+    with_feat = equip_defaults(dual_wielder)
+    assert with_feat["main_hand"] == "longsword"
+    assert with_feat["off_hand"] == "rapier"
+    assert with_feat.get("main_hand_grip") == "one_handed"
+
+
+def test_compute_ac_dual_wielder_bonus() -> None:
+    char = Character(
+        name="Rogue",
+        race="human",
+        class_id="rogue",
+        stats={"dexterity": 12},
+        feat_ids=["dual_wielder"],
+        equipped={
+            "armor": "leather",
+            "shield": False,
+            "main_hand": "rapier",
+            "off_hand": "shortsword",
+        },
+        inventory=[
+            {"kind": "armor", "id": "leather", "qty": 1},
+            {"kind": "weapon", "id": "rapier", "qty": 1},
+            {"kind": "weapon", "id": "shortsword", "qty": 1},
+        ],
+    )
+    assert compute_ac(char) == 13
+
+    shielded = Character(
+        name="Rogue",
+        race="human",
+        class_id="rogue",
+        stats={"dexterity": 12},
+        feat_ids=["dual_wielder"],
+        equipped={
+            "armor": "leather",
+            "shield": True,
+            "main_hand": "rapier",
+            "main_hand_grip": "one_handed",
+        },
+    )
+    assert compute_ac(shielded) == 14
 
 
 def test_equip_defaults_versatile_one_handed_with_shield() -> None:

@@ -44,6 +44,109 @@ def _damage_type_labels(strings: StringsDict, types: list[Any]) -> str:
     return ", ".join(labels)
 
 
+def _spell_name(strings: StringsDict, spell_id: str) -> str:
+    """Локализованное имя заклинания."""
+    return get_string(strings, f"spells.{spell_id}", default=spell_id)
+
+
+def _spell_uses_label(strings: StringsDict, spell: dict[str, Any]) -> str:
+    """Подпись лимита использования заклинания."""
+    uses = spell.get("uses")
+    if uses == "at_will":
+        return get_string(strings, "character.grant_spell_uses_at_will")
+    recharge = spell.get("recharge")
+    if uses is not None and recharge:
+        return get_string(
+            strings,
+            "character.grant_spell_uses_recharge",
+            uses=uses,
+            recharge=recharge,
+        )
+    return str(uses) if uses is not None else ""
+
+
+def _format_spellcasting_grant(
+    grant: dict[str, Any], strings: StringsDict
+) -> str:
+    """Описание расовой магии (список заклинаний)."""
+    raw_spells = grant.get("spells", [])
+    if not isinstance(raw_spells, list) or not raw_spells:
+        return ""
+    entries: list[str] = []
+    for spell in raw_spells:
+        if not isinstance(spell, dict):
+            continue
+        spell_id = str(spell.get("name", ""))
+        if not spell_id:
+            continue
+        uses = _spell_uses_label(strings, spell)
+        entries.append(
+            get_string(
+                strings,
+                "character.grant_spellcasting_entry",
+                spell=_spell_name(strings, spell_id),
+                uses=uses,
+            )
+        )
+    if not entries:
+        return ""
+    ability = str(grant.get("ability", ""))
+    ability_label = _ability_name(strings, ability) if ability else ""
+    return get_string(
+        strings,
+        "character.grant_spellcasting_list",
+        spells="; ".join(entries),
+        ability=ability_label,
+    )
+
+
+def _format_disadvantage_grant(
+    grant: dict[str, Any], strings: StringsDict
+) -> str:
+    """Описание помехи от условия окружения."""
+    condition = str(grant.get("condition", ""))
+    if condition == "direct_sunlight":
+        return get_string(strings, "character.grant_disadvantage_sunlight")
+    affected = grant.get("affected", [])
+    affected_labels: list[str] = []
+    if isinstance(affected, list):
+        for item in affected:
+            token = str(item)
+            affected_labels.append(
+                get_string(
+                    strings,
+                    f"character.grant_affected_{token}",
+                    default=token,
+                )
+            )
+    condition_label = get_string(
+        strings,
+        f"character.grant_condition_{condition}",
+        default=condition,
+    )
+    return get_string(
+        strings,
+        "character.grant_disadvantage_generic",
+        affected=", ".join(affected_labels),
+        condition=condition_label,
+    )
+
+
+def _format_skill_proficiency_labels(
+    strings: StringsDict, skills: list[Any]
+) -> str:
+    """Список навыков с префиксом владения."""
+    labels = [
+        get_string(
+            strings,
+            "character.grant_skill_proficiency",
+            skill=_skill_name(strings, str(skill_id)),
+        )
+        for skill_id in skills
+    ]
+    return ", ".join(labels)
+
+
 def _grant_display_name(grant: dict[str, Any], strings: StringsDict) -> str:
     """Имя особенности: name из YAML или локализованный type."""
     name = str(grant.get("name", "")).strip()
@@ -112,6 +215,26 @@ def _grant_description(
             return ", ".join(
                 get_tool_name(str(tool_id), language) for tool_id in raw_tools
             )
+    if gtype == "spellcasting":
+        return _format_spellcasting_grant(grant, strings)
+    if gtype == "cantrip":
+        source = str(grant.get("source", ""))
+        ability = str(grant.get("ability", ""))
+        if source and ability:
+            return get_string(
+                strings,
+                "character.grant_cantrip_choice",
+                source=source,
+                ability=_ability_name(strings, ability),
+            )
+    if gtype == "immunity":
+        effect = str(grant.get("effect", ""))
+        if effect == "magical_sleep":
+            return get_string(
+                strings, "character.grant_immunity_magical_sleep"
+            )
+    if gtype == "disadvantage":
+        return _format_disadvantage_grant(grant, strings)
     weapons = grant.get("weapons", [])
     if isinstance(weapons, list) and weapons:
         return ", ".join(get_weapon_name(str(w), language) for w in weapons)
@@ -123,11 +246,16 @@ def _grant_description(
                 "character.grant_skill_expertise",
                 skill=_skill_name(strings, skill),
             )
-    skills = grant.get("skills", grant.get("skill"))
-    if isinstance(skills, list) and skills:
-        return ", ".join(_skill_name(strings, str(s)) for s in skills)
-    if isinstance(skills, str) and skills:
-        return _skill_name(strings, skills)
+    if gtype == "skill_proficiency":
+        skills = grant.get("skills", grant.get("skill"))
+        if isinstance(skills, list) and skills:
+            return _format_skill_proficiency_labels(strings, skills)
+        if isinstance(skills, str) and skills:
+            return get_string(
+                strings,
+                "character.grant_skill_proficiency",
+                skill=_skill_name(strings, skills),
+            )
     if gtype == "armor_proficiency":
         armor_labels = _armor_labels_from_grant(grant, strings, language)
         if armor_labels:
@@ -180,19 +308,34 @@ def _grant_description(
                 "character.grant_speed_value",
                 speed=speed,
             )
-    if gtype == "advantage" and grant.get("save") and grant.get("effect"):
-        effect_key = str(grant["effect"])
-        effect_label = get_string(
-            strings,
-            f"character.grant_effect_{effect_key}",
-            default=effect_key,
-        )
-        return get_string(
-            strings,
-            "character.grant_advantage_save",
-            save=_ability_name(strings, str(grant["save"])),
-            effect=effect_label,
-        )
+    if gtype == "advantage":
+        skill = grant.get("skill")
+        terrain = grant.get("terrain")
+        if isinstance(skill, str) and skill and terrain:
+            terrain_label = get_string(
+                strings,
+                f"character.grant_terrain_{terrain}",
+                default=str(terrain),
+            )
+            return get_string(
+                strings,
+                "character.grant_advantage_skill_terrain",
+                skill=_skill_name(strings, skill),
+                terrain=terrain_label,
+            )
+        if grant.get("save") and grant.get("effect"):
+            effect_key = str(grant["effect"])
+            effect_label = get_string(
+                strings,
+                f"character.grant_effect_{effect_key}",
+                default=effect_key,
+            )
+            return get_string(
+                strings,
+                "character.grant_advantage_save",
+                save=_ability_name(strings, str(grant["save"])),
+                effect=effect_label,
+            )
     if gtype == "rest" and grant.get("duration") is not None:
         return get_string(
             strings,
@@ -207,3 +350,30 @@ def _grant_description(
             range=range_ft,
         )
     return ""
+
+
+def _print_grant_line(
+    grant: dict[str, Any],
+    strings: StringsDict,
+    language: str,
+) -> None:
+    """Вывести одну строку особенности."""
+    name = _grant_display_name(grant, strings)
+    desc = _grant_description(grant, strings, language)
+    if desc:
+        print(
+            get_string(
+                strings,
+                "character.feature_line",
+                name=name,
+                desc=desc,
+            )
+        )
+    else:
+        print(
+            get_string(
+                strings,
+                "character.feature_line_name_only",
+                name=name,
+            )
+        )

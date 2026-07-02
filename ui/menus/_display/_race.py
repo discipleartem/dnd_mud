@@ -9,31 +9,75 @@ from core.localization import get_string
 from core.types import StatMap, StringsDict
 from ui.menus import _deps
 from ui.menus._common import _ability_name
-from ui.menus._display._grants import (
-    _grant_description,
-    _grant_display_name,
-)
+from ui.menus._display._grants import _print_grant_line
+from ui.menus._display._labels import _grant_pool_label
+
+
+def _has_choice_ability_bonuses(info: dict[str, Any]) -> bool:
+    """Есть ли выборный бонус характеристик в grants без ability_bonuses."""
+    if info.get("ability_bonuses"):
+        return False
+    for grant in grants_of_type(grants_from_entity(info), ABILITY_INCREASE):
+        if grant.get("choice"):
+            return True
+    return False
+
+
+def _choice_language_grants(
+    grants: list[dict[str, Any]],
+) -> list[dict[str, Any]]:
+    """Выборные языковые grants из списка."""
+    return [
+        grant
+        for grant in grants_of_type(grants, "language")
+        if grant.get("choice")
+    ]
+
+
+def _format_language_choice_extra(
+    strings: StringsDict, grant: dict[str, Any]
+) -> str:
+    """Краткая подпись выборного языка для строки «Языки»."""
+    count = int(grant.get("count", 1))
+    pool = str(grant.get("pool", grant.get("from", "common")))
+    pool_label = _grant_pool_label(strings, pool, gtype="language")
+    return get_string(
+        strings,
+        "character.language_race_extra",
+        count=count,
+        pool=pool_label,
+    )
 
 
 def _print_race_grants(
-    info: dict[str, Any], strings: StringsDict, language: str = "ru"
+    info: dict[str, Any],
+    strings: StringsDict,
+    language: str = "ru",
+    *,
+    omit_choice_languages: bool = False,
 ) -> None:
-    """Вывести особенности из grants[] (после миграции YAML)."""
+    """Вывести особенности из grants[] сущности (без наследования от расы)."""
     grants = grants_from_entity(info)
-    if not grants:
+    visible: list[dict[str, Any]] = []
+    for grant in grants:
+        if (
+            omit_choice_languages
+            and grant.get("type") == "language"
+            and grant.get("choice")
+        ):
+            continue
+        if (
+            _has_choice_ability_bonuses(info)
+            and grant.get("type") == ABILITY_INCREASE
+            and grant.get("choice")
+        ):
+            continue
+        visible.append(grant)
+    if not visible:
         return
     print(get_string(strings, "character.features_label"))
-    for grant in grants:
-        name = _grant_display_name(grant, strings)
-        desc = _grant_description(grant, strings, language)
-        print(
-            get_string(
-                strings,
-                "character.feature_line",
-                name=name,
-                desc=desc,
-            )
-        )
+    for grant in visible:
+        _print_grant_line(grant, strings, language)
 
 
 def _print_choice_ability_from_grants(
@@ -62,7 +106,9 @@ def _print_choice_ability_from_grants(
 
 
 def _print_race_info(
-    info: StringsDict, strings: StringsDict, language: str = "ru"
+    info: dict[str, Any],
+    strings: StringsDict,
+    language: str = "ru",
 ) -> None:
     """Вывести подробности расы или подрасы."""
     desc = info.get("description", "")
@@ -73,14 +119,25 @@ def _print_race_info(
     if speed:
         print(get_string(strings, "character.speed_label", speed=speed))
 
-    languages = info.get("languages", [])
-    if languages:
-        language_line = ", ".join(
-            _deps.get_language_name(str(lang), language) for lang in languages
+    entity_grants = grants_from_entity(info)
+    choice_languages = _choice_language_grants(entity_grants)
+    fixed_languages = info.get("languages", [])
+    lang_parts: list[str] = []
+    if isinstance(fixed_languages, list):
+        lang_parts.extend(
+            _deps.get_language_name(str(lang), language)
+            for lang in fixed_languages
         )
+    merge_choice_into_languages = bool(fixed_languages and choice_languages)
+    if merge_choice_into_languages:
+        for grant in choice_languages:
+            lang_parts.append(_format_language_choice_extra(strings, grant))
+    if lang_parts:
         print(
             get_string(
-                strings, "character.languages_label", langs=language_line
+                strings,
+                "character.languages_label",
+                langs=", ".join(lang_parts),
             )
         )
 
@@ -102,7 +159,12 @@ def _print_race_info(
     else:
         _print_choice_ability_from_grants(info, strings)
 
-    _print_race_grants(info, strings, language)
+    _print_race_grants(
+        info,
+        strings,
+        language,
+        omit_choice_languages=merge_choice_into_languages,
+    )
 
 
 def _format_bonuses(bonuses: StatMap, strings: StringsDict) -> str:

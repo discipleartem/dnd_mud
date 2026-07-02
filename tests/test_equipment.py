@@ -16,6 +16,7 @@ from core.equipment import (
 )
 from core.localization import load_strings
 from core.models import Character
+from ui.menus import _deps
 from ui.menus._common import _sort_ids_by_proficiency
 from ui.menus._display._character import (
     _format_character_feats,
@@ -315,3 +316,14 @@ def test_print_race_info_grants(
     output = capsys.readouterr().out
     assert "Эльфийская боевая подготовка" in output
     assert "Длинный меч" in output
+
+
+def test_format_class_proficiencies_localizes_rogue_tools(
+    ru_strings: dict[str, Any],
+) -> None:
+    from ui.menus._display._class import _format_class_proficiencies
+
+    rogue = _deps.load_class_full("rogue", "ru")
+    prof = _format_class_proficiencies(ru_strings, rogue, "ru")
+    assert "Воровские инструменты" in prof
+    assert "thieves_tools" not in prof

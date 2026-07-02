@@ -3,10 +3,10 @@
 import random
 from typing import Any
 
-from core.constants import proficiency_bonus
-from core.dice import ability_modifier
+from core.constants import ability_modifier, proficiency_bonus
 from core.models import Character
 from core.proficiency_checks import has_save_proficiency
+from core.stats import ABILITY_SCORE_DEFAULT
 
 
 def roll_d20(
@@ -28,7 +28,7 @@ def roll_d20(
 
 def saving_throw_modifier(character: Character, ability_id: str) -> int:
     """Модификатор спасброска без броска к20."""
-    score = int(character.stats.get(ability_id, 10))
+    score = int(character.stats.get(ability_id, ABILITY_SCORE_DEFAULT))
     mod = ability_modifier(score)
     if has_save_proficiency(character.save_proficiencies, ability_id):
         mod += proficiency_bonus(character.level)

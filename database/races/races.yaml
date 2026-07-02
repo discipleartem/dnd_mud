@@ -9,14 +9,20 @@ races:
     - 100
     size: medium
     speed: 30
+    languages:
+    - common
+    grants:
+    - type: language
+      count: 1
+      choice: true
+      pool: common
+      name: Дополнительный язык
     subraces:
       standard:
         name:
           ru: Человек (стандарт)
           en: Human (standard)
         description: Стандартный вариант человека из PHB
-        languages:
-        - common
         ability_bonuses:
           strength: 1
           dexterity: 1
@@ -24,21 +30,13 @@ races:
           intelligence: 1
           wisdom: 1
           charisma: 1
-        grants:
-        - type: language
-          count: 1
-          choice: true
-          pool: common
       variant_human:
         name:
           ru: Человек (вариант)
           en: Human (variant)
         description: Альтернативный вариант создания человека
-        languages:
-        - common
         inherit:
           ability_bonuses: false
-          grants: false
         grants:
         - type: ability_increase
           count: 2
@@ -53,10 +51,6 @@ races:
           count: 1
           choice: true
           from: all
-        - type: language
-          count: 1
-          choice: true
-          pool: common
   elf:
     name:
       ru: Эльф
@@ -177,6 +171,7 @@ races:
     - effect: magical_sleep
       type: immunity
       name: Наследие фей
+      description: невозможно усыпить магией
     - duration: 4
       effect: full_rest
       type: rest

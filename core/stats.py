@@ -23,6 +23,8 @@ POINT_BUY_COSTS: dict[int, int] = {
 }
 POINT_BUY_MIN = min(POINT_BUY_COSTS)
 POINT_BUY_MAX = max(POINT_BUY_COSTS)
+ABILITY_SCORE_MIN = 1
+ABILITY_SCORE_DEFAULT = 10
 ABILITY_SCORE_MAX = 20
 
 
@@ -72,6 +74,8 @@ def validate_final_stats(stats: StatMap) -> tuple[str, int] | None:
     """
     for stat in STAT_NAMES:
         value = stats.get(stat, 0)
+        if value < ABILITY_SCORE_MIN:
+            return stat, value
         if value > ABILITY_SCORE_MAX:
             return stat, value
     return None

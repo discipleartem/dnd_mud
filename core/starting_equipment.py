@@ -7,6 +7,7 @@ from core.equipment import (
     all_weapon_ids,
     armor_category,
     armor_strength_requirement,
+    proficiency_token_label,
     resolve_tool_pool,
     weapon_matches_category,
 )
@@ -377,7 +378,7 @@ def format_equipment_option_label(
     text = _strip_proficiency_label_suffix(text)
     req_key = equipment_option_requirement_key(option)
     if req_key:
-        hint = get_string(strings, f"proficiency.{req_key}", default=req_key)
+        hint = proficiency_token_label(req_key, strings, language)
         text = f"{text} ({hint})"
     return text
 

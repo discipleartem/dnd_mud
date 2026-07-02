@@ -29,9 +29,6 @@ def select_subrace(
     if not isinstance(subraces, dict) or not subraces:
         return False, None
 
-    if len(subraces) == 1:
-        return True, next(iter(subraces))
-
     _print_screen_header(get_string(strings, "character.subrace_caption"))
 
     race_name = race_full.get("name", race_id)
@@ -45,7 +42,7 @@ def select_subrace(
         if isinstance(subrace_info, dict):
             choices.append((str(subrace_id), subrace_info))
 
-    for idx, (_subrace_id, subrace_info) in enumerate(choices, 1):
+    for idx, (_choice_subrace_id, subrace_info) in enumerate(choices, 1):
         print()
         print(
             f"  {Fore.YELLOW}{idx}{Style.RESET_ALL}. "

@@ -17,13 +17,19 @@ from core.equipment import (
     load_weapon,
     meets_armor_strength_requirement,
     weapon_ammunition_item_id,
+    weapon_category,
     weapon_range,
+)
+from core.feat_apply import (
+    dual_wielder_ac_bonus_from_feats,
+    has_non_light_dual_wield,
 )
 from core.models import Character
 from core.proficiency_checks import (
     has_armor_proficiency,
     has_weapon_proficiency,
 )
+from core.stats import ABILITY_SCORE_DEFAULT
 from core.types import StringsDict
 
 ItemKind = Literal["weapon", "armor", "tool", "equipment"]
@@ -129,9 +135,10 @@ def _armor_ac_value(armor_id: str, dex_mod: int) -> int:
 
 
 def compute_ac(character: Character) -> int:
-    """Класс доспеха персонажа (PHB, без особых умений)."""
+    """Класс доспеха персонажа (PHB + бонусы черт при экипировке)."""
     stats = character.stats
-    dex_mod = ability_modifier(int(stats.get("dexterity", 10)))
+    dexterity = int(stats.get("dexterity", ABILITY_SCORE_DEFAULT))
+    dex_mod = ability_modifier(dexterity)
     equipped = character.equipped or default_equipped()
     armor_id = equipped.get("armor")
     ac = 10 + dex_mod
@@ -139,6 +146,8 @@ def compute_ac(character: Character) -> int:
         ac = _armor_ac_value(armor_id, dex_mod)
     if equipped.get("shield"):
         ac += 2
+    if dual_wielder_ac_bonus_applies(equipped, character.feat_ids):
+        ac += dual_wielder_ac_bonus_from_feats(character.feat_ids)
     return ac
 
 
@@ -170,6 +179,35 @@ def _weapon_is_two_handed(weapon_id: str) -> bool:
 
 def _weapon_is_light(weapon_id: str) -> bool:
     return bool(_weapon_properties(weapon_id).get("light"))
+
+
+def _weapon_is_melee(weapon_id: str) -> bool:
+    return weapon_category(weapon_id).endswith("_melee")
+
+
+def _weapon_is_one_handed_melee(weapon_id: str) -> bool:
+    return _weapon_is_melee(weapon_id) and not _weapon_is_two_handed(weapon_id)
+
+
+def dual_wielder_ac_bonus_applies(
+    equipped: dict[str, Any], feat_ids: list[str]
+) -> bool:
+    """+1 КД: в каждой руке одноручное рукопашное (черта dual_wielder)."""
+    if not feat_ids or dual_wielder_ac_bonus_from_feats(feat_ids) <= 0:
+        return False
+    if equipped.get("shield"):
+        return False
+    main = equipped.get("main_hand")
+    off = equipped.get("off_hand")
+    if not isinstance(main, str) or not main:
+        return False
+    if not isinstance(off, str) or not off:
+        return False
+    if main_hand_uses_both_hands(equipped):
+        return False
+    return _weapon_is_one_handed_melee(main) and _weapon_is_one_handed_melee(
+        off
+    )
 
 
 def _weapon_base_damage_dice(weapon_id: str) -> str:
@@ -265,13 +303,29 @@ def _proficient_inventory_weapons(character: Character) -> list[str]:
     ]
 
 
-def _pick_off_hand_weapon(weapons: list[str], main_hand: str) -> str | None:
-    """Лёгкое одноручное оружие для второй руки (кроме основного)."""
+def _off_hand_weapon_allowed(weapon_id: str, *, allow_non_light: bool) -> bool:
+    """Одноручное рукопашное для второй руки (лёгкое или dual_wielder)."""
+    if not _weapon_is_one_handed_melee(weapon_id):
+        return False
+    if allow_non_light:
+        return True
+    return _weapon_is_light(weapon_id)
+
+
+def _pick_off_hand_weapon(
+    weapons: list[str],
+    main_hand: str,
+    *,
+    allow_non_light: bool = False,
+) -> str | None:
+    """Одноручное оружие для второй руки (кроме основного)."""
     candidates: list[tuple[float, str]] = []
     for weapon_id in weapons:
         if weapon_id == main_hand:
             continue
-        if _weapon_is_two_handed(weapon_id) or not _weapon_is_light(weapon_id):
+        if not _off_hand_weapon_allowed(
+            weapon_id, allow_non_light=allow_non_light
+        ):
             continue
         candidates.append((_weapon_one_handed_damage(weapon_id), weapon_id))
     if not candidates:
@@ -283,7 +337,7 @@ def equip_defaults(character: Character) -> dict[str, Any]:
     """Авто-экипировка: лучший доспех, щит и оружие из инвентаря."""
     equipped = default_equipped()
     armor_profs = character.armor_proficiencies
-    strength = int(character.stats.get("strength", 10))
+    strength = int(character.stats.get("strength", ABILITY_SCORE_DEFAULT))
 
     armor_ids = [
         str(item["id"])
@@ -323,13 +377,20 @@ def equip_defaults(character: Character) -> dict[str, Any]:
     ):
         return equipped
 
-    if main_hand and _weapon_is_versatile(main_hand):
-        equipped["main_hand_grip"] = "two_handed"
-        return equipped
-
-    off_hand = _pick_off_hand_weapon(weapons, main_hand or "")
+    allow_non_light = has_non_light_dual_wield(character.feat_ids)
+    off_hand = _pick_off_hand_weapon(
+        weapons,
+        main_hand or "",
+        allow_non_light=allow_non_light,
+    )
     if off_hand:
         equipped["off_hand"] = off_hand
+        if main_hand and _weapon_is_versatile(main_hand):
+            equipped["main_hand_grip"] = "one_handed"
+        return equipped
+
+    if main_hand and _weapon_is_versatile(main_hand):
+        equipped["main_hand_grip"] = "two_handed"
     return equipped
 
 
