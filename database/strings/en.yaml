@@ -245,7 +245,8 @@ character:
 settings:
   caption: "SETTINGS"
   back: "Back"
-  prompt: "Choose action: "
+  prompt: "Choose action (1–{count}), 0 — Back: "
+  option_mods: "Mods"
 
 languages:
   caption: "LANGUAGE SELECTION"
