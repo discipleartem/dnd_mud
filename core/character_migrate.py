@@ -6,7 +6,11 @@ CHARACTERS_SCHEMA_VERSION = 1
 
 
 def migrate_character_data(data: dict[str, Any]) -> dict[str, Any]:
-    """Привести загруженный JSON персонажа к текущей схеме."""
+    """Привести загруженный JSON персонажа к текущей схеме.
+
+    v1: только проставляет ``schema_version`` у legacy-сейвов без поля.
+    Полевая миграция v0→v1 не выполняется (канон v1, см. CHANGELOG Breaking).
+    """
     version = data.get("schema_version", 0)
     if not isinstance(version, int):
         version = 0
