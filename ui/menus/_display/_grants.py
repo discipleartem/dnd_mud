@@ -358,22 +358,6 @@ def _print_grant_line(
     language: str,
 ) -> None:
     """Вывести одну строку особенности."""
-    name = _grant_display_name(grant, strings)
-    desc = _grant_description(grant, strings, language)
-    if desc:
-        print(
-            get_string(
-                strings,
-                "character.feature_line",
-                name=name,
-                desc=desc,
-            )
-        )
-    else:
-        print(
-            get_string(
-                strings,
-                "character.feature_line_name_only",
-                name=name,
-            )
-        )
+    from ui.menus._display._grant_lines import format_grant_line_text
+
+    print(format_grant_line_text(grant, strings, language))

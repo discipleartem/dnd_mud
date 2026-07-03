@@ -20,10 +20,8 @@ from core.models import Character
 from core.types import CharacterClass
 from ui.menus import _deps
 from ui.menus._common import _sort_ids_by_proficiency
-from ui.menus._display._character import (
-    _format_character_feats,
-    _print_character_card,
-)
+from ui.menus._display._character import _print_character_card
+from ui.menus._display._character_header import _format_character_feats
 from ui.menus._display._stats import (
     _format_ability_modifier,
     _format_character_stats_compact,
