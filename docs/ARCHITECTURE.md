@@ -63,8 +63,11 @@ UI не читает файлы данных напрямую — только �
 |--------|-----------|
 | `core/models.py` | `Character` (`class_id: CharacterClass`), `Adventure` (dataclass) |
 | `core/character.py` | Узкий фасад для flow-оркестраторов (`_deps`): save/load, stats, каталоги создания |
-| `core/character_builder.py` | `ResolvedGrants`, `resolve_creation_grants` — единая сборка владений при создании |
-| `core/character_storage.py` | CRUD персонажей: `build_new_character`, `persist_character`, `update_character`; JSON в `saves/` |
+| `core/grants_context.py` | `CreationContext`, `ResolvedGrants` — dataclass контекста создания (без imports progression/proficiencies) |
+| `core/character_builder.py` | `resolve_creation_grants`, `resolve_grants_for_context`, merge языков/компетентности из черт |
+| `core/character_build.py` | `build_new_character` — сборка модели без записи на диск |
+| `core/character_migrate.py` | `CHARACTERS_SCHEMA_VERSION`, `migrate_character_data` — версия JSON сейва при load |
+| `core/character_storage.py` | CRUD персонажей: thin wrapper `build_new_character`, `persist_character`, `update_character`; JSON в `saves/` |
 | `core/session_storage.py` | Снимки сессий приключений (`saves/sessions/`) |
 | `core/game_engine.py` | `GameEngine`, `GameSession` — state machine сценария |
 | `core/types.py` | `StatMap`, `GameDifficulty`, `CharacterClass`, `RuntimeSettings` |
@@ -141,7 +144,7 @@ main.py → ui/menus/ → core/character.py (фасад) → character_storage, 
 **Сценарий «Создать персонажа»:** сложность → имя → раса → подраса → характеристики → предыстория → языки → класс → подкласс → черты (если нужны) → владения → навыки → (компетентность?) → **снаряжение** → сохранение в `saves/characters/{save_slug}.json`.
 
 - Оркестрация: `ui/menus/_creation_steps.py` (`show_create_character_flow`), `ui/menus/_creation_handlers.py`, `ui/menus/stats/stats_flow.py`
-- Снаряжение: `ui/menus/equipment.py` → `core/starting_equipment.py`; предыстория — `core/backgrounds.get_background_equipment_items`; merge и `equip_defaults` — `core/character_storage.build_new_character` / `persist_character`, `core/inventory/`
+- Снаряжение: `ui/menus/equipment.py` → `core/starting_equipment.py`; предыстория — `core/backgrounds.get_background_equipment_items`; merge и `equip_defaults` — `core/character_build.build_new_character` / `character_storage.persist_character`, `core/inventory/`
 - Сохранение: `_CreationState.to_character()` → `persist_character()` (без kwargs-bridge)
 - Генераторы: `core/stats.py`, `core/races.py` (через фасад `core/character.py`)
 - Броски 4d6: `core/dice.py` (`roll_ability_score`)
