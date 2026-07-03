@@ -17,10 +17,8 @@ from core.inventory import (
     inventory_item_quantity,
     item_display_name,
     main_hand_uses_both_hands,
-)
-from core.inventory._weapons import (
-    _weapon_is_two_handed,
-    _weapon_is_versatile,
+    weapon_is_two_handed,
+    weapon_is_versatile,
 )
 from core.localization import get_string, load_strings
 from core.models import Character
@@ -76,7 +74,7 @@ def _versatile_grip_hint(
     strings: StringsDict,
 ) -> str:
     """Подсказка хвата универсального оружия (одна / две руки)."""
-    if not _weapon_is_versatile(weapon_id):
+    if not weapon_is_versatile(weapon_id):
         return ""
     if _versatile_active_grip(equipped, weapon_id) == "two_handed":
         key = "choose_character.field_equipped_versatile_grip_two"
@@ -98,7 +96,7 @@ def format_versatile_damage_dice(
         _weapon_versatile_dice,
     )
 
-    if not _weapon_is_versatile(weapon_id):
+    if not weapon_is_versatile(weapon_id):
         return None
     one_dice = _format_dice_for_display(
         _weapon_damage_dice(weapon_id), language
@@ -173,7 +171,7 @@ def get_equipped_display(
     else:
         result["main_hand"] = empty
     if main_hand_uses_both_hands(equipped) and isinstance(main_hand, str):
-        if _weapon_is_two_handed(main_hand):
+        if weapon_is_two_handed(main_hand):
             label_key = "choose_character.field_equipped_off_two_handed"
         else:
             label_key = "choose_character.field_equipped_off_versatile"

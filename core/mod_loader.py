@@ -57,6 +57,15 @@ def _deep_merge(base: Any, overlay: Any) -> Any:
     return result
 
 
+def get_enabled_mod_ids() -> frozenset[str]:
+    """ID модов, включённых в ``mods_state.json`` (без gating overlay)."""
+    state = load_json(MODS_STATE_FILE, default={"enabled": []})
+    enabled = state.get("enabled", [])
+    if isinstance(enabled, list):
+        return frozenset(str(item) for item in enabled)
+    return frozenset()
+
+
 def _enabled_mod_ids(
     *,
     game_difficulty: GameDifficulty | None = None,
