@@ -73,7 +73,7 @@ UI не читает файлы данных напрямую — только �
 | `core/scenario_rooms.py` | `exits` в узлах YAML-сценария |
 | `core/engine_rules.py` | Преимущество/помеха проверок по `GameDifficulty` |
 | `core/combat/` | Каркас Phase 2: `roll_initiative`, `attack_roll` |
-| `core/types.py` | `StatMap`, `GameDifficulty`, `CharacterClass`, `InventoryItem`, `EquippedState`, `RuntimeSettings` |
+| `core/types/` | Пакет типов домена: `_base.py` (базовые типы), `character_params.py` (CharacterBuildParams), `proficiencies.py` (Proficiencies, Expertise); `__init__.py` — фасад для backward compatibility |
 | `core/abilities.py` | Каталог характеристик и навыков из YAML |
 | `core/races.py` | Справочник рас, `collect_race_grants`, расовые бонусы |
 | `core/classes.py` | Справочник классов, `get_class_dict`, hit dice, подклассы |
