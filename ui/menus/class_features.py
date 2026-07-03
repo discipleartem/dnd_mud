@@ -2,12 +2,12 @@
 
 from colorama import Fore, Style
 
-from core.class_features import (
+from core.localization import get_string
+from core.models import Character
+from core.progression.class_features import (
     mark_class_features_applied,
     needs_class_feature_picks,
 )
-from core.localization import get_string
-from core.models import Character
 from core.types import LanguageCode, StringsDict
 from ui.menus import _deps
 from ui.menus._common import _print_screen_header, _print_success_and_wait

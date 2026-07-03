@@ -7,9 +7,9 @@ from typing import Any
 from core.classes import get_class_hit_dice
 from core.dice import ability_modifier, roll
 from core.feats import get_feat_hp_bonus_sources
-from core.hp_bonuses import HpBonusSource
-from core.levels import MAX_CHARACTER_LEVEL, clamp_level
 from core.models import Character
+from core.progression.hp_bonuses import HpBonusSource
+from core.levels import MAX_CHARACTER_LEVEL, clamp_level
 from core.races import get_racial_hp_bonus_sources
 from core.stats import ABILITY_SCORE_DEFAULT
 from core.types import GameDifficulty, StatMap
@@ -303,18 +303,18 @@ def _headless_asi_resolution(
     character: Character, new_level: int
 ) -> AsiResolution:
     """Авто-ASI или сохранённый выбор (без UI)."""
-    from core.asi import (
+    from core.feats import (
+        apply_feat_grants_to_character,
+        resolve_feat_ability_bonuses,
+        tough_hp_adjustment_on_acquire,
+    )
+    from core.progression.asi import (
         apply_asi_two_one,
         auto_asi_bonus,
         cap_stats,
         con_hp_bonus_from_asi,
         feat_id_from_asi_choice,
         pending_asi_at_level,
-    )
-    from core.feats import (
-        apply_feat_grants_to_character,
-        resolve_feat_ability_bonuses,
-        tough_hp_adjustment_on_acquire,
     )
     from core.stats import apply_bonuses_to_stats
 
@@ -375,7 +375,7 @@ def process_pending_level_ups(
     ) = None,
 ) -> Character:
     """Применить все ожидающие повышения; resolve_asi — UI или headless."""
-    from core.asi import pending_asi_at_level
+    from core.progression.asi import pending_asi_at_level
 
     char = character
     while has_pending_level_up(char):

@@ -4,11 +4,6 @@ from dataclasses import replace
 
 from colorama import Fore, Style
 
-from core.asi import (
-    con_hp_bonus_from_asi,
-    feat_id_from_asi_choice,
-    pending_asi_at_level,
-)
 from core.feats import (
     apply_feat_grants_to_character,
     load_feat,
@@ -20,6 +15,11 @@ from core.progression import (
     AsiResolution,
     HpGainBreakdown,
     process_pending_level_ups,
+)
+from core.progression.asi import (
+    con_hp_bonus_from_asi,
+    feat_id_from_asi_choice,
+    pending_asi_at_level,
 )
 from core.types import LanguageCode, StringsDict
 from ui.menus._common import _press_enter, _print_screen_header

@@ -4,9 +4,9 @@ from dataclasses import dataclass, field
 from typing import Any, Literal
 
 from core.character_storage import build_new_character
-from core.class_features import class_features_applied_at_creation
 from core.models import Character
-from core.subclasses import start_level_for_difficulty
+from core.progression.class_features import class_features_applied_at_creation
+from core.progression.subclasses import start_level_for_difficulty
 from core.types import GameDifficulty, StatMap
 
 CreationStep = Literal[

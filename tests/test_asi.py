@@ -2,7 +2,8 @@
 
 import pytest
 
-from core.asi import (
+from core.models import Character
+from core.progression.asi import (
     apply_asi_one_two,
     apply_asi_two_one,
     cap_stats,
@@ -11,7 +12,6 @@ from core.asi import (
     feat_id_from_asi_choice,
     pending_asi_at_level,
 )
-from core.models import Character
 
 
 def test_feat_id_from_asi_choice() -> None:

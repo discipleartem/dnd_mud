@@ -4,11 +4,11 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
-from core.class_features import needs_class_feature_picks
 from core.io import load_yaml
 from core.models import Character
 from core.progression import grant_experience, has_pending_level_up
-from core.subclasses import needs_subclass_npc
+from core.progression.class_features import needs_class_feature_picks
+from core.progression.subclasses import needs_subclass_npc
 
 
 @dataclass(frozen=True)

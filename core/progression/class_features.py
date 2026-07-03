@@ -3,8 +3,8 @@
 from dataclasses import replace
 
 from core.models import Character
+from core.progression.subclasses import subclass_is_active
 from core.skills import subclass_skills_active
-from core.subclasses import subclass_is_active
 
 
 def class_features_applied_at_creation(

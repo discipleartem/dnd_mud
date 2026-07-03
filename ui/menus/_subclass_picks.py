@@ -1,12 +1,12 @@
 """Общая логика выбора владений/навыков/экспертизы подкласса."""
 
-from core.class_features import subclass_skill_picks_pending
 from core.models import Character
 from core.proficiencies import (
     apply_subclass_proficiencies_to_character,
     is_valid_tool_selection,
     merge_proficiency_tokens,
 )
+from core.progression.class_features import subclass_skill_picks_pending
 from core.types import LanguageCode, StringsDict
 from ui.menus.expertise import apply_pending_expertise
 from ui.menus.proficiencies import _pick_tools

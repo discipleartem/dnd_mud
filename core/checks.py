@@ -6,7 +6,7 @@ from typing import Any
 from core.abilities import ability_for_skill
 from core.constants import ability_modifier, proficiency_bonus
 from core.models import Character
-from core.proficiency_checks import has_save_proficiency
+from core.proficiencies.proficiency_checks import has_save_proficiency
 from core.stats import ABILITY_SCORE_DEFAULT
 
 

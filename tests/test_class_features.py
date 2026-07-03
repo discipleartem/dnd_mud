@@ -4,11 +4,11 @@ from typing import Any
 
 import pytest
 
-from core.class_features import (
+from core.models import Character
+from core.progression.class_features import (
     class_features_applied_at_creation,
     needs_class_feature_picks,
 )
-from core.models import Character
 from core.scenario_actions import apply_scenario_action
 from ui.menus.class_features import apply_pending_class_features
 

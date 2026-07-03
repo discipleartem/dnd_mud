@@ -2,7 +2,7 @@
 
 from core.dice import ability_modifier
 from core.equipment import armor_category, load_armor
-from core.feat_apply import dual_wielder_ac_bonus_from_feats
+from core.feats.feat_apply import dual_wielder_ac_bonus_from_feats
 from core.inventory._weapons import dual_wielder_ac_bonus_applies
 from core.models import Character
 from core.stats import ABILITY_SCORE_DEFAULT

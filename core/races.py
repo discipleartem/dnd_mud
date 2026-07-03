@@ -11,11 +11,11 @@ from core.grants import (
     inherit_flags,
     merge_entity_grants,
 )
-from core.hp_bonuses import (
+from core.localization import resolve_localized_text
+from core.progression.hp_bonuses import (
     HpBonusSource,
     hit_point_bonus_sources_from_grants,
 )
-from core.localization import resolve_localized_text
 from core.types import StatMap
 
 RACES_FILE = Path("database/races/races.yaml")

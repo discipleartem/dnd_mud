@@ -10,9 +10,9 @@ from core.io import load_json, save_json
 from core.levels import clamp_level
 from core.models import Character
 from core.progression import max_hp_for_level, xp_for_level
+from core.progression.subclasses import start_level_for_difficulty
 from core.slug import make_save_slug
 from core.stats import STANDARD_ARRAY, generate_stats_standard_array
-from core.subclasses import start_level_for_difficulty
 from core.types import GameDifficulty, StatMap
 
 CHARACTERS_SCHEMA_VERSION = 1

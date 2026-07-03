@@ -2,8 +2,8 @@
 
 from typing import Any
 
-from core.feat_visibility import feat_visible_for_selection
-from core.feats_loader import (
+from core.feats.feat_visibility import feat_visible_for_selection
+from core.feats.feats_loader import (
     FeatGrant,
     FeatRequirementContext,
     load_feat,
@@ -112,7 +112,7 @@ def feat_meets_requirements(feat_id: str, ctx: FeatRequirementContext) -> bool:
 
 def active_feat_ids(character: Any) -> list[str]:
     """Черты персонажа, проходящие ongoing-проверку требований."""
-    from core.feat_visibility import (
+    from core.feats.feat_visibility import (
         build_feat_selection_context_from_character,
     )
     from core.models import Character
@@ -131,7 +131,7 @@ def feat_requirement_context_from_character(
     character: Any,
 ) -> FeatRequirementContext:
     """Контекст требований черт из персонажа (alias для visibility)."""
-    from core.feat_visibility import (
+    from core.feats.feat_visibility import (
         build_feat_selection_context_from_character,
     )
 

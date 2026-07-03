@@ -13,8 +13,8 @@ from core.proficiencies import (
     is_valid_tool_selection,
     merge_proficiency_tokens,
 )
-from core.proficiency_checks import has_tool_proficiency
-from core.subclasses import start_level_for_difficulty
+from core.proficiencies.proficiency_checks import has_tool_proficiency
+from core.progression.subclasses import start_level_for_difficulty
 from core.types import GameDifficulty, StringsDict
 from ui.menus._common import (
     _format_pick_menu_label,

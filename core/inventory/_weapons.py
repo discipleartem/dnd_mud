@@ -92,7 +92,7 @@ def dual_wielder_ac_bonus_applies(
     equipped: dict[str, Any], feat_ids: list[str]
 ) -> bool:
     """+1 КД: в каждой руке одноручное рукопашное (черта dual_wielder)."""
-    from core.feat_apply import (
+    from core.feats.feat_apply import (
         dual_wielder_ac_bonus_from_feats,
     )
 

@@ -3,8 +3,8 @@
 from typing import Any
 
 from core.classes import get_subclass_choice_level
-from core.levels import MAX_CHARACTER_LEVEL
 from core.models import Character
+from core.levels import MAX_CHARACTER_LEVEL
 from core.types import GameDifficulty
 
 EASY_START_LEVEL = 3
