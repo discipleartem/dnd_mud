@@ -2,15 +2,24 @@
 
 import pytest
 
-from core.catalog_loader import reload_catalogs
+from core.catalog_loader import load_catalog, reload_catalogs
 from core.mod_loader import (
     _enabled_mod_ids,
     _mod_allowed_for_difficulty,
+    get_mod_gating_difficulty,
     save_mods_state,
     set_mod_gating_difficulty,
 )
+from core.races import RACES_FILE
+from core.types import GameDifficulty
 
 pytestmark = pytest.mark.usefixtures("catalog_caches_cleared")
+
+
+def test_get_mod_gating_difficulty() -> None:
+    set_mod_gating_difficulty("hardcore")
+    assert get_mod_gating_difficulty() == "hardcore"
+    set_mod_gating_difficulty(None)
 
 
 def test_mod_allowed_for_difficulty() -> None:
@@ -37,3 +46,27 @@ def test_enabled_mod_ids_respects_gating(
 
 def test_reload_catalogs_clears_cache() -> None:
     reload_catalogs()
+
+
+def test_load_catalog_passes_mod_gating_difficulty(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    from pathlib import Path
+
+    seen: list[GameDifficulty | None] = []
+    from core.mod_loader import load_merged_yaml as original_yaml
+
+    def spy_yaml(
+        path: Path,
+        *,
+        game_difficulty: GameDifficulty | None = None,
+    ) -> dict[str, object]:
+        seen.append(game_difficulty)
+        return original_yaml(path, game_difficulty=game_difficulty)
+
+    monkeypatch.setattr("core.mod_loader.load_merged_yaml", spy_yaml)
+    set_mod_gating_difficulty("hardcore")
+    reload_catalogs()
+    load_catalog(RACES_FILE, "races")
+    assert seen[-1] == "hardcore"
+    set_mod_gating_difficulty(None)
