@@ -23,7 +23,9 @@ Release `dev` → `main`: review **не обязателен** — [`dnd-mud-rel
 
 ## Предусловия
 
-- [ ] Все подзадачи завершены; вспомогательные ветки слиты ([`dnd-mud-workflow.mdc`](../../rules/dnd-mud-workflow.mdc) §Несколько веток)
+- [ ] План с N PR: созданы и закоммичены **≥ N part-веток** (не один общий diff); таблица PR→ветка из §Шаг 0 workflow
+- [ ] Все part-ветки **слиты** `--no-ff` в интеграционную `feat/<slug>` ([`dnd-mud-workflow.mdc`](../../rules/dnd-mud-workflow.mdc) §Несколько веток)
+- [ ] Текущая ветка — `feat/<slug>`, не part-ветка и не `main`/`dev`
 - [ ] `dnd-mud-docs-after-task` выполнен (если была реализация кода/данных)
 - [ ] Рабочее дерево чистое
 - [ ] На task-ветке: `git rebase origin/dev` (на `dev` — fetch `origin/main`)

@@ -24,8 +24,10 @@ Personal: `git-dev-main-sync` (`~/.cursor/skills/git-dev-main-sync/`).
 ## Agent-loop
 
 ```
-git-старт → подзадачи (commits; verify-changed) → docs-after-task → commit → review → [fix-plan?] → [git-pr?] → merged/…
+git-старт → [инвентария N PR] → [part × N: branch + commit] → merge → feat/<slug> → docs → review → [git-pr?] → merged/…
 ```
+
+**1 PR плана = 1 ветка.** План на 17 PR — 17 part-веток, не одна. Канон: [`dnd-mud-workflow.mdc`](../rules/dnd-mud-workflow.mdc) §Несколько веток.
 
 Release `dev` → `main` — отдельно по запросу (`dnd-mud-release`).
 

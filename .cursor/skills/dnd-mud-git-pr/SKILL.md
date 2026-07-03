@@ -20,7 +20,7 @@ disable-model-invocation: true
 | PR `MERGED` / «смержил» | §Rename в `merged/*` |
 | Push без PR | Только push (§Push) |
 
-**Предусловие:** [`dnd-mud-review`](../dnd-mud-review/SKILL.md) выполнен (или пользователь явно просит без review).
+**Предусловие:** [`dnd-mud-review`](../dnd-mud-review/SKILL.md) выполнен. Head PR — **`feat/<slug>`** после merge всех part-веток плана (если план перечислял N PR — было создано ≥ N part-веток). См. [`dnd-mud-workflow.mdc`](../../rules/dnd-mud-workflow.mdc) §Шаг 0 и §Проверка.
 
 ## Push и PR
 
