@@ -2,13 +2,14 @@
 
 from core.game_engine import GameEngine, GameSession
 from core.models import Adventure, Character
+from core.types import CharacterClass
 
 
 def test_game_engine_grant_xp_triggers_level_up_pending() -> None:
     character = Character(
         name="Hero",
         race="human",
-        class_id="fighter",
+        class_id=CharacterClass.FIGHTER,
         experience=0,
     )
     adventure = Adventure(

@@ -2,6 +2,7 @@
 
 from core.character_storage import LoadCharactersResult
 from core.models import Adventure, Character
+from core.types import CharacterClass
 from ui.menus import _creation_steps, _deps, new_game
 
 
@@ -11,7 +12,7 @@ def test_select_adventure_filters_and_choice(
     character = Character(
         name="Normal Hero",
         race="human",
-        class_id="fighter",
+        class_id=CharacterClass.FIGHTER,
         difficulty="normal",
     )
     available = Adventure(
@@ -54,7 +55,9 @@ def test_new_game_no_characters_goes_to_create(monkeypatch):
 
 def test_new_game_back_navigation_and_cached_list(monkeypatch):
     calls = {"load": 0, "character": 0, "adventure": 0}
-    character = Character(name="Test Hero", race="human", class_id="fighter")
+    character = Character(
+        name="Test Hero", race="human", class_id=CharacterClass.FIGHTER
+    )
 
     def load_characters():
         calls["load"] += 1

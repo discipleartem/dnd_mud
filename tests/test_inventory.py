@@ -11,6 +11,7 @@ from core.inventory import (
     inventory_excluding_equipped,
 )
 from core.models import Character
+from core.types import CharacterClass
 from ui.menus._display._inventory import (
     format_inventory_line,
     get_equipped_display,
@@ -29,7 +30,7 @@ def test_compute_ac_with_chain_mail() -> None:
     char = Character(
         name="Test",
         race="human",
-        class_id="fighter",
+        class_id=CharacterClass.FIGHTER,
         stats={"dexterity": 14},
         equipped={"armor": "chain_mail", "shield": True},
         inventory=[
@@ -44,7 +45,7 @@ def test_equip_defaults_picks_armor_and_weapons() -> None:
     char = Character(
         name="Test",
         race="human",
-        class_id="fighter",
+        class_id=CharacterClass.FIGHTER,
         stats={"strength": 14, "dexterity": 10},
         weapon_proficiencies=["simple", "martial", "longsword", "dagger"],
         armor_proficiencies=["light", "medium", "heavy", "shield"],
@@ -67,7 +68,7 @@ def test_equip_defaults_skips_armor_below_strength() -> None:
     char = Character(
         name="Cleric",
         race="dwarf",
-        class_id="cleric",
+        class_id=CharacterClass.CLERIC,
         stats={"strength": 9, "dexterity": 13},
         armor_proficiencies=["light", "medium", "heavy", "shield"],
         inventory=[
@@ -83,7 +84,7 @@ def test_equip_defaults_rogue_rapier_and_dagger() -> None:
     char = Character(
         name="Rogue",
         race="human",
-        class_id="rogue",
+        class_id=CharacterClass.ROGUE,
         weapon_proficiencies=[
             "simple",
             "martial",
@@ -110,7 +111,7 @@ def test_equip_defaults_two_handed_blocks_shield_and_off_hand() -> None:
     char = Character(
         name="Barb",
         race="human",
-        class_id="fighter",
+        class_id=CharacterClass.FIGHTER,
         weapon_proficiencies=["simple", "martial", "greataxe", "handaxe"],
         armor_proficiencies=["shield"],
         inventory=[
@@ -129,7 +130,7 @@ def test_equip_defaults_caster_no_off_hand_weapon() -> None:
     char = Character(
         name="Cleric",
         race="human",
-        class_id="cleric",
+        class_id=CharacterClass.CLERIC,
         weapon_proficiencies=["simple", "mace", "dagger"],
         armor_proficiencies=["light", "medium", "heavy", "shield"],
         inventory=[
@@ -149,7 +150,7 @@ def test_equip_defaults_no_shield_dual_wield_light() -> None:
     char = Character(
         name="Fighter",
         race="human",
-        class_id="fighter",
+        class_id=CharacterClass.FIGHTER,
         weapon_proficiencies=["simple", "martial", "longsword", "handaxe"],
         inventory=[
             {"kind": "weapon", "id": "longsword", "qty": 1},
@@ -172,7 +173,7 @@ def test_equip_defaults_non_light_off_hand_requires_dual_wielder() -> None:
     without_feat = Character(
         name="Rogue",
         race="human",
-        class_id="rogue",
+        class_id=CharacterClass.ROGUE,
         weapon_proficiencies=profs,
         inventory=base_inventory,
     )
@@ -183,7 +184,7 @@ def test_equip_defaults_non_light_off_hand_requires_dual_wielder() -> None:
     with_longsword = Character(
         name="Fighter",
         race="human",
-        class_id="fighter",
+        class_id=CharacterClass.FIGHTER,
         weapon_proficiencies=["simple", "martial", "rapier", "longsword"],
         inventory=[
             {"kind": "weapon", "id": "rapier", "qty": 1},
@@ -198,7 +199,7 @@ def test_equip_defaults_non_light_off_hand_requires_dual_wielder() -> None:
     dual_wielder = Character(
         name="Fighter",
         race="human",
-        class_id="fighter",
+        class_id=CharacterClass.FIGHTER,
         feat_ids=["dual_wielder"],
         weapon_proficiencies=["simple", "martial", "rapier", "longsword"],
         inventory=[
@@ -216,7 +217,7 @@ def test_compute_ac_dual_wielder_bonus() -> None:
     char = Character(
         name="Rogue",
         race="human",
-        class_id="rogue",
+        class_id=CharacterClass.ROGUE,
         stats={"dexterity": 12},
         feat_ids=["dual_wielder"],
         equipped={
@@ -236,7 +237,7 @@ def test_compute_ac_dual_wielder_bonus() -> None:
     shielded = Character(
         name="Rogue",
         race="human",
-        class_id="rogue",
+        class_id=CharacterClass.ROGUE,
         stats={"dexterity": 12},
         feat_ids=["dual_wielder"],
         equipped={
@@ -253,7 +254,7 @@ def test_equip_defaults_versatile_one_handed_with_shield() -> None:
     char = Character(
         name="Cleric",
         race="dwarf",
-        class_id="cleric",
+        class_id=CharacterClass.CLERIC,
         weapon_proficiencies=[
             "simple",
             "warhammer",
@@ -279,7 +280,7 @@ def test_equip_defaults_versatile_two_handed_without_shield() -> None:
     char = Character(
         name="Fighter",
         race="dwarf",
-        class_id="fighter",
+        class_id=CharacterClass.FIGHTER,
         weapon_proficiencies=["simple", "martial", "warhammer"],
         inventory=[{"kind": "weapon", "id": "warhammer", "qty": 1}],
     )
@@ -293,7 +294,7 @@ def test_get_equipped_display_hands_and_occupied() -> None:
     char = Character(
         name="Test",
         race="human",
-        class_id="fighter",
+        class_id=CharacterClass.FIGHTER,
         equipped={
             "main_hand": "greataxe",
             "shield": False,
@@ -307,7 +308,7 @@ def test_get_equipped_display_hands_and_occupied() -> None:
     versatile = Character(
         name="Fighter",
         race="dwarf",
-        class_id="fighter",
+        class_id=CharacterClass.FIGHTER,
         equipped={
             "main_hand": "warhammer",
             "main_hand_grip": "two_handed",
@@ -325,7 +326,7 @@ def test_get_equipped_display_hands_and_occupied() -> None:
     cleric = Character(
         name="Cleric",
         race="dwarf",
-        class_id="cleric",
+        class_id=CharacterClass.CLERIC,
         equipped={
             "armor": "chain_mail",
             "shield": True,
@@ -350,7 +351,7 @@ def test_get_equipped_display_hands_and_occupied() -> None:
     crossbow_char = Character(
         name="Cleric",
         race="human",
-        class_id="cleric",
+        class_id=CharacterClass.CLERIC,
         equipped={
             "main_hand": "light_crossbow",
             "main_hand_grip": "two_handed",
@@ -372,7 +373,7 @@ def test_get_equipped_display_empty_armor_slot() -> None:
     char = Character(
         name="Cleric",
         race="dwarf",
-        class_id="cleric",
+        class_id=CharacterClass.CLERIC,
         equipped={
             "main_hand": "warhammer",
             "main_hand_grip": "one_handed",

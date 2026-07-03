@@ -24,6 +24,7 @@ from core.stats import (
     validate_final_stats,
     validate_point_buy_finish,
 )
+from core.types import CharacterClass
 
 
 @pytest.mark.parametrize(
@@ -97,7 +98,9 @@ def test_adventure_difficulty_rules() -> None:
 
 def test_adventure_unavailable_reason() -> None:
     high = Adventure(id="high", name="High", min_level=5)
-    char = Character(name="Hero", race="human", class_id="fighter", level=1)
+    char = Character(
+        name="Hero", race="human", class_id=CharacterClass.FIGHTER, level=1
+    )
     assert (
         adventure_unavailable_reason(high, char)
         == "adventures.unavailable_reason_level"
@@ -106,7 +109,7 @@ def test_adventure_unavailable_reason() -> None:
     normal_char = Character(
         name="Hero",
         race="human",
-        class_id="fighter",
+        class_id=CharacterClass.FIGHTER,
         difficulty="normal",
     )
     assert (

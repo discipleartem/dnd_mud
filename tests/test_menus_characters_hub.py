@@ -4,6 +4,7 @@ import pytest
 
 from core.character_storage import LoadCharactersResult
 from core.models import Character
+from core.types import CharacterClass
 from ui.menus import _deps, characters_menu
 
 
@@ -23,7 +24,7 @@ def test_characters_menu_shows_hub_options(
     character = Character(
         name="Hero",
         race="human",
-        class_id="fighter",
+        class_id=CharacterClass.FIGHTER,
         save_slug="hero",
     )
     _patch_load_characters(monkeypatch, [character])
@@ -41,7 +42,7 @@ def test_characters_menu_delete_one_confirmed(
     character = Character(
         name="Hero",
         race="human",
-        class_id="fighter",
+        class_id=CharacterClass.FIGHTER,
         save_slug="hero",
     )
     deleted: list[str] = []

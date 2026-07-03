@@ -14,6 +14,7 @@ from core.progression.subclasses import (
     subclass_is_active,
     subclass_offered_at_creation,
 )
+from core.types import CharacterClass
 from ui.menus.subclass_trainer import (
     assign_subclass_from_menu,
     run_subclass_trainer,
@@ -52,7 +53,7 @@ def test_subclass_pending_and_npc_rules() -> None:
     char = Character(
         name="Hero",
         race="human",
-        class_id="fighter",
+        class_id=CharacterClass.FIGHTER,
         level=1,
         subclass_id="champion",
         difficulty="normal",
@@ -63,7 +64,7 @@ def test_subclass_pending_and_npc_rules() -> None:
     hc = Character(
         name="Hero",
         race="human",
-        class_id="fighter",
+        class_id=CharacterClass.FIGHTER,
         level=3,
         difficulty="hardcore",
     )
@@ -89,7 +90,7 @@ def test_run_subclass_trainer_requires_higher_level(
     char = Character(
         name="Hero",
         race="human",
-        class_id="fighter",
+        class_id=CharacterClass.FIGHTER,
         level=1,
         difficulty="normal",
     )
@@ -108,7 +109,7 @@ def test_assign_subclass_from_menu_champion(
     char = Character(
         name="Hero",
         race="human",
-        class_id="fighter",
+        class_id=CharacterClass.FIGHTER,
         level=3,
         skills=["athletics", "intimidation"],
         difficulty="normal",

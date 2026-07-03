@@ -20,6 +20,7 @@ from core.progression import (
     xp_covers_level,
     xp_for_level,
 )
+from core.types import CharacterClass
 from ui.menus import level_up as level_up_menu
 from ui.menus.scenario_flow import run_scenario
 
@@ -123,7 +124,7 @@ def test_resolve_pending_level_ups_records_asi_and_feat(
     char = Character(
         name="Hero",
         race="human",
-        class_id="fighter",
+        class_id=CharacterClass.FIGHTER,
         level=3,
         stats={"strength": 16, "constitution": 14},
         current_hp=28,
@@ -180,7 +181,7 @@ def test_run_scenario_grant_xp_levels_character(
     character = Character(
         name="Hero",
         race="human",
-        class_id="fighter",
+        class_id=CharacterClass.FIGHTER,
         level=1,
         stats={"constitution": 14},
         current_hp=12,

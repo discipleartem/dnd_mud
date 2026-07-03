@@ -65,7 +65,7 @@ def test_save_character_roundtrip(characters_dir: Path) -> None:
     saved = character_mod.save_character(
         name="Hero",
         race_id="human",
-        class_id="fighter",
+        class_id=CharacterClass.FIGHTER,
         difficulty="normal",
         stats=stats,
         subclass_id="champion",
@@ -90,7 +90,7 @@ def test_save_character_easy_start_level_xp(characters_dir: Path) -> None:
     saved = character_mod.save_character(
         name="EasyHero",
         race_id="human",
-        class_id="fighter",
+        class_id=CharacterClass.FIGHTER,
         difficulty="easy",
         stats=stats,
     )
@@ -102,7 +102,7 @@ def test_character_json_uses_canonical_field_names() -> None:
     char = Character(
         name="Hero",
         race="human",
-        class_id="fighter",
+        class_id=CharacterClass.FIGHTER,
         subclass_id="champion",
         background_id="soldier",
     )
@@ -125,7 +125,7 @@ def test_starting_max_hp_and_hardcore(
     saved = character_mod.save_character(
         name="LowCon",
         race_id="human",
-        class_id="bard",
+        class_id=CharacterClass.BARD,
         stats=stats,
         difficulty="normal",
     )
@@ -139,7 +139,7 @@ def test_starting_max_hp_and_hardcore(
     hard = character_mod.save_character(
         name="HardHero",
         race_id="human",
-        class_id="fighter",
+        class_id=CharacterClass.FIGHTER,
         difficulty="hardcore",
         stats=stats,
     )
@@ -159,7 +159,7 @@ def test_hardcore_l1_hp_floor_on_create(
     saved = character_mod.save_character(
         name="HardLow",
         race_id="human",
-        class_id="bard",
+        class_id=CharacterClass.BARD,
         stats=stats,
         difficulty="hardcore",
     )
@@ -170,10 +170,10 @@ def test_hardcore_l1_hp_floor_on_create(
 def test_make_save_slug_and_slug_collision(characters_dir: Path) -> None:
     assert make_save_slug("Герой") == "geroy"
     first = character_mod.save_character(
-        name="Hero", race_id="human", class_id="fighter"
+        name="Hero", race_id="human", class_id=CharacterClass.FIGHTER
     )
     second = character_mod.save_character(
-        name="Hero", race_id="elf", class_id="rogue"
+        name="Hero", race_id="elf", class_id=CharacterClass.ROGUE
     )
     assert first.save_slug == "hero"
     assert second.save_slug == "hero_2"

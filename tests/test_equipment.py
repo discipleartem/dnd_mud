@@ -17,6 +17,7 @@ from core.equipment import (
 )
 from core.localization import load_strings
 from core.models import Character
+from core.types import CharacterClass
 from ui.menus import _deps
 from ui.menus._common import _sort_ids_by_proficiency
 from ui.menus._display._character import (
@@ -233,7 +234,7 @@ def test_format_character_stats_compact_hides_zero_mod(
     char = Character(
         name="Hero",
         race="human",
-        class_id="fighter",
+        class_id=CharacterClass.FIGHTER,
         stats={
             "strength": 6,
             "dexterity": 10,
@@ -254,7 +255,7 @@ def test_format_character_feats() -> None:
     char = Character(
         name="Hero",
         race="human",
-        class_id="fighter",
+        class_id=CharacterClass.FIGHTER,
         feat_ids=["tough", "athlete"],
     )
     assert _format_character_feats(char, "ru") == "Крепкий, Атлетичный"
@@ -266,7 +267,7 @@ def test_format_character_stats_and_card(
     char = Character(
         name="Арагорн",
         race="human",
-        class_id="fighter",
+        class_id=CharacterClass.FIGHTER,
         level=3,
         subclass_id="champion",
         current_hp=28,

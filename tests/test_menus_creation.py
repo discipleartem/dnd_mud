@@ -7,6 +7,7 @@ import pytest
 
 import ui.menus._creation_handlers as creation_handlers
 from core.stats import STAT_NAMES
+from core.types import CharacterClass
 from ui.menus import _creation_steps, _deps
 from ui.menus._creation_handlers import (
     _handle_equipment,
@@ -260,7 +261,7 @@ def test_handle_equipment_stores_choices_and_finalizes(
     fake_char = Character(
         name="Hero",
         race="human",
-        class_id="fighter",
+        class_id=CharacterClass.FIGHTER,
         equipment_choices=choices,
     )
     monkeypatch.setattr(

@@ -2,13 +2,14 @@
 
 from core.checks import ability_check, passive_skill, skill_check
 from core.models import Character
+from core.types import CharacterClass
 
 
 def test_skill_check_and_passive() -> None:
     character = Character(
         name="Rogue",
         race="human",
-        class_id="rogue",
+        class_id=CharacterClass.ROGUE,
         stats={"dexterity": 16},
         skills=["stealth"],
         level=3,
@@ -25,7 +26,7 @@ def test_skill_check_scenario_action_returns_message() -> None:
     character = Character(
         name="Hero",
         race="human",
-        class_id="rogue",
+        class_id=CharacterClass.ROGUE,
         skills=["stealth"],
     )
     result = apply_scenario_action(
@@ -46,7 +47,7 @@ def test_ability_check() -> None:
     character = Character(
         name="Hero",
         race="human",
-        class_id="fighter",
+        class_id=CharacterClass.FIGHTER,
         stats={"strength": 14},
     )
     result = ability_check(character, "strength", dc=12)
