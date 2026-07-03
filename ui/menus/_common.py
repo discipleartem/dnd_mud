@@ -73,8 +73,10 @@ def _choice_prompt(strings: StringsDict) -> str:
 
 def _print_screen_header(caption: str) -> None:
     """Заголовок экрана: разделитель, подпись по центру, разделитель."""
+    from ui.terminal_wrap import wrap_text
+
     print(SEPARATOR)
-    print(f"{Fore.YELLOW}{caption.center(78)}{Style.RESET_ALL}")
+    print(f"{Fore.YELLOW}{wrap_text(caption).center(78)}{Style.RESET_ALL}")
     print(SEPARATOR)
     print()
 
