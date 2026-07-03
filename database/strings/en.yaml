@@ -381,6 +381,9 @@ scenario:
   skill_check_success: "Check {skill}: {total} (d20={roll}+{bonus}) — success (DC {dc})"
   skill_check_failure: "Check {skill}: {total} (d20={roll}+{bonus}) — failure (DC {dc})"
   skill_check_roll: "Check {skill}: {total} (d20={roll}+{bonus})"
+  ability_check_success: "Check {ability}: {total} (d20={roll}+{bonus}) — success (DC {dc})"
+  ability_check_failure: "Check {ability}: {total} (d20={roll}+{bonus}) — failure (DC {dc})"
+  ability_check_roll: "Check {ability}: {total} (d20={roll}+{bonus})"
 
 level_up:
   caption: "LEVEL UP"
