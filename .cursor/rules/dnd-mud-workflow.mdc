@@ -77,15 +77,17 @@ git fetch origin && git rebase origin/dev
    - Реализация **только** scope этого PR.
    - **Commit** (≥1) на part-ветке.
    - **Запрещено** переходить к PR-(N+1), пока PR-N не закоммичен на своей ветке.
-3. **После всех N part-веток** — слить каждую в интеграционную (**до** docs финализации / review / PR):
+3. **После всех N part-веток** — слить каждую в интеграционную (**до** docs финализации / review / PR).
+   **Merge и удаление — атомарная пара:** сразу после успешного `--no-ff` merge part-ветка **удаляется** (`git branch -d`). Слитая part-ветка без префикса `merged/` не остаётся.
    ```bash
    TASK=feat/<slug>
    git fetch origin
    git checkout "${TASK}" && git rebase origin/dev
    for PART in chore/docs-tooling-sync refactor/save-migrations ...; do
      git merge --no-ff "${PART}" -m "merge(${PART}): into ${TASK}"
-     git branch -d "${PART}"    # локально, после успешного merge
+     git branch -d "${PART}"    # ОБЯЗАТЕЛЬНО: сразу после успешного merge
    done
+   make branch-cleanup          # резерв: удалить все слитые в dev part-ветки одной командой
    ```
 4. **Финализация** — только на **`feat/<slug>`**: docs-after-task → commit → review → push/PR → `merged/…`.
 
