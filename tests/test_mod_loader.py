@@ -1,19 +1,35 @@
 """Тесты mod gating и reload каталогов."""
 
+from pathlib import Path
+
 import pytest
 
 from core.catalog_loader import load_catalog, reload_catalogs
 from core.mod_loader import (
     _enabled_mod_ids,
     _mod_allowed_for_difficulty,
+    get_enabled_mod_ids,
     get_mod_gating_difficulty,
     save_mods_state,
+    set_mod_enabled,
     set_mod_gating_difficulty,
 )
 from core.races import RACES_FILE
 from core.types import GameDifficulty
 
 pytestmark = pytest.mark.usefixtures("catalog_caches_cleared")
+
+
+def test_get_enabled_mod_ids_reads_state(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    state_file = tmp_path / "mods_state.json"
+    monkeypatch.setattr("core.mod_loader.MODS_STATE_FILE", state_file)
+    assert get_enabled_mod_ids() == frozenset()
+    save_mods_state(["dragonborn_pack"])
+    assert get_enabled_mod_ids() == frozenset({"dragonborn_pack"})
+    set_mod_enabled("dragonborn_pack", False)
+    assert get_enabled_mod_ids() == frozenset()
 
 
 def test_get_mod_gating_difficulty() -> None:

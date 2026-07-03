@@ -2,7 +2,6 @@
 
 from colorama import Fore, Style
 
-from core.character_storage import CHARACTERS_DIR
 from core.game_engine import GameEngine, GameSession
 from core.session_storage import (
     find_adventure,
@@ -61,7 +60,7 @@ def show_load_game_flow(
     loaded = load_session(snapshot.save_slug)
     if loaded is None:
         return
-    character = load_character_for_session(loaded, CHARACTERS_DIR)
+    character = load_character_for_session(loaded)
     if character is None:
         print(
             f"{Fore.YELLOW}"

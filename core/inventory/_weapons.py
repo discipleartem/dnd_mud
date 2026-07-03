@@ -71,6 +71,16 @@ def _weapon_auto_equip_damage(weapon_id: str) -> tuple[float, bool]:
     return _weapon_one_handed_damage(weapon_id), False
 
 
+def weapon_is_two_handed(weapon_id: str) -> bool:
+    """Оружие помечено как двуручное (свойство ``two_handed``)."""
+    return _weapon_is_two_handed(weapon_id)
+
+
+def weapon_is_versatile(weapon_id: str) -> bool:
+    """Универсальное оружие (свойство ``versatile``)."""
+    return _weapon_is_versatile(weapon_id)
+
+
 def main_hand_uses_both_hands(equipped: dict[str, Any]) -> bool:
     """Основное оружие занимает обе руки (двуручное или универсальное)."""
     main = equipped.get("main_hand")

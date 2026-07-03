@@ -3,10 +3,9 @@
 from colorama import Fore, Style
 
 from core.catalog_loader import reload_catalogs
-from core.io import load_json
 from core.localization import get_string, resolve_localized_text
 from core.mod_loader import (
-    MODS_STATE_FILE,
+    get_enabled_mod_ids,
     list_available_mods,
     set_mod_enabled,
 )
@@ -16,14 +15,6 @@ from ui.menus._common import (
     _print_screen_header,
     _run_numbered_menu,
 )
-
-
-def _enabled_mod_set() -> set[str]:
-    state = load_json(MODS_STATE_FILE, default={"enabled": []})
-    enabled = state.get("enabled", [])
-    if isinstance(enabled, list):
-        return {str(item) for item in enabled}
-    return set()
 
 
 def show_mods_menu(strings: StringsDict, language: str = "ru") -> None:
@@ -38,7 +29,7 @@ def show_mods_menu(strings: StringsDict, language: str = "ru") -> None:
         _press_enter(strings)
         return
 
-    enabled = _enabled_mod_set()
+    enabled = set(get_enabled_mod_ids())
     while True:
         options: list[str] = []
         for mod in mods:
