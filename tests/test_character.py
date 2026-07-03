@@ -134,7 +134,7 @@ def test_starting_max_hp_and_hardcore(
     assert saved.current_hp == saved.max_hp
     stats["constitution"] = 14
     monkeypatch.setattr(
-        "core.progression.roll",
+        "core.progression.hp_gain.roll",
         lambda count, sides, modifier=0: 5 + modifier,
     )
     hard = character_mod.save_character(
@@ -154,7 +154,7 @@ def test_hardcore_l1_hp_floor_on_create(
     stats = dict.fromkeys(character_mod.STAT_NAMES, 10)
     stats["constitution"] = 8  # модификатор −1
     monkeypatch.setattr(
-        "core.progression.roll",
+        "core.progression.hp_gain.roll",
         lambda count, sides, modifier=0: 1 + modifier,
     )
     saved = character_mod.save_character(

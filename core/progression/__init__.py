@@ -1,434 +1,51 @@
 """Прогрессия персонажа: опыт и уровни (PHB, макс. 10 уровень)."""
 
-from collections.abc import Callable
-from dataclasses import dataclass, replace
-from typing import Any
+from core.dice import roll
+from core.progression.hp_gain import (
+    HpGainBreakdown,
+    extra_hp_bonus_sources,
+    extra_hp_per_level,
+    hp_gain_breakdown_for_level_up,
+    hp_gain_for_level,
+    max_hp_for_level,
+    roll_hp_gain_for_level_up,
+)
+from core.progression.level_up import (
+    AsiResolution,
+    apply_experience,
+    apply_level_up,
+    apply_progression_grants_at_level,
+    process_pending_level_ups,
+    resolve_pending_level_ups,
+)
+from core.progression.xp import (
+    XP_THRESHOLDS,
+    grant_experience,
+    has_pending_level_up,
+    level_from_xp,
+    xp_covers_level,
+    xp_for_level,
+)
 
-from core.classes import get_class_hit_dice
-from core.dice import ability_modifier, roll
-from core.feats import get_feat_hp_bonus_sources
-from core.levels import MAX_CHARACTER_LEVEL, clamp_level
-from core.models import Character
-from core.progression.hp_bonuses import HpBonusSource
-from core.stats import ABILITY_SCORE_DEFAULT
-from core.types import GameDifficulty, StatMap
-
-
-def extra_hp_bonus_sources(
-    race_id: str | None = None,
-    subrace_id: str | None = None,
-    feat_ids: list[str] | None = None,
-) -> tuple[HpBonusSource, ...]:
-    """Именованные бонусы HP за уровень: раса/подраса и черты."""
-    from core.races import get_racial_hp_bonus_sources
-
-    sources: list[HpBonusSource] = []
-    if race_id:
-        sources.extend(get_racial_hp_bonus_sources(race_id, subrace_id))
-    sources.extend(get_feat_hp_bonus_sources(feat_ids or []))
-    return tuple(sources)
-
-
-def extra_hp_per_level(
-    race_id: str | None = None,
-    subrace_id: str | None = None,
-    feat_ids: list[str] | None = None,
-) -> int:
-    """Суммарный бонус HP за уровень: раса/подраса + черты."""
-    sources = extra_hp_bonus_sources(race_id, subrace_id, feat_ids)
-    return sum(s.amount for s in sources)
-
-
-@dataclass(frozen=True)
-class HpGainBreakdown:
-    """Прирост HP: кость (или среднее/бросок), CON и внешние бонусы."""
-
-    die_part: int
-    con_mod: int
-    bonus_sources: tuple[HpBonusSource, ...] = ()
-    is_first_level: bool = False
-    dice_roll: int | None = None
-
-    @property
-    def extra_bonus(self) -> int:
-        """Сумма расовых и чертовых бонусов за уровень."""
-        return sum(source.amount for source in self.bonus_sources)
-
-    @property
-    def class_part(self) -> int:
-        """Часть от кости хитов и модификатора Телосложения."""
-        if self.is_first_level or self.dice_roll is not None:
-            return max(1, self.die_part + self.con_mod)
-        return self.die_part + self.con_mod
-
-    @property
-    def total(self) -> int:
-        """Полный прирост max HP за уровень."""
-        return self.class_part + self.extra_bonus
-
-
-XP_THRESHOLDS: list[int] = [
-    0,
-    300,
-    900,
-    2700,
-    6500,
-    14000,
-    23000,
-    34000,
-    48000,
-    64000,
+__all__ = [
+    "AsiResolution",
+    "HpGainBreakdown",
+    "XP_THRESHOLDS",
+    "apply_experience",
+    "apply_level_up",
+    "apply_progression_grants_at_level",
+    "extra_hp_bonus_sources",
+    "extra_hp_per_level",
+    "grant_experience",
+    "has_pending_level_up",
+    "hp_gain_breakdown_for_level_up",
+    "hp_gain_for_level",
+    "level_from_xp",
+    "max_hp_for_level",
+    "process_pending_level_ups",
+    "resolve_pending_level_ups",
+    "roll",
+    "roll_hp_gain_for_level_up",
+    "xp_covers_level",
+    "xp_for_level",
 ]
-
-
-def level_from_xp(experience: int) -> int:
-    """Уровень персонажа по накопленному опыту (1–MAX_CHARACTER_LEVEL)."""
-    level = 1
-    for idx, threshold in enumerate(XP_THRESHOLDS, start=1):
-        if experience >= threshold:
-            level = idx
-    return min(level, MAX_CHARACTER_LEVEL)
-
-
-def xp_for_level(level: int) -> int:
-    """Минимальный накопленный опыт PHB для достижения уровня.
-
-    Используется при создании персонажа. В игре опыт только растёт
-    (`grant_experience`); после левелапа избыток над порогом сохраняется.
-    """
-    level = clamp_level(level)
-    return XP_THRESHOLDS[level - 1]
-
-
-def xp_covers_level(experience: int, level: int) -> bool:
-    """Достаточно ли опыта для текущего уровня (>= минимального порога)."""
-    return experience >= xp_for_level(level)
-
-
-def hp_gain_for_level(
-    level: int,
-    hit_dice: int,
-    con_mod: int,
-    difficulty: GameDifficulty = "normal",
-    racial_hp_bonus: int = 0,
-) -> int:
-    """Прирост максимальных HP за один уровень класса."""
-    if difficulty == "hardcore":
-        return max(1, roll(1, hit_dice) + con_mod) + racial_hp_bonus
-    if level <= 1:
-        return max(1, hit_dice + con_mod) + racial_hp_bonus
-    return hit_dice // 2 + 1 + con_mod + racial_hp_bonus
-
-
-def hp_gain_breakdown_for_level_up(
-    class_id: str,
-    stats: StatMap,
-    new_level: int,
-    difficulty: GameDifficulty,
-    race_id: str | None = None,
-    subrace_id: str | None = None,
-    feat_ids: list[str] | None = None,
-) -> HpGainBreakdown:
-    """Разбивка прироста HP за повышение до new_level."""
-    hit_dice = get_class_hit_dice(class_id)
-    constitution = stats.get("constitution", ABILITY_SCORE_DEFAULT)
-    con_mod = ability_modifier(constitution)
-    bonus_sources = extra_hp_bonus_sources(race_id, subrace_id, feat_ids)
-    if difficulty == "hardcore":
-        dice = roll(1, hit_dice)
-        return HpGainBreakdown(
-            die_part=dice,
-            con_mod=con_mod,
-            bonus_sources=bonus_sources,
-            dice_roll=dice,
-        )
-    if new_level <= 1:
-        return HpGainBreakdown(
-            die_part=hit_dice,
-            con_mod=con_mod,
-            bonus_sources=bonus_sources,
-            is_first_level=True,
-        )
-    return HpGainBreakdown(
-        die_part=hit_dice // 2 + 1,
-        con_mod=con_mod,
-        bonus_sources=bonus_sources,
-    )
-
-
-def roll_hp_gain_for_level_up(
-    class_id: str,
-    stats: StatMap,
-    new_level: int,
-    difficulty: GameDifficulty,
-    race_id: str | None = None,
-    subrace_id: str | None = None,
-    feat_ids: list[str] | None = None,
-) -> tuple[int, int | None]:
-    """Прирост HP за повышение до new_level.
-
-    Для HardCore возвращает также значение броска кости.
-    """
-    breakdown = hp_gain_breakdown_for_level_up(
-        class_id,
-        stats,
-        new_level,
-        difficulty,
-        race_id,
-        subrace_id,
-        feat_ids,
-    )
-    return breakdown.total, breakdown.dice_roll
-
-
-def max_hp_for_level(
-    class_id: str,
-    stats: StatMap,
-    level: int,
-    difficulty: GameDifficulty = "normal",
-    race_id: str | None = None,
-    subrace_id: str | None = None,
-    feat_ids: list[str] | None = None,
-) -> int:
-    """Максимум HP на заданном уровне с учётом режима сложности."""
-    level = clamp_level(level)
-    hit_dice = get_class_hit_dice(class_id)
-    constitution = stats.get("constitution", ABILITY_SCORE_DEFAULT)
-    con_mod = ability_modifier(constitution)
-    hp_bonus = extra_hp_per_level(race_id, subrace_id, feat_ids)
-    total = 0
-    for lvl in range(1, level + 1):
-        total += hp_gain_for_level(
-            lvl, hit_dice, con_mod, difficulty, hp_bonus
-        )
-    return total
-
-
-def grant_experience(character: Character, amount: int) -> Character:
-    """Добавить опыт без повышения уровня (накопительно, без обрезки)."""
-    if amount <= 0:
-        return character
-    return replace(character, experience=character.experience + amount)
-
-
-def has_pending_level_up(character: Character) -> bool:
-    """Есть ли неприменённое повышение уровня по текущему XP."""
-    if character.level >= MAX_CHARACTER_LEVEL:
-        return False
-    return character.level < level_from_xp(character.experience)
-
-
-def apply_level_up(character: Character, hp_gain: int) -> Character:
-    """Повысить персонажа на один уровень с заданным приростом HP.
-
-    Поле ``experience`` не меняется — избыток над порогом уровня сохраняется.
-    """
-    if not has_pending_level_up(character):
-        return character
-    new_level = character.level + 1
-    updated = replace(
-        character,
-        level=new_level,
-        max_hp=character.max_hp + hp_gain,
-        current_hp=character.current_hp + hp_gain,
-    )
-    return apply_progression_grants_at_level(updated, new_level)
-
-
-def _apply_progression_grant(
-    character: Character, grant: dict[str, Any]
-) -> Character:
-    """Применить один grant progression без UI-подвыборов."""
-    if grant.get("choice"):
-        return character
-    from core.grant_mechanics import proficiency_tokens_and_skills_from_grant
-    from core.proficiencies import merge_proficiency_tokens
-    from core.skills import merge_proficiencies
-
-    weapons, armors, tools, skills = proficiency_tokens_and_skills_from_grant(
-        grant
-    )
-    updated = replace(
-        character,
-        weapon_proficiencies=merge_proficiency_tokens(
-            character.weapon_proficiencies, weapons
-        ),
-        armor_proficiencies=merge_proficiency_tokens(
-            character.armor_proficiencies, armors
-        ),
-        tool_proficiencies=merge_proficiency_tokens(
-            character.tool_proficiencies, tools
-        ),
-        skills=merge_proficiencies(character.skills, skills),
-    )
-    if grant.get("type") == "save_proficiency":
-        ability = grant.get("ability")
-        if isinstance(ability, str):
-            updated = replace(
-                updated,
-                save_proficiencies=merge_proficiencies(
-                    updated.save_proficiencies, [ability]
-                ),
-            )
-    return updated
-
-
-def apply_progression_grants_at_level(
-    character: Character, level: int
-) -> Character:
-    """Авто-применение grants класса/подкласса на уровне."""
-    from core.classes import get_class_dict, get_subclass_dict, grants_at_level
-
-    char = character
-    class_info = get_class_dict(char.class_id)
-    for grant in grants_at_level(class_info, level):
-        char = _apply_progression_grant(char, grant)
-    if char.subclass_id:
-        subclass_info = get_subclass_dict(char.class_id, char.subclass_id)
-        if subclass_info:
-            for grant in grants_at_level(subclass_info, level):
-                char = _apply_progression_grant(char, grant)
-    return char
-
-
-@dataclass
-class AsiResolution:
-    """Результат выбора ASI/черты на уровне."""
-
-    character: Character
-    con_bonus: int = 0
-    tough_bonus: int = 0
-
-
-def _headless_asi_resolution(
-    character: Character, new_level: int
-) -> AsiResolution:
-    """Авто-ASI или сохранённый выбор (без UI)."""
-    from core.feats import (
-        apply_feat_grants_to_character,
-        resolve_feat_ability_bonuses,
-        tough_hp_adjustment_on_acquire,
-    )
-    from core.progression.asi import (
-        apply_asi_two_one,
-        auto_asi_bonus,
-        cap_stats,
-        con_hp_bonus_from_asi,
-        feat_id_from_asi_choice,
-        pending_asi_at_level,
-    )
-    from core.stats import apply_bonuses_to_stats
-
-    char = character
-    old_stats = char.stats.copy()
-    con_bonus = 0
-    tough_bonus = 0
-    asi_key = str(new_level)
-    had_tough = "tough" in char.feat_ids
-    asi_value = ""
-
-    if pending_asi_at_level(char, new_level):
-        prime = next(iter(auto_asi_bonus(char.class_id)))
-        stats = cap_stats(apply_asi_two_one(char.stats, prime))
-        con_bonus = con_hp_bonus_from_asi(old_stats, stats, new_level)
-        asi_choices = dict(char.asi_choices)
-        asi_value = "asi"
-        asi_choices[asi_key] = asi_value
-        char = replace(char, stats=stats, asi_choices=asi_choices)
-    elif asi_key in char.asi_choices:
-        asi_value = char.asi_choices[asi_key]
-        stats = old_stats.copy()
-        feat_ids = list(char.feat_ids)
-        feat_choices = dict(char.feat_choices)
-        feat_id = feat_id_from_asi_choice(asi_value)
-        sub: dict[str, Any] = {}
-        if feat_id and feat_id not in feat_ids:
-            sub = feat_choices.get(feat_id, {})
-            feat_ids.append(feat_id)
-            bonuses = resolve_feat_ability_bonuses(feat_id, sub)
-            stats = cap_stats(apply_bonuses_to_stats(stats, bonuses))
-        con_bonus = con_hp_bonus_from_asi(old_stats, stats, new_level)
-        char = replace(
-            char,
-            stats=stats,
-            feat_ids=feat_ids,
-            feat_choices=feat_choices,
-        )
-        if feat_id:
-            char = apply_feat_grants_to_character(char, feat_id, sub)
-
-    if feat_id_from_asi_choice(asi_value) == "tough" and not had_tough:
-        tough_bonus = tough_hp_adjustment_on_acquire(new_level)
-
-    return AsiResolution(
-        character=char, con_bonus=con_bonus, tough_bonus=tough_bonus
-    )
-
-
-def process_pending_level_ups(
-    character: Character,
-    *,
-    resolve_asi: (
-        Callable[[Character, int], AsiResolution | None] | None
-    ) = None,
-    on_level_up: (
-        Callable[[Character, int, HpGainBreakdown, int, int], bool] | None
-    ) = None,
-) -> Character:
-    """Применить все ожидающие повышения; resolve_asi — UI или headless."""
-    from core.progression.asi import pending_asi_at_level
-
-    char = character
-    while has_pending_level_up(char):
-        new_level = char.level + 1
-        con_bonus = 0
-        tough_bonus = 0
-
-        if pending_asi_at_level(char, new_level):
-            resolution: AsiResolution | None
-            if resolve_asi is None:
-                resolution = _headless_asi_resolution(char, new_level)
-            else:
-                resolution = resolve_asi(char, new_level)
-            if resolution is None:
-                break
-            char = resolution.character
-            con_bonus = resolution.con_bonus
-            tough_bonus = resolution.tough_bonus
-        elif str(new_level) in char.asi_choices:
-            resolution = _headless_asi_resolution(char, new_level)
-            char = resolution.character
-            con_bonus = resolution.con_bonus
-            tough_bonus = resolution.tough_bonus
-
-        roll_feat_ids = list(char.feat_ids)
-        if tough_bonus > 0:
-            roll_feat_ids = [
-                feat_id for feat_id in roll_feat_ids if feat_id != "tough"
-            ]
-
-        breakdown = hp_gain_breakdown_for_level_up(
-            char.class_id,
-            char.stats,
-            new_level,
-            char.difficulty,
-            char.race,
-            char.subrace,
-            roll_feat_ids,
-        )
-        if on_level_up is not None and not on_level_up(
-            char, new_level, breakdown, con_bonus, tough_bonus
-        ):
-            break
-        char = apply_level_up(char, breakdown.total + con_bonus + tough_bonus)
-    return char
-
-
-def resolve_pending_level_ups(character: Character) -> Character:
-    """Применить все ожидающие повышения без UI."""
-    return process_pending_level_ups(character)
-
-
-def apply_experience(character: Character, amount: int) -> Character:
-    """Добавить опыт и сразу применить все повышения уровня (без UI)."""
-    return resolve_pending_level_ups(grant_experience(character, amount))
