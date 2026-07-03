@@ -77,15 +77,17 @@ git fetch origin && git rebase origin/dev
    - Реализация **только** scope этого PR.
    - **Commit** (≥1) на part-ветке.
    - **Запрещено** переходить к PR-(N+1), пока PR-N не закоммичен на своей ветке.
-3. **После всех N part-веток** — слить каждую в интеграционную (**до** docs финализации / review / PR):
+3. **После всех N part-веток** — слить каждую в интеграционную (**до** docs финализации / review / PR).
+   **Merge и удаление — атомарная пара:** сразу после успешного `--no-ff` merge part-ветка **удаляется** (`git branch -d`). Слитая part-ветка без префикса `merged/` не остаётся.
    ```bash
    TASK=feat/<slug>
    git fetch origin
    git checkout "${TASK}" && git rebase origin/dev
    for PART in chore/docs-tooling-sync refactor/save-migrations ...; do
      git merge --no-ff "${PART}" -m "merge(${PART}): into ${TASK}"
-     git branch -d "${PART}"    # локально, после успешного merge
+     git branch -d "${PART}"    # ОБЯЗАТЕЛЬНО: сразу после успешного merge
    done
+   make branch-cleanup CLEANUP_BASE="${TASK}"   # резерв: удалить все слитые в ${TASK} part-ветки одной командой
    ```
 4. **Финализация** — только на **`feat/<slug>`**: docs-after-task → commit → review → push/PR → `merged/…`.
 
@@ -94,8 +96,10 @@ git fetch origin && git rebase origin/dev
 ```bash
 # Ожидаемое N — из таблицы шага 0; part-ветки уже слиты, но reflog/merge commits видны:
 git log --oneline feat/<slug> | head -20
-git branch --list 'feat/*' 'chore/*' 'refactor/*' 'fix/*'
+git branch --list 'feat/*' 'chore/*' 'refactor/*' 'fix/*'   # незаархивированные part-ветки
 ```
+
+**Чистка part-веток** (после merge всех part в `feat/<slug>`; при финализации — после rename в `merged/*`): `make branch-cleanup` — `git branch -d` всех веток, слитых в `CLEANUP_BASE` (по умолчанию `dev`; в контексте §2b, до merge в `dev` — `CLEANUP_BASE=feat/<slug>`); `merged/*`, `main`, `dev` не трогает. Не оставлять слитые part-ветки без префикса `merged/`.
 
 | Критерий | OK | Нарушение (стоп) |
 |----------|-----|------------------|
@@ -103,6 +107,7 @@ git branch --list 'feat/*' 'chore/*' 'refactor/*' 'fix/*'
 | Слияние в `feat/<slug>` | все part слиты `--no-ff` | review/PR с незакрытых part-веток |
 | Текущая ветка для review/PR | `feat/<slug>` | part-ветка, `main`, `dev` |
 | Commits на part-ветках | есть до merge | один большой uncommitted diff |
+| Слитые part-ветки после задачи | удалены (`make branch-cleanup`) | остались `feat/*`/`refactor/*` без `merged/` |
 
 Задача **не завершена**, пока: (a) не созданы все N part-веток по плану; (b) не слиты в `feat/<slug>`; (c) review не на интеграционной.
 
