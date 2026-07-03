@@ -31,6 +31,7 @@
 - **DRY-рефакторинг (6 PR):** UI-хелперы `_print_pick_list` / `_read_pool_pick`, `apply_subclass_picks`, `bootstrap_session_catalogs`; core micro-DRY (`PHB_SKILL_IDS`, `iter_race_grants_by_source`, `_load_catalog_item`); save API через `build_new_character` + `persist_character` и `_CreationState.to_character()`; подпакеты `core/feats/`, `core/proficiencies/`, `core/progression/`; `Character.class_id` — `CharacterClass` (JSON — string; пустой `class_id` в JSON — ошибка)
 - **Load game:** `load_character_for_session` — единый путь загрузки персонажа через `character_storage._try_load_character_file`
 - **Git workflow:** Plan/Agent с part-ветками — обязательное создание веток, merge в `feat/<slug>`; `main`/`dev` в задаче не трогать
+- **Git workflow (tooling):** `make branch-cleanup` — удаление локальных part-веток, слитых в `CLEANUP_BASE` (по умолчанию `dev`; §2b — `CLEANUP_BASE=feat/<slug>`), с защитой `main`/`dev`/`merged/*` и guard на отсутствие базы; удаление part-ветки после `--no-ff` merge — явный шаг (`Makefile`, `dnd-mud-workflow.mdc`, `dnd-mud-git-pr`)
 - Skills refactor (DRY layers): policy verify/review — только `dnd-mud-workflow.mdc`; skills — процедуры; `AGENTS.md` / `DEVELOPMENT.md` — индекс ссылок
 - **Экран расы/подрасы:** выборный язык в строке «Языки»; подрасы без дубля grants родителя; полуорк всегда с экраном выбора и «Назад»
 - **Экран класса:** схлопнутый ASI по уровням; `proficiency_token_label` в меню владений и стартового снаряжения
