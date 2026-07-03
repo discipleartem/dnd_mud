@@ -4,6 +4,7 @@ import re
 from typing import Any
 
 from core.equipment import load_weapon, weapon_category
+from core.types import EquippedState
 
 
 def _parse_dice_average(dice: str) -> float:
@@ -81,7 +82,7 @@ def weapon_is_versatile(weapon_id: str) -> bool:
     return _weapon_is_versatile(weapon_id)
 
 
-def main_hand_uses_both_hands(equipped: dict[str, Any]) -> bool:
+def main_hand_uses_both_hands(equipped: EquippedState) -> bool:
     """Основное оружие занимает обе руки (двуручное или универсальное)."""
     main = equipped.get("main_hand")
     if not isinstance(main, str) or not main:
@@ -99,7 +100,7 @@ def main_hand_uses_both_hands(equipped: dict[str, Any]) -> bool:
 
 
 def dual_wielder_ac_bonus_applies(
-    equipped: dict[str, Any], feat_ids: list[str]
+    equipped: EquippedState, feat_ids: list[str]
 ) -> bool:
     """+1 КД: в каждой руке одноручное рукопашное (черта dual_wielder)."""
     from core.feats.feat_apply import (

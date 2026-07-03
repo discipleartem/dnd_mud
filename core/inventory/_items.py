@@ -1,13 +1,16 @@
 """Нормализация и слияние записей инвентаря."""
 
-from typing import Any, Literal
+from typing import Literal
 
 from core.equipment import load_equipment_item
+from core.types import EquippedState, InventoryItem
 
 ItemKind = Literal["weapon", "armor", "tool", "equipment"]
 
 
-def normalize_inventory_item(raw: dict[str, Any]) -> dict[str, Any] | None:
+def normalize_inventory_item(
+    raw: InventoryItem | dict[str, object],
+) -> InventoryItem | None:
     """Нормализовать запись инвентаря."""
     kind = raw.get("kind")
     item_id = raw.get("id")
@@ -19,10 +22,10 @@ def normalize_inventory_item(raw: dict[str, Any]) -> dict[str, Any] | None:
     qty = int(qty_raw) if isinstance(qty_raw, int) else 1
     if qty < 1:
         qty = 1
-    return {"kind": kind, "id": item_id, "qty": qty}
+    return {"kind": str(kind), "id": item_id, "qty": qty}
 
 
-def expand_pack_contents(item_id: str) -> list[dict[str, Any]]:
+def expand_pack_contents(item_id: str) -> list[InventoryItem]:
     """Развернуть набор (pack) в список предметов."""
     info = load_equipment_item(item_id)
     if info.get("category") != "pack":
@@ -30,7 +33,7 @@ def expand_pack_contents(item_id: str) -> list[dict[str, Any]]:
     contents = info.get("contents", [])
     if not isinstance(contents, list):
         return []
-    result: list[dict[str, Any]] = []
+    result: list[InventoryItem] = []
     for entry in contents:
         if not isinstance(entry, dict):
             continue
@@ -41,8 +44,8 @@ def expand_pack_contents(item_id: str) -> list[dict[str, Any]]:
 
 
 def merge_inventory_items(
-    items: list[dict[str, Any]],
-) -> list[dict[str, Any]]:
+    items: list[InventoryItem],
+) -> list[InventoryItem]:
     """Сложить одинаковые предметы по kind+id."""
     merged: dict[tuple[str, str], int] = {}
     order: list[tuple[str, str]] = []
@@ -62,11 +65,11 @@ def merge_inventory_items(
 
 
 def add_items_to_inventory(
-    inventory: list[dict[str, Any]],
-    new_items: list[dict[str, Any]],
-) -> list[dict[str, Any]]:
+    inventory: list[InventoryItem],
+    new_items: list[InventoryItem],
+) -> list[InventoryItem]:
     """Добавить предметы в инвентарь с развёрткой наборов."""
-    expanded: list[dict[str, Any]] = list(inventory)
+    expanded: list[InventoryItem] = list(inventory)
     for raw in new_items:
         item = normalize_inventory_item(raw)
         if item is None:
@@ -82,7 +85,7 @@ def add_items_to_inventory(
 
 
 def inventory_item_quantity(
-    inventory: list[dict[str, Any]], kind: str, item_id: str
+    inventory: list[InventoryItem], kind: str, item_id: str
 ) -> int:
     """Суммарное количество предмета kind+id в инвентаре."""
     total = 0
@@ -93,7 +96,7 @@ def inventory_item_quantity(
 
 
 def _equipped_item_counts(
-    equipped: dict[str, Any],
+    equipped: EquippedState,
 ) -> dict[tuple[str, str], int]:
     """Сколько предметов каждого kind+id занято экипировкой."""
     counts: dict[tuple[str, str], int] = {}
@@ -116,16 +119,16 @@ def _equipped_item_counts(
 
 
 def inventory_excluding_equipped(
-    inventory: list[dict[str, Any]],
-    equipped: dict[str, Any] | None,
-) -> list[dict[str, Any]]:
+    inventory: list[InventoryItem],
+    equipped: EquippedState | None,
+) -> list[InventoryItem]:
     """Инвентарь для UI: без экипированного; save не меняется."""
     if not equipped:
         return list(inventory)
     hidden = _equipped_item_counts(equipped)
     if not hidden:
         return list(inventory)
-    visible: list[dict[str, Any]] = []
+    visible: list[InventoryItem] = []
     for item in inventory:
         kind = str(item.get("kind", ""))
         item_id = str(item.get("id", ""))

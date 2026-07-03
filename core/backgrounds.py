@@ -6,6 +6,7 @@ from typing import Any
 from core.catalog_loader import load_catalog
 from core.grants import grants_from_entity, grants_of_type
 from core.localization import resolve_localized_text
+from core.types import InventoryItem
 
 BACKGROUNDS_FILE = Path("database/backgrounds/backgrounds.yaml")
 
@@ -136,11 +137,11 @@ def _background_inventory_tool_picks(
 def get_background_equipment_items(
     background_id: str,
     background_tool_picks: list[str] | None = None,
-) -> list[dict[str, Any]]:
+) -> list[InventoryItem]:
     """Предметы стартового снаряжения предыстории (не владения)."""
     from core.inventory import merge_inventory_items, normalize_inventory_item
 
-    items: list[dict[str, Any]] = []
+    items: list[InventoryItem] = []
     for grant in grants_of_type(
         _background_grants(background_id), "equipment_item"
     ):

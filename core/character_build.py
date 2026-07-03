@@ -10,7 +10,12 @@ from core.models import Character, _parse_character_class
 from core.progression import max_hp_for_level, xp_for_level
 from core.progression.subclasses import start_level_for_difficulty
 from core.stats import STANDARD_ARRAY, generate_stats_standard_array
-from core.types import CharacterClass, GameDifficulty, StatMap
+from core.types import (
+    CharacterClass,
+    GameDifficulty,
+    InventoryItem,
+    StatMap,
+)
 
 
 def build_new_character(
@@ -34,7 +39,7 @@ def build_new_character(
     feat_choices: dict[str, dict[str, Any]] | None = None,
     asi_choices: dict[str, str] | None = None,
     save_proficiencies: list[str] | None = None,
-    inventory: list[dict[str, Any]] | None = None,
+    inventory: list[InventoryItem] | None = None,
     equipment_choices: dict[str, str] | None = None,
     level: int | None = None,
     class_features_applied: bool = False,
@@ -115,19 +120,21 @@ def build_new_character(
         from core.inventory import add_items_to_inventory
         from core.starting_equipment import resolve_starting_items
 
-        inventory = resolve_starting_items(
+        raw_inv = resolve_starting_items(
             class_id,
             equipment_choices or {},
             list(weapon_proficiencies or []),
             list(armor_proficiencies or []),
         )
+        resolved: list[InventoryItem] = list(raw_inv)
         if background_id:
-            inventory = add_items_to_inventory(
-                inventory,
+            resolved = add_items_to_inventory(
+                resolved,
                 get_background_equipment_items(
                     background_id, list(background_tool_picks or [])
                 ),
             )
+        inventory = resolved
 
     hp = max_hp_for_level(
         class_id,

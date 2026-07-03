@@ -2,13 +2,6 @@
 
 from colorama import Fore, Style
 
-from core.game_engine import GameEngine, GameSession
-from core.session_storage import (
-    find_adventure,
-    list_sessions,
-    load_character_for_session,
-    load_session,
-)
 from ui.menus import _deps
 from ui.menus._common import (
     _press_enter,
@@ -19,7 +12,13 @@ from ui.menus.scenario_flow import run_scenario_with_engine
 
 StringsDict = _deps.StringsDict
 LanguageCode = _deps.LanguageCode
+GameEngine = _deps.GameEngine
+GameSession = _deps.GameSession
 get_string = _deps.get_string
+list_sessions = _deps.list_sessions
+load_session = _deps.load_session
+load_character_for_session = _deps.load_character_for_session
+find_adventure = _deps.find_adventure
 
 
 def show_load_game_flow(

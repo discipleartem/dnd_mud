@@ -11,7 +11,7 @@ from core.inventory import (
     inventory_excluding_equipped,
 )
 from core.models import Character
-from core.types import CharacterClass
+from core.types import CharacterClass, EquippedState, InventoryItem
 from ui.menus._display._inventory import (
     format_inventory_line,
     get_equipped_display,
@@ -165,7 +165,7 @@ def test_equip_defaults_no_shield_dual_wield_light() -> None:
 
 
 def test_equip_defaults_non_light_off_hand_requires_dual_wielder() -> None:
-    base_inventory = [
+    base_inventory: list[InventoryItem] = [
         {"kind": "weapon", "id": "rapier", "qty": 1},
         {"kind": "weapon", "id": "shortsword", "qty": 1},
     ]
@@ -194,7 +194,7 @@ def test_equip_defaults_non_light_off_hand_requires_dual_wielder() -> None:
     no_feat = equip_defaults(with_longsword)
     assert no_feat["main_hand"] == "longsword"
     assert no_feat.get("main_hand_grip") == "two_handed"
-    assert no_feat["off_hand"] is None
+    assert no_feat.get("off_hand") is None
 
     dual_wielder = Character(
         name="Fighter",
@@ -403,12 +403,12 @@ def test_default_equipped_empty() -> None:
 
 
 def test_inventory_excluding_equipped_hides_worn_only_in_display() -> None:
-    inventory = [
+    inventory: list[InventoryItem] = [
         {"kind": "armor", "id": "leather", "qty": 1},
         {"kind": "weapon", "id": "rapier", "qty": 1},
         {"kind": "weapon", "id": "dagger", "qty": 2},
     ]
-    equipped = {
+    equipped: EquippedState = {
         "armor": "leather",
         "shield": False,
         "main_hand": "rapier",
@@ -420,12 +420,16 @@ def test_inventory_excluding_equipped_hides_worn_only_in_display() -> None:
 
 
 def test_format_inventory_line_omits_equipped() -> None:
-    inventory = [
+    inventory: list[InventoryItem] = [
         {"kind": "armor", "id": "leather", "qty": 1},
         {"kind": "weapon", "id": "rapier", "qty": 1},
         {"kind": "tool", "id": "lute", "qty": 1},
     ]
-    equipped = {"armor": "leather", "main_hand": "rapier", "shield": False}
+    equipped: EquippedState = {
+        "armor": "leather",
+        "main_hand": "rapier",
+        "shield": False,
+    }
     line = format_inventory_line(inventory, "ru", equipped=equipped)
     assert "Кожаный доспех" not in line
     assert "Рапира" not in line

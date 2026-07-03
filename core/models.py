@@ -4,11 +4,17 @@
 """
 
 from dataclasses import dataclass, field
-from typing import Any
+from typing import Any, cast
 
 from core.levels import clamp_level
 from core.localization import resolve_localized_text
-from core.types import CharacterClass, GameDifficulty, StatMap
+from core.types import (
+    CharacterClass,
+    EquippedState,
+    GameDifficulty,
+    InventoryItem,
+    StatMap,
+)
 
 
 def _parse_character_class(raw: object) -> CharacterClass:
@@ -54,18 +60,35 @@ def _parse_difficulty(raw: object) -> GameDifficulty:
     return "normal"
 
 
-def _coerce_inventory(raw: object) -> list[dict[str, Any]]:
+def _coerce_inventory(raw: object) -> list[InventoryItem]:
     """Инвентарь из JSON."""
     if not isinstance(raw, list):
         return []
-    return [dict(item) for item in raw if isinstance(item, dict)]
+    items: list[InventoryItem] = []
+    for item in raw:
+        if not isinstance(item, dict):
+            continue
+        kind = item.get("kind")
+        item_id = item.get("id")
+        if not isinstance(kind, str) or not isinstance(item_id, str):
+            continue
+        entry: InventoryItem = {"kind": kind, "id": item_id}
+        qty = item.get("qty")
+        if isinstance(qty, int):
+            entry["qty"] = qty
+        items.append(entry)
+    return items
 
 
-def _coerce_equipped(raw: object) -> dict[str, Any]:
+def _coerce_equipped(raw: object) -> EquippedState:
     """Экипировка из JSON."""
     if isinstance(raw, dict):
-        return dict(raw)
+        return cast(EquippedState, dict(raw))
     return {}
+
+
+def _empty_equipped() -> EquippedState:
+    return cast(EquippedState, {})
 
 
 @dataclass
@@ -74,7 +97,7 @@ class Character:
 
     name: str
     race: str
-    class_id: CharacterClass | str
+    class_id: CharacterClass
     level: int = 1
     stats: StatMap = field(default_factory=dict)
     current_hp: int = 0
@@ -95,8 +118,8 @@ class Character:
     feat_choices: dict[str, dict[str, Any]] = field(default_factory=dict)
     asi_choices: dict[str, str] = field(default_factory=dict)
     save_proficiencies: list[str] = field(default_factory=list)
-    inventory: list[dict[str, Any]] = field(default_factory=list)
-    equipped: dict[str, Any] = field(default_factory=dict)
+    inventory: list[InventoryItem] = field(default_factory=list)
+    equipped: EquippedState = field(default_factory=_empty_equipped)
     equipment_choices: dict[str, str] = field(default_factory=dict)
     class_features_applied: bool = False
     save_slug: str | None = None

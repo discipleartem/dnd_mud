@@ -52,7 +52,7 @@ UI не читает файлы данных напрямую — только �
 
 **Импорты UI → core (deps policy):**
 
-1. **Flows и оркестраторы** (`_creation_steps`, `new_game`, `characters_menu`, …) — только `ui/menus/_deps` (monkeypatch в тестах).
+1. **Flows и оркестраторы** (`_creation_steps`, `new_game`, `load_game`, `characters_menu`, …) — только `ui/menus/_deps` (monkeypatch в тестах).
 2. **Специализированные экраны** (`feats/`, `level_up`, `_display/`) — прямые leaf-imports из `core.*`, без дублирования в `_deps`.
 
 `core/character.py` — узкий фасад для п.1 (stats, save/load, каталоги создания), не «весь core».
@@ -70,7 +70,7 @@ UI не читает файлы данных напрямую — только �
 | `core/character_storage.py` | CRUD персонажей: thin wrapper `build_new_character`, `persist_character`, `update_character`; JSON в `saves/` |
 | `core/session_storage.py` | Снимки сессий приключений (`saves/sessions/`) |
 | `core/game_engine.py` | `GameEngine`, `GameSession` — state machine сценария |
-| `core/types.py` | `StatMap`, `GameDifficulty`, `CharacterClass`, `RuntimeSettings` |
+| `core/types.py` | `StatMap`, `GameDifficulty`, `CharacterClass`, `InventoryItem`, `EquippedState`, `RuntimeSettings` |
 | `core/abilities.py` | Каталог характеристик и навыков из YAML |
 | `core/races.py` | Справочник рас, `collect_race_grants`, расовые бонусы |
 | `core/classes.py` | Справочник классов, `get_class_dict`, hit dice, подклассы |

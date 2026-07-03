@@ -50,9 +50,16 @@ from core.character import (
     validate_point_buy_finish,
 )
 from core.difficulty import adventure_unavailable_reason
+from core.game_engine import GameEngine, GameSession
 from core.localization import get_string
 from core.mod_loader import set_mod_gating_difficulty
 from core.models import Adventure, Character
+from core.session_storage import (
+    find_adventure,
+    list_sessions,
+    load_character_for_session,
+    load_session,
+)
 from core.types import (
     GameDifficulty,
     LanguageCode,
@@ -95,6 +102,9 @@ __all__ = [
     "can_assign_point_buy_value",
     "delete_all_characters",
     "delete_character",
+    "find_adventure",
+    "GameEngine",
+    "GameSession",
     "generate_stats_point_buy",
     "generate_stats_random",
     "generate_stats_standard_array",
@@ -110,6 +120,7 @@ __all__ = [
     "load_background_full",
     "load_backgrounds",
     "load_characters",
+    "load_character_for_session",
     "LoadCharactersResult",
     "load_class_full",
     "load_classes",
@@ -117,6 +128,8 @@ __all__ = [
     "load_subclasses",
     "load_race_full",
     "load_races",
+    "list_sessions",
+    "load_session",
     "load_strings",
     "point_buy_points_remaining",
     "roll_ability_score",
