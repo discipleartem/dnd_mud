@@ -6,6 +6,7 @@ PIP       := $(VENV)/bin/pip
 PYTHON_VENV := $(VENV)/bin/python
 VERIFY    := $(PYTHON_VENV) scripts/verify_targets.py
 VERIFY_BASE ?= origin/dev
+CLEANUP_BASE ?= dev
 
 $(VENV)/bin/python:
 	$(PYTHON) -m venv $(VENV)
@@ -102,19 +103,21 @@ verify-changed: check-changed test-changed
 .PHONY: verify-scope
 verify-scope: check-scope test-scope
 
-# Удаляет локальные ветки, полностью слитые в dev (part-ветки после merge).
+# Удаляет локальные ветки, полностью слитые в базу CLEANUP_BASE (по умолчанию dev; для §2b: make branch-cleanup CLEANUP_BASE=feat/<slug>).
 # Безопасно: git branch -d не тронет не-слитые; архив merged/* и main/dev не трогаются.
 .PHONY: branch-cleanup
 branch-cleanup:
+	@git rev-parse --verify --quiet $(CLEANUP_BASE) >/dev/null \
+		|| { echo "Базовая ветка '$(CLEANUP_BASE)' не найдена локально."; exit 1; }
 	@cur=$$(git rev-parse --abbrev-ref HEAD); \
-	stale=$$(git branch --merged dev --format='%(refname:short)' \
+	stale=$$(git branch --merged $(CLEANUP_BASE) --format='%(refname:short)' \
 		| grep -vxE 'main|dev' \
 		| grep -v '^merged/' \
 		| grep -vx "$$cur"); \
 	if [ -z "$$stale" ]; then \
-		echo "Слитых part-веток нет — чисто."; \
+		echo "Слитых в '$(CLEANUP_BASE)' part-веток нет — чисто."; \
 	else \
-		echo "Удаляю слитые в dev part-ветки:"; echo "$$stale"; \
+		echo "Удаляю слитые в '$(CLEANUP_BASE)' part-ветки:"; echo "$$stale"; \
 		echo "$$stale" | xargs -r -n1 git branch -d; \
 	fi
 
@@ -139,4 +142,4 @@ help:
 	@echo "  make verify-scope    — lint + test diff $(VERIFY_BASE)...HEAD (конец задачи)"
 	@echo "  make test-changed    — pytest только для staged изменений"
 	@echo "  make test-scope      — pytest для diff ветки vs $(VERIFY_BASE)"
-	@echo "  make branch-cleanup  — удалить локальные part-ветки, слитые в dev (кроме merged/*)"
+	@echo "  make branch-cleanup  — удалить локальные part-ветки, слитые в CLEANUP_BASE=$(CLEANUP_BASE) (кроме merged/*)"
