@@ -1,4 +1,4 @@
-.PHONY: help venv-recreate venv install install-hooks reinstall clean lint format format-check typecheck check test test-fast test-cov verify verify-changed verify-scope test-changed test-scope check-changed check-scope
+.PHONY: help venv-recreate venv install install-hooks reinstall clean lint format format-check typecheck check test test-fast test-cov verify verify-changed verify-scope test-changed test-scope check-changed check-scope branch-cleanup
 
 VENV      := .venv
 PYTHON    := python3.12
@@ -102,6 +102,22 @@ verify-changed: check-changed test-changed
 .PHONY: verify-scope
 verify-scope: check-scope test-scope
 
+# Удаляет локальные ветки, полностью слитые в dev (part-ветки после merge).
+# Безопасно: git branch -d не тронет не-слитые; архив merged/* и main/dev не трогаются.
+.PHONY: branch-cleanup
+branch-cleanup:
+	@cur=$$(git rev-parse --abbrev-ref HEAD); \
+	stale=$$(git branch --merged dev --format='%(refname:short)' \
+		| grep -vxE 'main|dev' \
+		| grep -v '^merged/' \
+		| grep -vx "$$cur"); \
+	if [ -z "$$stale" ]; then \
+		echo "Слитых part-веток нет — чисто."; \
+	else \
+		echo "Удаляю слитые в dev part-ветки:"; echo "$$stale"; \
+		echo "$$stale" | xargs -r -n1 git branch -d; \
+	fi
+
 .PHONY: help
 help:
 	@echo "Доступные команды:"
@@ -123,3 +139,4 @@ help:
 	@echo "  make verify-scope    — lint + test diff $(VERIFY_BASE)...HEAD (конец задачи)"
 	@echo "  make test-changed    — pytest только для staged изменений"
 	@echo "  make test-scope      — pytest для diff ветки vs $(VERIFY_BASE)"
+	@echo "  make branch-cleanup  — удалить локальные part-ветки, слитые в dev (кроме merged/*)"

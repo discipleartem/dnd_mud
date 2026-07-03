@@ -94,8 +94,10 @@ git fetch origin && git rebase origin/dev
 ```bash
 # Ожидаемое N — из таблицы шага 0; part-ветки уже слиты, но reflog/merge commits видны:
 git log --oneline feat/<slug> | head -20
-git branch --list 'feat/*' 'chore/*' 'refactor/*' 'fix/*'
+git branch --list 'feat/*' 'chore/*' 'refactor/*' 'fix/*'   # незаархивированные part-ветки
 ```
+
+**Чистка part-веток** (после merge всех part в `feat/<slug>`; при финализации — после rename в `merged/*`): `make branch-cleanup` — `git branch -d` всех веток, слитых в `dev`; `merged/*`, `main`, `dev` не трогает. Не оставлять слитые part-ветки без префикса `merged/`.
 
 | Критерий | OK | Нарушение (стоп) |
 |----------|-----|------------------|
@@ -103,6 +105,7 @@ git branch --list 'feat/*' 'chore/*' 'refactor/*' 'fix/*'
 | Слияние в `feat/<slug>` | все part слиты `--no-ff` | review/PR с незакрытых part-веток |
 | Текущая ветка для review/PR | `feat/<slug>` | part-ветка, `main`, `dev` |
 | Commits на part-ветках | есть до merge | один большой uncommitted diff |
+| Слитые part-ветки после задачи | удалены (`make branch-cleanup`) | остались `feat/*`/`refactor/*` без `merged/` |
 
 Задача **не завершена**, пока: (a) не созданы все N part-веток по плану; (b) не слиты в `feat/<slug>`; (c) review не на интеграционной.
 
