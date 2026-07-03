@@ -5,19 +5,18 @@ from typing import Any
 
 from colorama import Fore, Style
 
+from core.game_engine import GameEngine, GameSession, UiAction
 from core.localization import get_string, resolve_localized_text
 from core.models import Adventure, Character
-from core.scenario_actions import (
-    ScenarioActionResult,
-    apply_scenario_action,
-    load_scenario,
-)
+from core.scenario_actions import ScenarioActionResult, apply_scenario_action
+from core.session_storage import SessionSnapshot, save_session
 from core.types import LanguageCode, StringsDict
 from ui.menus import _deps
 from ui.menus._common import _press_enter, _print_screen_header
 from ui.menus.class_features import apply_pending_class_features
 from ui.menus.level_up import run_pending_level_ups
 from ui.menus.subclass_trainer import assign_subclass_from_menu
+from ui.terminal_wrap import wrap_text
 
 
 def _resolve_text(value: object, language: LanguageCode) -> str:
@@ -70,6 +69,34 @@ def _run_character_menu_action(
     return character
 
 
+def _handle_engine_ui(
+    pending: list[UiAction],
+    character: Character,
+    strings: StringsDict,
+    language: LanguageCode,
+) -> Character:
+    """Обработать UI-действия из движка."""
+    current = character
+    for action in pending:
+        if action.kind == "level_up":
+            current = run_pending_level_ups(strings, current, language)
+        elif action.kind == "pick_subclass":
+            current = _run_character_menu_action(
+                strings,
+                current,
+                language,
+                assign_subclass_from_menu,
+                message_key=action.message_key,
+            )
+        elif action.kind == "apply_class_features":
+            current = _persist_menu_result(
+                apply_pending_class_features(strings, current, language),
+                current,
+            )
+    _deps.update_character(current)
+    return current
+
+
 def _handle_action_result(
     result: ScenarioActionResult,
     strings: StringsDict,
@@ -98,6 +125,25 @@ def _handle_action_result(
     return character
 
 
+def _persist_session(engine: GameEngine, adventure: Adventure) -> None:
+    """Сохранить снимок сессии приключения."""
+    session = engine.session
+    if not session.character.save_slug:
+        return
+    slug = f"{session.character.save_slug}_{adventure.id}"
+    save_session(
+        SessionSnapshot(
+            save_slug=slug,
+            character_save_slug=session.character.save_slug,
+            adventure_id=adventure.id,
+            current_node_id=session.current_node_id,
+            difficulty=session.difficulty,
+            flags=dict(session.flags),
+            script_file=session.script_file,
+        )
+    )
+
+
 def _run_node_action(
     action: str,
     action_data: dict[str, Any],
@@ -110,53 +156,42 @@ def _run_node_action(
     return _handle_action_result(result, strings, language)
 
 
-def run_scenario(
+def run_scenario_with_engine(
+    engine: GameEngine,
     adventure: Adventure,
-    character: Character,
     strings: StringsDict,
     language: LanguageCode = "ru",
 ) -> Character:
-    """Запустить сценарий приключения. Возвращает обновлённого персонажа."""
-    script_file = adventure.script_file
-    if not script_file:
-        print(
-            f"{Fore.YELLOW}"
-            f"{get_string(strings, 'scenario.no_script')}"
-            f"{Style.RESET_ALL}"
-        )
-        print()
-        _press_enter(strings)
-        return character
-
-    scenario = load_scenario(str(script_file))
-    nodes = scenario.get("nodes", {})
-    if not isinstance(nodes, dict):
-        return character
-
-    node_id: str | None = scenario.get("start_node")
-    if not isinstance(node_id, str):
-        return character
-
-    current = character
+    """Запустить сценарий через GameEngine."""
+    graph = engine.load_scenario(adventure)
+    node_id = engine.session.current_node_id or graph.start_node_id
+    current = engine.session.character
 
     while node_id:
-        node = nodes.get(node_id)
-        if not isinstance(node, dict):
+        engine.session.current_node_id = node_id
+        node = engine.current_node()
+        if node is None:
             break
 
         description = _resolve_text(node.get("description"), language)
         _print_screen_header(adventure.get_name(language))
         if description:
-            print(description)
+            print(wrap_text(description))
             print()
 
         node_action = node.get("action")
         if isinstance(node_action, str):
-            current = _run_node_action(
-                node_action, node, current, strings, language
+            engine_result = engine.step_auto_node(node)
+            current = engine_result.character
+            current = _handle_engine_ui(
+                engine_result.pending_ui, current, strings, language
             )
-            next_id = node.get("next")
-            node_id = str(next_id) if next_id else None
+            engine.session.character = current
+            _persist_session(engine, adventure)
+            if engine_result.exit_scenario:
+                break
+            _show_action_message(strings, engine_result.message_key)
+            node_id = engine_result.next_node_id
             continue
 
         choices = node.get("choices", [])
@@ -188,15 +223,46 @@ def run_scenario(
         if not isinstance(selected, dict):
             break
 
-        action = selected.get("action")
-        if isinstance(action, str):
-            current = _run_node_action(
-                action, selected, current, strings, language
-            )
-            if action == "exit":
-                break
+        engine_result = engine.step_choice(selected)
+        current = engine_result.character
+        current = _handle_engine_ui(
+            engine_result.pending_ui, current, strings, language
+        )
+        engine.session.character = current
+        _persist_session(engine, adventure)
+        if engine_result.exit_scenario:
+            break
+        _show_action_message(strings, engine_result.message_key)
+        node_id = engine_result.next_node_id
 
-        next_id = selected.get("next")
-        node_id = str(next_id) if next_id else None
-
+    _deps.update_character(current)
     return current
+
+
+def run_scenario(
+    adventure: Adventure,
+    character: Character,
+    strings: StringsDict,
+    language: LanguageCode = "ru",
+) -> Character:
+    """Запустить сценарий приключения. Возвращает обновлённого персонажа."""
+    script_file = adventure.script_file
+    if not script_file:
+        print(
+            f"{Fore.YELLOW}"
+            f"{get_string(strings, 'scenario.no_script')}"
+            f"{Style.RESET_ALL}"
+        )
+        print()
+        _press_enter(strings)
+        return character
+
+    session = GameSession(
+        character=character,
+        adventure_id=adventure.id,
+        current_node_id=None,
+        difficulty=character.difficulty,
+        script_file=str(script_file),
+    )
+    engine = GameEngine(session)
+    return run_scenario_with_engine(engine, adventure, strings, language)
