@@ -225,12 +225,69 @@ def apply_level_up(character: Character, hp_gain: int) -> Character:
     if not has_pending_level_up(character):
         return character
     new_level = character.level + 1
-    return replace(
+    updated = replace(
         character,
         level=new_level,
         max_hp=character.max_hp + hp_gain,
         current_hp=character.current_hp + hp_gain,
     )
+    return apply_progression_grants_at_level(updated, new_level)
+
+
+def _apply_progression_grant(
+    character: Character, grant: dict[str, Any]
+) -> Character:
+    """Применить один grant progression без UI-подвыборов."""
+    if grant.get("choice"):
+        return character
+    from core.grant_mechanics import proficiency_tokens_and_skills_from_grant
+    from core.proficiencies import merge_proficiency_tokens
+    from core.skills import merge_proficiencies
+
+    weapons, armors, tools, skills = proficiency_tokens_and_skills_from_grant(
+        grant
+    )
+    updated = replace(
+        character,
+        weapon_proficiencies=merge_proficiency_tokens(
+            character.weapon_proficiencies, weapons
+        ),
+        armor_proficiencies=merge_proficiency_tokens(
+            character.armor_proficiencies, armors
+        ),
+        tool_proficiencies=merge_proficiency_tokens(
+            character.tool_proficiencies, tools
+        ),
+        skills=merge_proficiencies(character.skills, skills),
+    )
+    if grant.get("type") == "save_proficiency":
+        ability = grant.get("ability")
+        if isinstance(ability, str):
+            updated = replace(
+                updated,
+                save_proficiencies=merge_proficiencies(
+                    updated.save_proficiencies, [ability]
+                ),
+            )
+    return updated
+
+
+def apply_progression_grants_at_level(
+    character: Character, level: int
+) -> Character:
+    """Авто-применение grants класса/подкласса на уровне."""
+    from core.classes import get_class_dict, get_subclass_dict, grants_at_level
+
+    char = character
+    class_info = get_class_dict(char.class_id)
+    for grant in grants_at_level(class_info, level):
+        char = _apply_progression_grant(char, grant)
+    if char.subclass_id:
+        subclass_info = get_subclass_dict(char.class_id, char.subclass_id)
+        if subclass_info:
+            for grant in grants_at_level(subclass_info, level):
+                char = _apply_progression_grant(char, grant)
+    return char
 
 
 @dataclass
