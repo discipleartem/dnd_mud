@@ -80,17 +80,10 @@ CHARACTERS_DIR = SAVES_DIR / "characters"
 
 
 def _existing_save_slugs() -> set[str]:
-    """Собрать save_slug из имён файлов и содержимого JSON."""
-    slugs: set[str] = set()
+    """Собрать save_slug из имён файлов."""
     if not CHARACTERS_DIR.exists():
-        return slugs
-
-    for path in CHARACTERS_DIR.glob("*.json"):
-        slugs.add(path.stem)
-        character = _load_character_file(path)
-        if character is not None and character.save_slug:
-            slugs.add(character.save_slug)
-    return slugs
+        return set()
+    return {path.stem for path in CHARACTERS_DIR.glob("*.json")}
 
 
 def _unique_save_slug(name: str) -> str:
