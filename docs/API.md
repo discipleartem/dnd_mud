@@ -53,7 +53,7 @@ class Character:
 
 **Методы:**
 - `to_dict() -> dict[str, Any]` — сериализация для JSON (ключ класса — `class_id`)
-- `from_dict(data: dict[str, Any]) -> Character` — десериализация; ключ класса — `class_id` (при загрузке старых сейвов — fallback на `"class"`)
+- `from_dict(data: dict[str, Any]) -> Character` — десериализация; ключ класса — `class_id`
 
 ### Adventure
 

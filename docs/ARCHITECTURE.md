@@ -64,7 +64,6 @@ UI не читает файлы данных напрямую — только �
 | `core/character.py` | Узкий фасад для flow-оркестраторов (`_deps`): save/load, stats, каталоги создания |
 | `core/character_builder.py` | `ResolvedGrants`, `resolve_creation_grants` — единая сборка владений при создании |
 | `core/character_storage.py` | CRUD персонажей (JSON в `saves/`) |
-| `core/save_migration.py` | Миграции JSON сейвов при загрузке |
 | `core/session_storage.py` | Снимки сессий приключений (`saves/sessions/`) |
 | `core/game_engine.py` | `GameEngine`, `GameSession` — state machine сценария |
 | `core/types.py` | `StatMap`, `GameDifficulty`, `RuntimeSettings` |

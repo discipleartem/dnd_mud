@@ -11,7 +11,7 @@ Checklist (report findings with severity Blocker / Major / Minor / Nit):
 
 1. Correctness & regressions — logic bugs, edge cases, broken loaders, grant/subrace/mod_loader consistency if YAML or core/ touched; KISS, match surrounding style; flag missing type hints in core/ only if obvious.
 2. Tests — meaningful gaps only (do not re-run pytest); missing tests for new behavior in core/ or database/.
-3. Data & mods — only if database/ or mods/ in diff: grants schema per docs/DATA_SCHEMA.md, legacy compatibility, localization {ru,en}.
+3. Data & mods — only if database/ or mods/ in diff: grants schema per docs/DATA_SCHEMA.md, localization {ru,en}.
 4. UI & localization — only if ui/ in diff: localization keys, menu flow regressions.
 5. Git hygiene & secrets — unrelated files, .coverage, saves/, credentials.
 

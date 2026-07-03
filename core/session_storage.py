@@ -8,7 +8,6 @@ from typing import Any
 
 from core.io import load_json, save_json
 from core.models import Adventure, Character
-from core.save_migration import migrate_character_dict
 from core.types import GameDifficulty
 
 SESSIONS_SCHEMA_VERSION = 1
@@ -148,7 +147,6 @@ def load_character_for_session(
         return None
     try:
         data = load_json(path)
-        data = migrate_character_dict(data)
         return Character.from_dict(data)
     except OSError:
         return None
