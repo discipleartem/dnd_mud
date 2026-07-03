@@ -30,7 +30,7 @@ Re-export типов: `core.types`. Фасад функций персонажа
 class Character:
     name: str
     race: str
-    class_id: str
+    class_id: CharacterClass | str  # после __post_init__ — CharacterClass
     level: int = 1
     stats: StatMap = field(default_factory=dict)
     current_hp: int = 0
@@ -52,8 +52,10 @@ class Character:
 ```
 
 **Методы:**
-- `to_dict() -> dict[str, Any]` — сериализация для JSON (ключ класса — `class_id`)
-- `from_dict(data: dict[str, Any]) -> Character` — десериализация; ключ класса — `class_id`
+- `to_dict() -> dict[str, Any]` — сериализация для JSON (`class_id` — string)
+- `from_dict(data: dict[str, Any]) -> Character` — десериализация; `class_id` обязателен (`ValueError` при пустом значении); str приводится к `CharacterClass`
+
+`CharacterClass` — `StrEnum` в `core.types` (fighter, rogue, cleric, bard); в JSON-сейвах — string.
 
 ### Adventure
 

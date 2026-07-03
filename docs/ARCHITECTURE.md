@@ -80,7 +80,7 @@ UI не читает файлы данных напрямую — только �
 | `core/equipment.py` | Оружие, доспехи, инструменты из YAML |
 | `core/feats/` | Пакет черт: apply, requirements, visibility, descriptions, loader (публичный API — `core.feats`) |
 | `core/grant_mechanics.py` | Парсинг proficiency-токенов из grant dict |
-| `core/progression/` | XP, уровни, HP, ASI, expertise, class features, подклассы (публичный API — `core.progression`; `core/levels.py` — отдельно, без циклического import) |
+| `core/progression/` | XP, уровни, HP, ASI, expertise, class features, подклассы (публичный API — `core.progression`; `core/levels.py` и lazy-imports в `core/races` / `core/skills` — без циклического import при загрузке каталогов) |
 | `core/levels.py` | `MAX_CHARACTER_LEVEL`, `clamp_level` |
 | `core/constants.py` | PB, DC из YAML |
 | `core/grants.py` | Нормализация `grants[]` из YAML |
