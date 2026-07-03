@@ -19,9 +19,10 @@ def _load_languages_yaml() -> dict[str, Any]:
 
 def load_languages(language: str = "ru") -> list[dict[str, Any]]:
     """Список языков с локализованными полями."""
-    result = load_catalog_items(_load_languages_yaml(), language)
+    yaml_data = _load_languages_yaml()
+    result = load_catalog_items(yaml_data, language)
     for item in result:
-        info = _load_languages_yaml().get(item["id"], {})
+        info = yaml_data.get(item["id"], {})
         if isinstance(info, dict):
             item["category"] = info.get("category", "common")
     return result
