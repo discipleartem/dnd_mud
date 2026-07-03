@@ -167,7 +167,7 @@ generate_stats_random(random_values: list[int], race_id: str, subrace_id: str | 
 
 `roll_ability_score()` — в `core.dice` (4d6, убрать наименьший, сумма остальных трёх).
 
-**UI** (`ui/menus.py`):
+**UI** (`ui/menus/stats/stats_flow.py`):
 
 ```python
 show_stats_generation_flow(
