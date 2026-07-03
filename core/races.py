@@ -1,5 +1,6 @@
 """Загрузка рас и расовых бонусов из YAML."""
 
+from collections import Counter
 from pathlib import Path
 from typing import Any
 
@@ -66,10 +67,7 @@ def get_race_and_subrace(
 
 def _merge_bonus_dicts(base: StatMap, extra: StatMap) -> StatMap:
     """Сложить два словаря бонусов к характеристикам."""
-    result = dict(base)
-    for stat, val in extra.items():
-        result[stat] = result.get(stat, 0) + val
-    return result
+    return dict(Counter(base) + Counter(extra))
 
 
 def get_race_bonuses(race_id: str, subrace_id: str | None = None) -> StatMap:
