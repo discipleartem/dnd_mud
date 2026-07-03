@@ -87,7 +87,7 @@ git fetch origin && git rebase origin/dev
      git merge --no-ff "${PART}" -m "merge(${PART}): into ${TASK}"
      git branch -d "${PART}"    # ОБЯЗАТЕЛЬНО: сразу после успешного merge
    done
-   make branch-cleanup          # резерв: удалить все слитые в dev part-ветки одной командой
+   make branch-cleanup CLEANUP_BASE="${TASK}"   # резерв: удалить все слитые в ${TASK} part-ветки одной командой
    ```
 4. **Финализация** — только на **`feat/<slug>`**: docs-after-task → commit → review → push/PR → `merged/…`.
 
@@ -99,7 +99,7 @@ git log --oneline feat/<slug> | head -20
 git branch --list 'feat/*' 'chore/*' 'refactor/*' 'fix/*'   # незаархивированные part-ветки
 ```
 
-**Чистка part-веток** (после merge всех part в `feat/<slug>`; при финализации — после rename в `merged/*`): `make branch-cleanup` — `git branch -d` всех веток, слитых в `dev`; `merged/*`, `main`, `dev` не трогает. Не оставлять слитые part-ветки без префикса `merged/`.
+**Чистка part-веток** (после merge всех part в `feat/<slug>`; при финализации — после rename в `merged/*`): `make branch-cleanup` — `git branch -d` всех веток, слитых в `CLEANUP_BASE` (по умолчанию `dev`; в контексте §2b, до merge в `dev` — `CLEANUP_BASE=feat/<slug>`); `merged/*`, `main`, `dev` не трогает. Не оставлять слитые part-ветки без префикса `merged/`.
 
 | Критерий | OK | Нарушение (стоп) |
 |----------|-----|------------------|

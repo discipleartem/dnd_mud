@@ -82,7 +82,7 @@ git fetch origin --prune
 
 ```bash
 git fetch origin && git checkout dev && git merge --ff-only origin/dev
-make branch-cleanup   # git branch -d для всех веток, слитых в dev; merged/*, main, dev не трогает
+make branch-cleanup   # git branch -d для всех веток, слитых в CLEANUP_BASE (по умолчанию dev); merged/*, main, dev не трогает
 ```
 
 Не оставлять part-ветки без префикса `merged/` — они относятся к завершённой задаче и должны быть удалены (ручной `git branch -d` на каждую — источник ошибок; используй `make branch-cleanup`). Проверка «задача завершена» — [`dnd-mud-workflow.mdc`](../../rules/dnd-mud-workflow.mdc) §Проверка перед «задача завершена».
