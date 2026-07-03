@@ -2,8 +2,10 @@
 
 from colorama import Fore, Style
 
+from core.catalog_loader import reload_catalogs
 from core.character_storage import CHARACTERS_DIR
 from core.game_engine import GameEngine, GameSession
+from core.mod_loader import set_mod_gating_difficulty
 from core.session_storage import (
     find_adventure,
     list_sessions,
@@ -84,6 +86,9 @@ def show_load_game_flow(
         _press_enter(strings)
         return
 
+    set_mod_gating_difficulty(loaded.difficulty)
+    reload_catalogs()
+
     session = GameSession(
         character=character,
         adventure_id=loaded.adventure_id,
@@ -93,5 +98,4 @@ def show_load_game_flow(
         script_file=loaded.script_file,
     )
     engine = GameEngine(session)
-    engine.load_scenario(adventure)
     run_scenario_with_engine(engine, adventure, strings, language)

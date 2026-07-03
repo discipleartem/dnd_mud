@@ -8,7 +8,7 @@ from colorama import Fore, Style
 from core.game_engine import GameEngine, GameSession, UiAction
 from core.localization import get_string, resolve_localized_text
 from core.models import Adventure, Character
-from core.scenario_actions import ScenarioActionResult, apply_scenario_action
+from core.scenario_actions import ScenarioActionResult
 from core.session_storage import SessionSnapshot, save_session
 from core.types import LanguageCode, StringsDict
 from ui.menus import _deps
@@ -29,12 +29,19 @@ def _resolve_text(value: object, language: LanguageCode) -> str:
 
 
 def _show_action_message(
-    strings: StringsDict, message_key: str | None
+    strings: StringsDict,
+    message_key: str | None,
+    message_params: dict[str, Any] | None = None,
 ) -> None:
     """Показать сообщение action, если задан ключ."""
     if not message_key:
         return
-    print(f"{Fore.YELLOW}{get_string(strings, message_key)}{Style.RESET_ALL}")
+    params = message_params or {}
+    print(
+        f"{Fore.YELLOW}"
+        f"{get_string(strings, message_key, **params)}"
+        f"{Style.RESET_ALL}"
+    )
     print()
 
 
@@ -121,7 +128,7 @@ def _handle_action_result(
         )
 
     _deps.update_character(character)
-    _show_action_message(strings, result.message_key)
+    _show_action_message(strings, result.message_key, result.message_params)
     return character
 
 
@@ -142,18 +149,6 @@ def _persist_session(engine: GameEngine, adventure: Adventure) -> None:
             script_file=session.script_file,
         )
     )
-
-
-def _run_node_action(
-    action: str,
-    action_data: dict[str, Any],
-    character: Character,
-    strings: StringsDict,
-    language: LanguageCode,
-) -> Character:
-    """Выполнить action узла сценария с UI."""
-    result = apply_scenario_action(action, action_data, character)
-    return _handle_action_result(result, strings, language)
 
 
 def run_scenario_with_engine(
@@ -190,7 +185,11 @@ def run_scenario_with_engine(
             _persist_session(engine, adventure)
             if engine_result.exit_scenario:
                 break
-            _show_action_message(strings, engine_result.message_key)
+            _show_action_message(
+                strings,
+                engine_result.message_key,
+                engine_result.message_params,
+            )
             node_id = engine_result.next_node_id
             continue
 
@@ -232,7 +231,11 @@ def run_scenario_with_engine(
         _persist_session(engine, adventure)
         if engine_result.exit_scenario:
             break
-        _show_action_message(strings, engine_result.message_key)
+        _show_action_message(
+            strings,
+            engine_result.message_key,
+            engine_result.message_params,
+        )
         node_id = engine_result.next_node_id
 
     _deps.update_character(current)

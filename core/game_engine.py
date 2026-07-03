@@ -33,6 +33,7 @@ class EngineResult:
     character: Character
     next_node_id: str | None = None
     message_key: str | None = None
+    message_params: dict[str, Any] | None = None
     pending_ui: list[UiAction] = field(default_factory=list)
     exit_scenario: bool = False
 
@@ -82,7 +83,7 @@ class GameEngine:
         start = scenario.get("start_node")
         start_id = str(start) if isinstance(start, str) else None
         self._graph = ScenarioGraph(nodes=nodes, start_node_id=start_id)
-        if start_id:
+        if start_id and not self._session.current_node_id:
             self._session.current_node_id = start_id
         self._session.script_file = adventure.script_file
         return self._graph
@@ -110,11 +111,15 @@ class GameEngine:
     def step_choice(self, choice: dict[str, Any]) -> EngineResult:
         """Обработать выбор игрока: action + переход."""
         action = choice.get("action")
+        message_key: str | None = None
+        message_params: dict[str, Any] | None = None
         if isinstance(action, str):
             engine_result = self.apply_action(action, choice)
             if engine_result.exit_scenario:
                 return engine_result
             self._session.character = engine_result.character
+            message_key = engine_result.message_key
+            message_params = engine_result.message_params
             if engine_result.pending_ui:
                 return engine_result
         next_id = choice.get("next")
@@ -123,16 +128,20 @@ class GameEngine:
         return EngineResult(
             character=self._session.character,
             next_node_id=self._session.current_node_id,
+            message_key=message_key,
+            message_params=message_params,
         )
 
     def step_auto_node(self, node: dict[str, Any]) -> EngineResult:
         """Узел с единственным action и next."""
         message_key: str | None = None
+        message_params: dict[str, Any] | None = None
         action = node.get("action")
         if isinstance(action, str):
             engine_result = self.apply_action(action, node)
             self._session.character = engine_result.character
             message_key = engine_result.message_key
+            message_params = engine_result.message_params
             if engine_result.pending_ui or engine_result.exit_scenario:
                 return engine_result
         next_id = node.get("next")
@@ -144,6 +153,7 @@ class GameEngine:
             character=self._session.character,
             next_node_id=self._session.current_node_id,
             message_key=message_key,
+            message_params=message_params,
         )
 
     def _to_engine_result(
@@ -166,6 +176,7 @@ class GameEngine:
         return EngineResult(
             character=result.character,
             message_key=result.message_key,
+            message_params=result.message_params,
             pending_ui=pending,
             exit_scenario=action == "exit",
         )
