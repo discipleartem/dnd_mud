@@ -258,9 +258,9 @@ races:
 
 | ID | Задача | Триггер | Целевые файлы |
 |----|--------|---------|---------------|
-| `mod-deps` | `requires`, `conflicts` в manifest | Публикация 2+ зависимых модов | `core/mod_loader.py`, `mods/*/manifest.yaml` |
-| `mod-delete` | action `delete` / `replace_entity` в overlay | Homebrew override официальных рас/классов | `core/mod_loader.py` |
-| `mod-ui` | UI включения модов в настройках | Пользователи без ручного edit `mods_state.json` | `ui/menus/settings`, `database/core/mods_state.json` |
+| `mod-deps` | `requires`, `conflicts` в manifest | ✅ `mod_enable_error`, `set_mod_enabled` | `core/mod_loader.py`, `mods/*/manifest.yaml` |
+| `mod-delete` | action `delete` / `replace_entity` в overlay | ✅ `_apply_overlay_actions` | `core/mod_loader.py` |
+| `mod-ui` | UI включения модов в настройках | ✅ `show_settings` → `show_mods_menu` | `ui/menus/settings.py` |
 
 ### Контент PHB (наполнение, не схема)
 

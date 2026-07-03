@@ -6,6 +6,9 @@
 - **Сейвы:** удалены runtime-миграции (`core/save_migration.py`); требуется канонический формат v1 (`class_id`, `race`, `schema_version: 1`); ключ `"class"`, `race_id`, `equip_logic_version` не поддерживаются
 
 ### Added
+- **Structural refactor:** docs sync, layer hygiene (`get_enabled_mod_ids`, session/inventory facades), `progression/` split, `_display` consolidation, `InventoryItem` typing, unified `_deps`
+- **Mod system:** `requires`/`conflicts` в manifest, overlay `delete`/`replace_entity`, mods в меню настроек
+- **Phase 2 scaffold:** `ability_check` в сценариях, `exits`/комнаты, `core/combat/` (initiative, attack roll), `scenario_node.json`
 - **Полный рефакторинг (фазы 1–5):** пакет `core/inventory/`, presentation в `ui/menus/_display/_inventory.py`, `CharacterClass` StrEnum, deps policy для оркестраторов
 - **Mod infra:** `requires_game_difficulty` в `mod_loader` (runtime gating через `set_mod_gating_difficulty`), `reload_catalogs()`, меню «Модификации»
 - **Game engine:** `core/game_engine.py`, `GameSession`, decouple `scenario_flow` → `run_scenario_with_engine`

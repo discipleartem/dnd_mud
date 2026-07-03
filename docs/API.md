@@ -372,10 +372,14 @@ MODS_STATE_FILE = Path("database/core/mods_state.json")
 
 load_merged_yaml(path: Path) -> dict[str, Any]
 load_merged_catalog(path_str: str, catalog_key: str) -> dict[str, Any]
+get_enabled_mod_ids() -> frozenset[str]
+list_available_mods() -> list[dict[str, Any]]
+set_mod_enabled(mod_id: str, enabled: bool) -> dict[str, str] | None
+mod_enable_error(mod_id: str, *, enabled_ids: frozenset[str] | None = None) -> dict[str, str] | None
 clear_mod_loader_cache() -> None
 ```
 
-`load_merged_catalog` — deep-merge overlay включённых модов. Потребители каталогов — `core/catalog_loader.load_catalog`. Кэш: `@lru_cache` на `load_merged_catalog`.
+Overlay actions в YAML мода: `delete` (секция → список id), `replace_entity` (секция → dict id → entity), затем deep-merge остальных полей. Manifest: `requires`, `conflicts` (список mod id) — валидация при `set_mod_enabled`.
 
 Формат мода: [`DATA_SCHEMA.md`](DATA_SCHEMA.md) § Mod overlay, [`DEVELOPMENT.md`](DEVELOPMENT.md) § Создание мода.
 
@@ -801,10 +805,12 @@ def apply_scenario_action(
     action: str,
     action_data: dict[str, Any],
     character: Character,
+    *,
+    difficulty: GameDifficulty = "normal",
 ) -> ScenarioActionResult
 ```
 
-Действия: `grant_xp`, `subclass_training`, `text`, `menu`. Источник узлов: `adventures/*.yaml`.
+Действия: `grant_xp`, `subclass_training`, `skill_check`, `ability_check`, `exit`. `difficulty` задаёт преимущество/помеху проверок (`core/engine_rules.check_roll_flags`). Узлы могут содержать `exits` (направление → node id) — см. `core/scenario_rooms`, `GameEngine.step_exit`.
 
 ## ui.menus.scenario_flow — Интерактивный runner
 

@@ -69,7 +69,10 @@ UI не читает файлы данных напрямую — только �
 | `core/character_migrate.py` | `CHARACTERS_SCHEMA_VERSION`, `migrate_character_data` — версия JSON сейва при load |
 | `core/character_storage.py` | CRUD персонажей: thin wrapper `build_new_character`, `persist_character`, `update_character`; JSON в `saves/` |
 | `core/session_storage.py` | Снимки сессий приключений (`saves/sessions/`) |
-| `core/game_engine.py` | `GameEngine`, `GameSession` — state machine сценария |
+| `core/game_engine.py` | `GameEngine`, `GameSession` — state machine сценария; `step_exit`, флаги сессии |
+| `core/scenario_rooms.py` | `exits` в узлах YAML-сценария |
+| `core/engine_rules.py` | Преимущество/помеха проверок по `GameDifficulty` |
+| `core/combat/` | Каркас Phase 2: `roll_initiative`, `attack_roll` |
 | `core/types.py` | `StatMap`, `GameDifficulty`, `CharacterClass`, `InventoryItem`, `EquippedState`, `RuntimeSettings` |
 | `core/abilities.py` | Каталог характеристик и навыков из YAML |
 | `core/races.py` | Справочник рас, `collect_race_grants`, расовые бонусы |
@@ -98,7 +101,7 @@ UI не читает файлы данных напрямую — только �
 | `core/difficulty.py` | `adventure_allows_difficulty()` |
 | `core/localization.py` | `load_strings()` (кэш), `get_string()` |
 | `core/settings.py` | Настройки в `database/core/settings.json` |
-| `core/mod_loader.py` | Deep-merge overlay модов; gating по `requires_game_difficulty` |
+| `core/mod_loader.py` | Deep-merge overlay модов; `requires`/`conflicts`; `delete`/`replace_entity`; gating по `requires_game_difficulty` |
 
 ### 3. Data Layer (`database/`, `saves/`)
 
@@ -106,7 +109,7 @@ UI не читает файлы данных напрямую — только �
 
 | Путь | Назначение | Формат | Модуль |
 |------|-----------|--------|--------|
-| `database/schema/v1/` | JSON Schema v1 (grants, backgrounds, adventures, progression) | JSON | `tests/test_data_schema.py` |
+| `database/schema/v1/` | JSON Schema v1 (grants, backgrounds, adventures, progression, scenario_node) | JSON | `tests/test_data_schema.py` |
 | `database/races/races.yaml` | Расы | YAML | `races.py` |
 | `database/classes/classes.yaml` | Классы | YAML | `classes.py` |
 | `database/core/languages.yaml` | Языки PHB | YAML | `languages.py` |
