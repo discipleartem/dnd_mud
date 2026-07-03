@@ -111,6 +111,25 @@ def collect_race_grants(
     return grants_from_entity(race_info)
 
 
+def iter_race_grants_by_source(
+    race_id: str,
+    subrace_id: str | None = None,
+) -> list[tuple[list[dict[str, Any]], str]]:
+    """Grants расы/подрасы по источникам (для выборных механик без merge)."""
+    race_info, subrace_info = get_race_and_subrace(race_id, subrace_id)
+    if not race_info:
+        return []
+
+    if subrace_info:
+        _, inherit_grants = inherit_flags(subrace_info)
+        pairs: list[tuple[list[dict[str, Any]], str]] = []
+        if inherit_grants:
+            pairs.append((grants_from_entity(race_info), "race"))
+        pairs.append((grants_from_entity(subrace_info), "subrace"))
+        return pairs
+    return [(grants_from_entity(race_info), "race")]
+
+
 def get_choice_ability_bonus_mechanics(
     race_id: str, subrace_id: str | None = None
 ) -> dict[str, Any] | None:
