@@ -1,5 +1,6 @@
 """Выбор стартового снаряжения класса при создании персонажа."""
 
+from collections.abc import Callable
 from typing import Any
 
 from colorama import Fore, Style
@@ -36,6 +37,30 @@ from ui.menus._common import (
 )
 
 
+def _pick_sorted_item_from_pool(
+    strings: StringsDict,
+    item_ids: list[str],
+    *,
+    caption_key: str,
+    prompt_key: str,
+    label_for: Callable[[str], str],
+) -> str | None:
+    """Выбор одного предмета из отсортированного пула."""
+    if not item_ids:
+        return None
+    labels = [label_for(item_id) for item_id in item_ids]
+    _print_screen_header(get_string(strings, caption_key))
+    choice = _run_numbered_menu(
+        strings,
+        labels,
+        prompt_key=prompt_key,
+        back_label_key="character.back",
+    )
+    if choice is None:
+        return None
+    return item_ids[choice - 1]
+
+
 def _format_weapon_menu_label(
     weapon_id: str,
     proficient: bool,
@@ -68,29 +93,18 @@ def _pick_weapon_from_pool(
         has_weapon_proficiency,
         name_key=lambda weapon_id: get_weapon_name(weapon_id, language),
     )
-    if not weapons:
-        return None
-    labels = [
-        _format_weapon_menu_label(
+    return _pick_sorted_item_from_pool(
+        strings,
+        weapons,
+        caption_key="character.equipment_weapon_pick",
+        prompt_key="character.equipment_weapon_prompt",
+        label_for=lambda weapon_id: _format_weapon_menu_label(
             weapon_id,
             has_weapon_proficiency(weapon_proficiencies, weapon_id),
             strings,
             language,
-        )
-        for weapon_id in weapons
-    ]
-    _print_screen_header(
-        get_string(strings, "character.equipment_weapon_pick")
+        ),
     )
-    choice = _run_numbered_menu(
-        strings,
-        labels,
-        prompt_key="character.equipment_weapon_prompt",
-        back_label_key="character.back",
-    )
-    if choice is None:
-        return None
-    return weapons[choice - 1]
 
 
 def _pick_tool_from_pool(
@@ -106,25 +120,16 @@ def _pick_tool_from_pool(
         has_tool_proficiency,
         name_key=lambda tool_id: get_tool_name(tool_id, language),
     )
-    if not tools:
-        return None
-    labels = [
-        _format_pick_menu_label(
+    return _pick_sorted_item_from_pool(
+        strings,
+        tools,
+        caption_key="character.equipment_tool_pick",
+        prompt_key="character.equipment_tool_prompt",
+        label_for=lambda tool_id: _format_pick_menu_label(
             get_tool_name(tool_id, language),
             has_tool_proficiency(tool_proficiencies, tool_id),
-        )
-        for tool_id in tools
-    ]
-    _print_screen_header(get_string(strings, "character.equipment_tool_pick"))
-    choice = _run_numbered_menu(
-        strings,
-        labels,
-        prompt_key="character.equipment_tool_prompt",
-        back_label_key="character.back",
+        ),
     )
-    if choice is None:
-        return None
-    return tools[choice - 1]
 
 
 def _format_equipment_menu_label(

@@ -9,19 +9,12 @@ from core.class_features import (
 from core.classes import get_subclass_choice_level
 from core.localization import get_string
 from core.models import Character
-from core.proficiencies import (
-    apply_subclass_proficiencies_to_character,
-    is_valid_tool_selection,
-    merge_proficiency_tokens,
-)
 from core.types import LanguageCode, StringsDict
 from ui.menus import _deps
 from ui.menus._common import _print_screen_header, _print_success_and_wait
 from ui.menus._selectors import select_subclass
+from ui.menus._subclass_picks import apply_subclass_picks
 from ui.menus.class_features import apply_pending_class_features
-from ui.menus.expertise import apply_pending_expertise
-from ui.menus.proficiencies import _pick_tools
-from ui.menus.skills import add_subclass_skills_from_menu
 
 
 def assign_subclass_from_menu(
@@ -35,53 +28,20 @@ def assign_subclass_from_menu(
         return None
 
     character.subclass_id = subclass_id
-    choices = apply_subclass_proficiencies_to_character(character, subclass_id)
-    if choices:
-        pick_total = sum(c.count for c in choices)
-        pick_offset = 0
-        for choice in choices:
-            picked = _pick_tools(
-                strings,
-                choice,
-                character.tool_proficiencies,
-                language,
-                pick_offset + 1,
-                pick_total,
-            )
-            if picked is None:
-                character.subclass_id = None
-                return None
-            pool = choice.options or []
-            if not is_valid_tool_selection(picked, pool, choice.count):
-                character.subclass_id = None
-                return None
-            character.tool_proficiencies = merge_proficiency_tokens(
-                character.tool_proficiencies, picked
-            )
-            pick_offset += choice.count
-
-    updated_skills = add_subclass_skills_from_menu(
+    updated = apply_subclass_picks(
         strings,
-        character.class_id,
+        character,
         subclass_id,
-        character.level,
-        character.skills,
         language,
+        apply_skills=True,
     )
-    if updated_skills is None:
+    if updated is None:
         character.subclass_id = None
         return None
-    character.skills = updated_skills
 
-    expertise_result = apply_pending_expertise(strings, character, language)
-    if expertise_result is None:
-        character.subclass_id = None
-        return None
-    character.skill_expertise, character.tool_expertise = expertise_result
-
-    character = mark_class_features_applied(character)
-    _deps.update_character(character)
-    return character
+    updated = mark_class_features_applied(updated)
+    _deps.update_character(updated)
+    return updated
 
 
 def run_subclass_trainer(

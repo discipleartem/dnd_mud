@@ -11,8 +11,7 @@ from core.backgrounds import (
 )
 from core.localization import get_string
 from core.types import StringsDict
-from ui.menus import _deps
-from ui.menus._common import _print_screen_header
+from ui.menus._common import _print_screen_header, _read_numbered_choice
 from ui.menus._display._background import _print_background_info
 
 
@@ -40,18 +39,12 @@ def select_creation_background(
         _print_background_info(bg, strings, language)
 
     print()
-    print(
-        f"  {Fore.YELLOW}0{Style.RESET_ALL}. "
-        f"{get_string(strings, 'character.back')}"
-    )
-    print()
-    choice = _deps.get_int_input(
-        get_string(strings, "character.background_prompt"),
-        0,
-        len(details),
+    choice = _read_numbered_choice(
         strings,
+        len(details),
+        prompt_key="character.background_prompt",
     )
-    if choice == 0:
+    if choice is None:
         return None
 
     selected = details[choice - 1]

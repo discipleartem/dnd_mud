@@ -4,8 +4,6 @@ from typing import Literal
 
 from colorama import Fore, Style
 
-from core.catalog_loader import reload_catalogs
-from core.mod_loader import set_mod_gating_difficulty
 from ui.menus import _creation_steps, _deps
 from ui.menus._common import (
     _press_enter,
@@ -193,8 +191,7 @@ def show_new_game_flow(
         if character is None:
             return
 
-        set_mod_gating_difficulty(character.difficulty)
-        reload_catalogs()
+        _deps.bootstrap_session_catalogs(character.difficulty)
 
         while True:
             adventure = _select_adventure(strings, language, character)
