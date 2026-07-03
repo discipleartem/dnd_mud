@@ -4,11 +4,7 @@ from colorama import Fore, Style
 
 from core.classes import get_subclass_choice_level
 from core.equipment import proficiency_token_label
-from core.inventory import (
-    compute_ac,
-    format_inventory_line,
-    get_equipped_display,
-)
+from core.inventory import compute_ac
 from core.localization import get_string, resolve_localized_text
 from core.models import Character
 from core.subclasses import subclass_is_active
@@ -20,6 +16,10 @@ from ui.menus._display._class import (
     _character_subclass_label,
 )
 from ui.menus._display._difficulty import _difficulty_color, _difficulty_label
+from ui.menus._display._inventory import (
+    format_inventory_line,
+    get_equipped_display,
+)
 from ui.menus._display._stats import _format_character_stats_compact
 from ui.menus.expertise import format_expertise_display
 
