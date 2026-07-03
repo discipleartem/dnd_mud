@@ -8,6 +8,8 @@ from core.game_engine import GameEngine, GameSession
 from core.models import Adventure, Character
 from core.session_storage import (
     SessionSnapshot,
+    delete_session,
+    list_sessions,
     load_character_for_session,
     load_session,
     save_session,
@@ -77,3 +79,43 @@ def test_load_character_for_session_skips_invalid_save(
         difficulty="normal",
     )
     assert load_character_for_session(snapshot, characters_dir) is None
+
+
+def test_list_sessions_orders_by_updated_at(
+    sessions_dir: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    first = SessionSnapshot(
+        save_slug="first",
+        character_save_slug="hero",
+        adventure_id="tutorial",
+        current_node_id="welcome",
+        difficulty="normal",
+        updated_at="2020-01-01T00:00:00+00:00",
+    )
+    second = SessionSnapshot(
+        save_slug="second",
+        character_save_slug="hero",
+        adventure_id="tutorial",
+        current_node_id="training",
+        difficulty="normal",
+        updated_at="2021-01-01T00:00:00+00:00",
+    )
+    save_session(first)
+    save_session(second)
+    slugs = [item.save_slug for item in list_sessions()]
+    assert slugs == ["first", "second"]
+
+
+def test_delete_session_removes_file(sessions_dir: Path) -> None:
+    save_session(
+        SessionSnapshot(
+            save_slug="gone",
+            character_save_slug="hero",
+            adventure_id="tutorial",
+            current_node_id=None,
+            difficulty="normal",
+        )
+    )
+    assert delete_session("gone") is True
+    assert load_session("gone") is None
+    assert delete_session("missing") is False
