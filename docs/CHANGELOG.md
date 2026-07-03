@@ -6,7 +6,7 @@
 - **Сейвы:** удалены runtime-миграции (`core/save_migration.py`); требуется канонический формат v1 (`class_id`, `race`, `schema_version: 1`); ключ `"class"`, `race_id`, `equip_logic_version` не поддерживаются
 
 ### Added
-- **Полный рефакторинг (фазы 1–5):** миграции сейвов (`core/save_migration.py`), пакет `core/inventory/`, presentation в `ui/menus/_display/_inventory.py`, `CharacterClass` StrEnum, deps policy для оркестраторов
+- **Полный рефакторинг (фазы 1–5):** пакет `core/inventory/`, presentation в `ui/menus/_display/_inventory.py`, `CharacterClass` StrEnum, deps policy для оркестраторов
 - **Mod infra:** `requires_game_difficulty` в `mod_loader` (runtime gating через `set_mod_gating_difficulty`), `reload_catalogs()`, меню «Модификации»
 - **Game engine:** `core/game_engine.py`, `GameSession`, decouple `scenario_flow` → `run_scenario_with_engine`
 - **Phase 2 hooks:** `apply_progression_grants_at_level`, `feat_is_active` / `active_feat_ids`, `ability_check` / `skill_check` / `passive_skill`
@@ -28,7 +28,7 @@
 - Skills refactor (DRY layers): policy verify/review — только `dnd-mud-workflow.mdc`; skills — процедуры; `AGENTS.md` / `DEVELOPMENT.md` — индекс ссылок
 - **Экран расы/подрасы:** выборный язык в строке «Языки»; подрасы без дубля grants родителя; полуорк всегда с экраном выбора и «Назад»
 - **Экран класса:** схлопнутый ASI по уровням; `proficiency_token_label` в меню владений и стартового снаряжения
-- **Авто-экипировка:** миграция legacy-сейвов через `equip_logic_version` при загрузке
+- **Авто-экипировка:** пересчёт `equipped` через `equip_defaults()` при создании персонажа
 - **Данные рас:** язык человека на уровне расы; variant human наследует grant; описание «Наследие фей» у эльфа
 
 ### Changed
