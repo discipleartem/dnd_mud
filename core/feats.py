@@ -18,10 +18,13 @@ from core.feat_descriptions import (
     feat_summary_description,
 )
 from core.feat_requirements import (
+    active_feat_ids,
     can_take_feat,
     character_has_spellcasting,
     feat_has_requirements,
+    feat_is_active,
     feat_meets_requirements,
+    feat_requirement_context_from_character,
     get_race_feat_grants,
     list_feats_for_selection,
     race_feat_step_required,
@@ -38,6 +41,7 @@ from core.feats_loader import (
 __all__ = [
     "FeatGrant",
     "FeatRequirementContext",
+    "active_feat_ids",
     "apply_feat_grants_to_character",
     "apply_feats_to_stats",
     "can_take_feat",
@@ -45,7 +49,9 @@ __all__ = [
     "feat_visible_for_selection",
     "feat_full_description_lines",
     "feat_has_requirements",
+    "feat_is_active",
     "feat_meets_requirements",
+    "feat_requirement_context_from_character",
     "feat_summary_description",
     "get_feat_expertise_ids",
     "get_feat_hp_bonus_sources",

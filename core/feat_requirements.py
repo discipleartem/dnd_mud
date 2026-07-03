@@ -110,6 +110,48 @@ def feat_meets_requirements(feat_id: str, ctx: FeatRequirementContext) -> bool:
     return True
 
 
+def active_feat_ids(character: Any) -> list[str]:
+    """Черты персонажа, проходящие ongoing-проверку требований."""
+    from core.feat_visibility import (
+        build_feat_selection_context_from_character,
+    )
+    from core.models import Character
+
+    if not isinstance(character, Character):
+        return []
+    ctx = build_feat_selection_context_from_character(character)
+    return [
+        feat_id
+        for feat_id in character.feat_ids
+        if feat_is_active(feat_id, character, ctx=ctx)
+    ]
+
+
+def feat_requirement_context_from_character(
+    character: Any,
+) -> FeatRequirementContext:
+    """Контекст требований черт из персонажа (alias для visibility)."""
+    from core.feat_visibility import (
+        build_feat_selection_context_from_character,
+    )
+
+    return build_feat_selection_context_from_character(character)
+
+
+def feat_is_active(
+    feat_id: str,
+    character: Any,
+    *,
+    ctx: FeatRequirementContext | None = None,
+) -> bool:
+    """Активна ли черта с учётом текущих требований."""
+    if feat_id not in getattr(character, "feat_ids", []):
+        return False
+    if ctx is None:
+        ctx = feat_requirement_context_from_character(character)
+    return feat_meets_requirements(feat_id, ctx)
+
+
 def can_take_feat(
     feat_id: str,
     existing_ids: list[str],
