@@ -22,7 +22,18 @@ Console MUD — browser forbidden. Переопределяет `ironbee-devtool
 
 ## Git
 
-**Git-старт:** [`01-operations.mdc`](~/.cursor/rules/01-operations.mdc) §Task cycle ш.1. Если `main` впереди `dev`:
+**Git-старт (ОБЯЗАТЕЛЬНО ПЕРЕД ЛЮБОЙ РЕАЛИЗАЦИЕЙ):** [`01-operations.mdc`](~/.cursor/rules/01-operations.mdc) §Task cycle ш.1.
+
+**Критическое правило:** Перед началом любой реализации кода (даже если есть утверждённый план) агент ОБЯЗАН:
+
+1. `git fetch origin`
+2. Синхронизировать `dev` с `origin/dev` (`git pull` или `git rebase origin/dev`)
+3. Создать task-ветку от `dev` (`git checkout -b feat/<slug>` или `refactor/<slug>`)
+4. Только после этого начинать реализацию
+
+**Запрещено:** Начинать правки кода на ветке `dev`, `main` или без синхронизации с `origin/dev`.
+
+Если `main` впереди `dev`:
 
 ```bash
 git merge origin/main && git push origin dev
@@ -68,7 +79,11 @@ git fetch origin && git rebase origin/dev
 
 #### Алгоритм реализации
 
-1. **Git-старт** — `git fetch origin`, sync `main`/`dev`, **`git checkout -b feat/<slug>`** от `dev`.
+1. **Git-старт (ОБЯЗАТЕЛЬНО ПЕРЕД ПЕРВОЙ ПРАВКОЙ КОДА):**
+   - `git fetch origin`
+   - Синхронизация с `origin/dev` (`git pull` или `git rebase origin/dev`)
+   - **`git checkout -b feat/<slug>`** от `dev`
+   - Только после этого начинать реализацию
 2. **На каждый PR плана** (строго по порядку плана, если есть зависимости):
    ```bash
    git checkout feat/<slug>
