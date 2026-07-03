@@ -6,7 +6,6 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any
 
-from core.character_build import build_new_character as _build_new_character
 from core.character_migrate import (
     CHARACTERS_SCHEMA_VERSION,
     migrate_character_data,
@@ -15,7 +14,6 @@ from core.io import load_json, save_json
 from core.levels import clamp_level
 from core.models import Character
 from core.slug import make_save_slug
-from core.types import CharacterClass, GameDifficulty, InventoryItem, StatMap
 
 logger = logging.getLogger(__name__)
 
@@ -65,127 +63,10 @@ def _try_load_character_file(
         return None, path.stem
 
 
-def build_new_character(
-    name: str,
-    race_id: str,
-    class_id: str | CharacterClass,
-    difficulty: GameDifficulty = "normal",
-    subrace_id: str | None = None,
-    stats: StatMap | None = None,
-    subclass_id: str | None = None,
-    languages: list[str] | None = None,
-    background_id: str | None = None,
-    skills: list[str] | None = None,
-    skill_expertise: list[str] | None = None,
-    tool_expertise: list[str] | None = None,
-    weapon_proficiencies: list[str] | None = None,
-    armor_proficiencies: list[str] | None = None,
-    tool_proficiencies: list[str] | None = None,
-    background_tool_picks: list[str] | None = None,
-    feat_ids: list[str] | None = None,
-    feat_choices: dict[str, dict[str, Any]] | None = None,
-    asi_choices: dict[str, str] | None = None,
-    save_proficiencies: list[str] | None = None,
-    inventory: list[InventoryItem] | None = None,
-    equipment_choices: dict[str, str] | None = None,
-    level: int | None = None,
-    class_features_applied: bool = False,
-    apply_feat_stat_bonuses: bool = True,
-) -> Character:
-    """Собрать нового персонажа без записи на диск."""
-    return _build_new_character(
-        name=name,
-        race_id=race_id,
-        class_id=class_id,
-        difficulty=difficulty,
-        subrace_id=subrace_id,
-        stats=stats,
-        subclass_id=subclass_id,
-        languages=languages,
-        background_id=background_id,
-        skills=skills,
-        skill_expertise=skill_expertise,
-        tool_expertise=tool_expertise,
-        weapon_proficiencies=weapon_proficiencies,
-        armor_proficiencies=armor_proficiencies,
-        tool_proficiencies=tool_proficiencies,
-        background_tool_picks=background_tool_picks,
-        feat_ids=feat_ids,
-        feat_choices=feat_choices,
-        asi_choices=asi_choices,
-        save_proficiencies=save_proficiencies,
-        inventory=inventory,
-        equipment_choices=equipment_choices,
-        level=level,
-        class_features_applied=class_features_applied,
-        apply_feat_stat_bonuses=apply_feat_stat_bonuses,
-        unique_save_slug=_unique_save_slug,
-    )
-
-
 def persist_character(character: Character) -> Character:
     """Записать персонажа на диск."""
     _save_character_file(character)
     return character
-
-
-def save_character(
-    name: str,
-    race_id: str,
-    class_id: str | CharacterClass,
-    difficulty: GameDifficulty = "normal",
-    subrace_id: str | None = None,
-    stats: StatMap | None = None,
-    subclass_id: str | None = None,
-    languages: list[str] | None = None,
-    background_id: str | None = None,
-    skills: list[str] | None = None,
-    skill_expertise: list[str] | None = None,
-    tool_expertise: list[str] | None = None,
-    weapon_proficiencies: list[str] | None = None,
-    armor_proficiencies: list[str] | None = None,
-    tool_proficiencies: list[str] | None = None,
-    background_tool_picks: list[str] | None = None,
-    feat_ids: list[str] | None = None,
-    feat_choices: dict[str, dict[str, Any]] | None = None,
-    asi_choices: dict[str, str] | None = None,
-    save_proficiencies: list[str] | None = None,
-    inventory: list[InventoryItem] | None = None,
-    equipment_choices: dict[str, str] | None = None,
-    level: int | None = None,
-    class_features_applied: bool = False,
-    apply_feat_stat_bonuses: bool = True,
-) -> Character:
-    """Создать нового персонажа и сохранить в JSON."""
-    return persist_character(
-        build_new_character(
-            name=name,
-            race_id=race_id,
-            class_id=class_id,
-            difficulty=difficulty,
-            subrace_id=subrace_id,
-            stats=stats,
-            subclass_id=subclass_id,
-            languages=languages,
-            background_id=background_id,
-            skills=skills,
-            skill_expertise=skill_expertise,
-            tool_expertise=tool_expertise,
-            weapon_proficiencies=weapon_proficiencies,
-            armor_proficiencies=armor_proficiencies,
-            tool_proficiencies=tool_proficiencies,
-            background_tool_picks=background_tool_picks,
-            feat_ids=feat_ids,
-            feat_choices=feat_choices,
-            asi_choices=asi_choices,
-            save_proficiencies=save_proficiencies,
-            inventory=inventory,
-            equipment_choices=equipment_choices,
-            level=level,
-            class_features_applied=class_features_applied,
-            apply_feat_stat_bonuses=apply_feat_stat_bonuses,
-        )
-    )
 
 
 def update_character(character: Character) -> None:
