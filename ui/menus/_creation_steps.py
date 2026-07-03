@@ -1,8 +1,5 @@
 """Шаги state machine создания персонажа."""
 
-from core.localization import get_string
-from core.models import Character
-from core.types import StringsDict
 from ui.menus import _deps
 from ui.menus._common import (
     _print_screen_header,
@@ -13,6 +10,10 @@ from ui.menus._creation_finalize import (
 )
 from ui.menus._creation_state import _CreationState
 from ui.menus.settings import select_difficulty
+
+Character = _deps.Character
+StringsDict = _deps.StringsDict
+get_string = _deps.get_string
 
 
 def finalize_creation(
