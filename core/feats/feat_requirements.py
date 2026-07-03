@@ -9,6 +9,7 @@ from core.feats.feats_loader import (
     load_feat,
     load_feats,
 )
+from core.models import Character
 
 
 def get_race_feat_grants(
@@ -110,15 +111,12 @@ def feat_meets_requirements(feat_id: str, ctx: FeatRequirementContext) -> bool:
     return True
 
 
-def active_feat_ids(character: Any) -> list[str]:
+def active_feat_ids(character: Character) -> list[str]:
     """Черты персонажа, проходящие ongoing-проверку требований."""
     from core.feats.feat_visibility import (
         build_feat_selection_context_from_character,
     )
-    from core.models import Character
 
-    if not isinstance(character, Character):
-        return []
     ctx = build_feat_selection_context_from_character(character)
     return [
         feat_id
@@ -128,7 +126,7 @@ def active_feat_ids(character: Any) -> list[str]:
 
 
 def feat_requirement_context_from_character(
-    character: Any,
+    character: Character,
 ) -> FeatRequirementContext:
     """Контекст требований черт из персонажа (alias для visibility)."""
     from core.feats.feat_visibility import (
@@ -140,7 +138,7 @@ def feat_requirement_context_from_character(
 
 def feat_is_active(
     feat_id: str,
-    character: Any,
+    character: Character,
     *,
     ctx: FeatRequirementContext | None = None,
 ) -> bool:

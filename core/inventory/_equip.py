@@ -1,7 +1,5 @@
 """Экипировка персонажа и авто-подбор из инвентаря."""
 
-from typing import Any
-
 from core.classes import character_has_spellcasting
 from core.equipment import (
     armor_category,
@@ -22,9 +20,10 @@ from core.proficiencies.proficiency_checks import (
     has_weapon_proficiency,
 )
 from core.stats import ABILITY_SCORE_DEFAULT
+from core.types import EquippedState
 
 
-def default_equipped() -> dict[str, Any]:
+def default_equipped() -> EquippedState:
     """Пустая экипировка."""
     return {
         "armor": None,
@@ -105,7 +104,7 @@ def _pick_off_hand_weapon(
     return max(candidates)[1]
 
 
-def equip_defaults(character: Character) -> dict[str, Any]:
+def equip_defaults(character: Character) -> EquippedState:
     """Авто-экипировка: лучший доспех, щит и оружие из инвентаря."""
     equipped = default_equipped()
     armor_profs = character.armor_proficiencies

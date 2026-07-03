@@ -10,6 +10,7 @@ from core.feats.feat_visibility import (
     build_feat_selection_context_from_character,
 )
 from core.localization import get_string
+from core.models import Character
 from core.progression.asi import cap_stats
 from core.types import StatMap, StringsDict
 from ui.menus import _deps
@@ -20,10 +21,12 @@ from ui.menus.feats._subchoices import _resolve_feat_subchoices
 
 def select_level_up_feat_or_asi(
     strings: StringsDict,
-    character: Any,
+    character: Character,
     new_level: int,
     language: str = "ru",
-) -> tuple[Any, StatMap, list[str], dict[str, dict[str, Any]], str] | None:
+) -> (
+    tuple[Character, StatMap, list[str], dict[str, dict[str, Any]], str] | None
+):
     """Выбор ASI или черты при левелапе.
 
     Возвращает (character, stats, feat_ids, feat_choices, asi_choice_value)

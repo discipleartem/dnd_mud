@@ -15,7 +15,7 @@ from core.io import load_json, save_json
 from core.levels import clamp_level
 from core.models import Character
 from core.slug import make_save_slug
-from core.types import CharacterClass, GameDifficulty, StatMap
+from core.types import CharacterClass, GameDifficulty, InventoryItem, StatMap
 
 logger = logging.getLogger(__name__)
 
@@ -86,7 +86,7 @@ def build_new_character(
     feat_choices: dict[str, dict[str, Any]] | None = None,
     asi_choices: dict[str, str] | None = None,
     save_proficiencies: list[str] | None = None,
-    inventory: list[dict[str, Any]] | None = None,
+    inventory: list[InventoryItem] | None = None,
     equipment_choices: dict[str, str] | None = None,
     level: int | None = None,
     class_features_applied: bool = False,
@@ -150,7 +150,7 @@ def save_character(
     feat_choices: dict[str, dict[str, Any]] | None = None,
     asi_choices: dict[str, str] | None = None,
     save_proficiencies: list[str] | None = None,
-    inventory: list[dict[str, Any]] | None = None,
+    inventory: list[InventoryItem] | None = None,
     equipment_choices: dict[str, str] | None = None,
     level: int | None = None,
     class_features_applied: bool = False,

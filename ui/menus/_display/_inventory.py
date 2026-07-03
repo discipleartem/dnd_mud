@@ -1,6 +1,6 @@
 """Отображение инвентаря и экипировки в UI."""
 
-from typing import Any, Literal
+from typing import Literal
 
 from core.equipment import (
     armor_equipped_hint,
@@ -22,14 +22,14 @@ from core.inventory import (
 )
 from core.localization import get_string, load_strings
 from core.models import Character
-from core.types import StringsDict
+from core.types import EquippedState, InventoryItem, StringsDict
 
 
 def format_inventory_line(
-    inventory: list[dict[str, Any]],
+    inventory: list[InventoryItem],
     language: str = "ru",
     *,
-    equipped: dict[str, Any] | None = None,
+    equipped: EquippedState | None = None,
 ) -> str:
     """Сжатый список инвентаря для UI (без экипированных предметов)."""
     display_items = inventory_excluding_equipped(inventory, equipped)
@@ -46,7 +46,7 @@ def format_inventory_line(
     return ", ".join(parts)
 
 
-def _versatile_can_switch_to_two_hands(equipped: dict[str, Any]) -> bool:
+def _versatile_can_switch_to_two_hands(equipped: EquippedState) -> bool:
     """Можно ли взять универсальное оружие двумя руками."""
     if equipped.get("shield"):
         return False
@@ -55,7 +55,7 @@ def _versatile_can_switch_to_two_hands(equipped: dict[str, Any]) -> bool:
 
 
 def _versatile_active_grip(
-    equipped: dict[str, Any], weapon_id: str
+    equipped: EquippedState, weapon_id: str
 ) -> Literal["one_handed", "two_handed"]:
     """Текущий режим универсального оружия."""
     grip = equipped.get("main_hand_grip")
@@ -70,7 +70,7 @@ def _versatile_active_grip(
 
 def _versatile_grip_hint(
     weapon_id: str,
-    equipped: dict[str, Any],
+    equipped: EquippedState,
     strings: StringsDict,
 ) -> str:
     """Подсказка хвата универсального оружия (одна / две руки)."""
@@ -85,7 +85,7 @@ def _versatile_grip_hint(
 
 def format_versatile_damage_dice(
     weapon_id: str,
-    equipped: dict[str, Any],
+    equipped: EquippedState,
     strings: StringsDict,
     language: str = "ru",
 ) -> tuple[str, str, str] | None:
@@ -113,7 +113,7 @@ def format_versatile_damage_dice(
 
 
 def _loaded_ammunition_qty(
-    inventory: list[dict[str, Any]], ammo_item_id: str
+    inventory: list[InventoryItem], ammo_item_id: str
 ) -> int:
     """Боеприпасы «под рукой»: из инвентаря, до ёмкости колчана/сумки."""
     in_inv = inventory_item_quantity(inventory, "equipment", ammo_item_id)
@@ -121,7 +121,7 @@ def _loaded_ammunition_qty(
     return min(in_inv, pack) if in_inv > 0 else 0
 
 
-def _equipped_weapon_for_range(equipped: dict[str, Any]) -> str | None:
+def _equipped_weapon_for_range(equipped: EquippedState) -> str | None:
     """Оружие для строки дистанции (основная рука, затем вторая)."""
     for slot in ("main_hand", "off_hand"):
         weapon_id = equipped.get(slot)

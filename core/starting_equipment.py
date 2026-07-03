@@ -21,7 +21,7 @@ from core.proficiencies.proficiency_checks import (
     has_weapon_pool_proficiency,
     has_weapon_proficiency,
 )
-from core.types import StringsDict
+from core.types import InventoryItem, StringsDict
 
 _PROFICIENCY_LABEL_SUFFIXES = (
     " (если владеете)",
@@ -152,9 +152,9 @@ def _items_from_option(
     choices: dict[str, str],
     choice_id: str,
     weapon_proficiencies: list[str],
-) -> list[dict[str, Any]]:
+) -> list[InventoryItem]:
     """Собрать предметы из выбранной опции."""
-    items: list[dict[str, Any]] = []
+    items: list[InventoryItem] = []
     raw_items = option.get("items", [])
     if isinstance(raw_items, list):
         for entry in raw_items:
@@ -190,9 +190,9 @@ def resolve_starting_items(
     choices: dict[str, str],
     weapon_proficiencies: list[str],
     armor_proficiencies: list[str],
-) -> list[dict[str, Any]]:
+) -> list[InventoryItem]:
     """Разрешить стартовое снаряжение класса в список предметов."""
-    inventory: list[dict[str, Any]] = []
+    inventory: list[InventoryItem] = []
     for fixed in list_fixed_items(class_id):
         normalized = normalize_inventory_item(fixed)
         if normalized:
