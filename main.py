@@ -12,6 +12,7 @@ from pathlib import Path
 from colorama import Fore, Style, init
 
 from core.localization import get_string, load_strings
+from core.mod_loader import set_mod_gating_difficulty
 from core.settings import load_settings, save_settings
 from core.types import RuntimeSettings, StringsDict
 from ui.menus import (
@@ -19,6 +20,7 @@ from ui.menus import (
     show_languages_menu,
     show_load_game_flow,
     show_main_menu,
+    show_mods_menu,
     show_new_game_flow,
     show_settings,
     show_welcome_screen,
@@ -78,6 +80,8 @@ def main() -> int:
     # Загружаем настройки
     settings = load_settings()
 
+    set_mod_gating_difficulty("normal")
+
     # Загружаем строки интерфейса на выбранном языке
     strings = load_strings(settings["language"])
 
@@ -102,7 +106,7 @@ def main() -> int:
                     settings, strings
                 )
             case 2:
-                show_load_game_flow(strings)
+                show_load_game_flow(strings, settings["language"])
             case 3:
                 show_characters_menu(strings, settings["language"])
                 settings, strings = _save_and_reload_settings(
@@ -118,6 +122,8 @@ def main() -> int:
                 settings, strings = _save_and_reload_settings(
                     settings, strings
                 )
+            case 6:
+                show_mods_menu(strings, settings["language"])
 
     return 0
 

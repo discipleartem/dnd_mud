@@ -3,16 +3,15 @@
 import pytest
 
 from core.stats import STAT_NAMES
-from ui.menus import _common, _deps
+from ui.menus import _deps
 from ui.menus import stats as stats_menu
 from ui.menus.stats import stats_methods, stats_shared
 
 
 def test_standard_array_shows_race_bonuses_after_assign(
-    monkeypatch, capsys, ru_strings, patch_int_input
+    monkeypatch, capsys, ru_strings, patch_int_input, patch_press_enter
 ):
     patch_int_input(monkeypatch, [1, 0, 0])
-    monkeypatch.setattr(_common, "_press_enter", lambda strings: None)
     monkeypatch.setattr(
         _deps,
         "get_race_bonuses",

@@ -9,6 +9,7 @@ from core.types import StringsDict
 from ui.menus import _deps
 from ui.menus._common import (
     SEPARATOR,
+    _print_numbered_row,
     _print_screen_header,
     _read_numbered_choice,
 )
@@ -29,16 +30,11 @@ def select_subrace(
     if not isinstance(subraces, dict) or not subraces:
         return False, None
 
-    if len(subraces) == 1:
-        return True, next(iter(subraces))
-
     _print_screen_header(get_string(strings, "character.subrace_caption"))
 
     race_name = race_full.get("name", race_id)
     print(f"{Fore.CYAN}{race_name}{Style.RESET_ALL}")
-    desc = race_full.get("description", "")
-    if desc:
-        print(get_string(strings, "character.race_description", desc=desc))
+    _print_race_info(race_full, strings, language)
     print()
 
     print(get_string(strings, "character.subraces_label"))
@@ -47,13 +43,10 @@ def select_subrace(
         if isinstance(subrace_info, dict):
             choices.append((str(subrace_id), subrace_info))
 
-    for idx, (_subrace_id, subrace_info) in enumerate(choices, 1):
+    for idx, (_choice_subrace_id, subrace_info) in enumerate(choices, 1):
         print()
-        print(
-            f"  {Fore.YELLOW}{idx}{Style.RESET_ALL}. "
-            f"{Fore.CYAN}{subrace_info.get('name', '?')}"
-            f"{Style.RESET_ALL}"
-        )
+        name = f"{Fore.CYAN}{subrace_info.get('name', '?')}{Style.RESET_ALL}"
+        _print_numbered_row(idx, name)
         _print_race_info(subrace_info, strings, language)
 
     choice = _read_numbered_choice(
@@ -84,13 +77,13 @@ def select_class(
         if idx > 1:
             print(f"  {Fore.LIGHTBLACK_EX}{'─' * 74}{Style.RESET_ALL}")
         print()
-        print(
-            f"  {Fore.YELLOW}{idx}{Style.RESET_ALL}. "
+        name = (
             f"{Fore.CYAN}{Style.BRIGHT}"
             f"{class_info.get('name', '?')}"
             f"{Style.RESET_ALL}"
         )
-        _print_class_summary(class_info, strings)
+        _print_numbered_row(idx, name)
+        _print_class_summary(class_info, strings, language=language)
 
     choice = _read_numbered_choice(
         strings,
@@ -132,12 +125,12 @@ def select_subclass(
         if idx > 1:
             print(f"  {Fore.LIGHTBLACK_EX}{'─' * 74}{Style.RESET_ALL}")
             print()
-        print(
-            f"  {Fore.YELLOW}{idx}{Style.RESET_ALL}. "
+        name = (
             f"{Fore.CYAN}{Style.BRIGHT}"
             f"{sub_info.get('name', '?')}"
             f"{Style.RESET_ALL}"
         )
+        _print_numbered_row(idx, name)
         _print_subclass_info(sub_info, strings)
 
     choice = _read_numbered_choice(

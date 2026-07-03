@@ -15,8 +15,12 @@ from core.skills import (
     resolve_skill_pool,
 )
 from core.types import StringsDict
-from ui.menus import _deps
-from ui.menus._common import _print_screen_header, _skill_name
+from ui.menus._common import (
+    _print_pick_list,
+    _print_screen_header,
+    _read_pool_pick,
+    _skill_name,
+)
 
 SkillSource = str
 
@@ -52,31 +56,6 @@ def _print_proficient_summary(
     print()
 
 
-def _print_skill_pick_list(
-    strings: StringsDict,
-    pool: list[str],
-    proficient_so_far: list[str],
-) -> list[str]:
-    """Показать пул навыков; занятые — серым. Вернуть доступные для выбора."""
-    taken_suffix = get_string(strings, "character.skills_taken_suffix")
-    selectable: list[str] = []
-    for skill_id in pool:
-        name = _skill_name(strings, skill_id)
-        if skill_id in proficient_so_far:
-            print(
-                f"  {Fore.LIGHTBLACK_EX}{name} {taken_suffix}"
-                f"{Style.RESET_ALL}"
-            )
-        else:
-            selectable.append(skill_id)
-            idx = len(selectable)
-            print(
-                f"  {Fore.YELLOW}{idx}{Style.RESET_ALL}. "
-                f"{Fore.CYAN}{name}{Style.RESET_ALL}"
-            )
-    return selectable
-
-
 def _pick_one_skill(
     strings: StringsDict,
     pool: list[str],
@@ -87,43 +66,31 @@ def _pick_one_skill(
     total: int,
 ) -> str | None:
     """Выбрать один навык из пула или вернуть None при «Назад»."""
+    taken_suffix = get_string(strings, "character.skills_taken_suffix")
+    prompt = get_string(
+        strings,
+        prompt_key,
+        current=current,
+        total=total,
+    )
     while True:
         _print_screen_header(get_string(strings, "character.skills_caption"))
         _print_proficient_summary(strings, proficient, sources)
-        prompt = get_string(
+        selectable = _print_pick_list(
+            pool,
+            set(proficient),
+            label_for=lambda skill_id: _skill_name(strings, skill_id),
+            taken_suffix=taken_suffix,
+        )
+        picked = _read_pool_pick(
             strings,
-            prompt_key,
-            current=current,
-            total=total,
+            selectable,
+            prompt=prompt,
+            empty_key="character.expertise_pool_empty",
         )
-        selectable = _print_skill_pick_list(strings, pool, proficient)
-        print()
-        if not selectable:
-            print(
-                f"{Fore.RED}"
-                f"{get_string(strings, 'character.expertise_pool_empty')}"
-                f"{Style.RESET_ALL}"
-            )
-            print()
-            print(
-                f"  {Fore.YELLOW}0{Style.RESET_ALL}. "
-                f"{get_string(strings, 'character.back')}"
-            )
-            print()
-            choice = _deps.get_int_input(prompt, 0, 0, strings)
-            if choice == 0:
-                return None
+        if picked == "":
             continue
-
-        print(
-            f"  {Fore.YELLOW}0{Style.RESET_ALL}. "
-            f"{get_string(strings, 'character.back')}"
-        )
-        print()
-        choice = _deps.get_int_input(prompt, 0, len(selectable), strings)
-        if choice == 0:
-            return None
-        return selectable[choice - 1]
+        return picked
 
 
 def _add_proficiency(

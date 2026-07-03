@@ -14,7 +14,7 @@ Console MUD — browser forbidden. Переопределяет `ironbee-devtool
 | Global | dnd_mud |
 |--------|---------|
 | Agent напрямую — git-flow не обязателен | **git-старт обязателен** для правок кода/docs/git |
-| Browser / IronBee verify | `make verify-changed` / `make verify-scope` + smoke `python main.py` — skill [`dnd-mud-verify`](../skills/dnd-mud-verify/SKILL.md) |
+| Browser / IronBee verify | На task-ветке агент **не** запускает full verify — только pre-commit `verify-changed`; полный прогон **один раз** в skill [`dnd-mud-review`](../skills/dnd-mud-review/SKILL.md) |
 | Push по запросу | auto-commit подзадач; Plan → Build → Agent — push обязателен |
 | Ветки `merged/*` | **только локально** — никогда push/upstream/PR на `origin` (§Ветки merged/*) |
 
@@ -25,14 +25,16 @@ Console MUD — browser forbidden. Переопределяет `ironbee-devtool
 **Git-старт:** [`01-operations.mdc`](~/.cursor/rules/01-operations.mdc) §Task cycle ш.1. Если `main` впереди `dev`:
 
 ```bash
-git merge origin/main && make verify-scope && git push origin dev
+git merge origin/main && git push origin dev
 ```
 
-**Parallel dev:** после `rebase`/`merge origin/dev` и после конфликта — `make verify-scope` перед push/PR.
+(Полный `make verify-scope` на `dev` — по запросу или CI; не часть цикла агента на task-ветке.)
+
+**Parallel dev:** после `rebase`/`merge origin/dev` и после конфликта — commit в task-ветке; **не** запускать `make verify-scope` до финального [`dnd-mud-review`](../skills/dnd-mud-review/SKILL.md).
 
 ```bash
-git fetch origin && git rebase origin/dev && make verify-scope
-# конфликт: git add <files> && git rebase --continue && make verify-scope
+git fetch origin && git rebase origin/dev
+# конфликт: git add <files> && git rebase --continue
 # push после rebase на remote: --force-with-lease (только своя ветка)
 ```
 
@@ -41,23 +43,90 @@ git fetch origin && git rebase origin/dev && make verify-scope
 | `git rebase origin/dev` | По умолчанию |
 | `git merge origin/dev` | Ветка расшарена; force-push — согласовать |
 
-### Несколько веток по плану
+### Несколько веток по плану (Plan / Agent)
 
-План (Cursor Plan, Agent, `.plan.md`, split-to-PRs) с **несколькими ветками**:
+**Обязательно**, если план (Cursor Plan, `.plan.md`, Agent-loop, split-to-PRs) перечисляет **N отдельных PR / фаз / подзадач** — создать **не меньше N part-веток** (по одной на каждый PR), а не реализовывать весь план на одной ветке.
 
-| Роль | Ветка |
-|------|-------|
-| Интеграционная | `feat/<slug>` — git-старт |
-| Вспомогательные | `feat/<slug>-<part>` |
+**`main` и `dev` не трогать** в ходе задачи: только task-ветки от `origin/dev`.
 
-**До** docs / commit / verify / PR — слить вспомогательные в интеграционную. Задача не завершена, пока всё в одной ветке.
+| Роль | Ветка | Когда |
+|------|-------|-------|
+| Интеграционная | `feat/<slug>` | git-старт задачи (slug из плана или темы) |
+| Один PR плана | имя из плана или `feat/<slug>-<part>` | **каждый** `### PR-N` / фаза / delivery unit |
+
+#### Шаг 0 — инвентаризация веток (до первой правки кода)
+
+Перед реализацией агент **обязан**:
+
+1. Прочитать план и составить **таблицу веток**: PR-N → имя ветки → scope (файлы/цель).
+2. Имена — из заголовков плана, напр. `### PR-1: \`chore/docs-tooling-sync\`` → ветка `chore/docs-tooling-sync`.
+3. Если имя в плане нет — `feat/<slug>-<kebab-part>` (напр. `feat/full-refactor-phase1-foundation`).
+4. Зафиксировать **ожидаемое число** part-веток `N` (все `### PR-*`, включая optional, если они в плане как отдельные PR).
+5. Создать интеграционную `feat/<slug>`; **не** начинать код на `dev` / одной «общей» ветке вместо N part-веток.
+
+Пример (план «17 PR»): `N = 17` → 17 part-веток + 1 интеграционная, а не `feat/refactor-phase1-foundation` со всем diff.
+
+#### Алгоритм реализации
+
+1. **Git-старт** — `git fetch origin`, sync `main`/`dev`, **`git checkout -b feat/<slug>`** от `dev`.
+2. **На каждый PR плана** (строго по порядку плана, если есть зависимости):
+   ```bash
+   git checkout feat/<slug>
+   git checkout -b <branch-from-plan>   # напр. chore/docs-tooling-sync
+   ```
+   - Реализация **только** scope этого PR.
+   - **Commit** (≥1) на part-ветке.
+   - **Запрещено** переходить к PR-(N+1), пока PR-N не закоммичен на своей ветке.
+3. **После всех N part-веток** — слить каждую в интеграционную (**до** docs финализации / review / PR).
+   **Merge и удаление — атомарная пара:** сразу после успешного `--no-ff` merge part-ветка **удаляется** (`git branch -d`). Слитая part-ветка без префикса `merged/` не остаётся.
+   ```bash
+   TASK=feat/<slug>
+   git fetch origin
+   git checkout "${TASK}" && git rebase origin/dev
+   for PART in chore/docs-tooling-sync refactor/save-migrations ...; do
+     git merge --no-ff "${PART}" -m "merge(${PART}): into ${TASK}"
+     git branch -d "${PART}"    # ОБЯЗАТЕЛЬНО: сразу после успешного merge
+   done
+   make branch-cleanup CLEANUP_BASE="${TASK}"   # резерв: удалить все слитые в ${TASK} part-ветки одной командой
+   ```
+4. **Финализация** — только на **`feat/<slug>`**: docs-after-task → commit → review → push/PR → `merged/…`.
+
+#### Проверка перед «задача завершена»
+
+```bash
+# Ожидаемое N — из таблицы шага 0; part-ветки уже слиты, но reflog/merge commits видны:
+git log --oneline feat/<slug> | head -20
+git branch --list 'feat/*' 'chore/*' 'refactor/*' 'fix/*'   # незаархивированные part-ветки
+```
+
+**Чистка part-веток** (после merge всех part в `feat/<slug>`; при финализации — после rename в `merged/*`): `make branch-cleanup` — `git branch -d` всех веток, слитых в `CLEANUP_BASE` (по умолчанию `dev`; в контексте §2b, до merge в `dev` — `CLEANUP_BASE=feat/<slug>`); `merged/*`, `main`, `dev` не трогает. Не оставлять слитые part-ветки без префикса `merged/`.
+
+| Критерий | OK | Нарушение (стоп) |
+|----------|-----|------------------|
+| Part-веток создано и закоммичено | ≥ N (по плану) | Вся работа на 1 ветке при плане с N PR |
+| Слияние в `feat/<slug>` | все part слиты `--no-ff` | review/PR с незакрытых part-веток |
+| Текущая ветка для review/PR | `feat/<slug>` | part-ветка, `main`, `dev` |
+| Commits на part-ветках | есть до merge | один большой uncommitted diff |
+| Слитые part-ветки после задачи | удалены (`make branch-cleanup`) | остались `feat/*`/`refactor/*` без `merged/` |
+
+Задача **не завершена**, пока: (a) не созданы все N part-веток по плану; (b) не слиты в `feat/<slug>`; (c) review не на интеграционной.
+
+| Запрещено | Разрешено |
+|-----------|-----------|
+| План на 17 PR → 1 ветка + весь diff | 17 part-веток → merge → `feat/<slug>` |
+| Правки/коммиты на `main`, `dev` | `feat/<slug>`, part-ветки из плана |
+| «Сделаю всё, потом разобью на ветки» | Ветка + commit **перед** следующим PR |
+| Пропуск `git checkout -b` между PR плана | Одна `feat/<slug>`, если план **явно** одноветочный (1 PR) |
+
+**Одноветочный план** (один PR, без списка `### PR-1…N`) — достаточно одной `feat/<slug>`.
+
+Устаревший пример merge (одна part-ветка):
 
 ```bash
 TASK=feat/my-task
 git fetch origin
 git checkout "${TASK}" && git rebase origin/dev
-git merge --no-ff "feat/my-task-a"   # для каждой вспомогательной
-make verify-scope
+git merge --no-ff "feat/my-task-a"
 git push -u origin "${TASK}"         # после rebase: --force-with-lease
 git push origin --delete feat/my-task-a
 ```
@@ -76,13 +145,7 @@ git push origin --delete feat/my-task-a
 
 ### PR task → `dev` (по запросу)
 
-Триггеры: «сделай PR», `gh pr create --base dev` на task-ветке. Procedure: [`user-protocols.mdc`](~/.cursor/rules/user-protocols.mdc) §PR procedure.
-
-```bash
-git fetch origin && git rebase origin/dev && make verify-scope
-git push -u origin HEAD   # после rebase: --force-with-lease
-gh pr create --base dev --title "feat: …"
-```
+Триггеры: «сделай PR», push task → `dev`. **Policy** — ниже; **процедура** — skill [`dnd-mud-git-pr`](../skills/dnd-mud-git-pr/SKILL.md).
 
 **Rename (обязательно):** только **после squash merge** в `dev` — см. §Ветки `merged/*`. Локально: task → `merged/<исходное-имя>`; remote task-ветку удалить.
 
@@ -96,32 +159,55 @@ gh pr create --base dev --title "feat: …"
 | В работе / PR открыт | `feat/character-stats-menu` |
 | Завершена (локально) | `merged/feat/character-stats-menu` |
 
-```bash
-TASK=feat/my-task
-MERGED=merged/feat/my-task
-git fetch origin
-git checkout dev && git pull origin dev
-git push origin --delete "${TASK}" 2>/dev/null || true
-if git show-ref --verify --quiet "refs/heads/${TASK}"; then
-  git branch -m "${TASK}" "${MERGED}"
-  git branch --unset-upstream "${MERGED}" 2>/dev/null || true
-fi
-git fetch origin --prune
-```
-
 `main` и `dev` не переименовывать. Префикс `merged/` не дублировать.
 
 Release `dev` → `main`: skill [`dnd-mud-release`](../skills/dnd-mud-release/SKILL.md). Sync `dev`←`main`: [`git-dev-main-sync.md`](~/.cursor/docs/git-dev-main-sync.md).
 
 ## Verify / review (policy)
 
-Команды verify — skill [`dnd-mud-verify`](../skills/dnd-mud-verify/SKILL.md). Skills-цепочка — [`AGENTS.md`](../AGENTS.md) §Skills.
+**Канон политики** — этот раздел. Команды — [`dnd-mud-verify/reference.md`](../skills/dnd-mud-verify/reference.md). Процедуры — skills в [`.cursor/skills/`](../skills/README.md).
 
-**Review обязателен** один раз в конце task-ветки (skill [`dnd-mud-review`](../skills/dnd-mud-review/SKILL.md)), после verify, до push/PR. Bugbot subagent — только **full**. GitHub PR Bugbot — **нет**.
+| Skill | Процедура |
+|-------|-----------|
+| [`dnd-mud-docs-after-task`](../skills/dnd-mud-docs-after-task/SKILL.md) | docs + commit финализации |
+| [`dnd-mud-review`](../skills/dnd-mud-review/SKILL.md) | verify-scope + light/full review (**один раз**) |
+| [`dnd-mud-fix-plan`](../skills/dnd-mud-fix-plan/SKILL.md) | план после Blocker/Major |
+| [`dnd-mud-git-pr`](../skills/dnd-mud-git-pr/SKILL.md) | push / PR / rename `merged/*` |
+
+### На task-ветке (агент)
+
+| Разрешено | Запрещено агенту вручную |
+|-----------|---------------------------|
+| `make verify-changed` — **только** через pre-commit при commit | `make test`, `make test-fast`, `make check`, `make verify`, `make verify-scope` |
+| Промежуточные commits подзадач | Повторный `dnd-mud-review` без Blocker-fix |
+| | `pytest` на всём suite «для проверки» между подзадачами |
+
+### Конец task-ветки (один раз)
+
+После всех подзадач, [`dnd-mud-docs-after-task`](../skills/dnd-mud-docs-after-task/SKILL.md) и commit финализации — skill [`dnd-mud-review`](../skills/dnd-mud-review/SKILL.md) **до** push/PR:
+
+1. `make verify-scope` (+ smoke `python main.py` при UI в diff) — если diff затрагивает код/данные
+2. light или full readonly review diff vs `origin/dev`
+
+**Не выполнять** между подзадачами, после каждого commit, в середине docs-only правок.
+
+### Пропуск verify-scope
+
+Если diff **только** `docs/`, `.cursor/rules`, `AGENTS.md`, workflows — без `core/`, `database/`, `mods/`, `ui/`, `main.py`, `tests/`: шаг verify в review **пропустить**. Review для таких задач — опционален.
+
+### Повторный review
+
+| Ситуация | Действие |
+|----------|----------|
+| Blocker после review | fix → commits (`verify-changed` only) → **light re-check** (без повторного `verify-scope`, если fix точечный) — §Light re-check в review skill |
+| Повторный full bugbot | Только по явному запросу пользователя |
+| Push/PR без review | Только по явному запросу пользователя |
+
+**Review обязателен** один раз на task-ветку с кодом/данными. Bugbot subagent — только **full**. GitHub PR Bugbot — **нет**.
 
 **Cursor IDE:** Agent Review on Commit — OFF; Submodules / Untracked — OFF; Default Approach — Quick.
 
-Verify ≠ review. Runtime не нужен для docs-only / rules-only.
+Verify ≠ review. Полный pytest/lint на PR — CI ([`ci.yml`](../.github/workflows/ci.yml)).
 
 ## Динамические метрики
 

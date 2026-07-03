@@ -9,9 +9,7 @@ from core.classes import (
     iter_class_grants,
     load_class_full,
 )
-from core.grants import grants_from_entity, inherit_flags
 from core.io import merge_unique
-from core.races import collect_race_grants, get_race_and_subrace
 
 PHB_SKILL_IDS: tuple[str, ...] = skill_ids()
 
@@ -97,26 +95,15 @@ def get_fixed_racial_proficiencies_with_source(
     race_id: str, subrace_id: str | None = None
 ) -> list[tuple[str, str]]:
     """Фиксированные расовые владения: (skill_id, race|subrace)."""
-    race_info, subrace_info = get_race_and_subrace(race_id, subrace_id)
-    if not race_info:
+    from core.races import get_race_and_subrace, iter_race_grants_by_source
+
+    if not get_race_and_subrace(race_id, subrace_id)[0]:
         return []
 
     result: list[tuple[str, str]] = []
     seen: set[str] = set()
-
-    if subrace_info:
-        _, inherit_grants = inherit_flags(subrace_info)
-        if inherit_grants:
-            _collect_fixed_from_grants(
-                grants_from_entity(race_info), "race", seen, result
-            )
-        _collect_fixed_from_grants(
-            grants_from_entity(subrace_info), "subrace", seen, result
-        )
-    else:
-        _collect_fixed_from_grants(
-            collect_race_grants(race_id, subrace_id), "race", seen, result
-        )
+    for grants, source in iter_race_grants_by_source(race_id, subrace_id):
+        _collect_fixed_from_grants(grants, source, seen, result)
     return result
 
 
@@ -136,8 +123,9 @@ def get_race_skill_choices_with_source(
     race_id: str, subrace_id: str | None = None
 ) -> list[tuple[dict[str, Any], str]]:
     """Выборные расовые владения: (mechanics, race|subrace)."""
-    race_info, subrace_info = get_race_and_subrace(race_id, subrace_id)
-    if not race_info:
+    from core.races import get_race_and_subrace, iter_race_grants_by_source
+
+    if not get_race_and_subrace(race_id, subrace_id)[0]:
         return []
 
     result: list[tuple[dict[str, Any], str]] = []
@@ -153,13 +141,8 @@ def get_race_skill_choices_with_source(
                 continue
             result.append((mechanics, source))
 
-    if subrace_info:
-        _, inherit_grants = inherit_flags(subrace_info)
-        if inherit_grants:
-            scan(grants_from_entity(race_info), "race")
-        scan(grants_from_entity(subrace_info), "subrace")
-    else:
-        scan(collect_race_grants(race_id, subrace_id), "race")
+    for grants, source in iter_race_grants_by_source(race_id, subrace_id):
+        scan(grants, source)
     return result
 
 

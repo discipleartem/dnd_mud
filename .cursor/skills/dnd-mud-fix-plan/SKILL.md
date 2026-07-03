@@ -2,14 +2,14 @@
 name: dnd-mud-fix-plan
 description: >-
   Readonly план исправлений по findings из dnd-mud-review: приоритет, файлы,
-  границы коммитов, verify. Запуск после review при Major/Blocker или по запросу
-  (/dnd-mud-fix-plan). Не правит код и не коммитит.
+  границы коммитов. Запуск после Blocker/Major или по запросу. Не правит код
+  и не коммитит.
 disable-model-invocation: true
 ---
 
 # dnd_mud — fix plan (план исправлений после review)
 
-Канон-политика: [`AGENTS.md`](../../AGENTS.md) · [`dnd-mud-workflow.mdc`](../../rules/dnd-mud-workflow.mdc) · после [`dnd-mud-review`](../dnd-mud-review/SKILL.md).
+Канон: [`AGENTS.md`](../../AGENTS.md) · [`dnd-mud-workflow.mdc`](../../rules/dnd-mud-workflow.mdc) §Verify / review · после [`dnd-mud-review`](../dnd-mud-review/SKILL.md).
 
 **Fix plan** — readonly: структурированный план **без** правок кода, commit и push.  
 Реализация — в Agent mode по запросу пользователя («исправь по плану», «исправь blockers»).
@@ -33,7 +33,7 @@ disable-model-invocation: true
 
 ## Входные данные
 
-1. Таблицы findings из review: **основная** (Blocker/Major/Minor) и **Nit (опционально)** — см. [`dnd-mud-review`](../dnd-mud-review/SKILL.md) §Формат ответа
+1. Таблицы findings — [template-findings.md](../dnd-mud-review/template-findings.md)
 2. Имя ветки (`git branch --show-current`)
 3. Base branch review (`dev` по умолчанию)
 
@@ -49,12 +49,12 @@ disable-model-invocation: true
 3. Для каждого пункта must/optional указать:
    - файл(ы) и суть правки (1–2 предложения)
    - предлагаемый commit message (Conventional Commits, **why**)
-   - verify после пункта: `make verify-changed`; после блока must-fix: `make verify-scope`
+   - verify после пункта: pre-commit `verify-changed` only (policy — workflow §На task-ветке)
 4. Границы коммитов: atomic; не смешивать unrelated (код vs docs vs `.cursor/`).
 5. Финальный блок **After fixes**:
-   - verify один раз в конце блока must-fix
-   - **light re-check** по [`dnd-mud-review`](../dnd-mud-review/SKILL.md) §Light re-check — **только** если были Blocker; full bugbot — по запросу пользователя
-   - push/PR — по запросу пользователя
+   - **light re-check** — [`dnd-mud-review`](../dnd-mud-review/SKILL.md) §Light re-check
+   - повторный full `verify-scope` / bugbot — только по запросу
+   - push/PR — [`dnd-mud-git-pr`](../dnd-mud-git-pr/SKILL.md) по запросу
 6. **Не** править код, **не** `git commit`, **не** push.
 
 ## Формат выхода
@@ -78,18 +78,11 @@ disable-model-invocation: true
 - [Nit] `<location>` — …
 
 ### After fixes
-- [ ] verify-scope (…); full test — CI на PR
-- [ ] light re-check (dnd-mud-review) — только при Blocker в must-fix; full bugbot — по запросу
-- [ ] push/PR — по запросу
+- [ ] light re-check ([`dnd-mud-review`](../dnd-mud-review/SKILL.md) §Light re-check) — при Blocker в must-fix
+- [ ] push/PR — по запросу; полный pytest — CI на PR
 ```
 
 Язык: русский; пути и идентификаторы — English.
-
-## Связь с Agent-loop
-
-Канон: [`AGENTS.md`](../../AGENTS.md) §Agent-loop — ветка `[fix-plan?]` после review.
-
-После выдачи плана — ждать явного запроса на реализацию.
 
 ## Plan Mode (опционально)
 

@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://dnd-mud.local/schema/v1/scenario_node.json",
+  "title": "ScenarioNode",
+  "type": "object",
+  "properties": {
+    "description": {
+      "oneOf": [{ "type": "object" }, { "type": "string" }]
+    },
+    "choices": {
+      "type": "array",
+      "items": { "type": "object" }
+    },
+    "action": { "type": "string" },
+    "next": { "type": ["string", "null"] },
+    "exits": {
+      "type": "object",
+      "additionalProperties": { "type": "string" }
+    },
+    "items": {
+      "type": "array",
+      "items": { "type": "object" }
+    }
+  },
+  "additionalProperties": true
+}

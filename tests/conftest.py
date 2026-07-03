@@ -61,6 +61,15 @@ def human_race_with_subraces() -> dict[str, Any]:
     return {
         "name": "Человек",
         "description": "Описание человека",
+        "grants": [
+            {
+                "type": "language",
+                "count": 1,
+                "choice": True,
+                "pool": "common",
+                "name": "Дополнительный язык",
+            }
+        ],
         "subraces": {
             "standard": {
                 "name": "Человек (стандарт)",
@@ -70,7 +79,7 @@ def human_race_with_subraces() -> dict[str, Any]:
             "variant_human": {
                 "name": "Человек (вариант)",
                 "description": "Вариант человека",
-                "inherit": {"ability_bonuses": False, "grants": False},
+                "inherit": {"ability_bonuses": False},
                 "grants": [],
             },
         },
@@ -112,14 +121,31 @@ def patch_int_input():
 
 
 @pytest.fixture
+def patch_press_enter(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Заглушка _press_enter для UI smoke-тестов."""
+    from ui.menus import _common
+
+    monkeypatch.setattr(_common, "_press_enter", lambda strings: None)
+
+
+@pytest.fixture
+def minimal_character() -> Any:
+    """Минимальный сохранённый персонаж для hub-тестов."""
+    from tests.creation_helpers import minimal_character as _minimal
+
+    return _minimal()
+
+
+@pytest.fixture
 def fighter_l3() -> Any:
     """Боец 3 уровня для progression/level-up."""
     from core.models import Character
+    from core.types import CharacterClass
 
     return Character(
         name="Hero",
         race="human",
-        class_id="fighter",
+        class_id=CharacterClass.FIGHTER,
         level=3,
         stats={"constitution": 14, "strength": 16},
         current_hp=28,
@@ -133,11 +159,12 @@ def fighter_l3() -> Any:
 def fighter_l1_hardcore() -> Any:
     """Боец 1 уровня HardCore."""
     from core.models import Character
+    from core.types import CharacterClass
 
     return Character(
         name="Hero",
         race="human",
-        class_id="fighter",
+        class_id=CharacterClass.FIGHTER,
         level=1,
         stats={"constitution": 14},
         current_hp=7,

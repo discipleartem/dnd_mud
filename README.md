@@ -143,12 +143,14 @@ dnd_mud/
 │   └── test_settings.py
 │
 └── docs/                            # Документация
+    ├── README.md                    # Индекс документации
     ├── DATA_SCHEMA.md               # Схема YAML (grants, subraces, mods)
-    ├── DND_RULES.md                 # Правила D&D 5e (справочник по PHB)
-    ├── rules/                       # Главы справочника
+    ├── DND_RULES.md                 # Правила D&D 5e (оглавление PHB)
+    ├── rules/                       # Справочник PHB (layout agent-v2)
     ├── MUD_PRD.md                   # Product Requirements Document
     ├── ARCHITECTURE.md              # Архитектура проекта
     ├── API.md                       # API Reference
+    ├── BACKLOG.md                   # Backlog
     ├── DEVELOPMENT.md               # Руководство разработчика
     └── CHANGELOG.md                 # История изменений
 ```

@@ -4,9 +4,9 @@ from pathlib import Path
 from typing import Any, Literal
 
 from core.catalog_loader import load_catalog
-from core.grants import grants_from_entity, grants_of_type, inherit_flags
+from core.grants import grants_of_type
 from core.localization import resolve_localized_text
-from core.races import collect_race_grants, get_race_and_subrace
+from core.races import get_race_and_subrace, iter_race_grants_by_source
 
 LANGUAGES_FILE = Path("database/core/languages.yaml")
 LanguagePool = Literal["common", "exotic", "any"]
@@ -74,9 +74,7 @@ def get_racial_language_choices(
 ) -> list[tuple[dict[str, Any], str]]:
     """Выборные языки из grants: (grant, source)."""
     choices: list[tuple[dict[str, Any], str]] = []
-    race_info, subrace_info = get_race_and_subrace(race_id, subrace_id)
-
-    if not race_info:
+    if not get_race_and_subrace(race_id, subrace_id)[0]:
         return []
 
     def scan(grants: list[dict[str, Any]], source: str) -> None:
@@ -84,13 +82,8 @@ def get_racial_language_choices(
             if grant.get("choice"):
                 choices.append((grant, source))
 
-    if subrace_info:
-        _, inherit_grants = inherit_flags(subrace_info)
-        if inherit_grants:
-            scan(grants_from_entity(race_info), "race")
-        scan(grants_from_entity(subrace_info), "subrace")
-    else:
-        scan(collect_race_grants(race_id, subrace_id), "race")
+    for grants, source in iter_race_grants_by_source(race_id, subrace_id):
+        scan(grants, source)
     return choices
 
 

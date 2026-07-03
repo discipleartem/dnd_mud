@@ -1,8 +1,8 @@
 """Сборка владений и грантов персонажа из источников создания."""
 
-from dataclasses import dataclass
 from typing import Any
 
+from core.grants_context import CreationContext, ResolvedGrants
 from core.io import merge_unique
 from core.proficiencies import (
     get_background_tool_proficiencies,
@@ -15,15 +15,33 @@ from core.proficiencies import (
 from core.skills import apply_racial_proficiencies
 
 
-@dataclass(frozen=True)
-class ResolvedGrants:
-    """Агрегированные владения и гранты персонажа."""
-
-    weapon_tokens: tuple[str, ...]
-    armor_tokens: tuple[str, ...]
-    tool_tokens: tuple[str, ...]
-    skill_ids: tuple[str, ...]
-    language_ids: tuple[str, ...]
+def resolve_grants_for_context(
+    ctx: CreationContext,
+    *,
+    include_feat_languages: bool = True,
+) -> ResolvedGrants:
+    """Собрать владения по контексту создания персонажа."""
+    return resolve_creation_grants(
+        ctx.race_id,
+        ctx.subrace_id,
+        ctx.class_id,
+        ctx.background_id,
+        ctx.subclass_id,
+        ctx.level,
+        feat_ids=list(ctx.feat_ids) if ctx.feat_ids else None,
+        feat_choices=ctx.feat_choices,
+        extra_skills=list(ctx.extra_skills) if ctx.extra_skills else None,
+        extra_weapon_tokens=(
+            list(ctx.extra_weapon_tokens) if ctx.extra_weapon_tokens else None
+        ),
+        extra_tool_tokens=(
+            list(ctx.extra_tool_tokens) if ctx.extra_tool_tokens else None
+        ),
+        extra_languages=(
+            list(ctx.extra_languages) if ctx.extra_languages else None
+        ),
+        include_feat_languages=include_feat_languages,
+    )
 
 
 def resolve_creation_grants(
@@ -44,6 +62,7 @@ def resolve_creation_grants(
 ) -> ResolvedGrants:
     """Собрать владения из расы, класса, предыстории, подкласса и черт."""
     from core.backgrounds import get_background_skills
+    from core.proficiencies.proficiency_checks import get_class_saving_throws
 
     skills = list(apply_racial_proficiencies(race_id, subrace_id))
     if background_id:
@@ -76,12 +95,21 @@ def resolve_creation_grants(
             languages, feat_ids, feat_choices
         )
 
+    save_ids = list(get_class_saving_throws(class_id))
+    if feat_ids:
+        from core.feats.feat_apply import get_feat_save_proficiencies
+
+        for save_id in get_feat_save_proficiencies(feat_ids, feat_choices):
+            if save_id not in save_ids:
+                save_ids.append(save_id)
+
     return ResolvedGrants(
         weapon_tokens=tuple(weapons),
         armor_tokens=tuple(armors),
         tool_tokens=tuple(tools),
         skill_ids=tuple(skills),
         language_ids=tuple(languages),
+        save_ids=tuple(save_ids),
     )
 
 
@@ -114,3 +142,13 @@ def merge_expertise_with_feats(
         list(skill_expertise) if skill_expertise else [],
         feat_expertise,
     )
+
+
+__all__ = [
+    "CreationContext",
+    "ResolvedGrants",
+    "merge_expertise_with_feats",
+    "merge_languages_with_feats",
+    "resolve_creation_grants",
+    "resolve_grants_for_context",
+]

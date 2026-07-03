@@ -11,12 +11,16 @@ from core.models import Adventure, Character
 from core.progression import (
     apply_experience,
     grant_experience,
+    has_pending_level_up,
     hp_gain_breakdown_for_level_up,
     hp_gain_for_level,
     level_from_xp,
     max_hp_for_level,
     resolve_pending_level_ups,
+    xp_covers_level,
+    xp_for_level,
 )
+from core.types import CharacterClass
 from ui.menus import level_up as level_up_menu
 from ui.menus.scenario_flow import run_scenario
 
@@ -28,6 +32,30 @@ def test_character_level_cap_and_xp() -> None:
     assert clamp_level(15) == 10
     assert level_from_xp(900) == 3
     assert level_from_xp(999_999) == 10
+    assert xp_for_level(1) == 0
+    assert xp_for_level(3) == 900
+    assert xp_for_level(10) == 64000
+    assert xp_for_level(15) == 64000
+    assert xp_covers_level(1500, 3)
+    assert not xp_covers_level(899, 3)
+
+
+def test_level_up_preserves_excess_xp(
+    monkeypatch: pytest.MonkeyPatch,
+    fighter_l1_hardcore: Character,
+) -> None:
+    """Левелап не обрезает опыт до порога уровня."""
+    monkeypatch.setattr(
+        "core.progression.hp_gain.roll",
+        lambda count, sides, modifier=0: 8 + modifier,
+    )
+    char = grant_experience(fighter_l1_hardcore, 1500)
+    assert level_from_xp(char.experience) == 3
+    updated = resolve_pending_level_ups(char)
+    assert updated.level == 3
+    assert updated.experience == 1500
+    assert xp_covers_level(updated.experience, updated.level)
+    assert not has_pending_level_up(updated)
 
 
 def test_max_hp_for_level_with_bonuses() -> None:
@@ -57,7 +85,8 @@ def test_hp_gain_hardcore_floors_class_part_to_one(
 ) -> None:
     """HardCore: прирост от кости + CON не опускается ниже 1."""
     monkeypatch.setattr(
-        "core.progression.roll", lambda count, sides, modifier=0: 1 + modifier
+        "core.progression.hp_gain.roll",
+        lambda count, sides, modifier=0: 1 + modifier,
     )
     stats = {"constitution": 8}  # модификатор −1
     gain = hp_gain_for_level(2, 6, -1, "hardcore")
@@ -78,7 +107,7 @@ def test_resolve_pending_level_ups_matches_apply_experience(
     def patch_rolls(values: list[int]) -> None:
         rolls = iter(values)
         monkeypatch.setattr(
-            "core.progression.roll",
+            "core.progression.hp_gain.roll",
             lambda count, sides, modifier=0: next(rolls) + modifier,
         )
 
@@ -96,7 +125,7 @@ def test_resolve_pending_level_ups_records_asi_and_feat(
     char = Character(
         name="Hero",
         race="human",
-        class_id="fighter",
+        class_id=CharacterClass.FIGHTER,
         level=3,
         stats={"strength": 16, "constitution": 14},
         current_hp=28,
@@ -107,7 +136,8 @@ def test_resolve_pending_level_ups_records_asi_and_feat(
         feat_choices={},
     )
     monkeypatch.setattr(
-        "core.progression.roll", lambda count, sides, modifier=0: 8 + modifier
+        "core.progression.hp_gain.roll",
+        lambda count, sides, modifier=0: 8 + modifier,
     )
     updated = resolve_pending_level_ups(char)
     assert updated.level == 4
@@ -147,13 +177,13 @@ def test_run_scenario_grant_xp_levels_character(
 ) -> None:
     rolls = iter([8, 3])
     monkeypatch.setattr(
-        "core.progression.roll",
+        "core.progression.hp_gain.roll",
         lambda count, sides, modifier=0: next(rolls) + modifier,
     )
     character = Character(
         name="Hero",
         race="human",
-        class_id="fighter",
+        class_id=CharacterClass.FIGHTER,
         level=1,
         stats={"constitution": 14},
         current_hp=12,
@@ -178,4 +208,4 @@ def test_run_scenario_grant_xp_levels_character(
     patch_int_input(monkeypatch, [1, 1])
     result = run_scenario(adventure, character, ru_strings, "ru")
     assert result.level == 3
-    assert result.experience == 900
+    assert result.experience >= xp_for_level(3)

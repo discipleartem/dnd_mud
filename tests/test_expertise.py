@@ -1,13 +1,14 @@
 """Тесты компетентности (экспертизы) при создании."""
 
-from core.expertise import (
+from core.models import Character
+from core.progression.expertise import (
     ExpertiseGrant,
     expertise_step_required,
     get_expertise_grants,
     pending_expertise_grants,
     validate_expertise_selection,
 )
-from core.models import Character
+from core.types import CharacterClass
 
 
 def test_rogue_and_bard_expertise_grants() -> None:
@@ -22,7 +23,7 @@ def test_bard_expertise_pending_at_level_three() -> None:
     char = Character(
         name="Hero",
         race="elf",
-        class_id="bard",
+        class_id=CharacterClass.BARD,
         level=3,
         subclass_id="lore_college",
         skills=["arcana", "history", "performance"],

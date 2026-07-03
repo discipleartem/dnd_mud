@@ -1,57 +1,23 @@
 ---
 name: dnd-mud-verify
 description: >-
-  Runs dnd_mud verification (verify-changed / verify-scope / full via CI).
-  Use after subtasks, at end of task branch, before push/PR, or when asked.
+  Справочник команд verify (changed / scope / full). Политика — dnd-mud-workflow
+  §Verify/review. Агент на task-ветке не вызывает scope/full вручную. Читать
+  reference.md при явном запросе пользователя, release или контексте команд.
 disable-model-invocation: true
 ---
 
-# dnd_mud — verify
+# dnd_mud — verify (справочник)
 
-Канон: [`AGENTS.md`](../AGENTS.md) · skill [`dnd-mud-verify`](../../skills/dnd-mud-verify/SKILL.md). Policy: [`dnd-mud-workflow.mdc`](../../rules/dnd-mud-workflow.mdc) §Verify / review.
+Политика: [`dnd-mud-workflow.mdc`](../../rules/dnd-mud-workflow.mdc) §Verify / review.
 
-## Три уровня verify
+## Когда читать reference
 
-| Уровень | Когда | Команда |
-|---------|-------|---------|
-| **changed** | После подзадачи, pre-commit | `make verify-changed` |
-| **scope** | Конец task-ветки, после rebase/merge | `make verify-scope` |
-| **full** | CI на PR; опционально локально | `make verify` (= `make check` + `make test`) |
+| Ситуация | Действие |
+|----------|----------|
+| Подзадача / commit на task-ветке | **Не вызывать.** Pre-commit → `make verify-changed` |
+| Конец task-ветки | Процедура в [`dnd-mud-review`](../dnd-mud-review/SKILL.md) |
+| Пользователь явно просит `make test` / `make verify` | Команды — [reference.md](reference.md) |
+| Release `dev`→`main` | [`dnd-mud-release`](../dnd-mud-release/SKILL.md) + [reference.md](reference.md) |
 
-Маппинг changed/scope → pytest/lint: [`scripts/verify_targets.py`](../../scripts/verify_targets.py).
-
-## Когда выполнять
-
-- **Подзадача:** `make verify-changed` после правок (или полагается на pre-commit).
-- **Конец task-ветки:** один раз **после** docs и commit финализации (skill `dnd-mud-docs-after-task`), **перед** review — `make verify-scope`.
-- **Full локально** — по желанию перед push; **обязателен** в CI ([`.github/workflows/ci.yml`](../../.github/workflows/ci.yml)) на PR в `dev` / `main`.
-
-## Предусловия
-
-- [ ] git-старт был в начале сессии ([`dnd-mud-workflow.mdc`](../../rules/dnd-mud-workflow.mdc) §Git)
-- [ ] Реализация завершена; skill `dnd-mud-docs-after-task` выполнен (docs + commit финализации)
-
-## Команды (из `.venv`)
-
-```bash
-source .venv/bin/activate
-which python   # must point to .venv/bin/python
-```
-
-| Условие | Команда |
-|---------|---------|
-| Подзадача (staged .py) | `make verify-changed` |
-| Конец задачи (diff `origin/dev...HEAD`) | `make verify-scope` |
-| Затронут UI (`ui/`, меню) | `python main.py` — smoke затронутого меню |
-| Полный прогон (CI / вручную) | `make verify` |
-| Быстрый pytest локально | `make test-fast` |
-
-**Пропустить runtime**, если только docs, `.cursor/`, `AGENTS.md`, workflows — без изменений кода.
-
-Число тестов в отчётах — только из `pytest --collect-only -q`, не из docs.
-
-## Чеклист Before finishing
-
-- [ ] `make verify-scope` прошёл (если был код)
-- [ ] Smoke пройден (если UI)
-- [ ] Перейти к skill [`dnd-mud-review`](../dnd-mud-review/SKILL.md) — review **не** заменяет CI full test
+Команды и таблицы уровней: **[reference.md](reference.md)**.

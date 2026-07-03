@@ -2,16 +2,71 @@
 
 ## [Unreleased]
 
+### Breaking
+- **Сейвы:** удалены runtime-миграции (`core/save_migration.py`); требуется канонический формат v1 (`class_id`, `race`, `schema_version: 1`); ключ `"class"`, `race_id`, `equip_logic_version` не поддерживаются
+
+### Added
+- **Structural refactor:** docs sync, layer hygiene (`get_enabled_mod_ids`, session/inventory facades), `progression/` split, `_display` consolidation, `InventoryItem` typing, unified `_deps`
+- **Mod system:** `requires`/`conflicts` в manifest, overlay `delete`/`replace_entity`, mods в меню настроек
+- **Phase 2 scaffold:** `ability_check` в сценариях, `exits`/комнаты, `core/combat/` (initiative, attack roll), `scenario_node.json`
+- **Полный рефакторинг (фазы 1–5):** пакет `core/inventory/`, presentation в `ui/menus/_display/_inventory.py`, `CharacterClass` StrEnum, deps policy для оркестраторов
+- **Mod infra:** `requires_game_difficulty` в `mod_loader` (runtime gating через `set_mod_gating_difficulty`), `reload_catalogs()`, меню «Модификации»
+- **Game engine:** `core/game_engine.py`, `GameSession`, decouple `scenario_flow` → `run_scenario_with_engine`
+- **Phase 2 hooks:** `apply_progression_grants_at_level`, `feat_is_active` / `active_feat_ids`, `ability_check` / `skill_check` / `passive_skill`
+- **Load game:** сессии в `saves/sessions/`, flow `ui/menus/load_game.py`; resume сохраняет `current_node_id`
+- **Scenario:** сообщения результата `skill_check` в UI
+- **Terminal wrap:** `ui/terminal_wrap.py` (описания сценариев)
+- Agent skills: `dnd-mud-git-pr` (push/PR/rename `merged/*`); reference files (`dnd-mud-verify/reference.md`, `dnd-mud-review/checklist-full.md`, `template-findings.md`); индекс [`.cursor/skills/README.md`](../.cursor/skills/README.md)
+- **Модификаторы характеристик:** `ability_modifier()` из таблицы PHB в `constants.yaml` (clamp 1–30); константы `ABILITY_SCORE_MIN` / `DEFAULT` / `MAX` для валидации PC (1–20)
+- **UI грантов:** описания spellcasting, skill_proficiency, immunity, disadvantage, cantrip, advantage+terrain в меню создания
+- **Dual wielder:** авто-экипировка второй руки без «лёгкое» при черте; +1 КД при двух рукопашных (`core/inventory.py`, `core/feat_apply.py`)
+
+### Fixed
+- **Import cycle:** lazy-imports в `core/races`, `core/skills`, `core.progression` — `core.races` загружается без инициализации всего пакета progression (изолированный `pytest tests/test_catalog_loader.py`)
+- **Load game:** resume не сбрасывает `current_node_id` на `start_node` (`GameEngine.load_scenario`)
+- **Mod gating:** `load_catalog()` учитывает `set_mod_gating_difficulty` в игровых flow
+
+### Changed
+- **Паттерны (DRY):** `CreationContext` / `grants_context`; split `character_build`, `character_migrate`, CRUD в `character_storage`; `resolve_grants_for_context`; UI `_print_numbered_row`, `_PENDING_UI_HANDLERS` в `scenario_flow`; test fixtures `flat_stats`, `minimal_character`, `patch_press_enter`
+- **DRY-рефакторинг (6 PR):** UI-хелперы `_print_pick_list` / `_read_pool_pick`, `apply_subclass_picks`, `bootstrap_session_catalogs`; core micro-DRY (`PHB_SKILL_IDS`, `iter_race_grants_by_source`, `_load_catalog_item`); save API через `build_new_character` + `persist_character` и `_CreationState.to_character()`; подпакеты `core/feats/`, `core/proficiencies/`, `core/progression/`; `Character.class_id` — `CharacterClass` (JSON — string; пустой `class_id` в JSON — ошибка)
+- **Load game:** `load_character_for_session` — единый путь загрузки персонажа через `character_storage._try_load_character_file`
+- **Git workflow:** Plan/Agent с part-ветками — обязательное создание веток, merge в `feat/<slug>`; `main`/`dev` в задаче не трогать
+- **Git workflow (tooling):** `make branch-cleanup` — удаление локальных part-веток, слитых в `CLEANUP_BASE` (по умолчанию `dev`; §2b — `CLEANUP_BASE=feat/<slug>`), с защитой `main`/`dev`/`merged/*` и guard на отсутствие базы; удаление part-ветки после `--no-ff` merge — явный шаг (`Makefile`, `dnd-mud-workflow.mdc`, `dnd-mud-git-pr`)
+- Skills refactor (DRY layers): policy verify/review — только `dnd-mud-workflow.mdc`; skills — процедуры; `AGENTS.md` / `DEVELOPMENT.md` — индекс ссылок
+- **Экран расы/подрасы:** выборный язык в строке «Языки»; подрасы без дубля grants родителя; полуорк всегда с экраном выбора и «Назад»
+- **Экран класса:** схлопнутый ASI по уровням; `proficiency_token_label` в меню владений и стартового снаряжения
+- **Авто-экипировка:** пересчёт `equipped` через `equip_defaults()` при создании персонажа
+- **Данные рас:** язык человека на уровне расы; variant human наследует grant; описание «Наследие фей» у эльфа
+
+### Changed
+- **Каталоги `database/` ↔ PHB:** расы (`half_orc`, наследие фей; тёмное зрение эльфов в подрасах — дроу 120 фт.), прогрессия 4 классов (fighter/rogue/cleric/bard), grants 9 черт, предыстории (`equipment_item`), снаряжение (lance/pike, фонари, piton, vestments); `language_types.common` в `constants.yaml`
+- **Документация `docs/`:** индекс [`docs/README.md`](README.md); ссылки на `rules/chapters/`; глоссарии → `rules/reference/glossaries/`
+- **Справочник без лора:** карточки рас, предысторий и классов; главы `00`–`03`, `04-backgrounds` — только механика
+- **Справочник для агентов (layout `agent-v2`):** единый [`docs/rules/_index/lookup.yaml`](rules/_index/lookup.yaml) (`by_id`, `by_alias`, `summaries`); поле `quick` в frontmatter; нормализация карточек feats и секций `higher-levels` заклинаний через `scripts/build_rules_index.py`
+- **PHB dev-tools удалены:** все `scripts/phb*.py` и тесты `test_phb_*`; актуализация `docs/rules/` из PDF — агентами ([`docs/rules/README.md`](rules/README.md), [`AGENTS.md`](../AGENTS.md))
+
+### Added (ранее в ветке PHB)
+- Реорганизация `docs/rules/` — `chapters/`, `entities/`, `reference/`, `_index/`; `README.md` для агентов; индексы `entities.yaml` и `spells.yaml`
+
 ### Fixed
 - HardCore: прирост HP от «кость + CON» не опускается ниже 1 на любом уровне (`core/progression.py`)
 - Главное меню: пункт переключения языка кросс-локально (`ru` → «Languages», `en` → «Языки»)
+- Стартовое снаряжение предысторий: PHB-наборы (солдат — кости/карты, преступник — тёмная одежда), `inventory_tool_pools`
+- Меню снаряжения класса: владение конкретным оружием (warhammer у дварфа), предупреждение `(Сил N)` для тяжёлых доспехов
+- Карточка персонажа: слоты экипировки всегда видны, PHB-подсказки доспеха/оружия, versatile/ammo/range
+- PHB catalog review: дроу — одно тёмное зрение 120 фт. (базовый grant эльфа перенесён в `high_elf`/`wood_elf`); `supreme_divine_intervention` без неверного `uses_per_rest`; пример acolyte в `DATA_SCHEMA.md` — `prayer_book`
 
 ### Changed
 - MUD_PRD §3.2.1: перекрёстная ссылка на правила расчёта HP по режимам сложности
+- Docs/rules: индекс `DND_RULES.md`, `05-equipment`, `04-backgrounds`, `ARCHITECTURE`, `MUD_PRD` — статус инвентаря и шага `equipment` синхронизирован с кодом
 - Git workflow: merge policy в `DEVELOPMENT.md` — прямой push в `dev` разрешён; squash task→`dev` по практике; `main_rules` только на `main` (без `dev_rules`)
 - Git workflow: **все** ветки `merged/*` — только локальный архив; запрещены push/upstream/PR на `origin`; legacy `origin/merged/*` удалять (`dnd-mud-workflow.mdc`, `01-operations.mdc`, `user-protocols.mdc`)
 
 ### Added
+- `tests/test_phb_catalog_alignment.py`, `tests/fixtures/phb_equipment.yaml` — регрессии выравнивания каталогов с PHB (расы, классы, feats, снаряжение)
+- **Спасброски класса:** `saving_throws` в `classes.yaml`, поле `save_proficiencies` на `Character`, `core/checks.py` (`saving_throw_modifier`, `saving_throw`)
+- **Стартовое снаряжение:** `starting_equipment` в YAML, шаг `equipment` при создании, `core/starting_equipment.py`, `core/inventory.py` (инвентарь, экипировка, `compute_ac`)
+- PHB-наборы (`explorers_pack`, `dungeoneers_pack`, …) в `database/equipment/equipment.yaml`
 - `make test-fast` / `make test-cov` — быстрый pytest и детальный coverage-отчёт
 - `tests/creation_helpers.py` — golden-path контекст создания персонажа
 - Incremental verify: YAML-only diff в `database/` / `mods/` → `DATA_PATH_TESTS`
@@ -132,7 +187,7 @@
 - `core/feats_grants.py` — логика перенесена в `core/feats.py`
 
 ### Added
-- Документация: фильтрация черт по владениям (класс/раса/подкласс) — [`docs/rules/06-feats.md`](rules/06-feats.md) §«Фильтрация списка»
+- Документация: фильтрация черт по владениям (класс/раса/подкласс) — [`docs/rules/chapters/06-feats.md`](rules/chapters/06-feats.md) §«Фильтрация списка»
 - `core/feat_visibility.py` — контекст выбора черт (`build_feat_selection_context`) и скрытие без новых владений (`feat_visible_for_selection`)
 - `core/io.save_json`, `core/io.merge_unique` — единый JSON I/O и merge списков
 - `core/progression.process_pending_level_ups` — headless level-up engine с ASI callback

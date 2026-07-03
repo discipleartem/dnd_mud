@@ -120,3 +120,44 @@ def test_race_grants_match_grant_schema(
         for sub_id, sub in (race.get("subraces") or {}).items():
             if isinstance(sub, dict):
                 check_grants(sub.get("grants"), f"race:{race_id}:{sub_id}")
+
+
+WEAPON_ITEM_SCHEMA: dict[str, Any] = {
+    "type": "object",
+    "required": ["name", "category", "damage"],
+    "properties": {
+        "name": {"type": "string"},
+        "category": {"type": "string"},
+        "damage": {
+            "type": "object",
+            "required": ["dice", "type"],
+            "properties": {
+                "dice": {"type": "string"},
+                "type": {"type": "string"},
+            },
+        },
+    },
+}
+
+
+def test_weapon_yaml_items_match_minimal_schema() -> None:
+    """Оружие в каталоге имеет обязательные поля damage и category."""
+    data = _load_yaml(ROOT / "database/equipment/weapon.yaml")
+    for _weapon_id, weapon in data.get("weapons", {}).items():
+        assert isinstance(weapon, dict)
+        if weapon.get("damage") is None:
+            continue
+        jsonschema.validate(weapon, WEAPON_ITEM_SCHEMA)
+
+
+def test_feats_yaml_grants_match_grant_schema(
+    grant_schema: dict[str, Any],
+) -> None:
+    """Черты PHB: grants[] проходят grant.json."""
+    data = _load_yaml(ROOT / "database/progression/feats.yaml")
+    for _feat_id, feat in data.get("feats", {}).items():
+        grants = feat.get("grants", []) if isinstance(feat, dict) else []
+        if isinstance(grants, list):
+            for grant in grants:
+                if isinstance(grant, dict):
+                    jsonschema.validate(grant, grant_schema)

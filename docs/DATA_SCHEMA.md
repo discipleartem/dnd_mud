@@ -41,6 +41,7 @@ grants:
 | `tool_proficiency` | `tools[]` или `choice`+`pool` | `core/proficiencies.py` |
 | `language` | `languages[]` или `choice`+`pool` | `core/backgrounds.py`, races |
 | `feat` | `count`, `from` | `core/feats.py` |
+| `save_proficiency` | `ability` или `choice: true` + выбор в `feat_choices` (Resilient) | `core/feat_apply.py` |
 | `hit_point_bonus` | `amount`, `per_level` | `core/feats.py`, `core/races.py` |
 
 Типы вроде `darkvision`, `resistance` — в YAML допустимы; combat engine (Phase 2) пока не читает.
@@ -86,7 +87,7 @@ races:
 
 - **Все расы** — выбор подрасы; одна подраса → автовыбор в UI.
 - Базовая раса — общие поля (`name`, `size`, `speed`, …); механика в `subraces`.
-- `inherit: { ability_bonuses, grants }` — наследование grants и бонусов от базовой расы (см. §Legacy → grants).
+- `inherit: { ability_bonuses, grants }` — наследование grants и бонусов от базовой расы (см. `core/grants.merge_entity_grants`).
 - Saves: `race: human`, `subrace: null` → `standard` (fallback в loader).
 
 ## Предыстории (`database/backgrounds/backgrounds.yaml`)
@@ -102,16 +103,107 @@ backgrounds:
         count: 2
         choice: true
         pool: common
+      - type: equipment_item
+        items:
+          - { kind: equipment, id: emblem, qty: 1 }
+          - { kind: equipment, id: prayer_book, qty: 1 }
+    inventory_tool_pools:   # опционально: picks инструментов → инвентарь PHB
+      - musical_instruments
     feature:   # flavor до game engine
       name: { ru: "...", en: "..." }
       description: { ru: "...", en: "..." }
 ```
 
-## Классы и черты
+Grant `equipment_item` — фиксированные предметы предыстории (`core/backgrounds.get_background_equipment_items`).
 
-- **Классы:** `features[]` с `level` — без `progression.<level>` до Phase 2; при миграции — `grants` внутри feature или параллельно.
+`inventory_tool_pools` — whitelist пулов: выбранные на шаге владений инструменты попадают в инвентарь только если id входит в разрешённый пул (например `soldier_gaming` → `dice_set` / `playing_cards`). Владение без предмета (thieves' tools у преступника) — только `tool_proficiency`, не `equipment_item`.
+
+## Классы (`database/classes/classes.yaml`)
+
+Помимо `features[]`, `subclasses[]`, `proficiencies`:
+
+| Поле | Описание |
+|------|----------|
+| `saving_throws` | Список ability-id (`strength`, …) — два спасброска класса PHB |
+| `starting_equipment` | Машиночитаемое стартовое снаряжение (см. ниже) |
+
+### `starting_equipment`
+
+```yaml
+starting_equipment:
+  choices:
+    - id: armor
+      options:
+        - id: chain_mail
+          label: { ru: "а) Кольчуга", en: "a) Chain mail" }
+          items:
+            - { kind: armor, id: chain_mail, qty: 1 }
+          requires_armor: heavy          # опционально: подсказка в UI
+        - id: martial_shield
+          label: { ru: "…", en: "…" }
+          items:
+            - { kind: armor, id: shield, qty: 1 }
+          weapon_picks:
+            - pool: martial
+          requires_weapon_pool: martial
+  fixed:
+    - { kind: equipment, id: holy_symbol, qty: 1 }
+```
+
+| Поле опции | Назначение |
+|------------|------------|
+| `items[]` | `{ kind, id, qty }` — `weapon`, `armor`, `tool`, `equipment` |
+| `weapon_picks[]` | `{ pool }` — UI выбирает конкретное оружие из каталога |
+| `tool_picks[]` | `{ pool }` — UI выбирает инструмент |
+| `requires_weapon_pool` / `requires_armor` | Фильтр доступности по владениям |
+
+Runtime: `core/starting_equipment.py` → `resolve_starting_items`; выборы игрока — `equipment_choices` на `Character`.
+
+## Снаряжение (`database/equipment/`)
+
+Каталог по id: `weapons.yaml`, `armor.yaml`, `tools.yaml`, `equipment.yaml`.
+
+Наборы PHB (`category: pack`) с одноуровневым `contents[]` — при добавлении в инвентарь pack **разворачивается** (`core/inventory.expand_pack_contents`). Справочник предметов — [`rules/chapters/05-equipment-reference.md`](rules/chapters/05-equipment-reference.md).
+
+```yaml
+explorers_pack:
+  name: "Набор путешественника"
+  category: pack
+  contents:
+    - { kind: equipment, id: backpack, qty: 1 }
+```
+
+## Save JSON — поля персонажа (инвентарь и спасброски)
+
+Опциональные ключи в `saves/characters/{save_slug}.json` (модель `Character`, `core/models.py`). Отсутствие ключа → `[]` / `{}` (defaults в `Character.from_dict`).
+
+| Ключ | Тип | Описание |
+|------|-----|----------|
+| `save_proficiencies` | `string[]` | ability-id владения спасбросками (класс + Resilient) |
+| `inventory` | `{ kind, id, qty }[]` | Стартовый и предысторический инвентарь |
+| `equipped` | object | `armor`, `shield`, `main_hand`, `off_hand`, `main_hand_grip` |
+| `equipment_choices` | `{ choice_id: option_id }` | Аудит выборов а/б при создании |
+
+## Save JSON — сессия приключения
+
+Файлы `saves/sessions/{save_slug}.json` (`SessionSnapshot`, `core/session_storage.py`). `save_slug` обычно `{character_save_slug}_{adventure_id}`.
+
+| Ключ | Тип | Описание |
+|------|-----|----------|
+| `schema_version` | `int` | Версия схемы (сейчас `1`) |
+| `save_slug` | `string` | Имя файла без `.json` |
+| `character_save_slug` | `string` | Слаг персонажа в `saves/characters/` |
+| `adventure_id` | `string` | ID из `adventures.yaml` |
+| `current_node_id` | `string \| null` | Текущий узел YAML-сценария |
+| `difficulty` | `normal` \| `hardcore` \| `easy` | Режим сессии |
+| `flags` | `object` | Произвольные флаги сценария |
+| `script_file` | `string` | Путь к YAML сценария |
+| `updated_at` | `string` (ISO) | Время последнего сохранения |
+
+## Классы и черты (прочее)
+
+- **Классы:** `progression.<level>.grants` — канонический формат особенностей по уровням.
 - **Черты:** `grants[]`, `description_full` для UI PHB-текста.
-- **Снаряжение:** dict-by-id в `database/equipment/` — без изменений.
 
 ## Mod overlay
 
@@ -141,18 +233,18 @@ races:
 
 ### Сборка персонажа
 
-**Реализовано:** `core/character_builder.py` — `ResolvedGrants`, `resolve_creation_grants`, `merge_languages_with_feats`.
+**Реализовано:** `core/grants_context.py` — `CreationContext`, `ResolvedGrants`; `core/character_builder.py` — `resolve_creation_grants`, `resolve_grants_for_context`, `merge_languages_with_feats`.
 
 | ID | Задача | Статус |
 |----|--------|--------|
-| `char-builder` | `core/character_builder.py`, dataclass `ResolvedGrants`, единый `resolve_creation_grants` | ✅ реализовано |
+| `char-builder` | `grants_context` + `character_builder`, единый `resolve_creation_grants` | ✅ реализовано |
 
 ### Классы и progression
 
 | ID | Задача | Триггер | Целевые файлы |
 |----|--------|---------|---------------|
 | `class-progression` | `progression.<level>.grants` вместо плоского `class_features[]` | ✅ YAML + accessor (`iter_class_grants`); авто-применение при левелапе — Phase 2 |
-| `combat-usage` | Поле `usage: passive \| action \| bonus_action \| reaction` у grants/features | Реализация [`rules/09-combat.md`](rules/09-combat.md) | `database/classes/*.yaml`, combat resolver |
+| `combat-usage` | Поле `usage: passive \| action \| bonus_action \| reaction` у grants/features | Реализация [`rules/chapters/09-combat.md`](rules/chapters/09-combat.md) | `database/classes/*.yaml`, combat resolver |
 
 ### Валидация и метаданные
 
@@ -166,9 +258,9 @@ races:
 
 | ID | Задача | Триггер | Целевые файлы |
 |----|--------|---------|---------------|
-| `mod-deps` | `requires`, `conflicts` в manifest | Публикация 2+ зависимых модов | `core/mod_loader.py`, `mods/*/manifest.yaml` |
-| `mod-delete` | action `delete` / `replace_entity` в overlay | Homebrew override официальных рас/классов | `core/mod_loader.py` |
-| `mod-ui` | UI включения модов в настройках | Пользователи без ручного edit `mods_state.json` | `ui/menus/settings`, `database/core/mods_state.json` |
+| `mod-deps` | `requires`, `conflicts` в manifest | ✅ `mod_enable_error`, `set_mod_enabled` | `core/mod_loader.py`, `mods/*/manifest.yaml` |
+| `mod-delete` | action `delete` / `replace_entity` в overlay | ✅ `_apply_overlay_actions` | `core/mod_loader.py` |
+| `mod-ui` | UI включения модов в настройках | ✅ `show_settings` → `show_mods_menu` | `ui/menus/settings.py` |
 
 ### Контент PHB (наполнение, не схема)
 

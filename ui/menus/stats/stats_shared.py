@@ -179,9 +179,8 @@ def _confirm_stats(
     print()
 
     for stat in _deps.STAT_NAMES:
-        _print_final_stat_line(
-            strings, stat, stats.get(stat, 10), race_bonuses
-        )
+        stat_value = stats.get(stat, _deps.ABILITY_SCORE_DEFAULT)
+        _print_final_stat_line(strings, stat, stat_value, race_bonuses)
 
     print()
     print(
@@ -230,17 +229,26 @@ def _run_stats_confirm_loop(
             return "retry_finalize"
         return "reroll"
     final_stats, race_bonuses = finalized
-    over_max = _deps.validate_final_stats(final_stats)
-    if over_max is not None:
-        stat_id, value = over_max
+    over_limit = _deps.validate_final_stats(final_stats)
+    if over_limit is not None:
+        stat_id, value = over_limit
         stat_name = _ability_name(strings, stat_id)
-        msg = get_string(
-            strings,
-            "character.stats_exceeds_max",
-            stat=stat_name,
-            value=value,
-            max=_deps.ABILITY_SCORE_MAX,
-        )
+        if value < _deps.ABILITY_SCORE_MIN:
+            msg = get_string(
+                strings,
+                "character.stats_below_min",
+                stat=stat_name,
+                value=value,
+                min=_deps.ABILITY_SCORE_MIN,
+            )
+        else:
+            msg = get_string(
+                strings,
+                "character.stats_exceeds_max",
+                stat=stat_name,
+                value=value,
+                max=_deps.ABILITY_SCORE_MAX,
+            )
         print(f"{Fore.RED}{msg}{Style.RESET_ALL}")
         print()
         if allow_reroll:

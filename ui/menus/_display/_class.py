@@ -4,9 +4,16 @@ from typing import Any
 
 from colorama import Fore, Style
 
+from core.equipment import proficiency_token_label
 from core.localization import get_string
 from core.models import Character
-from core.subclasses import features_up_to_level
+from core.progression.asi import ASI_FEATURE_ID
+from core.progression.subclasses import features_up_to_level
+from core.starting_equipment import (
+    STARTING_EQUIPMENT_SECTION_KEYS,
+    STARTING_EQUIPMENT_SECTION_ORDER,
+    summarize_class_starting_equipment,
+)
 from core.types import StringsDict
 from ui.menus import _deps
 from ui.menus._common import _ability_name, _skill_name
@@ -36,20 +43,17 @@ def _character_subclass_label(
 def _format_class_proficiencies(
     strings: StringsDict,
     class_info: dict[str, Any],
+    language: str = "ru",
 ) -> str:
     """Сжатая строка владений класса."""
     prof = class_info.get("proficiencies", {})
     if isinstance(prof, dict):
         parts: list[str] = []
-        for key, label_key in (
-            ("armor", "proficiency"),
-            ("weapons", "proficiency"),
-            ("tools", "proficiency"),
-        ):
+        for key in ("armor", "weapons", "tools"):
             raw = prof.get(key, [])
             if isinstance(raw, list) and raw:
                 labels = [
-                    get_string(strings, f"{label_key}.{token}", default=token)
+                    proficiency_token_label(str(token), strings, language)
                     for token in raw
                 ]
                 parts.append(", ".join(labels))
@@ -76,6 +80,53 @@ def _format_class_skills(
             list=skill_names,
         )
     return skill_names
+
+
+def _format_class_saving_throws(
+    strings: StringsDict,
+    class_info: dict[str, Any],
+) -> str:
+    """Строка спасбросков класса."""
+    saves = class_info.get("saving_throws", [])
+    if not isinstance(saves, list) or not saves:
+        return ""
+    names = ", ".join(_ability_name(strings, str(s)) for s in saves)
+    return get_string(
+        strings,
+        "character.class_saving_throws_label",
+        list=names,
+    )
+
+
+def _print_class_starting_equipment(
+    class_info: dict[str, Any],
+    strings: StringsDict,
+    language: str,
+) -> None:
+    """Краткий обзор стартового снаряжения класса по категориям."""
+    class_id = str(class_info.get("id", ""))
+    if not class_id:
+        return
+    sections = summarize_class_starting_equipment(class_id, strings, language)
+    if not sections:
+        return
+    label = get_string(strings, "character.class_starting_equipment_label")
+    print(f"  {Fore.LIGHTBLACK_EX}{label.strip()}{Style.RESET_ALL}")
+    for section_key in STARTING_EQUIPMENT_SECTION_ORDER:
+        lines = sections.get(section_key)
+        if not lines:
+            continue
+        heading = get_string(
+            strings, STARTING_EQUIPMENT_SECTION_KEYS[section_key]
+        )
+        print(f"  {Fore.LIGHTBLACK_EX}{heading}{Style.RESET_ALL}")
+        for line in lines:
+            item_line = get_string(
+                strings,
+                "character.class_starting_equipment_choice",
+                label=line,
+            )
+            print(f"  {Fore.LIGHTBLACK_EX}{item_line}{Style.RESET_ALL}")
 
 
 def _print_class_description(desc: str) -> None:
@@ -115,17 +166,61 @@ def _format_feature_uses(strings: StringsDict, feat: dict[str, Any]) -> str:
     return f"{Fore.GREEN}{uses}{Style.RESET_ALL}"
 
 
+def _split_asi_features(
+    features: list[dict[str, Any]],
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+    """Отделить ASI от остальных умений класса."""
+    asi_feats: list[dict[str, Any]] = []
+    other: list[dict[str, Any]] = []
+    for feat in features:
+        if feat.get("id") == ASI_FEATURE_ID:
+            asi_feats.append(feat)
+        else:
+            other.append(feat)
+    return asi_feats, other
+
+
+def _format_collapsed_asi_name(
+    strings: StringsDict, asi_feats: list[dict[str, Any]]
+) -> str:
+    """Имя схлопнутого ASI с перечислением уровней."""
+    levels = sorted({int(feat.get("level", 0)) for feat in asi_feats})
+    levels_label = get_string(
+        strings,
+        "character.feature_asi_levels",
+        levels=", ".join(str(level) for level in levels),
+    )
+    base_name = str(asi_feats[0].get("name", ""))
+    return f"{base_name} ({levels_label})"
+
+
 def _print_class_features(
     strings: StringsDict, features: list[Any], *, detailed: bool
 ) -> None:
     """Вывести классовые умения (до 10 уровня)."""
-    filtered = features_up_to_level(features)
+    filtered: list[dict[str, Any]] = features_up_to_level(features)
     if not filtered:
         return
+    asi_feats, other_feats = _split_asi_features(filtered)
     _print_features_section_title(strings)
+    if asi_feats:
+        asi_name = _format_collapsed_asi_name(strings, asi_feats)
+        asi_desc = str(asi_feats[0].get("description", ""))
+        uses_part = _format_feature_uses(strings, asi_feats[0])
+        if detailed:
+            print(
+                f"    {Fore.CYAN}{Style.BRIGHT}{asi_name}{Style.RESET_ALL}: "
+                f"{asi_desc}{uses_part}"
+            )
+            print()
+        else:
+            print(
+                f"    {Fore.LIGHTBLACK_EX}•{Style.RESET_ALL} "
+                f"{Fore.CYAN}{asi_name}{Style.RESET_ALL}: {asi_desc}"
+            )
     if detailed:
         by_level: dict[int, list[dict[str, Any]]] = {}
-        for feat in filtered:
+        for feat in other_feats:
             level = int(feat.get("level", 0))
             by_level.setdefault(level, []).append(feat)
         for level in sorted(by_level):
@@ -147,7 +242,7 @@ def _print_class_features(
                 )
             print()
     else:
-        for feat in filtered:
+        for feat in other_feats:
             name = str(feat.get("name", ""))
             desc = str(feat.get("description", ""))
             print(
@@ -162,6 +257,7 @@ def _print_class_summary(
     *,
     include_features: bool = True,
     skills_summary: bool = True,
+    language: str = "ru",
 ) -> None:
     """Краткая карточка класса в списке выбора."""
     desc = class_info.get("description", "")
@@ -191,7 +287,7 @@ def _print_class_summary(
             f"{Fore.CYAN}{ability}{Style.RESET_ALL}"
         )
 
-    prof = _format_class_proficiencies(strings, class_info)
+    prof = _format_class_proficiencies(strings, class_info, language)
     if prof:
         label = get_string(strings, "character.class_proficiencies_label")
         if "{proficiencies}" in label:
@@ -212,6 +308,12 @@ def _print_class_summary(
             f"  {Fore.LIGHTBLACK_EX}{label}:{Style.RESET_ALL} "
             f"{Fore.CYAN}{skills_line}{Style.RESET_ALL}"
         )
+
+    saves_line = _format_class_saving_throws(strings, class_info)
+    if saves_line:
+        print(f"  {Fore.LIGHTBLACK_EX}{saves_line.strip()}{Style.RESET_ALL}")
+
+    _print_class_starting_equipment(class_info, strings, language)
 
     features = class_info.get("features", [])
     if include_features and isinstance(features, list):

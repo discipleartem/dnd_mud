@@ -2,6 +2,10 @@
 
 import random
 
+from core.constants import ability_modifier
+
+__all__ = ["ability_modifier", "roll", "roll_ability_score"]
+
 
 def roll(count: int = 1, sides: int = 20, modifier: int = 0) -> int:
     """Бросить несколько кубиков и сложить результат с модификатором.
@@ -29,8 +33,3 @@ def roll_ability_score() -> int:
     rolls = [roll(1, 6) for _ in range(4)]
     rolls.sort()
     return sum(rolls[1:])
-
-
-def ability_modifier(score: int) -> int:
-    """Рассчитать модификатор характеристики: (значение - 10) // 2."""
-    return (score - 10) // 2

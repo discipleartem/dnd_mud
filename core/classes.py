@@ -5,6 +5,7 @@ from typing import Any
 
 from core.catalog_loader import load_catalog
 from core.localization import resolve_localized_text
+from core.types import CharacterClass
 
 CLASSES_FILE = Path("database/classes/classes.yaml")
 DEFAULT_SUBCLASS_CHOICE_LEVEL = 3
@@ -15,7 +16,7 @@ def _load_classes_yaml() -> dict[str, Any]:
     return load_catalog(CLASSES_FILE, "classes")
 
 
-def get_class_dict(class_id: str) -> dict[str, Any]:
+def get_class_dict(class_id: CharacterClass | str) -> dict[str, Any]:
     """Сырые данные класса из YAML."""
     info = _load_classes_yaml().get(class_id, {})
     return info if isinstance(info, dict) else {}
@@ -84,7 +85,7 @@ def grants_at_level(
     return result
 
 
-def get_class_hit_dice(class_id: str) -> int:
+def get_class_hit_dice(class_id: CharacterClass | str) -> int:
     """Получить кость здоровья класса."""
     hit_dice = get_class_dict(class_id).get("hit_dice", 8)
     if isinstance(hit_dice, int):
@@ -92,7 +93,7 @@ def get_class_hit_dice(class_id: str) -> int:
     return 8
 
 
-def get_subclass_choice_level(class_id: str) -> int:
+def get_subclass_choice_level(class_id: CharacterClass | str) -> int:
     """Уровень класса, на котором выбирается подкласс (PHB / YAML)."""
     level = get_class_dict(class_id).get(
         "subclass_choice_level", DEFAULT_SUBCLASS_CHOICE_LEVEL
@@ -203,7 +204,7 @@ def _normalize_class_dict(
         "saving_throws": class_info.get("saving_throws", []),
         "skill_choices": class_info.get("skill_choices", []),
         "skill_choices_count": class_info.get("skill_choices_count", 0),
-        "equipment": class_info.get("equipment", {}),
+        "starting_equipment": class_info.get("starting_equipment", {}),
         "proficiencies": class_info.get("proficiencies", {}),
         "features": _class_features_only(class_info),
         "subclasses": class_info.get("subclasses", []),

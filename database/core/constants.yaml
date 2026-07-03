@@ -85,7 +85,7 @@ constants:
 
   # Типы языков
   language_types:
-    standard: "Стандартные языки"
+    common: "Стандартные языки"
     exotic: "Экзотические языки"
     secret: "Секретные языки"
     elemental: "Элементальные языки"

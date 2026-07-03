@@ -3,167 +3,30 @@
 from colorama import Fore, Style
 
 from core.classes import get_subclass_choice_level
-from core.equipment import proficiency_token_label
 from core.localization import get_string
 from core.models import Character
-from core.subclasses import subclass_is_active
+from core.progression.subclasses import subclass_is_active
 from core.types import StringsDict
 from ui.menus import _deps
-from ui.menus._common import _skill_name
+from ui.menus._display._character_header import (
+    _character_base_race_label,
+    _character_subrace_label,
+    _empty_field_value,
+    _format_character_feats,
+    _print_labeled_field,
+)
+from ui.menus._display._character_sections import (
+    _print_character_equipment,
+    _print_character_proficiencies,
+    _print_character_saving_throws,
+    _print_character_skills_and_expertise,
+)
 from ui.menus._display._class import (
     _character_class_label,
     _character_subclass_label,
 )
 from ui.menus._display._difficulty import _difficulty_color, _difficulty_label
 from ui.menus._display._stats import _format_character_stats_compact
-from ui.menus.expertise import format_expertise_display
-
-
-def _character_base_race_label(char: Character, language: str = "ru") -> str:
-    """Читаемое название базовой расы персонажа."""
-    race_full = _deps.load_race_full(char.race, language)
-    name = race_full.get("name")
-    if name:
-        return str(name)
-    return char.race
-
-
-def _character_subrace_label(
-    char: Character, language: str = "ru"
-) -> str | None:
-    """Читаемое название подрасы или None, если подрасы нет."""
-    if not char.subrace:
-        return None
-
-    race_full = _deps.load_race_full(char.race, language)
-    subraces = race_full.get("subraces", {})
-    if isinstance(subraces, dict):
-        subrace_info = subraces.get(char.subrace, {})
-        if isinstance(subrace_info, dict):
-            name = subrace_info.get("name")
-            if name:
-                name_str = str(name)
-                if "(" in name_str and name_str.endswith(")"):
-                    return name_str.split("(", maxsplit=1)[1].rstrip(")")
-                return name_str
-    return char.subrace
-
-
-def _empty_field_value(strings: StringsDict) -> str:
-    """Плейсхолдер для пустого поля карточки персонажа."""
-    empty = get_string(strings, "choose_character.field_empty")
-    return f"{Fore.LIGHTBLACK_EX}{empty}{Style.RESET_ALL}"
-
-
-def _print_labeled_field(
-    strings: StringsDict,
-    label_key: str,
-    value: str,
-    indent: str = "     ",
-) -> None:
-    """Вывести строку «подпись: значение» с цветной подписью."""
-    label = get_string(strings, label_key)
-    print(
-        f"{indent}" f"{Fore.LIGHTBLACK_EX}{label}{Style.RESET_ALL} " f"{value}"
-    )
-
-
-def _format_proficiency_token_list(
-    strings: StringsDict,
-    tokens: list[str],
-    *,
-    language: str = "ru",
-) -> str:
-    """Локализованный список токенов владений."""
-    names = [proficiency_token_label(t, strings, language) for t in tokens]
-    return ", ".join(names)
-
-
-def _print_character_proficiencies(
-    char: Character,
-    strings: StringsDict,
-    language: str,
-    *,
-    indent: str = "     ",
-) -> None:
-    """Владения персонажа: заголовок и категории с отступом."""
-    categories: tuple[tuple[list[str], str], ...] = (
-        (
-            char.armor_proficiencies,
-            "choose_character.field_proficiencies_armor",
-        ),
-        (
-            char.weapon_proficiencies,
-            "choose_character.field_proficiencies_weapons",
-        ),
-        (
-            char.tool_proficiencies,
-            "choose_character.field_proficiencies_tools",
-        ),
-    )
-    has_any = any(tokens for tokens, _ in categories)
-    if not has_any:
-        _print_labeled_field(
-            strings,
-            "choose_character.field_proficiencies",
-            _empty_field_value(strings),
-            indent=indent,
-        )
-        return
-
-    header = get_string(strings, "choose_character.field_proficiencies")
-    print(f"{indent}{Fore.LIGHTBLACK_EX}{header}{Style.RESET_ALL}")
-    sub_indent = f"{indent}  "
-    for tokens, label_key in categories:
-        if not tokens:
-            continue
-        value = _format_proficiency_token_list(
-            strings,
-            tokens,
-            language=language,
-        )
-        cat_label = get_string(strings, label_key)
-        print(
-            f"{sub_indent}{Fore.LIGHTBLACK_EX}{cat_label}{Style.RESET_ALL} "
-            f"{Fore.CYAN}{value}{Style.RESET_ALL}"
-        )
-
-
-def _print_character_skills_and_expertise(
-    char: Character,
-    strings: StringsDict,
-    *,
-    indent: str = "     ",
-) -> None:
-    """Навыки и компетентность на карточке персонажа."""
-    if char.skills:
-        skills_line = ", ".join(
-            _skill_name(strings, skill_id) for skill_id in char.skills
-        )
-        skills_display = f"{Fore.CYAN}{skills_line}{Style.RESET_ALL}"
-    else:
-        skills_display = _empty_field_value(strings)
-    _print_labeled_field(
-        strings,
-        "choose_character.field_skills",
-        skills_display,
-        indent=indent,
-    )
-
-    expertise_line = format_expertise_display(
-        strings, char.skill_expertise, char.tool_expertise
-    )
-    expertise_display = (
-        f"{Fore.CYAN}{expertise_line}{Style.RESET_ALL}"
-        if expertise_line
-        else _empty_field_value(strings)
-    )
-    _print_labeled_field(
-        strings,
-        "choose_character.field_expertise",
-        expertise_display,
-        indent=indent,
-    )
 
 
 def _print_character_card(
@@ -227,6 +90,15 @@ def _print_character_card(
         bg_display,
         indent=indent,
     )
+    if char.feat_ids:
+        feats_text = _format_character_feats(char, language)
+        feats_display = f"{Fore.CYAN}{feats_text}{Style.RESET_ALL}"
+        _print_labeled_field(
+            strings,
+            "choose_character.field_feats",
+            feats_display,
+            indent=indent,
+        )
     _print_labeled_field(
         strings,
         "choose_character.field_class",
@@ -277,6 +149,10 @@ def _print_character_card(
     _print_character_skills_and_expertise(char, strings, indent=indent)
 
     _print_character_proficiencies(char, strings, language, indent=indent)
+
+    _print_character_saving_throws(char, strings, indent=indent)
+
+    _print_character_equipment(char, strings, language, indent=indent)
 
     _print_labeled_field(
         strings,

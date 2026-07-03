@@ -3,12 +3,20 @@
   "githubPullRequests.createOnPublishBranch": "never",
   "githubPullRequests.queries": [
     {
+      "label": "Local Pull Request Branches",
+      "query": "default"
+    },
+    {
       "label": "Task → dev",
       "query": "repo:${owner}/${repository} is:open is:pr base:dev"
     },
     {
       "label": "Release dev → main",
       "query": "repo:${owner}/${repository} is:open is:pr base:main head:dev"
+    },
+    {
+      "label": "All Open",
+      "query": "default"
     }
   ],
   "github-actions.workflows.pinned.workflows": [

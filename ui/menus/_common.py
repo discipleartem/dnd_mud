@@ -73,8 +73,12 @@ def _choice_prompt(strings: StringsDict) -> str:
 
 def _print_screen_header(caption: str) -> None:
     """Заголовок экрана: разделитель, подпись по центру, разделитель."""
+    from ui.terminal_wrap import terminal_width, wrap_text
+
+    width = min(78, terminal_width())
     print(SEPARATOR)
-    print(f"{Fore.YELLOW}{caption.center(78)}{Style.RESET_ALL}")
+    for line in wrap_text(caption, width=width).splitlines():
+        print(f"{Fore.YELLOW}{line.center(width)}{Style.RESET_ALL}")
     print(SEPARATOR)
     print()
 
@@ -91,6 +95,11 @@ def _stats_total_line(strings: StringsDict) -> str:
     return f"{Fore.YELLOW}{total.center(78)}{Style.RESET_ALL}"
 
 
+def _print_numbered_row(idx: int, label: str, *, prefix: str = "  ") -> None:
+    """Строка нумерованного меню: жёлтый индекс и подпись."""
+    print(f"{prefix}{Fore.YELLOW}{idx}{Style.RESET_ALL}. {label}")
+
+
 def _run_numbered_menu(
     strings: StringsDict,
     options: list[str],
@@ -102,7 +111,7 @@ def _run_numbered_menu(
 ) -> int | None:
     """Нумерованное меню: 1..N — опции, 0 — назад. None при выборе 0."""
     for idx, label in enumerate(options, 1):
-        print(f"  {Fore.YELLOW}{idx}{Style.RESET_ALL}. {label}")
+        _print_numbered_row(idx, label)
     if before_back is not None:
         before_back()
     print()
@@ -151,3 +160,93 @@ def _read_numbered_choice(
     if choice == 0:
         return None
     return choice
+
+
+def _proficiency_menu_marker(proficient: bool) -> str:
+    """Зелёная «*» для пунктов меню с владением."""
+    if proficient:
+        return f"{Fore.GREEN}*{Style.RESET_ALL} "
+    return ""
+
+
+def _sort_ids_by_proficiency(
+    item_ids: list[str],
+    proficiencies: list[str],
+    has_proficiency: Callable[[list[str], str], bool],
+    *,
+    name_key: Callable[[str], str],
+) -> list[str]:
+    """Сначала предметы с владением, внутри группы — по имени."""
+    return sorted(
+        item_ids,
+        key=lambda item_id: (
+            0 if has_proficiency(proficiencies, item_id) else 1,
+            name_key(item_id),
+        ),
+    )
+
+
+def _format_pick_menu_label(name: str, proficient: bool) -> str:
+    """Подпись пункта меню выбора с опциональной «*» владения."""
+    marker = _proficiency_menu_marker(proficient)
+    return f"{marker}{Fore.CYAN}{name}{Style.RESET_ALL}"
+
+
+def _print_pick_list(
+    pool: list[str],
+    taken: set[str],
+    *,
+    label_for: Callable[[str], str],
+    taken_suffix: str,
+    format_selectable: Callable[[int, str, str], None] | None = None,
+) -> list[str]:
+    """Показать пул; занятые — серым. Вернуть доступные id в порядке вывода."""
+    selectable: list[str] = []
+    for item_id in pool:
+        name = label_for(item_id)
+        if item_id in taken:
+            print(
+                f"  {Fore.LIGHTBLACK_EX}{name} {taken_suffix}"
+                f"{Style.RESET_ALL}"
+            )
+        else:
+            selectable.append(item_id)
+            idx = len(selectable)
+            if format_selectable is not None:
+                format_selectable(idx, item_id, name)
+            else:
+                _print_numbered_row(idx, f"{Fore.CYAN}{name}{Style.RESET_ALL}")
+    return selectable
+
+
+def _read_pool_pick(
+    strings: StringsDict,
+    selectable: list[str],
+    *,
+    prompt: str,
+    empty_key: str,
+    back_label_key: str = "character.back",
+) -> str | None:
+    """Ввод выбора из пула после _print_pick_list; None — «Назад»."""
+    print()
+    if not selectable:
+        print(f"{Fore.RED}{get_string(strings, empty_key)}{Style.RESET_ALL}")
+        print()
+        print(
+            f"  {Fore.YELLOW}0{Style.RESET_ALL}. "
+            f"{get_string(strings, back_label_key)}"
+        )
+        print()
+        if _deps.get_int_input(prompt, 0, 0, strings) == 0:
+            return None
+        return ""
+
+    print(
+        f"  {Fore.YELLOW}0{Style.RESET_ALL}. "
+        f"{get_string(strings, back_label_key)}"
+    )
+    print()
+    choice = _deps.get_int_input(prompt, 0, len(selectable), strings)
+    if choice == 0:
+        return None
+    return selectable[choice - 1]

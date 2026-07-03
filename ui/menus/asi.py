@@ -3,13 +3,12 @@
 from colorama import Fore, Style
 
 from core.localization import get_string
-from core.stats import STAT_NAMES
+from core.stats import ABILITY_SCORE_DEFAULT, STAT_NAMES
 from core.types import StatMap, StringsDict
-from ui.menus import _deps
 from ui.menus._common import (
     _ability_name,
-    _choice_prompt,
     _print_screen_header,
+    _read_numbered_choice,
     _run_numbered_menu,
 )
 
@@ -87,7 +86,7 @@ def _pick_one_stat(
     )
     print()
     for idx, stat in enumerate(available, 1):
-        current = stats.get(stat, 10)
+        current = stats.get(stat, ABILITY_SCORE_DEFAULT)
         capped = current + amount > 20
         cap_note = ""
         if capped:
@@ -97,14 +96,11 @@ def _pick_one_stat(
             f"{_ability_name(strings, stat)}: {current}{cap_note}"
         )
     print()
-    print(
-        f"  {Fore.YELLOW}0{Style.RESET_ALL}. "
-        f"{get_string(strings, 'character.back')}"
+    choice = _read_numbered_choice(
+        strings,
+        len(available),
+        prompt_key="common.choice_prompt",
     )
-    print()
-    choice = _deps.get_int_input(
-        _choice_prompt(strings), 0, len(available), strings
-    )
-    if choice == 0:
+    if choice is None:
         return None
     return available[choice - 1]

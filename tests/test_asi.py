@@ -2,7 +2,8 @@
 
 import pytest
 
-from core.asi import (
+from core.models import Character
+from core.progression.asi import (
     apply_asi_one_two,
     apply_asi_two_one,
     cap_stats,
@@ -11,7 +12,7 @@ from core.asi import (
     feat_id_from_asi_choice,
     pending_asi_at_level,
 )
-from core.models import Character
+from core.types import CharacterClass
 
 
 def test_feat_id_from_asi_choice() -> None:
@@ -43,7 +44,7 @@ def test_pending_asi_at_level() -> None:
     char = Character(
         name="Hero",
         race="human",
-        class_id="fighter",
+        class_id=CharacterClass.FIGHTER,
         level=3,
         stats={"strength": 16},
         current_hp=20,

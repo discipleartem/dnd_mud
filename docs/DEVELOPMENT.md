@@ -43,7 +43,8 @@ dnd_mud
 make test-fast     # pytest без coverage (быстрый локальный цикл)
 make test          # pytest + coverage (CI)
 make test-cov      # coverage + term-missing (детальный отчёт)
-make verify-scope  # инкрементально на конец task-ветки (vs origin/dev)
+make verify-changed  # staged .py (pre-commit на подзадаче)
+# make verify-scope  — один раз в dnd-mud-review (конец task-ветки)
 VERIFY_BASE=origin/main make verify-scope  # на ветке dev — diff vs main
 pytest -v
 ```
@@ -58,13 +59,16 @@ dnd_mud/
 ├── core/                    # Игровое ядро
 │   ├── models.py            # Dataclass: Character, Adventure
 │   ├── character.py         # Узкий фасад для flow-оркестраторов (_deps)
-│   ├── character_builder.py # resolve_creation_grants, merge языков/компетентности
+│   ├── grants_context.py    # CreationContext, ResolvedGrants (без циклов import)
+│   ├── character_builder.py # resolve_creation_grants, resolve_grants_for_context
+│   ├── character_build.py   # build_new_character (сборка без записи на диск)
+│   ├── character_migrate.py # CHARACTERS_SCHEMA_VERSION, migrate_character_data
 │   ├── catalog_loader.py    # load_catalog — единая загрузка YAML-каталогов + mod overlay
 │   ├── hp_bonuses.py        # Бонусы HP из grants (раса, черта)
 │   ├── feats_loader.py      # Загрузка feats.yaml
 │   ├── grant_mechanics.py   # Парсинг proficiency-токенов из grants
 │   ├── feats.py             # Публичный фасад черт (гранты + apply)
-│   ├── character_storage.py # CRUD персонажей (JSON в saves/)
+│   ├── character_storage.py # CRUD персонажей; thin wrapper build_new_character
 │   ├── slug.py              # make_save_slug — транслитерация имён
 │   ├── stats.py             # Генерация и валидация характеристик
 │   ├── races.py             # Справочник рас
@@ -75,12 +79,16 @@ dnd_mud/
 │   ├── dice.py              # Броски кубиков
 │   ├── localization.py      # Локализация UI и resolve_localized_text
 │   ├── grants.py            # Нормализация grants[] из YAML
-│   ├── mod_loader.py        # Deep-merge overlay модов
+│   ├── mod_loader.py        # Deep-merge overlay модов; gating по режиму
+│   ├── game_engine.py       # GameEngine / GameSession (сценарии)
+│   ├── session_storage.py   # Сессии приключений (saves/sessions/)
 │   └── settings.py          # Настройки пользователя (JSON)
 ├── ui/                      # Пользовательский интерфейс
 │   ├── input_handler.py     # Валидация ввода (числа, строки, выбор)
 │   └── menus/               # Пакет экранов меню
 │       ├── main_menu.py
+│       ├── load_game.py
+│       ├── mods_menu.py
 │       ├── new_game.py
 │       ├── _creation_steps.py  # Тонкий loop создания персонажа
 │       ├── _creation_handlers.py, _creation_navigation.py, _creation_finalize.py, _creation_state.py
@@ -89,7 +97,7 @@ dnd_mud/
 │       ├── feats/           # Выбор черт (creation + level-up)
 │       ├── settings.py
 │       ├── stats/           # Генерация характеристик (подпакет)
-│       ├── _common.py       # SEPARATOR, _run_numbered_menu, …
+│       ├── _common.py       # _print_numbered_row, _run_numbered_menu, _read_numbered_choice, …
 │       ├── _display/        # Пакет отображения (класс, раса, stats, персонаж)
 │       ├── _selectors.py
 │       └── _deps.py         # Re-export core.character + input_handler (flows only)
@@ -117,16 +125,22 @@ dnd_mud/
 │   └── dragonborn_pack/     # Пример mod overlay (manifest + overlay.yaml)
 ├── tests/                   # pytest (число: pytest --collect-only -q)
 │   ├── conftest.py
-│   ├── creation_helpers.py  # общие константы golden-path
+│   ├── creation_helpers.py  # flat_stats, minimal_character, fighter_acolyte_creation
 │   ├── test_*.py            # ~20 файлов: core / menus / data / meta
 │   └── …                    # см. группы в §Тестирование ниже
 └── docs/                    # Документация
+    ├── README.md            # Индекс документации
     ├── DATA_SCHEMA.md       # Схема YAML (grants, subraces, mods)
-    ├── DND_RULES.md         # Правила D&D 5e (справочник по PHB)
-    ├── rules/               # Главы справочника
+    ├── DND_RULES.md         # Правила D&D 5e (оглавление PHB)
+    ├── rules/               # Справочник PHB (layout agent-v2)
+    │   ├── README.md        # Guide для агентов
+    │   ├── _index/lookup.yaml
+    │   ├── chapters/        # Главы 00–11
+    │   └── entities/        # Карточки рас, классов, заклинаний…
     ├── MUD_PRD.md
     ├── ARCHITECTURE.md
     ├── API.md
+    ├── BACKLOG.md
     ├── DEVELOPMENT.md
     └── CHANGELOG.md
 ```
@@ -143,12 +157,14 @@ dnd_mud/
 ## Линтинг и форматирование
 
 ```bash
-make check            # полный: ruff + black --check + mypy
-make verify-changed   # только staged .py (подзадача)
-make verify-scope     # diff origin/dev...HEAD (конец task-ветки)
+make check            # полный: ruff + black --check + mypy (CI / по запросу)
+make verify-changed   # только staged .py (pre-commit на подзадаче)
+# make verify-scope   # diff origin/dev...HEAD — skill dnd-mud-review, конец task-ветки
 VERIFY_BASE=origin/main make verify-scope  # на ветке dev
-make verify           # check + test (CI / ручной full)
+make verify           # check + test (CI)
 ```
+
+**Агент на task-ветке:** policy — [`.cursor/rules/dnd-mud-workflow.mdc`](../.cursor/rules/dnd-mud-workflow.mdc) §Verify / review; команды — [`dnd-mud-verify/reference.md`](../.cursor/skills/dnd-mud-verify/reference.md).
 
 Маппинг changed → pytest/lint: [`scripts/verify_targets.py`](../scripts/verify_targets.py). Если хотя бы один изменённый `.py` не смапился — full suite (не только когда mapped-тестов нет совсем).
 
@@ -208,12 +224,14 @@ pytest tests/test_data_schema.py -v
 
 | Тема | Канон |
 |------|-------|
-| Agent-loop, steps, skills | [`AGENTS.md`](../AGENTS.md) |
-| Git-старт, rebase, multi-branch, PR, `merged/*` (локально) | [`.cursor/rules/dnd-mud-workflow.mdc`](../.cursor/rules/dnd-mud-workflow.mdc) |
+| Agent-loop, steps, skills | [`AGENTS.md`](../AGENTS.md) · [`.cursor/skills/README.md`](../.cursor/skills/README.md) |
+| Git-старт, rebase, multi-branch, `merged/*` policy | [`.cursor/rules/dnd-mud-workflow.mdc`](../.cursor/rules/dnd-mud-workflow.mdc) |
 | Task cycle (global) | [`01-operations.mdc`](~/.cursor/rules/01-operations.mdc) §Task cycle |
-| Verify | skill [`.cursor/skills/dnd-mud-verify`](../.cursor/skills/dnd-mud-verify/SKILL.md) |
-| Review | skill [`.cursor/skills/dnd-mud-review`](../.cursor/skills/dnd-mud-review/SKILL.md) |
-| Release `dev` → `main` | skill [`.cursor/skills/dnd-mud-release`](../.cursor/skills/dnd-mud-release/SKILL.md) |
+| Verify policy + commands | workflow §Verify / review · [`dnd-mud-verify/reference.md`](../.cursor/skills/dnd-mud-verify/reference.md) |
+| Review | [`.cursor/skills/dnd-mud-review`](../.cursor/skills/dnd-mud-review/SKILL.md) |
+| Fix plan | [`.cursor/skills/dnd-mud-fix-plan`](../.cursor/skills/dnd-mud-fix-plan/SKILL.md) |
+| Push / PR task → `dev` | [`.cursor/skills/dnd-mud-git-pr`](../.cursor/skills/dnd-mud-git-pr/SKILL.md) |
+| Release `dev` → `main` | [`.cursor/skills/dnd-mud-release`](../.cursor/skills/dnd-mud-release/SKILL.md) |
 | Sync `dev`←`main` | [`git-dev-main-sync.md`](~/.cursor/docs/git-dev-main-sync.md) |
 
 IDE: расширения **GitHub Pull Requests** и **GitHub Actions** — [`.vscode/settings.json`](../.vscode/settings.json).
@@ -222,7 +240,7 @@ IDE: расширения **GitHub Pull Requests** и **GitHub Actions** — [`.
 
 Канон: skill [`.cursor/skills/dnd-mud-review`](../.cursor/skills/dnd-mud-review/SKILL.md). GitHub PR Bugbot — **нет**.
 
-Quality gate PR `task → dev`: `make verify-scope` + review (light/full). Full pytest/lint — CI [`ci.yml`](../.github/workflows/ci.yml).
+Quality gate PR `task → dev`: один раз [`dnd-mud-review`](../.cursor/skills/dnd-mud-review/SKILL.md) (включает `verify-scope`) до push. Full pytest/lint — CI [`ci.yml`](../.github/workflows/ci.yml).
 
 ### Cursor IDE (Agent Review)
 
@@ -233,13 +251,13 @@ Quality gate PR `task → dev`: `make verify-scope` + review (light/full). Full 
 | Практика | Зачем |
 |----------|-------|
 | Короткие task-ветки (1 фича, 1–3 дня) | Меньше контекста и diff |
-| Один чат ≈ одна интеграционная ветка к PR | Вспомогательные ветки по плану — ок, но перед PR слить в одну |
-| Review один раз в конце (light или full) | Не дублировать проверку в чате и bugbot |
-| `rebase origin/dev` перед full review | Минимальный diff для bugbot |
+| План с N PR / фаз → **N part-веток** (имя из `### PR-N: \`branch\``) | План «17 PR» на 1 ветке — нарушение workflow |
+| Merge всех part в `feat/<slug>` перед review | Review на part-ветке или с незакрытыми PR |
+| Review **один раз** в конце task-ветки (`dnd-mud-review` = verify-scope + diff) | Не гонять full test/lint между подзадачами |
+| `rebase origin/dev` перед review | Минимальный diff для bugbot |
 | Plan mode для крупных задач | Меньше итераций fix в Agent |
 | Узкий scope в промпте | Меньше лишних файлов в контексте |
 | Grep/Read вместо Task/explore для 1–2 файлов | Дешевле subagent |
-| `make test-fast` / `make test` вместо повторных «проверь ещё раз» в чате | Быстрый feedback без coverage; полный прогон — перед PR |
 
 Мониторинг: раз в неделю [cursor.com/dashboard/usage](https://cursor.com/dashboard/usage) — рост `agent_review` vs `auto`.
 
@@ -302,7 +320,7 @@ overlays:
     path: overlay.yaml
 ```
 
-Overlay-фрагмент (`overlay.yaml`) — partial YAML с ключом каталога (`races:`, …). Runtime: `core/catalog_loader.load_catalog` → deep-merge через `core/mod_loader.py`.
+Overlay-фрагмент (`overlay.yaml`) — partial YAML с ключом каталога (`races:`, …). Runtime: `core/catalog_loader.load_catalog` → deep-merge через `core/mod_loader.py`; режим — `set_mod_gating_difficulty()` (по умолчанию `normal` в `main.py`, при игре — `Character.difficulty`).
 
 ## Добавление локализации
 
@@ -372,7 +390,7 @@ races:
 - ✅ `ui/menus/stats/` — генерация характеристик (standard / point-buy / random)
 - ✅ Flow «Новая игра» (персонаж → приключение → `scenario_flow.run_scenario`)
 - ✅ Flow «Создать персонажа» — `ui/menus/_creation_steps.py` (`show_create_character_flow`)
-- ✅ Flow «Загрузить игру» — заглушка (`errors.load_not_implemented`)
+- ✅ Flow «Загрузить игру» — `ui/menus/load_game.py` (список сессий, resume сценария)
 
 ### Тестирование
 - ✅ pytest suite (`make test`; число кейсов: `pytest --collect-only -q`)

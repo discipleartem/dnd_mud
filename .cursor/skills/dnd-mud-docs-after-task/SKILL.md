@@ -1,21 +1,18 @@
 ---
 name: dnd-mud-docs-after-task
 description: >-
-  Updates dnd_mud project docs in docs/ after task implementation is complete,
-  before the finalization commit, then commits (docs: … or together with code).
-  Use when finishing a feature task, before verify, or when the user asks to sync
-  documentation with code changes.
+  Обновляет docs в docs/ после завершения реализации задачи, перед commit
+  финализации. Auto-commit на task-ветке. Перед verify/review. Когда задача
+  только docs/rules — пропустить.
 ---
 
 # dnd_mud — документация после задачи
 
-Канон: [`01-operations.mdc`](~/.cursor/rules/01-operations.mdc) §Task cycle ш.3 · оркестрация [`AGENTS.md`](../../AGENTS.md) §Steps.
+Канон: [`01-operations.mdc`](~/.cursor/rules/01-operations.mdc) §Task cycle ш.3 · [`AGENTS.md`](../../AGENTS.md) §Steps. Политика verify: [`dnd-mud-workflow.mdc`](../../rules/dnd-mud-workflow.mdc) §Verify / review.
 
 ## Когда выполнять
 
-После **завершения реализации** задачи (подзадачи, слияние веток по плану), **перед** commit финализации, **до** verify.
-
-Промежуточные commits подзадач во время работы — по [`01-operations.mdc`](~/.cursor/rules/01-operations.mdc) §Commits; skill на **конце** задачи, до финального commit.
+После **завершения реализации** (подзадачи, слияние веток по плану), **перед** commit финализации и [`dnd-mud-review`](../dnd-mud-review/SKILL.md).
 
 ## Когда пропустить
 
@@ -28,11 +25,12 @@ description: >-
 1. По `git diff` (working tree, staged; при необходимости `origin/dev...HEAD`) определить затронутые области.
 2. Обновить **только** релевантные файлы из таблицы ниже — факты, не дублирование.
 3. **Commit финализации** — после шагов 1–2, по [`user-protocols.mdc`](~/.cursor/rules/user-protocols.mdc) §Commit procedure:
+   - на task-ветке commit **auto** ([`01-operations.mdc`](~/.cursor/rules/01-operations.mdc) §Commits; project local overrides user «commit по запросу»)
    - незакоммиченный код + docs: один коммит `feat:`/`fix:`/… (docs в том же коммите), если уместно; иначе сначала код, затем `docs:`
    - код уже в подзадачах, изменились только docs: `docs: <краткое описание>` (Conventional Commits, английский)
    - не коммитить `.coverage`, `saves/` ([`dnd-mud-workflow.mdc`](../../rules/dnd-mud-workflow.mdc) §Git)
    - если diff пустой — commit пропустить
-4. Перейти к skill `dnd-mud-verify` → `dnd-mud-review`.
+4. Перейти к [`dnd-mud-review`](../dnd-mud-review/SKILL.md) (**один раз** на task-ветку).
 
 ## Какой файл обновлять
 

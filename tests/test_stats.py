@@ -5,7 +5,11 @@ import random
 import pytest
 
 from core import dice
-from core.constants import difficulty_class, proficiency_bonus
+from core.constants import (
+    ability_modifier,
+    difficulty_class,
+    proficiency_bonus,
+)
 from core.difficulty import (
     adventure_allows_difficulty,
     adventure_requires_hardcore,
@@ -13,10 +17,15 @@ from core.difficulty import (
 )
 from core.models import Adventure, Character
 from core.stats import (
+    ABILITY_SCORE_MAX,
+    ABILITY_SCORE_MIN,
     STAT_NAMES,
     point_buy_points_remaining,
+    validate_final_stats,
     validate_point_buy_finish,
 )
+from core.types import CharacterClass
+from tests.creation_helpers import flat_stats
 
 
 @pytest.mark.parametrize(
@@ -29,10 +38,40 @@ def test_proficiency_bonus(level: int, expected_bonus: int) -> None:
 
 def test_difficulty_class_and_dice(monkeypatch: pytest.MonkeyPatch) -> None:
     assert difficulty_class("medium") == 10
-    assert dice.ability_modifier(18) == 4
     values = iter([3, 5])
     monkeypatch.setattr(random, "randint", lambda _a, _b: next(values))
     assert dice.roll(count=2, sides=6, modifier=2) == 10
+
+
+@pytest.mark.parametrize(
+    "score,expected",
+    [
+        (1, -5),
+        (9, -1),
+        (10, 0),
+        (11, 0),
+        (20, 5),
+        (0, -5),
+        (22, 6),
+        (25, 7),
+        (30, 10),
+        (31, 10),
+    ],
+)
+def test_ability_modifier(score: int, expected: int) -> None:
+    assert ability_modifier(score) == expected
+    assert dice.ability_modifier(score) == expected
+
+
+def test_validate_final_stats_bounds() -> None:
+    base = flat_stats(10)
+    assert validate_final_stats(base) is None
+    over = dict(base)
+    over["strength"] = ABILITY_SCORE_MAX + 1
+    assert validate_final_stats(over) == ("strength", ABILITY_SCORE_MAX + 1)
+    under = dict(base)
+    under["dexterity"] = ABILITY_SCORE_MIN - 1
+    assert validate_final_stats(under) == ("dexterity", 0)
 
 
 def test_point_buy_validation() -> None:
@@ -60,7 +99,9 @@ def test_adventure_difficulty_rules() -> None:
 
 def test_adventure_unavailable_reason() -> None:
     high = Adventure(id="high", name="High", min_level=5)
-    char = Character(name="Hero", race="human", class_id="fighter", level=1)
+    char = Character(
+        name="Hero", race="human", class_id=CharacterClass.FIGHTER, level=1
+    )
     assert (
         adventure_unavailable_reason(high, char)
         == "adventures.unavailable_reason_level"
@@ -69,7 +110,7 @@ def test_adventure_unavailable_reason() -> None:
     normal_char = Character(
         name="Hero",
         race="human",
-        class_id="fighter",
+        class_id=CharacterClass.FIGHTER,
         difficulty="normal",
     )
     assert (

@@ -15,6 +15,7 @@ from ui.menus._common import (
     _print_screen_header,
     _run_numbered_menu,
 )
+from ui.menus.mods_menu import show_mods_menu
 
 
 def select_difficulty(strings: StringsDict) -> GameDifficulty | None:
@@ -107,21 +108,19 @@ def show_settings(
 ) -> RuntimeSettings:
     """Экран настроек."""
     while True:
+        options = [get_string(strings, "settings.option_mods")]
         _print_screen_header(get_string(strings, "settings.caption"))
-        print(
-            f"  {Fore.YELLOW}0{Style.RESET_ALL}."
-            f" {get_string(strings, 'settings.back')}"
-        )
-        print()
-
-        choice = _deps.get_int_input(
-            get_string(strings, "settings.prompt", count=0),
-            0,
-            0,
+        choice = _run_numbered_menu(
             strings,
+            options,
+            prompt_key="settings.prompt",
+            back_label_key="settings.back",
         )
 
-        if choice == 0:
+        if choice is None:
             break
+
+        if choice == 1:
+            show_mods_menu(strings, settings["language"])
 
     return settings

@@ -1,0 +1,74 @@
+---
+description: dnd_mud — stack, команды, docs index, local rules index
+alwaysApply: true
+---
+
+# dnd_mud project
+
+**Stack:** Python **3.12**, console MUD, Colorama, file-based storage, pytest.
+
+**Принцип:** [`dnd-mud-python.md`](dnd-mud-python.md), [`dnd-mud-tests.md`](dnd-mud-tests.md).
+
+## Commands
+
+`.venv` обязателен.
+
+```bash
+make install          # venv + pip install -e ".[dev]"
+make verify-changed   # подзадача (pre-commit)
+# verify-scope — только в dnd-mud-review (конец task-ветки)
+# make verify       — CI / release
+make test / make check  # по запросу или CI
+python main.py        # smoke меню (в review при UI-diff)
+```
+
+Verify/review policy — [`dnd-mud-workflow.md`](dnd-mud-workflow.md) §Verify / review; skills — [`.devin/workflows/`](../workflows/README.md).
+
+## Docs
+
+- [docs/README.md](../../docs/README.md) — индекс документации
+- [docs/DND_RULES.md](../../docs/DND_RULES.md) · [docs/DATA_SCHEMA.md](../../docs/DATA_SCHEMA.md) · [docs/ARCHITECTURE.md](../../docs/ARCHITECTURE.md)
+- [docs/API.md](../../docs/API.md) · [docs/BACKLOG.md](../../docs/BACKLOG.md) · [docs/CHANGELOG.md](../../docs/CHANGELOG.md) · [docs/DEVELOPMENT.md](../../docs/DEVELOPMENT.md) · [docs/MUD_PRD.md](../../docs/MUD_PRD.md)
+
+## D&D 5e — источник истины и поиск правил
+
+**Канон редакции:** Player's Handbook **2014** (рус. перевод PHantom, 2016), локальный файл `docs/PHB_ D&D_2023 RUS.pdf` (331 стр.; в git не коммитится — `.gitignore` → `docs/*.pdf`). Имя файла «2023» — локальное обозначение копии, **не** редакция правил 2024.
+
+Код, YAML и [`docs/DND_RULES.md`](../../docs/DND_RULES.md) описывают **реализацию в MUD**; при расхождении с PHB верен PDF.
+
+### Алгоритм поиска (агенты и разработчики)
+
+Искать информацию **строго по порядку**; переходить к следующему шагу только если на текущем ответа нет или он явно неполный. **Не опираться на память модели** и не выдумывать правила.
+
+| Шаг | Источник | Как искать |
+|-----|----------|------------|
+| **1** | [`docs/rules/`](../../docs/rules/) | [`_index/lookup.yaml`](../../docs/rules/_index/lookup.yaml) (`by_alias` / `by_id`); детали — markdown `phb:auto`; обзор — [`docs/rules/README.md`](../../docs/rules/README.md), [`docs/DND_RULES.md`](../../docs/DND_RULES.md) |
+| **2** | [`docs/PHB_ D&D_2023 RUS.pdf`](../../docs/PHB_%20D%26D_2023%20RUS.pdf) | Локальный PHB; см. §Доступ к PHB PDF ниже |
+| **3** | Интернет | Официальные правила **D&D 5e до редакции 2024** (PHB 2014 / SRD 5.1). **Не** использовать правила PHB 2024+ как канон для этого проекта |
+
+**При противоречии между источниками:** PDF (шаг 2) > пересказ в `docs/rules/` (шаг 1) > веб (шаг 3). После уточнения по PDF при необходимости дополняй `docs/rules/` (пересказ, не дословная копия).
+
+### Доступ к PHB PDF (агент)
+
+Инструменты чтения/поиска могут не видеть PDF, пока в [`.gitignore`](../../.gitignore) активна строка `docs/*.pdf` (даже если файл лежит в `docs/`).
+
+1. Временно закомментировать: `# docs/*.pdf` (строка ~20).
+2. Прочитать/найти нужное в `docs/PHB_ D&D_2023 RUS.pdf`.
+3. **Обязательно вернуть** активное игнорирование: раскомментировать `docs/*.pdf` (убрать `#`).
+4. PDF **не коммитить** и не добавлять в stage (`git add`).
+
+Если после шага 1 файл всё ещё недоступен — его нет локально; попроси пользователя положить PDF в `docs/`.
+
+## Agent-loop
+
+[`AGENTS.md`](../../AGENTS.md) · git/verify/review — [`dnd-mud-workflow.md`](dnd-mud-workflow.md).
+
+## Local rules (index)
+
+| Файл | Globs | Канон |
+|------|-------|-------|
+| `dnd-mud-workflow.md` | always | git/verify/review overrides |
+| `dnd-mud-python.md` | `**/*.py` | Python 3.12, KISS |
+| `dnd-mud-tests.md` | `tests/**` | pytest |
+| `dnd-mud-core.md` | `core/**`, `ui/**`, `main.py` | слои, механика |
+| `dnd-mud-data.md` | `database/**`, `mods/**`, `**/*.json` | YAML/JSON |

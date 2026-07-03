@@ -4,11 +4,26 @@
 """
 
 from dataclasses import dataclass, field
-from typing import Any
+from typing import Any, cast
 
 from core.levels import clamp_level
 from core.localization import resolve_localized_text
-from core.types import GameDifficulty, StatMap
+from core.types import (
+    CharacterClass,
+    EquippedState,
+    GameDifficulty,
+    InventoryItem,
+    StatMap,
+)
+
+
+def _parse_character_class(raw: object) -> CharacterClass:
+    """Идентификатор класса из JSON или кода."""
+    if isinstance(raw, CharacterClass):
+        return raw
+    if raw is None or raw == "":
+        raise ValueError("class_id is required")
+    return CharacterClass(str(raw))
 
 
 def _coerce_str_list(raw: object) -> list[str]:
@@ -45,13 +60,44 @@ def _parse_difficulty(raw: object) -> GameDifficulty:
     return "normal"
 
 
+def _coerce_inventory(raw: object) -> list[InventoryItem]:
+    """Инвентарь из JSON."""
+    if not isinstance(raw, list):
+        return []
+    items: list[InventoryItem] = []
+    for item in raw:
+        if not isinstance(item, dict):
+            continue
+        kind = item.get("kind")
+        item_id = item.get("id")
+        if not isinstance(kind, str) or not isinstance(item_id, str):
+            continue
+        entry: InventoryItem = {"kind": kind, "id": item_id}
+        qty = item.get("qty")
+        if isinstance(qty, int):
+            entry["qty"] = qty
+        items.append(entry)
+    return items
+
+
+def _coerce_equipped(raw: object) -> EquippedState:
+    """Экипировка из JSON."""
+    if isinstance(raw, dict):
+        return cast(EquippedState, dict(raw))
+    return {}
+
+
+def _empty_equipped() -> EquippedState:
+    return cast(EquippedState, {})
+
+
 @dataclass
 class Character:
     """Модель персонажа."""
 
     name: str
     race: str
-    class_id: str
+    class_id: CharacterClass
     level: int = 1
     stats: StatMap = field(default_factory=dict)
     current_hp: int = 0
@@ -71,16 +117,26 @@ class Character:
     feat_ids: list[str] = field(default_factory=list)
     feat_choices: dict[str, dict[str, Any]] = field(default_factory=dict)
     asi_choices: dict[str, str] = field(default_factory=dict)
+    save_proficiencies: list[str] = field(default_factory=list)
+    inventory: list[InventoryItem] = field(default_factory=list)
+    equipped: EquippedState = field(default_factory=_empty_equipped)
+    equipment_choices: dict[str, str] = field(default_factory=dict)
     class_features_applied: bool = False
     save_slug: str | None = None
     created_at: str | None = None
+
+    def __post_init__(self) -> None:
+        """Привести class_id к enum при создании из str."""
+        object.__setattr__(
+            self, "class_id", _parse_character_class(self.class_id)
+        )
 
     def to_dict(self) -> dict[str, Any]:
         """Сериализовать в словарь для сохранения в JSON."""
         data: dict[str, Any] = {
             "name": self.name,
             "race": self.race,
-            "class_id": self.class_id,
+            "class_id": str(self.class_id),
             "level": self.level,
             "stats": self.stats,
             "current_hp": self.current_hp,
@@ -114,6 +170,14 @@ class Character:
             data["feat_choices"] = self.feat_choices
         if self.asi_choices:
             data["asi_choices"] = self.asi_choices
+        if self.save_proficiencies:
+            data["save_proficiencies"] = self.save_proficiencies
+        if self.inventory:
+            data["inventory"] = self.inventory
+        if self.equipped:
+            data["equipped"] = self.equipped
+        if self.equipment_choices:
+            data["equipment_choices"] = self.equipment_choices
         if self.class_features_applied:
             data["class_features_applied"] = True
         if self.save_slug is not None:
@@ -136,7 +200,7 @@ class Character:
         return cls(
             name=str(data.get("name", "")),
             race=str(data.get("race", "")),
-            class_id=str(data.get("class_id") or ""),
+            class_id=_parse_character_class(data.get("class_id")),
             level=clamp_level(int(data.get("level", 1))),
             stats=data.get("stats", {}),
             current_hp=current_hp,
@@ -166,6 +230,14 @@ class Character:
             feat_ids=_coerce_str_list(data.get("feat_ids", [])),
             feat_choices=_coerce_feat_choices(data.get("feat_choices", {})),
             asi_choices=_coerce_str_dict(data.get("asi_choices", {})),
+            save_proficiencies=_coerce_str_list(
+                data.get("save_proficiencies", [])
+            ),
+            inventory=_coerce_inventory(data.get("inventory", [])),
+            equipped=_coerce_equipped(data.get("equipped", {})),
+            equipment_choices=_coerce_str_dict(
+                data.get("equipment_choices", {})
+            ),
             class_features_applied=bool(
                 data.get("class_features_applied", False)
             ),
