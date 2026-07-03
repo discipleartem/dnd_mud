@@ -264,7 +264,7 @@ def build_fixed_proficiencies(
     feat_choices: dict[str, dict[str, Any]] | None = None,
 ) -> tuple[list[str], list[str], list[str]]:
     """Собрать фиксированные владения без игровых выборов."""
-    from core.character_builder import resolve_grants_for_context
+    from core.character_build import resolve_grants_for_context
     from core.grants_context import CreationContext
 
     ctx = CreationContext(

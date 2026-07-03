@@ -2,7 +2,7 @@
 
 import pytest
 
-from core.character_builder import (
+from core.character_build import (
     CreationContext,
     ResolvedGrants,
     merge_languages_with_feats,
