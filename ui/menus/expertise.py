@@ -12,8 +12,12 @@ from core.localization import get_string
 from core.models import Character
 from core.types import StringsDict
 from ui.menus import _deps
-from ui.menus._common import _print_screen_header, _skill_name
-from ui.menus.skills import _print_skill_pick_list
+from ui.menus._common import (
+    _print_pick_list,
+    _print_screen_header,
+    _read_pool_pick,
+    _skill_name,
+)
 
 
 def _tool_name(strings: StringsDict, tool_id: str) -> str:
@@ -29,6 +33,7 @@ def _pick_expertise_skills(
     pick_count: int,
 ) -> list[str] | None:
     """Выбрать навыки для компетентности."""
+    taken_suffix = get_string(strings, "character.skills_taken_suffix")
     selected: list[str] = []
     for current in range(1, pick_count + 1):
         _print_screen_header(
@@ -48,35 +53,26 @@ def _pick_expertise_skills(
             total=pick_count,
         )
         pool = list(proficiencies)
-        blocked = list(already_expert) + selected
-        selectable = _print_skill_pick_list(strings, pool, blocked)
-        print()
-        if not selectable:
-            print(
-                f"{Fore.RED}"
-                f"{get_string(strings, 'character.expertise_pool_empty')}"
-                f"{Style.RESET_ALL}"
+        blocked = set(already_expert) | set(selected)
+        while True:
+            selectable = _print_pick_list(
+                pool,
+                blocked,
+                label_for=lambda skill_id: _skill_name(strings, skill_id),
+                taken_suffix=taken_suffix,
             )
-            print()
-            print(
-                f"  {Fore.YELLOW}0{Style.RESET_ALL}. "
-                f"{get_string(strings, 'character.back')}"
+            picked = _read_pool_pick(
+                strings,
+                selectable,
+                prompt=prompt,
+                empty_key="character.expertise_pool_empty",
             )
-            print()
-            if _deps.get_int_input(prompt, 0, 0, strings) == 0:
+            if picked == "":
+                continue
+            if picked is None:
                 return None
-            continue
-
-        print(
-            f"  {Fore.YELLOW}0{Style.RESET_ALL}. "
-            f"{get_string(strings, 'character.back')}"
-        )
-        print()
-        choice = _deps.get_int_input(prompt, 0, len(selectable), strings)
-        if choice == 0:
-            return None
-        picked = selectable[choice - 1]
-        selected.append(picked)
+            selected.append(picked)
+            break
 
     return selected
 

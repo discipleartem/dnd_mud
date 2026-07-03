@@ -185,3 +185,66 @@ def _format_pick_menu_label(name: str, proficient: bool) -> str:
     """Подпись пункта меню выбора с опциональной «*» владения."""
     marker = _proficiency_menu_marker(proficient)
     return f"{marker}{Fore.CYAN}{name}{Style.RESET_ALL}"
+
+
+def _print_pick_list(
+    pool: list[str],
+    taken: set[str],
+    *,
+    label_for: Callable[[str], str],
+    taken_suffix: str,
+    format_selectable: Callable[[int, str, str], None] | None = None,
+) -> list[str]:
+    """Показать пул; занятые — серым. Вернуть доступные id в порядке вывода."""
+    selectable: list[str] = []
+    for item_id in pool:
+        name = label_for(item_id)
+        if item_id in taken:
+            print(
+                f"  {Fore.LIGHTBLACK_EX}{name} {taken_suffix}"
+                f"{Style.RESET_ALL}"
+            )
+        else:
+            selectable.append(item_id)
+            idx = len(selectable)
+            if format_selectable is not None:
+                format_selectable(idx, item_id, name)
+            else:
+                print(
+                    f"  {Fore.YELLOW}{idx}{Style.RESET_ALL}. "
+                    f"{Fore.CYAN}{name}{Style.RESET_ALL}"
+                )
+    return selectable
+
+
+def _read_pool_pick(
+    strings: StringsDict,
+    selectable: list[str],
+    *,
+    prompt: str,
+    empty_key: str,
+    back_label_key: str = "character.back",
+) -> str | None:
+    """Ввод выбора из пула после _print_pick_list; None — «Назад»."""
+    print()
+    if not selectable:
+        print(f"{Fore.RED}{get_string(strings, empty_key)}{Style.RESET_ALL}")
+        print()
+        print(
+            f"  {Fore.YELLOW}0{Style.RESET_ALL}. "
+            f"{get_string(strings, back_label_key)}"
+        )
+        print()
+        if _deps.get_int_input(prompt, 0, 0, strings) == 0:
+            return None
+        return ""
+
+    print(
+        f"  {Fore.YELLOW}0{Style.RESET_ALL}. "
+        f"{get_string(strings, back_label_key)}"
+    )
+    print()
+    choice = _deps.get_int_input(prompt, 0, len(selectable), strings)
+    if choice == 0:
+        return None
+    return selectable[choice - 1]
