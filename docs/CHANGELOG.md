@@ -4,10 +4,11 @@
 
 ### Added
 - **Полный рефакторинг (фазы 1–5):** миграции сейвов (`core/save_migration.py`), пакет `core/inventory/`, presentation в `ui/menus/_display/_inventory.py`, `CharacterClass` StrEnum, deps policy для оркестраторов
-- **Mod infra:** `requires_game_difficulty` в `mod_loader`, `reload_catalogs()`, меню «Модификации» (`ui/menus/mods_menu.py`)
+- **Mod infra:** `requires_game_difficulty` в `mod_loader` (runtime gating через `set_mod_gating_difficulty`), `reload_catalogs()`, меню «Модификации»
 - **Game engine:** `core/game_engine.py`, `GameSession`, decouple `scenario_flow` → `run_scenario_with_engine`
 - **Phase 2 hooks:** `apply_progression_grants_at_level`, `feat_is_active` / `active_feat_ids`, `ability_check` / `skill_check` / `passive_skill`
-- **Load game:** сессии в `saves/sessions/`, flow `ui/menus/load_game.py`
+- **Load game:** сессии в `saves/sessions/`, flow `ui/menus/load_game.py`; resume сохраняет `current_node_id`
+- **Scenario:** сообщения результата `skill_check` в UI
 - **Terminal wrap:** `ui/terminal_wrap.py` (описания сценариев)
 - Agent skills: `dnd-mud-git-pr` (push/PR/rename `merged/*`); reference files (`dnd-mud-verify/reference.md`, `dnd-mud-review/checklist-full.md`, `template-findings.md`); индекс [`.cursor/skills/README.md`](../.cursor/skills/README.md)
 - **Модификаторы характеристик:** `ability_modifier()` из таблицы PHB в `constants.yaml` (clamp 1–30); константы `ABILITY_SCORE_MIN` / `DEFAULT` / `MAX` для валидации PC (1–20)

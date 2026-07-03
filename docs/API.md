@@ -605,8 +605,23 @@ save_settings(language: str) -> None
 
 **Запланированные hook'и (не реализованы)**
 
-- Проверка `requires_game_difficulty` в метаданных мода (overlay каталогов — через `core/mod_loader.py`)
 - Параметризация правил в `game_engine` по режиму (HardCore = полная механика D&D 5e)
+
+**Mod gating:** `set_mod_gating_difficulty()` / `get_mod_gating_difficulty()` в `core/mod_loader.py`; `load_catalog()` передаёт режим в overlay. По умолчанию в `main.py` — `normal`; перед игрой — `character.difficulty` (`new_game`, `load_game`).
+
+---
+
+## core.session_storage — Сессии приключений
+
+```python
+SessionSnapshot  # save_slug, character_save_slug, adventure_id, current_node_id, …
+list_sessions() -> list[SessionSnapshot]
+save_session(snapshot: SessionSnapshot) -> None
+load_session(save_slug: str) -> SessionSnapshot | None
+load_character_for_session(snapshot, characters_dir) -> Character | None
+```
+
+Файлы: `saves/sessions/{save_slug}.json` — см. [DATA_SCHEMA.md](DATA_SCHEMA.md) §Save JSON — сессия приключения.
 
 ---
 
