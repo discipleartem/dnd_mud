@@ -6,6 +6,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
+from core.character_storage import _try_load_character_file
 from core.io import load_json, save_json
 from core.models import Adventure, Character
 from core.types import GameDifficulty
@@ -143,13 +144,8 @@ def load_character_for_session(
 ) -> Character | None:
     """Загрузить персонажа сессии из ``saves/characters/``."""
     path = characters_dir / f"{snapshot.character_save_slug}.json"
-    if not path.exists():
-        return None
-    try:
-        data = load_json(path)
-        return Character.from_dict(data)
-    except OSError:
-        return None
+    character, _corrupt = _try_load_character_file(path)
+    return character
 
 
 def find_adventure(
