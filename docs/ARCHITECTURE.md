@@ -94,8 +94,8 @@ UI не читает файлы данных напрямую — только �
 | `core/stats.py` | Генерация/валидация характеристик |
 | `core/dice.py` | `roll()`, `roll_ability_score()`, `ability_modifier()` |
 | `core/slug.py` | `make_save_slug()` |
-| `core/io.py` | `load_yaml()` / `load_json()` (`strict` для каталогов), `save_json()` / `merge_unique()` |
-| `core/catalog_loader.py` | `load_catalog()`, `reload_catalogs()`, сброс кэшей |
+| `core/io.py` | `load_file()` (универсальный YAML/JSON), `load_yaml()` / `load_json()` (`strict` для каталогов), `save_json()` / `merge_unique()` |
+| `core/catalog_loader.py` | `load_catalog()`, `load_catalog_items()` (универсальный загрузчик элементов каталога), `reload_catalogs()`, сброс кэшей |
 | `core/adventure.py` | `load_adventures()` |
 | `core/scenario_actions.py` | Чистая логика action-узлов сценария (без UI) |
 | `core/difficulty.py` | `adventure_allows_difficulty()` |

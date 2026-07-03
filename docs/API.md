@@ -275,9 +275,21 @@ class ResolvedGrants:
 
 ```python
 build_new_character(..., *, unique_save_slug: Callable[[str], str]) -> Character
+resolve_grants_for_context(
+    ctx: CreationContext, *, include_feat_languages: bool = True,
+) -> ResolvedGrants
+resolve_creation_grants(
+    race_id, subrace_id, class_id, background_id, subclass_id, level, *,
+    feat_ids=None, feat_choices=None,
+    extra_skills=None, extra_weapon_tokens=None, extra_tool_tokens=None,
+    extra_languages=None, include_feat_languages=True,
+) -> ResolvedGrants
+merge_languages_with_feats(languages, feat_ids, feat_choices) -> list[str]
+merge_expertise_with_feats(skill_expertise, feat_ids, feat_choices) -> list[str]
 ```
 
-Реализация сборки; `character_storage.build_new_character` передаёт `_unique_save_slug`.
+Реализация сборки; `character_storage.build_new_character` передаёт `_unique_save_slug`.  
+Функции `resolve_grants_for_context`, `resolve_creation_grants`, `merge_languages_with_feats`, `merge_expertise_with_feats` перенесены из удалённого `character_builder.py`.
 
 ---
 
@@ -293,26 +305,6 @@ migrate_character_data(data: dict[str, Any]) -> dict[str, Any]
 
 ---
 
-## core.character_builder — Сборка владений
-
-```python
-resolve_grants_for_context(
-    ctx: CreationContext, *, include_feat_languages: bool = True,
-) -> ResolvedGrants
-
-resolve_creation_grants(
-    race_id, subrace_id, class_id, background_id, subclass_id, level, *,
-    feat_ids=None, feat_choices=None,
-    extra_skills=None, extra_weapon_tokens=None, extra_tool_tokens=None,
-    extra_languages=None, include_feat_languages=True,
-) -> ResolvedGrants
-merge_languages_with_feats(languages, feat_ids, feat_choices) -> list[str]
-merge_expertise_with_feats(skill_expertise, feat_ids, feat_choices) -> list[str]
-```
-
-`build_fixed_proficiencies`, `creation_known_for_feat_picks`, `build_feat_selection_context` делегируют в `resolve_grants_for_context` / `resolve_creation_grants`.
-
----
 
 ## core.grants — Нормализация grants
 
@@ -356,11 +348,19 @@ proficiency_tokens_and_skills_from_grant(grant, choices=None) -> tuple[weapons, 
 
 ```python
 load_catalog(path: Path | str, root_key: str) -> dict[str, Any]
+load_catalog_items(
+    catalog_data: dict[str, Any],
+    language: str,
+    item_id_key: str = "id",
+    name_key: str = "name",
+    fallback: Callable[[str, str], str] | None = None,
+) -> list[dict[str, Any]]
 clear_catalog_cache() -> None
 clear_all_catalog_caches() -> None
 ```
 
-Deep-merge модов через `mod_loader` (overlay по полю `target` — путь к базовому YAML в `manifest.yaml`); кэш `@lru_cache` на `load_catalog` и `load_merged_catalog`.
+Deep-merge модов через `mod_loader` (overlay по полю `target` — путь к базовому YAML в `manifest.yaml`); кэш `@lru_cache` на `load_catalog` и `load_merged_catalog`.  
+`load_catalog_items` — универсальный загрузчик элементов каталога с локализацией (DRY для `load_races`, `load_languages` и т.д.).
 
 ---
 
@@ -584,6 +584,26 @@ make_save_slug(name: str) -> str
 ```
 
 Транслитерация кириллицы и нормализация имени персонажа в slug для `saves/characters/{slug}.json`.
+
+---
+
+## core.io — Загрузка YAML/JSON
+
+```python
+load_file(
+    path: Path,
+    format: Literal["yaml", "json"],
+    default: dict[str, Any] | None = None,
+    *,
+    strict: bool = False,
+) -> dict[str, Any]
+load_yaml(path: Path, default: dict[str, Any] | None = None, *, strict: bool = False) -> dict[str, Any]
+load_json(path: Path, default: dict[str, Any] | None = None, *, strict: bool = False) -> dict[str, Any]
+save_json(path: Path, data: dict[str, Any]) -> None
+merge_unique(*parts: list[str]) -> list[str]
+```
+
+`load_file` — универсальная загрузка YAML или JSON файла (DRY). `load_yaml` и `load_json` — thin wrappers. `strict=True` для битых каталогов игры (`CatalogLoadError`).
 
 ---
 

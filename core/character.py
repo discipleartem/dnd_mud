@@ -11,7 +11,7 @@ from core.character_storage import (
     delete_all_characters,
     delete_character,
     load_characters,
-    save_character,
+    persist_character,
     update_character,
 )
 from core.classes import load_class_full, load_classes, load_subclasses
@@ -88,11 +88,11 @@ __all__ = [
     "load_race_full",
     "load_races",
     "load_strings",
+    "persist_character",
     "point_buy_points_remaining",
     "point_buy_total_cost",
     "remaining_standard_array_pool",
     "roll_ability_score",
-    "save_character",
     "update_character",
     "validate_final_stats",
     "validate_point_buy_finish",

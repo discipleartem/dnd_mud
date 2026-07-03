@@ -1,6 +1,6 @@
 """Финализация и сохранение персонажа после создания."""
 
-from core.character_builder import merge_languages_with_feats
+from core.character_build import merge_languages_with_feats
 from core.character_storage import persist_character
 from core.models import Character
 from ui.menus._creation_state import _CreationState

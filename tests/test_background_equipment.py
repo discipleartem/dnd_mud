@@ -5,7 +5,8 @@ from pathlib import Path
 import pytest
 
 from core.backgrounds import get_background_equipment_items
-from core.character_storage import save_character
+from core.character_build import build_new_character
+from core.character_storage import persist_character
 from core.types import CharacterClass
 from tests.creation_helpers import flat_stats
 
@@ -120,7 +121,7 @@ def test_save_character_merges_background_items_into_inventory(
     characters_dir: Path,
 ) -> None:
     stats = flat_stats(12)
-    saved = save_character(
+    character = build_new_character(
         name="BgHero",
         race_id="human",
         class_id=CharacterClass.ROGUE,
@@ -134,7 +135,9 @@ def test_save_character_merges_background_items_into_inventory(
             "ranged": "shortbow",
             "pack": "burglars_pack",
         },
+        unique_save_slug=lambda name: name,
     )
+    saved = persist_character(character)
     inv_ids = {(i["kind"], i["id"]) for i in saved.inventory}
     assert ("equipment", "crowbar") in inv_ids
     assert ("equipment", "dark_common_clothes") in inv_ids
@@ -146,7 +149,7 @@ def test_save_character_charlatan_tools_in_inventory(
     characters_dir: Path,
 ) -> None:
     stats = flat_stats(10)
-    saved = save_character(
+    character = build_new_character(
         name="Charlatan",
         race_id="human",
         class_id=CharacterClass.ROGUE,
@@ -157,7 +160,9 @@ def test_save_character_charlatan_tools_in_inventory(
             "ranged": "shortbow",
             "pack": "burglars_pack",
         },
+        unique_save_slug=lambda name: name,
     )
+    saved = persist_character(character)
     inv_ids = {(i["kind"], i["id"]) for i in saved.inventory}
     assert ("equipment", "fine_clothes") in inv_ids
     assert ("tool", "disguise_kit") in inv_ids

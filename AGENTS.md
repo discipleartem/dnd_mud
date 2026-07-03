@@ -31,6 +31,8 @@ PDF парсят только агенты. После правок — `python 
 git-старт (feat/<slug>) → [инвентаризация N PR из плана] → [part-ветка × N: checkout -b → scope → commit]* → merge all (--no-ff) + branch-cleanup → feat/<slug> → docs → review → [fix-plan?] → push/PR → merged/…
 ```
 
+**КРИТИЧЕСКОЕ ПРАВИЛО:** Git-старт ОБЯЗАТЕЛЕН перед ЛЮБОЙ реализацией кода (даже с утверждённым планом). Агент НЕ ДОЛЖЕН начинать правки кода на ветке `dev`, `main` или без синхронизации с `origin/dev`.
+
 Part-ветки: **1 PR плана = 1 ветка**; N PR → N веток — [`dnd-mud-workflow.mdc`](.cursor/rules/dnd-mud-workflow.mdc) §Несколько веток. **`main` / `dev` не трогать**. Docs — [`dnd-mud-docs-after-task`](.cursor/skills/dnd-mud-docs-after-task/SKILL.md) перед commit финализации.
 
 | Режим | Delta vs [`01-operations.mdc`](~/.cursor/rules/01-operations.mdc) |
@@ -58,7 +60,7 @@ Personal: `git-dev-main-sync` (`~/.cursor/skills/git-dev-main-sync/`).
 | # | Шаг | Канон |
 |---|-----|-------|
 | 0 | Инвентаризация веток из плана | Таблица PR → имя ветки; **N** = число `### PR-*` (или фаз delivery); до кода — [`dnd-mud-workflow.mdc`](.cursor/rules/dnd-mud-workflow.mdc) §Шаг 0 |
-| 1 | Git-старт | `feat/<slug>` от `dev`; [`01-operations.mdc`](~/.cursor/rules/01-operations.mdc) §Task cycle ш.1 |
+| 1 | Git-старт (ОБЯЗАТЕЛЬНО ПЕРЕД ПЕРВОЙ ПРАВКОЙ КОДА) | `git fetch origin`, sync `dev` с `origin/dev`, `git checkout -b feat/<slug>` от `dev`; [`01-operations.mdc`](~/.cursor/rules/01-operations.mdc) §Task cycle ш.1; [`dnd-mud-workflow.mdc`](.cursor/rules/dnd-mud-workflow.mdc) §Git |
 | 2 | Реализация | **Каждый PR** — `git checkout -b <branch>` → scope → commit; не следующий PR без commit на текущей part-ветке |
 | 2b | Слияние N part → `feat/<slug>` | После **всех** PR плана; каждая part сразу `git branch -d` после `--no-ff` merge; `main`/`dev` не трогать |
 | 2c | Чистка слитых part-веток | `make branch-cleanup` (или `git branch -d` в цикле 2b); не оставлять `feat/*`/`refactor/*` без `merged/` |

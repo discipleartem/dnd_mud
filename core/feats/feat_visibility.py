@@ -66,7 +66,7 @@ def creation_known_for_feat_picks(
     level: int,
 ) -> tuple[list[str], list[str], list[str]]:
     """Навыки, инструменты и токены оружия до подвыборов внутри черты."""
-    from core.character_builder import resolve_grants_for_context
+    from core.character_build import resolve_grants_for_context
 
     ctx = _creation_context(
         race_id, subrace_id, background_id, class_id, subclass_id, level
@@ -97,7 +97,7 @@ def build_feat_selection_context(
     Опциональные ``skills`` / ``weapon_tokens`` / ``tool_tokens`` дополняют
     владения расы, класса и предыстории (например, от уже выбранных черт).
     """
-    from core.character_builder import resolve_grants_for_context
+    from core.character_build import resolve_grants_for_context
 
     ctx = _creation_context(
         race_id,

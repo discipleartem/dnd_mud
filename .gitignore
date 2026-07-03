@@ -3,6 +3,7 @@
 .vscode/*
 !.vscode/settings.json
 !.vscode/extensions.json
+!.vscode/terminal-init.sh
 dnd_mud.egg-info
 .clinerules
 .copilot/
