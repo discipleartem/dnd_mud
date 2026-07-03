@@ -160,3 +160,73 @@ def test_mod_enable_requires_dependency(
     assert set_mod_enabled("base_pack", True) is None
     assert set_mod_enabled("addon_pack", True) is None
     assert get_enabled_mod_ids() == frozenset({"base_pack", "addon_pack"})
+
+
+def test_mod_overlay_delete_and_replace_entity(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    import json
+
+    from core.mod_loader import load_merged_yaml
+
+    catalog = tmp_path / "database" / "races" / "races.yaml"
+    catalog.parent.mkdir(parents=True)
+    catalog.write_text(
+        "\n".join(
+            [
+                "races:",
+                "  human:",
+                "    name:",
+                "      ru: Человек",
+                "  remove_me:",
+                "    name:",
+                "      ru: Удалить",
+            ]
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+
+    mod_id = "homebrew_races"
+    mod_dir = tmp_path / "mods" / mod_id
+    mod_dir.mkdir(parents=True)
+    (mod_dir / "manifest.yaml").write_text(
+        "\n".join(
+            [
+                f"id: {mod_id}",
+                "name: {ru: Homebrew}",
+                "version: '1.0'",
+                "overlays:",
+                f"  - target: {catalog.as_posix()}",
+                "    path: overlay.yaml",
+            ]
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+    (mod_dir / "overlay.yaml").write_text(
+        "\n".join(
+            [
+                "delete:",
+                "  races:",
+                "    - remove_me",
+                "replace_entity:",
+                "  races:",
+                "    human:",
+                "      name:",
+                "        ru: Люди",
+            ]
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+
+    state_path = tmp_path / "mods_state.json"
+    state_path.write_text(json.dumps({"enabled": [mod_id]}), encoding="utf-8")
+    monkeypatch.setattr("core.mod_loader.MODS_DIR", tmp_path / "mods")
+    monkeypatch.setattr("core.mod_loader.MODS_STATE_FILE", state_path)
+
+    merged = load_merged_yaml(catalog)
+    races = merged.get("races", {})
+    assert "remove_me" not in races
+    assert races["human"]["name"]["ru"] == "Люди"
