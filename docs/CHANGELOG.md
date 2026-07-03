@@ -5,6 +5,9 @@
 ### Breaking
 - **Сейвы:** удалены runtime-миграции (`core/save_migration.py`); требуется канонический формат v1 (`class_id`, `race`, `schema_version: 1`); ключ `"class"`, `race_id`, `equip_logic_version` не поддерживаются
 
+### Changed
+- **Code simplification (DRY/KISS/YAGNI):** удалён `core/character_builder.py` — функции перенесены в `core/character_build.py`; добавлен универсальный `catalog_loader.load_catalog_items` для DRY загрузки каталогов; добавлен универсальный `io.load_file` для DRY загрузки YAML/JSON; упрощён `_merge_bonus_dicts` через `collections.Counter`; оптимизирована `load_languages` (один вызов `_load_languages_yaml`)
+
 ### Added
 - **Structural refactor:** docs sync, layer hygiene (`get_enabled_mod_ids`, session/inventory facades), `progression/` split, `_display` consolidation, `InventoryItem` typing, unified `_deps`
 - **Mod system:** `requires`/`conflicts` в manifest, overlay `delete`/`replace_entity`, mods в меню настроек
