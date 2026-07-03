@@ -6,8 +6,8 @@ from typing import Any
 import pytest
 
 import ui.menus._creation_handlers as creation_handlers
-from core.stats import STAT_NAMES
 from core.types import CharacterClass
+from tests.creation_helpers import flat_stats
 from ui.menus import _creation_steps, _deps
 from ui.menus._creation_handlers import (
     _handle_equipment,
@@ -21,10 +21,6 @@ from ui.menus._creation_navigation import (
 )
 from ui.menus._creation_state import _CreationState
 from ui.menus._selectors import select_subrace
-
-
-def _flat_stats(value: int = 10) -> dict[str, int]:
-    return dict.fromkeys(STAT_NAMES, value)
 
 
 def test_select_subrace_half_orc_shows_menu_with_back(
@@ -207,7 +203,7 @@ def test_handlers_without_class_id() -> None:
         name="Test",
         difficulty="normal",
         race_id="human",
-        stats=_flat_stats(),
+        stats=flat_stats(10),
     )
     assert _handle_feats({}, state, "ru").next_step == "class"
     assert _handle_skills({}, state, "ru").next_step == "proficiencies"
@@ -224,7 +220,7 @@ def test_handle_skills_routes_to_equipment(
         race_id="human",
         subrace_id="standard",
         class_id="fighter",
-        stats=_flat_stats(),
+        stats=flat_stats(10),
     )
     monkeypatch.setattr(
         creation_handlers,
@@ -248,7 +244,7 @@ def test_handle_equipment_stores_choices_and_finalizes(
         difficulty="normal",
         race_id="human",
         class_id="fighter",
-        stats=_flat_stats(),
+        stats=flat_stats(10),
         weapon_proficiencies=["simple", "martial"],
         armor_proficiencies=["light", "medium", "heavy", "shield"],
     )

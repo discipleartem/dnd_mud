@@ -12,7 +12,12 @@ from core.scenario_actions import ScenarioActionResult
 from core.session_storage import SessionSnapshot, save_session
 from core.types import LanguageCode, StringsDict
 from ui.menus import _deps
-from ui.menus._common import _press_enter, _print_screen_header
+from ui.menus._common import (
+    _press_enter,
+    _print_numbered_row,
+    _print_screen_header,
+    _read_numbered_choice,
+)
 from ui.menus.class_features import apply_pending_class_features
 from ui.menus.level_up import run_pending_level_ups
 from ui.menus.subclass_trainer import assign_subclass_from_menu
@@ -85,23 +90,57 @@ def _handle_engine_ui(
     """Обработать UI-действия из движка."""
     current = character
     for action in pending:
-        if action.kind == "level_up":
-            current = run_pending_level_ups(strings, current, language)
-        elif action.kind == "pick_subclass":
-            current = _run_character_menu_action(
-                strings,
-                current,
-                language,
-                assign_subclass_from_menu,
-                message_key=action.message_key,
-            )
-        elif action.kind == "apply_class_features":
-            current = _persist_menu_result(
-                apply_pending_class_features(strings, current, language),
-                current,
-            )
+        handler = _PENDING_UI_HANDLERS.get(action.kind)
+        if handler is not None:
+            current = handler(strings, current, language, action)
     _deps.update_character(current)
     return current
+
+
+def _handle_level_up_ui(
+    strings: StringsDict,
+    character: Character,
+    language: LanguageCode,
+    _action: UiAction,
+) -> Character:
+    return run_pending_level_ups(strings, character, language)
+
+
+def _handle_pick_subclass_ui(
+    strings: StringsDict,
+    character: Character,
+    language: LanguageCode,
+    action: UiAction,
+) -> Character:
+    return _run_character_menu_action(
+        strings,
+        character,
+        language,
+        assign_subclass_from_menu,
+        message_key=action.message_key,
+    )
+
+
+def _handle_apply_class_features_ui(
+    strings: StringsDict,
+    character: Character,
+    language: LanguageCode,
+    _action: UiAction,
+) -> Character:
+    return _persist_menu_result(
+        apply_pending_class_features(strings, character, language),
+        character,
+    )
+
+
+_PENDING_UI_HANDLERS: dict[
+    str,
+    Callable[[StringsDict, Character, LanguageCode, UiAction], Character],
+] = {
+    "level_up": _handle_level_up_ui,
+    "pick_subclass": _handle_pick_subclass_ui,
+    "apply_class_features": _handle_apply_class_features_ui,
+}
 
 
 def _handle_action_result(
@@ -201,21 +240,14 @@ def run_scenario_with_engine(
             if not isinstance(choice, dict):
                 continue
             label = _resolve_text(choice.get("text"), language)
-            print(f"  {Fore.YELLOW}{idx}{Style.RESET_ALL}. {label}")
-        print()
-        print(
-            f"  {Fore.YELLOW}0{Style.RESET_ALL}."
-            f" {get_string(strings, 'character.back')}"
-        )
-        print()
-
-        choice_num = _deps.get_int_input(
-            get_string(strings, "scenario.choice_prompt", count=len(choices)),
-            0,
-            len(choices),
+            _print_numbered_row(idx, label)
+        choice_num = _read_numbered_choice(
             strings,
+            len(choices),
+            prompt_key="scenario.choice_prompt",
+            back_label_key="character.back",
         )
-        if choice_num == 0:
+        if choice_num is None:
             break
 
         selected = choices[choice_num - 1]

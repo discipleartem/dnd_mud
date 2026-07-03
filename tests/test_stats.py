@@ -25,6 +25,7 @@ from core.stats import (
     validate_point_buy_finish,
 )
 from core.types import CharacterClass
+from tests.creation_helpers import flat_stats
 
 
 @pytest.mark.parametrize(
@@ -63,7 +64,7 @@ def test_ability_modifier(score: int, expected: int) -> None:
 
 
 def test_validate_final_stats_bounds() -> None:
-    base = dict.fromkeys(STAT_NAMES, 10)
+    base = flat_stats(10)
     assert validate_final_stats(base) is None
     over = dict(base)
     over["strength"] = ABILITY_SCORE_MAX + 1

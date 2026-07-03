@@ -4,7 +4,9 @@ from __future__ import annotations
 
 from typing import Any
 
+from core.models import Character
 from core.stats import STAT_NAMES
+from core.types import CharacterClass
 
 VARIANT_HUMAN_STATS: dict[str, int] = {
     "strength": 15,
@@ -19,6 +21,18 @@ VARIANT_HUMAN_STATS: dict[str, int] = {
 def flat_stats(value: int) -> dict[str, int]:
     """Одинаковое значение для всех характеристик PHB."""
     return dict.fromkeys(STAT_NAMES, value)
+
+
+def minimal_character(**overrides: Any) -> Character:
+    """Минимальный персонаж для UI smoke-тестов."""
+    defaults: dict[str, Any] = {
+        "name": "Hero",
+        "race": "human",
+        "class_id": CharacterClass.FIGHTER,
+        "save_slug": "hero",
+    }
+    defaults.update(overrides)
+    return Character(**defaults)
 
 
 def fighter_acolyte_creation() -> dict[str, Any]:
