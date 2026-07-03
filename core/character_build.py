@@ -11,12 +11,8 @@ from core.models import Character, _parse_character_class
 from core.progression import max_hp_for_level, xp_for_level
 from core.progression.subclasses import start_level_for_difficulty
 from core.stats import STANDARD_ARRAY, generate_stats_standard_array
-from core.types import (
-    CharacterClass,
-    GameDifficulty,
-    InventoryItem,
-    StatMap,
-)
+from core.types import CharacterClass, GameDifficulty, InventoryItem, StatMap
+from core.types.character_params import CharacterBuildParams
 
 
 def build_new_character(
@@ -54,110 +50,191 @@ def build_new_character(
     черт (flow создания после ``select_creation_feats``).
 
     ``unique_save_slug`` — фабрика уникального save_slug по имени персонажа.
+
+    .. deprecated:: 0.2.0
+        Используйте :func:`build_new_character_from_params`
+        с CharacterBuildParams.
     """
+    params = CharacterBuildParams(
+        name=name,
+        race_id=race_id,
+        class_id=class_id,
+        difficulty=difficulty,
+        subrace_id=subrace_id,
+        stats=stats,
+        subclass_id=subclass_id,
+        languages=languages,
+        background_id=background_id,
+        skills=skills,
+        skill_expertise=skill_expertise,
+        tool_expertise=tool_expertise,
+        weapon_proficiencies=weapon_proficiencies,
+        armor_proficiencies=armor_proficiencies,
+        tool_proficiencies=tool_proficiencies,
+        background_tool_picks=background_tool_picks,
+        feat_ids=feat_ids,
+        feat_choices=feat_choices,
+        asi_choices=asi_choices,
+        save_proficiencies=save_proficiencies,
+        inventory=inventory,
+        equipment_choices=equipment_choices,
+        level=level,
+        class_features_applied=class_features_applied,
+        apply_feat_stat_bonuses=apply_feat_stat_bonuses,
+        unique_save_slug=unique_save_slug,
+    )
+    return build_new_character_from_params(params)
+
+
+def build_new_character_from_params(params: CharacterBuildParams) -> Character:
+    """Собрать нового персонажа из параметров без записи на диск.
+
+    Новый API для создания персонажа с использованием CharacterBuildParams.
+    Заменяет длинный список параметров в build_new_character.
+
+    Args:
+        params: Параметры создания персонажа.
+
+    Returns:
+        Модель персонажа.
+    """
+    stats = params.stats
     if stats is None:
         stats = generate_stats_standard_array(
-            list(STANDARD_ARRAY), race_id, subrace_id
+            list(STANDARD_ARRAY), params.race_id, params.subrace_id
         )
-    if feat_ids:
+    languages: list[str] | None = params.languages
+    skill_expertise: list[str] | None = params.skill_expertise
+    if params.feat_ids:
         from core.feats import apply_feats_to_stats
 
-        if apply_feat_stat_bonuses:
-            stats = apply_feats_to_stats(stats, feat_ids, feat_choices)
+        if params.apply_feat_stat_bonuses:
+            stats = apply_feats_to_stats(
+                stats, params.feat_ids, params.feat_choices
+            )
         languages = merge_languages_with_feats(
-            languages, feat_ids, feat_choices
+            params.languages, params.feat_ids, params.feat_choices
         )
         skill_expertise = merge_expertise_with_feats(
-            skill_expertise, feat_ids, feat_choices
+            params.skill_expertise, params.feat_ids, params.feat_choices
         )
 
+    level = params.level
     if level is None:
-        level = start_level_for_difficulty(difficulty)
+        level = start_level_for_difficulty(params.difficulty)
     level = clamp_level(level)
 
     need_grants = (
-        weapon_proficiencies is None
-        or armor_proficiencies is None
-        or tool_proficiencies is None
-        or skills is None
-        or save_proficiencies is None
+        params.weapon_proficiencies is None
+        or params.armor_proficiencies is None
+        or params.tool_proficiencies is None
+        or params.skills is None
+        or params.save_proficiencies is None
     )
+    weapon_proficiencies: list[str]
+    armor_proficiencies: list[str]
+    tool_proficiencies: list[str]
+    skills: list[str]
+    save_proficiencies: list[str]
     if need_grants:
         class_id_str = (
-            class_id.value
-            if isinstance(class_id, CharacterClass)
-            else str(class_id)
+            params.class_id.value
+            if isinstance(params.class_id, CharacterClass)
+            else str(params.class_id)
         )
         ctx = CreationContext(
-            race_id=race_id,
-            subrace_id=subrace_id,
+            race_id=params.race_id,
+            subrace_id=params.subrace_id,
             class_id=class_id_str,
-            background_id=background_id,
-            subclass_id=subclass_id,
+            background_id=params.background_id,
+            subclass_id=params.subclass_id,
             level=level,
-            feat_ids=tuple(feat_ids) if feat_ids else (),
-            feat_choices=feat_choices,
+            feat_ids=tuple(params.feat_ids) if params.feat_ids else (),
+            feat_choices=params.feat_choices,
         )
         grants = resolve_grants_for_context(ctx, include_feat_languages=False)
-        if weapon_proficiencies is None:
-            weapon_proficiencies = list(grants.weapon_tokens)
-        if armor_proficiencies is None:
-            armor_proficiencies = list(grants.armor_tokens)
-        if tool_proficiencies is None:
-            tool_proficiencies = list(grants.tool_tokens)
-        if skills is None:
-            skills = list(grants.skill_ids)
-        if save_proficiencies is None:
-            save_proficiencies = list(grants.save_ids)
+        weapon_proficiencies = (
+            list(grants.weapon_tokens)
+            if params.weapon_proficiencies is None
+            else params.weapon_proficiencies
+        )
+        armor_proficiencies = (
+            list(grants.armor_tokens)
+            if params.armor_proficiencies is None
+            else params.armor_proficiencies
+        )
+        tool_proficiencies = (
+            list(grants.tool_tokens)
+            if params.tool_proficiencies is None
+            else params.tool_proficiencies
+        )
+        skills = (
+            list(grants.skill_ids) if params.skills is None else params.skills
+        )
+        save_proficiencies = (
+            list(grants.save_ids)
+            if params.save_proficiencies is None
+            else params.save_proficiencies
+        )
+    else:
+        weapon_proficiencies = params.weapon_proficiencies or []
+        armor_proficiencies = params.armor_proficiencies or []
+        tool_proficiencies = params.tool_proficiencies or []
+        skills = params.skills or []
+        save_proficiencies = params.save_proficiencies or []
 
+    inventory = params.inventory
     if inventory is None:
         from core.backgrounds import get_background_equipment_items
         from core.inventory import add_items_to_inventory
         from core.starting_equipment import resolve_starting_items
 
         raw_inv = resolve_starting_items(
-            class_id,
-            equipment_choices or {},
+            params.class_id,
+            params.equipment_choices or {},
             list(weapon_proficiencies or []),
             list(armor_proficiencies or []),
         )
         resolved: list[InventoryItem] = list(raw_inv)
-        if background_id:
+        if params.background_id:
             resolved = add_items_to_inventory(
                 resolved,
                 get_background_equipment_items(
-                    background_id, list(background_tool_picks or [])
+                    params.background_id,
+                    list(params.background_tool_picks or []),
                 ),
             )
         inventory = resolved
 
     hp = max_hp_for_level(
-        class_id,
+        params.class_id,
         stats,
         level,
-        difficulty,
-        race_id,
-        subrace_id,
-        feat_ids,
+        params.difficulty,
+        params.race_id,
+        params.subrace_id,
+        params.feat_ids,
     )
 
     character = Character(
-        name=name,
-        race=race_id,
-        class_id=_parse_character_class(class_id),
+        name=params.name,
+        race=params.race_id,
+        class_id=_parse_character_class(params.class_id),
         level=level,
         stats=stats,
         current_hp=hp,
         max_hp=hp,
         experience=xp_for_level(level),
-        difficulty=difficulty,
-        subrace=subrace_id,
-        subclass_id=subclass_id,
+        difficulty=params.difficulty,
+        subrace=params.subrace_id,
+        subclass_id=params.subclass_id,
         languages=list(languages) if languages else [],
-        background_id=background_id,
+        background_id=params.background_id,
         skills=list(skills) if skills else [],
         skill_expertise=list(skill_expertise) if skill_expertise else [],
-        tool_expertise=list(tool_expertise) if tool_expertise else [],
+        tool_expertise=(
+            list(params.tool_expertise) if params.tool_expertise else []
+        ),
         weapon_proficiencies=(
             list(weapon_proficiencies) if weapon_proficiencies else []
         ),
@@ -167,16 +244,20 @@ def build_new_character(
         tool_proficiencies=(
             list(tool_proficiencies) if tool_proficiencies else []
         ),
-        feat_ids=list(feat_ids) if feat_ids else [],
-        feat_choices=dict(feat_choices) if feat_choices else {},
-        asi_choices=dict(asi_choices) if asi_choices else {},
+        feat_ids=list(params.feat_ids) if params.feat_ids else [],
+        feat_choices=(
+            dict(params.feat_choices) if params.feat_choices else {}
+        ),
+        asi_choices=dict(params.asi_choices) if params.asi_choices else {},
         save_proficiencies=(
             list(save_proficiencies) if save_proficiencies else []
         ),
         inventory=list(inventory) if inventory else [],
-        equipment_choices=dict(equipment_choices) if equipment_choices else {},
-        class_features_applied=class_features_applied,
-        save_slug=unique_save_slug(name),
+        equipment_choices=(
+            dict(params.equipment_choices) if params.equipment_choices else {}
+        ),
+        class_features_applied=params.class_features_applied,
+        save_slug=params.unique_save_slug(params.name),
         created_at=datetime.now(UTC).isoformat(),
     )
     from core.inventory import equip_defaults
@@ -328,6 +409,7 @@ def merge_expertise_with_feats(
 
 __all__ = [
     "build_new_character",
+    "build_new_character_from_params",
     "CreationContext",
     "ResolvedGrants",
     "merge_expertise_with_feats",
