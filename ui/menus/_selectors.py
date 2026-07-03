@@ -9,6 +9,7 @@ from core.types import StringsDict
 from ui.menus import _deps
 from ui.menus._common import (
     SEPARATOR,
+    _print_numbered_row,
     _print_screen_header,
     _read_numbered_choice,
 )
@@ -44,11 +45,8 @@ def select_subrace(
 
     for idx, (_choice_subrace_id, subrace_info) in enumerate(choices, 1):
         print()
-        print(
-            f"  {Fore.YELLOW}{idx}{Style.RESET_ALL}. "
-            f"{Fore.CYAN}{subrace_info.get('name', '?')}"
-            f"{Style.RESET_ALL}"
-        )
+        name = f"{Fore.CYAN}{subrace_info.get('name', '?')}{Style.RESET_ALL}"
+        _print_numbered_row(idx, name)
         _print_race_info(subrace_info, strings, language)
 
     choice = _read_numbered_choice(
@@ -79,12 +77,12 @@ def select_class(
         if idx > 1:
             print(f"  {Fore.LIGHTBLACK_EX}{'─' * 74}{Style.RESET_ALL}")
         print()
-        print(
-            f"  {Fore.YELLOW}{idx}{Style.RESET_ALL}. "
+        name = (
             f"{Fore.CYAN}{Style.BRIGHT}"
             f"{class_info.get('name', '?')}"
             f"{Style.RESET_ALL}"
         )
+        _print_numbered_row(idx, name)
         _print_class_summary(class_info, strings, language=language)
 
     choice = _read_numbered_choice(
@@ -127,12 +125,12 @@ def select_subclass(
         if idx > 1:
             print(f"  {Fore.LIGHTBLACK_EX}{'─' * 74}{Style.RESET_ALL}")
             print()
-        print(
-            f"  {Fore.YELLOW}{idx}{Style.RESET_ALL}. "
+        name = (
             f"{Fore.CYAN}{Style.BRIGHT}"
             f"{sub_info.get('name', '?')}"
             f"{Style.RESET_ALL}"
         )
+        _print_numbered_row(idx, name)
         _print_subclass_info(sub_info, strings)
 
     choice = _read_numbered_choice(

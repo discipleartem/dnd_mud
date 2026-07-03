@@ -3,9 +3,11 @@
 import pytest
 
 from core.character_builder import (
+    CreationContext,
     ResolvedGrants,
     merge_languages_with_feats,
     resolve_creation_grants,
+    resolve_grants_for_context,
 )
 from tests.creation_helpers import fighter_acolyte_creation
 
@@ -52,3 +54,21 @@ def test_merge_languages_with_feats_dedupes() -> None:
     )
     assert merged.count("common") == 1
     assert "elvish" in merged
+
+
+def test_resolve_grants_for_context_merges_extra_skills() -> None:
+    ctx = fighter_acolyte_creation()
+    creation_ctx = CreationContext(
+        race_id=ctx["race_id"],
+        subrace_id=ctx["subrace_id"],
+        class_id=ctx["class_id"],
+        background_id=ctx["background_id"],
+        subclass_id=ctx["subclass_id"],
+        level=ctx["level"],
+        extra_skills=("athletics",),
+    )
+    grants = resolve_grants_for_context(
+        creation_ctx, include_feat_languages=False
+    )
+    assert "athletics" in grants.skill_ids
+    assert "insight" in grants.skill_ids

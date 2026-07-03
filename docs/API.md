@@ -129,7 +129,8 @@ ABILITY_SCORE_DEFAULT = 10
 ABILITY_SCORE_MAX = 20
 ```
 
-`build_new_character` собирает `Character` без записи на диск (feat merge, HP, inventory, `equip_defaults`).  
+`build_new_character` (`core/character_build.py`) собирает `Character` без записи на диск (feat merge, HP, inventory, `equip_defaults`).  
+`character_storage.build_new_character` — thin wrapper с `_unique_save_slug`.  
 `persist_character` записывает готовую модель в `saves/characters/{save_slug}.json`.  
 Flow создания: `_CreationState.to_character()` → `persist_character()` (`ui/menus/_creation_finalize.py`).  
 `save_character` — thin wrapper: `build_new_character(...)` + persist (backward compat для тестов).  
@@ -238,9 +239,24 @@ get_background_language_choice(background_id: str) -> dict[str, Any] | None
 
 ---
 
-## core.character_builder — Сборка владений
+## core.grants_context — Контекст создания и владения
 
 ```python
+@dataclass(frozen=True)
+class CreationContext:
+    race_id: str
+    subrace_id: str | None
+    class_id: str
+    background_id: str | None
+    subclass_id: str | None
+    level: int
+    feat_ids: tuple[str, ...] = ()
+    feat_choices: dict[str, dict[str, Any]] | None = None
+    extra_skills: tuple[str, ...] = ()
+    extra_weapon_tokens: tuple[str, ...] = ()
+    extra_tool_tokens: tuple[str, ...] = ()
+    extra_languages: tuple[str, ...] = ()
+
 @dataclass(frozen=True)
 class ResolvedGrants:
     weapon_tokens: tuple[str, ...]
@@ -249,6 +265,40 @@ class ResolvedGrants:
     skill_ids: tuple[str, ...]
     language_ids: tuple[str, ...]
     save_ids: tuple[str, ...]
+```
+
+Тонкий модуль без imports из `progression` / `proficiencies` — разрыв циклических зависимостей. Re-export: `core.character_builder`.
+
+---
+
+## core.character_build — Сборка модели персонажа
+
+```python
+build_new_character(..., *, unique_save_slug: Callable[[str], str]) -> Character
+```
+
+Реализация сборки; `character_storage.build_new_character` передаёт `_unique_save_slug`.
+
+---
+
+## core.character_migrate — Версия JSON сейва
+
+```python
+CHARACTERS_SCHEMA_VERSION = 1
+
+migrate_character_data(data: dict[str, Any]) -> dict[str, Any]
+```
+
+При load: для сейвов без `schema_version` проставляет `1` (полевая миграция v0→v1 не выполняется — канон v1, см. Breaking в CHANGELOG).
+
+---
+
+## core.character_builder — Сборка владений
+
+```python
+resolve_grants_for_context(
+    ctx: CreationContext, *, include_feat_languages: bool = True,
+) -> ResolvedGrants
 
 resolve_creation_grants(
     race_id, subrace_id, class_id, background_id, subclass_id, level, *,
@@ -260,7 +310,7 @@ merge_languages_with_feats(languages, feat_ids, feat_choices) -> list[str]
 merge_expertise_with_feats(skill_expertise, feat_ids, feat_choices) -> list[str]
 ```
 
-`build_fixed_proficiencies`, `creation_known_for_feat_picks`, `build_feat_selection_context` делегируют в `resolve_creation_grants`.
+`build_fixed_proficiencies`, `creation_known_for_feat_picks`, `build_feat_selection_context` делегируют в `resolve_grants_for_context` / `resolve_creation_grants`.
 
 ---
 

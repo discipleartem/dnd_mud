@@ -2,20 +2,20 @@
 
 import logging
 from dataclasses import dataclass
-from datetime import UTC, datetime
+from datetime import datetime
 from pathlib import Path
 from typing import Any
 
+from core.character_build import build_new_character as _build_new_character
+from core.character_migrate import (
+    CHARACTERS_SCHEMA_VERSION,
+    migrate_character_data,
+)
 from core.io import load_json, save_json
 from core.levels import clamp_level
-from core.models import Character, _parse_character_class
-from core.progression import max_hp_for_level, xp_for_level
-from core.progression.subclasses import start_level_for_difficulty
+from core.models import Character
 from core.slug import make_save_slug
-from core.stats import STANDARD_ARRAY, generate_stats_standard_array
 from core.types import CharacterClass, GameDifficulty, StatMap
-
-CHARACTERS_SCHEMA_VERSION = 1
 
 logger = logging.getLogger(__name__)
 
@@ -51,6 +51,7 @@ def _try_load_character_file(
         if path.stat().st_size == 0:
             return None, path.stem
         data = load_json(path)
+        data = migrate_character_data(data)
         if not data.get("name"):
             return None, path.stem
         try:
@@ -91,154 +92,35 @@ def build_new_character(
     class_features_applied: bool = False,
     apply_feat_stat_bonuses: bool = True,
 ) -> Character:
-    """Собрать нового персонажа без записи на диск.
-
-    ``apply_feat_stat_bonuses=False`` — если ``stats`` уже содержат бонусы
-    черт (flow создания после ``select_creation_feats``).
-    """
-    if stats is None:
-        stats = generate_stats_standard_array(
-            list(STANDARD_ARRAY), race_id, subrace_id
-        )
-    if feat_ids:
-        from core.character_builder import (
-            merge_expertise_with_feats,
-            merge_languages_with_feats,
-        )
-        from core.feats import apply_feats_to_stats
-
-        if apply_feat_stat_bonuses:
-            stats = apply_feats_to_stats(stats, feat_ids, feat_choices)
-        languages = merge_languages_with_feats(
-            languages, feat_ids, feat_choices
-        )
-        skill_expertise = merge_expertise_with_feats(
-            skill_expertise, feat_ids, feat_choices
-        )
-
-    if level is None:
-        level = start_level_for_difficulty(difficulty)
-    level = clamp_level(level)
-
-    need_grants = (
-        weapon_proficiencies is None
-        or armor_proficiencies is None
-        or tool_proficiencies is None
-        or skills is None
-    )
-    if need_grants:
-        from core.character_builder import resolve_creation_grants
-
-        grants = resolve_creation_grants(
-            race_id,
-            subrace_id,
-            class_id,
-            background_id,
-            subclass_id,
-            level,
-            feat_ids=feat_ids,
-            feat_choices=feat_choices,
-            include_feat_languages=False,
-        )
-        if weapon_proficiencies is None:
-            weapon_proficiencies = list(grants.weapon_tokens)
-        if armor_proficiencies is None:
-            armor_proficiencies = list(grants.armor_tokens)
-        if tool_proficiencies is None:
-            tool_proficiencies = list(grants.tool_tokens)
-        if skills is None:
-            skills = list(grants.skill_ids)
-        if save_proficiencies is None:
-            save_proficiencies = list(grants.save_ids)
-
-    if save_proficiencies is None:
-        from core.character_builder import resolve_creation_grants
-
-        grants = resolve_creation_grants(
-            race_id,
-            subrace_id,
-            class_id,
-            background_id,
-            subclass_id,
-            level,
-            feat_ids=feat_ids,
-            feat_choices=feat_choices,
-            include_feat_languages=False,
-        )
-        save_proficiencies = list(grants.save_ids)
-
-    if inventory is None:
-        from core.backgrounds import get_background_equipment_items
-        from core.inventory import add_items_to_inventory
-        from core.starting_equipment import resolve_starting_items
-
-        inventory = resolve_starting_items(
-            class_id,
-            equipment_choices or {},
-            list(weapon_proficiencies or []),
-            list(armor_proficiencies or []),
-        )
-        if background_id:
-            inventory = add_items_to_inventory(
-                inventory,
-                get_background_equipment_items(
-                    background_id, list(background_tool_picks or [])
-                ),
-            )
-
-    hp = max_hp_for_level(
-        class_id,
-        stats,
-        level,
-        difficulty,
-        race_id,
-        subrace_id,
-        feat_ids,
-    )
-
-    character = Character(
+    """Собрать нового персонажа без записи на диск."""
+    return _build_new_character(
         name=name,
-        race=race_id,
-        class_id=_parse_character_class(class_id),
-        level=level,
-        stats=stats,
-        current_hp=hp,
-        max_hp=hp,
-        experience=xp_for_level(level),
+        race_id=race_id,
+        class_id=class_id,
         difficulty=difficulty,
-        subrace=subrace_id,
+        subrace_id=subrace_id,
+        stats=stats,
         subclass_id=subclass_id,
-        languages=list(languages) if languages else [],
+        languages=languages,
         background_id=background_id,
-        skills=list(skills) if skills else [],
-        skill_expertise=list(skill_expertise) if skill_expertise else [],
-        tool_expertise=list(tool_expertise) if tool_expertise else [],
-        weapon_proficiencies=(
-            list(weapon_proficiencies) if weapon_proficiencies else []
-        ),
-        armor_proficiencies=(
-            list(armor_proficiencies) if armor_proficiencies else []
-        ),
-        tool_proficiencies=(
-            list(tool_proficiencies) if tool_proficiencies else []
-        ),
-        feat_ids=list(feat_ids) if feat_ids else [],
-        feat_choices=dict(feat_choices) if feat_choices else {},
-        asi_choices=dict(asi_choices) if asi_choices else {},
-        save_proficiencies=(
-            list(save_proficiencies) if save_proficiencies else []
-        ),
-        inventory=list(inventory) if inventory else [],
-        equipment_choices=dict(equipment_choices) if equipment_choices else {},
+        skills=skills,
+        skill_expertise=skill_expertise,
+        tool_expertise=tool_expertise,
+        weapon_proficiencies=weapon_proficiencies,
+        armor_proficiencies=armor_proficiencies,
+        tool_proficiencies=tool_proficiencies,
+        background_tool_picks=background_tool_picks,
+        feat_ids=feat_ids,
+        feat_choices=feat_choices,
+        asi_choices=asi_choices,
+        save_proficiencies=save_proficiencies,
+        inventory=inventory,
+        equipment_choices=equipment_choices,
+        level=level,
         class_features_applied=class_features_applied,
-        save_slug=_unique_save_slug(name),
-        created_at=datetime.now(UTC).isoformat(),
+        apply_feat_stat_bonuses=apply_feat_stat_bonuses,
+        unique_save_slug=_unique_save_slug,
     )
-    from core.inventory import equip_defaults
-
-    character.equipped = equip_defaults(character)
-
-    return character
 
 
 def persist_character(character: Character) -> Character:

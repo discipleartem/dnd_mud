@@ -95,6 +95,11 @@ def _stats_total_line(strings: StringsDict) -> str:
     return f"{Fore.YELLOW}{total.center(78)}{Style.RESET_ALL}"
 
 
+def _print_numbered_row(idx: int, label: str, *, prefix: str = "  ") -> None:
+    """Строка нумерованного меню: жёлтый индекс и подпись."""
+    print(f"{prefix}{Fore.YELLOW}{idx}{Style.RESET_ALL}. {label}")
+
+
 def _run_numbered_menu(
     strings: StringsDict,
     options: list[str],
@@ -106,7 +111,7 @@ def _run_numbered_menu(
 ) -> int | None:
     """Нумерованное меню: 1..N — опции, 0 — назад. None при выборе 0."""
     for idx, label in enumerate(options, 1):
-        print(f"  {Fore.YELLOW}{idx}{Style.RESET_ALL}. {label}")
+        _print_numbered_row(idx, label)
     if before_back is not None:
         before_back()
     print()
@@ -210,10 +215,7 @@ def _print_pick_list(
             if format_selectable is not None:
                 format_selectable(idx, item_id, name)
             else:
-                print(
-                    f"  {Fore.YELLOW}{idx}{Style.RESET_ALL}. "
-                    f"{Fore.CYAN}{name}{Style.RESET_ALL}"
-                )
+                _print_numbered_row(idx, f"{Fore.CYAN}{name}{Style.RESET_ALL}")
     return selectable
 
 

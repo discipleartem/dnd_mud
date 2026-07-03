@@ -7,6 +7,7 @@ import pytest
 from core.backgrounds import get_background_equipment_items
 from core.character_storage import save_character
 from core.types import CharacterClass
+from tests.creation_helpers import flat_stats
 
 pytestmark = pytest.mark.usefixtures("catalog_caches_cleared")
 
@@ -118,7 +119,7 @@ def test_get_background_equipment_items_folk_hero_artisan_tools() -> None:
 def test_save_character_merges_background_items_into_inventory(
     characters_dir: Path,
 ) -> None:
-    stats = dict.fromkeys(STAT_NAMES, 12)
+    stats = flat_stats(12)
     saved = save_character(
         name="BgHero",
         race_id="human",
@@ -144,7 +145,7 @@ def test_save_character_merges_background_items_into_inventory(
 def test_save_character_charlatan_tools_in_inventory(
     characters_dir: Path,
 ) -> None:
-    stats = dict.fromkeys(STAT_NAMES, 10)
+    stats = flat_stats(10)
     saved = save_character(
         name="Charlatan",
         race_id="human",

@@ -59,13 +59,16 @@ dnd_mud/
 ├── core/                    # Игровое ядро
 │   ├── models.py            # Dataclass: Character, Adventure
 │   ├── character.py         # Узкий фасад для flow-оркестраторов (_deps)
-│   ├── character_builder.py # resolve_creation_grants, merge языков/компетентности
+│   ├── grants_context.py    # CreationContext, ResolvedGrants (без циклов import)
+│   ├── character_builder.py # resolve_creation_grants, resolve_grants_for_context
+│   ├── character_build.py   # build_new_character (сборка без записи на диск)
+│   ├── character_migrate.py # CHARACTERS_SCHEMA_VERSION, migrate_character_data
 │   ├── catalog_loader.py    # load_catalog — единая загрузка YAML-каталогов + mod overlay
 │   ├── hp_bonuses.py        # Бонусы HP из grants (раса, черта)
 │   ├── feats_loader.py      # Загрузка feats.yaml
 │   ├── grant_mechanics.py   # Парсинг proficiency-токенов из grants
 │   ├── feats.py             # Публичный фасад черт (гранты + apply)
-│   ├── character_storage.py # CRUD персонажей (JSON в saves/)
+│   ├── character_storage.py # CRUD персонажей; thin wrapper build_new_character
 │   ├── slug.py              # make_save_slug — транслитерация имён
 │   ├── stats.py             # Генерация и валидация характеристик
 │   ├── races.py             # Справочник рас
@@ -94,7 +97,7 @@ dnd_mud/
 │       ├── feats/           # Выбор черт (creation + level-up)
 │       ├── settings.py
 │       ├── stats/           # Генерация характеристик (подпакет)
-│       ├── _common.py       # SEPARATOR, _run_numbered_menu, …
+│       ├── _common.py       # _print_numbered_row, _run_numbered_menu, _read_numbered_choice, …
 │       ├── _display/        # Пакет отображения (класс, раса, stats, персонаж)
 │       ├── _selectors.py
 │       └── _deps.py         # Re-export core.character + input_handler (flows only)
@@ -122,7 +125,7 @@ dnd_mud/
 │   └── dragonborn_pack/     # Пример mod overlay (manifest + overlay.yaml)
 ├── tests/                   # pytest (число: pytest --collect-only -q)
 │   ├── conftest.py
-│   ├── creation_helpers.py  # общие константы golden-path
+│   ├── creation_helpers.py  # flat_stats, minimal_character, fighter_acolyte_creation
 │   ├── test_*.py            # ~20 файлов: core / menus / data / meta
 │   └── …                    # см. группы в §Тестирование ниже
 └── docs/                    # Документация

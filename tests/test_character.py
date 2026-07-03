@@ -6,6 +6,7 @@ from pathlib import Path
 import pytest
 
 import core.character as character_mod
+from core.character_migrate import migrate_character_data
 from core.character_storage import load_characters
 from core.models import Character
 from core.slug import make_save_slug
@@ -200,6 +201,13 @@ def test_creation_state_to_character_roundtrip() -> None:
     restored = Character.from_dict(built.to_dict())
     assert restored.class_id is CharacterClass.FIGHTER
     assert restored.name == "RoundtripHero"
+
+
+def test_migrate_character_data_stamps_schema_version() -> None:
+    legacy = {"name": "Legacy", "race": "human", "class_id": "fighter"}
+    migrated = migrate_character_data(legacy)
+    assert migrated["schema_version"] == 1
+    assert migrated["name"] == "Legacy"
 
 
 def test_load_characters_skips_invalid_saves(characters_dir: Path) -> None:

@@ -8,6 +8,7 @@ from ui.menus._common import (
     _print_cancelled,
     _print_screen_header,
     _print_success_and_wait,
+    _read_numbered_choice,
     _run_numbered_menu,
 )
 from ui.menus._corrupt_saves import show_corrupt_save_warnings_if_any
@@ -27,23 +28,13 @@ def _select_character_to_delete(
     """Выбор персонажа для удаления."""
     _print_screen_header(get_string(strings, "characters_menu.caption"))
     _print_characters_list(strings, characters, language)
-    print()
-    print(
-        f"  {Fore.YELLOW}0{Style.RESET_ALL}."
-        f" {get_string(strings, 'characters_menu.back')}"
-    )
-    print()
-    choice = _deps.get_int_input(
-        get_string(
-            strings,
-            "characters_menu.select_prompt",
-            count=len(characters),
-        ),
-        0,
-        len(characters),
+    choice = _read_numbered_choice(
         strings,
+        len(characters),
+        prompt_key="characters_menu.select_prompt",
+        back_label_key="characters_menu.back",
     )
-    if choice == 0:
+    if choice is None:
         return None
     return characters[choice - 1]
 

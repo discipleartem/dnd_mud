@@ -10,6 +10,7 @@ from typing import Any
 from core.classes import character_has_spellcasting
 from core.feats.feats_loader import FeatRequirementContext, load_feat
 from core.grant_mechanics import normalize_armor_token
+from core.grants_context import CreationContext
 from core.types import StatMap
 
 __all__ = [
@@ -31,6 +32,31 @@ _PROFICIENCY_GRANT_TYPES = frozenset(
 )
 
 
+def _creation_context(
+    race_id: str,
+    subrace_id: str | None,
+    background_id: str | None,
+    class_id: str,
+    subclass_id: str | None,
+    level: int,
+    *,
+    skills: list[str] | None = None,
+    weapon_tokens: list[str] | None = None,
+    tool_tokens: list[str] | None = None,
+) -> CreationContext:
+    return CreationContext(
+        race_id=race_id,
+        subrace_id=subrace_id,
+        class_id=class_id,
+        background_id=background_id,
+        subclass_id=subclass_id,
+        level=level,
+        extra_skills=tuple(skills) if skills else (),
+        extra_weapon_tokens=tuple(weapon_tokens) if weapon_tokens else (),
+        extra_tool_tokens=tuple(tool_tokens) if tool_tokens else (),
+    )
+
+
 def creation_known_for_feat_picks(
     race_id: str,
     subrace_id: str | None,
@@ -40,17 +66,12 @@ def creation_known_for_feat_picks(
     level: int,
 ) -> tuple[list[str], list[str], list[str]]:
     """Навыки, инструменты и токены оружия до подвыборов внутри черты."""
-    from core.character_builder import resolve_creation_grants
+    from core.character_builder import resolve_grants_for_context
 
-    grants = resolve_creation_grants(
-        race_id,
-        subrace_id,
-        class_id,
-        background_id,
-        subclass_id,
-        level,
-        include_feat_languages=False,
+    ctx = _creation_context(
+        race_id, subrace_id, background_id, class_id, subclass_id, level
     )
+    grants = resolve_grants_for_context(ctx, include_feat_languages=False)
     return (
         list(grants.skill_ids),
         list(grants.tool_tokens),
@@ -76,20 +97,20 @@ def build_feat_selection_context(
     Опциональные ``skills`` / ``weapon_tokens`` / ``tool_tokens`` дополняют
     владения расы, класса и предыстории (например, от уже выбранных черт).
     """
-    from core.character_builder import resolve_creation_grants
+    from core.character_builder import resolve_grants_for_context
 
-    grants = resolve_creation_grants(
+    ctx = _creation_context(
         race_id,
         subrace_id,
-        class_id,
         background_id,
+        class_id,
         subclass_id,
         level,
-        extra_skills=skills,
-        extra_weapon_tokens=weapon_tokens,
-        extra_tool_tokens=tool_tokens,
-        include_feat_languages=False,
+        skills=skills,
+        weapon_tokens=weapon_tokens,
+        tool_tokens=tool_tokens,
     )
+    grants = resolve_grants_for_context(ctx, include_feat_languages=False)
     return FeatRequirementContext(
         stats=stats,
         weapon_tokens=list(grants.weapon_tokens),
