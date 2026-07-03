@@ -1,14 +1,18 @@
 """Отображение карточек персонажей, рас и характеристик."""
 
 from ui.menus._display._character import (
+    _print_character_card,
+    _print_characters_list,
+)
+from ui.menus._display._character_header import (
     _character_base_race_label,
     _character_subrace_label,
     _empty_field_value,
-    _format_proficiency_token_list,
-    _print_character_card,
-    _print_character_proficiencies,
-    _print_characters_list,
     _print_labeled_field,
+)
+from ui.menus._display._character_sections import (
+    _format_proficiency_token_list,
+    _print_character_proficiencies,
 )
 from ui.menus._display._class import (
     _character_class_label,
