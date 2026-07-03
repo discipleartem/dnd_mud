@@ -374,6 +374,9 @@ scenario:
   choice_prompt: "Choose action (1-{count}), 0 — Back: "
   no_script: "Adventure script not found."
   subclass_not_ready: "Subclass choice is not available yet (HardCore, level 3+, no subclass)."
+  skill_check_success: "Check {skill}: {total} (d20={roll}+{bonus}) — success (DC {dc})"
+  skill_check_failure: "Check {skill}: {total} (d20={roll}+{bonus}) — failure (DC {dc})"
+  skill_check_roll: "Check {skill}: {total} (d20={roll}+{bonus})"
 
 level_up:
   caption: "LEVEL UP"
