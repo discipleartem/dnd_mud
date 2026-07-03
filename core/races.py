@@ -12,10 +12,6 @@ from core.grants import (
     merge_entity_grants,
 )
 from core.localization import resolve_localized_text
-from core.progression.hp_bonuses import (
-    HpBonusSource,
-    hit_point_bonus_sources_from_grants,
-)
 from core.types import StatMap
 
 RACES_FILE = Path("database/races/races.yaml")
@@ -162,8 +158,10 @@ def build_bonuses_from_choices(
 
 def get_racial_hp_bonus_sources(
     race_id: str, subrace_id: str | None = None
-) -> list[HpBonusSource]:
+) -> list[Any]:
     """Именованные бонусы HP за уровень из grants расы/подрасы."""
+    from core.progression.hp_bonuses import hit_point_bonus_sources_from_grants
+
     return hit_point_bonus_sources_from_grants(
         collect_race_grants(race_id, subrace_id)
     )

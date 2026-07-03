@@ -94,6 +94,8 @@ CLASSES_FILE = Path("database/classes/classes.yaml")
 ### Сохранение и загрузка
 
 ```python
+build_new_character(...) -> Character
+persist_character(character: Character) -> Character
 save_character(...) -> Character
 update_character(character: Character) -> Character
 load_characters() -> LoadCharactersResult
@@ -125,7 +127,11 @@ ABILITY_SCORE_DEFAULT = 10
 ABILITY_SCORE_MAX = 20
 ```
 
-`save_character` создаёт `Character` (`current_hp` = `max_hp` = `max_hp_for_level(..., difficulty)`) и сохраняет в `saves/characters/{save_slug}.json`.  
+`build_new_character` собирает `Character` без записи на диск (feat merge, HP, inventory, `equip_defaults`).  
+`persist_character` записывает готовую модель в `saves/characters/{save_slug}.json`.  
+Flow создания: `_CreationState.to_character()` → `persist_character()` (`ui/menus/_creation_finalize.py`).  
+`save_character` — thin wrapper: `build_new_character(...)` + persist (backward compat для тестов).  
+`save_character` / `build_new_character` задают `current_hp` = `max_hp` = `max_hp_for_level(..., difficulty)`.  
 Параметр `apply_feat_stat_bonuses=False` — если `stats` уже содержат бонусы черт (flow создания после `select_creation_feats`).  
 `max_hp_for_level` — см. `core.progression` (HP на уровне 1–10, включая режим Normal/Easy/HardCore).  
 `update_character` — перезапись JSON после изменений (подкласс, XP и т.д.).

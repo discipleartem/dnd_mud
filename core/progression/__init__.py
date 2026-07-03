@@ -10,7 +10,6 @@ from core.feats import get_feat_hp_bonus_sources
 from core.levels import MAX_CHARACTER_LEVEL, clamp_level
 from core.models import Character
 from core.progression.hp_bonuses import HpBonusSource
-from core.races import get_racial_hp_bonus_sources
 from core.stats import ABILITY_SCORE_DEFAULT
 from core.types import GameDifficulty, StatMap
 
@@ -21,6 +20,8 @@ def extra_hp_bonus_sources(
     feat_ids: list[str] | None = None,
 ) -> tuple[HpBonusSource, ...]:
     """Именованные бонусы HP за уровень: раса/подраса и черты."""
+    from core.races import get_racial_hp_bonus_sources
+
     sources: list[HpBonusSource] = []
     if race_id:
         sources.extend(get_racial_hp_bonus_sources(race_id, subrace_id))
