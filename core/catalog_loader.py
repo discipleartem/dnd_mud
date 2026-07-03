@@ -4,12 +4,20 @@ from pathlib import Path
 from typing import Any
 
 from core.localization import clear_strings_cache
-from core.mod_loader import clear_mod_loader_cache, load_merged_catalog
+from core.mod_loader import (
+    clear_mod_loader_cache,
+    get_mod_gating_difficulty,
+    load_merged_catalog,
+)
 
 
 def load_catalog(path: Path | str, root_key: str) -> dict[str, Any]:
     """Загрузить словарь каталога из YAML (с deep-merge модов)."""
-    return load_merged_catalog(str(path), root_key)
+    return load_merged_catalog(
+        str(path),
+        root_key,
+        game_difficulty=get_mod_gating_difficulty(),
+    )
 
 
 def clear_catalog_cache() -> None:

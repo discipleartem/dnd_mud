@@ -22,6 +22,11 @@ def set_mod_gating_difficulty(difficulty: GameDifficulty | None) -> None:
     _mod_gating_difficulty = difficulty
 
 
+def get_mod_gating_difficulty() -> GameDifficulty | None:
+    """Текущий режим gating модов (None — без фильтра по сложности)."""
+    return _mod_gating_difficulty
+
+
 def _mod_allowed_for_difficulty(
     manifest: dict[str, Any],
     difficulty: GameDifficulty | None,
