@@ -132,59 +132,53 @@ class Character:
         )
 
     def to_dict(self) -> dict[str, Any]:
-        """Сериализовать в словарь для сохранения в JSON."""
-        data: dict[str, Any] = {
-            "name": self.name,
-            "race": self.race,
-            "class_id": str(self.class_id),
-            "level": self.level,
-            "stats": self.stats,
-            "current_hp": self.current_hp,
-            "max_hp": self.max_hp,
-            "experience": self.experience,
-            "difficulty": self.difficulty,
+        """Сериализовать в словарь для сохранения в JSON.
+
+        Использует dataclass.asdict() с фильтрацией None/пустых значений
+        для уменьшения дублирования кода.
+        """
+        from dataclasses import asdict
+
+        base = asdict(self)
+        # Преобразовать class_id в строку для совместимости с JSON
+        base["class_id"] = str(self.class_id)
+
+        # Убрать поля с None/пустыми значениями по умолчанию
+        # Исключаем обязательные поля и специфические значения
+        optional_fields = {
+            "subrace",
+            "subclass_id",
+            "languages",
+            "background_id",
+            "skills",
+            "skill_expertise",
+            "tool_expertise",
+            "weapon_proficiencies",
+            "armor_proficiencies",
+            "tool_proficiencies",
+            "feat_ids",
+            "feat_choices",
+            "asi_choices",
+            "save_proficiencies",
+            "inventory",
+            "equipped",
+            "equipment_choices",
+            "save_slug",
+            "created_at",
+            "class_features_applied",
         }
-        if self.subrace is not None:
-            data["subrace"] = self.subrace
-        if self.subclass_id is not None:
-            data["subclass_id"] = self.subclass_id
-        if self.languages:
-            data["languages"] = self.languages
-        if self.background_id is not None:
-            data["background_id"] = self.background_id
-        if self.skills:
-            data["skills"] = self.skills
-        if self.skill_expertise:
-            data["skill_expertise"] = self.skill_expertise
-        if self.tool_expertise:
-            data["tool_expertise"] = self.tool_expertise
-        if self.weapon_proficiencies:
-            data["weapon_proficiencies"] = self.weapon_proficiencies
-        if self.armor_proficiencies:
-            data["armor_proficiencies"] = self.armor_proficiencies
-        if self.tool_proficiencies:
-            data["tool_proficiencies"] = self.tool_proficiencies
-        if self.feat_ids:
-            data["feat_ids"] = self.feat_ids
-        if self.feat_choices:
-            data["feat_choices"] = self.feat_choices
-        if self.asi_choices:
-            data["asi_choices"] = self.asi_choices
-        if self.save_proficiencies:
-            data["save_proficiencies"] = self.save_proficiencies
-        if self.inventory:
-            data["inventory"] = self.inventory
-        if self.equipped:
-            data["equipped"] = self.equipped
-        if self.equipment_choices:
-            data["equipment_choices"] = self.equipment_choices
-        if self.class_features_applied:
-            data["class_features_applied"] = True
-        if self.save_slug is not None:
-            data["save_slug"] = self.save_slug
-        if self.created_at is not None:
-            data["created_at"] = self.created_at
-        return data
+
+        result: dict[str, Any] = {}
+        for key, value in base.items():
+            if key in optional_fields:
+                if value is None or value == [] or value == {}:
+                    continue
+                # class_features_applied — False по умолчанию, не сериализуем
+                if key == "class_features_applied" and not value:
+                    continue
+            result[key] = value
+
+        return result
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> "Character":

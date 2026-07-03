@@ -6,6 +6,7 @@
 - **Сейвы:** удалены runtime-миграции (`core/save_migration.py`); требуется канонический формат v1 (`class_id`, `race`, `schema_version: 1`); ключ `"class"`, `race_id`, `equip_logic_version` не поддерживаются
 
 ### Changed
+- **Clean Code refactor:** пакет `core/types/` — `_base.py` (базовые типы), `character_params.py` (CharacterBuildParams), `proficiencies.py` (Proficiencies, Expertise); `__init__.py` — фасад для backward compatibility; новая функция `build_new_character_from_params()` в `core/character_build.py`; `build_new_character()` помечен как deprecated с `warnings.warn`; `Character.to_dict()` рефакторинг с использованием `dataclasses.asdict()`; улучшена типизация и уменьшено дублирование кода
 - **Code simplification (DRY/KISS/YAGNI):** удалён `core/character_builder.py` — функции перенесены в `core/character_build.py`; добавлен универсальный `catalog_loader.load_catalog_items` для DRY загрузки каталогов; добавлен универсальный `io.load_file` для DRY загрузки YAML/JSON; упрощён `_merge_bonus_dicts` через `collections.Counter`; оптимизирована `load_languages` (один вызов `_load_languages_yaml`)
 
 ### Added

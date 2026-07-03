@@ -1,10 +1,5 @@
-"""Общие типы домена (PEP 695 / PEP 692).
+"""Пакет типов домена для Clean Code рефакторинга."""
 
-Фасад для backward compatibility. Реальные типы в core/types/_base.py
-и новых модулях core/types/.
-"""
-
-# Базовые типы из _base.py
 from core.types._base import (
     CharacterClass,
     EquippedState,
@@ -15,8 +10,6 @@ from core.types._base import (
     StatMap,
     StringsDict,
 )
-
-# Новые типы для Clean Code рефакторинга
 from core.types.character_params import CharacterBuildParams
 from core.types.proficiencies import Expertise, Proficiencies
 
