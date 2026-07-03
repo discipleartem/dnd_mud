@@ -1,0 +1,95 @@
+---
+description: dnd_mud data — YAML как БД, JSON для сейвов и конфигов
+globs: "database/**,mods/**,adventures/**,saves/**,**/*.json"
+alwaysApply: false
+---
+
+# dnd_mud data layer
+
+Поиск правил PHB — [`00-project.md`](00-project.md) §D&D 5e — источник истины и поиск правил.
+
+Проект **не использует SQL-БД**. Данные — файлы YAML и JSON.
+
+## Когда какой формат
+
+| Формат | Роль | Примеры |
+|--------|------|---------|
+| **YAML** | Справочники и контент (замена БД) | расы, классы, снаряжение, строки, каталог приключений, моды |
+| **JSON** | Сохранения и конфиги | персонажи, настройки пользователя, будущие слоты сохранений игры |
+
+**Правило:** новые справочники и игровой контент — в YAML. Mutable player state и конфиги — в JSON.
+
+## Канонические пути
+
+| Данные | Путь | Модуль |
+|--------|------|--------|
+| Расы | `database/races/races.yaml` | `core/character.py` |
+| Классы | `database/classes/classes.yaml` | `core/character.py` |
+| Приключения (каталог) | `database/content/adventures.yaml` | `core/adventure.py` |
+| Настройки | `database/core/settings.json` | `core/settings.py` |
+| Персонажи | `saves/characters/*.json` | `core/character.py` |
+| Локализация | `database/strings/{ru,en}.yaml` | `core/localization.py` |
+| Языки PHB | `database/core/languages.yaml` | `core/languages.py` |
+| Предыстории | `database/backgrounds/backgrounds.yaml` | `core/backgrounds.py` |
+| Оружие / доспехи / инструменты | `database/equipment/*.yaml` | `core/equipment.py` |
+| Константы PHB (PB, DC) | `database/core/constants.yaml` | `core/constants.py` |
+| Характеристики / навыки (мета) | `database/core/abilities.yaml`, `skills.yaml` | `core/abilities.py` |
+| Черты | `database/progression/feats.yaml` | `core/feats.py` |
+| Моды (состояние) | `database/core/mods_state.json` | `core/mod_loader.py` |
+| Сценарии | `adventures/*.yaml` | `core/adventure.py` |
+
+## YAML conventions (`database/`, `mods/`, `adventures/`)
+
+Канон схемы: [`docs/DATA_SCHEMA.md`](../../docs/DATA_SCHEMA.md) — `grants[]`, `subraces`, mod overlay.
+
+- Human-editable reference data; bilingual fields where needed: `name: { ru: "...", en: "..." }`
+- User-facing UI strings: `database/strings/{ru,en}.yaml` with matching keys
+- Do not hardcode game data in Python — extend YAML under `database/`
+- Владения на персонаже — **токены** (`simple`, `martial`, `light`, `thieves_tools`, …), не развёрнутые списки предметов
+
+```yaml
+# mods/dragonborn_pack/manifest.yaml
+id: dragonborn_pack
+overlays:
+  - target: database/races/races.yaml
+    path: overlay.yaml
+```
+
+## JSON conventions (saves and configs)
+
+- UTF-8, pretty-print with `indent=2`
+- Поле `schema_version` при эволюции формата
+- `saves/` — в `.gitignore` (пользовательские данные)
+- Validate after load; explicit errors on corrupt files
+
+```json
+{
+  "schema_version": 1,
+  "language": "ru",
+  "difficulty": "normal"
+}
+```
+
+```json
+{
+  "schema_version": 1,
+  "save_slug": "hero",
+  "name": "Hero",
+  "race_id": "human",
+  "class_id": "fighter",
+  "level": 1,
+  "stats": {},
+  "current_hp": 12,
+  "experience": 0,
+  "difficulty": "normal",
+  "weapon_proficiencies": ["simple", "martial"],
+  "armor_proficiencies": ["light", "medium", "heavy", "shield"],
+  "tool_proficiencies": []
+}
+```
+
+## When editing data
+
+1. Keep `ru` and `en` in sync for new localization keys
+2. YAML for new races/classes/items; JSON for new save/config shapes
+3. Полный прогон — [`dnd-mud-workflow.md`](dnd-mud-workflow.md) §Verify / review (конец task-ветки), не после каждого YAML-правки
