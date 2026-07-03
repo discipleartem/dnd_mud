@@ -46,8 +46,10 @@ def test_mod_allowed_for_difficulty() -> None:
 
 
 def test_enabled_mod_ids_respects_gating(
-    monkeypatch: pytest.MonkeyPatch,
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
 ) -> None:
+    state_file = tmp_path / "mods_state.json"
+    monkeypatch.setattr("core.mod_loader.MODS_STATE_FILE", state_file)
     save_mods_state(["dragonborn_pack"])
     set_mod_gating_difficulty("normal")
     monkeypatch.setattr(
