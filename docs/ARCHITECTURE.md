@@ -44,7 +44,8 @@
 | `ui/menus/_corrupt_saves.py` | Предупреждение о битых JSON в `saves/characters/` |
 | `ui/menus/feats/` | Выбор черт при создании и левелапе (публичный API в `__init__.py`) |
 | `ui/menus/_creation_handlers.py`, `_creation_navigation.py`, `_creation_finalize.py`, `_creation_state.py` | State machine создания персонажа |
-| `ui/menus/_common.py`, `_display/`, `_deps.py` | Общие хелперы, отображение (пакет), seam для тестов |
+| `ui/menus/_common.py`, `_display/`, `_deps.py` | Общие хелперы (`_print_pick_list`, `_read_pool_pick`, `_run_numbered_menu`), отображение, seam для тестов; `bootstrap_session_catalogs()` |
+| `ui/menus/_subclass_picks.py` | Общий flow выбора владений/навыков/компетентности подкласса |
 | `ui/input_handler.py` | Валидация ввода, UTF-8 для stdin/stdout |
 
 UI не читает файлы данных напрямую — только через `core/`.
@@ -60,39 +61,30 @@ UI не читает файлы данных напрямую — только �
 
 | Модуль | Назначение |
 |--------|-----------|
-| `core/models.py` | `Character`, `Adventure` (dataclass) |
+| `core/models.py` | `Character` (`class_id: CharacterClass`), `Adventure` (dataclass) |
 | `core/character.py` | Узкий фасад для flow-оркестраторов (`_deps`): save/load, stats, каталоги создания |
 | `core/character_builder.py` | `ResolvedGrants`, `resolve_creation_grants` — единая сборка владений при создании |
-| `core/character_storage.py` | CRUD персонажей (JSON в `saves/`) |
+| `core/character_storage.py` | CRUD персонажей: `build_new_character`, `persist_character`, `update_character`; JSON в `saves/` |
 | `core/session_storage.py` | Снимки сессий приключений (`saves/sessions/`) |
 | `core/game_engine.py` | `GameEngine`, `GameSession` — state machine сценария |
-| `core/types.py` | `StatMap`, `GameDifficulty`, `RuntimeSettings` |
+| `core/types.py` | `StatMap`, `GameDifficulty`, `CharacterClass`, `RuntimeSettings` |
 | `core/abilities.py` | Каталог характеристик и навыков из YAML |
 | `core/races.py` | Справочник рас, `collect_race_grants`, расовые бонусы |
 | `core/classes.py` | Справочник классов, `get_class_dict`, hit dice, подклассы |
-| `core/subclasses.py` | Уровень выбора подкласса, gating по режиму сложности |
-| `core/class_features.py` | Отложенные особенности класса/подкласса |
-| `core/backgrounds.py` | Каталог предысторий PHB |
-| `core/skills.py` | Навыки при создании персонажа |
+| `core/skills.py` | Навыки при создании персонажа; `PHB_SKILL_IDS` |
 | `core/languages.py` | Каталог языков PHB, пулы выбора |
-| `core/proficiencies.py` | Фасад владений: `proficiency_collect` (сбор токенов из grants) + `proficiency_checks` (проверки применимости) |
-| `core/proficiency_collect.py` | Агрегация токенов владений при создании/левелапе из YAML |
-| `core/proficiency_checks.py` | Проверки «владеет ли персонаж» оружием, доспехами, инструментами |
+| `core/proficiencies/` | Пакет владений: `proficiency_collect`, `proficiency_checks` (публичный API — `core.proficiencies`) |
 | `core/checks.py` | Проверки характеристик, навыков, спасбросков (`ability_check`, `skill_check`, …) |
 | `core/inventory/` | Инвентарь, экипировка, `compute_ac`, авто-экипировка (`_items`, `_ac`, `_weapons`, `_equip`) |
 | `core/starting_equipment.py` | Стартовое снаряжение класса из YAML |
 | `core/equipment.py` | Оружие, доспехи, инструменты из YAML |
-| `core/feats.py` | Публичный фасад черт (требования, гранты, применение) |
-| `core/feat_visibility.py` | Скрытие черт в меню выбора по расе/классу и владениям |
-| `core/feats_loader.py` | Загрузка `feats.yaml` |
+| `core/feats/` | Пакет черт: apply, requirements, visibility, descriptions, loader (публичный API — `core.feats`) |
 | `core/grant_mechanics.py` | Парсинг proficiency-токенов из grant dict |
-| `core/asi.py` | ASI при левелапе |
-| `core/expertise.py` | Компетентность (rogue, bard, …) |
-| `core/hp_bonuses.py` | Источники бонусов HP из features |
-| `core/progression.py` | XP, уровни, HP, `process_pending_level_ups`, `grant_experience` |
-| `core/levels.py` | `MAX_CHARACTER_LEVEL` |
+| `core/progression/` | XP, уровни, HP, ASI, expertise, class features, подклассы (публичный API — `core.progression`; `core/levels.py` — отдельно, без циклического import) |
+| `core/levels.py` | `MAX_CHARACTER_LEVEL`, `clamp_level` |
 | `core/constants.py` | PB, DC из YAML |
 | `core/grants.py` | Нормализация `grants[]` из YAML |
+| `core/backgrounds.py` | Каталог предысторий PHB |
 | `core/stats.py` | Генерация/валидация характеристик |
 | `core/dice.py` | `roll()`, `roll_ability_score()`, `ability_modifier()` |
 | `core/slug.py` | `make_save_slug()` |
@@ -149,7 +141,8 @@ main.py → ui/menus/ → core/character.py (фасад) → character_storage, 
 **Сценарий «Создать персонажа»:** сложность → имя → раса → подраса → характеристики → предыстория → языки → класс → подкласс → черты (если нужны) → владения → навыки → (компетентность?) → **снаряжение** → сохранение в `saves/characters/{save_slug}.json`.
 
 - Оркестрация: `ui/menus/_creation_steps.py` (`show_create_character_flow`), `ui/menus/_creation_handlers.py`, `ui/menus/stats/stats_flow.py`
-- Снаряжение: `ui/menus/equipment.py` → `core/starting_equipment.py`; предыстория — `core/backgrounds.get_background_equipment_items`; merge и `equip_defaults` — `core/character_storage.save_character`, `core/inventory/`
+- Снаряжение: `ui/menus/equipment.py` → `core/starting_equipment.py`; предыстория — `core/backgrounds.get_background_equipment_items`; merge и `equip_defaults` — `core/character_storage.build_new_character` / `persist_character`, `core/inventory/`
+- Сохранение: `_CreationState.to_character()` → `persist_character()` (без kwargs-bridge)
 - Генераторы: `core/stats.py`, `core/races.py` (через фасад `core/character.py`)
 - Броски 4d6: `core/dice.py` (`roll_ability_score`)
 

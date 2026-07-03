@@ -23,6 +23,7 @@
 - **Mod gating:** `load_catalog()` учитывает `set_mod_gating_difficulty` в игровых flow
 
 ### Changed
+- **DRY-рефакторинг (6 PR):** UI-хелперы `_print_pick_list` / `_read_pool_pick`, `apply_subclass_picks`, `bootstrap_session_catalogs`; core micro-DRY (`PHB_SKILL_IDS`, `iter_race_grants_by_source`, `_load_catalog_item`); save API через `build_new_character` + `persist_character` и `_CreationState.to_character()`; подпакеты `core/feats/`, `core/proficiencies/`, `core/progression/`; `Character.class_id` — `CharacterClass` (JSON — string)
 - **Load game:** `load_character_for_session` — единый путь загрузки персонажа через `character_storage._try_load_character_file`
 - **Git workflow:** Plan/Agent с part-ветками — обязательное создание веток, merge в `feat/<slug>`; `main`/`dev` в задаче не трогать
 - Skills refactor (DRY layers): policy verify/review — только `dnd-mud-workflow.mdc`; skills — процедуры; `AGENTS.md` / `DEVELOPMENT.md` — индекс ссылок
