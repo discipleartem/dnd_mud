@@ -11,8 +11,9 @@ menu:
   characters: "Characters"
   settings: "Settings"
   languages: "Языки"  # cross-locale: menu item in the other language
+  mods: "Mods"
   exit: "Exit"
-  prompt: "Choose option: "
+  prompt: "Choose option (0–{max}): "
 
 character:
   creation_caption: "CHARACTER CREATION"
@@ -353,6 +354,21 @@ new_game:
 
 load_game:
   caption: "LOAD GAME"
+  no_sessions: "No saved adventure sessions."
+  back: "Back"
+  prompt: "Choose session (1–{count}), 0 — Back: "
+  missing_character: "Session character not found."
+  missing_adventure: "Session adventure not found."
+
+mods:
+  caption: "MODS"
+  none: "No mods found in mods/."
+  line: "{name} (v{version}) — {status}"
+  status_on: "enabled"
+  status_off: "disabled"
+  prompt: "Choose mod (1–{count}), 0 — Back: "
+  back: "Back"
+  toggled: "Mod «{name}» updated. Catalogs reloaded."
 
 scenario:
   choice_prompt: "Choose action (1-{count}), 0 — Back: "

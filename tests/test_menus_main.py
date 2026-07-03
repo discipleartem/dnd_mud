@@ -23,17 +23,13 @@ def test_menu_languages_cross_locale_label(
     assert get_string(strings, "menu.languages") == expected
 
 
-def test_show_main_menu_and_load_game_stub(
+def test_show_main_menu_includes_mods_item(
     monkeypatch: pytest.MonkeyPatch,
     ru_strings: dict[str, Any],
     patch_int_input: Any,
-    capsys: pytest.CaptureFixture[str],
 ) -> None:
-    patch_int_input(monkeypatch, [3])
-    assert main_menu.show_main_menu(ru_strings) == 3
-    monkeypatch.setattr(main_menu, "_press_enter", lambda strings: None)
-    main_menu.show_load_game_flow(ru_strings)
-    assert "ещё не реализована" in capsys.readouterr().out
+    patch_int_input(monkeypatch, [6])
+    assert main_menu.show_main_menu(ru_strings) == 6
 
 
 def test_select_difficulty_back_and_hardcore(

@@ -21,3 +21,8 @@ def clear_all_catalog_caches() -> None:
     """Сбросить все кэши загрузчиков каталогов и строк (для тестов)."""
     clear_catalog_cache()
     clear_strings_cache()
+
+
+def reload_catalogs() -> None:
+    """Перезагрузить каталоги и строки без рестарта интерпретатора."""
+    clear_all_catalog_caches()
