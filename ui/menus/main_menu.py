@@ -2,10 +2,11 @@
 
 from colorama import Fore, Style
 
-from core.localization import get_string
-from core.types import StringsDict
 from ui.menus import _deps
-from ui.menus._common import SEPARATOR, _press_enter, _print_screen_header
+from ui.menus._common import SEPARATOR, _print_screen_header
+
+get_string = _deps.get_string
+StringsDict = _deps.StringsDict
 
 
 def show_welcome_screen(version: str, strings: StringsDict) -> None:
@@ -41,6 +42,7 @@ def show_main_menu(strings: StringsDict) -> int:
         ("3", get_string(strings, "menu.characters")),
         ("4", get_string(strings, "menu.settings")),
         ("5", get_string(strings, "menu.languages")),
+        ("6", get_string(strings, "menu.mods")),
         ("0", get_string(strings, "menu.exit")),
     ]
     for num, label in menu_items:
@@ -50,17 +52,5 @@ def show_main_menu(strings: StringsDict) -> int:
     print(SEPARATOR)
     print()
 
-    prompt = get_string(strings, "menu.prompt", max=5)
-    return _deps.get_int_input(prompt, 0, 5, strings)
-
-
-def show_load_game_flow(strings: StringsDict) -> None:
-    """Flow «Загрузить игру»."""
-    _print_screen_header(get_string(strings, "load_game.caption"))
-    print(
-        f"{Fore.YELLOW}"
-        f"{get_string(strings, 'errors.load_not_implemented')}"
-        f"{Style.RESET_ALL}"
-    )
-    print()
-    _press_enter(strings)
+    prompt = get_string(strings, "menu.prompt", max=6)
+    return _deps.get_int_input(prompt, 0, 6, strings)

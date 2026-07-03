@@ -8,10 +8,13 @@ from core.inventory import (
     default_equipped,
     equip_defaults,
     expand_pack_contents,
-    format_inventory_line,
     inventory_excluding_equipped,
 )
 from core.models import Character
+from ui.menus._display._inventory import (
+    format_inventory_line,
+    get_equipped_display,
+)
 
 pytestmark = pytest.mark.usefixtures("catalog_caches_cleared")
 
@@ -287,8 +290,6 @@ def test_equip_defaults_versatile_two_handed_without_shield() -> None:
 
 
 def test_get_equipped_display_hands_and_occupied() -> None:
-    from core.inventory import get_equipped_display
-
     char = Character(
         name="Test",
         race="human",
@@ -368,8 +369,6 @@ def test_get_equipped_display_hands_and_occupied() -> None:
 
 
 def test_get_equipped_display_empty_armor_slot() -> None:
-    from core.inventory import get_equipped_display
-
     char = Character(
         name="Cleric",
         race="dwarf",

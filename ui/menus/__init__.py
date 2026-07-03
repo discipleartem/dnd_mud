@@ -2,11 +2,9 @@
 
 from ui.menus._creation_steps import show_create_character_flow
 from ui.menus.characters_menu import show_characters_menu
-from ui.menus.main_menu import (
-    show_load_game_flow,
-    show_main_menu,
-    show_welcome_screen,
-)
+from ui.menus.load_game import show_load_game_flow
+from ui.menus.main_menu import show_main_menu, show_welcome_screen
+from ui.menus.mods_menu import show_mods_menu
 from ui.menus.new_game import show_new_game_flow
 from ui.menus.settings import (
     select_difficulty,
@@ -22,6 +20,7 @@ __all__ = [
     "show_languages_menu",
     "show_load_game_flow",
     "show_main_menu",
+    "show_mods_menu",
     "show_new_game_flow",
     "show_settings",
     "show_stats_generation_flow",

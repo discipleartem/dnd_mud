@@ -11,8 +11,9 @@ menu:
   characters: "Персонажи"
   settings: "Настройки"
   languages: "Languages"  # кросс-локаль: пункт на «чужом» языке
+  mods: "Модификации"
   exit: "Выход"
-  prompt: "Выберите пункт: "
+  prompt: "Выберите пункт (0–{max}): "
 
 character:
   creation_caption: "СОЗДАНИЕ ПЕРСОНАЖА"
@@ -353,11 +354,29 @@ new_game:
 
 load_game:
   caption: "ЗАГРУЗИТЬ ИГРУ"
+  no_sessions: "Нет сохранённых сессий приключений."
+  back: "Назад"
+  prompt: "Выберите сессию (1–{count}), 0 — Назад: "
+  missing_character: "Персонаж сессии не найден."
+  missing_adventure: "Приключение сессии не найдено."
+
+mods:
+  caption: "МОДИФИКАЦИИ"
+  none: "Моды не найдены в каталоге mods/."
+  line: "{name} (v{version}) — {status}"
+  status_on: "включён"
+  status_off: "выключен"
+  prompt: "Выберите мод (1–{count}), 0 — Назад: "
+  back: "Назад"
+  toggled: "Мод «{name}» обновлён. Каталоги перезагружены."
 
 scenario:
   choice_prompt: "Выберите действие (1-{count}), 0 — Назад: "
   no_script: "Сценарий приключения не найден."
   subclass_not_ready: "Сейчас выбор архетипа недоступен (нужен HardCore, уровень 3+ и отсутствие подкласса)."
+  skill_check_success: "Проверка {skill}: {total} (к20={roll}+{bonus}) — успех (КС {dc})"
+  skill_check_failure: "Проверка {skill}: {total} (к20={roll}+{bonus}) — провал (КС {dc})"
+  skill_check_roll: "Проверка {skill}: {total} (к20={roll}+{bonus})"
 
 level_up:
   caption: "ПОВЫШЕНИЕ УРОВНЯ"

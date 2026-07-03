@@ -184,6 +184,22 @@ explorers_pack:
 | `equipped` | object | `armor`, `shield`, `main_hand`, `off_hand`, `main_hand_grip` |
 | `equipment_choices` | `{ choice_id: option_id }` | Аудит выборов а/б при создании |
 
+## Save JSON — сессия приключения
+
+Файлы `saves/sessions/{save_slug}.json` (`SessionSnapshot`, `core/session_storage.py`). `save_slug` обычно `{character_save_slug}_{adventure_id}`.
+
+| Ключ | Тип | Описание |
+|------|-----|----------|
+| `schema_version` | `int` | Версия схемы (сейчас `1`) |
+| `save_slug` | `string` | Имя файла без `.json` |
+| `character_save_slug` | `string` | Слаг персонажа в `saves/characters/` |
+| `adventure_id` | `string` | ID из `adventures.yaml` |
+| `current_node_id` | `string \| null` | Текущий узел YAML-сценария |
+| `difficulty` | `normal` \| `hardcore` \| `easy` | Режим сессии |
+| `flags` | `object` | Произвольные флаги сценария |
+| `script_file` | `string` | Путь к YAML сценария |
+| `updated_at` | `string` (ISO) | Время последнего сохранения |
+
 ## Классы и черты (прочее)
 
 - **Классы:** `features[]` с `level` — без `progression.<level>` до Phase 2; при миграции — `grants` внутри feature или параллельно.

@@ -4,10 +4,8 @@ from typing import Literal
 
 from colorama import Fore, Style
 
-from core.difficulty import adventure_unavailable_reason
-from core.localization import get_string
-from core.models import Adventure, Character
-from core.types import RuntimeSettings, StringsDict
+from core.catalog_loader import reload_catalogs
+from core.mod_loader import set_mod_gating_difficulty
 from ui.menus import _creation_steps, _deps
 from ui.menus._common import (
     _press_enter,
@@ -17,6 +15,13 @@ from ui.menus._common import (
 from ui.menus._corrupt_saves import show_corrupt_save_warnings_if_any
 from ui.menus._display import _print_characters_list
 from ui.menus.scenario_flow import run_scenario
+
+Adventure = _deps.Adventure
+Character = _deps.Character
+RuntimeSettings = _deps.RuntimeSettings
+StringsDict = _deps.StringsDict
+adventure_unavailable_reason = _deps.adventure_unavailable_reason
+get_string = _deps.get_string
 
 SelectCharacterResult = Character | Literal["create"] | None
 
@@ -187,6 +192,9 @@ def show_new_game_flow(
 
         if character is None:
             return
+
+        set_mod_gating_difficulty(character.difficulty)
+        reload_catalogs()
 
         while True:
             adventure = _select_adventure(strings, language, character)

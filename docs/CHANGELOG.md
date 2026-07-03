@@ -3,16 +3,29 @@
 ## [Unreleased]
 
 ### Added
+- **Полный рефакторинг (фазы 1–5):** миграции сейвов (`core/save_migration.py`), пакет `core/inventory/`, presentation в `ui/menus/_display/_inventory.py`, `CharacterClass` StrEnum, deps policy для оркестраторов
+- **Mod infra:** `requires_game_difficulty` в `mod_loader` (runtime gating через `set_mod_gating_difficulty`), `reload_catalogs()`, меню «Модификации»
+- **Game engine:** `core/game_engine.py`, `GameSession`, decouple `scenario_flow` → `run_scenario_with_engine`
+- **Phase 2 hooks:** `apply_progression_grants_at_level`, `feat_is_active` / `active_feat_ids`, `ability_check` / `skill_check` / `passive_skill`
+- **Load game:** сессии в `saves/sessions/`, flow `ui/menus/load_game.py`; resume сохраняет `current_node_id`
+- **Scenario:** сообщения результата `skill_check` в UI
+- **Terminal wrap:** `ui/terminal_wrap.py` (описания сценариев)
 - Agent skills: `dnd-mud-git-pr` (push/PR/rename `merged/*`); reference files (`dnd-mud-verify/reference.md`, `dnd-mud-review/checklist-full.md`, `template-findings.md`); индекс [`.cursor/skills/README.md`](../.cursor/skills/README.md)
 - **Модификаторы характеристик:** `ability_modifier()` из таблицы PHB в `constants.yaml` (clamp 1–30); константы `ABILITY_SCORE_MIN` / `DEFAULT` / `MAX` для валидации PC (1–20)
 - **UI грантов:** описания spellcasting, skill_proficiency, immunity, disadvantage, cantrip, advantage+terrain в меню создания
 - **Dual wielder:** авто-экипировка второй руки без «лёгкое» при черте; +1 КД при двух рукопашных (`core/inventory.py`, `core/feat_apply.py`)
 
+### Fixed
+- **Load game:** resume не сбрасывает `current_node_id` на `start_node` (`GameEngine.load_scenario`)
+- **Mod gating:** `load_catalog()` учитывает `set_mod_gating_difficulty` в игровых flow
+
 ### Changed
+- **Git workflow:** план с N PR → **N part-веток** (шаг 0: инвентаризация; 1 PR = 1 `git checkout -b`); merge в `feat/<slug>`; антипаттерн «17 PR на 1 ветке»
+- **Git workflow:** Plan/Agent с part-ветками — обязательное создание веток, merge в `feat/<slug>`; `main`/`dev` в задаче не трогать
 - Skills refactor (DRY layers): policy verify/review — только `dnd-mud-workflow.mdc`; skills — процедуры; `AGENTS.md` / `DEVELOPMENT.md` — индекс ссылок
 - **Экран расы/подрасы:** выборный язык в строке «Языки»; подрасы без дубля grants родителя; полуорк всегда с экраном выбора и «Назад»
 - **Экран класса:** схлопнутый ASI по уровням; `proficiency_token_label` в меню владений и стартового снаряжения
-- **Авто-экипировка:** при наличии пары одноручных предпочитается dual-wield вместо двуручного хвата versatile (старые сейвы не пересчитываются автоматически)
+- **Авто-экипировка:** миграция legacy-сейвов через `equip_logic_version` при загрузке
 - **Данные рас:** язык человека на уровне расы; variant human наследует grant; описание «Наследие фей» у эльфа
 
 ### Changed

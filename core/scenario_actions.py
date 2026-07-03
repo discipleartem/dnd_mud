@@ -20,6 +20,7 @@ class ScenarioActionResult:
     pick_subclass: bool = False
     apply_class_features: bool = False
     message_key: str | None = None
+    message_params: dict[str, Any] | None = None
 
 
 def load_scenario(script_file: str) -> dict[str, Any]:
@@ -64,5 +65,47 @@ def apply_scenario_action(
             action_data.get("message_key", "scenario.subclass_not_ready")
         )
         return ScenarioActionResult(character=character, message_key=key)
+
+    if action == "skill_check":
+        from core.checks import skill_check
+
+        skill_id = str(action_data.get("skill", ""))
+        dc_raw = action_data.get("dc")
+        dc = int(dc_raw) if isinstance(dc_raw, int) else None
+        if not skill_id:
+            return ScenarioActionResult(character=character)
+        check = skill_check(character, skill_id, dc=dc)
+        bonus = check["modifier"]
+        if dc is not None:
+            success = bool(check.get("success"))
+            key = (
+                "scenario.skill_check_success"
+                if success
+                else "scenario.skill_check_failure"
+            )
+            return ScenarioActionResult(
+                character=character,
+                message_key=key,
+                message_params={
+                    "skill": skill_id,
+                    "roll": check["roll"],
+                    "bonus": bonus,
+                    "total": check["total"],
+                    "dc": dc,
+                },
+            )
+        return ScenarioActionResult(
+            character=character,
+            message_key="scenario.skill_check_roll",
+            message_params={
+                "skill": skill_id,
+                "roll": check["roll"],
+                "bonus": bonus,
+                "total": check["total"],
+            },
+        )
+
+    if action == "exit":
+        return ScenarioActionResult(character=character)
 
     return ScenarioActionResult(character=character)

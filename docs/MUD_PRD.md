@@ -117,12 +117,12 @@
 - Хранится в `Character.difficulty` и наследуется на всю сессию.
 - **Создание персонажа**: см. §3.4.6.
 - **Приключения**: поля `allowed_game_difficulties` / `hardcore_only` / `min_level` загружаются в `Adventure` и проверяются в UI (`_select_adventure`). HardCore-персонаж не блокируется на приключениях без требования HardCore; недоступные — серым списком с причиной.
-- **Моды** (запланировано): в метаданных мода — требование режима, напр. `requires_game_difficulty: hardcore`; моды HardCore-only не активны в Normal.
-- **Game engine** (запланировано): проверки DC, урон, смерть, ограничения ресурсов параметризуются режимом; HardCore = полные правила D&D 5e без упрощений (Phase 2).
+- **Моды:** `requires_game_difficulty` в manifest; overlay применяется через `set_mod_gating_difficulty()` + `load_catalog()`; UI — «Модификации» (`ui/menus/mods_menu.py`).
+- **Game engine:** скелет `core/game_engine.py` — узлы YAML, actions, UI hooks; бой и полная параметризация режима — Phase 2.
 
 **Где выбирается**
 
-- Flow «Создать персонажа» §3.4.1 — экран `select_difficulty()` (`ui/menus.py`).
+- Flow «Создать персонажа» §3.4.1 — экран `select_difficulty()` (`ui/menus/settings.py`).
 - Flow «Новая игра» §3.3 — режим берётся из выбранного `Character.difficulty` (без отдельного экрана сложности).
 - Меню «Настройки» §3.5 — заглушка (только «Назад»); язык — в «Languages» §3.6.
 
@@ -559,7 +559,7 @@ races:
 
 Включение: `database/core/mods_state.json` (`enabled: ["dragonborn_pack"]`). Runtime: `core/mod_loader.py`.
 
-**Запланировано:** `requires_game_difficulty` в manifest; UI включения модов; `delete` / `replace_entity` в overlay.
+**Реализовано:** `requires_game_difficulty` в manifest; меню «Модификации»; runtime gating через `set_mod_gating_difficulty`. **Запланировано:** `delete` / `replace_entity` в overlay.
 
 ## 6. Архитектура (модули)
 
@@ -572,8 +572,9 @@ races:
 - `localization.py` – `load_strings()`, `get_string()` (YAML-словари, fallback на английский).
 - `settings.py` – `load_settings()`, `save_settings(language)`; JSON в `database/core/settings.json`.
 - `grants.py` – чтение `grants[]` из YAML (`grants_from_entity`, `merge_entity_grants`).
-- `mod_loader.py` – deep-merge overlay модов в каталоги YAML (`races`, `backgrounds`, …).
-- **Запланировано:** `game_engine.py`.
+- `mod_loader.py` – deep-merge overlay модов; gating по `requires_game_difficulty`.
+- `game_engine.py` – скелет движка сценария (`GameSession`, `GameEngine`, UI actions).
+- `session_storage.py` – снимки сессий в `saves/sessions/`.
 
 ### 6.2. UI
 - `menus.py` – функции отрисовки экранов (show_welcome_screen, show_main_menu, show_settings).
@@ -689,35 +690,36 @@ Choose option:
 | P0 | Приветственный экран + главное меню | ✅ Реализовано |
 | P0 | Flow «Новая игра» (персонаж → приключение) | ✅ UI реализован; engine — частично |
 | P0 | Flow «Создать персонажа» (сложность → создание) | ✅ Реализовано |
-| P0 | Flow «Загрузить игру» | ⏳ Заглушка |
+| P0 | Flow «Загрузить игру» | ✅ Список сессий, resume с `current_node_id` |
 | P1 | Настройки (заглушка; язык через Languages) | ✅ Реализовано |
 | P1 | Меню Languages (русский/английский) | ✅ Реализовано |
-| P2 | HardCore gating: ограничения в YAML каталоге и модах | ⏳ Приключения в YAML/UI; mod overlay — да; `requires_game_difficulty` в модах — нет |
-| P2 | Полноценный движок приключений (комнаты, проверки, бой) | ❌ Не реализовано |
-| P2 | Автосохранение/ручное сохранение приключения | ❌ Не реализовано |
+| P1 | Меню «Модификации» | ✅ Реализовано |
+| P2 | HardCore gating: ограничения в YAML каталоге и модах | ✅ Приключения + `requires_game_difficulty` в runtime |
+| P2 | Полноценный движок приключений (комнаты, проверки, бой) | ⏳ Скелет engine + checks; бой — нет |
+| P2 | Автосохранение/ручное сохранение приключения | ✅ Сессии в `saves/sessions/` при шагах сценария |
 
 ## 9. Ограничения и допущения
 
 - Одиночная игра (без сети).
 - Нет поддержки многопользовательской игры.
 - Движок боя — упрощённый (D20 + модификаторы).
-- Состояние игры сохраняется только вручную (автосохранение не требуется на Pre-Alpha).
+- Состояние приключения автосохраняется в `saves/sessions/` при прохождении сценария; персонаж — в `saves/characters/`.
 - Графика отсутствует (только текст).
 - Моды не требуют перезагрузки интерпретатора (но могут требовать перезагрузки ядра через вызов функции reload_mods).
 
 ## 10. Критерии приёмки Pre-Alpha
 
 - [x] При запуске main.py отображается приветствие с версией.
-- [x] Главное меню с 5 пунктами + Выход (0).
+- [x] Главное меню: «Новая игра», «Загрузить игру», «Персонажи», «Настройки», «Languages», «Модификации», «Выход» (0).
 - [x] Пункт «Настройки»: заглушка (только «Назад»); язык — в «Languages».
 - [x] Пункт «Languages»: переключение языка интерфейса (русский/английский).
 - [x] Flow «Новая игра»: список персонажей → список приключений (фильтр по `Character.difficulty`).
 - [x] Flow «Создать персонажа»: выбор сложности → имя → раса → подраса → характеристики → предыстория → языки → класс → подкласс → сохранение.
 - [x] Выбор расы: нумерованный список с описанием, бонусами и особенностями.
-- [ ] Flow «Загрузить игру»: список сохранений → загрузка состояния.
+- [x] Flow «Загрузить игру»: список сессий → resume с сохранённого узла сценария.
 - [x] Персонаж сохраняется в JSON вместе с выбранной сложностью.
 - [x] Уровень персонажа проверяется при выборе приключения (`min_level`).
-- [x] Ограничения приключений в `adventures.yaml` (`allowed_game_difficulties`, `hardcore_only`, `min_level`); gating модов по режиму HardCore — запланировано (`requires_game_difficulty`, §5.4).
-- [ ] Весь текст корректно переносится при изменении размера терминала.
+- [x] Gating модов по режиму HardCore (`requires_game_difficulty`, §5.4).
+- [x] Перенос длинного текста сценариев и заголовков под ширину терминала (`ui/terminal_wrap.py`).
 
 См. также открытые задачи в [BACKLOG.md](BACKLOG.md).

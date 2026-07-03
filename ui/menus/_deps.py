@@ -48,12 +48,26 @@ from core.character import (
     validate_final_stats,
     validate_point_buy_finish,
 )
+from core.difficulty import adventure_unavailable_reason
+from core.localization import get_string
+from core.models import Adventure, Character
+from core.types import (
+    GameDifficulty,
+    LanguageCode,
+    RuntimeSettings,
+    StatMap,
+    StringsDict,
+)
 from ui.input_handler import get_int_input, get_str_input
 
 __all__ = [
     "ABILITY_SCORE_DEFAULT",
+    "Adventure",
     "ABILITY_SCORE_MAX",
     "ABILITY_SCORE_MIN",
+    "Character",
+    "GameDifficulty",
+    "LanguageCode",
     "POINT_BUY_BUDGET",
     "POINT_BUY_COSTS",
     "POINT_BUY_MAX",
@@ -62,6 +76,10 @@ __all__ = [
     "STANDARD_ARRAY_MAX",
     "STANDARD_ARRAY_MIN",
     "STAT_NAMES",
+    "StatMap",
+    "StringsDict",
+    "RuntimeSettings",
+    "adventure_unavailable_reason",
     "apply_bonuses_to_stats",
     "build_bonuses_from_choices",
     "can_assign_point_buy_value",
@@ -77,6 +95,7 @@ __all__ = [
     "has_choice_ability_bonuses",
     "get_int_input",
     "get_str_input",
+    "get_string",
     "load_adventures",
     "load_background_full",
     "load_backgrounds",

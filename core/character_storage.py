@@ -10,6 +10,11 @@ from core.io import load_json, save_json
 from core.levels import clamp_level
 from core.models import Character
 from core.progression import max_hp_for_level, xp_for_level
+from core.save_migration import (
+    CHARACTERS_SCHEMA_VERSION,
+    EQUIP_LOGIC_VERSION,
+    migrate_character_dict,
+)
 from core.slug import make_save_slug
 from core.stats import STANDARD_ARRAY, generate_stats_standard_array
 from core.subclasses import start_level_for_difficulty
@@ -51,6 +56,7 @@ def _try_load_character_file(
         data = load_json(path)
         if not data.get("name"):
             return None, path.stem
+        data = migrate_character_dict(data)
         try:
             character = Character.from_dict(data)
         except (ValueError, TypeError):
@@ -249,7 +255,6 @@ def update_character(character: Character) -> None:
 
 SAVES_DIR = Path("saves")
 CHARACTERS_DIR = SAVES_DIR / "characters"
-CHARACTERS_SCHEMA_VERSION = 1
 
 
 def _existing_save_slugs() -> set[str]:
@@ -295,6 +300,7 @@ def _save_character_file(character: Character) -> None:
         path,
         {
             "schema_version": CHARACTERS_SCHEMA_VERSION,
+            "equip_logic_version": EQUIP_LOGIC_VERSION,
             **character.to_dict(),
         },
     )
