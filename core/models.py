@@ -165,6 +165,7 @@ class Character:
             "equipment_choices",
             "save_slug",
             "created_at",
+            "class_features_applied",
         }
 
         result: dict[str, Any] = {}

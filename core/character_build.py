@@ -1,5 +1,6 @@
 """Сборка нового персонажа без записи на диск."""
 
+import warnings
 from collections.abc import Callable
 from datetime import UTC, datetime
 from typing import Any
@@ -55,6 +56,12 @@ def build_new_character(
         Используйте :func:`build_new_character_from_params`
         с CharacterBuildParams.
     """
+    warnings.warn(
+        "build_new_character is deprecated. "
+        "Use build_new_character_from_params with CharacterBuildParams.",
+        DeprecationWarning,
+        stacklevel=2,
+    )
     params = CharacterBuildParams(
         name=name,
         race_id=race_id,

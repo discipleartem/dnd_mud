@@ -4,7 +4,7 @@
 """
 
 from collections.abc import Callable
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import Any
 
 from core.types import (
@@ -48,33 +48,70 @@ class CharacterBuildParams:
     level: int | None = None
     class_features_applied: bool = False
     apply_feat_stat_bonuses: bool = True
-    unique_save_slug: Callable[[str], str] = field(default=lambda name: name)
+    unique_save_slug: Callable[[str], str] = lambda name: name
 
     def to_kwargs(self) -> dict[str, Any]:
-        """Преобразовать в kwargs для совместимости с существующим API."""
+        """Преобразовать в kwargs для совместимости с существующим API.
+
+        Создает копии mutable объектов для предотвращения случайной мутации.
+        """
         return {
             "name": self.name,
             "race_id": self.race_id,
             "class_id": self.class_id,
             "difficulty": self.difficulty,
             "subrace_id": self.subrace_id,
-            "stats": self.stats,
+            "stats": dict(self.stats) if self.stats else None,
             "subclass_id": self.subclass_id,
-            "languages": self.languages,
+            "languages": list(self.languages) if self.languages else None,
             "background_id": self.background_id,
-            "skills": self.skills,
-            "skill_expertise": self.skill_expertise,
-            "tool_expertise": self.tool_expertise,
-            "weapon_proficiencies": self.weapon_proficiencies,
-            "armor_proficiencies": self.armor_proficiencies,
-            "tool_proficiencies": self.tool_proficiencies,
-            "background_tool_picks": self.background_tool_picks,
-            "feat_ids": self.feat_ids,
-            "feat_choices": self.feat_choices,
-            "asi_choices": self.asi_choices,
-            "save_proficiencies": self.save_proficiencies,
-            "inventory": self.inventory,
-            "equipment_choices": self.equipment_choices,
+            "skills": list(self.skills) if self.skills else None,
+            "skill_expertise": (
+                list(self.skill_expertise) if self.skill_expertise else None
+            ),
+            "tool_expertise": (
+                list(self.tool_expertise) if self.tool_expertise else None
+            ),
+            "weapon_proficiencies": (
+                list(self.weapon_proficiencies)
+                if self.weapon_proficiencies
+                else None
+            ),
+            "armor_proficiencies": (
+                list(self.armor_proficiencies)
+                if self.armor_proficiencies
+                else None
+            ),
+            "tool_proficiencies": (
+                list(self.tool_proficiencies)
+                if self.tool_proficiencies
+                else None
+            ),
+            "background_tool_picks": (
+                list(self.background_tool_picks)
+                if self.background_tool_picks
+                else None
+            ),
+            "feat_ids": list(self.feat_ids) if self.feat_ids else None,
+            "feat_choices": (
+                {k: dict(v) for k, v in self.feat_choices.items()}
+                if self.feat_choices
+                else None
+            ),
+            "asi_choices": (
+                dict(self.asi_choices) if self.asi_choices else None
+            ),
+            "save_proficiencies": (
+                list(self.save_proficiencies)
+                if self.save_proficiencies
+                else None
+            ),
+            "inventory": (list(self.inventory) if self.inventory else None),
+            "equipment_choices": (
+                dict(self.equipment_choices)
+                if self.equipment_choices
+                else None
+            ),
             "level": self.level,
             "class_features_applied": self.class_features_applied,
             "apply_feat_stat_bonuses": self.apply_feat_stat_bonuses,
