@@ -70,9 +70,11 @@ UI не читает файлы данных напрямую — только �
 | `core/backgrounds.py` | Каталог предысторий PHB |
 | `core/skills.py` | Навыки при создании персонажа |
 | `core/languages.py` | Каталог языков PHB, пулы выбора |
-| `core/proficiencies.py` | Владения оружием, доспехами, инструментами |
+| `core/proficiencies.py` | Фасад владений: `proficiency_collect` (сбор токенов из grants) + `proficiency_checks` (проверки применимости) |
+| `core/proficiency_collect.py` | Агрегация токенов владений при создании/левелапе из YAML |
+| `core/proficiency_checks.py` | Проверки «владеет ли персонаж» оружием, доспехами, инструментами |
 | `core/checks.py` | Спасброски и бросок к20 (`saving_throw`, `roll_d20`) |
-| `core/inventory.py` | Инвентарь, экипировка, `compute_ac`, авто-экипировка |
+| `core/inventory/` | Инвентарь, экипировка, `compute_ac`, авто-экипировка (`_items`, `_ac`, `_weapons`, `_equip`) |
 | `core/starting_equipment.py` | Стартовое снаряжение класса из YAML |
 | `core/equipment.py` | Оружие, доспехи, инструменты из YAML |
 | `core/feats.py` | Публичный фасад черт (требования, гранты, применение) |
@@ -139,7 +141,7 @@ main.py → ui/menus/ → core/character.py (фасад) → character_storage, 
 **Сценарий «Создать персонажа»:** сложность → имя → раса → подраса → характеристики → предыстория → языки → класс → подкласс → черты (если нужны) → владения → навыки → (компетентность?) → **снаряжение** → сохранение в `saves/characters/{save_slug}.json`.
 
 - Оркестрация: `ui/menus/_creation_steps.py` (`show_create_character_flow`), `ui/menus/_creation_handlers.py`, `ui/menus/stats/stats_flow.py`
-- Снаряжение: `ui/menus/equipment.py` → `core/starting_equipment.py`; предыстория — `core/backgrounds.get_background_equipment_items`; merge и `equip_defaults` — `core/character_storage.save_character`, `core/inventory.py`
+- Снаряжение: `ui/menus/equipment.py` → `core/starting_equipment.py`; предыстория — `core/backgrounds.get_background_equipment_items`; merge и `equip_defaults` — `core/character_storage.save_character`, `core/inventory/`
 - Генераторы: `core/stats.py`, `core/races.py` (через фасад `core/character.py`)
 - Броски 4d6: `core/dice.py` (`roll_ability_score`)
 

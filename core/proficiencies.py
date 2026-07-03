@@ -1,4 +1,8 @@
-"""Владения оружием, доспехами и инструментами — публичный фасад."""
+"""Владения оружием, доспехами и инструментами — публичный фасад.
+
+Единая точка импорта для UI и flow создания: сбор токенов из grants
+(``proficiency_collect``) и проверки владения (``proficiency_checks``).
+"""
 
 from core.proficiency_checks import (
     get_class_saving_throws,
