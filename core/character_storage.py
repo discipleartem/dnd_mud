@@ -64,7 +64,7 @@ def _try_load_character_file(
         return None, path.stem
 
 
-def save_character(
+def build_new_character(
     name: str,
     race_id: str,
     class_id: str,
@@ -91,7 +91,7 @@ def save_character(
     class_features_applied: bool = False,
     apply_feat_stat_bonuses: bool = True,
 ) -> Character:
-    """Создать нового персонажа и сохранить в JSON.
+    """Собрать нового персонажа без записи на диск.
 
     ``apply_feat_stat_bonuses=False`` — если ``stats`` уже содержат бонусы
     черт (flow создания после ``select_creation_feats``).
@@ -238,9 +238,72 @@ def save_character(
 
     character.equipped = equip_defaults(character)
 
-    _save_character_file(character)
-
     return character
+
+
+def persist_character(character: Character) -> Character:
+    """Записать персонажа на диск."""
+    _save_character_file(character)
+    return character
+
+
+def save_character(
+    name: str,
+    race_id: str,
+    class_id: str,
+    difficulty: GameDifficulty = "normal",
+    subrace_id: str | None = None,
+    stats: StatMap | None = None,
+    subclass_id: str | None = None,
+    languages: list[str] | None = None,
+    background_id: str | None = None,
+    skills: list[str] | None = None,
+    skill_expertise: list[str] | None = None,
+    tool_expertise: list[str] | None = None,
+    weapon_proficiencies: list[str] | None = None,
+    armor_proficiencies: list[str] | None = None,
+    tool_proficiencies: list[str] | None = None,
+    background_tool_picks: list[str] | None = None,
+    feat_ids: list[str] | None = None,
+    feat_choices: dict[str, dict[str, Any]] | None = None,
+    asi_choices: dict[str, str] | None = None,
+    save_proficiencies: list[str] | None = None,
+    inventory: list[dict[str, Any]] | None = None,
+    equipment_choices: dict[str, str] | None = None,
+    level: int | None = None,
+    class_features_applied: bool = False,
+    apply_feat_stat_bonuses: bool = True,
+) -> Character:
+    """Создать нового персонажа и сохранить в JSON."""
+    return persist_character(
+        build_new_character(
+            name=name,
+            race_id=race_id,
+            class_id=class_id,
+            difficulty=difficulty,
+            subrace_id=subrace_id,
+            stats=stats,
+            subclass_id=subclass_id,
+            languages=languages,
+            background_id=background_id,
+            skills=skills,
+            skill_expertise=skill_expertise,
+            tool_expertise=tool_expertise,
+            weapon_proficiencies=weapon_proficiencies,
+            armor_proficiencies=armor_proficiencies,
+            tool_proficiencies=tool_proficiencies,
+            background_tool_picks=background_tool_picks,
+            feat_ids=feat_ids,
+            feat_choices=feat_choices,
+            asi_choices=asi_choices,
+            save_proficiencies=save_proficiencies,
+            inventory=inventory,
+            equipment_choices=equipment_choices,
+            level=level,
+            class_features_applied=class_features_applied,
+            apply_feat_stat_bonuses=apply_feat_stat_bonuses,
+        )
+    )
 
 
 def update_character(character: Character) -> None:
