@@ -16,7 +16,7 @@ def _parse_character_class(raw: object) -> CharacterClass:
     if isinstance(raw, CharacterClass):
         return raw
     if raw is None or raw == "":
-        return CharacterClass.FIGHTER
+        raise ValueError("class_id is required")
     return CharacterClass(str(raw))
 
 
