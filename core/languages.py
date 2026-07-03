@@ -3,7 +3,7 @@
 from pathlib import Path
 from typing import Any, Literal
 
-from core.catalog_loader import load_catalog
+from core.catalog_loader import load_catalog, load_catalog_items
 from core.grants import grants_of_type
 from core.localization import resolve_localized_text
 from core.races import get_race_and_subrace, iter_race_grants_by_source
@@ -19,17 +19,11 @@ def _load_languages_yaml() -> dict[str, Any]:
 
 def load_languages(language: str = "ru") -> list[dict[str, Any]]:
     """Список языков с локализованными полями."""
-    result: list[dict[str, Any]] = []
-    for lang_id, info in _load_languages_yaml().items():
-        if not isinstance(info, dict):
-            continue
-        result.append(
-            {
-                "id": lang_id,
-                "name": resolve_localized_text(info.get("name", {}), language),
-                "category": info.get("category", "common"),
-            }
-        )
+    result = load_catalog_items(_load_languages_yaml(), language)
+    for item in result:
+        info = _load_languages_yaml().get(item["id"], {})
+        if isinstance(info, dict):
+            item["category"] = info.get("category", "common")
     return result
 
 

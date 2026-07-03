@@ -4,7 +4,11 @@ from collections import Counter
 from pathlib import Path
 from typing import Any
 
-from core.catalog_loader import clear_catalog_cache, load_catalog
+from core.catalog_loader import (
+    clear_catalog_cache,
+    load_catalog,
+    load_catalog_items,
+)
 from core.grants import (
     ABILITY_INCREASE,
     grants_from_entity,
@@ -203,20 +207,7 @@ def _localize_race_info(
 
 def load_races(language: str = "ru") -> list[dict[str, Any]]:
     """Загрузить список всех доступных рас."""
-    result: list[dict[str, Any]] = []
-    for race_id, race_info in _load_races_yaml().items():
-        if isinstance(race_info, dict):
-            result.append(
-                {
-                    "id": race_id,
-                    "name": resolve_localized_text(
-                        race_info.get("name", race_id),
-                        language,
-                        fallback=race_id,
-                    ),
-                }
-            )
-    return result
+    return load_catalog_items(_load_races_yaml(), language)
 
 
 def load_race_full(race_id: str, language: str = "ru") -> dict[str, Any]:
