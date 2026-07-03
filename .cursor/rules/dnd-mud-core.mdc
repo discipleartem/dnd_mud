@@ -39,6 +39,6 @@ message = "New Game"                            # ❌
 Поиск правил — [`00-project.mdc`](00-project.mdc) §D&D 5e — источник истины и поиск правил (`docs/rules/` → PHB PDF → веб, 5e до 2024).
 
 - Модели в `core/models.py` — `dataclass` для `Character`, `Adventure`
-- `class_id: str` на `Character`; `CharacterClass` Enum — целевой рефакторинг, не блокер
+- `class_id: CharacterClass` на `Character` (`core/types.py`, `StrEnum`); legacy JSON с `str` нормализуется в `__post_init__`
 - Баланс из YAML — без magic numbers в Python
 - Явные проверки условий; эффекты apply/remove явно

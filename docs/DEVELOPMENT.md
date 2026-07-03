@@ -390,7 +390,7 @@ races:
 - ✅ `ui/menus/stats/` — генерация характеристик (standard / point-buy / random)
 - ✅ Flow «Новая игра» (персонаж → приключение → `scenario_flow.run_scenario`)
 - ✅ Flow «Создать персонажа» — `ui/menus/_creation_steps.py` (`show_create_character_flow`)
-- ✅ Flow «Загрузить игру» — заглушка (`errors.load_not_implemented`)
+- ✅ Flow «Загрузить игру» — `ui/menus/load_game.py` (список сессий, resume сценария)
 
 ### Тестирование
 - ✅ pytest suite (`make test`; число кейсов: `pytest --collect-only -q`)

@@ -852,10 +852,11 @@ main() -> int
 | № | Пункт | Обработчик |
 |---|-------|------------|
 | 1 | Новая игра | `show_new_game_flow` |
-| 2 | Загрузить игру | `show_load_game_flow` (заглушка) |
-| 3 | Создать персонажа | `show_create_character_flow` |
+| 2 | Загрузить игру | `show_load_game_flow` |
+| 3 | Персонажи | `show_characters_menu` |
 | 4 | Настройки | `show_settings` |
-| 5 | Languages / Языки (кросс-локально: ru → `Languages`, en → `Языки`) | `show_languages_menu` |
+| 5 | Languages / Языки (кросс-локально) | `show_languages_menu` |
+| 6 | Модификации | `show_mods_menu` |
 | 0 | Выход | завершение |
 
 После изменения настроек или языка вызывается `_save_and_reload_settings`.
@@ -869,8 +870,10 @@ show_welcome_screen(version: str, strings: dict) -> None
 show_main_menu(strings: dict) -> int
 select_difficulty(strings: dict) -> str | None
 show_new_game_flow(strings: dict, settings: dict) -> None
-show_load_game_flow(strings: dict) -> None
-show_create_character_flow(strings: dict, language: str = "ru") -> Character | None  # ui/menus/_creation_steps.py
+show_load_game_flow(strings: dict, language: str = "ru") -> None
+show_characters_menu(strings: dict, language: str = "ru") -> None
+show_mods_menu(strings: dict, language: str = "ru") -> None
+show_create_character_flow(strings: dict, language: str = "ru") -> Character | None  # ui/menus/_creation_steps.py; из hub «Персонажи»
 show_stats_generation_flow(strings: StringsDict, race_id: str, subrace_id: str | None, difficulty: GameDifficulty) -> StatMap | None
 show_settings(strings: dict, settings: dict) -> dict
 show_languages_menu(strings: dict, settings: dict) -> dict
