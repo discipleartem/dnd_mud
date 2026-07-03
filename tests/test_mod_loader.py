@@ -10,6 +10,7 @@ from core.mod_loader import (
     _mod_allowed_for_difficulty,
     get_enabled_mod_ids,
     get_mod_gating_difficulty,
+    list_available_mods,
     save_mods_state,
     set_mod_enabled,
     set_mod_gating_difficulty,
@@ -88,3 +89,19 @@ def test_load_catalog_passes_mod_gating_difficulty(
     load_catalog(RACES_FILE, "races")
     assert seen[-1] == "hardcore"
     set_mod_gating_difficulty(None)
+
+
+def test_list_available_mods_includes_dragonborn_pack() -> None:
+    ids = {str(mod.get("id", "")) for mod in list_available_mods()}
+    assert "dragonborn_pack" in ids
+
+
+def test_set_mod_enabled_persists_state(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    state_file = tmp_path / "mods_state.json"
+    monkeypatch.setattr("core.mod_loader.MODS_STATE_FILE", state_file)
+    set_mod_enabled("dragonborn_pack", True)
+    assert get_enabled_mod_ids() == frozenset({"dragonborn_pack"})
+    set_mod_enabled("dragonborn_pack", False)
+    assert get_enabled_mod_ids() == frozenset()
