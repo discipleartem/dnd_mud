@@ -6,6 +6,7 @@ import pytest
 
 from core.backgrounds import get_background_equipment_items
 from core.character_storage import save_character
+from core.types import CharacterClass
 
 pytestmark = pytest.mark.usefixtures("catalog_caches_cleared")
 
@@ -121,7 +122,7 @@ def test_save_character_merges_background_items_into_inventory(
     saved = save_character(
         name="BgHero",
         race_id="human",
-        class_id="rogue",
+        class_id=CharacterClass.ROGUE,
         difficulty="normal",
         stats=stats,
         background_id="criminal",
@@ -147,7 +148,7 @@ def test_save_character_charlatan_tools_in_inventory(
     saved = save_character(
         name="Charlatan",
         race_id="human",
-        class_id="rogue",
+        class_id=CharacterClass.ROGUE,
         stats=stats,
         background_id="charlatan",
         equipment_choices={

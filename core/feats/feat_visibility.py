@@ -8,7 +8,7 @@
 from typing import Any
 
 from core.classes import character_has_spellcasting
-from core.feats_loader import FeatRequirementContext, load_feat
+from core.feats.feats_loader import FeatRequirementContext, load_feat
 from core.grant_mechanics import normalize_armor_token
 from core.types import StatMap
 

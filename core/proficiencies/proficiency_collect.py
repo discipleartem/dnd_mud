@@ -48,11 +48,6 @@ def _tokens_from_mechanics(
     return proficiency_tokens_from_grant(mechanics)
 
 
-def _mechanics_from_entry(entry: dict[str, Any]) -> dict[str, Any]:
-    """Плоский grant или mechanics из class feature."""
-    return mechanics_from_grant_entry(entry)
-
-
 def _collect_from_grants(
     grants: list[dict[str, Any]],
     level: int,
@@ -72,7 +67,7 @@ def _collect_from_grants(
             and feat_level > level
         ):
             continue
-        merged = _mechanics_from_entry(entry)
+        merged = mechanics_from_grant_entry(entry)
         w, a, t = _tokens_from_mechanics(merged)
         weapons.extend(w)
         armors.extend(a)

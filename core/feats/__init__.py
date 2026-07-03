@@ -1,6 +1,6 @@
 """Загрузка черт из YAML — публичный фасад."""
 
-from core.feat_apply import (
+from core.feats.feat_apply import (
     apply_feat_grants_to_character,
     apply_feats_to_stats,
     get_feat_expertise_ids,
@@ -13,11 +13,11 @@ from core.feat_apply import (
     resolve_feat_grants,
     tough_hp_adjustment_on_acquire,
 )
-from core.feat_descriptions import (
+from core.feats.feat_descriptions import (
     feat_full_description_lines,
     feat_summary_description,
 )
-from core.feat_requirements import (
+from core.feats.feat_requirements import (
     active_feat_ids,
     can_take_feat,
     character_has_spellcasting,
@@ -30,8 +30,8 @@ from core.feat_requirements import (
     race_feat_step_required,
     requirement_met,
 )
-from core.feat_visibility import feat_visible_for_selection
-from core.feats_loader import (
+from core.feats.feat_visibility import feat_visible_for_selection
+from core.feats.feats_loader import (
     FeatGrant,
     FeatRequirementContext,
     load_feat,

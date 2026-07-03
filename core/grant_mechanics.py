@@ -2,15 +2,13 @@
 
 from typing import Any
 
-from core.abilities import skill_ids
+from core.skills import PHB_SKILL_IDS
 
 _ARMOR_ALIASES: dict[str, str] = {
     "light_armor": "light",
     "medium_armor": "medium",
     "heavy_armor": "heavy",
 }
-
-PHB_SKILL_IDS: tuple[str, ...] = skill_ids()
 
 
 def normalize_armor_token(token: str) -> str:

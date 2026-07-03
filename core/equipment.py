@@ -54,6 +54,14 @@ def _load_equipment_items() -> dict[str, Any]:
     return load_catalog(EQUIPMENT_FILE, "equipment")
 
 
+def _load_catalog_item(
+    catalog: dict[str, Any], item_id: str
+) -> dict[str, Any]:
+    """Один элемент из загруженного каталога."""
+    info = catalog.get(item_id, {})
+    return dict(info) if isinstance(info, dict) else {}
+
+
 def all_weapon_ids() -> list[str]:
     """ID всего оружия из каталога."""
     return sorted(_load_weapons().keys())
@@ -66,26 +74,22 @@ def all_tool_ids() -> list[str]:
 
 def load_weapon(weapon_id: str) -> dict[str, Any]:
     """Данные оружия по id."""
-    info = _load_weapons().get(weapon_id, {})
-    return dict(info) if isinstance(info, dict) else {}
+    return _load_catalog_item(_load_weapons(), weapon_id)
 
 
 def load_armor(armor_id: str) -> dict[str, Any]:
     """Данные доспеха по id."""
-    info = _load_armor().get(armor_id, {})
-    return dict(info) if isinstance(info, dict) else {}
+    return _load_catalog_item(_load_armor(), armor_id)
 
 
 def load_tool(tool_id: str) -> dict[str, Any]:
     """Данные инструмента по id."""
-    info = _load_tools().get(tool_id, {})
-    return dict(info) if isinstance(info, dict) else {}
+    return _load_catalog_item(_load_tools(), tool_id)
 
 
 def load_equipment_item(item_id: str) -> dict[str, Any]:
     """Данные предмета снаряжения по id."""
-    info = _load_equipment_items().get(item_id, {})
-    return dict(info) if isinstance(info, dict) else {}
+    return _load_catalog_item(_load_equipment_items(), item_id)
 
 
 def weapon_category(weapon_id: str) -> str:

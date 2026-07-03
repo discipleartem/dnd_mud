@@ -7,7 +7,7 @@ from core.equipment import proficiency_token_label
 from core.inventory import compute_ac
 from core.localization import get_string, resolve_localized_text
 from core.models import Character
-from core.subclasses import subclass_is_active
+from core.progression.subclasses import subclass_is_active
 from core.types import StringsDict
 from ui.menus import _deps
 from ui.menus._common import _ability_name, _skill_name
@@ -26,7 +26,7 @@ from ui.menus.expertise import format_expertise_display
 
 def _format_character_feats(char: Character, language: str = "ru") -> str:
     """Список названий черт персонажа через запятую."""
-    from core.feats_loader import load_feat
+    from core.feats.feats_loader import load_feat
 
     names: list[str] = []
     for feat_id in char.feat_ids:

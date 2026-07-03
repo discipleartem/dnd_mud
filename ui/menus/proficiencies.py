@@ -13,13 +13,13 @@ from core.proficiencies import (
     is_valid_tool_selection,
     merge_proficiency_tokens,
 )
-from core.proficiency_checks import has_tool_proficiency
-from core.subclasses import start_level_for_difficulty
+from core.proficiencies.proficiency_checks import has_tool_proficiency
+from core.progression.subclasses import start_level_for_difficulty
 from core.types import GameDifficulty, StringsDict
-from ui.menus import _deps
 from ui.menus._common import (
     _format_pick_menu_label,
     _print_screen_header,
+    _read_pool_pick,
     _sort_ids_by_proficiency,
 )
 
@@ -119,23 +119,21 @@ def _pick_tools(
                     has_tool_proficiency(known_tools, tool_id),
                 )
                 print(f"  {Fore.YELLOW}{idx}{Style.RESET_ALL}. {label}")
-            print()
-            print(
-                f"  {Fore.YELLOW}0{Style.RESET_ALL}. "
-                f"{get_string(strings, 'character.back')}"
+            tool_prompt = get_string(
+                strings, "character.proficiencies_tool_prompt"
             )
-            print()
-            picked = _deps.get_int_input(
-                get_string(strings, "character.proficiencies_tool_prompt"),
-                0,
-                len(selectable),
+            picked_id = _read_pool_pick(
                 strings,
+                selectable,
+                prompt=tool_prompt,
+                empty_key="character.expertise_pool_empty",
             )
-            if picked == 0:
+            if picked_id == "":
+                continue
+            if picked_id is None:
                 return None
-            tool_id = selectable[picked - 1]
-            added.append(tool_id)
-            current.append(tool_id)
+            added.append(picked_id)
+            current.append(picked_id)
             break
     return added
 

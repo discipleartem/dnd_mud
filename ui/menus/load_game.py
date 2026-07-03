@@ -2,10 +2,8 @@
 
 from colorama import Fore, Style
 
-from core.catalog_loader import reload_catalogs
 from core.character_storage import CHARACTERS_DIR
 from core.game_engine import GameEngine, GameSession
-from core.mod_loader import set_mod_gating_difficulty
 from core.session_storage import (
     find_adventure,
     list_sessions,
@@ -13,7 +11,11 @@ from core.session_storage import (
     load_session,
 )
 from ui.menus import _deps
-from ui.menus._common import _press_enter, _print_screen_header
+from ui.menus._common import (
+    _press_enter,
+    _print_screen_header,
+    _read_numbered_choice,
+)
 from ui.menus.scenario_flow import run_scenario_with_engine
 
 StringsDict = _deps.StringsDict
@@ -45,18 +47,14 @@ def show_load_game_flow(
             f" {snapshot.adventure_id} — {snapshot.character_save_slug}"
         )
     print()
-    print(
-        f"  {Fore.YELLOW}0{Style.RESET_ALL}."
-        f" {get_string(strings, 'load_game.back')}"
-    )
-    print()
-    choice = _deps.get_int_input(
-        get_string(strings, "load_game.prompt", count=len(sessions)),
-        0,
-        len(sessions),
+    choice = _read_numbered_choice(
         strings,
+        len(sessions),
+        prompt_key="load_game.prompt",
+        back_label_key="load_game.back",
+        prompt_kwargs={"count": len(sessions)},
     )
-    if choice == 0:
+    if choice is None:
         return
 
     snapshot = sessions[choice - 1]
@@ -86,8 +84,7 @@ def show_load_game_flow(
         _press_enter(strings)
         return
 
-    set_mod_gating_difficulty(loaded.difficulty)
-    reload_catalogs()
+    _deps.bootstrap_session_catalogs(loaded.difficulty)
 
     session = GameSession(
         character=character,

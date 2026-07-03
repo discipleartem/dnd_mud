@@ -3,9 +3,9 @@
 from dataclasses import replace
 from typing import Any
 
-from core.feats_loader import load_feat
+from core.feats.feats_loader import load_feat
 from core.grant_mechanics import proficiency_tokens_and_skills_from_grant
-from core.hp_bonuses import HpBonusSource, hit_point_bonus_amount
+from core.progression.hp_bonuses import HpBonusSource, hit_point_bonus_amount
 from core.types import StatMap
 
 

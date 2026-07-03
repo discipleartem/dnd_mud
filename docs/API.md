@@ -30,7 +30,7 @@ Re-export типов: `core.types`. Фасад функций персонажа
 class Character:
     name: str
     race: str
-    class_id: str
+    class_id: CharacterClass | str  # после __post_init__ — CharacterClass
     level: int = 1
     stats: StatMap = field(default_factory=dict)
     current_hp: int = 0
@@ -52,8 +52,10 @@ class Character:
 ```
 
 **Методы:**
-- `to_dict() -> dict[str, Any]` — сериализация для JSON (ключ класса — `class_id`)
-- `from_dict(data: dict[str, Any]) -> Character` — десериализация; ключ класса — `class_id`
+- `to_dict() -> dict[str, Any]` — сериализация для JSON (`class_id` — string)
+- `from_dict(data: dict[str, Any]) -> Character` — десериализация; `class_id` обязателен (`ValueError` при пустом значении); str приводится к `CharacterClass`
+
+`CharacterClass` — `StrEnum` в `core.types` (fighter, rogue, cleric, bard); в JSON-сейвах — string.
 
 ### Adventure
 
@@ -94,6 +96,8 @@ CLASSES_FILE = Path("database/classes/classes.yaml")
 ### Сохранение и загрузка
 
 ```python
+build_new_character(...) -> Character
+persist_character(character: Character) -> Character
 save_character(...) -> Character
 update_character(character: Character) -> Character
 load_characters() -> LoadCharactersResult
@@ -125,7 +129,11 @@ ABILITY_SCORE_DEFAULT = 10
 ABILITY_SCORE_MAX = 20
 ```
 
-`save_character` создаёт `Character` (`current_hp` = `max_hp` = `max_hp_for_level(..., difficulty)`) и сохраняет в `saves/characters/{save_slug}.json`.  
+`build_new_character` собирает `Character` без записи на диск (feat merge, HP, inventory, `equip_defaults`).  
+`persist_character` записывает готовую модель в `saves/characters/{save_slug}.json`.  
+Flow создания: `_CreationState.to_character()` → `persist_character()` (`ui/menus/_creation_finalize.py`).  
+`save_character` — thin wrapper: `build_new_character(...)` + persist (backward compat для тестов).  
+`save_character` / `build_new_character` задают `current_hp` = `max_hp` = `max_hp_for_level(..., difficulty)`.  
 Параметр `apply_feat_stat_bonuses=False` — если `stats` уже содержат бонусы черт (flow создания после `select_creation_feats`).  
 `max_hp_for_level` — см. `core.progression` (HP на уровне 1–10, включая режим Normal/Easy/HardCore).  
 `update_character` — перезапись JSON после изменений (подкласс, XP и т.д.).

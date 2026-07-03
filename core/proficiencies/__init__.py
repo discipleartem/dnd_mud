@@ -4,7 +4,7 @@
 (``proficiency_collect``) и проверки владения (``proficiency_checks``).
 """
 
-from core.proficiency_checks import (
+from core.proficiencies.proficiency_checks import (
     get_class_saving_throws,
     has_armor_proficiency,
     has_save_proficiency,
@@ -13,7 +13,7 @@ from core.proficiency_checks import (
     is_valid_tool_selection,
     subclass_proficiencies_active,
 )
-from core.proficiency_collect import (
+from core.proficiencies.proficiency_collect import (
     ProficiencyChoice,
     apply_subclass_proficiencies_to_character,
     build_fixed_proficiencies,

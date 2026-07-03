@@ -7,7 +7,7 @@ from core.equipment import (
     armor_category,
     meets_armor_strength_requirement,
 )
-from core.feat_apply import has_non_light_dual_wield
+from core.feats.feat_apply import has_non_light_dual_wield
 from core.inventory._ac import _armor_sort_key
 from core.inventory._weapons import (
     _weapon_auto_equip_damage,
@@ -17,7 +17,7 @@ from core.inventory._weapons import (
     _weapon_one_handed_damage,
 )
 from core.models import Character
-from core.proficiency_checks import (
+from core.proficiencies.proficiency_checks import (
     has_armor_proficiency,
     has_weapon_proficiency,
 )

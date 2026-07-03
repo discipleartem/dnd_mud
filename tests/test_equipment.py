@@ -1,5 +1,6 @@
 """Тесты снаряжения и форматирования карточек (_display)."""
 
+from collections.abc import Callable
 from typing import Any
 
 import pytest
@@ -16,6 +17,7 @@ from core.equipment import (
 )
 from core.localization import load_strings
 from core.models import Character
+from core.types import CharacterClass
 from ui.menus import _deps
 from ui.menus._common import _sort_ids_by_proficiency
 from ui.menus._display._character import (
@@ -67,6 +69,8 @@ def test_option_display_label_strips_proficiency_hint() -> None:
 
 def test_armor_menu_shows_unavailable_chain_mail(
     ru_strings: dict[str, Any],
+    monkeypatch: pytest.MonkeyPatch,
+    patch_int_input: Callable[[pytest.MonkeyPatch, list[int]], None],
 ) -> None:
     from io import StringIO
     from unittest.mock import patch
@@ -75,10 +79,8 @@ def test_armor_menu_shows_unavailable_chain_mail(
     from ui.menus.equipment import _pick_option_for_group
 
     groups = list_equipment_options_by_group("cleric")
-    with (
-        patch("ui.menus._deps.get_int_input", return_value=0),
-        patch("sys.stdout", new_callable=StringIO) as buf,
-    ):
+    patch_int_input(monkeypatch, [0])
+    with patch("sys.stdout", new_callable=StringIO) as buf:
         _pick_option_for_group(
             ru_strings,
             "armor",
@@ -99,6 +101,8 @@ def test_armor_menu_shows_unavailable_chain_mail(
 
 def test_weapon_menu_warhammer_available_for_dwarf_weapon_proficiency(
     ru_strings: dict[str, Any],
+    monkeypatch: pytest.MonkeyPatch,
+    patch_int_input: Callable[[pytest.MonkeyPatch, list[int]], None],
 ) -> None:
     from io import StringIO
     from unittest.mock import patch
@@ -114,10 +118,8 @@ def test_weapon_menu_warhammer_available_for_dwarf_weapon_proficiency(
         "light_hammer",
         "warhammer",
     ]
-    with (
-        patch("ui.menus._deps.get_int_input", return_value=0),
-        patch("sys.stdout", new_callable=StringIO) as buf,
-    ):
+    patch_int_input(monkeypatch, [0])
+    with patch("sys.stdout", new_callable=StringIO) as buf:
         _pick_option_for_group(
             ru_strings,
             "weapon",
@@ -135,6 +137,8 @@ def test_weapon_menu_warhammer_available_for_dwarf_weapon_proficiency(
 
 def test_weapon_menu_shows_unavailable_warhammer_without_proficiency(
     ru_strings: dict[str, Any],
+    monkeypatch: pytest.MonkeyPatch,
+    patch_int_input: Callable[[pytest.MonkeyPatch, list[int]], None],
 ) -> None:
     from io import StringIO
     from unittest.mock import patch
@@ -143,10 +147,8 @@ def test_weapon_menu_shows_unavailable_warhammer_without_proficiency(
     from ui.menus.equipment import _pick_option_for_group
 
     groups = list_equipment_options_by_group("cleric")
-    with (
-        patch("ui.menus._deps.get_int_input", return_value=0),
-        patch("sys.stdout", new_callable=StringIO) as buf,
-    ):
+    patch_int_input(monkeypatch, [0])
+    with patch("sys.stdout", new_callable=StringIO) as buf:
         _pick_option_for_group(
             ru_strings,
             "weapon",
@@ -232,7 +234,7 @@ def test_format_character_stats_compact_hides_zero_mod(
     char = Character(
         name="Hero",
         race="human",
-        class_id="fighter",
+        class_id=CharacterClass.FIGHTER,
         stats={
             "strength": 6,
             "dexterity": 10,
@@ -253,7 +255,7 @@ def test_format_character_feats() -> None:
     char = Character(
         name="Hero",
         race="human",
-        class_id="fighter",
+        class_id=CharacterClass.FIGHTER,
         feat_ids=["tough", "athlete"],
     )
     assert _format_character_feats(char, "ru") == "Крепкий, Атлетичный"
@@ -265,7 +267,7 @@ def test_format_character_stats_and_card(
     char = Character(
         name="Арагорн",
         race="human",
-        class_id="fighter",
+        class_id=CharacterClass.FIGHTER,
         level=3,
         subclass_id="champion",
         current_hp=28,

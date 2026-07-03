@@ -8,12 +8,12 @@ from typing import Any
 
 from core.io import load_json, save_json
 from core.levels import clamp_level
-from core.models import Character
+from core.models import Character, _parse_character_class
 from core.progression import max_hp_for_level, xp_for_level
+from core.progression.subclasses import start_level_for_difficulty
 from core.slug import make_save_slug
 from core.stats import STANDARD_ARRAY, generate_stats_standard_array
-from core.subclasses import start_level_for_difficulty
-from core.types import GameDifficulty, StatMap
+from core.types import CharacterClass, GameDifficulty, StatMap
 
 CHARACTERS_SCHEMA_VERSION = 1
 
@@ -64,10 +64,10 @@ def _try_load_character_file(
         return None, path.stem
 
 
-def save_character(
+def build_new_character(
     name: str,
     race_id: str,
-    class_id: str,
+    class_id: str | CharacterClass,
     difficulty: GameDifficulty = "normal",
     subrace_id: str | None = None,
     stats: StatMap | None = None,
@@ -91,7 +91,7 @@ def save_character(
     class_features_applied: bool = False,
     apply_feat_stat_bonuses: bool = True,
 ) -> Character:
-    """Создать нового персонажа и сохранить в JSON.
+    """Собрать нового персонажа без записи на диск.
 
     ``apply_feat_stat_bonuses=False`` — если ``stats`` уже содержат бонусы
     черт (flow создания после ``select_creation_feats``).
@@ -199,7 +199,7 @@ def save_character(
     character = Character(
         name=name,
         race=race_id,
-        class_id=class_id,
+        class_id=_parse_character_class(class_id),
         level=level,
         stats=stats,
         current_hp=hp,
@@ -238,9 +238,72 @@ def save_character(
 
     character.equipped = equip_defaults(character)
 
-    _save_character_file(character)
-
     return character
+
+
+def persist_character(character: Character) -> Character:
+    """Записать персонажа на диск."""
+    _save_character_file(character)
+    return character
+
+
+def save_character(
+    name: str,
+    race_id: str,
+    class_id: str | CharacterClass,
+    difficulty: GameDifficulty = "normal",
+    subrace_id: str | None = None,
+    stats: StatMap | None = None,
+    subclass_id: str | None = None,
+    languages: list[str] | None = None,
+    background_id: str | None = None,
+    skills: list[str] | None = None,
+    skill_expertise: list[str] | None = None,
+    tool_expertise: list[str] | None = None,
+    weapon_proficiencies: list[str] | None = None,
+    armor_proficiencies: list[str] | None = None,
+    tool_proficiencies: list[str] | None = None,
+    background_tool_picks: list[str] | None = None,
+    feat_ids: list[str] | None = None,
+    feat_choices: dict[str, dict[str, Any]] | None = None,
+    asi_choices: dict[str, str] | None = None,
+    save_proficiencies: list[str] | None = None,
+    inventory: list[dict[str, Any]] | None = None,
+    equipment_choices: dict[str, str] | None = None,
+    level: int | None = None,
+    class_features_applied: bool = False,
+    apply_feat_stat_bonuses: bool = True,
+) -> Character:
+    """Создать нового персонажа и сохранить в JSON."""
+    return persist_character(
+        build_new_character(
+            name=name,
+            race_id=race_id,
+            class_id=class_id,
+            difficulty=difficulty,
+            subrace_id=subrace_id,
+            stats=stats,
+            subclass_id=subclass_id,
+            languages=languages,
+            background_id=background_id,
+            skills=skills,
+            skill_expertise=skill_expertise,
+            tool_expertise=tool_expertise,
+            weapon_proficiencies=weapon_proficiencies,
+            armor_proficiencies=armor_proficiencies,
+            tool_proficiencies=tool_proficiencies,
+            background_tool_picks=background_tool_picks,
+            feat_ids=feat_ids,
+            feat_choices=feat_choices,
+            asi_choices=asi_choices,
+            save_proficiencies=save_proficiencies,
+            inventory=inventory,
+            equipment_choices=equipment_choices,
+            level=level,
+            class_features_applied=class_features_applied,
+            apply_feat_stat_bonuses=apply_feat_stat_bonuses,
+        )
+    )
 
 
 def update_character(character: Character) -> None:

@@ -2,11 +2,6 @@
 
 from typing import Any
 
-from core.asi import cap_stats
-from core.feat_visibility import (
-    build_feat_selection_context,
-    creation_known_for_feat_picks,
-)
 from core.feats import (
     apply_feats_to_stats,
     get_feat_skill_ids,
@@ -15,8 +10,13 @@ from core.feats import (
     load_feat,
     resolve_feat_ability_bonuses,
 )
+from core.feats.feat_visibility import (
+    build_feat_selection_context,
+    creation_known_for_feat_picks,
+)
 from core.grant_mechanics import proficiency_tokens_and_skills_from_grant
 from core.localization import get_string
+from core.progression.asi import cap_stats
 from core.types import StatMap, StringsDict
 from ui.menus import _deps
 from ui.menus._common import _print_screen_header

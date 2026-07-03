@@ -9,6 +9,7 @@ from core.backgrounds import get_background_skills, load_backgrounds
 from core.models import Adventure, Character
 from core.scenario_actions import apply_scenario_action, load_scenario
 from core.skills import PHB_SKILL_IDS
+from core.types import CharacterClass
 
 pytestmark = pytest.mark.usefixtures("catalog_caches_cleared")
 
@@ -17,7 +18,7 @@ def test_character_round_trip_with_subrace() -> None:
     original = Character(
         name="Test",
         race="human",
-        class_id="fighter",
+        class_id=CharacterClass.FIGHTER,
         subrace="variant_human",
         stats={"strength": 10},
         current_hp=12,
@@ -25,16 +26,22 @@ def test_character_round_trip_with_subrace() -> None:
     )
     restored = Character.from_dict(original.to_dict())
     assert restored.subrace == "variant_human"
-    assert restored.class_id == "fighter"
+    assert restored.class_id is CharacterClass.FIGHTER
     assert restored.save_slug == "test"
 
 
 def test_character_and_adventure_from_dict() -> None:
     character = Character.from_dict(
-        {"name": "X", "race": "human", "class_id": "wizard"}
+        {"name": "X", "race": "human", "class_id": "bard"}
     )
-    assert character.class_id == "wizard"
-    assert Character.from_dict({}).level == 1
+    assert character.class_id is CharacterClass.BARD
+    partial = Character.from_dict(
+        {"name": "X", "race": "human", "class_id": "fighter", "level": 1}
+    )
+    assert partial.level == 1
+
+    with pytest.raises(ValueError, match="class_id"):
+        Character.from_dict({})
 
     localized = Adventure(id="a1", name={"ru": "Обучение", "en": "Tutorial"})
     assert localized.get_name("ru") == "Обучение"
@@ -92,7 +99,9 @@ def test_load_scenario_reads_yaml(tmp_path: Path) -> None:
 
 
 def test_apply_scenario_action_unknown_returns_unchanged() -> None:
-    char = Character(name="Hero", race="human", class_id="fighter")
+    char = Character(
+        name="Hero", race="human", class_id=CharacterClass.FIGHTER
+    )
     result = apply_scenario_action("unknown", {}, char)
     assert result.character is char
     assert result.level_up_pending is False

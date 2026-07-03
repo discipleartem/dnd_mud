@@ -12,6 +12,7 @@ from core.session_storage import (
     load_session,
     save_session,
 )
+from core.types import CharacterClass
 
 
 @pytest.fixture
@@ -45,7 +46,7 @@ def test_load_scenario_preserves_resumed_node_id() -> None:
     character = Character(
         name="Hero",
         race="human",
-        class_id="fighter",
+        class_id=CharacterClass.FIGHTER,
     )
     adventure = Adventure(
         id="tutorial",

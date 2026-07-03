@@ -45,7 +45,7 @@ def resolve_creation_grants(
 ) -> ResolvedGrants:
     """Собрать владения из расы, класса, предыстории, подкласса и черт."""
     from core.backgrounds import get_background_skills
-    from core.proficiency_checks import get_class_saving_throws
+    from core.proficiencies.proficiency_checks import get_class_saving_throws
 
     skills = list(apply_racial_proficiencies(race_id, subrace_id))
     if background_id:
@@ -80,7 +80,7 @@ def resolve_creation_grants(
 
     save_ids = list(get_class_saving_throws(class_id))
     if feat_ids:
-        from core.feat_apply import get_feat_save_proficiencies
+        from core.feats.feat_apply import get_feat_save_proficiencies
 
         for save_id in get_feat_save_proficiencies(feat_ids, feat_choices):
             if save_id not in save_ids:

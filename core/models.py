@@ -8,7 +8,16 @@ from typing import Any
 
 from core.levels import clamp_level
 from core.localization import resolve_localized_text
-from core.types import GameDifficulty, StatMap
+from core.types import CharacterClass, GameDifficulty, StatMap
+
+
+def _parse_character_class(raw: object) -> CharacterClass:
+    """Идентификатор класса из JSON или кода."""
+    if isinstance(raw, CharacterClass):
+        return raw
+    if raw is None or raw == "":
+        raise ValueError("class_id is required")
+    return CharacterClass(str(raw))
 
 
 def _coerce_str_list(raw: object) -> list[str]:
@@ -65,7 +74,7 @@ class Character:
 
     name: str
     race: str
-    class_id: str
+    class_id: CharacterClass | str
     level: int = 1
     stats: StatMap = field(default_factory=dict)
     current_hp: int = 0
@@ -93,12 +102,18 @@ class Character:
     save_slug: str | None = None
     created_at: str | None = None
 
+    def __post_init__(self) -> None:
+        """Привести class_id к enum при создании из str."""
+        object.__setattr__(
+            self, "class_id", _parse_character_class(self.class_id)
+        )
+
     def to_dict(self) -> dict[str, Any]:
         """Сериализовать в словарь для сохранения в JSON."""
         data: dict[str, Any] = {
             "name": self.name,
             "race": self.race,
-            "class_id": self.class_id,
+            "class_id": str(self.class_id),
             "level": self.level,
             "stats": self.stats,
             "current_hp": self.current_hp,
@@ -162,7 +177,7 @@ class Character:
         return cls(
             name=str(data.get("name", "")),
             race=str(data.get("race", "")),
-            class_id=str(data.get("class_id") or ""),
+            class_id=_parse_character_class(data.get("class_id")),
             level=clamp_level(int(data.get("level", 1))),
             stats=data.get("stats", {}),
             current_hp=current_hp,

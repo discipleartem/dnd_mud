@@ -16,6 +16,7 @@ from core.feats import (
     resolve_feat_ability_bonuses,
     tough_hp_adjustment_on_acquire,
 )
+from core.types import CharacterClass
 
 _CREATION_STATS = {
     "strength": 14,
@@ -30,7 +31,7 @@ pytestmark = pytest.mark.usefixtures("catalog_caches_cleared")
 
 
 def test_feat_meets_requirements_and_spellcasting_context() -> None:
-    from core.feat_visibility import build_feat_selection_context
+    from core.feats.feat_visibility import build_feat_selection_context
 
     ctx_ok = FeatRequirementContext(
         stats={"dexterity": 14, "strength": 10},
@@ -53,7 +54,7 @@ def test_feat_meets_requirements_and_spellcasting_context() -> None:
         race_id="human",
         subrace_id="variant_human",
         background_id="soldier",
-        class_id="fighter",
+        class_id=CharacterClass.FIGHTER,
         subclass_id="champion",
         level=1,
     )
@@ -106,14 +107,14 @@ def test_list_feats_for_selection_requirements_split() -> None:
 
 
 def test_redundant_proficiency_feats_hidden_fighter() -> None:
-    from core.feat_visibility import build_feat_selection_context
+    from core.feats.feat_visibility import build_feat_selection_context
 
     ctx = build_feat_selection_context(
         stats=_CREATION_STATS,
         race_id="human",
         subrace_id="variant_human",
         background_id="soldier",
-        class_id="fighter",
+        class_id=CharacterClass.FIGHTER,
         subclass_id="champion",
         level=1,
     )
@@ -130,14 +131,14 @@ def test_redundant_proficiency_feats_hidden_fighter() -> None:
 
 
 def test_redundant_proficiency_feats_hidden_dwarf() -> None:
-    from core.feat_visibility import build_feat_selection_context
+    from core.feats.feat_visibility import build_feat_selection_context
 
     ctx = build_feat_selection_context(
         stats=_CREATION_STATS,
         race_id="dwarf",
         subrace_id="mountain_dwarf",
         background_id="soldier",
-        class_id="fighter",
+        class_id=CharacterClass.FIGHTER,
         subclass_id="champion",
         level=1,
     )
@@ -153,7 +154,7 @@ def test_apply_feat_grants_to_character_merges_skills_and_tools() -> None:
     char = Character(
         name="Hero",
         race="human",
-        class_id="fighter",
+        class_id=CharacterClass.FIGHTER,
         level=4,
         stats={"constitution": 14},
         current_hp=30,
@@ -186,7 +187,7 @@ def test_print_feat_selection_menu_shows_hidden_section(
         weapon_tokens=["simple", "martial"],
         armor_tokens=["light", "medium", "heavy", "shield"],
         tool_tokens=[],
-        class_id="fighter",
+        class_id=CharacterClass.FIGHTER,
         skills=["athletics", "intimidation"],
     )
     eligible, blocked, hidden = list_feats_for_selection(ctx, [])

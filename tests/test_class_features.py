@@ -4,12 +4,13 @@ from typing import Any
 
 import pytest
 
-from core.class_features import (
+from core.models import Character
+from core.progression.class_features import (
     class_features_applied_at_creation,
     needs_class_feature_picks,
 )
-from core.models import Character
 from core.scenario_actions import apply_scenario_action
+from core.types import CharacterClass
 from ui.menus.class_features import apply_pending_class_features
 
 
@@ -17,7 +18,7 @@ def test_bard_class_features_by_level() -> None:
     char = Character(
         name="Hero",
         race="elf",
-        class_id="bard",
+        class_id=CharacterClass.BARD,
         level=3,
         subclass_id="lore_college",
         difficulty="normal",
@@ -33,7 +34,7 @@ def test_subclass_training_triggers_class_features() -> None:
     char = Character(
         name="Hero",
         race="elf",
-        class_id="bard",
+        class_id=CharacterClass.BARD,
         level=3,
         subclass_id="lore_college",
         difficulty="normal",
@@ -49,7 +50,7 @@ def test_apply_pending_class_features_champion_marks_applied(
     char = Character(
         name="Hero",
         race="human",
-        class_id="fighter",
+        class_id=CharacterClass.FIGHTER,
         level=3,
         subclass_id="champion",
         class_features_applied=False,

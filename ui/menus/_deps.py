@@ -4,6 +4,7 @@
 Импорты используются как `_deps.<name>` из других модулей пакета.
 """
 
+from core.catalog_loader import reload_catalogs
 from core.character import (
     ABILITY_SCORE_DEFAULT,
     ABILITY_SCORE_MAX,
@@ -50,6 +51,7 @@ from core.character import (
 )
 from core.difficulty import adventure_unavailable_reason
 from core.localization import get_string
+from core.mod_loader import set_mod_gating_difficulty
 from core.models import Adventure, Character
 from core.types import (
     GameDifficulty,
@@ -59,6 +61,13 @@ from core.types import (
     StringsDict,
 )
 from ui.input_handler import get_int_input, get_str_input
+
+
+def bootstrap_session_catalogs(difficulty: GameDifficulty) -> None:
+    """Синхронизировать mod overlay перед сессией приключения."""
+    set_mod_gating_difficulty(difficulty)
+    reload_catalogs()
+
 
 __all__ = [
     "ABILITY_SCORE_DEFAULT",
@@ -81,6 +90,7 @@ __all__ = [
     "RuntimeSettings",
     "adventure_unavailable_reason",
     "apply_bonuses_to_stats",
+    "bootstrap_session_catalogs",
     "build_bonuses_from_choices",
     "can_assign_point_buy_value",
     "delete_all_characters",

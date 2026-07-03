@@ -9,6 +9,9 @@ import core.character as character_mod
 from core.character_storage import load_characters
 from core.models import Character
 from core.slug import make_save_slug
+from core.types import CharacterClass
+from tests.creation_helpers import fighter_acolyte_creation
+from ui.menus._creation_state import _CreationState
 
 
 @pytest.mark.parametrize(
@@ -62,7 +65,7 @@ def test_save_character_roundtrip(characters_dir: Path) -> None:
     saved = character_mod.save_character(
         name="Hero",
         race_id="human",
-        class_id="fighter",
+        class_id=CharacterClass.FIGHTER,
         difficulty="normal",
         stats=stats,
         subclass_id="champion",
@@ -87,7 +90,7 @@ def test_save_character_easy_start_level_xp(characters_dir: Path) -> None:
     saved = character_mod.save_character(
         name="EasyHero",
         race_id="human",
-        class_id="fighter",
+        class_id=CharacterClass.FIGHTER,
         difficulty="easy",
         stats=stats,
     )
@@ -99,7 +102,7 @@ def test_character_json_uses_canonical_field_names() -> None:
     char = Character(
         name="Hero",
         race="human",
-        class_id="fighter",
+        class_id=CharacterClass.FIGHTER,
         subclass_id="champion",
         background_id="soldier",
     )
@@ -109,6 +112,7 @@ def test_character_json_uses_canonical_field_names() -> None:
     assert "subclass" not in data
     assert "background" not in data
     restored = Character.from_dict(data)
+    assert restored.class_id is CharacterClass.FIGHTER
     assert restored.subclass_id == "champion"
     assert restored.background_id == "soldier"
 
@@ -121,7 +125,7 @@ def test_starting_max_hp_and_hardcore(
     saved = character_mod.save_character(
         name="LowCon",
         race_id="human",
-        class_id="bard",
+        class_id=CharacterClass.BARD,
         stats=stats,
         difficulty="normal",
     )
@@ -135,7 +139,7 @@ def test_starting_max_hp_and_hardcore(
     hard = character_mod.save_character(
         name="HardHero",
         race_id="human",
-        class_id="fighter",
+        class_id=CharacterClass.FIGHTER,
         difficulty="hardcore",
         stats=stats,
     )
@@ -155,7 +159,7 @@ def test_hardcore_l1_hp_floor_on_create(
     saved = character_mod.save_character(
         name="HardLow",
         race_id="human",
-        class_id="bard",
+        class_id=CharacterClass.BARD,
         stats=stats,
         difficulty="hardcore",
     )
@@ -166,14 +170,36 @@ def test_hardcore_l1_hp_floor_on_create(
 def test_make_save_slug_and_slug_collision(characters_dir: Path) -> None:
     assert make_save_slug("Герой") == "geroy"
     first = character_mod.save_character(
-        name="Hero", race_id="human", class_id="fighter"
+        name="Hero", race_id="human", class_id=CharacterClass.FIGHTER
     )
     second = character_mod.save_character(
-        name="Hero", race_id="elf", class_id="rogue"
+        name="Hero", race_id="elf", class_id=CharacterClass.ROGUE
     )
     assert first.save_slug == "hero"
     assert second.save_slug == "hero_2"
     assert character_mod.delete_character("hero") is True
+
+
+def test_creation_state_to_character_roundtrip() -> None:
+    """CreationState → Character → JSON сохраняет class_id как enum."""
+    params = fighter_acolyte_creation()
+    state = _CreationState(
+        name="RoundtripHero",
+        difficulty="normal",
+        race_id=params["race_id"],
+        subrace_id=params["subrace_id"],
+        class_id=params["class_id"],
+        subclass_id=params["subclass_id"],
+        background_id=params["background_id"],
+        stats=params["stats"],
+        skills=["athletics", "perception"],
+    )
+    built = state.to_character()
+    assert built is not None
+    assert built.class_id is CharacterClass.FIGHTER
+    restored = Character.from_dict(built.to_dict())
+    assert restored.class_id is CharacterClass.FIGHTER
+    assert restored.name == "RoundtripHero"
 
 
 def test_load_characters_skips_invalid_saves(characters_dir: Path) -> None:

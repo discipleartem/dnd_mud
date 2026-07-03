@@ -4,16 +4,16 @@ from typing import Any
 
 from colorama import Fore, Style
 
-from core.asi import ASI_FEATURE_ID
 from core.equipment import proficiency_token_label
 from core.localization import get_string
 from core.models import Character
+from core.progression.asi import ASI_FEATURE_ID
+from core.progression.subclasses import features_up_to_level
 from core.starting_equipment import (
     STARTING_EQUIPMENT_SECTION_KEYS,
     STARTING_EQUIPMENT_SECTION_ORDER,
     summarize_class_starting_equipment,
 )
-from core.subclasses import features_up_to_level
 from core.types import StringsDict
 from ui.menus import _deps
 from ui.menus._common import _ability_name, _skill_name

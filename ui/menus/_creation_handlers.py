@@ -3,10 +3,10 @@
 from collections.abc import Callable
 from dataclasses import dataclass
 
-from core.expertise import expertise_step_required
 from core.localization import get_string
 from core.models import Character
-from core.subclasses import subclass_offered_at_creation
+from core.progression.expertise import expertise_step_required
+from core.progression.subclasses import subclass_offered_at_creation
 from core.types import StringsDict
 from ui.menus import _deps
 from ui.menus._common import _print_screen_header, _run_numbered_menu

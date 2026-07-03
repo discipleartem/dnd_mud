@@ -124,11 +124,12 @@ def patch_int_input():
 def fighter_l3() -> Any:
     """Боец 3 уровня для progression/level-up."""
     from core.models import Character
+    from core.types import CharacterClass
 
     return Character(
         name="Hero",
         race="human",
-        class_id="fighter",
+        class_id=CharacterClass.FIGHTER,
         level=3,
         stats={"constitution": 14, "strength": 16},
         current_hp=28,
@@ -142,11 +143,12 @@ def fighter_l3() -> Any:
 def fighter_l1_hardcore() -> Any:
     """Боец 1 уровня HardCore."""
     from core.models import Character
+    from core.types import CharacterClass
 
     return Character(
         name="Hero",
         race="human",
-        class_id="fighter",
+        class_id=CharacterClass.FIGHTER,
         level=1,
         stats={"constitution": 14},
         current_hp=7,
