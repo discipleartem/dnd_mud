@@ -8,7 +8,7 @@ alwaysApply: false
 
 **Минимум:** Python ≥ 3.12 (`pyproject.toml` → `requires-python`). Toolchain: `py312` (ruff, black, mypy).
 
-База: [`python-standards.mdc`](~/.cursor/rules/python-standards.mdc), [`python-architecture.mdc`](~/.cursor/rules/python-architecture.mdc) — паттерны только если **реально** упрощают код в этом MUD.
+База: [`python-standards.mdc`](~/.cursor/rules/python-standards.mdc), [`python-architecture.mdc`](~/.cursor/rules/python-architecture.mdc), [`design-patterns.mdc`](~/.cursor/rules/design-patterns.mdc) — паттерны только если **реально** упрощают код в этом MUD (алгоритм — global `design-patterns.mdc`).
 
 ## KISS (app code: `core/`, `ui/`, `main.py`, `tests/`)
 
