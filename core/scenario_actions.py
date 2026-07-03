@@ -65,4 +65,17 @@ def apply_scenario_action(
         )
         return ScenarioActionResult(character=character, message_key=key)
 
+    if action == "skill_check":
+        from core.checks import skill_check
+
+        skill_id = str(action_data.get("skill", ""))
+        dc_raw = action_data.get("dc")
+        dc = int(dc_raw) if isinstance(dc_raw, int) else None
+        if skill_id:
+            skill_check(character, skill_id, dc=dc)
+        return ScenarioActionResult(character=character)
+
+    if action == "exit":
+        return ScenarioActionResult(character=character)
+
     return ScenarioActionResult(character=character)
