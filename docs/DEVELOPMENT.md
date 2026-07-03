@@ -79,7 +79,6 @@ dnd_mud/
 │   ├── mod_loader.py        # Deep-merge overlay модов; gating по режиму
 │   ├── game_engine.py       # GameEngine / GameSession (сценарии)
 │   ├── session_storage.py   # Сессии приключений (saves/sessions/)
-│   ├── save_migration.py    # Миграции JSON сейвов персонажей
 │   └── settings.py          # Настройки пользователя (JSON)
 ├── ui/                      # Пользовательский интерфейс
 │   ├── input_handler.py     # Валидация ввода (числа, строки, выбор)

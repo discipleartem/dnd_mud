@@ -8,6 +8,7 @@ from core.game_engine import GameEngine, GameSession
 from core.models import Adventure, Character
 from core.session_storage import (
     SessionSnapshot,
+    load_character_for_session,
     load_session,
     save_session,
 )
@@ -60,3 +61,18 @@ def test_load_scenario_preserves_resumed_node_id() -> None:
     graph = engine.load_scenario(adventure)
     assert graph.start_node_id == "welcome"
     assert engine.session.current_node_id == "training"
+
+
+def test_load_character_for_session_skips_invalid_save(
+    characters_dir: Path,
+) -> None:
+    characters_dir.mkdir(parents=True, exist_ok=True)
+    (characters_dir / "hero.json").write_text("{not json", encoding="utf-8")
+    snapshot = SessionSnapshot(
+        save_slug="hero_tutorial",
+        character_save_slug="hero",
+        adventure_id="tutorial",
+        current_node_id=None,
+        difficulty="normal",
+    )
+    assert load_character_for_session(snapshot, characters_dir) is None

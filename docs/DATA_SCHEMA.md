@@ -87,7 +87,7 @@ races:
 
 - **Все расы** — выбор подрасы; одна подраса → автовыбор в UI.
 - Базовая раса — общие поля (`name`, `size`, `speed`, …); механика в `subraces`.
-- `inherit: { ability_bonuses, grants }` — наследование grants и бонусов от базовой расы (см. §Legacy → grants).
+- `inherit: { ability_bonuses, grants }` — наследование grants и бонусов от базовой расы (см. `core/grants.merge_entity_grants`).
 - Saves: `race: human`, `subrace: null` → `standard` (fallback в loader).
 
 ## Предыстории (`database/backgrounds/backgrounds.yaml`)
@@ -175,7 +175,7 @@ explorers_pack:
 
 ## Save JSON — поля персонажа (инвентарь и спасброски)
 
-Опциональные ключи в `saves/characters/{save_slug}.json` (модель `Character`, `core/models.py`). Отсутствие ключа → `[]` / `{}` (обратная совместимость со старыми сейвами).
+Опциональные ключи в `saves/characters/{save_slug}.json` (модель `Character`, `core/models.py`). Отсутствие ключа → `[]` / `{}` (defaults в `Character.from_dict`).
 
 | Ключ | Тип | Описание |
 |------|-----|----------|
@@ -202,7 +202,7 @@ explorers_pack:
 
 ## Классы и черты (прочее)
 
-- **Классы:** `features[]` с `level` — без `progression.<level>` до Phase 2; при миграции — `grants` внутри feature или параллельно.
+- **Классы:** `progression.<level>.grants` — канонический формат особенностей по уровням.
 - **Черты:** `grants[]`, `description_full` для UI PHB-текста.
 
 ## Mod overlay

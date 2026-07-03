@@ -2,8 +2,11 @@
 
 ## [Unreleased]
 
+### Breaking
+- **Сейвы:** удалены runtime-миграции (`core/save_migration.py`); требуется канонический формат v1 (`class_id`, `race`, `schema_version: 1`); ключ `"class"`, `race_id`, `equip_logic_version` не поддерживаются
+
 ### Added
-- **Полный рефакторинг (фазы 1–5):** миграции сейвов (`core/save_migration.py`), пакет `core/inventory/`, presentation в `ui/menus/_display/_inventory.py`, `CharacterClass` StrEnum, deps policy для оркестраторов
+- **Полный рефакторинг (фазы 1–5):** пакет `core/inventory/`, presentation в `ui/menus/_display/_inventory.py`, `CharacterClass` StrEnum, deps policy для оркестраторов
 - **Mod infra:** `requires_game_difficulty` в `mod_loader` (runtime gating через `set_mod_gating_difficulty`), `reload_catalogs()`, меню «Модификации»
 - **Game engine:** `core/game_engine.py`, `GameSession`, decouple `scenario_flow` → `run_scenario_with_engine`
 - **Phase 2 hooks:** `apply_progression_grants_at_level`, `feat_is_active` / `active_feat_ids`, `ability_check` / `skill_check` / `passive_skill`
@@ -20,12 +23,12 @@
 - **Mod gating:** `load_catalog()` учитывает `set_mod_gating_difficulty` в игровых flow
 
 ### Changed
-- **Git workflow:** план с N PR → **N part-веток** (шаг 0: инвентаризация; 1 PR = 1 `git checkout -b`); merge в `feat/<slug>`; антипаттерн «17 PR на 1 ветке»
+- **Load game:** `load_character_for_session` — единый путь загрузки персонажа через `character_storage._try_load_character_file`
 - **Git workflow:** Plan/Agent с part-ветками — обязательное создание веток, merge в `feat/<slug>`; `main`/`dev` в задаче не трогать
 - Skills refactor (DRY layers): policy verify/review — только `dnd-mud-workflow.mdc`; skills — процедуры; `AGENTS.md` / `DEVELOPMENT.md` — индекс ссылок
 - **Экран расы/подрасы:** выборный язык в строке «Языки»; подрасы без дубля grants родителя; полуорк всегда с экраном выбора и «Назад»
 - **Экран класса:** схлопнутый ASI по уровням; `proficiency_token_label` в меню владений и стартового снаряжения
-- **Авто-экипировка:** миграция legacy-сейвов через `equip_logic_version` при загрузке
+- **Авто-экипировка:** пересчёт `equipped` через `equip_defaults()` при создании персонажа
 - **Данные рас:** язык человека на уровне расы; variant human наследует grant; описание «Наследие фей» у эльфа
 
 ### Changed

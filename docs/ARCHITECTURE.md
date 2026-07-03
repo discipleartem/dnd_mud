@@ -64,7 +64,6 @@ UI не читает файлы данных напрямую — только �
 | `core/character.py` | Узкий фасад для flow-оркестраторов (`_deps`): save/load, stats, каталоги создания |
 | `core/character_builder.py` | `ResolvedGrants`, `resolve_creation_grants` — единая сборка владений при создании |
 | `core/character_storage.py` | CRUD персонажей (JSON в `saves/`) |
-| `core/save_migration.py` | Миграции JSON сейвов при загрузке |
 | `core/session_storage.py` | Снимки сессий приключений (`saves/sessions/`) |
 | `core/game_engine.py` | `GameEngine`, `GameSession` — state machine сценария |
 | `core/types.py` | `StatMap`, `GameDifficulty`, `RuntimeSettings` |
@@ -145,7 +144,7 @@ main.py → ui/menus/ → core/character.py (фасад) → character_storage, 
 
 **Сценарий «Новая игра»:** персонаж → приключение (фильтр по режиму) → `run_scenario()` / `run_scenario_with_engine()` в `ui/menus/scenario_flow.py` (автосохранение сессии, grant XP, subclass training, skill_check).
 
-**Сценарий «Загрузить игру»:** список `saves/sessions/` → загрузка персонажа и `current_node_id` → продолжение через `GameEngine`.
+**Сценарий «Загрузить игру»:** список `saves/sessions/` → `session_storage.load_character_for_session` (через `character_storage._try_load_character_file`) и `current_node_id` → продолжение через `GameEngine`.
 
 **Сценарий «Создать персонажа»:** сложность → имя → раса → подраса → характеристики → предыстория → языки → класс → подкласс → черты (если нужны) → владения → навыки → (компетентность?) → **снаряжение** → сохранение в `saves/characters/{save_slug}.json`.
 
