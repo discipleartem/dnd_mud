@@ -113,6 +113,46 @@ def _deep_merge(base: Any, overlay: Any) -> Any:
     return result
 
 
+def _apply_overlay_actions(
+    data: dict[str, Any],
+    overlay: dict[str, Any],
+) -> dict[str, Any]:
+    """delete / replace_entity, затем deep-merge остального overlay."""
+    result = dict(data)
+
+    delete_spec = overlay.get("delete")
+    if isinstance(delete_spec, dict):
+        for section, entity_ids in delete_spec.items():
+            section_data = result.get(section)
+            if not isinstance(section_data, dict):
+                continue
+            if not isinstance(entity_ids, list):
+                continue
+            for entity_id in entity_ids:
+                section_data.pop(str(entity_id), None)
+
+    replace_spec = overlay.get("replace_entity")
+    if isinstance(replace_spec, dict):
+        for section, entities in replace_spec.items():
+            section_data = result.get(section)
+            if not isinstance(section_data, dict):
+                continue
+            if not isinstance(entities, dict):
+                continue
+            for entity_id, entity_data in entities.items():
+                section_data[str(entity_id)] = entity_data
+
+    remainder = {
+        key: value
+        for key, value in overlay.items()
+        if key not in ("delete", "replace_entity")
+    }
+    merged = _deep_merge(result, remainder)
+    if isinstance(merged, dict):
+        return merged
+    return result
+
+
 def get_enabled_mod_ids() -> frozenset[str]:
     """ID модов, включённых в ``mods_state.json`` (без gating overlay)."""
     state = load_json(MODS_STATE_FILE, default={"enabled": []})
@@ -183,7 +223,7 @@ def _apply_mod_overlays(
                 continue
             overlay_data = load_yaml(overlay_path)
             if isinstance(overlay_data, dict):
-                result = _deep_merge(result, overlay_data)
+                result = _apply_overlay_actions(result, overlay_data)
     return result
 
 
