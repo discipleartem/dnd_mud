@@ -23,7 +23,7 @@
 - **Mod gating:** `load_catalog()` учитывает `set_mod_gating_difficulty` в игровых flow
 
 ### Changed
-- **Git workflow:** план с N PR → **N part-веток** (шаг 0: инвентаризация; 1 PR = 1 `git checkout -b`); merge в `feat/<slug>`; антипаттерн «17 PR на 1 ветке»
+- **Load game:** `load_character_for_session` — единый путь загрузки персонажа через `character_storage._try_load_character_file`
 - **Git workflow:** Plan/Agent с part-ветками — обязательное создание веток, merge в `feat/<slug>`; `main`/`dev` в задаче не трогать
 - Skills refactor (DRY layers): policy verify/review — только `dnd-mud-workflow.mdc`; skills — процедуры; `AGENTS.md` / `DEVELOPMENT.md` — индекс ссылок
 - **Экран расы/подрасы:** выборный язык в строке «Языки»; подрасы без дубля grants родителя; полуорк всегда с экраном выбора и «Назад»

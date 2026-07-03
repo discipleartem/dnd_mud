@@ -144,7 +144,7 @@ main.py → ui/menus/ → core/character.py (фасад) → character_storage, 
 
 **Сценарий «Новая игра»:** персонаж → приключение (фильтр по режиму) → `run_scenario()` / `run_scenario_with_engine()` в `ui/menus/scenario_flow.py` (автосохранение сессии, grant XP, subclass training, skill_check).
 
-**Сценарий «Загрузить игру»:** список `saves/sessions/` → загрузка персонажа и `current_node_id` → продолжение через `GameEngine`.
+**Сценарий «Загрузить игру»:** список `saves/sessions/` → `session_storage.load_character_for_session` (через `character_storage._try_load_character_file`) и `current_node_id` → продолжение через `GameEngine`.
 
 **Сценарий «Создать персонажа»:** сложность → имя → раса → подраса → характеристики → предыстория → языки → класс → подкласс → черты (если нужны) → владения → навыки → (компетентность?) → **снаряжение** → сохранение в `saves/characters/{save_slug}.json`.
 

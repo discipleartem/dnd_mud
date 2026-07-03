@@ -621,6 +621,8 @@ load_session(save_slug: str) -> SessionSnapshot | None
 load_character_for_session(snapshot, characters_dir) -> Character | None
 ```
 
+`load_character_for_session` загружает JSON через `character_storage._try_load_character_file` — те же правила битых сейвов, что у `load_characters()`.
+
 Файлы: `saves/sessions/{save_slug}.json` — см. [DATA_SCHEMA.md](DATA_SCHEMA.md) §Save JSON — сессия приключения.
 
 ---
