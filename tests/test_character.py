@@ -9,6 +9,9 @@ import core.character as character_mod
 from core.character_storage import load_characters
 from core.models import Character
 from core.slug import make_save_slug
+from core.types import CharacterClass
+from tests.creation_helpers import fighter_acolyte_creation
+from ui.menus._creation_state import _CreationState
 
 
 @pytest.mark.parametrize(
@@ -109,6 +112,7 @@ def test_character_json_uses_canonical_field_names() -> None:
     assert "subclass" not in data
     assert "background" not in data
     restored = Character.from_dict(data)
+    assert restored.class_id is CharacterClass.FIGHTER
     assert restored.subclass_id == "champion"
     assert restored.background_id == "soldier"
 
@@ -174,6 +178,28 @@ def test_make_save_slug_and_slug_collision(characters_dir: Path) -> None:
     assert first.save_slug == "hero"
     assert second.save_slug == "hero_2"
     assert character_mod.delete_character("hero") is True
+
+
+def test_creation_state_to_character_roundtrip() -> None:
+    """CreationState → Character → JSON сохраняет class_id как enum."""
+    params = fighter_acolyte_creation()
+    state = _CreationState(
+        name="RoundtripHero",
+        difficulty="normal",
+        race_id=params["race_id"],
+        subrace_id=params["subrace_id"],
+        class_id=params["class_id"],
+        subclass_id=params["subclass_id"],
+        background_id=params["background_id"],
+        stats=params["stats"],
+        skills=["athletics", "perception"],
+    )
+    built = state.to_character()
+    assert built is not None
+    assert built.class_id is CharacterClass.FIGHTER
+    restored = Character.from_dict(built.to_dict())
+    assert restored.class_id is CharacterClass.FIGHTER
+    assert restored.name == "RoundtripHero"
 
 
 def test_load_characters_skips_invalid_saves(characters_dir: Path) -> None:

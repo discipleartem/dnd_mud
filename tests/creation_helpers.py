@@ -4,6 +4,8 @@ from __future__ import annotations
 
 from typing import Any
 
+from core.stats import STAT_NAMES
+
 VARIANT_HUMAN_STATS: dict[str, int] = {
     "strength": 15,
     "dexterity": 14,
@@ -12,6 +14,11 @@ VARIANT_HUMAN_STATS: dict[str, int] = {
     "wisdom": 10,
     "charisma": 8,
 }
+
+
+def flat_stats(value: int) -> dict[str, int]:
+    """Одинаковое значение для всех характеристик PHB."""
+    return dict.fromkeys(STAT_NAMES, value)
 
 
 def fighter_acolyte_creation() -> dict[str, Any]:

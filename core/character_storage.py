@@ -8,12 +8,12 @@ from typing import Any
 
 from core.io import load_json, save_json
 from core.levels import clamp_level
-from core.models import Character
+from core.models import Character, _parse_character_class
 from core.progression import max_hp_for_level, xp_for_level
 from core.progression.subclasses import start_level_for_difficulty
 from core.slug import make_save_slug
 from core.stats import STANDARD_ARRAY, generate_stats_standard_array
-from core.types import GameDifficulty, StatMap
+from core.types import CharacterClass, GameDifficulty, StatMap
 
 CHARACTERS_SCHEMA_VERSION = 1
 
@@ -67,7 +67,7 @@ def _try_load_character_file(
 def build_new_character(
     name: str,
     race_id: str,
-    class_id: str,
+    class_id: str | CharacterClass,
     difficulty: GameDifficulty = "normal",
     subrace_id: str | None = None,
     stats: StatMap | None = None,
@@ -199,7 +199,7 @@ def build_new_character(
     character = Character(
         name=name,
         race=race_id,
-        class_id=class_id,
+        class_id=_parse_character_class(class_id),
         level=level,
         stats=stats,
         current_hp=hp,
@@ -250,7 +250,7 @@ def persist_character(character: Character) -> Character:
 def save_character(
     name: str,
     race_id: str,
-    class_id: str,
+    class_id: str | CharacterClass,
     difficulty: GameDifficulty = "normal",
     subrace_id: str | None = None,
     stats: StatMap | None = None,

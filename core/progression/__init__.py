@@ -7,9 +7,9 @@ from typing import Any
 from core.classes import get_class_hit_dice
 from core.dice import ability_modifier, roll
 from core.feats import get_feat_hp_bonus_sources
+from core.levels import MAX_CHARACTER_LEVEL, clamp_level
 from core.models import Character
 from core.progression.hp_bonuses import HpBonusSource
-from core.levels import MAX_CHARACTER_LEVEL, clamp_level
 from core.races import get_racial_hp_bonus_sources
 from core.stats import ABILITY_SCORE_DEFAULT
 from core.types import GameDifficulty, StatMap
