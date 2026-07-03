@@ -245,7 +245,8 @@ character:
 settings:
   caption: "НАСТРОЙКИ"
   back: "Назад"
-  prompt: "Выберите действие: "
+  prompt: "Выберите действие (1–{count}), 0 — Назад: "
+  option_mods: "Модификации"
 
 languages:
   caption: "ВЫБОР ЯЗЫКА"
