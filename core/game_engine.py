@@ -9,6 +9,7 @@ from core.scenario_actions import (
     apply_scenario_action,
     load_scenario,
 )
+from core.scenario_rooms import node_exits, resolve_exit
 from core.types import GameDifficulty
 
 UiActionKind = Literal[
@@ -105,6 +106,7 @@ class GameEngine:
             action,
             action_data,
             self._session.character,
+            difficulty=self.rule_mode,
         )
         return self._to_engine_result(result, action)
 
@@ -155,6 +157,34 @@ class GameEngine:
             message_key=message_key,
             message_params=message_params,
         )
+
+    def current_exits(self) -> dict[str, str]:
+        """Выходы текущего узла (направление → id узла)."""
+        node = self.current_node()
+        if node is None:
+            return {}
+        return node_exits(node)
+
+    def step_exit(self, direction: str) -> EngineResult:
+        """Перейти по выходу комнаты."""
+        node = self.current_node()
+        if node is None:
+            return EngineResult(character=self._session.character)
+        next_id = resolve_exit(node, direction)
+        if next_id:
+            self._session.current_node_id = next_id
+        return EngineResult(
+            character=self._session.character,
+            next_node_id=self._session.current_node_id,
+        )
+
+    def set_flag(self, key: str, value: Any = True) -> None:
+        """Установить флаг сессии."""
+        self._session.flags[str(key)] = value
+
+    def get_flag(self, key: str, default: Any = None) -> Any:
+        """Прочитать флаг сессии."""
+        return self._session.flags.get(key, default)
 
     def _to_engine_result(
         self,

@@ -381,6 +381,9 @@ scenario:
   skill_check_success: "Проверка {skill}: {total} (к20={roll}+{bonus}) — успех (КС {dc})"
   skill_check_failure: "Проверка {skill}: {total} (к20={roll}+{bonus}) — провал (КС {dc})"
   skill_check_roll: "Проверка {skill}: {total} (к20={roll}+{bonus})"
+  ability_check_success: "Проверка {ability}: {total} (к20={roll}+{bonus}) — успех (КС {dc})"
+  ability_check_failure: "Проверка {ability}: {total} (к20={roll}+{bonus}) — провал (КС {dc})"
+  ability_check_roll: "Проверка {ability}: {total} (к20={roll}+{bonus})"
 
 level_up:
   caption: "ПОВЫШЕНИЕ УРОВНЯ"
