@@ -4,13 +4,7 @@
 
 ## Pre-Alpha (открыто)
 
-| ID | Задача | Ссылки |
-|----|--------|--------|
-| `load-game` | Flow «Загрузить игру»: список сейвов → загрузка состояния | [MUD_PRD.md](MUD_PRD.md) §3.2, §10 |
-| `terminal-wrap` | Перенос текста при изменении ширины терминала | [MUD_PRD.md](MUD_PRD.md) §10 |
-| `mod-gating` | `requires_game_difficulty` в manifest модов | [MUD_PRD.md](MUD_PRD.md) §5.4, [DEVELOPMENT.md](DEVELOPMENT.md) |
-| `mod-menu` | Отдельный пункт меню «Модификации» (опционально) | [DEVELOPMENT.md](DEVELOPMENT.md) |
-| `mod-runtime` | Перезагрузка каталогов при смене модов без перезапуска интерпретатора | [DEVELOPMENT.md](DEVELOPMENT.md) |
+_Нет открытых задач Pre-Alpha._
 
 ## Phase 2 (запланировано)
 

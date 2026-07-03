@@ -244,7 +244,8 @@ Quality gate PR `task → dev`: один раз [`dnd-mud-review`](../.cursor/sk
 | Практика | Зачем |
 |----------|-------|
 | Короткие task-ветки (1 фича, 1–3 дня) | Меньше контекста и diff |
-| Один чат ≈ одна интеграционная ветка к PR | Вспомогательные ветки по плану — ок, но перед PR слить в одну |
+| План с N PR / фаз → **N part-веток** (имя из `### PR-N: \`branch\``) | План «17 PR» на 1 ветке — нарушение workflow |
+| Merge всех part в `feat/<slug>` перед review | Review на part-ветке или с незакрытыми PR |
 | Review **один раз** в конце task-ветки (`dnd-mud-review` = verify-scope + diff) | Не гонять full test/lint между подзадачами |
 | `rebase origin/dev` перед review | Минимальный diff для bugbot |
 | Plan mode для крупных задач | Меньше итераций fix в Agent |
