@@ -15,6 +15,10 @@
 - **UI грантов:** описания spellcasting, skill_proficiency, immunity, disadvantage, cantrip, advantage+terrain в меню создания
 - **Dual wielder:** авто-экипировка второй руки без «лёгкое» при черте; +1 КД при двух рукопашных (`core/inventory.py`, `core/feat_apply.py`)
 
+### Fixed
+- **Load game:** resume не сбрасывает `current_node_id` на `start_node` (`GameEngine.load_scenario`)
+- **Mod gating:** `load_catalog()` учитывает `set_mod_gating_difficulty` в игровых flow
+
 ### Changed
 - **Git workflow:** план с N PR → **N part-веток** (шаг 0: инвентаризация; 1 PR = 1 `git checkout -b`); merge в `feat/<slug>`; антипаттерн «17 PR на 1 ветке»
 - **Git workflow:** Plan/Agent с part-ветками — обязательное создание веток, merge в `feat/<slug>`; `main`/`dev` в задаче не трогать

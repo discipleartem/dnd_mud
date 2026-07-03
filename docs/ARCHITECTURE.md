@@ -22,11 +22,14 @@
 | Модуль | Назначение |
 |--------|-----------|
 | `ui/menus/` | Пакет экранов меню (flows по файлам) |
-| `ui/menus/main_menu.py` | Приветствие, главное меню, заглушка «Загрузить игру» |
+| `ui/menus/main_menu.py` | Приветствие, главное меню |
+| `ui/menus/load_game.py` | Flow «Загрузить игру» (сессии в `saves/sessions/`) |
+| `ui/menus/mods_menu.py` | Включение/выключение модов |
 | `ui/menus/new_game.py` | Flow «Новая игра» |
 | `ui/menus/_creation_steps.py` | Flow «Создать персонажа» + state machine шагов |
 | `ui/menus/_selectors.py` | Общие селекторы расы, класса, подкласса |
-| `ui/menus/scenario_flow.py` | Интерактивный runner YAML-сценариев |
+| `ui/menus/scenario_flow.py` | Runner YAML-сценариев через `GameEngine` |
+| `ui/terminal_wrap.py` | Перенос текста под ширину терминала |
 | `ui/menus/subclass_trainer.py` | NPC-наставник: поздний выбор подкласса |
 | `ui/menus/languages.py` | Выбор языков расы/подрасы |
 | `ui/menus/backgrounds.py` | Выбор предыстории |
@@ -61,6 +64,9 @@ UI не читает файлы данных напрямую — только �
 | `core/character.py` | Узкий фасад для flow-оркестраторов (`_deps`): save/load, stats, каталоги создания |
 | `core/character_builder.py` | `ResolvedGrants`, `resolve_creation_grants` — единая сборка владений при создании |
 | `core/character_storage.py` | CRUD персонажей (JSON в `saves/`) |
+| `core/save_migration.py` | Миграции JSON сейвов при загрузке |
+| `core/session_storage.py` | Снимки сессий приключений (`saves/sessions/`) |
+| `core/game_engine.py` | `GameEngine`, `GameSession` — state machine сценария |
 | `core/types.py` | `StatMap`, `GameDifficulty`, `RuntimeSettings` |
 | `core/abilities.py` | Каталог характеристик и навыков из YAML |
 | `core/races.py` | Справочник рас, `collect_race_grants`, расовые бонусы |
@@ -73,7 +79,7 @@ UI не читает файлы данных напрямую — только �
 | `core/proficiencies.py` | Фасад владений: `proficiency_collect` (сбор токенов из grants) + `proficiency_checks` (проверки применимости) |
 | `core/proficiency_collect.py` | Агрегация токенов владений при создании/левелапе из YAML |
 | `core/proficiency_checks.py` | Проверки «владеет ли персонаж» оружием, доспехами, инструментами |
-| `core/checks.py` | Спасброски и бросок к20 (`saving_throw`, `roll_d20`) |
+| `core/checks.py` | Проверки характеристик, навыков, спасбросков (`ability_check`, `skill_check`, …) |
 | `core/inventory/` | Инвентарь, экипировка, `compute_ac`, авто-экипировка (`_items`, `_ac`, `_weapons`, `_equip`) |
 | `core/starting_equipment.py` | Стартовое снаряжение класса из YAML |
 | `core/equipment.py` | Оружие, доспехи, инструменты из YAML |
@@ -92,13 +98,13 @@ UI не читает файлы данных напрямую — только �
 | `core/dice.py` | `roll()`, `roll_ability_score()`, `ability_modifier()` |
 | `core/slug.py` | `make_save_slug()` |
 | `core/io.py` | `load_yaml()` / `load_json()` (`strict` для каталогов), `save_json()` / `merge_unique()` |
-| `core/catalog_loader.py` | `load_catalog()`, `clear_catalog_cache()`, `clear_all_catalog_caches()` |
+| `core/catalog_loader.py` | `load_catalog()`, `reload_catalogs()`, сброс кэшей |
 | `core/adventure.py` | `load_adventures()` |
 | `core/scenario_actions.py` | Чистая логика action-узлов сценария (без UI) |
 | `core/difficulty.py` | `adventure_allows_difficulty()` |
 | `core/localization.py` | `load_strings()` (кэш), `get_string()` |
 | `core/settings.py` | Настройки в `database/core/settings.json` |
-| `core/mod_loader.py` | Deep-merge overlay модов в каталоги YAML |
+| `core/mod_loader.py` | Deep-merge overlay модов; gating по `requires_game_difficulty` |
 
 ### 3. Data Layer (`database/`, `saves/`)
 
@@ -114,6 +120,7 @@ UI не читает файлы данных напрямую — только �
 | `database/content/adventures.yaml` | Каталог приключений | YAML | `adventure.py` |
 | `database/core/settings.json` | Настройки | JSON | `settings.py` |
 | `saves/characters/*.json` | Персонажи (по одному файлу) | JSON | `character_storage.py` |
+| `saves/sessions/*.json` | Сессии приключений (узел сценария, флаги) | JSON | `session_storage.py` |
 | `database/strings/*.yaml` | Локализация | YAML | `localization.py` |
 | `database/core/mods_state.json` | Включённые моды | JSON | `mod_loader.py` |
 
@@ -136,7 +143,9 @@ main.py → ui/menus/ → core/character.py (фасад) → character_storage, 
                     → core/localization.py → database/strings/*.yaml
 ```
 
-**Сценарий «Новая игра»:** персонаж → приключение (фильтр по режиму) → `run_scenario()` в `ui/menus/scenario_flow.py` (grant XP, subclass training, меню узлов).
+**Сценарий «Новая игра»:** персонаж → приключение (фильтр по режиму) → `run_scenario()` / `run_scenario_with_engine()` в `ui/menus/scenario_flow.py` (автосохранение сессии, grant XP, subclass training, skill_check).
+
+**Сценарий «Загрузить игру»:** список `saves/sessions/` → загрузка персонажа и `current_node_id` → продолжение через `GameEngine`.
 
 **Сценарий «Создать персонажа»:** сложность → имя → раса → подраса → характеристики → предыстория → языки → класс → подкласс → черты (если нужны) → владения → навыки → (компетентность?) → **снаряжение** → сохранение в `saves/characters/{save_slug}.json`.
 
@@ -152,13 +161,15 @@ main.py → ui/menus/ → core/character.py (фасад) → character_storage, 
 `Character.difficulty` задаётся в flow «Создать персонажа» и используется в «Новая игра»:
 
 ```
-select_difficulty() → show_stats_generation_flow() → adventure_allows_difficulty() → [будущее] правила game_engine
+select_difficulty() → show_stats_generation_flow() → adventure_allows_difficulty()
+                    → set_mod_gating_difficulty(character.difficulty) → load_catalog / overlay
+                    → run_scenario_with_engine() (GameEngine)
 ```
 
 | Режим | Реализовано сегодня | Запланировано |
 |-------|---------------------|---------------|
-| `normal` | 3 метода характеристик, переквалификация | Базовая механика engine |
-| `hardcore` | Авто-4d6×6, без переквалификации; фильтр приключений в UI | Gating модов, полная механика D&D 5e |
+| `normal` | 3 метода характеристик, переквалификация; gating модов | Полная механика engine (бой, ресурсы) |
+| `hardcore` | Авто-4d6×6; фильтр приключений; gating модов (`requires_game_difficulty`) | Полная механика D&D 5e без упрощений |
 | `easy` | Старт 3 ур., обязательный подкласс; характеристики как Normal | Упрощённая механика engine / обучение |
 
 Фильтрация приключений: `core/difficulty.py` (`adventure_unavailable_reason`) + `_select_adventure()` в `ui/menus/new_game.py`. Каталог `adventures.yaml` задаёт `min_level`, `allowed_game_difficulties`, `hardcore_only`; недоступные приключения — серым списком с причиной.  

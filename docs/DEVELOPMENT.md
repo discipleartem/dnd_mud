@@ -76,12 +76,17 @@ dnd_mud/
 │   ├── dice.py              # Броски кубиков
 │   ├── localization.py      # Локализация UI и resolve_localized_text
 │   ├── grants.py            # Нормализация grants[] из YAML
-│   ├── mod_loader.py        # Deep-merge overlay модов
+│   ├── mod_loader.py        # Deep-merge overlay модов; gating по режиму
+│   ├── game_engine.py       # GameEngine / GameSession (сценарии)
+│   ├── session_storage.py   # Сессии приключений (saves/sessions/)
+│   ├── save_migration.py    # Миграции JSON сейвов персонажей
 │   └── settings.py          # Настройки пользователя (JSON)
 ├── ui/                      # Пользовательский интерфейс
 │   ├── input_handler.py     # Валидация ввода (числа, строки, выбор)
 │   └── menus/               # Пакет экранов меню
 │       ├── main_menu.py
+│       ├── load_game.py
+│       ├── mods_menu.py
 │       ├── new_game.py
 │       ├── _creation_steps.py  # Тонкий loop создания персонажа
 │       ├── _creation_handlers.py, _creation_navigation.py, _creation_finalize.py, _creation_state.py
@@ -313,7 +318,7 @@ overlays:
     path: overlay.yaml
 ```
 
-Overlay-фрагмент (`overlay.yaml`) — partial YAML с ключом каталога (`races:`, …). Runtime: `core/catalog_loader.load_catalog` → deep-merge через `core/mod_loader.py`.
+Overlay-фрагмент (`overlay.yaml`) — partial YAML с ключом каталога (`races:`, …). Runtime: `core/catalog_loader.load_catalog` → deep-merge через `core/mod_loader.py`; режим — `set_mod_gating_difficulty()` (по умолчанию `normal` в `main.py`, при игре — `Character.difficulty`).
 
 ## Добавление локализации
 
