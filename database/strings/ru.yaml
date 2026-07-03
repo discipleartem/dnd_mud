@@ -369,6 +369,9 @@ mods:
   prompt: "Выберите мод (1–{count}), 0 — Назад: "
   back: "Назад"
   toggled: "Мод «{name}» обновлён. Каталоги перезагружены."
+  error_requires: "Нельзя включить «{mod_id}»: требуется мод «{other_mod_id}»."
+  error_conflicts: "Нельзя включить «{mod_id}»: конфликт с «{other_mod_id}»."
+  error_missing: "Мод «{mod_id}» не найден."
 
 scenario:
   choice_prompt: "Выберите действие (1-{count}), 0 — Назад: "

@@ -369,6 +369,9 @@ mods:
   prompt: "Choose mod (1–{count}), 0 — Back: "
   back: "Back"
   toggled: "Mod «{name}» updated. Catalogs reloaded."
+  error_requires: "Cannot enable «{mod_id}»: requires «{other_mod_id}»."
+  error_conflicts: "Cannot enable «{mod_id}»: conflicts with «{other_mod_id}»."
+  error_missing: "Mod «{mod_id}» not found."
 
 scenario:
   choice_prompt: "Choose action (1-{count}), 0 — Back: "
