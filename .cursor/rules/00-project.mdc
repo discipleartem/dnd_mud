@@ -22,7 +22,7 @@ make test / make check  # по запросу или CI
 python main.py        # smoke меню (в review при UI-diff)
 ```
 
-Verify: pre-commit `verify-changed` на подзадачах; полный прогон — skill [`dnd-mud-review`](.cursor/skills/dnd-mud-review/SKILL.md). Справочник команд — [`dnd-mud-verify`](.cursor/skills/dnd-mud-verify/SKILL.md).
+Verify/review policy — [`dnd-mud-workflow.mdc`](dnd-mud-workflow.mdc) §Verify / review; skills — [`.cursor/skills/`](.cursor/skills/README.md).
 
 ## Docs
 

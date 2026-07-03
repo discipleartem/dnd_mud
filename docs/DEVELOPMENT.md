@@ -157,7 +157,7 @@ VERIFY_BASE=origin/main make verify-scope  # на ветке dev
 make verify           # check + test (CI)
 ```
 
-**Агент на task-ветке:** между подзадачами — только pre-commit `verify-changed`; **не** вызывать `make test`, `make check`, `make verify-scope` вручную. Полный прогон — **один раз** в skill [`dnd-mud-review`](../.cursor/skills/dnd-mud-review/SKILL.md).
+**Агент на task-ветке:** policy — [`.cursor/rules/dnd-mud-workflow.mdc`](../.cursor/rules/dnd-mud-workflow.mdc) §Verify / review; команды — [`dnd-mud-verify/reference.md`](../.cursor/skills/dnd-mud-verify/reference.md).
 
 Маппинг changed → pytest/lint: [`scripts/verify_targets.py`](../scripts/verify_targets.py). Если хотя бы один изменённый `.py` не смапился — full suite (не только когда mapped-тестов нет совсем).
 
@@ -217,12 +217,14 @@ pytest tests/test_data_schema.py -v
 
 | Тема | Канон |
 |------|-------|
-| Agent-loop, steps, skills | [`AGENTS.md`](../AGENTS.md) |
-| Git-старт, rebase, multi-branch, PR, `merged/*` (локально) | [`.cursor/rules/dnd-mud-workflow.mdc`](../.cursor/rules/dnd-mud-workflow.mdc) |
+| Agent-loop, steps, skills | [`AGENTS.md`](../AGENTS.md) · [`.cursor/skills/README.md`](../.cursor/skills/README.md) |
+| Git-старт, rebase, multi-branch, `merged/*` policy | [`.cursor/rules/dnd-mud-workflow.mdc`](../.cursor/rules/dnd-mud-workflow.mdc) |
 | Task cycle (global) | [`01-operations.mdc`](~/.cursor/rules/01-operations.mdc) §Task cycle |
-| Verify | skill [`.cursor/skills/dnd-mud-verify`](../.cursor/skills/dnd-mud-verify/SKILL.md) |
-| Review | skill [`.cursor/skills/dnd-mud-review`](../.cursor/skills/dnd-mud-review/SKILL.md) |
-| Release `dev` → `main` | skill [`.cursor/skills/dnd-mud-release`](../.cursor/skills/dnd-mud-release/SKILL.md) |
+| Verify policy + commands | workflow §Verify / review · [`dnd-mud-verify/reference.md`](../.cursor/skills/dnd-mud-verify/reference.md) |
+| Review | [`.cursor/skills/dnd-mud-review`](../.cursor/skills/dnd-mud-review/SKILL.md) |
+| Fix plan | [`.cursor/skills/dnd-mud-fix-plan`](../.cursor/skills/dnd-mud-fix-plan/SKILL.md) |
+| Push / PR task → `dev` | [`.cursor/skills/dnd-mud-git-pr`](../.cursor/skills/dnd-mud-git-pr/SKILL.md) |
+| Release `dev` → `main` | [`.cursor/skills/dnd-mud-release`](../.cursor/skills/dnd-mud-release/SKILL.md) |
 | Sync `dev`←`main` | [`git-dev-main-sync.md`](~/.cursor/docs/git-dev-main-sync.md) |
 
 IDE: расширения **GitHub Pull Requests** и **GitHub Actions** — [`.vscode/settings.json`](../.vscode/settings.json).

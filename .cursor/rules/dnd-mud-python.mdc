@@ -28,7 +28,7 @@ def handle_menu_choice(choice: int, loc, settings) -> tuple[bool, object]:
     return True, settings
 ```
 
-Тесты — `dnd-mud-tests.mdc` (бюджет на PR). Verify — skill [`dnd-mud-verify`](.cursor/skills/dnd-mud-verify/SKILL.md).
+Тесты — `dnd-mud-tests.mdc` (бюджет на PR). Verify — [`dnd-mud-workflow.mdc`](dnd-mud-workflow.mdc) §Verify / review.
 
 ## Синтаксис и типы (3.12)
 
@@ -44,7 +44,7 @@ UI-строки — из YAML (`database/strings/`); f-strings в коде — �
 
 ## Tooling
 
-Verify — skill [`dnd-mud-verify`](.cursor/skills/dnd-mud-verify/SKILL.md). Lint: `make check` (ruff + black + mypy).
+Verify — [`dnd-mud-verify/reference.md`](../skills/dnd-mud-verify/reference.md). Lint: `make check` (ruff + black + mypy).
 
 venv: [`01-operations.mdc`](~/.cursor/rules/01-operations.mdc) §Virtual environment.
 

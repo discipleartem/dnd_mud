@@ -77,14 +77,7 @@ git push origin --delete feat/my-task-a
 
 ### PR task → `dev` (по запросу)
 
-Триггеры: «сделай PR», `gh pr create --base dev` на task-ветке. Procedure: [`user-protocols.mdc`](~/.cursor/rules/user-protocols.mdc) §PR procedure.
-
-```bash
-git fetch origin && git rebase origin/dev
-# dnd-mud-review (один раз; включает make verify-scope)
-git push -u origin HEAD   # после rebase: --force-with-lease
-gh pr create --base dev --title "feat: …"
-```
+Триггеры: «сделай PR», push task → `dev`. **Policy** — ниже; **процедура** — skill [`dnd-mud-git-pr`](../skills/dnd-mud-git-pr/SKILL.md).
 
 **Rename (обязательно):** только **после squash merge** в `dev` — см. §Ветки `merged/*`. Локально: task → `merged/<исходное-имя>`; remote task-ветку удалить.
 
@@ -98,26 +91,20 @@ gh pr create --base dev --title "feat: …"
 | В работе / PR открыт | `feat/character-stats-menu` |
 | Завершена (локально) | `merged/feat/character-stats-menu` |
 
-```bash
-TASK=feat/my-task
-MERGED=merged/feat/my-task
-git fetch origin
-git checkout dev && git pull origin dev
-git push origin --delete "${TASK}" 2>/dev/null || true
-if git show-ref --verify --quiet "refs/heads/${TASK}"; then
-  git branch -m "${TASK}" "${MERGED}"
-  git branch --unset-upstream "${MERGED}" 2>/dev/null || true
-fi
-git fetch origin --prune
-```
-
 `main` и `dev` не переименовывать. Префикс `merged/` не дублировать.
 
 Release `dev` → `main`: skill [`dnd-mud-release`](../skills/dnd-mud-release/SKILL.md). Sync `dev`←`main`: [`git-dev-main-sync.md`](~/.cursor/docs/git-dev-main-sync.md).
 
 ## Verify / review (policy)
 
-Справочник команд verify — skill [`dnd-mud-verify`](../skills/dnd-mud-verify/SKILL.md). **Оркестрация агента на task-ветке** — ниже.
+**Канон политики** — этот раздел. Команды — [`dnd-mud-verify/reference.md`](../skills/dnd-mud-verify/reference.md). Процедуры — skills в [`.cursor/skills/`](../skills/README.md).
+
+| Skill | Процедура |
+|-------|-----------|
+| [`dnd-mud-docs-after-task`](../skills/dnd-mud-docs-after-task/SKILL.md) | docs + commit финализации |
+| [`dnd-mud-review`](../skills/dnd-mud-review/SKILL.md) | verify-scope + light/full review (**один раз**) |
+| [`dnd-mud-fix-plan`](../skills/dnd-mud-fix-plan/SKILL.md) | план после Blocker/Major |
+| [`dnd-mud-git-pr`](../skills/dnd-mud-git-pr/SKILL.md) | push / PR / rename `merged/*` |
 
 ### На task-ветке (агент)
 
@@ -127,13 +114,32 @@ Release `dev` → `main`: skill [`dnd-mud-release`](../skills/dnd-mud-release/SK
 | Промежуточные commits подзадач | Повторный `dnd-mud-review` без Blocker-fix |
 | | `pytest` на всём suite «для проверки» между подзадачами |
 
-**Конец task-ветки (один раз):** skill [`dnd-mud-review`](../skills/dnd-mud-review/SKILL.md) — после всех подзадач, docs-after-task и commit финализации; **внутри review** — `make verify-scope` (+ smoke UI при необходимости), затем light/full readonly review. До push/PR.
+### Конец task-ветки (один раз)
 
-**Review обязателен** один раз на task-ветку. Bugbot subagent — только **full**. GitHub PR Bugbot — **нет**.
+После всех подзадач, [`dnd-mud-docs-after-task`](../skills/dnd-mud-docs-after-task/SKILL.md) и commit финализации — skill [`dnd-mud-review`](../skills/dnd-mud-review/SKILL.md) **до** push/PR:
+
+1. `make verify-scope` (+ smoke `python main.py` при UI в diff) — если diff затрагивает код/данные
+2. light или full readonly review diff vs `origin/dev`
+
+**Не выполнять** между подзадачами, после каждого commit, в середине docs-only правок.
+
+### Пропуск verify-scope
+
+Если diff **только** `docs/`, `.cursor/rules`, `AGENTS.md`, workflows — без `core/`, `database/`, `mods/`, `ui/`, `main.py`, `tests/`: шаг verify в review **пропустить**. Review для таких задач — опционален.
+
+### Повторный review
+
+| Ситуация | Действие |
+|----------|----------|
+| Blocker после review | fix → commits (`verify-changed` only) → **light re-check** (без повторного `verify-scope`, если fix точечный) — §Light re-check в review skill |
+| Повторный full bugbot | Только по явному запросу пользователя |
+| Push/PR без review | Только по явному запросу пользователя |
+
+**Review обязателен** один раз на task-ветку с кодом/данными. Bugbot subagent — только **full**. GitHub PR Bugbot — **нет**.
 
 **Cursor IDE:** Agent Review on Commit — OFF; Submodules / Untracked — OFF; Default Approach — Quick.
 
-Verify ≠ review. Полный pytest/lint на PR — CI ([`ci.yml`](../.github/workflows/ci.yml)). Runtime smoke не нужен для docs-only / rules-only diff.
+Verify ≠ review. Полный pytest/lint на PR — CI ([`ci.yml`](../.github/workflows/ci.yml)).
 
 ## Динамические метрики
 

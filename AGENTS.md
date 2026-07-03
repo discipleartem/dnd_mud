@@ -38,16 +38,17 @@ git-старт → подзадачи (commits; pre-commit verify-changed) → [
 | Agent напрямую | **git-старт обязателен**; push по запросу |
 | Plan → Build → Agent | push обязателен |
 
-Git/verify/review/rename — [`dnd-mud-workflow.mdc`](.cursor/rules/dnd-mud-workflow.mdc). Global Task cycle — [`01-operations.mdc`](~/.cursor/rules/01-operations.mdc) §Task cycle.
+Git/verify/review/rename — [`dnd-mud-workflow.mdc`](.cursor/rules/dnd-mud-workflow.mdc) (policy) · skills — [`.cursor/skills/README.md`](.cursor/skills/README.md). Global Task cycle — [`01-operations.mdc`](~/.cursor/rules/01-operations.mdc) §Task cycle.
 
 ## Skills
 
 | Skill | Когда |
 |-------|-------|
 | [`dnd-mud-docs-after-task`](.cursor/skills/dnd-mud-docs-after-task/SKILL.md) | После реализации, **перед** commit финализации |
-| [`dnd-mud-verify`](.cursor/skills/dnd-mud-verify/SKILL.md) | Справочник команд; агент **не** вызывает scope/full на task-ветке |
+| [`dnd-mud-verify`](.cursor/skills/dnd-mud-verify/SKILL.md) | Справочник команд ([reference.md](.cursor/skills/dnd-mud-verify/reference.md)); policy — workflow |
 | [`dnd-mud-review`](.cursor/skills/dnd-mud-review/SKILL.md) | **Один раз** в конце task-ветки: `verify-scope` + readonly review |
 | [`dnd-mud-fix-plan`](.cursor/skills/dnd-mud-fix-plan/SKILL.md) | Major/Blocker после review |
+| [`dnd-mud-git-pr`](.cursor/skills/dnd-mud-git-pr/SKILL.md) | Push / PR task → `dev` / rename `merged/*` (по запросу) |
 | [`dnd-mud-release`](.cursor/skills/dnd-mud-release/SKILL.md) | PR `dev` → `main` |
 
 Personal: `git-dev-main-sync` (`~/.cursor/skills/git-dev-main-sync/`).
@@ -62,5 +63,5 @@ Personal: `git-dev-main-sync` (`~/.cursor/skills/git-dev-main-sync/`).
 | 3–4 | Docs + commit финализации | skill [`dnd-mud-docs-after-task`](.cursor/skills/dnd-mud-docs-after-task/SKILL.md) |
 | 5 | Review (включает `verify-scope`) | skill [`dnd-mud-review`](.cursor/skills/dnd-mud-review/SKILL.md) — **один раз** |
 | 6 | Fix plan | skill [`dnd-mud-fix-plan`](.cursor/skills/dnd-mud-fix-plan/SKILL.md) |
-| 7–8 | Push / PR / rename → `merged/*` (локально) | [`dnd-mud-workflow.mdc`](.cursor/rules/dnd-mud-workflow.mdc) §Ветки `merged/*` · §PR task → dev |
+| 7–8 | Push / PR / rename → `merged/*` (локально) | skill [`dnd-mud-git-pr`](.cursor/skills/dnd-mud-git-pr/SKILL.md); policy — [`dnd-mud-workflow.mdc`](.cursor/rules/dnd-mud-workflow.mdc) |
 | 9 | Release | skill [`dnd-mud-release`](.cursor/skills/dnd-mud-release/SKILL.md) |

@@ -3,11 +3,13 @@
 ## [Unreleased]
 
 ### Added
+- Agent skills: `dnd-mud-git-pr` (push/PR/rename `merged/*`); reference files (`dnd-mud-verify/reference.md`, `dnd-mud-review/checklist-full.md`, `template-findings.md`); индекс [`.cursor/skills/README.md`](../.cursor/skills/README.md)
 - **Модификаторы характеристик:** `ability_modifier()` из таблицы PHB в `constants.yaml` (clamp 1–30); константы `ABILITY_SCORE_MIN` / `DEFAULT` / `MAX` для валидации PC (1–20)
 - **UI грантов:** описания spellcasting, skill_proficiency, immunity, disadvantage, cantrip, advantage+terrain в меню создания
 - **Dual wielder:** авто-экипировка второй руки без «лёгкое» при черте; +1 КД при двух рукопашных (`core/inventory.py`, `core/feat_apply.py`)
 
 ### Changed
+- Skills refactor (DRY layers): policy verify/review — только `dnd-mud-workflow.mdc`; skills — процедуры; `AGENTS.md` / `DEVELOPMENT.md` — индекс ссылок
 - **Экран расы/подрасы:** выборный язык в строке «Языки»; подрасы без дубля grants родителя; полуорк всегда с экраном выбора и «Назад»
 - **Экран класса:** схлопнутый ASI по уровням; `proficiency_token_label` в меню владений и стартового снаряжения
 - **Авто-экипировка:** при наличии пары одноручных предпочитается dual-wield вместо двуручного хвата versatile (старые сейвы не пересчитываются автоматически)

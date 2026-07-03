@@ -1,15 +1,15 @@
 ---
 name: dnd-mud-release
 description: >-
-  Release checklist for dnd_mud dev to main via GitHub PR only (fetch, sync check,
-  trial merge, make test, gh pr create, gh pr merge --squash). Never push/merge
-  dev into main locally.
+  Чеклист release dnd_mud dev→main через GitHub PR (fetch, sync check, trial
+  merge, make verify, gh pr create/merge --squash). Локальный merge dev в main
+  запрещён. Только по запросу пользователя.
 disable-model-invocation: true
 ---
 
 # dnd_mud — release (`dev` → `main`)
 
-Канон-политика: [`AGENTS.md`](../../AGENTS.md) · [`dnd-mud-workflow.mdc`](../../rules/dnd-mud-workflow.mdc) · CI: [`ci.yml`](../../.github/workflows/ci.yml), [`pr-dev-to-main-check.yml`](../../.github/workflows/pr-dev-to-main-check.yml).
+Канон: [`AGENTS.md`](../../AGENTS.md) · [`dnd-mud-workflow.mdc`](../../rules/dnd-mud-workflow.mdc) · CI: [`ci.yml`](../../.github/workflows/ci.yml), [`pr-dev-to-main-check.yml`](../../.github/workflows/pr-dev-to-main-check.yml).
 
 ## Когда выполнять
 
@@ -31,9 +31,9 @@ disable-model-invocation: true
 
 По умолчанию **без** full bugbot `dev` vs `main` — каждая task-ветка уже прошла review при merge в `dev`.
 
-Обязательно: `make verify` (или дождаться CI `quality`), trial merge, CI sync-check.
+Обязательно: `make verify` (команды — [`dnd-mud-verify/reference.md`](../dnd-mud-verify/reference.md)), trial merge, CI sync-check.
 
-Full bugbot release-review ([`dnd-mud-review`](../dnd-mud-review/SKILL.md), `Base Branch: main`, ветка `dev`) — только если: (a) в release попали коммиты без task-review; (b) пользователь явно просит; (c) hotfix напрямую в `dev`.
+Full bugbot release-review ([`dnd-mud-review`](../dnd-mud-review/SKILL.md), `Base Branch: main`, ветка `dev`, [checklist-full.md](../dnd-mud-review/checklist-full.md)) — только если: (a) в release попали коммиты без task-review; (b) пользователь явно просит; (c) hotfix напрямую в `dev`.
 
 ```bash
 source .venv/bin/activate

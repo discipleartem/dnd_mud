@@ -6,7 +6,7 @@ alwaysApply: false
 
 # dnd_mud tests
 
-**Runners:** pre-commit `verify-changed` (подзадача) · `make verify-scope` — **только** в [`dnd-mud-review`](../skills/dnd-mud-review/SKILL.md) · `make test` — CI
+**Runners:** [`dnd-mud-workflow.mdc`](../rules/dnd-mud-workflow.mdc) §Verify / review · [`dnd-mud-verify/reference.md`](../skills/dnd-mud-verify/reference.md)
 
 Один тест на изменённое поведение или реальный риск регрессии. Похожие кейсы — `@pytest.mark.parametrize`, не копии функций. Код теста — так же простой, как прод-код (`dnd-mud-python.mdc`).
 
