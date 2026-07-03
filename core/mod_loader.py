@@ -44,6 +44,62 @@ def _mod_allowed_for_difficulty(
     return True
 
 
+def _mod_id_list(manifest: dict[str, Any], key: str) -> list[str]:
+    """Список ID модов из поля manifest (строка или список)."""
+    raw = manifest.get(key)
+    if raw is None:
+        return []
+    if isinstance(raw, str):
+        return [raw]
+    if isinstance(raw, list):
+        return [str(item) for item in raw]
+    return []
+
+
+def mod_enable_error(
+    mod_id: str,
+    *,
+    enabled_ids: frozenset[str] | None = None,
+) -> dict[str, str] | None:
+    """Проверить, можно ли включить мод. None — ок; иначе payload для UI."""
+    if enabled_ids is None:
+        enabled_ids = get_enabled_mod_ids()
+    manifest = _load_mod_manifest(mod_id)
+    if not manifest:
+        return {"key": "mods.error_missing", "mod_id": mod_id}
+
+    candidate = frozenset(enabled_ids | {mod_id})
+
+    for required in _mod_id_list(manifest, "requires"):
+        if required not in candidate:
+            return {
+                "key": "mods.error_requires",
+                "mod_id": mod_id,
+                "other_mod_id": required,
+            }
+
+    for conflict in _mod_id_list(manifest, "conflicts"):
+        if conflict in candidate and conflict != mod_id:
+            return {
+                "key": "mods.error_conflicts",
+                "mod_id": mod_id,
+                "other_mod_id": conflict,
+            }
+
+    for other_id in candidate:
+        if other_id == mod_id:
+            continue
+        other_manifest = _load_mod_manifest(other_id)
+        if mod_id in _mod_id_list(other_manifest, "conflicts"):
+            return {
+                "key": "mods.error_conflicts",
+                "mod_id": mod_id,
+                "other_mod_id": other_id,
+            }
+
+    return None
+
+
 def _deep_merge(base: Any, overlay: Any) -> Any:
     """Рекурсивно объединить overlay в base."""
     if not isinstance(base, dict) or not isinstance(overlay, dict):
@@ -157,18 +213,30 @@ def list_available_mods() -> list[dict[str, Any]]:
     return result
 
 
-def set_mod_enabled(mod_id: str, enabled: bool) -> None:
-    """Включить или выключить мод в ``mods_state.json``."""
+def set_mod_enabled(mod_id: str, enabled: bool) -> dict[str, str] | None:
+    """Включить или выключить мод в ``mods_state.json``.
+
+    Returns:
+        Payload ошибки для UI или None при успехе.
+    """
     state = load_json(MODS_STATE_FILE, default={"enabled": []})
     current = state.get("enabled", [])
     if not isinstance(current, list):
         current = []
-    enabled_ids = [str(item) for item in current]
-    if enabled and mod_id not in enabled_ids:
-        enabled_ids.append(mod_id)
-    elif not enabled and mod_id in enabled_ids:
-        enabled_ids.remove(mod_id)
-    save_mods_state(enabled_ids)
+    enabled_ids = frozenset(str(item) for item in current)
+
+    if enabled:
+        error = mod_enable_error(mod_id, enabled_ids=enabled_ids)
+        if error is not None:
+            return error
+
+    enabled_list = [str(item) for item in current]
+    if enabled and mod_id not in enabled_list:
+        enabled_list.append(mod_id)
+    elif not enabled and mod_id in enabled_list:
+        enabled_list.remove(mod_id)
+    save_mods_state(enabled_list)
+    return None
 
 
 def save_mods_state(enabled_ids: list[str]) -> None:

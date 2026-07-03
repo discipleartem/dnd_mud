@@ -11,6 +11,7 @@ from core.mod_loader import (
     get_enabled_mod_ids,
     get_mod_gating_difficulty,
     list_available_mods,
+    mod_enable_error,
     save_mods_state,
     set_mod_enabled,
     set_mod_gating_difficulty,
@@ -105,3 +106,57 @@ def test_set_mod_enabled_persists_state(
     assert get_enabled_mod_ids() == frozenset({"dragonborn_pack"})
     set_mod_enabled("dragonborn_pack", False)
     assert get_enabled_mod_ids() == frozenset()
+
+
+def test_mod_enable_conflict_blocks_second_mod(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    mods_dir = tmp_path / "mods"
+    mods_dir.mkdir()
+    for mod_id, conflicts in (
+        ("mod_a", []),
+        ("mod_b", ["mod_a"]),
+    ):
+        mod_path = mods_dir / mod_id
+        mod_path.mkdir()
+        lines = [f"id: {mod_id}", "name: {ru: Test}", "version: '1.0'"]
+        if conflicts:
+            lines.append(f"conflicts: {conflicts}")
+        (mod_path / "manifest.yaml").write_text("\n".join(lines) + "\n")
+    monkeypatch.setattr("core.mod_loader.MODS_DIR", mods_dir)
+    state_file = tmp_path / "mods_state.json"
+    monkeypatch.setattr("core.mod_loader.MODS_STATE_FILE", state_file)
+
+    assert set_mod_enabled("mod_a", True) is None
+    error = set_mod_enabled("mod_b", True)
+    assert error is not None
+    assert error.get("key") == "mods.error_conflicts"
+    assert get_enabled_mod_ids() == frozenset({"mod_a"})
+
+
+def test_mod_enable_requires_dependency(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    mods_dir = tmp_path / "mods"
+    mods_dir.mkdir()
+    for mod_id, requires in (
+        ("base_pack", []),
+        ("addon_pack", ["base_pack"]),
+    ):
+        mod_path = mods_dir / mod_id
+        mod_path.mkdir()
+        lines = [f"id: {mod_id}", "name: {ru: Test}", "version: '1.0'"]
+        if requires:
+            lines.append(f"requires: {requires}")
+        (mod_path / "manifest.yaml").write_text("\n".join(lines) + "\n")
+    monkeypatch.setattr("core.mod_loader.MODS_DIR", mods_dir)
+    state_file = tmp_path / "mods_state.json"
+    monkeypatch.setattr("core.mod_loader.MODS_STATE_FILE", state_file)
+
+    error = mod_enable_error("addon_pack")
+    assert error is not None
+    assert error.get("key") == "mods.error_requires"
+
+    assert set_mod_enabled("base_pack", True) is None
+    assert set_mod_enabled("addon_pack", True) is None
+    assert get_enabled_mod_ids() == frozenset({"base_pack", "addon_pack"})

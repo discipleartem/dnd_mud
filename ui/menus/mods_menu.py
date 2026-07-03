@@ -62,7 +62,18 @@ def show_mods_menu(strings: StringsDict, language: str = "ru") -> None:
         selected = mods[choice - 1]
         mod_id = str(selected.get("id", ""))
         new_state = mod_id not in enabled
-        set_mod_enabled(mod_id, new_state)
+        error = set_mod_enabled(mod_id, new_state)
+        if error is not None:
+            msg_key = str(error.get("key", "mods.error_missing"))
+            params = {k: v for k, v in error.items() if k != "key"}
+            print(
+                f"{Fore.RED}"
+                f"{get_string(strings, msg_key, **params)}"
+                f"{Style.RESET_ALL}"
+            )
+            print()
+            _press_enter(strings)
+            continue
         reload_catalogs()
         if new_state:
             enabled.add(mod_id)
