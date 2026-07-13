@@ -5,8 +5,10 @@ from typing import Any, Literal
 
 from core.character_build import build_new_character
 from core.models import Character
-from core.progression.class_features import class_features_applied_at_creation
-from core.progression.subclasses import start_level_for_difficulty
+from core.progression import (
+    class_features_applied_at_creation,
+    start_level_for_difficulty,
+)
 from core.types import GameDifficulty, StatMap
 
 CreationStep = Literal[

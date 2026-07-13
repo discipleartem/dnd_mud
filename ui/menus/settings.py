@@ -2,14 +2,14 @@
 
 from colorama import Fore, Style
 
-from core.localization import get_string
+from core.localization import get_string, load_strings
 from core.types import (
     GameDifficulty,
     LanguageCode,
     RuntimeSettings,
     StringsDict,
 )
-from ui.menus import _deps
+from ui.input_handler import get_int_input
 from ui.menus._common import (
     _press_enter,
     _print_screen_header,
@@ -44,7 +44,7 @@ def select_difficulty(strings: StringsDict) -> GameDifficulty | None:
     )
     print()
 
-    choice = _deps.get_int_input(
+    choice = get_int_input(
         get_string(strings, "difficulty.prompt", count=len(options)),
         0,
         len(options),
@@ -90,7 +90,7 @@ def show_languages_menu(
 
         new_lang = lang_codes[choice - 1]
         settings = {"language": new_lang}
-        strings = _deps.load_strings(new_lang)
+        strings = load_strings(new_lang)
         msg = get_string(
             strings,
             "languages.changed",

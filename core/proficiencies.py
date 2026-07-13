@@ -1,8 +1,6 @@
-"""Сбор владений из grants, классов и рас.
+"""Владения оружием, доспехами и инструментами.
 
-Агрегирует токены владений при создании и левелапе из YAML (раса, класс,
-подкласс, черты, предыстория). Не проверяет применимость в бою — см.
-``proficiency_checks``.
+Сбор токенов из grants и проверки владения.
 """
 
 from dataclasses import dataclass
@@ -10,14 +8,21 @@ from typing import Any
 
 from core.classes import (
     get_class_dict,
+    get_subclass_choice_level,
     get_subclass_dict,
     iter_class_grants,
 )
-from core.equipment import resolve_tool_pool
+from core.equipment import (
+    armor_category,
+    resolve_tool_pool,
+    tool_category,
+    weapon_matches_category,
+)
 from core.feats import get_feat_proficiency_grants
-from core.grant_mechanics import (
+from core.grants import (
     mechanics_from_grant_entry,
     normalize_armor_token,
+    proficiency_tokens_from_grant,
 )
 from core.io import merge_unique
 from core.models import Character
@@ -34,6 +39,106 @@ class ProficiencyChoice:
     options: list[str] | None = None
 
 
+# ============================================================================
+# Проверки владений
+# ============================================================================
+
+
+def has_weapon_proficiency(proficiencies: list[str], weapon_id: str) -> bool:
+    """Владение оружием по токенам."""
+    if weapon_id in proficiencies:
+        return True
+    for token in proficiencies:
+        if weapon_matches_category(token, weapon_id):
+            return True
+    return False
+
+
+def has_weapon_pool_proficiency(
+    pool: str, weapon_proficiencies: list[str]
+) -> bool:
+    """Владение категорией оружия (simple, martial), не отдельным видом."""
+    if pool in weapon_proficiencies:
+        return True
+    if pool == "martial":
+        return any(
+            token in weapon_proficiencies
+            for token in ("martial_melee", "martial_ranged")
+        )
+    if pool == "simple":
+        return any(
+            token in weapon_proficiencies
+            for token in ("simple_melee", "simple_ranged")
+        )
+    return False
+
+
+def has_armor_proficiency(proficiencies: list[str], armor_id: str) -> bool:
+    """Владение доспехом или щитом."""
+    cat = armor_category(armor_id)
+    if not cat:
+        return False
+    normalized = normalize_armor_token(cat)
+    return normalized in proficiencies or cat in proficiencies
+
+
+def has_tool_proficiency(proficiencies: list[str], tool_id: str) -> bool:
+    """Владение инструментом или категорией."""
+    if tool_id in proficiencies:
+        return True
+    cat = tool_category(tool_id)
+    if cat and cat in proficiencies:
+        return True
+    for token in proficiencies:
+        if token in ("artisans_tools", "gaming_sets", "musical_instruments"):
+            pool = resolve_tool_pool(token)
+            if tool_id in pool:
+                return True
+    return False
+
+
+def is_valid_tool_selection(
+    selected: list[str], pool: list[str], count: int
+) -> bool:
+    """Проверить выбор инструментов."""
+    if len(selected) != count:
+        return False
+    if len(set(selected)) != count:
+        return False
+    pool_set = set(pool)
+    return all(t in pool_set for t in selected)
+
+
+def get_class_saving_throws(class_id: str) -> list[str]:
+    """Спасброски класса."""
+    info = get_class_dict(class_id)
+    if not info:
+        return []
+    raw = info.get("saving_throws", [])
+    if isinstance(raw, list):
+        return [str(s) for s in raw]
+    return []
+
+
+def has_save_proficiency(proficiencies: list[str], ability_id: str) -> bool:
+    """Владение спасброском по характеристике."""
+    return ability_id in proficiencies
+
+
+def subclass_proficiencies_active(
+    class_id: str, subclass_id: str | None, level: int
+) -> bool:
+    """Подкласс даёт владения на текущем уровне."""
+    if not subclass_id:
+        return False
+    return level >= get_subclass_choice_level(class_id)
+
+
+# ============================================================================
+# Сбор владений из grants
+# ============================================================================
+
+
 def merge_proficiency_tokens(*parts: list[str]) -> list[str]:
     """Объединить списки владений без дублей."""
     return merge_unique(*parts)
@@ -43,8 +148,6 @@ def _tokens_from_mechanics(
     mechanics: dict[str, Any],
 ) -> tuple[list[str], list[str], list[str]]:
     """Из grant/class feature: weapons, armors, tools."""
-    from core.grant_mechanics import proficiency_tokens_from_grant
-
     return proficiency_tokens_from_grant(mechanics)
 
 
@@ -303,3 +406,28 @@ def apply_subclass_proficiencies_to_character(
         character.tool_proficiencies, st
     )
     return choices
+
+
+__all__ = [
+    "ProficiencyChoice",
+    "merge_proficiency_tokens",
+    # Checks
+    "has_weapon_proficiency",
+    "has_weapon_pool_proficiency",
+    "has_armor_proficiency",
+    "has_tool_proficiency",
+    "is_valid_tool_selection",
+    "get_class_saving_throws",
+    "has_save_proficiency",
+    "subclass_proficiencies_active",
+    # Collect
+    "get_class_proficiency_tokens",
+    "get_class_tool_choices",
+    "get_subclass_proficiency_tokens",
+    "get_racial_proficiency_tokens",
+    "get_background_tool_proficiencies",
+    "get_feat_proficiency_tokens",
+    "get_proficiency_choices",
+    "build_fixed_proficiencies",
+    "apply_subclass_proficiencies_to_character",
+]

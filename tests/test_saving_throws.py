@@ -7,7 +7,7 @@ import pytest
 from core.character_build import resolve_creation_grants
 from core.checks import saving_throw, saving_throw_modifier
 from core.models import Character
-from core.proficiencies.proficiency_checks import get_class_saving_throws
+from core.proficiencies import get_class_saving_throws
 from core.types import CharacterClass
 
 pytestmark = pytest.mark.usefixtures("catalog_caches_cleared")

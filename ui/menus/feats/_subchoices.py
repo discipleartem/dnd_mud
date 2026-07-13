@@ -8,10 +8,13 @@ from core.equipment import (
     proficiency_token_label,
 )
 from core.feats import load_feat
+from core.languages import (
+    get_language_name,
+    load_languages,
+)
 from core.localization import get_string
 from core.skills import PHB_SKILL_IDS
 from core.types import StatMap, StringsDict
-from ui.menus import _deps
 from ui.menus._common import (
     _ability_name,
     _print_screen_header,
@@ -183,7 +186,7 @@ def _pick_languages_for_feat(
 ) -> list[str] | None:
     """Выбор языков для linguist."""
     known = known or []
-    all_langs = _deps.load_languages(language)
+    all_langs = load_languages(language)
     pool = [
         str(entry.get("id", ""))
         for entry in all_langs
@@ -193,7 +196,7 @@ def _pick_languages_for_feat(
     for pick_num in range(1, count + 1):
         available = [lang for lang in pool if lang not in picked]
         labels = [
-            _deps.get_language_name(lang_id, language) for lang_id in available
+            get_language_name(lang_id, language) for lang_id in available
         ]
         _print_screen_header(get_string(strings, "character.feat_caption"))
         choice = _run_numbered_menu(

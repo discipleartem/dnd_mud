@@ -5,12 +5,15 @@ from collections.abc import Callable
 from datetime import UTC, datetime
 from typing import Any
 
+from core.constants import clamp_level
 from core.grants_context import CreationContext, ResolvedGrants
 from core.io import merge_unique
-from core.levels import clamp_level
 from core.models import Character, _parse_character_class
-from core.progression import max_hp_for_level, xp_for_level
-from core.progression.subclasses import start_level_for_difficulty
+from core.progression import (
+    max_hp_for_level,
+    start_level_for_difficulty,
+    xp_for_level,
+)
 from core.stats import STANDARD_ARRAY, generate_stats_standard_array
 from core.types import CharacterClass, GameDifficulty, InventoryItem, StatMap
 from core.types.character_params import CharacterBuildParams
@@ -324,13 +327,11 @@ def resolve_creation_grants(
     from core.proficiencies import (
         get_background_tool_proficiencies,
         get_class_proficiency_tokens,
+        get_class_saving_throws,
         get_feat_proficiency_tokens,
         get_racial_proficiency_tokens,
         get_subclass_proficiency_tokens,
         merge_proficiency_tokens,
-    )
-    from core.proficiencies.proficiency_checks import (
-        get_class_saving_throws,
     )
     from core.skills import apply_racial_proficiencies
 
@@ -367,7 +368,7 @@ def resolve_creation_grants(
 
     save_ids = list(get_class_saving_throws(class_id))
     if feat_ids:
-        from core.feats.feat_apply import get_feat_save_proficiencies
+        from core.feats import get_feat_save_proficiencies
 
         for save_id in get_feat_save_proficiencies(feat_ids, feat_choices):
             if save_id not in save_ids:

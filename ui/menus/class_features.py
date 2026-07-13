@@ -2,14 +2,14 @@
 
 from colorama import Fore, Style
 
+from core.character_storage import update_character
 from core.localization import get_string
 from core.models import Character
-from core.progression.class_features import (
+from core.progression import (
     mark_class_features_applied,
     needs_class_feature_picks,
 )
 from core.types import LanguageCode, StringsDict
-from ui.menus import _deps
 from ui.menus._common import _print_screen_header, _print_success_and_wait
 from ui.menus._subclass_picks import apply_subclass_picks
 
@@ -37,7 +37,7 @@ def apply_pending_class_features(
         return None
 
     updated = mark_class_features_applied(updated)
-    _deps.update_character(updated)
+    update_character(updated)
 
     msg = get_string(strings, "class_features.success")
     _print_success_and_wait(strings, msg)

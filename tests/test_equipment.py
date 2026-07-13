@@ -18,13 +18,12 @@ from core.equipment import (
 from core.localization import load_strings
 from core.models import Character
 from core.types import CharacterClass
-from ui.menus import _deps
 from ui.menus._common import _sort_ids_by_proficiency
-from ui.menus._display._character import _print_character_card
-from ui.menus._display._character_header import _format_character_feats
-from ui.menus._display._stats import (
+from ui.menus._display import (
     _format_ability_modifier,
+    _format_character_feats,
     _format_character_stats_compact,
+    _print_character_card,
 )
 
 
@@ -292,7 +291,7 @@ def test_format_character_stats_and_card(
 def test_print_race_info_grants(
     capsys: pytest.CaptureFixture[str], ru_strings: dict[str, Any]
 ) -> None:
-    from ui.menus._display._race import _print_race_info
+    from ui.menus._display import _print_race_info
 
     high_elf = {
         "name": "Высший эльф",
@@ -321,9 +320,10 @@ def test_print_race_info_grants(
 def test_format_class_proficiencies_localizes_rogue_tools(
     ru_strings: dict[str, Any],
 ) -> None:
-    from ui.menus._display._class import _format_class_proficiencies
+    from core.classes import load_class_full
+    from ui.menus._display import _format_class_proficiencies
 
-    rogue = _deps.load_class_full("rogue", "ru")
+    rogue = load_class_full("rogue", "ru")
     prof = _format_class_proficiencies(ru_strings, rogue, "ru")
     assert "Воровские инструменты" in prof
     assert "thieves_tools" not in prof

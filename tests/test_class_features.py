@@ -5,7 +5,7 @@ from typing import Any
 import pytest
 
 from core.models import Character
-from core.progression.class_features import (
+from core.progression import (
     class_features_applied_at_creation,
     needs_class_feature_picks,
 )

@@ -7,7 +7,7 @@ import pytest
 
 from core.classes import get_subclass_choice_level, load_class_full
 from core.models import Character
-from core.progression.subclasses import (
+from core.progression import (
     features_up_to_level,
     needs_subclass_npc,
     start_level_for_difficulty,

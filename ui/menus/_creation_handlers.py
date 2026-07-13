@@ -5,10 +5,13 @@ from dataclasses import dataclass
 
 from core.localization import get_string
 from core.models import Character
-from core.progression.expertise import expertise_step_required
-from core.progression.subclasses import subclass_offered_at_creation
+from core.progression import (
+    expertise_step_required,
+    subclass_offered_at_creation,
+)
+from core.races import load_races
+from core.stats import ABILITY_SCORE_DEFAULT
 from core.types import StringsDict
-from ui.menus import _deps
 from ui.menus._common import _print_screen_header, _run_numbered_menu
 from ui.menus._creation_finalize import merge_feat_languages
 from ui.menus._creation_navigation import (
@@ -54,7 +57,7 @@ def _done(strings: StringsDict, state: _CreationState) -> StepResult:
 def _handle_race(
     strings: StringsDict, state: _CreationState, language: str
 ) -> StepResult:
-    races = _deps.load_races(language)
+    races = load_races(language)
     _print_screen_header(get_string(strings, "character.race_caption"))
     choice = _run_numbered_menu(
         strings,
@@ -257,7 +260,7 @@ def _handle_equipment(
         list(state.tool_proficiencies or []),
         language,
         strength=int(
-            (state.stats or {}).get("strength", _deps.ABILITY_SCORE_DEFAULT)
+            (state.stats or {}).get("strength", ABILITY_SCORE_DEFAULT)
         ),
     )
     if equipment is None:

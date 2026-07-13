@@ -31,7 +31,7 @@ pytestmark = pytest.mark.usefixtures("catalog_caches_cleared")
 
 
 def test_feat_meets_requirements_and_spellcasting_context() -> None:
-    from core.feats.feat_visibility import build_feat_selection_context
+    from core.feats import build_feat_selection_context
 
     ctx_ok = FeatRequirementContext(
         stats={"dexterity": 14, "strength": 10},
@@ -107,7 +107,7 @@ def test_list_feats_for_selection_requirements_split() -> None:
 
 
 def test_redundant_proficiency_feats_hidden_fighter() -> None:
-    from core.feats.feat_visibility import build_feat_selection_context
+    from core.feats import build_feat_selection_context
 
     ctx = build_feat_selection_context(
         stats=_CREATION_STATS,
@@ -131,7 +131,7 @@ def test_redundant_proficiency_feats_hidden_fighter() -> None:
 
 
 def test_redundant_proficiency_feats_hidden_dwarf() -> None:
-    from core.feats.feat_visibility import build_feat_selection_context
+    from core.feats import build_feat_selection_context
 
     ctx = build_feat_selection_context(
         stats=_CREATION_STATS,

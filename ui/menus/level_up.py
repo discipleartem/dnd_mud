@@ -14,12 +14,10 @@ from core.models import Character
 from core.progression import (
     AsiResolution,
     HpGainBreakdown,
-    process_pending_level_ups,
-)
-from core.progression.asi import (
     con_hp_bonus_from_asi,
     feat_id_from_asi_choice,
     pending_asi_at_level,
+    process_pending_level_ups,
 )
 from core.types import LanguageCode, StringsDict
 from ui.menus._common import _press_enter, _print_screen_header

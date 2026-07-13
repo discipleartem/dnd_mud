@@ -2,15 +2,18 @@
 
 from colorama import Fore, Style
 
-from core.classes import get_subclass_choice_level
+from core.character_storage import update_character
+from core.classes import (
+    get_subclass_choice_level,
+    load_subclasses,
+)
 from core.localization import get_string
 from core.models import Character
-from core.progression.class_features import (
+from core.progression import (
     mark_class_features_applied,
     needs_class_feature_picks,
 )
 from core.types import LanguageCode, StringsDict
-from ui.menus import _deps
 from ui.menus._common import _print_screen_header, _print_success_and_wait
 from ui.menus._selectors import select_subclass
 from ui.menus._subclass_picks import apply_subclass_picks
@@ -40,7 +43,7 @@ def assign_subclass_from_menu(
         return None
 
     updated = mark_class_features_applied(updated)
-    _deps.update_character(updated)
+    update_character(updated)
     return updated
 
 
@@ -79,7 +82,7 @@ def run_subclass_trainer(
 
     subclass_id = updated.subclass_id
     name = subclass_id or ""
-    for sub in _deps.load_subclasses(character.class_id, language):
+    for sub in load_subclasses(character.class_id, language):
         if sub.get("id") == subclass_id:
             name = str(sub.get("name", subclass_id))
             break

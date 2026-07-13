@@ -6,7 +6,7 @@ from typing import Any
 
 import pytest
 
-from core.levels import MAX_CHARACTER_LEVEL, clamp_level
+from core.constants import MAX_CHARACTER_LEVEL, clamp_level
 from core.models import Adventure, Character
 from core.progression import (
     apply_experience,

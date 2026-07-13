@@ -17,7 +17,7 @@ from core.inventory import (
     normalize_inventory_item,
 )
 from core.localization import get_string, resolve_localized_text
-from core.proficiencies.proficiency_checks import (
+from core.proficiencies import (
     has_weapon_pool_proficiency,
     has_weapon_proficiency,
 )

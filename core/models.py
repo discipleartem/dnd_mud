@@ -6,7 +6,7 @@
 from dataclasses import dataclass, field
 from typing import Any, cast
 
-from core.levels import clamp_level
+from core.constants import clamp_level
 from core.localization import resolve_localized_text
 from core.types import (
     CharacterClass,

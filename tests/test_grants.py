@@ -2,12 +2,13 @@
 
 import pytest
 
-from core.grant_mechanics import (
+from core.grants import (
+    grants_from_entity,
+    inherit_flags,
     mechanics_from_grant_entry,
     normalize_armor_token,
     proficiency_tokens_from_grant,
 )
-from core.grants import grants_from_entity, inherit_flags
 from core.races import (
     collect_race_grants,
     get_race_and_subrace,

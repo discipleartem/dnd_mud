@@ -2,15 +2,13 @@
 
 from colorama import Fore, Style
 
-from ui.menus import _deps
+from core.localization import get_string
+from core.types import StringsDict
 from ui.menus._common import (
     SEPARATOR,
     _print_screen_header,
     _run_numbered_menu,
 )
-
-get_string = _deps.get_string
-StringsDict = _deps.StringsDict
 
 
 def show_welcome_screen(version: str, strings: StringsDict) -> None:

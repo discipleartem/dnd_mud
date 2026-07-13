@@ -3,14 +3,17 @@
 import json
 from pathlib import Path
 
+import core.character as character_mod
 import pytest
 
-import core.character as character_mod
 from core.character_build import build_new_character
 from core.character_migrate import migrate_character_data
-from core.character_storage import load_characters, persist_character
+from core.character_storage import (
+    load_characters,
+    make_save_slug,
+    persist_character,
+)
 from core.models import Character
-from core.slug import make_save_slug
 from core.types import CharacterClass
 from tests.creation_helpers import fighter_acolyte_creation
 from ui.menus._creation_state import _CreationState
