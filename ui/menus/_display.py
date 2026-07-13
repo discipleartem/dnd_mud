@@ -4,6 +4,7 @@ from typing import Any, Literal
 
 from colorama import Fore, Style
 
+from core.backgrounds import load_background_full
 from core.classes import (
     get_subclass_choice_level,
     load_classes,
@@ -1779,8 +1780,7 @@ def _print_character_card(
         )
     if char.languages:
         lang_line = ", ".join(
-            _deps.get_language_name(lang_id, language)
-            for lang_id in char.languages
+            get_language_name(lang_id, language) for lang_id in char.languages
         )
         lang_display = f"{Fore.CYAN}{lang_line}{Style.RESET_ALL}"
     else:
@@ -1792,7 +1792,7 @@ def _print_character_card(
         indent=indent,
     )
     if char.background_id:
-        bg = _deps.load_background_full(char.background_id, language)
+        bg = load_background_full(char.background_id, language)
         bg_name = bg.get("name", char.background_id)
         bg_display = f"{Fore.CYAN}{bg_name}{Style.RESET_ALL}"
     else:

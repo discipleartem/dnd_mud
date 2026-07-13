@@ -15,8 +15,13 @@ from core.progression import (
     xp_for_level,
 )
 from core.stats import STANDARD_ARRAY, generate_stats_standard_array
-from core.types import CharacterClass, GameDifficulty, InventoryItem, StatMap
-from core.types.character_params import CharacterBuildParams
+from core.types import (
+    CharacterBuildParams,
+    CharacterClass,
+    GameDifficulty,
+    InventoryItem,
+    StatMap,
+)
 
 
 def build_new_character(

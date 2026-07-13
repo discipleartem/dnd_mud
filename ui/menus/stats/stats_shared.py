@@ -207,7 +207,7 @@ def _confirm_stats(
     print()
 
     max_choice = 2 if allow_reroll else 1
-    choice = _get_int_input(_choice_prompt(strings), 0, max_choice, strings)
+    choice = get_int_input(_choice_prompt(strings), 0, max_choice, strings)
 
     if choice == 0:
         return "back"
