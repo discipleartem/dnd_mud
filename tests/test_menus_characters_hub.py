@@ -4,14 +4,14 @@ import pytest
 
 from core.character_storage import LoadCharactersResult
 from core.models import Character
-from ui.menus import _deps, characters_menu
+from ui.menus import characters_menu
 
 
 def _patch_load_characters(
     monkeypatch: pytest.MonkeyPatch, characters: list[Character]
 ) -> None:
     monkeypatch.setattr(
-        _deps,
+        characters_menu,
         "load_characters",
         lambda: LoadCharactersResult(characters=tuple(characters)),
     )

@@ -16,7 +16,6 @@ from core.grants import proficiency_tokens_and_skills_from_grant
 from core.localization import get_string
 from core.progression import cap_stats
 from core.types import StatMap, StringsDict
-from ui.menus import _deps
 from ui.menus._common import _print_screen_header
 from ui.menus.feats._selection import _pick_feat_from_lists
 from ui.menus.feats._subchoices import _resolve_feat_subchoices

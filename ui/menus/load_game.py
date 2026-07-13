@@ -2,11 +2,11 @@
 
 from colorama import Fore, Style
 
-from core.adventure import find_adventure, load_adventures
-from core.catalog_loader import bootstrap_session_catalogs
+from core.adventure import load_adventures
 from core.game_engine import GameEngine, GameSession
 from core.localization import get_string
 from core.session_storage import (
+    find_adventure,
     list_sessions,
     load_character_for_session,
     load_session,

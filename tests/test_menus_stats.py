@@ -2,8 +2,8 @@
 
 import pytest
 
+from core.races import get_race_bonuses
 from core.stats import STAT_NAMES
-from ui.menus import _deps
 from ui.menus import stats as stats_menu
 from ui.menus.stats import stats_methods, stats_shared
 
@@ -13,7 +13,7 @@ def test_standard_array_shows_race_bonuses_after_assign(
 ):
     patch_int_input(monkeypatch, [1, 0, 0])
     monkeypatch.setattr(
-        _deps,
+        stats_menu,
         "get_race_bonuses",
         lambda race_id, subrace_id=None: {"strength": 2},
     )

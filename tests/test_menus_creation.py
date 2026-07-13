@@ -8,7 +8,7 @@ import pytest
 import ui.menus._creation_handlers as creation_handlers
 from core.types import CharacterClass
 from tests.creation_helpers import flat_stats
-from ui.menus import _creation_steps, _deps
+from ui.menus import _creation_steps
 from ui.menus._creation_handlers import (
     _handle_equipment,
     _handle_feats,

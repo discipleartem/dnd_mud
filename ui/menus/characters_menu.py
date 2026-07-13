@@ -2,7 +2,10 @@
 
 from colorama import Fore, Style
 
-from ui.menus import _creation_steps, _deps
+from core.localization import get_string
+from core.models import Character
+from core.types import LanguageCode, StringsDict
+from ui.menus import _creation_steps
 from ui.menus._common import (
     _confirm_yes_no,
     _print_cancelled,
@@ -13,11 +16,6 @@ from ui.menus._common import (
 )
 from ui.menus._corrupt_saves import show_corrupt_save_warnings_if_any
 from ui.menus._display import _print_characters_list
-
-Character = _deps.Character
-LanguageCode = _deps.LanguageCode
-StringsDict = _deps.StringsDict
-get_string = _deps.get_string
 
 
 def _select_character_to_delete(

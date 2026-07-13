@@ -4,7 +4,11 @@ from typing import Literal
 
 from colorama import Fore, Style
 
-from ui.menus import _creation_steps, _deps
+from core.adventure import Adventure, adventure_unavailable_reason
+from core.localization import get_string
+from core.models import Character
+from core.types import RuntimeSettings, StringsDict
+from ui.menus import _creation_steps
 from ui.menus._common import (
     _press_enter,
     _print_screen_header,
@@ -13,13 +17,6 @@ from ui.menus._common import (
 from ui.menus._corrupt_saves import show_corrupt_save_warnings_if_any
 from ui.menus._display import _print_characters_list
 from ui.menus.scenario_flow import run_scenario
-
-Adventure = _deps.Adventure
-Character = _deps.Character
-RuntimeSettings = _deps.RuntimeSettings
-StringsDict = _deps.StringsDict
-adventure_unavailable_reason = _deps.adventure_unavailable_reason
-get_string = _deps.get_string
 
 SelectCharacterResult = Character | Literal["create"] | None
 

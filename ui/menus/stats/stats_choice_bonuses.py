@@ -3,8 +3,8 @@
 from colorama import Fore, Style
 
 from core.localization import get_string
+from core.races import get_choice_ability_bonus_mechanics
 from core.types import StatMap, StringsDict
-from ui.menus import _deps
 from ui.menus._common import (
     _ability_name,
     _choice_prompt,
@@ -19,7 +19,7 @@ def _select_choice_ability_bonuses(
     subrace_id: str | None,
 ) -> StatMap | None:
     """Выбор характеристик для выборного расового бонуса."""
-    mechanics = _deps.get_choice_ability_bonus_mechanics(race_id, subrace_id)
+    mechanics = get_choice_ability_bonus_mechanics(race_id, subrace_id)
     if mechanics is None:
         return {}
 
