@@ -58,9 +58,9 @@ UI не читает файлы данных напрямую — только �
 |--------|-----------|
 | `core/models.py` | `Character` (`class_id: CharacterClass`), `Adventure` (dataclass); JSON coerce helpers |
 | `core/grants_context.py` | `CreationContext`, `ResolvedGrants` — dataclass контекста создания |
-| `core/character_build.py` | `build_new_character` / `resolve_creation_grants` — сборка модели без записи на диск |
+| `core/character_build.py` | `build_new_character(CharacterBuildParams)` / `resolve_creation_grants` — сборка модели без записи на диск |
 | `core/character_migrate.py` | `CHARACTERS_SCHEMA_VERSION`, `migrate_character_data` — версия JSON сейва при load |
-| `core/character_storage.py` | CRUD персонажей; `make_save_slug`; JSON в `saves/` |
+| `core/character_storage.py` | CRUD персонажей; `make_save_slug`, `unique_save_slug`; JSON в `saves/` |
 | `core/session_storage.py` | Снимки сессий приключений (`saves/sessions/`) |
 | `core/game_engine.py` | `GameEngine`, `GameSession` — state machine сценария; `step_exit`, флаги сессии |
 | `core/scenario_rooms.py` | `exits` в узлах YAML-сценария |

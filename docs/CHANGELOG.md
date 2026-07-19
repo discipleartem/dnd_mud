@@ -3,12 +3,15 @@
 ## [Unreleased]
 
 ### Removed
+- **kwargs-`build_new_character` / `to_kwargs` / draft plan:** единственный API — `build_new_character(CharacterBuildParams)`; удалены мёртвые `_handle_action_result`, `_versatile_can_switch_to_two_hands`; черновик `docs/refactor-simplify-ae2709.md`
 - **Черновик `docs/tokenize.md`:** правила минимального контекста LLM перенесены в global User Rules (`~/.cursor/rules/ai-context.mdc`)
 
 ### Breaking
 - **Сейвы:** удалены runtime-миграции (`core/save_migration.py`); требуется канонический формат v1 (`class_id`, `race`, `schema_version: 1`); ключ `"class"`, `race_id`, `equip_logic_version` не поддерживаются
+- **Character build API:** kwargs-`build_new_character` удалён; callers передают `CharacterBuildParams`
 
 ### Changed
+- **Residual simplify:** `unique_save_slug` публичный и подключён в creation; dispatch grant/feat subchoices через `match`; docs sync API/ARCHITECTURE
 - **Architecture simplify:** слияние пакетов `core/feats|progression|inventory|proficiencies|types` и `ui/menus/_display` в единые модули; удалены фасады `core/character.py`, `ui/menus/_deps.py`, микромодули `levels`/`slug`/`grant_mechanics`; JSON coerce в `models.py` через `_json_list_str` / `_json_dict`; `bootstrap_session_catalogs` в `catalog_loader`
 - **Rules DRY (1B):** `dnd-mud-workflow.mdc` — короткий policy-delta; процедура N part-веток — skill `dnd-mud-multi-branch`; stub `ironbee-devtools-use.mdc` (browser forbidden); `AGENTS.md` — оркестрация (inventory → git-старт); skills index — `.cursor/skills/README.md`; PHB актуализация — в `00-project.mdc`. Global: сжатый `00-global` индекс; Settings UI / IronBee platform off — ручной шаг ([`user-rules-minimal.md`](~/.cursor/docs/user-rules-minimal.md))
 - **Global rules modules:** монолиты `01-operations` / `user-protocols` заменены модулями `venv` / `git` / `task-cycle` / `communication` / `language` (+ `ai-context`); ссылки в `AGENTS.md`, skills, workflow обновлены

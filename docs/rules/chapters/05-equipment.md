@@ -155,7 +155,7 @@ type: chapter
 | Владения (класс/раса/предыстория/подкласс) | `core/proficiencies.py` |
 | Инвентарь, авто-экипировка, `compute_ac` | `core/inventory.py` |
 | Стартовое снаряжение класса (`starting_equipment` в YAML) | `core/starting_equipment.py` |
-| Стартовое снаряжение предыстории | `core/backgrounds.py` → merge в `save_character` |
+| Стартовое снаряжение предыстории | `core/backgrounds.py` → merge в `build_new_character` / `persist_character` |
 | Шаг выбора инструментов при создании | `ui/menus/proficiencies.py` |
 | Шаг выбора снаряжения класса (а/б) | `ui/menus/equipment.py` |
 | Карточка персонажа: инвентарь, экипировка, КД | `ui/menus/_display.py` |

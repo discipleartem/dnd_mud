@@ -60,9 +60,9 @@ dnd_mud/
 │   ├── models.py            # Dataclass: Character, Adventure
 │   ├── types.py             # StatMap, CharacterClass, CharacterBuildParams, …
 │   ├── grants_context.py    # CreationContext, ResolvedGrants
-│   ├── character_build.py   # build_new_character, resolve_creation_grants
+│   ├── character_build.py   # build_new_character(CharacterBuildParams), resolve_creation_grants
 │   ├── character_migrate.py # CHARACTERS_SCHEMA_VERSION, migrate_character_data
-│   ├── character_storage.py # CRUD; make_save_slug
+│   ├── character_storage.py # CRUD; make_save_slug, unique_save_slug
 │   ├── catalog_loader.py    # load_catalog + bootstrap_session_catalogs
 │   ├── feats.py             # Черты (loader, apply, visibility, …)
 │   ├── progression.py       # XP, HP, ASI, expertise, level-up

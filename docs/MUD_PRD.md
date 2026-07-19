@@ -319,7 +319,7 @@
 #### 3.4.13. Стартовое снаряжение класса (реализовано)
 - Источник: `starting_equipment` в `database/classes/classes.yaml`; PHB-наборы — `database/equipment/equipment.yaml`.
 - Шаг **после** навыков (и expertise): выбор опций а/б по группам (оружие, доспех, набор и т.д.); pool-опции — подменю конкретного id с учётом владений.
-- Результат: `equipment_choices` в JSON; `inventory` и `equipped` формируются в `save_character` (`core/starting_equipment.py`, `core/inventory.equip_defaults`).
+- Результат: `equipment_choices` в JSON; `inventory` и `equipped` формируются в `build_new_character` / `persist_character` (`core/starting_equipment.py`, `core/inventory.equip_defaults`).
 - UI: `ui/menus/equipment.py`; карточка персонажа — инвентарь, экипировка, КД.
 - См. [`rules/chapters/05-equipment.md`](rules/chapters/05-equipment.md), [`rules/chapters/01-character-creation.md`](rules/chapters/01-character-creation.md).
 
@@ -563,7 +563,7 @@ races:
 
 ### 6.1. Core (ядро)
 - `models.py` – dataclass `Character`, `Adventure`; `to_dict()` / `from_dict()`.
-- `character.py` – `save_character()`, `load_characters()`, генерация характеристик, загрузка рас/классов из YAML.
+- `character_storage.py` / `character_build.py` – `persist_character()`, `build_new_character(CharacterBuildParams)`, `load_characters()`, генерация характеристик, загрузка рас/классов из YAML.
 - `dice.py` – `roll()`, `roll_ability_score()`, `ability_modifier()`.
 - `adventure.py` – `load_adventures() -> list[Adventure]`; имя через `Adventure.get_name()`.
 - `difficulty.py` – `adventure_allows_difficulty()` для фильтрации приключений по режиму.

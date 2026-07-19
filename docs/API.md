@@ -39,16 +39,12 @@ class EquippedState(TypedDict, total=False):
     main_hand_grip: Literal["one_handed", "two_handed"]
 ```
 
-### CharacterBuildParams (character_params.py)
+### CharacterBuildParams (`core/types.py`)
 
 ```python
 @dataclass
 class CharacterBuildParams:
-    """Параметры для сборки нового персонажа.
-
-    Заменяет длинный список параметров в build_new_character.
-    Все параметры опциональны и имеют разумные значения по умолчанию.
-    """
+    """Параметры для сборки нового персонажа."""
     name: str
     race_id: str
     class_id: str | CharacterClass
@@ -75,12 +71,9 @@ class CharacterBuildParams:
     class_features_applied: bool = False
     apply_feat_stat_bonuses: bool = True
     unique_save_slug: Callable[[str], str] = lambda name: name
-
-    def to_kwargs(self) -> dict[str, Any]:
-        """Преобразовать в kwargs для совместимости с существующим API."""
 ```
 
-### Proficiencies, Expertise (proficiencies.py)
+### Proficiencies, Expertise (`core/types.py`)
 
 ```python
 @dataclass
@@ -203,10 +196,10 @@ CLASSES_FILE = Path("database/classes/classes.yaml")  # core.classes
 ### Сохранение и загрузка
 
 ```python
-build_new_character(...) -> Character
+build_new_character(params: CharacterBuildParams) -> Character
 persist_character(character: Character) -> Character
-save_character(...) -> Character
 update_character(character: Character) -> Character
+unique_save_slug(name: str) -> str
 load_characters() -> LoadCharactersResult
 # LoadCharactersResult.characters — tuple[Character, ...]
 # LoadCharactersResult.corrupt_save_warnings — имя или save_slug битых JSON
@@ -236,12 +229,10 @@ ABILITY_SCORE_DEFAULT = 10
 ABILITY_SCORE_MAX = 20
 ```
 
-`build_new_character` (`core/character_build.py`) собирает `Character` без записи на диск (feat merge, HP, inventory, `equip_defaults`).  
-`character_storage.build_new_character` — thin wrapper с `_unique_save_slug`.  
+`build_new_character` (`core/character_build.py`) собирает `Character` из `CharacterBuildParams` без записи на диск (feat merge, HP, inventory, `equip_defaults`).  
 `persist_character` записывает готовую модель в `saves/characters/{save_slug}.json`.  
-Flow создания: `_CreationState.to_character()` → `persist_character()` (`ui/menus/_creation_finalize.py`).  
-`save_character` — thin wrapper: `build_new_character(...)` + persist (backward compat для тестов).  
-`save_character` / `build_new_character` задают `current_hp` = `max_hp` = `max_hp_for_level(..., difficulty)`.  
+Flow создания: `_CreationState.to_character()` (передаёт `unique_save_slug`) → `persist_character()` (`ui/menus/_creation_finalize.py`).  
+`build_new_character` задаёт `current_hp` = `max_hp` = `max_hp_for_level(..., difficulty)`.  
 Параметр `apply_feat_stat_bonuses=False` — если `stats` уже содержат бонусы черт (flow создания после `select_creation_feats`).  
 `max_hp_for_level` — см. `core.progression` (HP на уровне 1–10, включая режим Normal/Easy/HardCore).  
 `update_character` — перезапись JSON после изменений (подкласс, XP и т.д.).
@@ -381,7 +372,7 @@ class ResolvedGrants:
 ## core.character_build — Сборка модели персонажа
 
 ```python
-build_new_character(..., *, unique_save_slug: Callable[[str], str]) -> Character
+build_new_character(params: CharacterBuildParams) -> Character
 resolve_grants_for_context(
     ctx: CreationContext, *, include_feat_languages: bool = True,
 ) -> ResolvedGrants
@@ -395,7 +386,8 @@ merge_languages_with_feats(languages, feat_ids, feat_choices) -> list[str]
 merge_expertise_with_feats(skill_expertise, feat_ids, feat_choices) -> list[str]
 ```
 
-Реализация сборки; `character_storage.build_new_character` передаёт `_unique_save_slug`.  
+Единственный API сборки — `build_new_character(CharacterBuildParams)`.  
+Creation flow передаёт `unique_save_slug` из `core.character_storage`.  
 Функции `resolve_grants_for_context`, `resolve_creation_grants`, `merge_languages_with_feats`, `merge_expertise_with_feats` перенесены из удалённого `character_builder.py`.
 
 ---
@@ -673,7 +665,7 @@ apply_subclass_proficiencies_to_character(character) -> Character
 }
 ```
 
-Имя файла — slug из `core.character_storage.make_save_slug()`; при коллизии — `hero_2.json`, `hero_3.json` и т.д.
+Имя файла — slug из `core.character_storage.unique_save_slug()` (`make_save_slug` + суффикс при коллизии: `hero_2.json`, …).
 
 > **Save format:** `to_dict()` / `from_dict()` используют только `class_id` (ключ `"class"` не поддерживается).
 
@@ -683,9 +675,11 @@ apply_subclass_proficiencies_to_character(character) -> Character
 
 ```python
 make_save_slug(name: str) -> str
+unique_save_slug(name: str) -> str
 ```
 
-Транслитерация кириллицы и нормализация имени персонажа в slug для `saves/characters/{slug}.json`.
+Транслитерация кириллицы и нормализация имени персонажа в slug для `saves/characters/{slug}.json`.  
+`unique_save_slug` добавляет суффикс `_2`, `_3`, … при коллизии с существующими сейвами.
 
 ---
 

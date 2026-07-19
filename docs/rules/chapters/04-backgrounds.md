@@ -94,7 +94,7 @@ backgrounds:
 
 - `Character.background_id` в JSON сейва.
 - Навыки предыстории входят в `Character.skills` с источником `background` при выборе классовых навыков.
-- Стартовое снаряжение: grant `equipment_item` + picks из `inventory_tool_pools` → `core/backgrounds.get_background_equipment_items`, merge в `save_character`.
+- Стартовое снаряжение: grant `equipment_item` + picks из `inventory_tool_pools` → `core/backgrounds.get_background_equipment_items`, merge в `build_new_character`.
 
 ### Не реализовано
 
