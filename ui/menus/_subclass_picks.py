@@ -6,7 +6,7 @@ from core.proficiencies import (
     is_valid_tool_selection,
     merge_proficiency_tokens,
 )
-from core.progression.class_features import subclass_skill_picks_pending
+from core.progression import subclass_skill_picks_pending
 from core.types import LanguageCode, StringsDict
 from ui.menus.expertise import apply_pending_expertise
 from ui.menus.proficiencies import _pick_tools

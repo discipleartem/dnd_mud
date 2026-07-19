@@ -6,9 +6,12 @@ from typing import Any
 
 from core.io import load_yaml
 from core.models import Character
-from core.progression import grant_experience, has_pending_level_up
-from core.progression.class_features import needs_class_feature_picks
-from core.progression.subclasses import needs_subclass_npc
+from core.progression import (
+    grant_experience,
+    has_pending_level_up,
+    needs_class_feature_picks,
+    needs_subclass_npc,
+)
 from core.types import GameDifficulty
 
 

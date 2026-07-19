@@ -1,6 +1,9 @@
 """Шаги state machine создания персонажа."""
 
-from ui.menus import _deps
+from core.localization import get_string
+from core.models import Character
+from core.types import StringsDict
+from ui.input_handler import get_str_input
 from ui.menus._common import (
     _print_screen_header,
     _print_success_and_wait,
@@ -10,10 +13,6 @@ from ui.menus._creation_finalize import (
 )
 from ui.menus._creation_state import _CreationState
 from ui.menus.settings import select_difficulty
-
-Character = _deps.Character
-StringsDict = _deps.StringsDict
-get_string = _deps.get_string
 
 
 def finalize_creation(
@@ -38,7 +37,7 @@ def show_create_character_flow(
 
     _print_screen_header(get_string(strings, "character.creation_caption"))
 
-    name = _deps.get_str_input(
+    name = get_str_input(
         get_string(strings, "character.name_prompt"),
         min_length=2,
         only_letters=True,

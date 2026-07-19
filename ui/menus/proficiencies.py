@@ -10,11 +10,11 @@ from core.proficiencies import (
     ProficiencyChoice,
     build_fixed_proficiencies,
     get_proficiency_choices,
+    has_tool_proficiency,
     is_valid_tool_selection,
     merge_proficiency_tokens,
 )
-from core.proficiencies.proficiency_checks import has_tool_proficiency
-from core.progression.subclasses import start_level_for_difficulty
+from core.progression import start_level_for_difficulty
 from core.types import GameDifficulty, StringsDict
 from ui.menus._common import (
     _format_pick_menu_label,

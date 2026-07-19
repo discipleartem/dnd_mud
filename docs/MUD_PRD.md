@@ -33,7 +33,7 @@
 - База данных правил D&D 5e (YAML-справочники в `database/`)
 - Локализация (русский/английский, YAML-словари)
 - Броски кубиков (`roll`, `roll_ability_score`, `ability_modifier` в `core/dice.py`)
-- Модель персонажа (`core/models.py`: Character dataclass; сохранение через `core/character.py` в JSON)
+- Модель персонажа (`core/models.py`: Character dataclass; сохранение через `core/character_storage.py` в JSON)
 - Загрузка приключений из YAML
 - Адаптивный вывод текста с переносом по ширине терминала
 
@@ -222,7 +222,7 @@
 
 - На **каждом** экране «ГЕНЕРАЦИЯ ХАРАКТЕРИСТИК» внутри выбранного метода (кроме меню выбора метода): показать суммарные бонусы от расы и подрасы через `get_race_bonuses()` (например, «Расовые бонусы: Сила+1, …»).
 - **После распределения**: экран итоговых значений **с уже применёнными** расовыми бонусами (база + бонус; подпись «Итого (с расовыми бонусами)»).
-- Функции `generate_stats_*` в `core/character.py` возвращают финальные значения (база + расовый бонус).
+- Функции `generate_stats_*` в `core/stats.py` возвращают финальные значения (база + расовый бонус).
 - **Выборные бонусы** (напр. variant human): после распределения базовых значений UI вызывает `get_choice_ability_bonus_mechanics()` и экран выбора характеристик; итог — через `apply_bonuses_to_stats()` / `get_effective_race_bonuses()`.
 
 **Режим Normal** (`normal`) — см. §3.2.1
@@ -319,7 +319,7 @@
 #### 3.4.13. Стартовое снаряжение класса (реализовано)
 - Источник: `starting_equipment` в `database/classes/classes.yaml`; PHB-наборы — `database/equipment/equipment.yaml`.
 - Шаг **после** навыков (и expertise): выбор опций а/б по группам (оружие, доспех, набор и т.д.); pool-опции — подменю конкретного id с учётом владений.
-- Результат: `equipment_choices` в JSON; `inventory` и `equipped` формируются в `save_character` (`core/starting_equipment.py`, `core/inventory.equip_defaults`).
+- Результат: `equipment_choices` в JSON; `inventory` и `equipped` формируются в `build_new_character` / `persist_character` (`core/starting_equipment.py`, `core/inventory.equip_defaults`).
 - UI: `ui/menus/equipment.py`; карточка персонажа — инвентарь, экипировка, КД.
 - См. [`rules/chapters/05-equipment.md`](rules/chapters/05-equipment.md), [`rules/chapters/01-character-creation.md`](rules/chapters/01-character-creation.md).
 
@@ -413,7 +413,7 @@ dnd_mud/
 │   └── …                            # см. docs/ARCHITECTURE.md
 ├── ui/                              # пользовательский интерфейс
 │   ├── input_handler.py, terminal_wrap.py
-│   └── menus/                       # flows, _creation_*, _display/, feats/
+│   └── menus/                       # flows, _creation_*, _display.py, feats/
 ├── database/                        # YAML-справочники + JSON-конфиг
 │   ├── races/races.yaml
 │   ├── classes/classes.yaml
@@ -563,7 +563,7 @@ races:
 
 ### 6.1. Core (ядро)
 - `models.py` – dataclass `Character`, `Adventure`; `to_dict()` / `from_dict()`.
-- `character.py` – `save_character()`, `load_characters()`, генерация характеристик, загрузка рас/классов из YAML.
+- `character_storage.py` / `character_build.py` – `persist_character()`, `build_new_character(CharacterBuildParams)`, `load_characters()`, генерация характеристик, загрузка рас/классов из YAML.
 - `dice.py` – `roll()`, `roll_ability_score()`, `ability_modifier()`.
 - `adventure.py` – `load_adventures() -> list[Adventure]`; имя через `Adventure.get_name()`.
 - `difficulty.py` – `adventure_allows_difficulty()` для фильтрации приключений по режиму.

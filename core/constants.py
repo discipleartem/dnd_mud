@@ -4,9 +4,16 @@ from pathlib import Path
 from typing import Any
 
 from core.catalog_loader import load_catalog
-from core.levels import clamp_level
 
 CONSTANTS_FILE = Path("database/core/constants.yaml")
+
+MAX_CHARACTER_LEVEL = 10
+
+
+def clamp_level(level: int) -> int:
+    """Ограничить уровень диапазоном 1–MAX_CHARACTER_LEVEL."""
+    return max(1, min(level, MAX_CHARACTER_LEVEL))
+
 
 ABILITY_MODIFIER_SCORE_MIN = 1
 ABILITY_MODIFIER_SCORE_MAX = 30

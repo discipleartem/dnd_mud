@@ -6,7 +6,7 @@ from typing import Any
 
 import pytest
 
-from core.levels import MAX_CHARACTER_LEVEL, clamp_level
+from core.constants import MAX_CHARACTER_LEVEL, clamp_level
 from core.models import Adventure, Character
 from core.progression import (
     apply_experience,
@@ -46,7 +46,7 @@ def test_level_up_preserves_excess_xp(
 ) -> None:
     """Левелап не обрезает опыт до порога уровня."""
     monkeypatch.setattr(
-        "core.progression.hp_gain.roll",
+        "core.progression.roll",
         lambda count, sides, modifier=0: 8 + modifier,
     )
     char = grant_experience(fighter_l1_hardcore, 1500)
@@ -85,7 +85,7 @@ def test_hp_gain_hardcore_floors_class_part_to_one(
 ) -> None:
     """HardCore: прирост от кости + CON не опускается ниже 1."""
     monkeypatch.setattr(
-        "core.progression.hp_gain.roll",
+        "core.progression.roll",
         lambda count, sides, modifier=0: 1 + modifier,
     )
     stats = {"constitution": 8}  # модификатор −1
@@ -107,7 +107,7 @@ def test_resolve_pending_level_ups_matches_apply_experience(
     def patch_rolls(values: list[int]) -> None:
         rolls = iter(values)
         monkeypatch.setattr(
-            "core.progression.hp_gain.roll",
+            "core.progression.roll",
             lambda count, sides, modifier=0: next(rolls) + modifier,
         )
 
@@ -136,7 +136,7 @@ def test_resolve_pending_level_ups_records_asi_and_feat(
         feat_choices={},
     )
     monkeypatch.setattr(
-        "core.progression.hp_gain.roll",
+        "core.progression.roll",
         lambda count, sides, modifier=0: 8 + modifier,
     )
     updated = resolve_pending_level_ups(char)
@@ -177,7 +177,7 @@ def test_run_scenario_grant_xp_levels_character(
 ) -> None:
     rolls = iter([8, 3])
     monkeypatch.setattr(
-        "core.progression.hp_gain.roll",
+        "core.progression.roll",
         lambda count, sides, modifier=0: next(rolls) + modifier,
     )
     character = Character(
@@ -198,7 +198,8 @@ def test_run_scenario_grant_xp_levels_character(
     )
     saved: list[Character] = []
     monkeypatch.setattr(
-        "ui.menus._deps.update_character", lambda char: saved.append(char)
+        "ui.menus.scenario_flow.update_character",
+        lambda char: saved.append(char),
     )
     monkeypatch.setattr(
         "ui.menus.scenario_flow.assign_subclass_from_menu",

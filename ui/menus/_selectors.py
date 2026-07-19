@@ -4,9 +4,10 @@ from typing import Any
 
 from colorama import Fore, Style
 
+from core.classes import load_class_full, load_classes, load_subclasses
 from core.localization import get_string
+from core.races import load_race_full
 from core.types import StringsDict
-from ui.menus import _deps
 from ui.menus._common import (
     SEPARATOR,
     _print_numbered_row,
@@ -25,7 +26,7 @@ def select_subrace(
     strings: StringsDict, race_id: str, language: str = "ru"
 ) -> tuple[bool, str | None]:
     """Показать описание расы и выбрать подрасу."""
-    race_full = _deps.load_race_full(race_id, language)
+    race_full = load_race_full(race_id, language)
     subraces = race_full.get("subraces", {})
     if not isinstance(subraces, dict) or not subraces:
         return False, None
@@ -65,13 +66,13 @@ def select_class(
     strings: StringsDict, language: str = "ru"
 ) -> dict[str, Any] | None:
     """Выбрать класс персонажа (краткий обзор каждого класса)."""
-    classes = _deps.load_classes(language)
+    classes = load_classes(language)
     _print_screen_header(get_string(strings, "character.class_caption"))
 
     class_details: list[dict[str, Any]] = []
     for cls in classes:
         class_id = str(cls.get("id") or cls.get("name"))
-        class_details.append(_deps.load_class_full(class_id, language))
+        class_details.append(load_class_full(class_id, language))
 
     for idx, class_info in enumerate(class_details, 1):
         if idx > 1:
@@ -101,8 +102,8 @@ def select_subclass(
     language: str = "ru",
 ) -> str | None:
     """Выбрать подкласс (подробный обзор архетипов)."""
-    class_full = _deps.load_class_full(class_id, language)
-    subclasses = _deps.load_subclasses(class_id, language)
+    class_full = load_class_full(class_id, language)
+    subclasses = load_subclasses(class_id, language)
 
     if not subclasses:
         return None

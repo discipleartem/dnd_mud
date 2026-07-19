@@ -5,13 +5,12 @@ from typing import Any
 
 from colorama import Fore, Style
 
+from core.character_storage import update_character
 from core.game_engine import GameEngine, GameSession, UiAction
 from core.localization import get_string, resolve_localized_text
 from core.models import Adventure, Character
-from core.scenario_actions import ScenarioActionResult
 from core.session_storage import SessionSnapshot, save_session
 from core.types import LanguageCode, StringsDict
-from ui.menus import _deps
 from ui.menus._common import (
     _press_enter,
     _print_numbered_row,
@@ -57,7 +56,7 @@ def _persist_menu_result(
     """Сохранить персонажа после UI-меню или вернуть исходного."""
     if updated is not None:
         return updated
-    _deps.update_character(character)
+    update_character(character)
     return character
 
 
@@ -93,7 +92,7 @@ def _handle_engine_ui(
         handler = _PENDING_UI_HANDLERS.get(action.kind)
         if handler is not None:
             current = handler(strings, current, language, action)
-    _deps.update_character(current)
+    update_character(current)
     return current
 
 
@@ -141,34 +140,6 @@ _PENDING_UI_HANDLERS: dict[
     "pick_subclass": _handle_pick_subclass_ui,
     "apply_class_features": _handle_apply_class_features_ui,
 }
-
-
-def _handle_action_result(
-    result: ScenarioActionResult,
-    strings: StringsDict,
-    language: LanguageCode,
-) -> Character:
-    """Сохранить персонажа и обработать UI-побочные эффекты action."""
-    character = result.character
-    if result.level_up_pending:
-        character = run_pending_level_ups(strings, character, language)
-    if result.pick_subclass:
-        return _run_character_menu_action(
-            strings,
-            character,
-            language,
-            assign_subclass_from_menu,
-            message_key=result.message_key,
-        )
-    if result.apply_class_features:
-        return _persist_menu_result(
-            apply_pending_class_features(strings, character, language),
-            character,
-        )
-
-    _deps.update_character(character)
-    _show_action_message(strings, result.message_key, result.message_params)
-    return character
 
 
 def _persist_session(engine: GameEngine, adventure: Adventure) -> None:
@@ -270,7 +241,7 @@ def run_scenario_with_engine(
         )
         node_id = engine_result.next_node_id
 
-    _deps.update_character(current)
+    update_character(current)
     return current
 
 

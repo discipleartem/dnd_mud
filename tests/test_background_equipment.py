@@ -7,7 +7,7 @@ import pytest
 from core.backgrounds import get_background_equipment_items
 from core.character_build import build_new_character
 from core.character_storage import persist_character
-from core.types import CharacterClass
+from core.types import CharacterBuildParams, CharacterClass
 from tests.creation_helpers import flat_stats
 
 pytestmark = pytest.mark.usefixtures("catalog_caches_cleared")
@@ -122,20 +122,22 @@ def test_save_character_merges_background_items_into_inventory(
 ) -> None:
     stats = flat_stats(12)
     character = build_new_character(
-        name="BgHero",
-        race_id="human",
-        class_id=CharacterClass.ROGUE,
-        difficulty="normal",
-        stats=stats,
-        background_id="criminal",
-        tool_proficiencies=["thieves_tools", "dice_set", "lute", "lyre"],
-        background_tool_picks=["dice_set"],
-        equipment_choices={
-            "melee": "rapier",
-            "ranged": "shortbow",
-            "pack": "burglars_pack",
-        },
-        unique_save_slug=lambda name: name,
+        CharacterBuildParams(
+            name="BgHero",
+            race_id="human",
+            class_id=CharacterClass.ROGUE,
+            difficulty="normal",
+            stats=stats,
+            background_id="criminal",
+            tool_proficiencies=["thieves_tools", "dice_set", "lute", "lyre"],
+            background_tool_picks=["dice_set"],
+            equipment_choices={
+                "melee": "rapier",
+                "ranged": "shortbow",
+                "pack": "burglars_pack",
+            },
+            unique_save_slug=lambda name: name,
+        )
     )
     saved = persist_character(character)
     inv_ids = {(i["kind"], i["id"]) for i in saved.inventory}
@@ -150,17 +152,19 @@ def test_save_character_charlatan_tools_in_inventory(
 ) -> None:
     stats = flat_stats(10)
     character = build_new_character(
-        name="Charlatan",
-        race_id="human",
-        class_id=CharacterClass.ROGUE,
-        stats=stats,
-        background_id="charlatan",
-        equipment_choices={
-            "melee": "rapier",
-            "ranged": "shortbow",
-            "pack": "burglars_pack",
-        },
-        unique_save_slug=lambda name: name,
+        CharacterBuildParams(
+            name="Charlatan",
+            race_id="human",
+            class_id=CharacterClass.ROGUE,
+            stats=stats,
+            background_id="charlatan",
+            equipment_choices={
+                "melee": "rapier",
+                "ranged": "shortbow",
+                "pack": "burglars_pack",
+            },
+            unique_save_slug=lambda name: name,
+        )
     )
     saved = persist_character(character)
     inv_ids = {(i["kind"], i["id"]) for i in saved.inventory}

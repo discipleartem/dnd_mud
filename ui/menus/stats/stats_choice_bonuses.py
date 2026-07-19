@@ -3,8 +3,16 @@
 from colorama import Fore, Style
 
 from core.localization import get_string
+from core.races import (
+    build_bonuses_from_choices,
+    get_choice_ability_bonus_mechanics,
+    get_effective_race_bonuses,
+    get_race_bonuses,
+    has_choice_ability_bonuses,
+)
+from core.stats import STAT_NAMES, apply_bonuses_to_stats
 from core.types import StatMap, StringsDict
-from ui.menus import _deps
+from ui.input_handler import get_int_input
 from ui.menus._common import (
     _ability_name,
     _choice_prompt,
@@ -19,7 +27,7 @@ def _select_choice_ability_bonuses(
     subrace_id: str | None,
 ) -> StatMap | None:
     """Выбор характеристик для выборного расового бонуса."""
-    mechanics = _deps.get_choice_ability_bonus_mechanics(race_id, subrace_id)
+    mechanics = get_choice_ability_bonus_mechanics(race_id, subrace_id)
     if mechanics is None:
         return {}
 
@@ -52,9 +60,9 @@ def _select_choice_ability_bonuses(
                 print(f"  {_ability_name(strings, stat)} +{value}")
             print()
 
-        available = list(_deps.STAT_NAMES)
+        available = list(STAT_NAMES)
         if not allow_duplicates:
-            available = [s for s in _deps.STAT_NAMES if s not in chosen_stats]
+            available = [s for s in STAT_NAMES if s not in chosen_stats]
 
         print(
             f"{Fore.YELLOW}"
@@ -78,7 +86,7 @@ def _select_choice_ability_bonuses(
         )
         print()
 
-        choice = _deps.get_int_input(
+        choice = get_int_input(
             _choice_prompt(strings), 0, len(available), strings
         )
         if choice == 0:
@@ -86,7 +94,7 @@ def _select_choice_ability_bonuses(
 
         chosen_stats.append(available[choice - 1])
 
-    return _deps.build_bonuses_from_choices(chosen_stats, value)
+    return build_bonuses_from_choices(chosen_stats, value)
 
 
 def _finalize_stats_with_race_bonuses(
@@ -96,8 +104,8 @@ def _finalize_stats_with_race_bonuses(
     subrace_id: str | None,
 ) -> tuple[StatMap, StatMap] | None:
     """Применить выборные бонусы после генерации характеристик."""
-    if not _deps.has_choice_ability_bonuses(race_id, subrace_id):
-        return stats, _deps.get_race_bonuses(race_id, subrace_id)
+    if not has_choice_ability_bonuses(race_id, subrace_id):
+        return stats, get_race_bonuses(race_id, subrace_id)
 
     choice_bonuses = _select_choice_ability_bonuses(
         strings, stats, race_id, subrace_id
@@ -105,8 +113,8 @@ def _finalize_stats_with_race_bonuses(
     if choice_bonuses is None:
         return None
 
-    final_stats = _deps.apply_bonuses_to_stats(stats, choice_bonuses)
-    effective_bonuses = _deps.get_effective_race_bonuses(
+    final_stats = apply_bonuses_to_stats(stats, choice_bonuses)
+    effective_bonuses = get_effective_race_bonuses(
         race_id, subrace_id, choice_bonuses
     )
     return final_stats, effective_bonuses

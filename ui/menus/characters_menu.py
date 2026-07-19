@@ -2,7 +2,15 @@
 
 from colorama import Fore, Style
 
-from ui.menus import _creation_steps, _deps
+from core.character_storage import (
+    delete_all_characters,
+    delete_character,
+    load_characters,
+)
+from core.localization import get_string
+from core.models import Character
+from core.types import LanguageCode, StringsDict
+from ui.menus import _creation_steps
 from ui.menus._common import (
     _confirm_yes_no,
     _print_cancelled,
@@ -13,11 +21,6 @@ from ui.menus._common import (
 )
 from ui.menus._corrupt_saves import show_corrupt_save_warnings_if_any
 from ui.menus._display import _print_characters_list
-
-Character = _deps.Character
-LanguageCode = _deps.LanguageCode
-StringsDict = _deps.StringsDict
-get_string = _deps.get_string
 
 
 def _select_character_to_delete(
@@ -58,7 +61,7 @@ def _delete_one_character(
         return
 
     if character.save_slug:
-        _deps.delete_character(character.save_slug)
+        delete_character(character.save_slug)
 
     msg = get_string(
         strings,
@@ -78,7 +81,7 @@ def _delete_all_characters(strings: StringsDict, count: int) -> None:
         _print_cancelled(strings)
         return
 
-    deleted = _deps.delete_all_characters()
+    deleted = delete_all_characters()
     msg = get_string(
         strings,
         "characters_menu.delete_all_success",
@@ -95,7 +98,7 @@ def show_characters_menu(
     corrupt_warning_shown = False
     while True:
         if load_result is None:
-            load_result = _deps.load_characters()
+            load_result = load_characters()
             corrupt_warning_shown = show_corrupt_save_warnings_if_any(
                 strings,
                 corrupt_labels=load_result.corrupt_save_warnings,

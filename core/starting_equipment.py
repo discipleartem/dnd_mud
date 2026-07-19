@@ -17,7 +17,7 @@ from core.inventory import (
     normalize_inventory_item,
 )
 from core.localization import get_string, resolve_localized_text
-from core.proficiencies.proficiency_checks import (
+from core.proficiencies import (
     has_weapon_pool_proficiency,
     has_weapon_proficiency,
 )
@@ -151,7 +151,6 @@ def _items_from_option(
     option: dict[str, Any],
     choices: dict[str, str],
     choice_id: str,
-    weapon_proficiencies: list[str],
 ) -> list[InventoryItem]:
     """Собрать предметы из выбранной опции."""
     items: list[InventoryItem] = []
@@ -225,7 +224,6 @@ def resolve_starting_items(
                 selected,
                 choices,
                 choice_id,
-                weapon_proficiencies,
             )
         )
     return add_items_to_inventory([], inventory)

@@ -8,10 +8,13 @@ from core.equipment import (
     proficiency_token_label,
 )
 from core.feats import load_feat
+from core.languages import (
+    get_language_name,
+    load_languages,
+)
 from core.localization import get_string
 from core.skills import PHB_SKILL_IDS
 from core.types import StatMap, StringsDict
-from ui.menus import _deps
 from ui.menus._common import (
     _ability_name,
     _print_screen_header,
@@ -183,7 +186,7 @@ def _pick_languages_for_feat(
 ) -> list[str] | None:
     """Выбор языков для linguist."""
     known = known or []
-    all_langs = _deps.load_languages(language)
+    all_langs = load_languages(language)
     pool = [
         str(entry.get("id", ""))
         for entry in all_langs
@@ -193,7 +196,7 @@ def _pick_languages_for_feat(
     for pick_num in range(1, count + 1):
         available = [lang for lang in pool if lang not in picked]
         labels = [
-            _deps.get_language_name(lang_id, language) for lang_id in available
+            get_language_name(lang_id, language) for lang_id in available
         ]
         _print_screen_header(get_string(strings, "character.feat_caption"))
         choice = _run_numbered_menu(
@@ -257,53 +260,55 @@ def _resolve_feat_subchoices(
     for grant in feat.get("grants", []):
         if not isinstance(grant, dict):
             continue
-        mtype = grant.get("type", "")
-        if mtype == "weapon_proficiency" and grant.get("choice"):
-            count = int(grant.get("count", 1))
-            weapons = _pick_weapons_for_feat(
-                strings,
-                count,
-                language,
-                weapon_proficiencies=weapon_proficiencies,
-            )
-            if weapons is None:
-                return None
-            choices["weapons"] = weapons
-        elif mtype == "multiple_proficiency" and grant.get("choice"):
-            count = int(grant.get("count", 1))
-            picks = _pick_skills_or_tools(
-                strings,
-                count,
-                language,
-                known_skills=known_skills,
-                known_tools=known_tools,
-            )
-            if picks is None:
-                return None
-            choices["skills_tools"] = picks
-        elif mtype == "resistance" and grant.get("choice"):
-            element = _pick_elemental_damage(strings)
-            if element is None:
-                return None
-            choices["damage_type"] = element
-        elif mtype in ("magic_initiate", "ritual_caster"):
-            cls = _pick_spell_class(strings)
-            if cls is None:
-                return None
-            choices["caster_class"] = cls
-        elif mtype == "skill_expertise" and grant.get("choice"):
-            count = int(grant.get("count", 2))
-            expertise = _pick_expertise_skills(strings, count)
-            if expertise is None:
-                return None
-            choices["expertise"] = expertise
-        elif mtype == "language" and grant.get("choice"):
-            count = int(grant.get("count", 3))
-            langs = _pick_languages_for_feat(
-                strings, count, language, known=known_languages
-            )
-            if langs is None:
-                return None
-            choices["languages"] = langs
+        mtype = str(grant.get("type", ""))
+        match mtype:
+            case "weapon_proficiency" if grant.get("choice"):
+                weapons = _pick_weapons_for_feat(
+                    strings,
+                    int(grant.get("count", 1)),
+                    language,
+                    weapon_proficiencies=weapon_proficiencies,
+                )
+                if weapons is None:
+                    return None
+                choices["weapons"] = weapons
+            case "multiple_proficiency" if grant.get("choice"):
+                picks = _pick_skills_or_tools(
+                    strings,
+                    int(grant.get("count", 1)),
+                    language,
+                    known_skills=known_skills,
+                    known_tools=known_tools,
+                )
+                if picks is None:
+                    return None
+                choices["skills_tools"] = picks
+            case "resistance" if grant.get("choice"):
+                element = _pick_elemental_damage(strings)
+                if element is None:
+                    return None
+                choices["damage_type"] = element
+            case "magic_initiate" | "ritual_caster":
+                cls = _pick_spell_class(strings)
+                if cls is None:
+                    return None
+                choices["caster_class"] = cls
+            case "skill_expertise" if grant.get("choice"):
+                expertise = _pick_expertise_skills(
+                    strings, int(grant.get("count", 2))
+                )
+                if expertise is None:
+                    return None
+                choices["expertise"] = expertise
+            case "language" if grant.get("choice"):
+                langs = _pick_languages_for_feat(
+                    strings,
+                    int(grant.get("count", 3)),
+                    language,
+                    known=known_languages,
+                )
+                if langs is None:
+                    return None
+                choices["languages"] = langs
 
     return choices

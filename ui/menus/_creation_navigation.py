@@ -1,8 +1,10 @@
 """Навигация «назад» и ветвление шагов создания персонажа."""
 
 from core.feats import race_feat_step_required
-from core.progression.expertise import expertise_step_required
-from core.progression.subclasses import subclass_offered_at_creation
+from core.progression import (
+    expertise_step_required,
+    subclass_offered_at_creation,
+)
 from ui.menus._creation_state import CreationStep, _CreationState
 
 

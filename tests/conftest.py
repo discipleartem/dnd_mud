@@ -112,10 +112,18 @@ def patch_int_input():
         def fake_get_int_input(*args: object, **kwargs: object) -> int:
             return next(iterator)
 
-        monkeypatch.setattr(
-            "ui.menus._deps.get_int_input",
-            fake_get_int_input,
-        )
+        # Прямые импорты get_int_input — патчим точки использования.
+        for target in (
+            "ui.menus._common.get_int_input",
+            "ui.menus.new_game.get_int_input",
+            "ui.menus.stats.stats_methods.get_int_input",
+            "ui.menus.stats.stats_shared.get_int_input",
+            "ui.menus.stats.stats_choice_bonuses.get_int_input",
+            "ui.menus.settings.get_int_input",
+            "ui.menus.feats._selection.get_int_input",
+            "ui.menus.expertise.get_int_input",
+        ):
+            monkeypatch.setattr(target, fake_get_int_input)
 
     return _patch
 

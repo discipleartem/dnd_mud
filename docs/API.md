@@ -5,15 +5,11 @@ UI (`ui/`) обращается к данным только через `core/`.
 
 ---
 
-## core.types — Пакет типов домена
+## core.types — Типы домена
 
-**Структура пакета:**
-- `core/types/__init__.py` — фасад для backward compatibility, re-export всех типов
-- `core/types/_base.py` — базовые типы (StatMap, CharacterClass, GameDifficulty и т.д.)
-- `core/types/character_params.py` — CharacterBuildParams для создания персонажей
-- `core/types/proficiencies.py` — Proficiencies, Expertise для группировки владений
+Единый модуль `core/types.py` (бывший пакет `core/types/`).
 
-### Базовые типы (_base.py)
+### Базовые типы
 
 ```python
 type StatMap = dict[str, int]
@@ -43,16 +39,12 @@ class EquippedState(TypedDict, total=False):
     main_hand_grip: Literal["one_handed", "two_handed"]
 ```
 
-### CharacterBuildParams (character_params.py)
+### CharacterBuildParams (`core/types.py`)
 
 ```python
 @dataclass
 class CharacterBuildParams:
-    """Параметры для сборки нового персонажа.
-
-    Заменяет длинный список параметров в build_new_character.
-    Все параметры опциональны и имеют разумные значения по умолчанию.
-    """
+    """Параметры для сборки нового персонажа."""
     name: str
     race_id: str
     class_id: str | CharacterClass
@@ -79,12 +71,9 @@ class CharacterBuildParams:
     class_features_applied: bool = False
     apply_feat_stat_bonuses: bool = True
     unique_save_slug: Callable[[str], str] = lambda name: name
-
-    def to_kwargs(self) -> dict[str, Any]:
-        """Преобразовать в kwargs для совместимости с существующим API."""
 ```
 
-### Proficiencies, Expertise (proficiencies.py)
+### Proficiencies, Expertise (`core/types.py`)
 
 ```python
 @dataclass
@@ -118,7 +107,7 @@ class Expertise:
         """Создать из списков для совместимости с существующим API."""
 ```
 
-Re-export типов: `core.types`. Фасад функций персонажа — `core.character`.
+Re-export типов: `core.types`. Функции персонажа — leaf-модули (`character_storage`, `stats`, `races`, …).
 
 ---
 
@@ -182,25 +171,35 @@ class Adventure:
 
 ---
 
-## core.character — Персонажи
+## Персонажи (leaf-модули)
 
-### Константы
+Фасад `core.character` удалён. Импортировать напрямую:
+
+| Область | Модуль |
+|---------|--------|
+| CRUD / slug | `core.character_storage` |
+| Сборка | `core.character_build` |
+| Stats | `core.stats` |
+| Расы / бонусы | `core.races` |
+| Классы | `core.classes` |
+
+### Константы и save/load
 
 ```python
-STANDARD_ARRAY = [15, 14, 13, 12, 10, 8]
-STAT_NAMES = ["strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma"]
-CHARACTERS_DIR = Path("saves/characters")
-RACES_FILE = Path("database/races/races.yaml")
-CLASSES_FILE = Path("database/classes/classes.yaml")
+STANDARD_ARRAY = [15, 14, 13, 12, 10, 8]  # core.stats
+STAT_NAMES = [...]  # core.stats
+CHARACTERS_DIR = Path("saves/characters")  # core.character_storage
+RACES_FILE = Path("database/races/races.yaml")  # core.races
+CLASSES_FILE = Path("database/classes/classes.yaml")  # core.classes
 ```
 
 ### Сохранение и загрузка
 
 ```python
-build_new_character(...) -> Character
+build_new_character(params: CharacterBuildParams) -> Character
 persist_character(character: Character) -> Character
-save_character(...) -> Character
 update_character(character: Character) -> Character
+unique_save_slug(name: str) -> str
 load_characters() -> LoadCharactersResult
 # LoadCharactersResult.characters — tuple[Character, ...]
 # LoadCharactersResult.corrupt_save_warnings — имя или save_slug битых JSON
@@ -230,12 +229,10 @@ ABILITY_SCORE_DEFAULT = 10
 ABILITY_SCORE_MAX = 20
 ```
 
-`build_new_character` (`core/character_build.py`) собирает `Character` без записи на диск (feat merge, HP, inventory, `equip_defaults`).  
-`character_storage.build_new_character` — thin wrapper с `_unique_save_slug`.  
+`build_new_character` (`core/character_build.py`) собирает `Character` из `CharacterBuildParams` без записи на диск (feat merge, HP, inventory, `equip_defaults`).  
 `persist_character` записывает готовую модель в `saves/characters/{save_slug}.json`.  
-Flow создания: `_CreationState.to_character()` → `persist_character()` (`ui/menus/_creation_finalize.py`).  
-`save_character` — thin wrapper: `build_new_character(...)` + persist (backward compat для тестов).  
-`save_character` / `build_new_character` задают `current_hp` = `max_hp` = `max_hp_for_level(..., difficulty)`.  
+Flow создания: `_CreationState.to_character()` (передаёт `unique_save_slug`) → `persist_character()` (`ui/menus/_creation_finalize.py`).  
+`build_new_character` задаёт `current_hp` = `max_hp` = `max_hp_for_level(..., difficulty)`.  
 Параметр `apply_feat_stat_bonuses=False` — если `stats` уже содержат бонусы черт (flow создания после `select_creation_feats`).  
 `max_hp_for_level` — см. `core.progression` (HP на уровне 1–10, включая режим Normal/Easy/HardCore).  
 `update_character` — перезапись JSON после изменений (подкласс, XP и т.д.).
@@ -243,7 +240,7 @@ Flow создания: `_CreationState.to_character()` → `persist_character()`
 
 ### Генерация характеристик
 
-**Константы** (`core/character.py`):
+**Константы** (`core/stats.py`):
 
 ```python
 STANDARD_ARRAY = [15, 14, 13, 12, 10, 8]
@@ -375,7 +372,7 @@ class ResolvedGrants:
 ## core.character_build — Сборка модели персонажа
 
 ```python
-build_new_character(..., *, unique_save_slug: Callable[[str], str]) -> Character
+build_new_character(params: CharacterBuildParams) -> Character
 resolve_grants_for_context(
     ctx: CreationContext, *, include_feat_languages: bool = True,
 ) -> ResolvedGrants
@@ -389,7 +386,8 @@ merge_languages_with_feats(languages, feat_ids, feat_choices) -> list[str]
 merge_expertise_with_feats(skill_expertise, feat_ids, feat_choices) -> list[str]
 ```
 
-Реализация сборки; `character_storage.build_new_character` передаёт `_unique_save_slug`.  
+Единственный API сборки — `build_new_character(CharacterBuildParams)`.  
+Creation flow передаёт `unique_save_slug` из `core.character_storage`.  
 Функции `resolve_grants_for_context`, `resolve_creation_grants`, `merge_languages_with_feats`, `merge_expertise_with_feats` перенесены из удалённого `character_builder.py`.
 
 ---
@@ -407,9 +405,10 @@ migrate_character_data(data: dict[str, Any]) -> dict[str, Any]
 ---
 
 
-## core.grants — Нормализация grants
+## core.grants — Нормализация grants и proficiency-токены
 
-Единый формат эффектов из YAML (`grants[]`). Схема типов: [`DATA_SCHEMA.md`](DATA_SCHEMA.md).
+Единый формат эффектов из YAML (`grants[]`) и разбор владений
+(бывший `core.grant_mechanics`). Схема типов: [`DATA_SCHEMA.md`](DATA_SCHEMA.md).
 
 ```python
 inherit_flags(entity: dict[str, Any]) -> tuple[bool, bool]
@@ -422,25 +421,15 @@ merge_entity_grants(
 ) -> list[dict[str, Any]]
 grant_type(grant: dict[str, Any]) -> str
 grants_of_type(grants: list[dict[str, Any]], type_name: str) -> list[dict[str, Any]]
-```
-
-`inherit_flags` — `(ability_bonuses, grants)` из блока `inherit` в YAML подрасы; без блока — `(True, True)`.  
-`grants_from_entity` — копии dict из `grants[]`.  
-`merge_entity_grants` — grants подрасы с наследованием от базовой расы.
-
----
-
-## core.grant_mechanics — Парсинг proficiency-grants
-
-Разбор владений из `grants[]` (расы, классы, черты). См. также `core/feat_visibility` для скрытия черт в меню.
-
-```python
 normalize_armor_token(token: str) -> str
 mechanics_from_grant_entry(entry: dict[str, Any]) -> dict[str, Any]
 proficiency_tokens_from_grant(grant, choices=None) -> tuple[weapons, armors, tools]
 proficiency_tokens_and_skills_from_grant(grant, choices=None) -> tuple[weapons, armors, tools, skills]
 ```
 
+`inherit_flags` — `(ability_bonuses, grants)` из блока `inherit` в YAML подрасы; без блока — `(True, True)`.  
+`grants_from_entity` — копии dict из `grants[]`.  
+`merge_entity_grants` — grants подрасы с наследованием от базовой расы.  
 `normalize_armor_token` — алиасы YAML (`light_armor` → `light` и т.д.).
 
 ---
@@ -456,12 +445,16 @@ load_catalog_items(
     name_key: str = "name",
     fallback: Callable[[str, str], str] | None = None,
 ) -> list[dict[str, Any]]
+bootstrap_session_catalogs(difficulty: GameDifficulty) -> None
+reset_session_catalogs() -> None
 clear_catalog_cache() -> None
 clear_all_catalog_caches() -> None
 ```
 
 Deep-merge модов через `mod_loader` (overlay по полю `target` — путь к базовому YAML в `manifest.yaml`); кэш `@lru_cache` на `load_catalog` и `load_merged_catalog`.  
-`load_catalog_items` — универсальный загрузчик элементов каталога с локализацией (DRY для `load_races`, `load_languages` и т.д.).
+`load_catalog_items` — универсальный загрузчик элементов каталога с локализацией (DRY для `load_races`, `load_languages` и т.д.).  
+`bootstrap_session_catalogs` — `set_mod_gating_difficulty` + `reload_catalogs` перед сессией приключения.  
+`reset_session_catalogs` — вернуть gating к `normal` после сессии (`new_game` / `load_game`).
 
 ---
 
@@ -578,7 +571,7 @@ load_skill_info(skill_id: str) -> dict[str, Any]
 
 ## core.feats — Черты
 
-Источник: `database/progression/feats.yaml`. Загрузка — `core/feats_loader.py`; гранты и apply — в `core/feats.py`; скрытие в меню выбора — `core/feat_visibility.py`. UI: пакет `ui/menus/feats/` (`select_creation_feats`, `select_level_up_feat_or_asi`).
+Источник: `database/progression/feats.yaml`. Всё в `core/feats.py` (loader, apply, requirements, visibility, descriptions). UI: пакет `ui/menus/feats/` (`select_creation_feats`, `select_level_up_feat_or_asi`).
 
 ```python
 load_feats() -> list[dict[str, Any]]
@@ -601,7 +594,9 @@ tough_hp_adjustment_on_acquire(level) -> int
 
 **Запланировано (Phase 2):** постоянная проверка требований — `feat_is_active`, `active_feat_ids`, `feat_requirement_context_from_character`; см. [`rules/chapters/06-feats.md`](rules/chapters/06-feats.md) §«Запланировано». **Resilient** (`save_proficiency` в YAML): владение спасброском применяется **при создании** через `get_feat_save_proficiencies` → `save_proficiencies` на `Character`.
 
-## core.asi — Увеличение характеристик
+## core.progression — ASI (фрагмент)
+
+ASI и связанные helpers живут в `core/progression.py` (не отдельный `core.asi`).
 
 ```python
 class_grants_asi_at_level(class_id, level) -> bool
@@ -635,7 +630,7 @@ get_class_saving_throws(class_id: str) -> list[str]
 apply_subclass_proficiencies_to_character(character) -> Character
 ```
 
-Импорт из `core.proficiencies` (не re-export в `core.character`).
+Импорт из `core.proficiencies`.
 
 ---
 
@@ -672,19 +667,21 @@ apply_subclass_proficiencies_to_character(character) -> Character
 }
 ```
 
-Имя файла — slug из `core/slug.make_save_slug()`; при коллизии — `hero_2.json`, `hero_3.json` и т.д.
+Имя файла — slug из `core.character_storage.unique_save_slug()` (`make_save_slug` + суффикс при коллизии: `hero_2.json`, …).
 
 > **Save format:** `to_dict()` / `from_dict()` используют только `class_id` (ключ `"class"` не поддерживается).
 
 ---
 
-## core.slug — Slug сохранений
+## core.character_storage.make_save_slug — Slug сохранений
 
 ```python
 make_save_slug(name: str) -> str
+unique_save_slug(name: str) -> str
 ```
 
-Транслитерация кириллицы и нормализация имени персонажа в slug для `saves/characters/{slug}.json`.
+Транслитерация кириллицы и нормализация имени персонажа в slug для `saves/characters/{slug}.json`.  
+`unique_save_slug` добавляет суффикс `_2`, `_3`, … при коллизии с существующими сейвами.
 
 ---
 
@@ -822,7 +819,7 @@ adventure_unavailable_reason(adventure: Adventure, character: Character) -> str 
 
 ---
 
-## core.levels — Потолок уровня
+## core.constants — Потолок уровня
 
 ```python
 MAX_CHARACTER_LEVEL = 10
@@ -906,7 +903,7 @@ def apply_experience(character: Character, amount: int) -> Character
 
 **Сценарии:** action `grant_xp` → `ScenarioActionResult.level_up_pending`; runner вызывает `run_pending_level_ups` перед сохранением.
 
-Re-export: `MAX_CHARACTER_LEVEL`, `clamp_level` из `core.levels`.
+Re-export: `MAX_CHARACTER_LEVEL`, `clamp_level` из `core.constants`.
 
 ---
 

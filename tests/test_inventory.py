@@ -12,7 +12,7 @@ from core.inventory import (
 )
 from core.models import Character
 from core.types import CharacterClass, EquippedState, InventoryItem
-from ui.menus._display._inventory import (
+from ui.menus._display import (
     format_inventory_line,
     get_equipped_display,
 )

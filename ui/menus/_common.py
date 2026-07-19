@@ -7,7 +7,7 @@ from colorama import Fore, Style
 
 from core.localization import get_string
 from core.types import StringsDict
-from ui.menus import _deps
+from ui.input_handler import get_int_input
 
 SEPARATOR = f"{Fore.YELLOW}{'=' * 78}{Style.RESET_ALL}"
 
@@ -32,7 +32,7 @@ def _confirm_yes_no(
     strings: StringsDict, prompt_key: str, **kwargs: Any
 ) -> bool:
     """Подтвердить действие: 1 — да, 0 — нет."""
-    choice = _deps.get_int_input(
+    choice = get_int_input(
         get_string(strings, prompt_key, **kwargs),
         0,
         1,
@@ -123,7 +123,7 @@ def _run_numbered_menu(
 
     kwargs = dict(prompt_kwargs or {})
     kwargs.setdefault("count", len(options))
-    choice = _deps.get_int_input(
+    choice = get_int_input(
         get_string(strings, prompt_key, **kwargs),
         0,
         len(options),
@@ -151,7 +151,7 @@ def _read_numbered_choice(
     print()
     kwargs = dict(prompt_kwargs or {})
     kwargs.setdefault("count", count)
-    choice = _deps.get_int_input(
+    choice = get_int_input(
         get_string(strings, prompt_key, **kwargs),
         0,
         count,
@@ -237,7 +237,7 @@ def _read_pool_pick(
             f"{get_string(strings, back_label_key)}"
         )
         print()
-        if _deps.get_int_input(prompt, 0, 0, strings) == 0:
+        if get_int_input(prompt, 0, 0, strings) == 0:
             return None
         return ""
 
@@ -246,7 +246,7 @@ def _read_pool_pick(
         f"{get_string(strings, back_label_key)}"
     )
     print()
-    choice = _deps.get_int_input(prompt, 0, len(selectable), strings)
+    choice = get_int_input(prompt, 0, len(selectable), strings)
     if choice == 0:
         return None
     return selectable[choice - 1]

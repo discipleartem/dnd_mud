@@ -4,14 +4,14 @@ from colorama import Fore, Style
 
 from core.localization import get_string
 from core.models import Character
-from core.progression.expertise import (
+from core.progression import (
     ExpertiseGrant,
     default_rogue_tool_expertise,
     get_expertise_grants,
     pending_expertise_grants,
 )
 from core.types import StringsDict
-from ui.menus import _deps
+from ui.input_handler import get_int_input
 from ui.menus._common import (
     _print_pick_list,
     _print_screen_header,
@@ -107,7 +107,7 @@ def _select_rogue_expertise(
             f"{get_string(strings, 'character.back')}"
         )
         print()
-        mode = _deps.get_int_input(
+        mode = get_int_input(
             get_string(strings, "character.expertise_mode_prompt"),
             0,
             2,

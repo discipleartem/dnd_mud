@@ -56,33 +56,22 @@ dnd_mud/
 ├── main.py                  # Точка входа
 ├── pyproject.toml           # Конфигурация проекта
 ├── README.md
-├── core/                    # Игровое ядро
+├── core/                    # Игровое ядро (модули, не гранулярные пакеты)
 │   ├── models.py            # Dataclass: Character, Adventure
-│   ├── character.py         # Узкий фасад для flow-оркестраторов (_deps)
-│   ├── grants_context.py    # CreationContext, ResolvedGrants (без циклов import)
-│   ├── character_builder.py # resolve_creation_grants, resolve_grants_for_context
-│   ├── character_build.py   # build_new_character (сборка без записи на диск)
+│   ├── types.py             # StatMap, CharacterClass, CharacterBuildParams, …
+│   ├── grants_context.py    # CreationContext, ResolvedGrants
+│   ├── character_build.py   # build_new_character(CharacterBuildParams), resolve_creation_grants
 │   ├── character_migrate.py # CHARACTERS_SCHEMA_VERSION, migrate_character_data
-│   ├── catalog_loader.py    # load_catalog — единая загрузка YAML-каталогов + mod overlay
-│   ├── hp_bonuses.py        # Бонусы HP из grants (раса, черта)
-│   ├── feats_loader.py      # Загрузка feats.yaml
-│   ├── grant_mechanics.py   # Парсинг proficiency-токенов из grants
-│   ├── feats.py             # Публичный фасад черт (гранты + apply)
-│   ├── character_storage.py # CRUD персонажей; thin wrapper build_new_character
-│   ├── slug.py              # make_save_slug — транслитерация имён
+│   ├── character_storage.py # CRUD; make_save_slug, unique_save_slug
+│   ├── catalog_loader.py    # load_catalog + bootstrap_session_catalogs
+│   ├── feats.py             # Черты (loader, apply, visibility, …)
+│   ├── progression.py       # XP, HP, ASI, expertise, level-up
+│   ├── inventory.py         # Инвентарь / экипировка / AC
+│   ├── proficiencies.py     # Владения
+│   ├── grants.py            # grants[] + proficiency-токены
 │   ├── stats.py             # Генерация и валидация характеристик
-│   ├── races.py             # Справочник рас
-│   ├── classes.py           # Справочник классов
-│   ├── io.py                # load_yaml / load_json
-│   ├── adventure.py         # Загрузка приключений из YAML
-│   ├── difficulty.py        # Фильтр приключений по режиму сложности
-│   ├── dice.py              # Броски кубиков
-│   ├── localization.py      # Локализация UI и resolve_localized_text
-│   ├── grants.py            # Нормализация grants[] из YAML
-│   ├── mod_loader.py        # Deep-merge overlay модов; gating по режиму
-│   ├── game_engine.py       # GameEngine / GameSession (сценарии)
-│   ├── session_storage.py   # Сессии приключений (saves/sessions/)
-│   └── settings.py          # Настройки пользователя (JSON)
+│   ├── races.py / classes.py / …
+│   └── …
 ├── ui/                      # Пользовательский интерфейс
 │   ├── input_handler.py     # Валидация ввода (числа, строки, выбор)
 │   └── menus/               # Пакет экранов меню
@@ -97,10 +86,9 @@ dnd_mud/
 │       ├── feats/           # Выбор черт (creation + level-up)
 │       ├── settings.py
 │       ├── stats/           # Генерация характеристик (подпакет)
-│       ├── _common.py       # _print_numbered_row, _run_numbered_menu, _read_numbered_choice, …
-│       ├── _display/        # Пакет отображения (класс, раса, stats, персонаж)
-│       ├── _selectors.py
-│       └── _deps.py         # Re-export core.character + input_handler (flows only)
+│       ├── _common.py       # _print_numbered_row, _run_numbered_menu, …
+│       ├── _display.py      # Отображение (класс, раса, stats, персонаж)
+│       └── _selectors.py
 ├── database/                # YAML-справочники D&D 5e
 │   ├── races/
 │   │   └── races.yaml       # Расы и подрасы
@@ -147,12 +135,7 @@ dnd_mud/
 
 ### UI → core imports
 
-| Слой | Импорт |
-|------|--------|
-| Flows (`_creation_steps`, `new_game`, `characters_menu`, …) | `ui/menus/_deps` |
-| Экраны (`feats/`, `level_up`, `_display/`) | Прямые `from core.*` |
-
-`core/character.py` синхронизирован с `_deps` — не дублировать leaf-API в фасаде.
+Все UI-модули импортируют leaf-модули `core.*` напрямую (без `_deps` / `core.character` фасадов). Monkeypatch в тестах — по имени модуля-потребителя.
 
 ## Линтинг и форматирование
 
@@ -382,7 +365,7 @@ races:
 
 ### Реализовано (core)
 - ✅ `core/models.py` — типизированные dataclass: Character, Adventure
-- ✅ `core/character.py` — фасад API персонажей, adventure, backgrounds, dice, languages
+- ✅ `core/stats.py` / `core/races.py` / `core/character_storage.py` — leaf API без фасада
 - ✅ `core/dice.py` — `roll`, `roll_ability_score`, `ability_modifier`
 - ✅ `core/localization.py` — YAML-словари с fallback на английский
 - ✅ `core/settings.py` — настройки пользователя (язык)
@@ -418,7 +401,7 @@ races:
 ### Генерация характеристик
 
 Спецификация UX (методы, HardCore, расовые бонусы, переквалификация): [MUD_PRD.md §3.4.5](MUD_PRD.md#345-генерация-характеристик-реализовано).  
-API: `core/character.py`, UI: `show_stats_generation_flow` в `ui/menus/stats/stats_flow.py`.
+API: `core/stats.py`, UI: `show_stats_generation_flow` в `ui/menus/stats/stats_flow.py`.
 
 ### База данных
 - ✅ Справочники: `races/races.yaml`, `classes/classes.yaml`, `content/adventures.yaml`

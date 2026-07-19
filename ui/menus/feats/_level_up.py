@@ -1,19 +1,17 @@
-"""Выбор ASI или черты при левелапе."""
+"""Выбор ASI или черт при левелапе."""
 
 from typing import Any
 
 from core.feats import (
+    build_feat_selection_context_from_character,
     list_feats_for_selection,
     resolve_feat_ability_bonuses,
 )
-from core.feats.feat_visibility import (
-    build_feat_selection_context_from_character,
-)
 from core.localization import get_string
 from core.models import Character
-from core.progression.asi import cap_stats
+from core.progression import cap_stats
+from core.stats import apply_bonuses_to_stats
 from core.types import StatMap, StringsDict
-from ui.menus import _deps
 from ui.menus._common import _print_screen_header
 from ui.menus.feats._selection import _pick_feat_from_lists
 from ui.menus.feats._subchoices import _resolve_feat_subchoices
@@ -34,7 +32,7 @@ def select_level_up_feat_or_asi(
     """
     from dataclasses import replace
 
-    from core.progression.asi import apply_asi_one_two, apply_asi_two_one
+    from core.progression import apply_asi_one_two, apply_asi_two_one
     from ui.menus.asi import select_asi_mode, select_asi_stats
 
     _print_screen_header(
@@ -94,7 +92,7 @@ def select_level_up_feat_or_asi(
     feat_choices[feat_id] = sub
     feat_ids.append(feat_id)
     bonuses = resolve_feat_ability_bonuses(feat_id, sub)
-    stats = cap_stats(_deps.apply_bonuses_to_stats(stats, bonuses))
+    stats = cap_stats(apply_bonuses_to_stats(stats, bonuses))
     updated = replace(
         character,
         stats=stats,

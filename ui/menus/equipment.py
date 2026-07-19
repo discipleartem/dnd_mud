@@ -12,7 +12,7 @@ from core.equipment import (
     weapon_property_hint,
 )
 from core.localization import get_string
-from core.proficiencies.proficiency_checks import (
+from core.proficiencies import (
     has_tool_proficiency,
     has_weapon_proficiency,
 )

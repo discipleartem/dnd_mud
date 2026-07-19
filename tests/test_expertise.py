@@ -1,7 +1,7 @@
 """Тесты компетентности (экспертизы) при создании."""
 
 from core.models import Character
-from core.progression.expertise import (
+from core.progression import (
     ExpertiseGrant,
     expertise_step_required,
     get_expertise_grants,
