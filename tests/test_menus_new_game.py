@@ -24,7 +24,9 @@ def test_select_adventure_filters_and_choice(
         description="desc",
         hardcore_only=True,
     )
-    monkeypatch.setattr(new_game, "load_adventures", lambda: [available, blocked])
+    monkeypatch.setattr(
+        new_game, "load_adventures", lambda: [available, blocked]
+    )
     patch_int_input(monkeypatch, [0])
     assert new_game._select_adventure(ru_strings, "ru", character) is None
     output = capsys.readouterr().out
@@ -44,7 +46,7 @@ def test_new_game_no_characters_goes_to_create(monkeypatch):
         calls["create"] += 1
 
     monkeypatch.setattr(
-        _deps, "load_characters", lambda: LoadCharactersResult.empty()
+        new_game, "load_characters", lambda: LoadCharactersResult.empty()
     )
     monkeypatch.setattr(
         _creation_steps, "show_create_character_flow", create_flow
@@ -71,7 +73,7 @@ def test_new_game_back_navigation_and_cached_list(monkeypatch):
         calls["adventure"] += 1
         return None
 
-    monkeypatch.setattr(_deps, "load_characters", load_characters)
+    monkeypatch.setattr(new_game, "load_characters", load_characters)
     monkeypatch.setattr(new_game, "_select_character", select_character)
     monkeypatch.setattr(new_game, "_select_adventure", select_adventure)
     new_game.show_new_game_flow({}, {"language": "ru"})

@@ -2,6 +2,11 @@
 
 from colorama import Fore, Style
 
+from core.character_storage import (
+    delete_all_characters,
+    delete_character,
+    load_characters,
+)
 from core.localization import get_string
 from core.models import Character
 from core.types import LanguageCode, StringsDict
@@ -56,7 +61,7 @@ def _delete_one_character(
         return
 
     if character.save_slug:
-        _deps.delete_character(character.save_slug)
+        delete_character(character.save_slug)
 
     msg = get_string(
         strings,
@@ -76,7 +81,7 @@ def _delete_all_characters(strings: StringsDict, count: int) -> None:
         _print_cancelled(strings)
         return
 
-    deleted = _deps.delete_all_characters()
+    deleted = delete_all_characters()
     msg = get_string(
         strings,
         "characters_menu.delete_all_success",
@@ -93,7 +98,7 @@ def show_characters_menu(
     corrupt_warning_shown = False
     while True:
         if load_result is None:
-            load_result = _deps.load_characters()
+            load_result = load_characters()
             corrupt_warning_shown = show_corrupt_save_warnings_if_any(
                 strings,
                 corrupt_labels=load_result.corrupt_save_warnings,

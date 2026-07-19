@@ -3,6 +3,7 @@
 from colorama import Fore, Style
 
 from core.adventure import load_adventures
+from core.catalog_loader import bootstrap_session_catalogs
 from core.game_engine import GameEngine, GameSession
 from core.localization import get_string
 from core.session_storage import (

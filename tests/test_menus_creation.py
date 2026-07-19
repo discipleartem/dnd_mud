@@ -64,8 +64,7 @@ def test_select_subrace_human_menu(
 ):
     """Выбор подрасы человека — меню standard/variant."""
     monkeypatch.setattr(
-        _deps,
-        "load_race_full",
+        "ui.menus._selectors.load_race_full",
         lambda _race_id, language="ru": human_race_with_subraces,
     )
     patch_int_input(monkeypatch, [1])
@@ -158,9 +157,11 @@ def test_create_character_back_from_subrace_exits(
     monkeypatch.setattr(
         _creation_steps, "select_difficulty", lambda strings: "normal"
     )
-    monkeypatch.setattr(_deps, "get_str_input", lambda *args, **kwargs: "Hero")
     monkeypatch.setattr(
-        _deps,
+        _creation_steps, "get_str_input", lambda *args, **kwargs: "Hero"
+    )
+    monkeypatch.setattr(
+        creation_handlers,
         "load_races",
         lambda language="ru": [{"id": "human", "name": "Человек"}],
     )

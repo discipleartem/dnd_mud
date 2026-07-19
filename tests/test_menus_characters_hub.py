@@ -43,7 +43,7 @@ def test_characters_menu_delete_one_confirmed(
         return True
 
     _patch_load_characters(monkeypatch, [minimal_character])
-    monkeypatch.setattr(_deps, "delete_character", fake_delete)
+    monkeypatch.setattr(characters_menu, "delete_character", fake_delete)
     patch_int_input(monkeypatch, [2, 1, 1, 0])
     characters_menu.show_characters_menu(ru_strings)
     assert deleted == ["hero"]

@@ -11,9 +11,7 @@ import scripts.verify_targets as vt
 
 def test_core_and_ui_mapping() -> None:
     assert vt.source_to_tests("core/difficulty.py") == ["tests/test_stats.py"]
-    assert vt.source_to_tests("core/feat_visibility.py") == [
-        "tests/test_feats.py"
-    ]
+    assert vt.source_to_tests("core/feats.py") == ["tests/test_feats.py"]
     assert vt.source_to_tests("core/scenario_actions.py") == [
         "tests/test_models.py",
         "tests/test_class_features.py",
@@ -24,8 +22,9 @@ def test_core_and_ui_mapping() -> None:
     assert vt.source_to_tests("core/backgrounds.py") == [
         "tests/test_models.py"
     ]
-    assert vt.source_to_tests("core/grant_mechanics.py") == [
-        "tests/test_grants.py"
+    assert vt.source_to_tests("core/grants.py") == ["tests/test_grants.py"]
+    assert vt.source_to_tests("core/progression.py") == [
+        "tests/test_progression.py"
     ]
     assert vt.source_to_tests("core/mod_loader.py") == [
         "tests/test_catalog_loader.py"
@@ -39,7 +38,7 @@ def test_core_and_ui_mapping() -> None:
     assert vt.source_to_tests("ui/menus/stats/stats_flow.py") == [
         "tests/test_menus_stats.py"
     ]
-    assert vt.source_to_tests("ui/menus/_display/_race.py") == [
+    assert vt.source_to_tests("ui/menus/_display.py") == [
         "tests/test_equipment.py"
     ]
     assert vt.source_to_tests("ui/menus/characters_menu.py") == [

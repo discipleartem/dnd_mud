@@ -126,9 +126,7 @@ def _select_stats_point_buy(
             )
             print()
 
-            choice = get_int_input(
-                _choice_prompt(strings), 0, 6, strings
-            )
+            choice = get_int_input(_choice_prompt(strings), 0, 6, strings)
 
             if choice == 0:
                 error_key = validate_point_buy_finish(stat_values)
@@ -216,9 +214,7 @@ def _select_stats_random_normal(
         )
         print()
 
-        roll_choice = get_int_input(
-            _choice_prompt(strings), 0, 2, strings
-        )
+        roll_choice = get_int_input(_choice_prompt(strings), 0, 2, strings)
         if roll_choice == 0:
             return None
         if roll_choice == 2:
@@ -239,9 +235,7 @@ def _select_stats_random_normal(
                 break
 
             selected_values = [selected[stat] for stat in STAT_NAMES]
-            stats = generate_stats_random(
-                selected_values, race_id, subrace_id
-            )
+            stats = generate_stats_random(selected_values, race_id, subrace_id)
             result = _run_stats_confirm_loop(
                 strings,
                 stats,

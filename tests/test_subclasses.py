@@ -121,7 +121,7 @@ def test_assign_subclass_from_menu_champion(
         return character
 
     monkeypatch.setattr(
-        "ui.menus.subclass_trainer._deps.update_character",
+        "ui.menus.subclass_trainer.update_character",
         fake_update,
     )
     patch_int_input(monkeypatch, [3])

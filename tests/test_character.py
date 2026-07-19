@@ -3,17 +3,24 @@
 import json
 from pathlib import Path
 
-import core.character as character_mod
 import pytest
 
 from core.character_build import build_new_character
 from core.character_migrate import migrate_character_data
 from core.character_storage import (
+    delete_character,
     load_characters,
     make_save_slug,
     persist_character,
 )
 from core.models import Character
+from core.races import get_race_bonuses
+from core.stats import (
+    STAT_NAMES,
+    can_assign_point_buy_value,
+    generate_stats_standard_array,
+    point_buy_total_cost,
+)
 from core.types import CharacterClass
 from tests.creation_helpers import fighter_acolyte_creation
 from ui.menus._creation_state import _CreationState
@@ -46,27 +53,21 @@ def test_race_bonuses(
     expected_bonuses: dict[str, int] | None,
 ) -> None:
     if expected_bonuses is not None:
-        assert (
-            character_mod.get_race_bonuses(race_id, subrace_id)
-            == expected_bonuses
-        )
+        assert get_race_bonuses(race_id, subrace_id) == expected_bonuses
     else:
-        assert character_mod.get_race_bonuses(race_id, subrace_id)
+        assert get_race_bonuses(race_id, subrace_id)
 
 
 def test_generate_stats_and_point_buy() -> None:
     values = [15, 14, 13, 12, 10, 8]
-    assert (
-        character_mod.generate_stats_standard_array(values, "elf")["dexterity"]
-        == 16
-    )
-    assert character_mod.point_buy_total_cost([8, 8, 8, 8, 8, 8]) == 0
-    stats = dict.fromkeys(character_mod.STAT_NAMES, 8)
-    assert character_mod.can_assign_point_buy_value(stats, "strength", 15)
+    assert generate_stats_standard_array(values, "elf")["dexterity"] == 16
+    assert point_buy_total_cost([8, 8, 8, 8, 8, 8]) == 0
+    stats = dict.fromkeys(STAT_NAMES, 8)
+    assert can_assign_point_buy_value(stats, "strength", 15)
 
 
 def test_save_character_roundtrip(characters_dir: Path) -> None:
-    stats = dict.fromkeys(character_mod.STAT_NAMES, 12)
+    stats = dict.fromkeys(STAT_NAMES, 12)
     character = build_new_character(
         name="Hero",
         race_id="human",
@@ -83,7 +84,7 @@ def test_save_character_roundtrip(characters_dir: Path) -> None:
     saved = persist_character(character)
     assert saved.level == 1
     assert saved.experience == 0
-    loaded = character_mod.load_characters().characters[-1]
+    loaded = load_characters().characters[-1]
     assert loaded.skills == ["athletics"]
     with open(
         characters_dir / f"{saved.save_slug}.json", encoding="utf-8"
@@ -93,7 +94,7 @@ def test_save_character_roundtrip(characters_dir: Path) -> None:
 
 
 def test_save_character_easy_start_level_xp(characters_dir: Path) -> None:
-    stats = dict.fromkeys(character_mod.STAT_NAMES, 12)
+    stats = dict.fromkeys(STAT_NAMES, 12)
     character = build_new_character(
         name="EasyHero",
         race_id="human",
@@ -129,7 +130,7 @@ def test_character_json_uses_canonical_field_names() -> None:
 def test_starting_max_hp_and_hardcore(
     characters_dir: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
-    stats = dict.fromkeys(character_mod.STAT_NAMES, 10)
+    stats = dict.fromkeys(STAT_NAMES, 10)
     stats["constitution"] = 8
     character = build_new_character(
         name="LowCon",
@@ -144,7 +145,7 @@ def test_starting_max_hp_and_hardcore(
     assert saved.current_hp == saved.max_hp
     stats["constitution"] = 14
     monkeypatch.setattr(
-        "core.progression.hp_gain.roll",
+        "core.progression.roll",
         lambda count, sides, modifier=0: 5 + modifier,
     )
     hard_character = build_new_character(
@@ -163,10 +164,10 @@ def test_hardcore_l1_hp_floor_on_create(
     characters_dir: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     """HardCore L1: persist_character применяет пол max(1, бросок + CON)."""
-    stats = dict.fromkeys(character_mod.STAT_NAMES, 10)
+    stats = dict.fromkeys(STAT_NAMES, 10)
     stats["constitution"] = 8  # модификатор −1
     monkeypatch.setattr(
-        "core.progression.hp_gain.roll",
+        "core.progression.roll",
         lambda count, sides, modifier=0: 1 + modifier,
     )
     character = build_new_character(
@@ -200,7 +201,7 @@ def test_make_save_slug_and_slug_collision(characters_dir: Path) -> None:
     second = persist_character(second_character)
     assert first.save_slug == "hero"
     assert second.save_slug == "hero_2"
-    assert character_mod.delete_character("hero") is True
+    assert delete_character("hero") is True
 
 
 def test_creation_state_to_character_roundtrip() -> None:

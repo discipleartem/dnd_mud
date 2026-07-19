@@ -57,7 +57,7 @@ def test_apply_pending_class_features_champion_marks_applied(
         difficulty="normal",
     )
     monkeypatch.setattr(
-        "ui.menus.class_features._deps.update_character", lambda c: c
+        "ui.menus.class_features.update_character", lambda c: c
     )
     monkeypatch.setattr(
         "ui.menus.class_features._print_success_and_wait",

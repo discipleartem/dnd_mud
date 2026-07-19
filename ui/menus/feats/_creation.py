@@ -15,6 +15,7 @@ from core.feats import (
 from core.grants import proficiency_tokens_and_skills_from_grant
 from core.localization import get_string
 from core.progression import cap_stats
+from core.stats import apply_bonuses_to_stats
 from core.types import StatMap, StringsDict
 from ui.menus._common import _print_screen_header
 from ui.menus.feats._selection import _pick_feat_from_lists
@@ -110,7 +111,7 @@ def select_creation_feats(
             feat_ids.append(feat_id)
             bonuses = resolve_feat_ability_bonuses(feat_id, sub)
             working_stats = cap_stats(
-                _deps.apply_bonuses_to_stats(working_stats, bonuses)
+                apply_bonuses_to_stats(working_stats, bonuses)
             )
             for g in load_feat(feat_id).get("grants", []):
                 if not isinstance(g, dict):

@@ -15,7 +15,6 @@ from core.classes import (
 )
 from core.constants import MAX_CHARACTER_LEVEL, clamp_level
 from core.dice import ability_modifier, roll
-from core.feats import get_feat_hp_bonus_sources
 from core.models import Character
 from core.skills import THIEVES_TOOLS_ID, subclass_skills_active
 from core.stats import (
@@ -137,6 +136,7 @@ def extra_hp_bonus_sources(
     feat_ids: list[str] | None = None,
 ) -> tuple[HpBonusSource, ...]:
     """Именованные бонусы HP за уровень: раса/подраса и черты."""
+    from core.feats import get_feat_hp_bonus_sources
     from core.races import get_racial_hp_bonus_sources
 
     sources: list[HpBonusSource] = []

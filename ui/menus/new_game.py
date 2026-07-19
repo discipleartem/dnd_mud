@@ -4,10 +4,14 @@ from typing import Literal
 
 from colorama import Fore, Style
 
-from core.adventure import Adventure, adventure_unavailable_reason
+from core.adventure import load_adventures
+from core.catalog_loader import bootstrap_session_catalogs
+from core.character_storage import load_characters
+from core.difficulty import adventure_unavailable_reason
 from core.localization import get_string
-from core.models import Character
+from core.models import Adventure, Character
 from core.types import RuntimeSettings, StringsDict
+from ui.input_handler import get_int_input
 from ui.menus import _creation_steps
 from ui.menus._common import (
     _press_enter,
@@ -45,7 +49,7 @@ def _select_character(
         f"{Style.RESET_ALL}"
     )
     print()
-    choice = _deps.get_int_input(
+    choice = get_int_input(
         get_string(strings, "choose_character.prompt", count=char_count),
         0,
         create_idx,
@@ -67,7 +71,7 @@ def _select_adventure(
     character: Character,
 ) -> Adventure | None:
     """Экран выбора приключения с учётом сложности персонажа."""
-    adventures: list[Adventure] = _deps.load_adventures()
+    adventures: list[Adventure] = load_adventures()
 
     if not adventures:
         print(
@@ -161,7 +165,7 @@ def show_new_game_flow(
 
     while True:
         if load_result is None:
-            load_result = _deps.load_characters()
+            load_result = load_characters()
             corrupt_warning_shown = show_corrupt_save_warnings_if_any(
                 strings,
                 corrupt_labels=load_result.corrupt_save_warnings,
@@ -188,7 +192,7 @@ def show_new_game_flow(
         if character is None:
             return
 
-        _deps.bootstrap_session_catalogs(character.difficulty)
+        bootstrap_session_catalogs(character.difficulty)
 
         while True:
             adventure = _select_adventure(strings, language, character)

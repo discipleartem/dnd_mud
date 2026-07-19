@@ -10,6 +10,7 @@ from core.feats import (
 from core.localization import get_string
 from core.models import Character
 from core.progression import cap_stats
+from core.stats import apply_bonuses_to_stats
 from core.types import StatMap, StringsDict
 from ui.menus._common import _print_screen_header
 from ui.menus.feats._selection import _pick_feat_from_lists
@@ -91,7 +92,7 @@ def select_level_up_feat_or_asi(
     feat_choices[feat_id] = sub
     feat_ids.append(feat_id)
     bonuses = resolve_feat_ability_bonuses(feat_id, sub)
-    stats = cap_stats(_deps.apply_bonuses_to_stats(stats, bonuses))
+    stats = cap_stats(apply_bonuses_to_stats(stats, bonuses))
     updated = replace(
         character,
         stats=stats,

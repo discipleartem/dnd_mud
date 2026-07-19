@@ -2,10 +2,9 @@
 
 import pytest
 
-from core.races import get_race_bonuses
 from core.stats import STAT_NAMES
 from ui.menus import stats as stats_menu
-from ui.menus.stats import stats_methods, stats_shared
+from ui.menus.stats import stats_choice_bonuses, stats_methods, stats_shared
 
 
 def test_standard_array_shows_race_bonuses_after_assign(
@@ -13,7 +12,7 @@ def test_standard_array_shows_race_bonuses_after_assign(
 ):
     patch_int_input(monkeypatch, [1, 0, 0])
     monkeypatch.setattr(
-        stats_menu,
+        stats_choice_bonuses,
         "get_race_bonuses",
         lambda race_id, subrace_id=None: {"strength": 2},
     )
@@ -64,7 +63,7 @@ def test_variant_human_standard_array_applies_choice_bonuses(
 def test_hardcore_4d6_no_regenerate_option(
     monkeypatch, capsys, ru_strings, patch_int_input
 ):
-    monkeypatch.setattr(_deps, "roll_ability_score", lambda: 12)
+    monkeypatch.setattr(stats_methods, "roll_ability_score", lambda: 12)
     monkeypatch.setattr(stats_methods, "_press_enter", lambda strings: None)
     patch_int_input(monkeypatch, [1])
     stats_methods._select_stats_random_hardcore(ru_strings, "elf", None)
