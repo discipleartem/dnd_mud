@@ -47,3 +47,17 @@ PR task → `dev` — по запросу (`dnd-mud-git-pr`). Release `dev` → 
 | Только docs/rules | verify-scope пропустить; review опционален |
 
 Команды: [`dnd-mud-verify/reference.md`](../skills/dnd-mud-verify/reference.md). Метрики (число тестов, объём diff) — из команд в review skill / DEVELOPMENT, не хардкодить.
+
+## Dead code (policy)
+
+Субагент: [`dead-code-cleaner`](~/.cursor/agents/dead-code-cleaner.md) (global, token-heavy).
+
+| Триггер | Когда | Лимит |
+|---------|-------|-------|
+| **post-refactor** | Рефакторинг **закончен** (не mid-edit) | **1×** на эпизод рефакторинга в task-ветке |
+| **pre-PR-dev** | Сразу перед **первым** push/PR task → `dev` ([`dnd-mud-git-pr`](../skills/dnd-mud-git-pr/SKILL.md)) | **1×** на task-ветку |
+| **explicit** | Пользователь явно просит | по запросу |
+
+**Запрещено:** mid-task / между мелкими правками; повтор того же триггера (повторный PR/merge в `dev`, повтор после того же рефакторинга); speculative scan вне таблицы.
+
+Оба триггера в одной задаче допустимы, если были и рефакторинг, и PR — не больше одного раза на каждый. При `DONE` / истории прогона для триггера — **не вызывать** снова (`SKIPPED`).

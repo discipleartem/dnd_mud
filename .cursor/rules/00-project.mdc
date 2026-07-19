@@ -78,7 +78,7 @@ PDF парсят только агенты. После правок — `python 
 
 | Файл | Globs | Канон |
 |------|-------|-------|
-| `dnd-mud-workflow.mdc` | always | git/verify/review overrides |
+| `dnd-mud-workflow.mdc` | always | git/verify/review/dead-code overrides |
 | `ironbee-devtools-use.mdc` | always | stub: browser/IronBee forbidden |
 | `dnd-mud-python.mdc` | `**/*.py` | Python 3.12, KISS |
 | `dnd-mud-tests.mdc` | `tests/**` | pytest |

@@ -22,6 +22,8 @@ disable-model-invocation: true
 
 **Предусловие:** [`dnd-mud-review`](../dnd-mud-review/SKILL.md) выполнен. Head PR — **`feat/<slug>`** после merge всех part-веток плана (если план перечислял N PR — было создано ≥ N part-веток). См. [`dnd-mud-multi-branch`](../dnd-mud-multi-branch/SKILL.md) и [`dnd-mud-workflow.mdc`](../../rules/dnd-mud-workflow.mdc) §Multi-branch.
 
+**Dead code (pre-PR-dev):** перед **первым** push/PR в этом turn — один раз вызвать субагент [`dead-code-cleaner`](~/.cursor/agents/dead-code-cleaner.md) (триггер `pre-PR-dev`). Policy: [`dnd-mud-workflow.mdc`](../../rules/dnd-mud-workflow.mdc) §Dead code. Если для этой task-ветки уже был `DONE (pre-PR-dev)` — **не** вызывать снова. Повторный push/PR / retry merge → `dev` без нового прогона.
+
 ## Push и PR
 
 ```bash

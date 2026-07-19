@@ -226,13 +226,14 @@ pytest tests/test_data_schema.py -v
 |------|-------|
 | Agent-loop, steps | [`AGENTS.md`](../AGENTS.md) |
 | Skills index | [`.cursor/skills/README.md`](../.cursor/skills/README.md) |
-| Git-старт, `merged/*`, verify policy | [`.cursor/rules/dnd-mud-workflow.mdc`](../.cursor/rules/dnd-mud-workflow.mdc) |
+| Git-старт, `merged/*`, verify / dead-code policy | [`.cursor/rules/dnd-mud-workflow.mdc`](../.cursor/rules/dnd-mud-workflow.mdc) |
 | Multi-branch (N PR) | [`.cursor/skills/dnd-mud-multi-branch`](../.cursor/skills/dnd-mud-multi-branch/SKILL.md) |
 | Task cycle (global) | [`task-cycle.mdc`](~/.cursor/rules/task-cycle.mdc) |
 | Verify commands | [`dnd-mud-verify/reference.md`](../.cursor/skills/dnd-mud-verify/reference.md) |
 | Review | [`.cursor/skills/dnd-mud-review`](../.cursor/skills/dnd-mud-review/SKILL.md) |
 | Fix plan | [`.cursor/skills/dnd-mud-fix-plan`](../.cursor/skills/dnd-mud-fix-plan/SKILL.md) |
 | Push / PR task → `dev` | [`.cursor/skills/dnd-mud-git-pr`](../.cursor/skills/dnd-mud-git-pr/SKILL.md) |
+| Dead code (1× post-refactor / 1× pre-PR → `dev`) | [`dead-code-cleaner`](~/.cursor/agents/dead-code-cleaner.md) · workflow §Dead code |
 | Release `dev` → `main` | [`.cursor/skills/dnd-mud-release`](../.cursor/skills/dnd-mud-release/SKILL.md) |
 | Sync `dev`←`main` | [`git-dev-main-sync.md`](~/.cursor/docs/git-dev-main-sync.md) |
 | Settings UI / IronBee cleanup | [`user-rules-minimal.md`](~/.cursor/docs/user-rules-minimal.md) |
@@ -257,6 +258,7 @@ Quality gate PR `task → dev`: один раз [`dnd-mud-review`](../.cursor/sk
 | План с N PR / фаз → **N part-веток** (имя из `### PR-N: \`branch\``) | План «17 PR» на 1 ветке — нарушение workflow |
 | Merge всех part в `feat/<slug>` перед review | Review на part-ветке или с незакрытыми PR |
 | Review **один раз** в конце task-ветки (`dnd-mud-review` = verify-scope + diff) | Не гонять full test/lint между подзадачами |
+| `dead-code-cleaner` **1×** post-refactor и **1×** перед первым PR → `dev` | Дорогой субагент; не на retry PR/merge |
 | `rebase origin/dev` перед review | Минимальный diff для bugbot |
 | Plan mode для крупных задач | Меньше итераций fix в Agent |
 | Узкий scope в промпте | Меньше лишних файлов в контексте |

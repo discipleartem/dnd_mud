@@ -17,7 +17,7 @@
 | [`dnd-mud-verify`](dnd-mud-verify/SKILL.md) | Справочник команд → [reference.md](dnd-mud-verify/reference.md) |
 | [`dnd-mud-review`](dnd-mud-review/SKILL.md) | Один раз: verify-scope + light/full review |
 | [`dnd-mud-fix-plan`](dnd-mud-fix-plan/SKILL.md) | План после Blocker/Major |
-| [`dnd-mud-git-pr`](dnd-mud-git-pr/SKILL.md) | Push / PR / rename `merged/*` |
+| [`dnd-mud-git-pr`](dnd-mud-git-pr/SKILL.md) | Push / PR / rename `merged/*` (+ dead-code pre-PR-dev 1×) |
 | [`dnd-mud-release`](dnd-mud-release/SKILL.md) | Release `dev` → `main` |
 
 Personal: `git-dev-main-sync` (`~/.cursor/skills/git-dev-main-sync/`).
