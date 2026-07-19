@@ -731,8 +731,6 @@ def _armor_requirement_met(
 def _requirement_met(
     req: dict[str, Any],
     ctx: FeatRequirementContext,
-    *,
-    or_group: list[dict[str, Any]] | None = None,
 ) -> bool:
     """Одно требование черты."""
     rtype = req.get("type", "")

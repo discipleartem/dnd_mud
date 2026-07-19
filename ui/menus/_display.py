@@ -1278,7 +1278,7 @@ def format_inventory_line(
 
 
 def _versatile_active_grip(
-    equipped: EquippedState, weapon_id: str
+    equipped: EquippedState,
 ) -> Literal["one_handed", "two_handed"]:
     """Текущий режим универсального оружия."""
     grip = equipped.get("main_hand_grip")
@@ -1299,7 +1299,7 @@ def _versatile_grip_hint(
     """Подсказка хвата универсального оружия (одна / две руки)."""
     if not weapon_is_versatile(weapon_id):
         return ""
-    if _versatile_active_grip(equipped, weapon_id) == "two_handed":
+    if _versatile_active_grip(equipped) == "two_handed":
         key = "choose_character.field_equipped_versatile_grip_two"
     else:
         key = "choose_character.field_equipped_versatile_grip_one"
@@ -1309,7 +1309,6 @@ def _versatile_grip_hint(
 def format_versatile_damage_dice(
     weapon_id: str,
     equipped: EquippedState,
-    strings: StringsDict,
     language: str = "ru",
 ) -> tuple[str, str, str] | None:
     """Кости универсального оружия и активный режим: (1к8, 1к10, one|two)."""
@@ -1322,9 +1321,7 @@ def format_versatile_damage_dice(
         _weapon_versatile_dice(weapon_id), language
     )
     active = (
-        "two"
-        if _versatile_active_grip(equipped, weapon_id) == "two_handed"
-        else "one"
+        "two" if _versatile_active_grip(equipped) == "two_handed" else "one"
     )
     return one_dice, two_dice, active
 
@@ -1378,7 +1375,7 @@ def get_equipped_display(
         if hint_parts:
             result["main_hand_hint"] = ", ".join(hint_parts)
         damage_dice = format_versatile_damage_dice(
-            main_hand, equipped, strings, language
+            main_hand, equipped, language
         )
         if damage_dice:
             one, two, active = damage_dice

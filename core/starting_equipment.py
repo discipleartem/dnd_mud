@@ -151,7 +151,6 @@ def _items_from_option(
     option: dict[str, Any],
     choices: dict[str, str],
     choice_id: str,
-    weapon_proficiencies: list[str],
 ) -> list[InventoryItem]:
     """Собрать предметы из выбранной опции."""
     items: list[InventoryItem] = []
@@ -225,7 +224,6 @@ def resolve_starting_items(
                 selected,
                 choices,
                 choice_id,
-                weapon_proficiencies,
             )
         )
     return add_items_to_inventory([], inventory)
