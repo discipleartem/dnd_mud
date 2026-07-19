@@ -44,58 +44,48 @@
 | `ui/menus/_corrupt_saves.py` | Предупреждение о битых JSON в `saves/characters/` |
 | `ui/menus/feats/` | Выбор черт при создании и левелапе (публичный API в `__init__.py`) |
 | `ui/menus/_creation_handlers.py`, `_creation_navigation.py`, `_creation_finalize.py`, `_creation_state.py` | State machine создания персонажа |
-| `ui/menus/_common.py`, `_display/`, `_deps.py` | Общие хелперы (`_print_numbered_row`, `_print_pick_list`, `_read_pool_pick`, `_run_numbered_menu`, `_read_numbered_choice`), отображение, seam для тестов; `bootstrap_session_catalogs()` |
+| `ui/menus/_common.py`, `_display.py` | Общие хелперы (`_print_numbered_row`, `_print_pick_list`, `_read_pool_pick`, `_run_numbered_menu`, `_read_numbered_choice`) и отображение |
 | `ui/menus/_subclass_picks.py` | Общий flow выбора владений/навыков/компетентности подкласса |
 | `ui/input_handler.py` | Валидация ввода, UTF-8 для stdin/stdout |
 
 UI не читает файлы данных напрямую — только через `core/`.
 
-**Импорты UI → core (deps policy):**
-
-1. **Flows и оркестраторы** (`_creation_steps`, `new_game`, `load_game`, `characters_menu`, …) — только `ui/menus/_deps` (monkeypatch в тестах).
-2. **Специализированные экраны** (`feats/`, `level_up`, `_display/`) — прямые leaf-imports из `core.*`, без дублирования в `_deps`.
-
-`core/character.py` — узкий фасад для п.1 (stats, save/load, каталоги создания), не «весь core».
+**Импорты UI → core:** прямые leaf-imports из `core.*` (и `ui.input_handler`). Monkeypatch в тестах — по точке использования в UI-модуле (`conftest.patch_int_input` и т.п.).
 
 ### 2. Core Layer (`core/`)
 
 | Модуль | Назначение |
 |--------|-----------|
-| `core/models.py` | `Character` (`class_id: CharacterClass`), `Adventure` (dataclass) |
-| `core/character.py` | Узкий фасад для flow-оркестраторов (`_deps`): save/load, stats, каталоги создания |
-| `core/grants_context.py` | `CreationContext`, `ResolvedGrants` — dataclass контекста создания (без imports progression/proficiencies) |
-| `core/character_builder.py` | `resolve_creation_grants`, `resolve_grants_for_context`, merge языков/компетентности из черт |
-| `core/character_build.py` | `build_new_character` — сборка модели без записи на диск |
+| `core/models.py` | `Character` (`class_id: CharacterClass`), `Adventure` (dataclass); JSON coerce helpers |
+| `core/grants_context.py` | `CreationContext`, `ResolvedGrants` — dataclass контекста создания |
+| `core/character_build.py` | `build_new_character` / `resolve_creation_grants` — сборка модели без записи на диск |
 | `core/character_migrate.py` | `CHARACTERS_SCHEMA_VERSION`, `migrate_character_data` — версия JSON сейва при load |
-| `core/character_storage.py` | CRUD персонажей: thin wrapper `build_new_character`, `persist_character`, `update_character`; JSON в `saves/` |
+| `core/character_storage.py` | CRUD персонажей; `make_save_slug`; JSON в `saves/` |
 | `core/session_storage.py` | Снимки сессий приключений (`saves/sessions/`) |
 | `core/game_engine.py` | `GameEngine`, `GameSession` — state machine сценария; `step_exit`, флаги сессии |
 | `core/scenario_rooms.py` | `exits` в узлах YAML-сценария |
 | `core/engine_rules.py` | Преимущество/помеха проверок по `GameDifficulty` |
 | `core/combat/` | Каркас Phase 2: `roll_initiative`, `attack_roll` |
-| `core/types/` | Пакет типов домена: `_base.py` (базовые типы), `character_params.py` (CharacterBuildParams), `proficiencies.py` (Proficiencies, Expertise); `__init__.py` — фасад для backward compatibility |
+| `core/types.py` | Типы домена: `StatMap`, `CharacterClass`, `CharacterBuildParams`, `Proficiencies`, … |
 | `core/abilities.py` | Каталог характеристик и навыков из YAML |
 | `core/races.py` | Справочник рас, `collect_race_grants`, расовые бонусы |
 | `core/classes.py` | Справочник классов, `get_class_dict`, hit dice, подклассы |
 | `core/skills.py` | Навыки при создании персонажа; `PHB_SKILL_IDS` |
 | `core/languages.py` | Каталог языков PHB, пулы выбора |
-| `core/proficiencies/` | Пакет владений: `proficiency_collect`, `proficiency_checks` (публичный API — `core.proficiencies`) |
+| `core/proficiencies.py` | Сбор и проверки владений |
 | `core/checks.py` | Проверки характеристик, навыков, спасбросков (`ability_check`, `skill_check`, …) |
-| `core/inventory/` | Инвентарь, экипировка, `compute_ac`, авто-экипировка (`_items`, `_ac`, `_weapons`, `_equip`) |
+| `core/inventory.py` | Инвентарь, экипировка, `compute_ac`, авто-экипировка |
 | `core/starting_equipment.py` | Стартовое снаряжение класса из YAML |
 | `core/equipment.py` | Оружие, доспехи, инструменты из YAML |
-| `core/feats/` | Пакет черт: apply, requirements, visibility, descriptions, loader (публичный API — `core.feats`) |
-| `core/grant_mechanics.py` | Парсинг proficiency-токенов из grant dict |
-| `core/progression/` | XP, уровни, HP, ASI, expertise, class features, подклассы (публичный API — `core.progression`; `core/levels.py` и lazy-imports в `core/races` / `core/skills` — без циклического import при загрузке каталогов) |
-| `core/levels.py` | `MAX_CHARACTER_LEVEL`, `clamp_level` |
-| `core/constants.py` | PB, DC из YAML |
-| `core/grants.py` | Нормализация `grants[]` из YAML |
+| `core/feats.py` | Черты: loader, apply, requirements, visibility, descriptions |
+| `core/progression.py` | XP, уровни, HP, ASI, expertise, class features, подклассы (lazy-imports к `feats`/`races`) |
+| `core/constants.py` | PB, DC; `MAX_CHARACTER_LEVEL`, `clamp_level` |
+| `core/grants.py` | Нормализация `grants[]`; proficiency-токены (`normalize_armor_token`, …) |
 | `core/backgrounds.py` | Каталог предысторий PHB |
 | `core/stats.py` | Генерация/валидация характеристик |
 | `core/dice.py` | `roll()`, `roll_ability_score()`, `ability_modifier()` |
-| `core/slug.py` | `make_save_slug()` |
 | `core/io.py` | `load_file()` (универсальный YAML/JSON), `load_yaml()` / `load_json()` (`strict` для каталогов), `save_json()` / `merge_unique()` |
-| `core/catalog_loader.py` | `load_catalog()`, `load_catalog_items()` (универсальный загрузчик элементов каталога), `reload_catalogs()`, сброс кэшей |
+| `core/catalog_loader.py` | `load_catalog()`, `load_catalog_items()`, `bootstrap_session_catalogs()`, `reload_catalogs()` |
 | `core/adventure.py` | `load_adventures()` |
 | `core/scenario_actions.py` | Чистая логика action-узлов сценария (без UI) |
 | `core/difficulty.py` | `adventure_allows_difficulty()` |
@@ -131,8 +121,8 @@ UI не читает файлы данных напрямую — только �
 ## Поток данных
 
 ```
-main.py → ui/menus/ → core/character.py (фасад) → character_storage, races, classes, stats
-                    → core/races.py, core/backgrounds.py
+main.py → ui/menus/ → core/* (прямые leaf-imports)
+                    → core/races.py, core/backgrounds.py, core/character_storage.py, …
                          → core/mod_loader.py → database/*/*.yaml + mods/*/overlay.yaml
                          → core/grants.py (нормализация grants[])
                     → core/settings.py → database/core/settings.json
@@ -147,9 +137,9 @@ main.py → ui/menus/ → core/character.py (фасад) → character_storage, 
 **Сценарий «Создать персонажа»:** сложность → имя → раса → подраса → характеристики → предыстория → языки → класс → подкласс → черты (если нужны) → владения → навыки → (компетентность?) → **снаряжение** → сохранение в `saves/characters/{save_slug}.json`.
 
 - Оркестрация: `ui/menus/_creation_steps.py` (`show_create_character_flow`), `ui/menus/_creation_handlers.py`, `ui/menus/stats/stats_flow.py`
-- Снаряжение: `ui/menus/equipment.py` → `core/starting_equipment.py`; предыстория — `core/backgrounds.get_background_equipment_items`; merge и `equip_defaults` — `core/character_build.build_new_character` / `character_storage.persist_character`, `core/inventory/`
+- Снаряжение: `ui/menus/equipment.py` → `core/starting_equipment.py`; предыстория — `core/backgrounds.get_background_equipment_items`; merge и `equip_defaults` — `core/character_build.build_new_character` / `character_storage.persist_character`, `core/inventory.py`
 - Сохранение: `_CreationState.to_character()` → `persist_character()` (без kwargs-bridge)
-- Генераторы: `core/stats.py`, `core/races.py` (через фасад `core/character.py`)
+- Генераторы: `core/stats.py`, `core/races.py`
 - Броски 4d6: `core/dice.py` (`roll_ability_score`)
 
 Подробная спецификация UX генерации характеристик: [MUD_PRD.md §3.4.6](MUD_PRD.md#346-генерация-характеристик-реализовано).
