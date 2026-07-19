@@ -2,6 +2,9 @@
 
 ## [Unreleased]
 
+### Fixed
+- **Mod gating:** после сессии приключения `reset_session_catalogs()` возвращает gating к `normal` (`new_game` / `load_game`)
+
 ### Removed
 - **kwargs-`build_new_character` / `to_kwargs` / draft plan:** единственный API — `build_new_character(CharacterBuildParams)`; удалены мёртвые `_handle_action_result`, `_versatile_can_switch_to_two_hands`; черновик `docs/refactor-simplify-ae2709.md`
 - **Черновик `docs/tokenize.md`:** правила минимального контекста LLM перенесены в global User Rules (`~/.cursor/rules/ai-context.mdc`)

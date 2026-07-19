@@ -5,7 +5,10 @@ from typing import Literal
 from colorama import Fore, Style
 
 from core.adventure import load_adventures
-from core.catalog_loader import bootstrap_session_catalogs
+from core.catalog_loader import (
+    bootstrap_session_catalogs,
+    reset_session_catalogs,
+)
 from core.character_storage import load_characters
 from core.difficulty import adventure_unavailable_reason
 from core.localization import get_string
@@ -193,11 +196,15 @@ def show_new_game_flow(
             return
 
         bootstrap_session_catalogs(character.difficulty)
+        try:
+            while True:
+                adventure = _select_adventure(strings, language, character)
+                if adventure is None:
+                    break
 
-        while True:
-            adventure = _select_adventure(strings, language, character)
-            if adventure is None:
-                break
-
-            character = run_scenario(adventure, character, strings, language)
-            return
+                character = run_scenario(
+                    adventure, character, strings, language
+                )
+                return
+        finally:
+            reset_session_catalogs()

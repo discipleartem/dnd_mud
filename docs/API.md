@@ -446,13 +446,15 @@ load_catalog_items(
     fallback: Callable[[str, str], str] | None = None,
 ) -> list[dict[str, Any]]
 bootstrap_session_catalogs(difficulty: GameDifficulty) -> None
+reset_session_catalogs() -> None
 clear_catalog_cache() -> None
 clear_all_catalog_caches() -> None
 ```
 
 Deep-merge модов через `mod_loader` (overlay по полю `target` — путь к базовому YAML в `manifest.yaml`); кэш `@lru_cache` на `load_catalog` и `load_merged_catalog`.  
 `load_catalog_items` — универсальный загрузчик элементов каталога с локализацией (DRY для `load_races`, `load_languages` и т.д.).  
-`bootstrap_session_catalogs` — `set_mod_gating_difficulty` + `reload_catalogs` перед сессией приключения.
+`bootstrap_session_catalogs` — `set_mod_gating_difficulty` + `reload_catalogs` перед сессией приключения.  
+`reset_session_catalogs` — вернуть gating к `normal` после сессии (`new_game` / `load_game`).
 
 ---
 

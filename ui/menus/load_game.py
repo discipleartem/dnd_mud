@@ -3,7 +3,10 @@
 from colorama import Fore, Style
 
 from core.adventure import load_adventures
-from core.catalog_loader import bootstrap_session_catalogs
+from core.catalog_loader import (
+    bootstrap_session_catalogs,
+    reset_session_catalogs,
+)
 from core.game_engine import GameEngine, GameSession
 from core.localization import get_string
 from core.session_storage import (
@@ -83,14 +86,16 @@ def show_load_game_flow(
         return
 
     bootstrap_session_catalogs(loaded.difficulty)
-
-    session = GameSession(
-        character=character,
-        adventure_id=loaded.adventure_id,
-        current_node_id=loaded.current_node_id,
-        difficulty=loaded.difficulty,
-        flags=dict(loaded.flags),
-        script_file=loaded.script_file,
-    )
-    engine = GameEngine(session)
-    run_scenario_with_engine(engine, adventure, strings, language)
+    try:
+        session = GameSession(
+            character=character,
+            adventure_id=loaded.adventure_id,
+            current_node_id=loaded.current_node_id,
+            difficulty=loaded.difficulty,
+            flags=dict(loaded.flags),
+            script_file=loaded.script_file,
+        )
+        engine = GameEngine(session)
+        run_scenario_with_engine(engine, adventure, strings, language)
+    finally:
+        reset_session_catalogs()

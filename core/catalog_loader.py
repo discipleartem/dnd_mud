@@ -45,6 +45,12 @@ def bootstrap_session_catalogs(difficulty: GameDifficulty) -> None:
     reload_catalogs()
 
 
+def reset_session_catalogs() -> None:
+    """Вернуть mod gating к normal после сессии приключения."""
+    set_mod_gating_difficulty("normal")
+    reload_catalogs()
+
+
 def load_catalog_items(
     catalog_data: dict[str, Any],
     language: str,
