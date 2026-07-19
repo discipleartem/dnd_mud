@@ -3,6 +3,7 @@
 Используем dataclasses для type-safety и удобной сериализации.
 """
 
+from collections.abc import Callable
 from dataclasses import dataclass, field
 from typing import Any, cast
 
@@ -26,31 +27,6 @@ def _parse_character_class(raw: object) -> CharacterClass:
     return CharacterClass(str(raw))
 
 
-def _coerce_str_list(raw: object) -> list[str]:
-    """Список строк из JSON."""
-    if isinstance(raw, list):
-        return [str(item) for item in raw]
-    return []
-
-
-def _coerce_str_dict(raw: object) -> dict[str, str]:
-    """Словарь str→str из JSON."""
-    if isinstance(raw, dict):
-        return {str(key): str(value) for key, value in raw.items()}
-    return {}
-
-
-def _coerce_feat_choices(raw: object) -> dict[str, dict[str, Any]]:
-    """feat_choices из JSON."""
-    if not isinstance(raw, dict):
-        return {}
-    return {
-        str(key): value
-        for key, value in raw.items()
-        if isinstance(value, dict)
-    }
-
-
 def _parse_difficulty(raw: object) -> GameDifficulty:
     """Режим сложности из JSON."""
     if raw == "hardcore":
@@ -60,31 +36,54 @@ def _parse_difficulty(raw: object) -> GameDifficulty:
     return "normal"
 
 
-def _coerce_inventory(raw: object) -> list[InventoryItem]:
-    """Инвентарь из JSON."""
+def _json_list[T](
+    raw: object,
+    convert: Callable[[object], T | None] | None = None,
+) -> list[T]:
+    """Список из JSON: по умолчанию str, иначе convert (None — пропуск)."""
     if not isinstance(raw, list):
         return []
-    items: list[InventoryItem] = []
+    if convert is None:
+        return [cast(T, str(item)) for item in raw]
+    result: list[T] = []
     for item in raw:
-        if not isinstance(item, dict):
-            continue
-        kind = item.get("kind")
-        item_id = item.get("id")
-        if not isinstance(kind, str) or not isinstance(item_id, str):
-            continue
-        entry: InventoryItem = {"kind": kind, "id": item_id}
-        qty = item.get("qty")
-        if isinstance(qty, int):
-            entry["qty"] = qty
-        items.append(entry)
-    return items
+        mapped = convert(item)
+        if mapped is not None:
+            result.append(mapped)
+    return result
 
 
-def _coerce_equipped(raw: object) -> EquippedState:
-    """Экипировка из JSON."""
-    if isinstance(raw, dict):
-        return cast(EquippedState, dict(raw))
-    return {}
+def _json_dict[V](
+    raw: object,
+    convert: Callable[[object], V | None] | None = None,
+) -> dict[str, V]:
+    """Словарь str→V из JSON (convert=None → str; None — пропуск)."""
+    if not isinstance(raw, dict):
+        return {}
+    result: dict[str, V] = {}
+    for key, value in raw.items():
+        if convert is None:
+            result[str(key)] = cast(V, str(value))
+            continue
+        mapped = convert(value)
+        if mapped is not None:
+            result[str(key)] = mapped
+    return result
+
+
+def _inventory_item(raw: object) -> InventoryItem | None:
+    """Один предмет инвентаря из JSON или None."""
+    if not isinstance(raw, dict):
+        return None
+    kind = raw.get("kind")
+    item_id = raw.get("id")
+    if not isinstance(kind, str) or not isinstance(item_id, str):
+        return None
+    entry: InventoryItem = {"kind": kind, "id": item_id}
+    qty = raw.get("qty")
+    if isinstance(qty, int):
+        entry["qty"] = qty
+    return entry
 
 
 def _empty_equipped() -> EquippedState:
@@ -191,6 +190,7 @@ class Character:
         created_at = data.get("created_at")
         subclass_raw = data.get("subclass_id")
         background_raw = data.get("background_id")
+        equipped_raw = data.get("equipped", {})
         return cls(
             name=str(data.get("name", "")),
             race=str(data.get("race", "")),
@@ -205,33 +205,36 @@ class Character:
             subclass_id=(
                 str(subclass_raw) if subclass_raw is not None else None
             ),
-            languages=_coerce_str_list(data.get("languages", [])),
+            languages=_json_list(data.get("languages", [])),
             background_id=(
                 str(background_raw) if background_raw is not None else None
             ),
-            skills=_coerce_str_list(data.get("skills", [])),
-            skill_expertise=_coerce_str_list(data.get("skill_expertise", [])),
-            tool_expertise=_coerce_str_list(data.get("tool_expertise", [])),
-            weapon_proficiencies=_coerce_str_list(
+            skills=_json_list(data.get("skills", [])),
+            skill_expertise=_json_list(data.get("skill_expertise", [])),
+            tool_expertise=_json_list(data.get("tool_expertise", [])),
+            weapon_proficiencies=_json_list(
                 data.get("weapon_proficiencies", [])
             ),
-            armor_proficiencies=_coerce_str_list(
+            armor_proficiencies=_json_list(
                 data.get("armor_proficiencies", [])
             ),
-            tool_proficiencies=_coerce_str_list(
-                data.get("tool_proficiencies", [])
+            tool_proficiencies=_json_list(data.get("tool_proficiencies", [])),
+            feat_ids=_json_list(data.get("feat_ids", [])),
+            feat_choices=_json_dict(
+                data.get("feat_choices", {}),
+                convert=lambda v: v if isinstance(v, dict) else None,
             ),
-            feat_ids=_coerce_str_list(data.get("feat_ids", [])),
-            feat_choices=_coerce_feat_choices(data.get("feat_choices", {})),
-            asi_choices=_coerce_str_dict(data.get("asi_choices", {})),
-            save_proficiencies=_coerce_str_list(
-                data.get("save_proficiencies", [])
+            asi_choices=_json_dict(data.get("asi_choices", {})),
+            save_proficiencies=_json_list(data.get("save_proficiencies", [])),
+            inventory=_json_list(
+                data.get("inventory", []), convert=_inventory_item
             ),
-            inventory=_coerce_inventory(data.get("inventory", [])),
-            equipped=_coerce_equipped(data.get("equipped", {})),
-            equipment_choices=_coerce_str_dict(
-                data.get("equipment_choices", {})
+            equipped=(
+                cast(EquippedState, dict(equipped_raw))
+                if isinstance(equipped_raw, dict)
+                else _empty_equipped()
             ),
+            equipment_choices=_json_dict(data.get("equipment_choices", {})),
             class_features_applied=bool(
                 data.get("class_features_applied", False)
             ),
