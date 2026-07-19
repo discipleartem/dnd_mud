@@ -334,180 +334,211 @@ def _grant_description(
                 amount=amount,
             )
     if gtype == ABILITY_INCREASE and grant.get("choice"):
-        count = int(grant.get("count", 1))
-        amount = int(grant.get("amount", 1))
         return get_string(
             strings,
             "character.stats_choice_bonus_subrace_info",
-            count=count,
-            value=amount,
+            count=int(grant.get("count", 1)),
+            value=int(grant.get("amount", 1)),
         )
     if grant.get("choice"):
-        count = int(grant.get("count", 1))
-        tools = grant.get("tools", [])
-        if gtype == "tool_proficiency" and isinstance(tools, list) and tools:
-            tool_labels = ", ".join(
-                get_tool_name(str(tool_id), language) for tool_id in tools
-            )
+        return _grant_choice_description(grant, strings, language, gtype)
+
+    match gtype:
+        case "tool_proficiency":
+            raw_tools = grant.get("tools", [])
+            if isinstance(raw_tools, list) and raw_tools:
+                return ", ".join(
+                    get_tool_name(str(tool_id), language)
+                    for tool_id in raw_tools
+                )
+        case "spellcasting":
+            return _format_spellcasting_grant(grant, strings)
+        case "cantrip":
+            source = str(grant.get("source", ""))
+            ability = str(grant.get("ability", ""))
+            if source and ability:
+                return get_string(
+                    strings,
+                    "character.grant_cantrip_choice",
+                    source=source,
+                    ability=_ability_name(strings, ability),
+                )
+        case "immunity":
+            if grant.get("effect") == "magical_sleep":
+                return get_string(
+                    strings, "character.grant_immunity_magical_sleep"
+                )
+        case "disadvantage":
+            return _format_disadvantage_grant(grant, strings)
+        case "skill_bonus" if grant.get("expertise"):
+            skill = grant.get("skill")
+            if isinstance(skill, str) and skill:
+                return get_string(
+                    strings,
+                    "character.grant_skill_expertise",
+                    skill=_skill_name(strings, skill),
+                )
+        case "skill_proficiency":
+            return _skill_proficiency_description(grant, strings)
+        case "armor_proficiency":
+            return _armor_labels_from_grant(grant, strings, language) or ""
+        case "speed_ignore_penalty":
+            armor_labels = _armor_labels_from_grant(grant, strings, language)
+            if armor_labels:
+                return get_string(
+                    strings,
+                    "character.grant_speed_ignore",
+                    armors=armor_labels,
+                )
+        case "resistance":
+            return _resistance_description(grant, strings)
+        case "speed_bonus":
+            speed = grant.get("amount")
+            if speed is not None:
+                return get_string(
+                    strings,
+                    "character.grant_speed_value",
+                    speed=speed,
+                )
+        case "advantage":
+            return _advantage_description(grant, strings)
+        case "rest" if grant.get("duration") is not None:
             return get_string(
                 strings,
-                "character.grant_choice_tools",
-                count=count,
-                tools=tool_labels,
+                "character.grant_rest_trance",
+                duration=int(grant["duration"]),
             )
-        pool = str(grant.get("pool", grant.get("from", "")))
-        if pool:
-            pool_label = _grant_pool_label(strings, pool, gtype=gtype)
+        case "darkvision" if grant.get("range") is not None:
             return get_string(
                 strings,
-                "character.grant_choice_pool",
-                count=count,
-                pool=pool_label,
+                "character.grant_darkvision",
+                range=grant["range"],
             )
-        return get_string(
-            strings,
-            "character.grant_choice",
-            count=count,
-        )
-    if gtype == "tool_proficiency":
-        raw_tools = grant.get("tools", [])
-        if isinstance(raw_tools, list) and raw_tools:
-            return ", ".join(
-                get_tool_name(str(tool_id), language) for tool_id in raw_tools
-            )
-    if gtype == "spellcasting":
-        return _format_spellcasting_grant(grant, strings)
-    if gtype == "cantrip":
-        source = str(grant.get("source", ""))
-        ability = str(grant.get("ability", ""))
-        if source and ability:
-            return get_string(
-                strings,
-                "character.grant_cantrip_choice",
-                source=source,
-                ability=_ability_name(strings, ability),
-            )
-    if gtype == "immunity":
-        effect = str(grant.get("effect", ""))
-        if effect == "magical_sleep":
-            return get_string(
-                strings, "character.grant_immunity_magical_sleep"
-            )
-    if gtype == "disadvantage":
-        return _format_disadvantage_grant(grant, strings)
+
     weapons = grant.get("weapons", [])
     if isinstance(weapons, list) and weapons:
         return ", ".join(get_weapon_name(str(w), language) for w in weapons)
-    if gtype == "skill_bonus" and grant.get("expertise"):
-        skill = grant.get("skill")
-        if isinstance(skill, str) and skill:
-            return get_string(
-                strings,
-                "character.grant_skill_expertise",
-                skill=_skill_name(strings, skill),
-            )
-    if gtype == "skill_proficiency":
-        skills = grant.get("skills", grant.get("skill"))
-        if isinstance(skills, list) and skills:
-            return _format_skill_proficiency_labels(strings, skills)
-        if isinstance(skills, str) and skills:
-            return get_string(
-                strings,
-                "character.grant_skill_proficiency",
-                skill=_skill_name(strings, skills),
-            )
-    if gtype == "armor_proficiency":
-        armor_labels = _armor_labels_from_grant(grant, strings, language)
-        if armor_labels:
-            return armor_labels
-    if gtype == "speed_ignore_penalty":
-        armor_labels = _armor_labels_from_grant(grant, strings, language)
-        if armor_labels:
-            return get_string(
-                strings,
-                "character.grant_speed_ignore",
-                armors=armor_labels,
-            )
-    if gtype == "resistance":
-        damage_types = grant.get("damage_types", [])
-        advantage_saves = grant.get("advantage_saves", [])
-        dmg_labels = (
-            _damage_type_labels(strings, damage_types)
-            if isinstance(damage_types, list)
-            else ""
+    return ""
+
+
+def _grant_choice_description(
+    grant: dict[str, Any],
+    strings: StringsDict,
+    language: str,
+    gtype: str,
+) -> str:
+    """Описание grant с ``choice: true``."""
+    count = int(grant.get("count", 1))
+    tools = grant.get("tools", [])
+    if gtype == "tool_proficiency" and isinstance(tools, list) and tools:
+        tool_labels = ", ".join(
+            get_tool_name(str(tool_id), language) for tool_id in tools
         )
-        save_labels = (
-            _damage_type_labels(strings, advantage_saves)
-            if isinstance(advantage_saves, list)
-            else ""
-        )
-        if save_labels and dmg_labels:
-            return get_string(
-                strings,
-                "character.grant_resistance_full",
-                saves=save_labels,
-                types=dmg_labels,
-            )
-        if dmg_labels:
-            return get_string(
-                strings,
-                "character.grant_resistance",
-                types=dmg_labels,
-            )
-        if save_labels:
-            return get_string(
-                strings,
-                "character.grant_advantage_saves",
-                types=save_labels,
-            )
-    if gtype == "speed_bonus":
-        speed = grant.get("amount")
-        if speed is not None:
-            return get_string(
-                strings,
-                "character.grant_speed_value",
-                speed=speed,
-            )
-    if gtype == "advantage":
-        skill = grant.get("skill")
-        terrain = grant.get("terrain")
-        if isinstance(skill, str) and skill and terrain:
-            terrain_label = get_string(
-                strings,
-                f"character.grant_terrain_{terrain}",
-                default=str(terrain),
-            )
-            return get_string(
-                strings,
-                "character.grant_advantage_skill_terrain",
-                skill=_skill_name(strings, skill),
-                terrain=terrain_label,
-            )
-        if grant.get("save") and grant.get("effect"):
-            effect_key = str(grant["effect"])
-            effect_label = get_string(
-                strings,
-                f"character.grant_effect_{effect_key}",
-                default=effect_key,
-            )
-            return get_string(
-                strings,
-                "character.grant_advantage_save",
-                save=_ability_name(strings, str(grant["save"])),
-                effect=effect_label,
-            )
-    if gtype == "rest" and grant.get("duration") is not None:
         return get_string(
             strings,
-            "character.grant_rest_trance",
-            duration=int(grant["duration"]),
+            "character.grant_choice_tools",
+            count=count,
+            tools=tool_labels,
         )
-    range_ft = grant.get("range")
-    if gtype == "darkvision" and range_ft is not None:
+    pool = str(grant.get("pool", grant.get("from", "")))
+    if pool:
+        pool_label = _grant_pool_label(strings, pool, gtype=gtype)
         return get_string(
             strings,
-            "character.grant_darkvision",
-            range=range_ft,
+            "character.grant_choice_pool",
+            count=count,
+            pool=pool_label,
+        )
+    return get_string(strings, "character.grant_choice", count=count)
+
+
+def _skill_proficiency_description(
+    grant: dict[str, Any],
+    strings: StringsDict,
+) -> str:
+    """Описание grant skill_proficiency."""
+    skills = grant.get("skills", grant.get("skill"))
+    if isinstance(skills, list) and skills:
+        return _format_skill_proficiency_labels(strings, skills)
+    if isinstance(skills, str) and skills:
+        return get_string(
+            strings,
+            "character.grant_skill_proficiency",
+            skill=_skill_name(strings, skills),
+        )
+    return ""
+
+
+def _resistance_description(
+    grant: dict[str, Any],
+    strings: StringsDict,
+) -> str:
+    """Описание grant resistance / advantage_saves."""
+    damage_types = grant.get("damage_types", [])
+    advantage_saves = grant.get("advantage_saves", [])
+    dmg_labels = (
+        _damage_type_labels(strings, damage_types)
+        if isinstance(damage_types, list)
+        else ""
+    )
+    save_labels = (
+        _damage_type_labels(strings, advantage_saves)
+        if isinstance(advantage_saves, list)
+        else ""
+    )
+    if save_labels and dmg_labels:
+        return get_string(
+            strings,
+            "character.grant_resistance_full",
+            saves=save_labels,
+            types=dmg_labels,
+        )
+    if dmg_labels:
+        return get_string(
+            strings,
+            "character.grant_resistance",
+            types=dmg_labels,
+        )
+    if save_labels:
+        return get_string(
+            strings,
+            "character.grant_advantage_saves",
+            types=save_labels,
+        )
+    return ""
+
+
+def _advantage_description(
+    grant: dict[str, Any],
+    strings: StringsDict,
+) -> str:
+    """Описание grant advantage."""
+    skill = grant.get("skill")
+    terrain = grant.get("terrain")
+    if isinstance(skill, str) and skill and terrain:
+        terrain_label = get_string(
+            strings,
+            f"character.grant_terrain_{terrain}",
+            default=str(terrain),
+        )
+        return get_string(
+            strings,
+            "character.grant_advantage_skill_terrain",
+            skill=_skill_name(strings, skill),
+            terrain=terrain_label,
+        )
+    if grant.get("save") and grant.get("effect"):
+        effect_key = str(grant["effect"])
+        effect_label = get_string(
+            strings,
+            f"character.grant_effect_{effect_key}",
+            default=effect_key,
+        )
+        return get_string(
+            strings,
+            "character.grant_advantage_save",
+            save=_ability_name(strings, str(grant["save"])),
+            effect=effect_label,
         )
     return ""
 
