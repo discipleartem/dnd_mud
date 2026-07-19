@@ -10,7 +10,7 @@ from core.progression import (
     class_features_applied_at_creation,
     start_level_for_difficulty,
 )
-from core.types import GameDifficulty, StatMap
+from core.types import CharacterBuildParams, GameDifficulty, StatMap
 
 CreationStep = Literal[
     "race",
@@ -68,26 +68,28 @@ class _CreationState:
             self.class_id, self.subclass_id, start_level
         )
         return build_new_character(
-            name=self.name,
-            race_id=str(self.race_id),
-            class_id=str(self.class_id),
-            difficulty=self.difficulty,
-            subrace_id=str(self.subrace_id) if self.subrace_id else None,
-            stats=self.stats,
-            subclass_id=self.subclass_id,
-            languages=self.languages,
-            background_id=self.background_id,
-            skills=self.skills,
-            skill_expertise=self.skill_expertise,
-            tool_expertise=self.tool_expertise,
-            weapon_proficiencies=self.weapon_proficiencies,
-            armor_proficiencies=self.armor_proficiencies,
-            tool_proficiencies=self.tool_proficiencies,
-            background_tool_picks=self.background_tool_picks or None,
-            equipment_choices=self.equipment_choices or None,
-            feat_ids=self.feat_ids or None,
-            feat_choices=self.feat_choices or None,
-            class_features_applied=features_applied,
-            apply_feat_stat_bonuses=False,
-            unique_save_slug=unique_save_slug,
+            CharacterBuildParams(
+                name=self.name,
+                race_id=str(self.race_id),
+                class_id=str(self.class_id),
+                difficulty=self.difficulty,
+                subrace_id=str(self.subrace_id) if self.subrace_id else None,
+                stats=self.stats,
+                subclass_id=self.subclass_id,
+                languages=self.languages,
+                background_id=self.background_id,
+                skills=self.skills,
+                skill_expertise=self.skill_expertise,
+                tool_expertise=self.tool_expertise,
+                weapon_proficiencies=self.weapon_proficiencies,
+                armor_proficiencies=self.armor_proficiencies,
+                tool_proficiencies=self.tool_proficiencies,
+                background_tool_picks=self.background_tool_picks or None,
+                equipment_choices=self.equipment_choices or None,
+                feat_ids=self.feat_ids or None,
+                feat_choices=self.feat_choices or None,
+                class_features_applied=features_applied,
+                apply_feat_stat_bonuses=False,
+                unique_save_slug=unique_save_slug,
+            )
         )

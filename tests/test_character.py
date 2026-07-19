@@ -21,7 +21,7 @@ from core.stats import (
     generate_stats_standard_array,
     point_buy_total_cost,
 )
-from core.types import CharacterClass
+from core.types import CharacterBuildParams, CharacterClass
 from tests.creation_helpers import fighter_acolyte_creation
 from ui.menus._creation_state import _CreationState
 
@@ -69,17 +69,19 @@ def test_generate_stats_and_point_buy() -> None:
 def test_save_character_roundtrip(characters_dir: Path) -> None:
     stats = dict.fromkeys(STAT_NAMES, 12)
     character = build_new_character(
-        name="Hero",
-        race_id="human",
-        class_id=CharacterClass.FIGHTER,
-        difficulty="normal",
-        stats=stats,
-        subclass_id="champion",
-        skills=["athletics"],
-        background_id="soldier",
-        feat_ids=["resilient"],
-        feat_choices={"resilient": {"ability": "constitution"}},
-        unique_save_slug=lambda name: name,
+        CharacterBuildParams(
+            name="Hero",
+            race_id="human",
+            class_id=CharacterClass.FIGHTER,
+            difficulty="normal",
+            stats=stats,
+            subclass_id="champion",
+            skills=["athletics"],
+            background_id="soldier",
+            feat_ids=["resilient"],
+            feat_choices={"resilient": {"ability": "constitution"}},
+            unique_save_slug=lambda name: name,
+        )
     )
     saved = persist_character(character)
     assert saved.level == 1
@@ -96,12 +98,14 @@ def test_save_character_roundtrip(characters_dir: Path) -> None:
 def test_save_character_easy_start_level_xp(characters_dir: Path) -> None:
     stats = dict.fromkeys(STAT_NAMES, 12)
     character = build_new_character(
-        name="EasyHero",
-        race_id="human",
-        class_id=CharacterClass.FIGHTER,
-        difficulty="easy",
-        stats=stats,
-        unique_save_slug=lambda name: name,
+        CharacterBuildParams(
+            name="EasyHero",
+            race_id="human",
+            class_id=CharacterClass.FIGHTER,
+            difficulty="easy",
+            stats=stats,
+            unique_save_slug=lambda name: name,
+        )
     )
     saved = persist_character(character)
     assert saved.level == 3
@@ -133,12 +137,14 @@ def test_starting_max_hp_and_hardcore(
     stats = dict.fromkeys(STAT_NAMES, 10)
     stats["constitution"] = 8
     character = build_new_character(
-        name="LowCon",
-        race_id="human",
-        class_id=CharacterClass.BARD,
-        stats=stats,
-        difficulty="normal",
-        unique_save_slug=lambda name: name,
+        CharacterBuildParams(
+            name="LowCon",
+            race_id="human",
+            class_id=CharacterClass.BARD,
+            stats=stats,
+            difficulty="normal",
+            unique_save_slug=lambda name: name,
+        )
     )
     saved = persist_character(character)
     assert saved.max_hp == 7
@@ -149,12 +155,14 @@ def test_starting_max_hp_and_hardcore(
         lambda count, sides, modifier=0: 5 + modifier,
     )
     hard_character = build_new_character(
-        name="HardHero",
-        race_id="human",
-        class_id=CharacterClass.FIGHTER,
-        difficulty="hardcore",
-        stats=stats,
-        unique_save_slug=lambda name: name,
+        CharacterBuildParams(
+            name="HardHero",
+            race_id="human",
+            class_id=CharacterClass.FIGHTER,
+            difficulty="hardcore",
+            stats=stats,
+            unique_save_slug=lambda name: name,
+        )
     )
     hard = persist_character(hard_character)
     assert hard.max_hp == 7
@@ -171,12 +179,14 @@ def test_hardcore_l1_hp_floor_on_create(
         lambda count, sides, modifier=0: 1 + modifier,
     )
     character = build_new_character(
-        name="HardLow",
-        race_id="human",
-        class_id=CharacterClass.BARD,
-        stats=stats,
-        difficulty="hardcore",
-        unique_save_slug=lambda name: name,
+        CharacterBuildParams(
+            name="HardLow",
+            race_id="human",
+            class_id=CharacterClass.BARD,
+            stats=stats,
+            difficulty="hardcore",
+            unique_save_slug=lambda name: name,
+        )
     )
     saved = persist_character(character)
     assert saved.max_hp == 1
@@ -186,17 +196,21 @@ def test_hardcore_l1_hp_floor_on_create(
 def test_make_save_slug_and_slug_collision(characters_dir: Path) -> None:
     assert make_save_slug("Герой") == "geroy"
     first_character = build_new_character(
-        name="Hero",
-        race_id="human",
-        class_id=CharacterClass.FIGHTER,
-        unique_save_slug=make_save_slug,
+        CharacterBuildParams(
+            name="Hero",
+            race_id="human",
+            class_id=CharacterClass.FIGHTER,
+            unique_save_slug=make_save_slug,
+        )
     )
     first = persist_character(first_character)
     second_character = build_new_character(
-        name="Hero",
-        race_id="elf",
-        class_id=CharacterClass.ROGUE,
-        unique_save_slug=lambda name: f"{make_save_slug(name)}_2",
+        CharacterBuildParams(
+            name="Hero",
+            race_id="elf",
+            class_id=CharacterClass.ROGUE,
+            unique_save_slug=lambda name: f"{make_save_slug(name)}_2",
+        )
     )
     second = persist_character(second_character)
     assert first.save_slug == "hero"

@@ -1,7 +1,5 @@
 """Сборка нового персонажа без записи на диск."""
 
-import warnings
-from collections.abc import Callable
 from datetime import UTC, datetime
 from typing import Any
 
@@ -15,103 +13,16 @@ from core.progression import (
     xp_for_level,
 )
 from core.stats import STANDARD_ARRAY, generate_stats_standard_array
-from core.types import (
-    CharacterBuildParams,
-    CharacterClass,
-    GameDifficulty,
-    InventoryItem,
-    StatMap,
-)
+from core.types import CharacterBuildParams, CharacterClass, InventoryItem
 
 
-def build_new_character(
-    name: str,
-    race_id: str,
-    class_id: str | CharacterClass,
-    difficulty: GameDifficulty = "normal",
-    subrace_id: str | None = None,
-    stats: StatMap | None = None,
-    subclass_id: str | None = None,
-    languages: list[str] | None = None,
-    background_id: str | None = None,
-    skills: list[str] | None = None,
-    skill_expertise: list[str] | None = None,
-    tool_expertise: list[str] | None = None,
-    weapon_proficiencies: list[str] | None = None,
-    armor_proficiencies: list[str] | None = None,
-    tool_proficiencies: list[str] | None = None,
-    background_tool_picks: list[str] | None = None,
-    feat_ids: list[str] | None = None,
-    feat_choices: dict[str, dict[str, Any]] | None = None,
-    asi_choices: dict[str, str] | None = None,
-    save_proficiencies: list[str] | None = None,
-    inventory: list[InventoryItem] | None = None,
-    equipment_choices: dict[str, str] | None = None,
-    level: int | None = None,
-    class_features_applied: bool = False,
-    apply_feat_stat_bonuses: bool = True,
-    *,
-    unique_save_slug: Callable[[str], str],
-) -> Character:
-    """Собрать нового персонажа без записи на диск.
+def build_new_character(params: CharacterBuildParams) -> Character:
+    """Собрать нового персонажа из параметров без записи на диск.
 
     ``apply_feat_stat_bonuses=False`` — если ``stats`` уже содержат бонусы
     черт (flow создания после ``select_creation_feats``).
 
     ``unique_save_slug`` — фабрика уникального save_slug по имени персонажа.
-
-    .. deprecated:: 0.2.0
-        Используйте :func:`build_new_character_from_params`
-        с CharacterBuildParams.
-    """
-    warnings.warn(
-        "build_new_character is deprecated. "
-        "Use build_new_character_from_params with CharacterBuildParams.",
-        DeprecationWarning,
-        stacklevel=2,
-    )
-    params = CharacterBuildParams(
-        name=name,
-        race_id=race_id,
-        class_id=class_id,
-        difficulty=difficulty,
-        subrace_id=subrace_id,
-        stats=stats,
-        subclass_id=subclass_id,
-        languages=languages,
-        background_id=background_id,
-        skills=skills,
-        skill_expertise=skill_expertise,
-        tool_expertise=tool_expertise,
-        weapon_proficiencies=weapon_proficiencies,
-        armor_proficiencies=armor_proficiencies,
-        tool_proficiencies=tool_proficiencies,
-        background_tool_picks=background_tool_picks,
-        feat_ids=feat_ids,
-        feat_choices=feat_choices,
-        asi_choices=asi_choices,
-        save_proficiencies=save_proficiencies,
-        inventory=inventory,
-        equipment_choices=equipment_choices,
-        level=level,
-        class_features_applied=class_features_applied,
-        apply_feat_stat_bonuses=apply_feat_stat_bonuses,
-        unique_save_slug=unique_save_slug,
-    )
-    return build_new_character_from_params(params)
-
-
-def build_new_character_from_params(params: CharacterBuildParams) -> Character:
-    """Собрать нового персонажа из параметров без записи на диск.
-
-    Новый API для создания персонажа с использованием CharacterBuildParams.
-    Заменяет длинный список параметров в build_new_character.
-
-    Args:
-        params: Параметры создания персонажа.
-
-    Returns:
-        Модель персонажа.
     """
     stats = params.stats
     if stats is None:
@@ -422,7 +333,6 @@ def merge_expertise_with_feats(
 
 __all__ = [
     "build_new_character",
-    "build_new_character_from_params",
     "CreationContext",
     "ResolvedGrants",
     "merge_expertise_with_feats",
