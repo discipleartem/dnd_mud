@@ -151,7 +151,7 @@ def _existing_save_slugs() -> set[str]:
     return slugs
 
 
-def _unique_save_slug(name: str) -> str:
+def unique_save_slug(name: str) -> str:
     """Уникальный save_slug для нового персонажа."""
     base = make_save_slug(name)
     existing = _existing_save_slugs()

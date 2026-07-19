@@ -1246,14 +1246,6 @@ def format_inventory_line(
     return ", ".join(parts)
 
 
-def _versatile_can_switch_to_two_hands(equipped: EquippedState) -> bool:
-    """Можно ли взять универсальное оружие двумя руками."""
-    if equipped.get("shield"):
-        return False
-    off = equipped.get("off_hand")
-    return not (isinstance(off, str) and off)
-
-
 def _versatile_active_grip(
     equipped: EquippedState, weapon_id: str
 ) -> Literal["one_handed", "two_handed"]:
