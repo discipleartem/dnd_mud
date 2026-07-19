@@ -114,7 +114,7 @@ class Expertise:
         """Создать из списков для совместимости с существующим API."""
 ```
 
-Re-export типов: `core.types`. Фасад функций персонажа — `core.character`.
+Re-export типов: `core.types`. Функции персонажа — leaf-модули (`character_storage`, `stats`, `races`, …).
 
 ---
 
@@ -636,7 +636,7 @@ get_class_saving_throws(class_id: str) -> list[str]
 apply_subclass_proficiencies_to_character(character) -> Character
 ```
 
-Импорт из `core.proficiencies` (не re-export в `core.character`).
+Импорт из `core.proficiencies`.
 
 ---
 
