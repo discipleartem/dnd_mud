@@ -23,8 +23,8 @@ Release `dev` → `main`: review **не обязателен** — [`dnd-mud-rel
 
 ## Предусловия
 
-- [ ] План с N PR: созданы и закоммичены **≥ N part-веток** (не один общий diff); таблица PR→ветка из §Шаг 0 workflow
-- [ ] Все part-ветки **слиты** `--no-ff` в интеграционную `feat/<slug>` ([`dnd-mud-workflow.mdc`](../../rules/dnd-mud-workflow.mdc) §Несколько веток)
+- [ ] План с N PR: созданы и закоммичены **≥ N part-веток** (не один общий diff); таблица PR→ветка — [`dnd-mud-multi-branch`](../dnd-mud-multi-branch/SKILL.md) §Шаг 0
+- [ ] Все part-ветки **слиты** `--no-ff` в интеграционную `feat/<slug>` ([`dnd-mud-multi-branch`](../dnd-mud-multi-branch/SKILL.md))
 - [ ] Текущая ветка — `feat/<slug>`, не part-ветка и не `main`/`dev`
 - [ ] `dnd-mud-docs-after-task` выполнен (если была реализация кода/данных)
 - [ ] Рабочее дерево чистое

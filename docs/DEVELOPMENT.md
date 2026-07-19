@@ -224,15 +224,18 @@ pytest tests/test_data_schema.py -v
 
 | Тема | Канон |
 |------|-------|
-| Agent-loop, steps, skills | [`AGENTS.md`](../AGENTS.md) · [`.cursor/skills/README.md`](../.cursor/skills/README.md) |
-| Git-старт, rebase, multi-branch, `merged/*` policy | [`.cursor/rules/dnd-mud-workflow.mdc`](../.cursor/rules/dnd-mud-workflow.mdc) |
-| Task cycle (global) | [`01-operations.mdc`](~/.cursor/rules/01-operations.mdc) §Task cycle |
-| Verify policy + commands | workflow §Verify / review · [`dnd-mud-verify/reference.md`](../.cursor/skills/dnd-mud-verify/reference.md) |
+| Agent-loop, steps | [`AGENTS.md`](../AGENTS.md) |
+| Skills index | [`.cursor/skills/README.md`](../.cursor/skills/README.md) |
+| Git-старт, `merged/*`, verify policy | [`.cursor/rules/dnd-mud-workflow.mdc`](../.cursor/rules/dnd-mud-workflow.mdc) |
+| Multi-branch (N PR) | [`.cursor/skills/dnd-mud-multi-branch`](../.cursor/skills/dnd-mud-multi-branch/SKILL.md) |
+| Task cycle (global) | [`task-cycle.mdc`](~/.cursor/rules/task-cycle.mdc) |
+| Verify commands | [`dnd-mud-verify/reference.md`](../.cursor/skills/dnd-mud-verify/reference.md) |
 | Review | [`.cursor/skills/dnd-mud-review`](../.cursor/skills/dnd-mud-review/SKILL.md) |
 | Fix plan | [`.cursor/skills/dnd-mud-fix-plan`](../.cursor/skills/dnd-mud-fix-plan/SKILL.md) |
 | Push / PR task → `dev` | [`.cursor/skills/dnd-mud-git-pr`](../.cursor/skills/dnd-mud-git-pr/SKILL.md) |
 | Release `dev` → `main` | [`.cursor/skills/dnd-mud-release`](../.cursor/skills/dnd-mud-release/SKILL.md) |
 | Sync `dev`←`main` | [`git-dev-main-sync.md`](~/.cursor/docs/git-dev-main-sync.md) |
+| Settings UI / IronBee cleanup | [`user-rules-minimal.md`](~/.cursor/docs/user-rules-minimal.md) |
 
 IDE: расширения **GitHub Pull Requests** и **GitHub Actions** — [`.vscode/settings.json`](../.vscode/settings.json).
 
@@ -295,7 +298,7 @@ Rulesets: **Settings → Rules**. Только **`main_rules`** на `refs/heads
 git fetch origin && git checkout dev && git pull origin dev
 git log dev..origin/main --oneline   # must be empty
 git merge origin/main --no-commit --no-ff && git merge --abort   # пробная проверка, не релиз
-make test
+make verify
 gh pr create --base main --head dev --title "release: …"
 # CI dev-sync-and-mergeable → gh pr merge <number> --squash
 ```

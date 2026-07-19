@@ -21,6 +21,6 @@ build/
 # Локальная копия PHB (© WotC); не коммитить
 docs/*.pdf
 
-# IronBee extension перезаписывает файл; для dnd_mud канон — dnd-mud-verify.mdc
-.cursor/rules/ironbee-devtools-use.mdc
+# IronBee: stub committed in .cursor/rules/ironbee-devtools-use.mdc (console ban).
+# Keep ironbeeDevTools.platform.browser.enable = false so the extension does not overwrite it.
 

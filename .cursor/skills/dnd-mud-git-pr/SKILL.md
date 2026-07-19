@@ -9,8 +9,8 @@ disable-model-invocation: true
 
 # dnd_mud — git PR (task → `dev`)
 
-**Policy:** [`dnd-mud-workflow.mdc`](../../rules/dnd-mud-workflow.mdc) §PR task → `dev`, §Ветки `merged/*`.  
-**Оформление PR:** [`user-protocols.mdc`](~/.cursor/rules/user-protocols.mdc) §PR procedure.
+**Policy:** [`dnd-mud-workflow.mdc`](../../rules/dnd-mud-workflow.mdc) §`merged/*` · Overrides.  
+**Оформление PR:** [`git.mdc`](~/.cursor/rules/git.mdc) §PR procedure.
 
 ## Когда выполнять
 
@@ -20,7 +20,7 @@ disable-model-invocation: true
 | PR `MERGED` / «смержил» | §Rename в `merged/*` |
 | Push без PR | Только push (§Push) |
 
-**Предусловие:** [`dnd-mud-review`](../dnd-mud-review/SKILL.md) выполнен. Head PR — **`feat/<slug>`** после merge всех part-веток плана (если план перечислял N PR — было создано ≥ N part-веток). См. [`dnd-mud-workflow.mdc`](../../rules/dnd-mud-workflow.mdc) §Шаг 0 и §Проверка.
+**Предусловие:** [`dnd-mud-review`](../dnd-mud-review/SKILL.md) выполнен. Head PR — **`feat/<slug>`** после merge всех part-веток плана (если план перечислял N PR — было создано ≥ N part-веток). См. [`dnd-mud-multi-branch`](../dnd-mud-multi-branch/SKILL.md) и [`dnd-mud-workflow.mdc`](../../rules/dnd-mud-workflow.mdc) §Multi-branch.
 
 ## Push и PR
 
@@ -30,7 +30,7 @@ git fetch origin && git rebase origin/dev
 git push -u origin HEAD
 ```
 
-Создать PR — по [`user-protocols.mdc`](~/.cursor/rules/user-protocols.mdc) §PR procedure:
+Создать PR — по [`git.mdc`](~/.cursor/rules/git.mdc) §PR procedure:
 
 1. Parallel: `git status`, `git diff`, remote tracking, `git log`, `git diff origin/dev...HEAD`
 2. Draft summary по всем коммитам ветки
@@ -85,4 +85,4 @@ git fetch origin && git checkout dev && git merge --ff-only origin/dev
 make branch-cleanup   # git branch -d для всех веток, слитых в CLEANUP_BASE (по умолчанию dev); merged/*, main, dev не трогает
 ```
 
-Не оставлять part-ветки без префикса `merged/` — они относятся к завершённой задаче и должны быть удалены (ручной `git branch -d` на каждую — источник ошибок; используй `make branch-cleanup`). Проверка «задача завершена» — [`dnd-mud-workflow.mdc`](../../rules/dnd-mud-workflow.mdc) §Проверка перед «задача завершена».
+Не оставлять part-ветки без префикса `merged/` — они относятся к завершённой задаче и должны быть удалены (ручной `git branch -d` на каждую — источник ошибок; используй `make branch-cleanup`). Проверка «задача завершена» — [`dnd-mud-multi-branch`](../dnd-mud-multi-branch/SKILL.md) §Проверка.

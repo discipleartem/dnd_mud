@@ -11,7 +11,7 @@ alwaysApply: true
 
 ## Commands
 
-`.venv` обязателен — [`01-operations.mdc`](~/.cursor/rules/01-operations.mdc) §Virtual environment.
+`.venv` обязателен — [`venv.mdc`](~/.cursor/rules/venv.mdc).
 
 ```bash
 make install          # venv + pip install -e ".[dev]"
@@ -59,6 +59,17 @@ Verify/review policy — [`dnd-mud-workflow.mdc`](dnd-mud-workflow.mdc) §Verify
 
 Если после шага 1 файл всё ещё недоступен — его нет локально; попроси пользователя положить PDF в `docs/`.
 
+### Актуализация справочника из PDF
+
+PDF парсят только агенты. После правок — `python scripts/build_rules_index.py` (нормализация индексов, не PDF).
+
+1. Читает нужный раздел PDF (процедура доступа — выше).
+2. Обновляет `<!-- phb:auto:* -->` и `quick` в frontmatter; при новых сущностях — `toc.yaml`, `_index/entities.yaml` / `_index/spells.yaml`.
+3. Сохраняет `mud:*` и `mud_status` / `mud_refs` без изменений, если задача не про реализацию MUD.
+4. Запускает `scripts/build_rules_index.py`.
+
+Подробнее: [`docs/rules/README.md`](../docs/rules/README.md).
+
 ## Agent-loop
 
 [`AGENTS.md`](../AGENTS.md) · git/verify/review — [`dnd-mud-workflow.mdc`](dnd-mud-workflow.mdc).
@@ -68,9 +79,10 @@ Verify/review policy — [`dnd-mud-workflow.mdc`](dnd-mud-workflow.mdc) §Verify
 | Файл | Globs | Канон |
 |------|-------|-------|
 | `dnd-mud-workflow.mdc` | always | git/verify/review overrides |
+| `ironbee-devtools-use.mdc` | always | stub: browser/IronBee forbidden |
 | `dnd-mud-python.mdc` | `**/*.py` | Python 3.12, KISS |
 | `dnd-mud-tests.mdc` | `tests/**` | pytest |
 | `dnd-mud-core.mdc` | `core/**`, `ui/**`, `main.py` | слои, механика |
 | `dnd-mud-data.mdc` | `database/**`, `mods/**`, `**/*.json` | YAML/JSON |
 
-Global: [`00-global.mdc`](~/.cursor/rules/00-global.mdc) · [`01-operations.mdc`](~/.cursor/rules/01-operations.mdc)
+Global: [`00-global.mdc`](~/.cursor/rules/00-global.mdc) · [`git.mdc`](~/.cursor/rules/git.mdc) · [`task-cycle.mdc`](~/.cursor/rules/task-cycle.mdc)
