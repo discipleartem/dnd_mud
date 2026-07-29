@@ -555,6 +555,29 @@ tough_hp_adjustment_on_acquire(level) -> int
 
 **Запланировано (Phase 2):** постоянная проверка требований — `feat_is_active`, `active_feat_ids`, `feat_requirement_context_from_character`; см. [`rules/chapters/06-feats.md`](rules/chapters/06-feats.md) §«Запланировано». **Resilient** (`save_proficiency` в YAML): владение спасброском применяется **при создании** через `get_feat_save_proficiencies` → `save_proficiencies` на `Character`.
 
+## core.hp_bonus — Бонусы HP из grants
+
+```python
+HpBonusSource(name: str, amount: int)
+hit_point_bonus_amount(mechanics: dict) -> int
+hit_point_bonus_sources_from_grants(grants: list[dict]) -> list[HpBonusSource]
+```
+
+Также реэкспорт из `core.progression`.
+
+## core.expertise — Компетентность (expertise)
+
+```python
+ExpertiseGrant / ExpertiseAlternative
+get_expertise_grants(class_id, character_level) -> list[ExpertiseGrant]
+expertise_step_required(class_id, character_level) -> bool
+pending_expertise_grants(character) -> list[ExpertiseGrant]
+validate_expertise_selection(...) -> bool
+default_rogue_tool_expertise() -> list[str]
+```
+
+Также реэкспорт из `core.progression`.
+
 ## core.progression — ASI (фрагмент)
 
 ASI и связанные helpers живут в `core/progression.py` (не отдельный `core.asi`).

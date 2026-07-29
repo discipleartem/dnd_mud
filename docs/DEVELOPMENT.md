@@ -65,8 +65,10 @@ dnd_mud/
 │   ├── character_storage.py # CRUD; make_save_slug, unique_save_slug
 │   ├── catalog_loader.py    # load_catalog + bootstrap_session_catalogs
 │   ├── feats.py             # Черты (loader, apply, visibility, …)
-│   ├── progression.py       # XP, HP, ASI, expertise, level-up
-│   ├── inventory.py         # Инвентарь / экипировка / AC
+│   ├── progression.py       # XP, HP, ASI, level-up (expertise → expertise.py)
+│   ├── expertise.py         # Компетентность класса
+│   ├── hp_bonus.py          # Бонусы HP из grants
+│   ├── combat.py            # Phase 2: initiative / attack roll│   ├── inventory.py         # Инвентарь / экипировка / AC
 │   ├── proficiencies.py     # Владения
 │   ├── grants.py            # grants[] + proficiency-токены
 │   ├── stats.py             # Генерация и валидация характеристик

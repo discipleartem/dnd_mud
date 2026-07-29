@@ -67,6 +67,8 @@ UI не читает файлы данных напрямую — только �
 | `core/scenario_rooms.py` | `exits` в узлах YAML-сценария |
 | `core/engine_rules.py` | Преимущество/помеха проверок по `GameDifficulty` |
 | `core/combat.py` | Каркас Phase 2: `roll_initiative`, `attack_roll` |
+| `core/hp_bonus.py` | `HpBonusSource`, бонусы HP из grants |
+| `core/expertise.py` | Компетентность (expertise) из class features |
 | `core/types.py` | Типы домена: `StatMap`, `CharacterClass`, `CharacterBuildParams`, … |
 | `core/abilities.py` | Каталог характеристик и навыков из YAML |
 | `core/races.py` | Справочник рас, `collect_race_grants`, расовые бонусы |
