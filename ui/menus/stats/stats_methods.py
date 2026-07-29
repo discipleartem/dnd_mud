@@ -20,7 +20,7 @@ from core.stats import (
 from core.types import StatMap, StringsDict
 from ui.input_handler import get_int_input
 from ui.menus._common import _ability_name, _choice_prompt, _press_enter
-from ui.menus._display import (
+from ui.menus.display import (
     _print_point_buy_cost_table,
     _print_stats_generation_header,
 )

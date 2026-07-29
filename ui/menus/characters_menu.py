@@ -20,7 +20,7 @@ from ui.menus._common import (
     _run_numbered_menu,
 )
 from ui.menus._corrupt_saves import show_corrupt_save_warnings_if_any
-from ui.menus._display import _print_characters_list
+from ui.menus.display import _print_characters_list
 
 
 def _select_character_to_delete(

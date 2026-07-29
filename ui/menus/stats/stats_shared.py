@@ -23,7 +23,7 @@ from ui.menus._common import (
     _choice_prompt,
     _stats_total_line,
 )
-from ui.menus._display import (
+from ui.menus.display import (
     _print_final_stat_line,
     _print_stats_generation_header,
 )

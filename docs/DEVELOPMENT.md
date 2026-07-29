@@ -87,7 +87,8 @@ dnd_mud/
 │       ├── settings.py
 │       ├── stats/           # Генерация характеристик (подпакет)
 │       ├── _common.py       # _print_numbered_row, _run_numbered_menu, …
-│       ├── _display.py      # Отображение (класс, раса, stats, персонаж)
+│       ├── display/         # Отображение (класс, раса, stats, персонаж)
+│       ├── _display.py      # Compat re-export → display/
 │       └── _selectors.py
 ├── database/                # YAML-справочники D&D 5e
 │   ├── races/
