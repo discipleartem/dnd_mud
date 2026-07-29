@@ -183,7 +183,7 @@ def weapon_properties_raw(weapon_id: str) -> dict[str, Any]:
     return dict(props) if isinstance(props, dict) else {}
 
 
-def _format_dice_for_display(dice: str, language: str) -> str:
+def format_dice_for_display(dice: str, language: str) -> str:
     """Кости в подписи: 1d10 → 1к10 для ru."""
     if language == "ru":
         return dice.replace("d", "к")
@@ -211,18 +211,18 @@ def format_weapon_property_labels(
     return labels
 
 
-def _weapon_damage_dice(weapon_id: str) -> str:
+def weapon_damage_dice(weapon_id: str) -> str:
     damage = load_weapon(weapon_id).get("damage", {})
     if isinstance(damage, dict):
         return str(damage.get("dice", "1d4"))
     return "1d4"
 
 
-def _weapon_versatile_dice(weapon_id: str) -> str:
+def weapon_versatile_dice(weapon_id: str) -> str:
     props = weapon_properties_raw(weapon_id).get("versatile")
     if props:
         return str(props)
-    return _weapon_damage_dice(weapon_id)
+    return weapon_damage_dice(weapon_id)
 
 
 def format_versatile_catalog_hint(
@@ -233,11 +233,9 @@ def format_versatile_catalog_hint(
     """Подсказка для меню: оба режима без указания активного."""
     if "versatile" not in weapon_properties_raw(weapon_id):
         return None
-    one_dice = _format_dice_for_display(
-        _weapon_damage_dice(weapon_id), language
-    )
-    two_dice = _format_dice_for_display(
-        _weapon_versatile_dice(weapon_id), language
+    one_dice = format_dice_for_display(weapon_damage_dice(weapon_id), language)
+    two_dice = format_dice_for_display(
+        weapon_versatile_dice(weapon_id), language
     )
     return get_string(
         strings,

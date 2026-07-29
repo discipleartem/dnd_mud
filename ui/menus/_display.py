@@ -12,19 +12,19 @@ from core.classes import (
 )
 from core.dice import ability_modifier
 from core.equipment import (
-    _format_dice_for_display,
-    _weapon_damage_dice,
-    _weapon_versatile_dice,
     armor_equipped_hint,
     default_ammunition_pack_size,
+    format_dice_for_display,
     get_armor_name,
     get_equipment_item_name,
     get_tool_name,
     get_weapon_name,
     proficiency_token_label,
     weapon_ammunition_item_id,
+    weapon_damage_dice,
     weapon_property_hint,
     weapon_range,
+    weapon_versatile_dice,
 )
 from core.grants import (
     ABILITY_INCREASE,
@@ -1314,11 +1314,9 @@ def format_versatile_damage_dice(
     """Кости универсального оружия и активный режим: (1к8, 1к10, one|two)."""
     if not weapon_is_versatile(weapon_id):
         return None
-    one_dice = _format_dice_for_display(
-        _weapon_damage_dice(weapon_id), language
-    )
-    two_dice = _format_dice_for_display(
-        _weapon_versatile_dice(weapon_id), language
+    one_dice = format_dice_for_display(weapon_damage_dice(weapon_id), language)
+    two_dice = format_dice_for_display(
+        weapon_versatile_dice(weapon_id), language
     )
     active = (
         "two" if _versatile_active_grip(equipped) == "two_handed" else "one"
