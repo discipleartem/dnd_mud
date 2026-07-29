@@ -65,8 +65,8 @@ UI не читает файлы данных напрямую — только �
 | `core/game_engine.py` | `GameEngine`, `GameSession` — state machine сценария; `step_exit`, флаги сессии |
 | `core/scenario_rooms.py` | `exits` в узлах YAML-сценария |
 | `core/engine_rules.py` | Преимущество/помеха проверок по `GameDifficulty` |
-| `core/combat/` | Каркас Phase 2: `roll_initiative`, `attack_roll` |
-| `core/types.py` | Типы домена: `StatMap`, `CharacterClass`, `CharacterBuildParams`, `Proficiencies`, … |
+| `core/combat.py` | Каркас Phase 2: `roll_initiative`, `attack_roll` |
+| `core/types.py` | Типы домена: `StatMap`, `CharacterClass`, `CharacterBuildParams`, … |
 | `core/abilities.py` | Каталог характеристик и навыков из YAML |
 | `core/races.py` | Справочник рас, `collect_race_grants`, расовые бонусы |
 | `core/classes.py` | Справочник классов, `get_class_dict`, hit dice, подклассы |

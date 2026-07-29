@@ -5,7 +5,6 @@ from pathlib import Path
 from typing import Any
 
 from core.catalog_loader import (
-    clear_catalog_cache,
     load_catalog,
     load_catalog_items,
 )
@@ -20,11 +19,6 @@ from core.localization import resolve_localized_text
 from core.types import StatMap
 
 RACES_FILE = Path("database/races/races.yaml")
-
-
-def clear_races_cache() -> None:
-    """Сбросить кэш рас (для тестов)."""
-    clear_catalog_cache()
 
 
 def _load_races_yaml() -> dict[str, Any]:
@@ -216,14 +210,3 @@ def load_race_full(race_id: str, language: str = "ru") -> dict[str, Any]:
     if race_info:
         return _localize_race_info(race_info, language)
     return {}
-
-
-def auto_select_subrace_id(race_id: str) -> str | None:
-    """Автовыбор подрасы, если в YAML ровно одна."""
-    race_info = _load_races_yaml().get(race_id, {})
-    if not isinstance(race_info, dict):
-        return None
-    subraces = race_info.get("subraces", {})
-    if isinstance(subraces, dict) and len(subraces) == 1:
-        return str(next(iter(subraces)))
-    return None
