@@ -35,15 +35,14 @@ def _pick_expertise_skills(
     """Выбрать навыки для компетентности."""
     taken_suffix = get_string(strings, "character.skills_taken_suffix")
     selected: list[str] = []
+    header = get_string(strings, "character.expertise_caption")
+    heading = get_string(
+        strings,
+        "character.expertise_feature_heading",
+        name=grant.feature_name,
+    )
     for current in range(1, pick_count + 1):
-        _print_screen_header(
-            get_string(strings, "character.expertise_caption")
-        )
-        heading = get_string(
-            strings,
-            "character.expertise_feature_heading",
-            name=grant.feature_name,
-        )
+        _print_screen_header(header)
         print(f"{Fore.CYAN}{Style.BRIGHT}{heading}{Style.RESET_ALL}")
         print()
         prompt = get_string(
@@ -52,11 +51,10 @@ def _pick_expertise_skills(
             current=current,
             total=pick_count,
         )
-        pool = list(proficiencies)
         blocked = set(already_expert) | set(selected)
         while True:
             selectable = _print_pick_list(
-                pool,
+                list(proficiencies),
                 blocked,
                 label_for=lambda skill_id: _skill_name(strings, skill_id),
                 taken_suffix=taken_suffix,

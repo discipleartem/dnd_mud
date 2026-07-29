@@ -166,6 +166,25 @@ def _select_stats_point_buy(
             )
 
 
+def _select_stats_random(
+    strings: StringsDict,
+    race_id: str,
+    subrace_id: str | None,
+    *,
+    allow_regenerate: bool = True,
+    hardcore_rolls: list[int] | None = None,
+) -> StatMap | None:
+    """Случайная генерация характеристик (Normal с рероллом / HardCore)."""
+    if not allow_regenerate:
+        return _select_stats_random_hardcore(
+            strings,
+            race_id,
+            subrace_id,
+            hardcore_rolls=hardcore_rolls,
+        )
+    return _select_stats_random_normal(strings, race_id, subrace_id)
+
+
 def _select_stats_random_normal(
     strings: StringsDict,
     race_id: str,

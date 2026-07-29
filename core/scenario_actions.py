@@ -95,58 +95,32 @@ def apply_scenario_action(
         )
         return ScenarioActionResult(character=character, message_key=key)
 
-    if action == "skill_check":
-        from core.checks import skill_check
+    if action in ("skill_check", "ability_check"):
+        from core.checks import ability_check, skill_check
         from core.engine_rules import check_roll_flags
 
-        skill_id = str(action_data.get("skill", ""))
+        is_skill = action == "skill_check"
+        field = "skill" if is_skill else "ability"
+        subject_id = str(action_data.get(field, ""))
         dc_raw = action_data.get("dc")
         dc = int(dc_raw) if isinstance(dc_raw, int) else None
-        if not skill_id:
+        if not subject_id:
             return ScenarioActionResult(character=character)
         advantage, disadvantage = check_roll_flags(difficulty)
-        check = skill_check(
+        check_fn = skill_check if is_skill else ability_check
+        check = check_fn(
             character,
-            skill_id,
+            subject_id,
             dc=dc,
             advantage=advantage,
             disadvantage=disadvantage,
         )
         key, params = _check_message(
-            prefix="scenario.skill_check",
+            prefix=f"scenario.{action}",
             check=check,
             dc=dc,
         )
-        params["skill"] = skill_id
-        return ScenarioActionResult(
-            character=character,
-            message_key=key,
-            message_params=params,
-        )
-
-    if action == "ability_check":
-        from core.checks import ability_check
-        from core.engine_rules import check_roll_flags
-
-        ability_id = str(action_data.get("ability", ""))
-        dc_raw = action_data.get("dc")
-        dc = int(dc_raw) if isinstance(dc_raw, int) else None
-        if not ability_id:
-            return ScenarioActionResult(character=character)
-        advantage, disadvantage = check_roll_flags(difficulty)
-        check = ability_check(
-            character,
-            ability_id,
-            dc=dc,
-            advantage=advantage,
-            disadvantage=disadvantage,
-        )
-        key, params = _check_message(
-            prefix="scenario.ability_check",
-            check=check,
-            dc=dc,
-        )
-        params["ability"] = ability_id
+        params[field] = subject_id
         return ScenarioActionResult(
             character=character,
             message_key=key,
