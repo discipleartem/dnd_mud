@@ -44,7 +44,8 @@
 | `ui/menus/_corrupt_saves.py` | Предупреждение о битых JSON в `saves/characters/` |
 | `ui/menus/feats/` | Выбор черт при создании и левелапе (публичный API в `__init__.py`) |
 | `ui/menus/_creation_handlers.py`, `_creation_navigation.py`, `_creation_finalize.py`, `_creation_state.py` | State machine создания персонажа |
-| `ui/menus/_common.py`, `_display.py` | Общие хелперы (`_print_numbered_row`, `_print_pick_list`, `_read_pool_pick`, `_run_numbered_menu`, `_read_numbered_choice`) и отображение |
+| `ui/menus/display/` | Отображение: grants, раса/фон, stats, карточка, экипировка, класс |
+| `ui/menus/_display.py` | Совместимый re-export → `ui.menus.display` |
 | `ui/menus/_subclass_picks.py` | Общий flow выбора владений/навыков/компетентности подкласса |
 | `ui/input_handler.py` | Валидация ввода, UTF-8 для stdin/stdout |
 
@@ -65,8 +66,10 @@ UI не читает файлы данных напрямую — только �
 | `core/game_engine.py` | `GameEngine`, `GameSession` — state machine сценария; `step_exit`, флаги сессии |
 | `core/scenario_rooms.py` | `exits` в узлах YAML-сценария |
 | `core/engine_rules.py` | Преимущество/помеха проверок по `GameDifficulty` |
-| `core/combat/` | Каркас Phase 2: `roll_initiative`, `attack_roll` |
-| `core/types.py` | Типы домена: `StatMap`, `CharacterClass`, `CharacterBuildParams`, `Proficiencies`, … |
+| `core/combat.py` | Каркас Phase 2: `roll_initiative`, `attack_roll` |
+| `core/hp_bonus.py` | `HpBonusSource`, бонусы HP из grants |
+| `core/expertise.py` | Компетентность (expertise) из class features |
+| `core/types.py` | Типы домена: `StatMap`, `CharacterClass`, `CharacterBuildParams`, … |
 | `core/abilities.py` | Каталог характеристик и навыков из YAML |
 | `core/races.py` | Справочник рас, `collect_race_grants`, расовые бонусы |
 | `core/classes.py` | Справочник классов, `get_class_dict`, hit dice, подклассы |

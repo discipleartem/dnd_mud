@@ -2,6 +2,9 @@
 
 ## [Unreleased]
 
+### Changed
+- **Code slim refactor:** purge мёртвого API; `core/combat.py` вместо пакета; `ui/menus/display/` вместо `_display` god-file; `core/hp_bonus.py` + `core/expertise.py` sibling-модули; dedupe UI picks / scenario checks; slim `character_build`
+
 ### Fixed
 - **Mod gating:** после сессии приключения `reset_session_catalogs()` возвращает gating к `normal` (`new_game` / `load_game`)
 

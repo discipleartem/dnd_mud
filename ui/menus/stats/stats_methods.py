@@ -20,7 +20,7 @@ from core.stats import (
 from core.types import StatMap, StringsDict
 from ui.input_handler import get_int_input
 from ui.menus._common import _ability_name, _choice_prompt, _press_enter
-from ui.menus._display import (
+from ui.menus.display import (
     _print_point_buy_cost_table,
     _print_stats_generation_header,
 )
@@ -164,6 +164,25 @@ def _select_stats_point_buy(
             _prompt_point_buy_stat_value(
                 strings, stat_name, stats, stat_to_modify
             )
+
+
+def _select_stats_random(
+    strings: StringsDict,
+    race_id: str,
+    subrace_id: str | None,
+    *,
+    allow_regenerate: bool = True,
+    hardcore_rolls: list[int] | None = None,
+) -> StatMap | None:
+    """Случайная генерация характеристик (Normal с рероллом / HardCore)."""
+    if not allow_regenerate:
+        return _select_stats_random_hardcore(
+            strings,
+            race_id,
+            subrace_id,
+            hardcore_rolls=hardcore_rolls,
+        )
+    return _select_stats_random_normal(strings, race_id, subrace_id)
 
 
 def _select_stats_random_normal(

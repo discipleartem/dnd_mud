@@ -223,15 +223,3 @@ def available_skills(pool: list[str], proficient: list[str]) -> list[str]:
 def merge_proficiencies(*parts: list[str]) -> list[str]:
     """Объединить списки владений без дублей, в порядке появления."""
     return merge_unique(*parts)
-
-
-def is_valid_skill_selection(
-    selected: list[str], pool: list[str], count: int
-) -> bool:
-    """Проверить выбор навыков: ровно count уникальных из pool."""
-    if len(selected) != count:
-        return False
-    if len(set(selected)) != count:
-        return False
-    pool_set = set(pool)
-    return all(skill_id in pool_set for skill_id in selected)

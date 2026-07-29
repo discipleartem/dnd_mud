@@ -73,38 +73,6 @@ class CharacterBuildParams:
     unique_save_slug: Callable[[str], str] = lambda name: name
 ```
 
-### Proficiencies, Expertise (`core/types.py`)
-
-```python
-@dataclass
-class Proficiencies:
-    """Владения персонажа: оружием, доспехами, инструментами."""
-    weapons: list[str] = field(default_factory=list)
-    armor: list[str] = field(default_factory=list)
-    tools: list[str] = field(default_factory=list)
-
-    def to_lists(self) -> tuple[list[str], list[str], list[str]]:
-        """Преобразовать в кортеж списков для совместимости с API."""
-
-    @classmethod
-    def from_lists(cls, weapons: list[str] | None = None,
-                   armor: list[str] | None = None,
-                   tools: list[str] | None = None) -> "Proficiencies":
-        """Создать из списков для совместимости с существующим API."""
-
-@dataclass
-class Expertise:
-    """Компетентность персонажа: навыки и инструменты."""
-    skills: list[str] = field(default_factory=list)
-    tools: list[str] = field(default_factory=list)
-
-    def to_lists(self) -> tuple[list[str], list[str]]:
-        """Преобразовать в кортеж списков для совместимости с API."""
-
-    @classmethod
-    def from_lists(cls, skills: list[str] | None = None,
-                   tools: list[str] | None = None) -> "Expertise":
-        """Создать из списков для совместимости с существующим API."""
 ```
 
 Re-export типов: `core.types`. Функции персонажа — leaf-модули (`character_storage`, `stats`, `races`, …).
@@ -220,7 +188,6 @@ get_effective_race_bonuses(
 POINT_BUY_BUDGET = 27
 POINT_BUY_COSTS: dict[int, int]
 point_buy_cost(score: int) -> int
-remaining_standard_array_pool(used: list[int]) -> list[int]
 point_buy_total_cost(values: list[int]) -> int
 can_assign_point_buy_value(current: StatMap, stat: str, new_value: int) -> bool
 validate_final_stats(stats: StatMap) -> tuple[str, int] | None
@@ -312,13 +279,10 @@ racial_languages_step_required(race_id: str, subrace_id: str | None = None) -> b
 
 ```python
 resolve_subrace_id(race_id: str, subrace_id: str | None = None) -> str | None
-auto_select_subrace_id(race_id: str) -> str | None
 collect_race_grants(race_id: str, subrace_id: str | None = None) -> list[dict[str, Any]]
-clear_races_cache() -> None
 ```
 
-`resolve_subrace_id` — fallback `human` + `subrace: null` → `standard`.  
-`auto_select_subrace_id` — единственная подраса (напр. `half_orc`) без экрана выбора.
+`resolve_subrace_id` — fallback `human` + `subrace: null` → `standard`.
 
 ### Предыстории (`core/backgrounds.py`)
 
@@ -547,8 +511,6 @@ ABILITY_MODIFIER_SCORE_MAX = 30
 proficiency_bonus(level: int) -> int
 ability_modifier(score: int) -> int  # clamp 1–30, таблица ability_modifiers из YAML
 difficulty_class(tier: str) -> int
-cover_bonus(tier: str) -> int | str | None
-size_label(size_id: str) -> str
 ```
 
 ---
@@ -562,7 +524,6 @@ ability_ids() -> tuple[str, ...]
 skill_ids() -> tuple[str, ...]
 skill_ability_map() -> dict[str, str]
 ability_for_skill(skill_id: str) -> str | None
-load_skill_info(skill_id: str) -> dict[str, Any]
 ```
 
 `core/stats.py` → `STAT_NAMES` и `core/skills.py` → `PHB_SKILL_IDS` загружаются из YAML с fallback.
@@ -593,6 +554,29 @@ tough_hp_adjustment_on_acquire(level) -> int
 `list_feats_for_selection` — eligible (требования OK + новые владения), blocked (требования не выполнены) и hidden (нет новых владений; показываются в конце списка, не выбираются). Уже взятые черты не возвращаются. См. [`rules/chapters/06-feats.md`](rules/chapters/06-feats.md) §«Фильтрация списка».
 
 **Запланировано (Phase 2):** постоянная проверка требований — `feat_is_active`, `active_feat_ids`, `feat_requirement_context_from_character`; см. [`rules/chapters/06-feats.md`](rules/chapters/06-feats.md) §«Запланировано». **Resilient** (`save_proficiency` в YAML): владение спасброском применяется **при создании** через `get_feat_save_proficiencies` → `save_proficiencies` на `Character`.
+
+## core.hp_bonus — Бонусы HP из grants
+
+```python
+HpBonusSource(name: str, amount: int)
+hit_point_bonus_amount(mechanics: dict) -> int
+hit_point_bonus_sources_from_grants(grants: list[dict]) -> list[HpBonusSource]
+```
+
+Также реэкспорт из `core.progression`.
+
+## core.expertise — Компетентность (expertise)
+
+```python
+ExpertiseGrant / ExpertiseAlternative
+get_expertise_grants(class_id, character_level) -> list[ExpertiseGrant]
+expertise_step_required(class_id, character_level) -> bool
+pending_expertise_grants(character) -> list[ExpertiseGrant]
+validate_expertise_selection(...) -> bool
+default_rogue_tool_expertise() -> list[str]
+```
+
+Также реэкспорт из `core.progression`.
 
 ## core.progression — ASI (фрагмент)
 

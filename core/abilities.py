@@ -102,11 +102,3 @@ def skill_ability_map() -> dict[str, str]:
 def ability_for_skill(skill_id: str) -> str | None:
     """Характеристика для навыка или None."""
     return skill_ability_map().get(skill_id)
-
-
-def load_skill_info(skill_id: str) -> dict[str, Any]:
-    """Метаданные навыка из skills.yaml."""
-    info = _load_skills_yaml().get(skill_id, {})
-    if isinstance(info, dict):
-        return info
-    return {}

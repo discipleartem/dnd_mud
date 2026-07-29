@@ -65,8 +65,10 @@ dnd_mud/
 │   ├── character_storage.py # CRUD; make_save_slug, unique_save_slug
 │   ├── catalog_loader.py    # load_catalog + bootstrap_session_catalogs
 │   ├── feats.py             # Черты (loader, apply, visibility, …)
-│   ├── progression.py       # XP, HP, ASI, expertise, level-up
-│   ├── inventory.py         # Инвентарь / экипировка / AC
+│   ├── progression.py       # XP, HP, ASI, level-up (expertise → expertise.py)
+│   ├── expertise.py         # Компетентность класса
+│   ├── hp_bonus.py          # Бонусы HP из grants
+│   ├── combat.py            # Phase 2: initiative / attack roll│   ├── inventory.py         # Инвентарь / экипировка / AC
 │   ├── proficiencies.py     # Владения
 │   ├── grants.py            # grants[] + proficiency-токены
 │   ├── stats.py             # Генерация и валидация характеристик
@@ -87,7 +89,8 @@ dnd_mud/
 │       ├── settings.py
 │       ├── stats/           # Генерация характеристик (подпакет)
 │       ├── _common.py       # _print_numbered_row, _run_numbered_menu, …
-│       ├── _display.py      # Отображение (класс, раса, stats, персонаж)
+│       ├── display/         # Отображение (класс, раса, stats, персонаж)
+│       ├── _display.py      # Compat re-export → display/
 │       └── _selectors.py
 ├── database/                # YAML-справочники D&D 5e
 │   ├── races/
@@ -187,7 +190,7 @@ make install-hooks   # или make install — подключает .githooks/pr
 
 | Группа | Файлы (примеры) |
 |--------|-----------------|
-| **core** | `test_stats`, `test_grants`, `test_character`, `test_character_builder`, `test_proficiencies`, `test_progression`, `test_feats`, `test_subclasses`, `test_asi`, `test_expertise`, `test_languages`, `test_class_features`, `test_equipment` |
+| **core** | `test_stats`, `test_grants`, `test_character`, `test_character_build`, `test_proficiencies`, `test_progression`, `test_feats`, `test_subclasses`, `test_asi`, `test_expertise`, `test_languages`, `test_class_features`, `test_equipment` |
 | **menus** | `test_menus_main`, `test_menus_creation`, `test_menus_new_game`, `test_menus_characters_hub`, `test_menus_stats` |
 | **data** | `test_catalog_loader`, `test_data_schema`, `test_io`, `test_models` (adventures/backgrounds) |
 | **meta** | `test_verify_targets`, `test_localization` |
