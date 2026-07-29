@@ -21,8 +21,6 @@ POINT_BUY_COSTS: dict[int, int] = {
     14: 7,
     15: 9,
 }
-POINT_BUY_MIN = min(POINT_BUY_COSTS)
-POINT_BUY_MAX = max(POINT_BUY_COSTS)
 ABILITY_SCORE_MIN = 1
 ABILITY_SCORE_DEFAULT = 10
 ABILITY_SCORE_MAX = 20
@@ -31,15 +29,6 @@ ABILITY_SCORE_MAX = 20
 def point_buy_cost(score: int) -> int:
     """Стоимость значения характеристики в point-buy."""
     return POINT_BUY_COSTS.get(score, 0)
-
-
-def remaining_standard_array_pool(used: list[int]) -> list[int]:
-    """Остаток стандартного массива после уже назначенных значений."""
-    pool = list(STANDARD_ARRAY)
-    for value in used:
-        if value in pool:
-            pool.remove(value)
-    return sorted(pool, reverse=True)
 
 
 def point_buy_total_cost(values: list[int]) -> int:
