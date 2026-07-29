@@ -12,7 +12,7 @@ from core.grants import (
     proficiency_tokens_and_skills_from_grant,
 )
 from core.grants_context import CreationContext
-from core.progression import HpBonusSource, hit_point_bonus_amount
+from core.hp_bonus import HpBonusSource, hit_point_bonus_amount
 from core.types import StatMap
 
 FEATS_FILE = Path("database/progression/feats.yaml")
@@ -576,102 +576,102 @@ def _armor_tokens_from_grant(grant: dict[str, Any]) -> list[str]:
     return [normalize_armor_token(str(armor)) for armor in raw]
 
 
+def _any_new_weapon(
+    ctx: FeatRequirementContext, weapon_ids: list[str]
+) -> bool:
+    from core.proficiencies import has_weapon_proficiency
+
+    return any(
+        not has_weapon_proficiency(ctx.weapon_tokens, weapon_id)
+        for weapon_id in weapon_ids
+    )
+
+
+def _any_new_tool(ctx: FeatRequirementContext, tool_ids: list[str]) -> bool:
+    from core.proficiencies import has_tool_proficiency
+
+    return any(
+        not has_tool_proficiency(ctx.tool_tokens, tool_id)
+        for tool_id in tool_ids
+    )
+
+
+def _any_new_armor(ctx: FeatRequirementContext, grant: dict[str, Any]) -> bool:
+    armors = _armor_tokens_from_grant(grant)
+    if not armors:
+        return True
+    return any(armor not in ctx.armor_tokens for armor in armors)
+
+
 def _grant_adds_new_proficiency(
     grant: dict[str, Any], ctx: FeatRequirementContext
 ) -> bool:
     """Даёт ли grant новое владение относительно контекста."""
     from core.equipment import all_tool_ids, all_weapon_ids
-    from core.proficiencies import has_tool_proficiency, has_weapon_proficiency
     from core.skills import PHB_SKILL_IDS
 
     mtype = str(grant.get("type", ""))
     if mtype not in _PROFICIENCY_GRANT_TYPES:
         return True
 
-    if mtype == "bonus_proficiencies":
-        weapons_new = False
-        armors_new = False
-        raw_w = grant.get("weapons", [])
-        if grant.get("choice"):
-            weapons_new = any(
-                not has_weapon_proficiency(ctx.weapon_tokens, weapon_id)
-                for weapon_id in all_weapon_ids()
-            )
-        elif isinstance(raw_w, list) and raw_w:
-            weapons_new = any(
-                not has_weapon_proficiency(ctx.weapon_tokens, str(weapon_id))
-                for weapon_id in raw_w
-            )
-        armors = _armor_tokens_from_grant(grant)
-        if armors:
-            armors_new = any(armor not in ctx.armor_tokens for armor in armors)
-        if isinstance(raw_w, list) and raw_w or grant.get("choice"):
-            if armors:
-                return weapons_new or armors_new
-            return weapons_new
-        if armors:
-            return armors_new
-        return True
-
-    if mtype == "armor_proficiency":
-        armors = _armor_tokens_from_grant(grant)
-        if not armors:
-            return True
-        return any(armor not in ctx.armor_tokens for armor in armors)
-
-    if mtype == "weapon_proficiency":
-        if grant.get("choice"):
-            return any(
-                not has_weapon_proficiency(ctx.weapon_tokens, weapon_id)
-                for weapon_id in all_weapon_ids()
-            )
-        raw = grant.get("weapons", [])
-        if not isinstance(raw, list) or not raw:
-            return True
-        return any(
-            not has_weapon_proficiency(ctx.weapon_tokens, str(weapon_id))
-            for weapon_id in raw
-        )
-
-    if mtype == "skill_proficiency":
-        grant_skills: list[str] = []
-        raw = grant.get("skills", [])
-        if isinstance(raw, list):
-            grant_skills.extend(str(skill) for skill in raw)
-        skill_one = grant.get("skill")
-        if isinstance(skill_one, str) and skill_one:
-            grant_skills.append(skill_one)
-        if not grant_skills:
+    match mtype:
+        case "bonus_proficiencies":
+            raw_w = grant.get("weapons", [])
+            weapons_listed = isinstance(raw_w, list) and bool(raw_w)
             if grant.get("choice"):
-                return any(skill not in ctx.skills for skill in PHB_SKILL_IDS)
-            return True
-        return any(skill not in ctx.skills for skill in grant_skills)
-
-    if mtype == "tool_proficiency":
-        if grant.get("choice"):
-            return any(
-                not has_tool_proficiency(ctx.tool_tokens, tool_id)
-                for tool_id in all_tool_ids()
+                weapons_new = _any_new_weapon(ctx, list(all_weapon_ids()))
+            elif weapons_listed:
+                weapons_new = _any_new_weapon(
+                    ctx, [str(weapon_id) for weapon_id in raw_w]
+                )
+            else:
+                weapons_new = False
+            armors = _armor_tokens_from_grant(grant)
+            armors_new = (
+                any(armor not in ctx.armor_tokens for armor in armors)
+                if armors
+                else False
             )
-        raw = grant.get("tools", [])
-        if not isinstance(raw, list) or not raw:
+            if weapons_listed or grant.get("choice"):
+                return weapons_new or armors_new if armors else weapons_new
+            return armors_new if armors else True
+        case "armor_proficiency":
+            return _any_new_armor(ctx, grant)
+        case "weapon_proficiency":
+            if grant.get("choice"):
+                return _any_new_weapon(ctx, list(all_weapon_ids()))
+            raw = grant.get("weapons", [])
+            if not isinstance(raw, list) or not raw:
+                return True
+            return _any_new_weapon(ctx, [str(weapon_id) for weapon_id in raw])
+        case "skill_proficiency":
+            grant_skills: list[str] = []
+            raw = grant.get("skills", [])
+            if isinstance(raw, list):
+                grant_skills.extend(str(skill) for skill in raw)
+            skill_one = grant.get("skill")
+            if isinstance(skill_one, str) and skill_one:
+                grant_skills.append(skill_one)
+            if not grant_skills:
+                if grant.get("choice"):
+                    return any(
+                        skill not in ctx.skills for skill in PHB_SKILL_IDS
+                    )
+                return True
+            return any(skill not in ctx.skills for skill in grant_skills)
+        case "tool_proficiency":
+            if grant.get("choice"):
+                return _any_new_tool(ctx, list(all_tool_ids()))
+            raw = grant.get("tools", [])
+            if not isinstance(raw, list) or not raw:
+                return True
+            return _any_new_tool(ctx, [str(tool_id) for tool_id in raw])
+        case "multiple_proficiency":
+            return any(skill not in ctx.skills for skill in PHB_SKILL_IDS) or (
+                _any_new_tool(ctx, list(all_tool_ids()))
+            )
+        case _:
             return True
-        return any(
-            not has_tool_proficiency(ctx.tool_tokens, str(tool_id))
-            for tool_id in raw
-        )
-
-    if mtype == "multiple_proficiency":
-        skill_available = any(
-            skill not in ctx.skills for skill in PHB_SKILL_IDS
-        )
-        tool_available = any(
-            not has_tool_proficiency(ctx.tool_tokens, tool_id)
-            for tool_id in all_tool_ids()
-        )
-        return skill_available or tool_available
-
-    return True
 
 
 def feat_visible_for_selection(
