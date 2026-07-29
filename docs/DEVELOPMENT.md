@@ -190,7 +190,7 @@ make install-hooks   # или make install — подключает .githooks/pr
 
 | Группа | Файлы (примеры) |
 |--------|-----------------|
-| **core** | `test_stats`, `test_grants`, `test_character`, `test_character_builder`, `test_proficiencies`, `test_progression`, `test_feats`, `test_subclasses`, `test_asi`, `test_expertise`, `test_languages`, `test_class_features`, `test_equipment` |
+| **core** | `test_stats`, `test_grants`, `test_character`, `test_character_build`, `test_proficiencies`, `test_progression`, `test_feats`, `test_subclasses`, `test_asi`, `test_expertise`, `test_languages`, `test_class_features`, `test_equipment` |
 | **menus** | `test_menus_main`, `test_menus_creation`, `test_menus_new_game`, `test_menus_characters_hub`, `test_menus_stats` |
 | **data** | `test_catalog_loader`, `test_data_schema`, `test_io`, `test_models` (adventures/backgrounds) |
 | **meta** | `test_verify_targets`, `test_localization` |
