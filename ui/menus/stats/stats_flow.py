@@ -8,8 +8,7 @@ from ui.menus._common import (
 )
 from ui.menus.stats.stats_methods import (
     _select_stats_point_buy,
-    _select_stats_random_hardcore,
-    _select_stats_random_normal,
+    _select_stats_random,
     _select_stats_standard_array,
 )
 
@@ -24,10 +23,11 @@ def show_stats_generation_flow(
 ) -> StatMap | None:
     """Flow генерации характеристик с выбором метода."""
     if difficulty == "hardcore":
-        return _select_stats_random_hardcore(
+        return _select_stats_random(
             strings,
             race_id,
             subrace_id,
+            allow_regenerate=False,
             hardcore_rolls=hardcore_rolls,
         )
 
@@ -56,7 +56,7 @@ def show_stats_generation_flow(
         elif choice == 2:
             stats = _select_stats_point_buy(strings, race_id, subrace_id)
         else:
-            stats = _select_stats_random_normal(strings, race_id, subrace_id)
+            stats = _select_stats_random(strings, race_id, subrace_id)
 
         if stats is not None:
             return stats

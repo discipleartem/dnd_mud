@@ -17,6 +17,7 @@ from core.skills import PHB_SKILL_IDS
 from core.types import StatMap, StringsDict
 from ui.menus._common import (
     _ability_name,
+    _pick_n_from_pool,
     _print_screen_header,
     _run_numbered_menu,
     _skill_name,
@@ -66,26 +67,14 @@ def _pick_weapons_for_feat(
         for w in all_weapon_ids()
         if not has_weapon_proficiency(proficiencies, w)
     ]
-    picked: list[str] = []
-    for pick_num in range(1, count + 1):
-        _print_screen_header(get_string(strings, "character.feat_caption"))
-        available = [w for w in pool if w not in picked]
-        if not available:
-            return None
-        labels = [
-            proficiency_token_label(w, strings, language) for w in available
-        ]
-        choice = _run_numbered_menu(
-            strings,
-            labels,
-            prompt_key="character.feat_pick_weapon",
-            back_label_key="character.back",
-            prompt_kwargs={"current": pick_num, "total": count},
-        )
-        if choice is None:
-            return None
-        picked.append(available[choice - 1])
-    return picked
+    return _pick_n_from_pool(
+        strings,
+        pool,
+        count,
+        header=get_string(strings, "character.feat_caption"),
+        label_for=lambda w: proficiency_token_label(w, strings, language),
+        prompt_key="character.feat_pick_weapon",
+    )
 
 
 def _pick_skills_or_tools(
@@ -192,24 +181,14 @@ def _pick_languages_for_feat(
         for entry in all_langs
         if str(entry.get("id", "")) not in known
     ]
-    picked: list[str] = []
-    for pick_num in range(1, count + 1):
-        available = [lang for lang in pool if lang not in picked]
-        labels = [
-            get_language_name(lang_id, language) for lang_id in available
-        ]
-        _print_screen_header(get_string(strings, "character.feat_caption"))
-        choice = _run_numbered_menu(
-            strings,
-            labels,
-            prompt_key="character.feat_pick_language",
-            back_label_key="character.back",
-            prompt_kwargs={"current": pick_num, "total": count},
-        )
-        if choice is None:
-            return None
-        picked.append(available[choice - 1])
-    return picked
+    return _pick_n_from_pool(
+        strings,
+        pool,
+        count,
+        header=get_string(strings, "character.feat_caption"),
+        label_for=lambda lang_id: get_language_name(lang_id, language),
+        prompt_key="character.feat_pick_language",
+    )
 
 
 def _pick_expertise_skills(
@@ -217,23 +196,14 @@ def _pick_expertise_skills(
     count: int,
 ) -> list[str] | None:
     """Выбор навыков для skill_expert (экспертное владение)."""
-    picked: list[str] = []
-    pool = list(PHB_SKILL_IDS)
-    for pick_num in range(1, count + 1):
-        available = [s for s in pool if s not in picked]
-        labels = [_skill_name(strings, sid) for sid in available]
-        _print_screen_header(get_string(strings, "character.feat_caption"))
-        choice = _run_numbered_menu(
-            strings,
-            labels,
-            prompt_key="character.feat_pick_expertise",
-            back_label_key="character.back",
-            prompt_kwargs={"current": pick_num, "total": count},
-        )
-        if choice is None:
-            return None
-        picked.append(available[choice - 1])
-    return picked
+    return _pick_n_from_pool(
+        strings,
+        list(PHB_SKILL_IDS),
+        count,
+        header=get_string(strings, "character.feat_caption"),
+        label_for=lambda sid: _skill_name(strings, sid),
+        prompt_key="character.feat_pick_expertise",
+    )
 
 
 def _resolve_feat_subchoices(

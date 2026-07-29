@@ -24,18 +24,15 @@ from ui.menus._common import (
 )
 
 
-def _token_label(strings: StringsDict, token: str, language: str) -> str:
-    """Читаемое имя токена владения."""
-    return proficiency_token_label(token, strings, language)
-
-
 def _format_list(
     strings: StringsDict, tokens: list[str], language: str
 ) -> str:
     """Список владений для отображения."""
     if not tokens:
         return get_string(strings, "character.proficiencies_none")
-    return ", ".join(_token_label(strings, t, language) for t in tokens)
+    return ", ".join(
+        proficiency_token_label(t, strings, language) for t in tokens
+    )
 
 
 def _print_summary(

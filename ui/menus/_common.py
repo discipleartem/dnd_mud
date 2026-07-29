@@ -134,6 +134,37 @@ def _run_numbered_menu(
     return choice
 
 
+def _pick_n_from_pool(
+    strings: StringsDict,
+    pool: list[str],
+    count: int,
+    *,
+    header: str,
+    label_for: Callable[[str], str],
+    prompt_key: str,
+    back_label_key: str = "character.back",
+) -> list[str] | None:
+    """Выбрать count id из pool через нумерованное меню (0 — назад)."""
+    picked: list[str] = []
+    for pick_num in range(1, count + 1):
+        available = [item for item in pool if item not in picked]
+        if not available:
+            return None
+        _print_screen_header(header)
+        labels = [label_for(item) for item in available]
+        choice = _run_numbered_menu(
+            strings,
+            labels,
+            prompt_key=prompt_key,
+            back_label_key=back_label_key,
+            prompt_kwargs={"current": pick_num, "total": count},
+        )
+        if choice is None:
+            return None
+        picked.append(available[choice - 1])
+    return picked
+
+
 def _read_numbered_choice(
     strings: StringsDict,
     count: int,

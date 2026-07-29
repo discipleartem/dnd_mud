@@ -23,15 +23,6 @@ from ui.menus.subclass_trainer import assign_subclass_from_menu
 from ui.terminal_wrap import wrap_text
 
 
-def _resolve_text(value: object, language: LanguageCode) -> str:
-    """Локализованный текст узла или действия."""
-    if isinstance(value, dict):
-        return resolve_localized_text(value, language, fallback="")
-    if value is None:
-        return ""
-    return str(value)
-
-
 def _show_action_message(
     strings: StringsDict,
     message_key: str | None,
@@ -178,7 +169,9 @@ def run_scenario_with_engine(
         if node is None:
             break
 
-        description = _resolve_text(node.get("description"), language)
+        description = resolve_localized_text(
+            node.get("description"), language, fallback=""
+        )
         _print_screen_header(adventure.get_name(language))
         if description:
             print(wrap_text(description))
@@ -210,7 +203,9 @@ def run_scenario_with_engine(
         for idx, choice in enumerate(choices, 1):
             if not isinstance(choice, dict):
                 continue
-            label = _resolve_text(choice.get("text"), language)
+            label = resolve_localized_text(
+                choice.get("text"), language, fallback=""
+            )
             _print_numbered_row(idx, label)
         choice_num = _read_numbered_choice(
             strings,
