@@ -14,7 +14,7 @@ from ui.menus._common import (
     _print_screen_header,
     _read_numbered_choice,
 )
-from ui.menus._display import (
+from ui.menus.display import (
     _print_class_info,
     _print_class_summary,
     _print_race_info,

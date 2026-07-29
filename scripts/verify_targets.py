@@ -80,6 +80,7 @@ UI_MENU_TESTS: dict[str, str] = {
 UI_PREFIX_TESTS: list[tuple[str, str]] = [
     ("ui/menus/_creation_", "tests/test_menus_creation.py"),
     ("ui/menus/_display", "tests/test_equipment.py"),
+    ("ui/menus/display/", "tests/test_equipment.py"),
     ("ui/menus/feats/", "tests/test_feats.py"),
     ("ui/menus/stats/", "tests/test_menus_stats.py"),
 ]

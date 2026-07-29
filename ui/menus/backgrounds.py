@@ -12,7 +12,7 @@ from core.backgrounds import (
 from core.localization import get_string
 from core.types import StringsDict
 from ui.menus._common import _print_screen_header, _read_numbered_choice
-from ui.menus._display import _print_background_info
+from ui.menus.display import _print_background_info
 
 
 def select_creation_background(

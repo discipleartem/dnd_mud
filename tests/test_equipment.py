@@ -19,7 +19,7 @@ from core.localization import load_strings
 from core.models import Character
 from core.types import CharacterClass
 from ui.menus._common import _sort_ids_by_proficiency
-from ui.menus._display import (
+from ui.menus.display import (
     _format_ability_modifier,
     _format_character_feats,
     _format_character_stats_compact,
@@ -291,7 +291,7 @@ def test_format_character_stats_and_card(
 def test_print_race_info_grants(
     capsys: pytest.CaptureFixture[str], ru_strings: dict[str, Any]
 ) -> None:
-    from ui.menus._display import _print_race_info
+    from ui.menus.display import _print_race_info
 
     high_elf = {
         "name": "Высший эльф",
@@ -321,7 +321,7 @@ def test_format_class_proficiencies_localizes_rogue_tools(
     ru_strings: dict[str, Any],
 ) -> None:
     from core.classes import load_class_full
-    from ui.menus._display import _format_class_proficiencies
+    from ui.menus.display import _format_class_proficiencies
 
     rogue = load_class_full("rogue", "ru")
     prof = _format_class_proficiencies(ru_strings, rogue, "ru")

@@ -44,7 +44,8 @@
 | `ui/menus/_corrupt_saves.py` | Предупреждение о битых JSON в `saves/characters/` |
 | `ui/menus/feats/` | Выбор черт при создании и левелапе (публичный API в `__init__.py`) |
 | `ui/menus/_creation_handlers.py`, `_creation_navigation.py`, `_creation_finalize.py`, `_creation_state.py` | State machine создания персонажа |
-| `ui/menus/_common.py`, `_display.py` | Общие хелперы (`_print_numbered_row`, `_print_pick_list`, `_read_pool_pick`, `_run_numbered_menu`, `_read_numbered_choice`) и отображение |
+| `ui/menus/display/` | Отображение: grants, раса/фон, stats, карточка, экипировка, класс |
+| `ui/menus/_display.py` | Совместимый re-export → `ui.menus.display` |
 | `ui/menus/_subclass_picks.py` | Общий flow выбора владений/навыков/компетентности подкласса |
 | `ui/input_handler.py` | Валидация ввода, UTF-8 для stdin/stdout |
 
