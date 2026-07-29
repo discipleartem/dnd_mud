@@ -1,4 +1,4 @@
-"""Тесты core/character_builder.py."""
+"""Тесты core/character_build.py."""
 
 import pytest
 
