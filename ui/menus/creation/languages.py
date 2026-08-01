@@ -14,7 +14,7 @@ from core.catalogs.languages import (
 from core.platform.localization import get_string
 from core.types import StringsDict
 from ui.menus.console import (
-    pick_from_pool_loop,
+    pick_n_from_pool_loop,
     print_screen_header,
 )
 
@@ -33,50 +33,51 @@ def _pick_language_choices(
     count = int(mechanics.get("count", 0))
     pool_spec = mechanics.get("pool", "common")
     total = pick_total if pick_total is not None else count
-    added: list[str] = []
-    current = list(known_languages)
     taken_suffix = get_string(strings, "character.languages_taken_suffix")
+    header = get_string(strings, "character.languages_caption")
+    current = list(known_languages)
 
-    for pick_idx in range(1, count + 1):
-        prompt = get_string(
+    def pool_for_pick(_picked: list[str]) -> list[str]:
+        return resolve_language_pool(pool_spec, current + _picked)
+
+    def taken_for_pick(picked: list[str]) -> set[str]:
+        return set(current) | set(picked)
+
+    def prompt_at(cur: int, _tot: int) -> str:
+        return get_string(
             strings,
             prompt_key,
-            current=pick_offset + pick_idx,
+            current=pick_offset + cur,
             total=total,
         )
-        lang_pool = resolve_language_pool(pool_spec, current)
 
-        def _before_known() -> None:
-            if not current:
-                return
-            names = ", ".join(
-                get_language_name(lang_id, language) for lang_id in current
-            )
-            known_line = get_string(
-                strings,
-                "character.languages_known",
-                list=names,
-            )
-            print(f"{Fore.CYAN}{known_line}{Style.RESET_ALL}")
-            print()
-
-        picked = pick_from_pool_loop(
-            strings,
-            lang_pool,
-            set(current),
-            label_for=lambda lang_id: get_language_name(lang_id, language),
-            taken_suffix=taken_suffix,
-            prompt=prompt,
-            empty_key="character.languages_pool_empty",
-            header=get_string(strings, "character.languages_caption"),
-            before_list=_before_known,
+    def before_known(picked: list[str]) -> None:
+        known = current + picked
+        if not known:
+            return
+        names = ", ".join(
+            get_language_name(lang_id, language) for lang_id in known
         )
-        if picked is None:
-            return None
-        added.append(picked)
-        current.append(picked)
+        known_line = get_string(
+            strings,
+            "character.languages_known",
+            list=names,
+        )
+        print(f"{Fore.CYAN}{known_line}{Style.RESET_ALL}")
+        print()
 
-    return added
+    return pick_n_from_pool_loop(
+        strings,
+        count,
+        pool_for_pick=pool_for_pick,
+        taken_for_pick=taken_for_pick,
+        label_for=lambda lang_id: get_language_name(lang_id, language),
+        taken_suffix=taken_suffix,
+        prompt_at=prompt_at,
+        header=header,
+        empty_key="character.languages_pool_empty",
+        before_list=before_known,
+    )
 
 
 def select_creation_languages(

@@ -9,7 +9,6 @@ from core.types import (
     RuntimeSettings,
     StringsDict,
 )
-from ui.input_handler import get_int_input
 from ui.menus.console import (
     press_enter,
     print_screen_header,
@@ -22,7 +21,7 @@ def select_difficulty(strings: StringsDict) -> GameDifficulty | None:
     """Экран выбора сложности при создании персонажа."""
     print_screen_header(get_string(strings, "difficulty.caption"))
 
-    options: list[tuple[GameDifficulty, str, str]] = [
+    options_data: list[tuple[GameDifficulty, str, str]] = [
         ("easy", get_string(strings, "difficulty.easy"), str(Fore.GREEN)),
         ("normal", get_string(strings, "difficulty.normal"), str(Fore.YELLOW)),
         (
@@ -31,30 +30,24 @@ def select_difficulty(strings: StringsDict) -> GameDifficulty | None:
             str(Fore.RED),
         ),
     ]
-    for idx, (_, label, color) in enumerate(options, 1):
-        marker = f"{Fore.GREEN}* {Style.RESET_ALL}" if idx == 1 else "  "
-        print(
-            f"{marker}{Fore.YELLOW}{idx}{Style.RESET_ALL}. "
-            f"{color}{label}{Style.RESET_ALL}"
-        )
-    print()
-    print(
-        f"  {Fore.YELLOW}0{Style.RESET_ALL}."
-        f" {get_string(strings, 'difficulty.back')}"
-    )
-    print()
-
-    choice = get_int_input(
-        get_string(strings, "difficulty.prompt", count=len(options)),
-        0,
-        len(options),
+    labels = [label for _, label, _ in options_data]
+    choice = run_numbered_menu(
         strings,
+        labels,
+        prompt_key="difficulty.prompt",
+        back_label_key="difficulty.back",
+        row_formatter=lambda idx, label: (
+            f"{options_data[idx - 1][2]}{label}{Style.RESET_ALL}"
+        ),
+        row_marker=lambda idx: (
+            f"{Fore.GREEN}* {Style.RESET_ALL}" if idx == 1 else "  "
+        ),
     )
 
-    if choice == 0:
+    if choice is None:
         return None
 
-    return options[choice - 1][0]
+    return options_data[choice - 1][0]
 
 
 def show_languages_menu(

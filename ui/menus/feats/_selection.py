@@ -7,8 +7,7 @@ from colorama import Fore, Style
 from core.feats.requirements import FeatRequirementContext
 from core.platform.localization import get_string
 from core.types import StringsDict
-from ui.input_handler import get_int_input
-from ui.menus.console import SEPARATOR
+from ui.menus.console import SEPARATOR, read_numbered_choice
 from ui.menus.feats._requirements import (
     _confirm_feat_selection,
     _print_feat_details,
@@ -88,14 +87,12 @@ def _pick_feat_from_lists(
         _print_feat_selection_menu(
             strings, eligible, blocked, hidden, ctx, language
         )
-        print()
-        choice = get_int_input(
-            get_string(strings, "character.feat_prompt", count=len(eligible)),
-            0,
-            len(eligible),
+        choice = read_numbered_choice(
             strings,
+            len(eligible),
+            prompt_key="character.feat_prompt",
         )
-        if choice == 0:
+        if choice is None:
             return None
         selected = eligible[choice - 1]
         if _confirm_feat_selection(strings, selected, ctx, language):

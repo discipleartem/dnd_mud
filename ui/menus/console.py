@@ -94,9 +94,15 @@ def stats_total_line(strings: StringsDict) -> str:
     return f"{Fore.YELLOW}{total.center(SCREEN_WIDTH)}{Style.RESET_ALL}"
 
 
-def print_numbered_row(idx: int, label: str, *, prefix: str = "  ") -> None:
+def print_numbered_row(
+    idx: int,
+    label: str,
+    *,
+    prefix: str = "  ",
+    marker: str = "",
+) -> None:
     """Строка нумерованного меню: жёлтый индекс и подпись."""
-    print(f"{prefix}{Fore.YELLOW}{idx}{Style.RESET_ALL}. {label}")
+    print(f"{prefix}{marker}{Fore.YELLOW}{idx}{Style.RESET_ALL}. {label}")
 
 
 def print_back_row(
@@ -104,12 +110,27 @@ def print_back_row(
     *,
     back_label_key: str = "character.back",
     prefix: str = "  ",
+    muted: bool = False,
 ) -> None:
     """Строка «0. Назад» для нумерованного меню."""
-    print(
-        f"{prefix}{Fore.YELLOW}0{Style.RESET_ALL}."
-        f" {get_string(strings, back_label_key)}"
-    )
+    label = get_string(strings, back_label_key)
+    if muted:
+        label = f"{Fore.LIGHTBLACK_EX}{label}{Style.RESET_ALL}"
+    print(f"{prefix}{Fore.YELLOW}0{Style.RESET_ALL}. {label}")
+
+
+def print_numbered_options(
+    options: list[str],
+    *,
+    row_formatter: Callable[[int, str], str] | None = None,
+    row_marker: Callable[[int], str] | None = None,
+    prefix: str = "  ",
+) -> None:
+    """Вывести нумерованный список опций."""
+    for idx, label in enumerate(options, 1):
+        display = row_formatter(idx, label) if row_formatter else label
+        marker = row_marker(idx) if row_marker else ""
+        print_numbered_row(idx, display, prefix=prefix, marker=marker)
 
 
 def run_numbered_menu(
@@ -120,10 +141,15 @@ def run_numbered_menu(
     back_label_key: str = "common.back",
     prompt_kwargs: dict[str, Any] | None = None,
     before_back: Callable[[], None] | None = None,
+    row_formatter: Callable[[int, str], str] | None = None,
+    row_marker: Callable[[int], str] | None = None,
+    default_choice: int | None = None,
 ) -> int | None:
     """Нумерованное меню: 1..N — опции, 0 — назад. None при выборе 0."""
     for idx, label in enumerate(options, 1):
-        print_numbered_row(idx, label)
+        display = row_formatter(idx, label) if row_formatter else label
+        marker = row_marker(idx) if row_marker else ""
+        print_numbered_row(idx, display, marker=marker)
     if before_back is not None:
         before_back()
     print()
@@ -137,6 +163,7 @@ def run_numbered_menu(
         0,
         len(options),
         strings,
+        default=default_choice,
     )
     if choice == 0:
         return None
@@ -174,6 +201,49 @@ def pick_n_from_pool(
     return picked
 
 
+def pick_n_from_pool_loop(
+    strings: StringsDict,
+    count: int,
+    *,
+    pool_for_pick: Callable[[list[str]], list[str]],
+    taken_for_pick: Callable[[list[str]], set[str]],
+    label_for: Callable[[str], str],
+    taken_suffix: str,
+    prompt_at: Callable[[int, int], str],
+    header: str,
+    empty_key: str,
+    before_list: Callable[[list[str]], None] | None = None,
+    format_selectable: Callable[[int, str, str], None] | None = None,
+    back_label_key: str = "character.back",
+) -> list[str] | None:
+    """Выбрать count id через pick_from_pool_loop; None — «Назад»."""
+    picked: list[str] = []
+    for pick_num in range(1, count + 1):
+        prompt = prompt_at(pick_num, count)
+
+        def _before_list() -> None:
+            if before_list is not None:
+                before_list(picked)
+
+        item = pick_from_pool_loop(
+            strings,
+            pool_for_pick(picked),
+            taken_for_pick(picked),
+            label_for=label_for,
+            taken_suffix=taken_suffix,
+            prompt=prompt,
+            empty_key=empty_key,
+            header=header,
+            before_list=_before_list if before_list is not None else None,
+            format_selectable=format_selectable,
+            back_label_key=back_label_key,
+        )
+        if item is None:
+            return None
+        picked.append(item)
+    return picked
+
+
 def read_numbered_choice(
     strings: StringsDict,
     count: int,
@@ -181,10 +251,12 @@ def read_numbered_choice(
     prompt_key: str,
     back_label_key: str = "character.back",
     prompt_kwargs: dict[str, Any] | None = None,
+    default_choice: int | None = None,
+    back_muted: bool = False,
 ) -> int | None:
     """Ввод номера после кастомного рендера списка (0 — назад)."""
     print()
-    print_back_row(strings, back_label_key=back_label_key)
+    print_back_row(strings, back_label_key=back_label_key, muted=back_muted)
     print()
     kwargs = dict(prompt_kwargs or {})
     kwargs.setdefault("count", count)
@@ -193,6 +265,7 @@ def read_numbered_choice(
         0,
         count,
         strings,
+        default=default_choice,
     )
     if choice == 0:
         return None

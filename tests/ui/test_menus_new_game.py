@@ -48,7 +48,8 @@ def test_new_game_no_characters_goes_to_create(monkeypatch):
         calls["create"] += 1
 
     monkeypatch.setattr(
-        new_game, "load_characters", lambda: LoadCharactersResult.empty()
+        "ui.menus.hub._characters_cache.load_characters",
+        lambda: LoadCharactersResult.empty(),
     )
     monkeypatch.setattr(
         _creation_steps, "show_create_character_flow", create_flow
@@ -75,7 +76,10 @@ def test_new_game_back_navigation_and_cached_list(monkeypatch):
         calls["adventure"] += 1
         return None
 
-    monkeypatch.setattr(new_game, "load_characters", load_characters)
+    monkeypatch.setattr(
+        "ui.menus.hub._characters_cache.load_characters",
+        load_characters,
+    )
     monkeypatch.setattr(new_game, "_select_character", select_character)
     monkeypatch.setattr(new_game, "_select_adventure", select_adventure)
     new_game.show_new_game_flow({}, {"language": "ru"})

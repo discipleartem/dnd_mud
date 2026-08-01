@@ -9,6 +9,7 @@ from core.progression.asi import would_exceed_cap
 from core.types import StatMap, StringsDict
 from ui.menus.console import (
     ability_name,
+    print_numbered_options,
     print_screen_header,
     read_numbered_choice,
     run_numbered_menu,
@@ -87,17 +88,15 @@ def _pick_one_stat(
         f"{Style.RESET_ALL}"
     )
     print()
-    for idx, stat in enumerate(available, 1):
+    labels: list[str] = []
+    for stat in available:
         current = stats.get(stat, ABILITY_SCORE_DEFAULT)
         capped = would_exceed_cap(current, amount)
         cap_note = ""
         if capped:
             cap_note = f" ({get_string(strings, 'level_up.asi_at_cap')})"
-        print(
-            f"  {Fore.YELLOW}{idx}{Style.RESET_ALL}. "
-            f"{ability_name(strings, stat)}: {current}{cap_note}"
-        )
-    print()
+        labels.append(f"{ability_name(strings, stat)}: {current}{cap_note}")
+    print_numbered_options(labels)
     choice = read_numbered_choice(
         strings,
         len(available),
