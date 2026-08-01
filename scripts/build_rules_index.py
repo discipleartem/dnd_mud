@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Сборка и нормализация индексов docs/rules/; заклинания — из локального PHB PDF."""
+"""Сборка и нормализация индексов docs/rules/ из YAML и markdown."""
 
 from __future__ import annotations
 
@@ -9,14 +9,6 @@ from pathlib import Path
 from typing import Any
 
 import yaml
-from phb_spell_parse import (
-    DEFAULT_PDF,
-    effect_to_bullets,
-    extract_pdf_text,
-    load_spells_index,
-    map_parsed_to_ids,
-    parse_spell_descriptions,
-)
 from rules_class_data import (
     CLASS_MUD_STATUS,
     CLASS_PAGES,
@@ -775,7 +767,7 @@ def sync_feat_file(path: Path, feat_id: str, payload: dict[str, Any]) -> bool:
     body_src = str(
         payload.get("description_full") or payload.get("description") or ""
     )
-    effect = bullets_from_text(body_src) or "_См. PHB PDF._\n"
+    effect = bullets_from_text(body_src) or "_См. PHB._\n"
     quick = str(payload.get("description", "")).strip()
 
     if path.is_file():
@@ -808,7 +800,7 @@ def sync_feat_file(path: Path, feat_id: str, payload: dict[str, Any]) -> bool:
     content = (
         format_frontmatter(fm)
         + f"# {name}\n\n"
-        + "> Источник: PHB, гл. 6. Пересказ из feats.yaml / PHB PDF.\n\n"
+        + "> Источник: PHB, гл. 6. Пересказ из feats.yaml / PHB.\n\n"
         + "## Параметры\n\n"
         + f"<!-- phb:auto:parameters -->\n{params}\n<!-- /phb:auto:parameters -->\n\n"
         + "## Эффект\n\n"
@@ -940,100 +932,6 @@ def fix_spell_duplicate_mud_header(path: Path) -> bool:
         path.write_text(new_text, encoding="utf-8")
         return True
     return False
-
-
-def _spell_level_tag(level: int | str) -> str:
-    if level == 0 or level == "0":
-        return "cantrip"
-    return f"level-{level}"
-
-
-def sync_spell_from_phb(
-    path: Path,
-    spell_id: str,
-    index_meta: dict[str, Any],
-    phb: dict[str, Any],
-) -> None:
-    school_match = re.search(r"`(\w+)`", str(phb.get("school_label", "")))
-    school = (
-        school_match.group(1) if school_match else index_meta.get("school", "")
-    )
-    level = phb["level"]
-    title = str(phb.get("title") or index_meta.get("ru", spell_id))
-    params = (
-        "| Параметр | Значение |\n|----------|----------|\n"
-        f"| Уровень | {phb['level_label']} |\n"
-        f"| Школа | {phb['school_label']} |\n"
-        f"| Время | {phb['casting_time']} |\n"
-        f"| Дистанция | {phb['range']} |\n"
-        f"| Компоненты | {phb['components']} |\n"
-        f"| Длительность | {phb['duration']} |"
-    )
-    effect = effect_to_bullets(phb.get("effect_lines") or [])
-    higher = phb.get("higher_levels")
-    if path.is_file():
-        fm, _ = parse_frontmatter(path.read_text(encoding="utf-8"))
-    else:
-        fm = {}
-    tags = ["spell"]
-    if school:
-        tags.append(str(school))
-    tags.append(_spell_level_tag(level))
-    fm.update(
-        {
-            "phb_chapter": 11,
-            "phb_section": title,
-            "phb_pages": [211, 289],
-            "phb_part": 3,
-            "id": spell_id,
-            "type": "spell",
-            "tags": tags,
-            "mud_status": fm.get("mud_status", "planned"),
-        }
-    )
-    mud_inner = (
-        "| Аспект | Значение |\n|--------|----------|\n"
-        f"| Статус | {fm.get('mud_status', 'planned')} |\n"
-        "| YAML | — |\n"
-        "| Core | — |\n"
-    )
-    higher_block = ""
-    if higher:
-        higher_block = (
-            "## На больших уровнях\n\n"
-            f"<!-- phb:auto:higher-levels -->\n{higher}\n"
-            "<!-- /phb:auto:higher-levels -->\n\n"
-        )
-    content = (
-        format_frontmatter(fm)
-        + f"# {title}\n\n"
-        + "> Источник: PHB, гл. 11. Пересказ правил, не дословная копия PHB.\n\n"
-        + "## Параметры\n\n"
-        + f"<!-- phb:auto:parameters -->\n{params}\n<!-- /phb:auto:parameters -->\n\n"
-        + "## Эффект\n\n"
-        + f"<!-- phb:auto:effect -->\n{effect}<!-- /phb:auto:effect -->\n\n"
-        + higher_block
-        + f"## {MUD_SECTION}\n\n"
-        + f"<!-- mud:implementation -->\n{mud_inner}<!-- /mud:implementation -->\n"
-    )
-    path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(content, encoding="utf-8")
-
-
-def sync_all_spells_from_phb() -> int:
-    if not DEFAULT_PDF.is_file():
-        return 0
-    text = extract_pdf_text()
-    parsed = parse_spell_descriptions(text)
-    index = load_spells_index(RULES_DIR)
-    mapped = map_parsed_to_ids(parsed, index)
-    for spell_id, phb in mapped.items():
-        meta = index.get(spell_id, {})
-        if not isinstance(meta, dict):
-            continue
-        path = RULES_DIR / "entities" / "spells" / f"{spell_id}.md"
-        sync_spell_from_phb(path, spell_id, meta, phb)
-    return len(mapped)
 
 
 def build_lookup() -> dict[str, Any]:
@@ -1180,7 +1078,6 @@ def update_toc_agent_entry() -> None:
 def main() -> int:
     counts = {
         "feats": 0,
-        "spells_synced": 0,
         "spells_fixed": 0,
         "races": 0,
         "backgrounds": 0,
@@ -1195,8 +1092,6 @@ def main() -> int:
     counts["races"] = sync_all_race_cards()
     counts["backgrounds"] = sync_all_backgrounds()
     counts["classes"] = sync_all_class_cards()
-
-    counts["spells_synced"] = sync_all_spells_from_phb()
 
     for spell_path in (RULES_DIR / "entities" / "spells").glob("*.md"):
         if fix_spell_higher_levels(spell_path):
