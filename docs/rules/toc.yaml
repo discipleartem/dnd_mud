@@ -74,6 +74,24 @@ entries:
   pages:
   - 163
   - 165
+- id: 07-ability-scores
+  type: chapter
+  file: chapters/07-ability-scores.md
+  pages:
+  - 173
+  - 180
+- id: 08-adventures
+  type: chapter
+  file: chapters/08-adventures.md
+  pages:
+  - 181
+  - 188
+- id: 09-combat
+  type: chapter
+  file: chapters/09-combat.md
+  pages:
+  - 189
+  - 198
 - id: acolyte
   type: background
   file: entities/backgrounds/acolyte.md

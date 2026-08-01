@@ -77,6 +77,27 @@ by_id:
     - 163
     - 165
     quick: ''
+  07-ability-scores:
+    type: chapter
+    file: chapters/07-ability-scores.md
+    pages:
+    - 173
+    - 180
+    quick: ''
+  08-adventures:
+    type: chapter
+    file: chapters/08-adventures.md
+    pages:
+    - 181
+    - 188
+    quick: ''
+  09-combat:
+    type: chapter
+    file: chapters/09-combat.md
+    pages:
+    - 189
+    - 198
+    quick: ''
   acolyte:
     type: background
     file: entities/backgrounds/acolyte.md
@@ -632,6 +653,15 @@ by_alias:
   Индивидуальные опции: 06-individual-options
   06-multiclass: 06-multiclass
   Мультиклассирование: 06-multiclass
+  07-ability-scores: 07-ability-scores
+  07 ability scores: 07-ability-scores
+  Использование характеристик: 07-ability-scores
+  08-adventures: 08-adventures
+  08 adventures: 08-adventures
+  Приключения: 08-adventures
+  09-combat: 09-combat
+  09 combat: 09-combat
+  Сражение: 09-combat
   acolyte: acolyte
   Прислужник: acolyte
   charlatan: charlatan
@@ -825,6 +855,9 @@ summaries:
   06-feats: ''
   06-individual-options: ''
   06-multiclass: ''
+  07-ability-scores: ''
+  08-adventures: ''
+  09-combat: ''
   acolyte: 'Проницательность, Религия; умение: Приют для верующих'
   charlatan: 'Ловкость рук, Обман; умение: Поддельная личность'
   criminal: 'Обман, Скрытность; умение: Криминальные связи'
