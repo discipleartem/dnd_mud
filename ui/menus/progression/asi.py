@@ -2,7 +2,8 @@
 
 from colorama import Fore, Style
 
-from core.mechanics.stats import ABILITY_SCORE_DEFAULT, STAT_NAMES
+from core.constants import ABILITY_SCORE_DEFAULT, ABILITY_SCORE_MAX
+from core.mechanics.stats import STAT_NAMES
 from core.platform.localization import get_string
 from core.types import StatMap, StringsDict
 from ui.menus.console import (
@@ -87,7 +88,7 @@ def _pick_one_stat(
     print()
     for idx, stat in enumerate(available, 1):
         current = stats.get(stat, ABILITY_SCORE_DEFAULT)
-        capped = current + amount > 20
+        capped = current + amount > ABILITY_SCORE_MAX
         cap_note = ""
         if capped:
             cap_note = f" ({get_string(strings, 'level_up.asi_at_cap')})"

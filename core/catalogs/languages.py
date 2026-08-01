@@ -1,6 +1,5 @@
 """Загрузка языков и пулов выбора при создании персонажа."""
 
-from pathlib import Path
 from typing import Any, Literal
 
 from core.catalogs.races import (
@@ -9,8 +8,8 @@ from core.catalogs.races import (
 )
 from core.platform.catalog_loader import load_catalog, load_catalog_items
 from core.platform.localization import resolve_localized_text
+from core.platform.paths import LANGUAGES_FILE
 
-LANGUAGES_FILE = Path("database/core/languages.yaml")
 LanguagePool = Literal["common", "exotic", "any"]
 
 

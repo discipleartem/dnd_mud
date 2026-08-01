@@ -1,13 +1,11 @@
 """Загрузка предысторий из YAML."""
 
-from pathlib import Path
 from typing import Any
 
 from core.grants.normalize import grants_from_entity, grants_of_type
 from core.platform.catalog_loader import load_catalog
 from core.platform.localization import resolve_localized_text
-
-BACKGROUNDS_FILE = Path("database/backgrounds/backgrounds.yaml")
+from core.platform.paths import BACKGROUNDS_FILE
 
 
 def _load_backgrounds_yaml() -> dict[str, Any]:

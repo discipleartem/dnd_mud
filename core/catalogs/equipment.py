@@ -1,6 +1,5 @@
 """Загрузка каталога снаряжения из YAML."""
 
-from pathlib import Path
 from typing import Any
 
 from core.platform.catalog_loader import load_catalog
@@ -9,16 +8,13 @@ from core.platform.localization import (
     load_strings,
     resolve_localized_text,
 )
+from core.platform.paths import (
+    ARMOR_FILE,
+    EQUIPMENT_FILE,
+    TOOLS_FILE,
+    WEAPONS_FILE,
+)
 from core.types import LanguageCode, StringsDict
-
-WEAPONS_FILE = Path("database/equipment/weapon.yaml")
-ARMOR_FILE = Path("database/equipment/armor.yaml")
-TOOLS_FILE = Path("database/equipment/tools.yaml")
-EQUIPMENT_FILE = Path("database/equipment/equipment.yaml")
-
-CUSTOM_TOOL_POOLS: dict[str, list[str]] = {
-    "soldier_gaming": ["dice_set", "playing_cards"],
-}
 
 # Пулы инструментов для proficiencies
 TOOL_POOL_CATEGORIES: dict[str, str] = {
@@ -139,9 +135,19 @@ def tools_by_category(category: str) -> list[str]:
     return result
 
 
+def _load_custom_tool_pools() -> dict[str, list[str]]:
+    """Пользовательские пулы инструментов из YAML."""
+    raw = load_catalog(TOOLS_FILE, "tool_pools")
+    result: dict[str, list[str]] = {}
+    for pool_id, items in raw.items():
+        if isinstance(items, list):
+            result[str(pool_id)] = [str(item) for item in items]
+    return result
+
+
 def resolve_tool_pool(pool: str) -> list[str]:
     """Разрешить pool-токен в список tool id."""
-    custom = CUSTOM_TOOL_POOLS.get(pool)
+    custom = _load_custom_tool_pools().get(pool)
     if custom is not None:
         return list(custom)
     if pool in _load_tools():

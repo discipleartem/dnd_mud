@@ -10,12 +10,12 @@ from typing import Any, Literal, cast
 
 from core.mechanics.stats import STAT_NAMES
 from core.platform.io import load_json, save_json
+from core.platform.paths import CREATION_DRAFT_PATH
 from core.types import GameDifficulty, StatMap, parse_game_difficulty
 
 logger = logging.getLogger(__name__)
 
 CREATION_DRAFT_SCHEMA_VERSION = 1
-CREATION_DRAFT_PATH = Path("saves") / "creation_draft.json"
 
 CreationStep = Literal[
     "race",

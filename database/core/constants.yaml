@@ -35,21 +35,6 @@ constants:
     29: 9
     30: 10
 
-  # Значения кубиков хитов по классам (id класса → грани кубика)
-  hit_dice:
-    barbarian: 12
-    fighter: 10
-    paladin: 10
-    ranger: 10
-    bard: 8
-    cleric: 8
-    druid: 8
-    monk: 8
-    rogue: 8
-    warlock: 8
-    sorcerer: 6
-    wizard: 6
-
   # Бонус мастерства по уровню персонажа (PHB)
   proficiency_bonus:
     1: 2

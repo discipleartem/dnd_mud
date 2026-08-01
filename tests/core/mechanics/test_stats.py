@@ -59,7 +59,6 @@ def test_dice_roll(monkeypatch: pytest.MonkeyPatch) -> None:
 )
 def test_ability_modifier(score: int, expected: int) -> None:
     assert ability_modifier(score) == expected
-    assert dice.ability_modifier(score) == expected
 
 
 def test_validate_final_stats_bounds() -> None:

@@ -2,7 +2,7 @@
 
 from core.catalogs.classes import get_class_dict, iter_class_grants
 from core.character.models import Character
-from core.mechanics.dice import ability_modifier
+from core.constants import ability_modifier
 from core.mechanics.stats import (
     ABILITY_SCORE_DEFAULT,
     ABILITY_SCORE_MAX,

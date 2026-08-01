@@ -2,9 +2,7 @@
 
 import random
 
-from core.constants import ability_modifier
-
-__all__ = ["ability_modifier", "roll", "roll_ability_score"]
+__all__ = ["roll", "roll_ability_score"]
 
 
 def roll(count: int = 1, sides: int = 20, modifier: int = 0) -> int:
