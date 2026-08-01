@@ -1,27 +1,21 @@
 ---
+id: human
+type: race
 phb_chapter: 2
-phb_section: Человек
 phb_pages:
 - 29
 - 31
-phb_part: 1
-id: human
-type: race
-tags:
-- race
-mud_status: partial
 quick: 'Стандарт: все характеристики +1; вариант: +1 к двум, навык, черта, язык'
-mud_refs:
-  yaml: database/races/races.yaml#human
+aliases:
+- human
+- Человек
 ---
 
 # Человек
 
-> Источник: PHB, стр. 29–31. Только механика.
+> Источник: PHB 2014. Пересказ механики, не дословная копия.
 
-## Правила (PHB)
-
-<!-- phb:auto:summary -->
+## Механика
 ### Стандартный человек
 
 - Все характеристики +1.
@@ -34,14 +28,3 @@ mud_refs:
 - Владение одним навыком на выбор.
 - Одна черта на выбор (требования черты должны выполняться).
 - Один дополнительный язык.
-<!-- /phb:auto:summary -->
-
-## Реализация в MUD
-
-<!-- mud:implementation -->
-| Аспект | Значение |
-|--------|----------|
-| Статус | partial |
-| YAML | `database/races/races.yaml#human` |
-| Core | `core/races.py` |
-<!-- /mud:implementation -->

@@ -1,27 +1,21 @@
 ---
+id: sage
+type: background
 phb_chapter: 4
-phb_section: Мудрец
 phb_pages:
 - 121
 - 142
-phb_part: 1
-id: sage
-tags:
-- background
-mud_status: partial
-type: background
-mud_refs:
-  yaml: database/backgrounds/backgrounds.yaml#sage
 quick: 'История, Магия; умение: Исследователь'
+aliases:
+- sage
+- Мудрец
 ---
 
 # Мудрец
 
-> Источник: PHB, гл. 4. Только механика (навыки, снаряжение, умение).
+> Источник: PHB 2014. Пересказ механики, не дословная копия.
 
-## Правила (PHB)
-
-<!-- phb:auto:summary -->
+## Механика
 ### Навыки
 
 - История
@@ -44,15 +38,3 @@ quick: 'История, Магия; умение: Исследователь'
 ### Умение: Исследователь
 
 - Зная язык, можете найти сведения, если они записаны где-либо.
-
-<!-- /phb:auto:summary -->
-
-## Реализация в MUD
-
-<!-- mud:implementation -->
-| Аспект | Значение |
-|--------|----------|
-| Статус | partial |
-| YAML | `database/backgrounds/backgrounds.yaml#sage` |
-| Core | `core/backgrounds.py` |
-<!-- /mud:implementation -->

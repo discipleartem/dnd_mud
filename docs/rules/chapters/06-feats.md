@@ -1,22 +1,20 @@
 ---
+id: 06-feats
+type: chapter
 phb_chapter: 6
-phb_section: Черты
 phb_pages:
 - 166
 - 172
-phb_part: 1
-id: 06-feats
-tags:
-- chapter
-mud_status: partial
-type: chapter
+quick: Черты вместо ASI; список в entities/feats
+aliases:
+- 06-feats
+- Черты
 ---
 
 # Черты
 
-> Источник: PHB, стр. 166–172. Пересказ правил.
+> Источник: PHB 2014. Пересказ механики, не дословная копия.
 
-<!-- phb:auto:links -->
 ## Детальные карточки
 
 | ID | Название | Файл | Статус MUD |
@@ -63,44 +61,11 @@ type: chapter
 | `resilient` | Устойчивый | [resilient.md](entities/feats/resilient.md) | partial |
 | `crossbow_expert` | Эксперт В Арбалетах | [crossbow_expert.md](entities/feats/crossbow_expert.md) | partial |
 | `linguist` | Языковед | [linguist.md](entities/feats/linguist.md) | partial |
-<!-- /phb:auto:links -->
 
-## Правила (PHB)
-
-<!-- phb:auto:summary -->
+## Механика
 ### Общие правила
 
 - Черты — опциональная замена умения «Улучшение характеристик» на некоторых уровнях.
 - Каждую черту можно взять **один раз**, если в описании не указано иное.
 - Требования черты проверяются **в момент выбора**; при их потере эффект не работает.
 - Механика каждой черты — в карточках `entities/feats/` (таблица ниже).
-<!-- /phb:auto:summary -->
-
-## Реализация в MUD
-
-<!-- mud:implementation -->
-| Аспект | Значение |
-|--------|----------|
-| Статус | partial |
-| YAML | `database/progression/feats.yaml` |
-| Core | `core/feats.py`, `core/feat_requirements.py` |
-| UI | `ui/menus/feats/` |
-| Детали | `docs/API.md` §core.feats |
-
-### Фильтрация списка
-
-`list_feats_for_selection` возвращает три группы:
-
-| Группа | Условие | UI |
-|--------|---------|----|
-| **eligible** | Требования выполнены и черта даёт **новые** владения | Выбираемые |
-| **blocked** | Требования не выполнены | Показ с причиной, не выбираются |
-| **hidden** | Требования OK, но владения уже есть (раса/класс/другие черты) | Секция «Скрыто» в конце списка |
-
-Уже взятые черты не возвращаются.
-
-### Запланировано (Phase 2)
-
-- Постоянная проверка требований в runtime: `feat_is_active`, `active_feat_ids`, `feat_requirement_context_from_character`.
-- Потеря требований (смена доспехов и т.п.) отключает эффект черты.
-<!-- /mud:implementation -->

@@ -12,7 +12,7 @@ import pytest
 @pytest.fixture
 def catalog_caches_cleared() -> Generator[None, None, None]:
     """Сбросить кэши каталогов до и после теста."""
-    from core.catalog_loader import clear_all_catalog_caches
+    from core.platform.catalog_loader import clear_all_catalog_caches
 
     clear_all_catalog_caches()
     yield
@@ -22,7 +22,7 @@ def catalog_caches_cleared() -> Generator[None, None, None]:
 @pytest.fixture
 def ru_strings() -> dict[str, Any]:
     """Строки локализации ru."""
-    from core.localization import load_strings
+    from core.platform.localization import load_strings
 
     return load_strings("ru")
 
@@ -30,7 +30,7 @@ def ru_strings() -> dict[str, Any]:
 @pytest.fixture
 def en_strings() -> dict[str, Any]:
     """Строки локализации en."""
-    from core.localization import load_strings
+    from core.platform.localization import load_strings
 
     return load_strings("en")
 
@@ -38,7 +38,7 @@ def en_strings() -> dict[str, Any]:
 @pytest.fixture
 def characters_dir(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
     """Временная директория сохранений персонажей."""
-    import core.character_storage as storage_mod
+    import core.character.storage as storage_mod
 
     path = tmp_path / "characters"
     monkeypatch.setattr(storage_mod, "CHARACTERS_DIR", path)
@@ -48,7 +48,7 @@ def characters_dir(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
 @pytest.fixture
 def settings_file(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
     """Временный файл настроек."""
-    import core.settings as settings_mod
+    import core.platform.settings as settings_mod
 
     path = tmp_path / "settings.json"
     monkeypatch.setattr(settings_mod, "SETTINGS_PATH", path)
@@ -112,20 +112,28 @@ def patch_int_input():
         def fake_get_int_input(*args: object, **kwargs: object) -> int:
             return next(iterator)
 
-        monkeypatch.setattr(
-            "ui.menus._deps.get_int_input",
-            fake_get_int_input,
-        )
+        # Прямые импорты get_int_input — патчим точки использования.
+        for target in (
+            "ui.menus.console.get_int_input",
+            "ui.menus.hub.new_game.get_int_input",
+            "ui.menus.stats.stats_methods.get_int_input",
+            "ui.menus.stats.stats_shared.get_int_input",
+            "ui.menus.stats.stats_choice_bonuses.get_int_input",
+            "ui.menus.hub.settings.get_int_input",
+            "ui.menus.feats._selection.get_int_input",
+            "ui.menus.creation.expertise.get_int_input",
+        ):
+            monkeypatch.setattr(target, fake_get_int_input)
 
     return _patch
 
 
 @pytest.fixture
 def patch_press_enter(monkeypatch: pytest.MonkeyPatch) -> None:
-    """Заглушка _press_enter для UI smoke-тестов."""
-    from ui.menus import _common
+    """Заглушка press_enter для UI smoke-тестов."""
+    from ui.menus import console
 
-    monkeypatch.setattr(_common, "_press_enter", lambda strings: None)
+    monkeypatch.setattr(console, "press_enter", lambda strings: None)
 
 
 @pytest.fixture
@@ -139,7 +147,7 @@ def minimal_character() -> Any:
 @pytest.fixture
 def fighter_l3() -> Any:
     """Боец 3 уровня для progression/level-up."""
-    from core.models import Character
+    from core.character.models import Character
     from core.types import CharacterClass
 
     return Character(
@@ -158,7 +166,7 @@ def fighter_l3() -> Any:
 @pytest.fixture
 def fighter_l1_hardcore() -> Any:
     """Боец 1 уровня HardCore."""
-    from core.models import Character
+    from core.character.models import Character
     from core.types import CharacterClass
 
     return Character(
@@ -177,9 +185,9 @@ def fighter_l1_hardcore() -> Any:
 @pytest.fixture
 def patch_level_up_ui(monkeypatch: pytest.MonkeyPatch) -> None:
     """Заглушки UI повышения уровня."""
-    from ui.menus import level_up as level_up_menu
+    from ui.menus.progression import level_up as level_up_menu
 
-    monkeypatch.setattr(level_up_menu, "_press_enter", lambda strings: None)
+    monkeypatch.setattr(level_up_menu, "press_enter", lambda strings: None)
     monkeypatch.setattr(
-        level_up_menu, "_print_screen_header", lambda strings: None
+        level_up_menu, "print_screen_header", lambda strings: None
     )

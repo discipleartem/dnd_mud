@@ -2,8 +2,36 @@
 
 ## [Unreleased]
 
+### Changed
+- **Clean Code architecture pass:** `Adventure` → `catalogs/adventure`; background gear → `inventory/background_equipment`; racial HP → `mechanics/hp_bonus`; mod gating API → `CatalogSession`; `proficiency_collect` + `feats/grant_merge` (leaf `grants.resolve`); grant format registry; `equipment_text` / `equipped_display`; UI pool-pick helpers (`SCREEN_WIDTH`, `pick_from_pool_loop`)
+- **Spell cards fix:** восстановлены пустые `## Эффект` (23); `major_image` → `magic_mouth`; словари RU↔EN дополнены
+- **Справочник PHB UX/agent:** обязательный `quick` у всех карточек; эффекты заклинаний без флавора; `rules/INDEX.md` для людей; aliases в обоих регистрах
+- **Алгоритм поиска PHB:** `00-project.mdc` / `AGENTS.md` / `DND_RULES` — `lookup.yaml` (`by_alias` → `quick` → `file`) → веб 2014/SRD; без `phb:auto` / генераторов
+- **Справочник PHB `docs/rules/` (agent-v2):** полная замена — только механика без лора и без MUD-блоков; ручные `lookup.yaml` / `toc.yaml`; статус MUD — в [`DND_RULES.md`](DND_RULES.md)
+- **Architecture package restructure:** `core/` разбит на пакеты (`platform/`, `catalogs/`, `grants/`, `character/`, `feats/`, `progression/`, `inventory/`, `mechanics/`, `engine/` + `combat/`); leaf-imports без package facades; `CatalogSession` в `platform/catalog_session.py`; grant format в `core/grants/format.py`; `ui/menus/` — `hub/`, `creation/`, `progression/`, `scenario/`, `display/`, `feats/`, `stats/`; тесты зеркалят пакеты (`tests/core/…`, `tests/ui/`, `tests/data/`)
+- **Clean Code epic (B+C):** leaf `grants_resolve` / `feat_catalog`; sibling-модули feats/progression/inventory + фасады; UI `console.py` вместо `_common`; `grant_labels`, `session_runner`, `creation_finalize`; docs sync (нет `character_builder` / `_display`)
+- **Code slim refactor:** purge мёртвого API; `core/combat.py` вместо пакета; `ui/menus/display/` вместо `_display` god-file; `core/hp_bonus.py` + `core/expertise.py` sibling-модули; dedupe UI picks / scenario checks; slim `character_build`
+
+### Fixed
+- **Mod gating:** после сессии приключения `reset_session_catalogs()` возвращает gating к `normal` (`new_game` / `load_game`)
+
+### Removed
+- **`scripts/build_rules_index.py` / `scripts/rules_class_data.py`:** индексы справочника ведутся вручную; локальный PDF PHB в `docs/*.pdf` игнорируется git
+- **PDF-workflow:** `scripts/phb_spell_parse.py` и синк заклинаний из PDF в `build_rules_index.py`; алгоритм поиска правил — `docs/rules/` → веб (PHB 2014 / SRD 5.1), без локального PDF
+- **kwargs-`build_new_character` / `to_kwargs` / draft plan:** единственный API — `build_new_character(CharacterBuildParams)`; удалены мёртвые `_handle_action_result`, `_versatile_can_switch_to_two_hands`; черновик `docs/refactor-simplify-ae2709.md`
+- **Черновик `docs/tokenize.md`:** правила минимального контекста LLM перенесены в global User Rules (`~/.cursor/rules/ai-context.mdc`)
+
 ### Breaking
 - **Сейвы:** удалены runtime-миграции (`core/save_migration.py`); требуется канонический формат v1 (`class_id`, `race`, `schema_version: 1`); ключ `"class"`, `race_id`, `equip_logic_version` не поддерживаются
+- **Character build API:** kwargs-`build_new_character` удалён; callers передают `CharacterBuildParams`
+
+### Changed
+- **Residual simplify:** `unique_save_slug` публичный и подключён в creation; dispatch grant/feat subchoices через `match`; docs sync API/ARCHITECTURE
+- **Architecture simplify:** слияние пакетов `core/feats|progression|inventory|proficiencies|types` и `ui/menus/_display` в единые модули; удалены фасады `core/character.py`, `ui/menus/_deps.py`, микромодули `levels`/`slug`/`grant_mechanics`; JSON coerce в `models.py` через `_json_list_str` / `_json_dict`; `bootstrap_session_catalogs` в `catalog_loader`
+- **Rules DRY (1B):** `dnd-mud-workflow.mdc` — короткий policy-delta; процедура N part-веток — skill `dnd-mud-multi-branch`; stub `ironbee-devtools-use.mdc` (browser forbidden); `AGENTS.md` — оркестрация (inventory → git-старт); skills index — `.cursor/skills/README.md`; PHB актуализация — в `00-project.mdc`. Global: сжатый `00-global` индекс; Settings UI / IronBee platform off — ручной шаг ([`user-rules-minimal.md`](~/.cursor/docs/user-rules-minimal.md))
+- **Global rules modules:** монолиты `01-operations` / `user-protocols` заменены модулями `venv` / `git` / `task-cycle` / `communication` / `language` (+ `ai-context`); ссылки в `AGENTS.md`, skills, workflow обновлены
+- **Clean Code refactor:** пакет `core/types/` — `_base.py` (базовые типы), `character_params.py` (CharacterBuildParams), `proficiencies.py` (Proficiencies, Expertise); `__init__.py` — фасад для backward compatibility; новая функция `build_new_character_from_params()` в `core/character_build.py`; `build_new_character()` помечен как deprecated с `warnings.warn`; `Character.to_dict()` рефакторинг с использованием `dataclasses.asdict()`; улучшена типизация и уменьшено дублирование кода
+- **Code simplification (DRY/KISS/YAGNI):** удалён `core/character_builder.py` — функции перенесены в `core/character_build.py`; добавлен универсальный `catalog_loader.load_catalog_items` для DRY загрузки каталогов; добавлен универсальный `io.load_file` для DRY загрузки YAML/JSON; упрощён `_merge_bonus_dicts` через `collections.Counter`; оптимизирована `load_languages` (один вызов `_load_languages_yaml`)
 
 ### Added
 - **Structural refactor:** docs sync, layer hygiene (`get_enabled_mod_ids`, session/inventory facades), `progression/` split, `_display` consolidation, `InventoryItem` typing, unified `_deps`

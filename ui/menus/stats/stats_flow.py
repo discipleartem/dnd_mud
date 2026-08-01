@@ -1,15 +1,14 @@
 """Оркестратор flow генерации характеристик."""
 
-from core.localization import get_string
+from core.platform.localization import get_string
 from core.types import GameDifficulty, StatMap, StringsDict
-from ui.menus._common import (
-    _print_screen_header,
-    _run_numbered_menu,
+from ui.menus.console import (
+    print_screen_header,
+    run_numbered_menu,
 )
 from ui.menus.stats.stats_methods import (
     _select_stats_point_buy,
-    _select_stats_random_hardcore,
-    _select_stats_random_normal,
+    _select_stats_random,
     _select_stats_standard_array,
 )
 
@@ -24,15 +23,16 @@ def show_stats_generation_flow(
 ) -> StatMap | None:
     """Flow генерации характеристик с выбором метода."""
     if difficulty == "hardcore":
-        return _select_stats_random_hardcore(
+        return _select_stats_random(
             strings,
             race_id,
             subrace_id,
+            allow_regenerate=False,
             hardcore_rolls=hardcore_rolls,
         )
 
     while True:
-        _print_screen_header(
+        print_screen_header(
             get_string(strings, "character.stats_generation_caption")
         )
 
@@ -42,7 +42,7 @@ def show_stats_generation_flow(
             get_string(strings, "character.stats_random"),
         ]
 
-        choice = _run_numbered_menu(
+        choice = run_numbered_menu(
             strings,
             methods,
             prompt_key="character.stats_generation_method_prompt",
@@ -56,7 +56,7 @@ def show_stats_generation_flow(
         elif choice == 2:
             stats = _select_stats_point_buy(strings, race_id, subrace_id)
         else:
-            stats = _select_stats_random_normal(strings, race_id, subrace_id)
+            stats = _select_stats_random(strings, race_id, subrace_id)
 
         if stats is not None:
             return stats

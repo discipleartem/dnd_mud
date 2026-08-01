@@ -1,35 +1,29 @@
 # Agent skills — dnd_mud
 
-Индекс project skills. **Policy** verify/review/git — [`dnd-mud-workflow.mdc`](../rules/dnd-mud-workflow.mdc). **Оркестрация** — [`AGENTS.md`](../../AGENTS.md).
+Индекс project skills. **Policy** — [`dnd-mud-workflow.mdc`](../rules/dnd-mud-workflow.mdc). **Оркестрация / loop** — [`AGENTS.md`](../../AGENTS.md).
+
+**Поиск правил PHB:** [`00-project.mdc`](../rules/00-project.mdc) §D&D 5e · [`AGENTS.md`](../../AGENTS.md) §Поиск правил · [`docs/rules/README.md`](../../docs/rules/README.md).
 
 | Слой | Где |
 |------|-----|
 | Policy | `dnd-mud-workflow.mdc` |
 | Loop / steps | `AGENTS.md` |
+| PHB lookup | `docs/rules/_index/lookup.yaml` |
 | Процедуры | skills ниже |
 
 ## Skills
 
 | Skill | Когда |
 |-------|-------|
+| [`dnd-mud-multi-branch`](dnd-mud-multi-branch/SKILL.md) | План с N PR: inventory, part-ветки, merge, cleanup |
 | [`dnd-mud-docs-after-task`](dnd-mud-docs-after-task/SKILL.md) | После реализации, перед commit финализации |
 | [`dnd-mud-verify`](dnd-mud-verify/SKILL.md) | Справочник команд → [reference.md](dnd-mud-verify/reference.md) |
 | [`dnd-mud-review`](dnd-mud-review/SKILL.md) | Один раз: verify-scope + light/full review |
 | [`dnd-mud-fix-plan`](dnd-mud-fix-plan/SKILL.md) | План после Blocker/Major |
-| [`dnd-mud-git-pr`](dnd-mud-git-pr/SKILL.md) | Push / PR / rename `merged/*` |
+| [`dnd-mud-git-pr`](dnd-mud-git-pr/SKILL.md) | Push / PR / rename `merged/*` (+ dead-code pre-PR-dev 1×) |
 | [`dnd-mud-release`](dnd-mud-release/SKILL.md) | Release `dev` → `main` |
 
 Personal: `git-dev-main-sync` (`~/.cursor/skills/git-dev-main-sync/`).
-
-## Agent-loop
-
-```
-git-старт → [инвентария N PR] → [part × N: branch + commit] → merge → feat/<slug> → docs → review → [git-pr?] → merged/…
-```
-
-**1 PR плана = 1 ветка.** План на 17 PR — 17 part-веток, не одна. Канон: [`dnd-mud-workflow.mdc`](../rules/dnd-mud-workflow.mdc) §Несколько веток.
-
-Release `dev` → `main` — отдельно по запросу (`dnd-mud-release`).
 
 ## Reference files
 

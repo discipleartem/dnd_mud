@@ -1,15 +1,34 @@
-"""Повышение уровня, grants progression и ASI."""
+"""Применение повышений уровня и прогрессионных grants."""
 
 from collections.abc import Callable
 from dataclasses import dataclass, replace
 from typing import Any
 
-from core.models import Character
-from core.progression.hp_gain import (
-    HpGainBreakdown,
-    hp_gain_breakdown_for_level_up,
+from core.catalogs.classes import (
+    get_class_dict,
+    get_subclass_dict,
+    grants_at_level,
 )
-from core.progression.xp import grant_experience, has_pending_level_up
+from core.catalogs.skills import merge_proficiencies
+from core.character.models import Character
+from core.feats.apply import (
+    apply_feat_grants_to_character,
+    resolve_feat_ability_bonuses,
+    tough_hp_adjustment_on_acquire,
+)
+from core.grants.normalize import proficiency_tokens_and_skills_from_grant
+from core.mechanics.proficiencies import merge_proficiency_tokens
+from core.mechanics.stats import apply_bonuses_to_stats
+from core.progression.asi import (
+    apply_asi_two_one,
+    auto_asi_bonus,
+    cap_stats,
+    con_hp_bonus_from_asi,
+    feat_id_from_asi_choice,
+    pending_asi_at_level,
+)
+from core.progression.hp import HpGainBreakdown, hp_gain_breakdown_for_level_up
+from core.progression.xp_levels import grant_experience, has_pending_level_up
 
 
 def apply_level_up(character: Character, hp_gain: int) -> Character:
@@ -35,9 +54,6 @@ def _apply_progression_grant(
     """Применить один grant progression без UI-подвыборов."""
     if grant.get("choice"):
         return character
-    from core.grant_mechanics import proficiency_tokens_and_skills_from_grant
-    from core.proficiencies import merge_proficiency_tokens
-    from core.skills import merge_proficiencies
 
     weapons, armors, tools, skills = proficiency_tokens_and_skills_from_grant(
         grant
@@ -71,8 +87,6 @@ def apply_progression_grants_at_level(
     character: Character, level: int
 ) -> Character:
     """Авто-применение grants класса/подкласса на уровне."""
-    from core.classes import get_class_dict, get_subclass_dict, grants_at_level
-
     char = character
     class_info = get_class_dict(char.class_id)
     for grant in grants_at_level(class_info, level):
@@ -98,21 +112,6 @@ def _headless_asi_resolution(
     character: Character, new_level: int
 ) -> AsiResolution:
     """Авто-ASI или сохранённый выбор (без UI)."""
-    from core.feats import (
-        apply_feat_grants_to_character,
-        resolve_feat_ability_bonuses,
-        tough_hp_adjustment_on_acquire,
-    )
-    from core.progression.asi import (
-        apply_asi_two_one,
-        auto_asi_bonus,
-        cap_stats,
-        con_hp_bonus_from_asi,
-        feat_id_from_asi_choice,
-        pending_asi_at_level,
-    )
-    from core.stats import apply_bonuses_to_stats
-
     char = character
     old_stats = char.stats.copy()
     con_bonus = 0
@@ -170,8 +169,6 @@ def process_pending_level_ups(
     ) = None,
 ) -> Character:
     """Применить все ожидающие повышения; resolve_asi — UI или headless."""
-    from core.progression.asi import pending_asi_at_level
-
     char = character
     while has_pending_level_up(char):
         new_level = char.level + 1

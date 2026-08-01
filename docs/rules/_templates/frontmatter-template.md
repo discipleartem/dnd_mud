@@ -1,36 +1,24 @@
 ---
-phb_chapter: 0
-phb_section: "Название раздела"
-phb_pages: [0, 0]
-phb_part: 1
 id: example_id
-type: chapter
-tags: []
-mud_status: n/a
-mud_refs: {}
-quick: "Краткая механика в 1–2 предложения (для lookup.yaml; без флавора)"
+type: chapter  # chapter | race | class | background | feat | spell | appendix | glossary
+phb_pages: [0, 0]
+quick: "Обязательно: 1 строка механики для lookup (без флавора)"
+aliases: [Пример, пример, example]
+# spell additionally: level, school, casting_time, range, components, duration
 ---
 
 # Заголовок (RU)
 
-> Источник: PHB, стр. N–M. Пересказ правил, не дословная копия PHB. © Wizards of the Coast.
+> Источник: PHB 2014, стр. N–M. Пересказ механики, не дословная копия.
 
-## Правила (PHB)
+## Секция механики
 
-<!-- phb:auto:summary -->
-(пересказ **механики** из PHB PDF — без лора; обновляет агент)
-<!-- /phb:auto:summary -->
-
-## Реализация в MUD
-
-<!-- mud:implementation -->
-(опционально: статус реализации, ссылки на YAML/core; не противоречит PHB)
-<!-- /mud:implementation -->
+(структурированный пересказ — только механика)
 
 ---
 
-**Заклинание:** вместо `## Правила (PHB)` — секции `## Параметры`, `## Эффект`, опционально `## На больших уровнях` с блоками `phb:auto:parameters`, `phb:auto:effect`, `phb:auto:higher-levels`.
+**Заклинание:** `## Параметры` / `## Эффект` / опционально `## На больших уровнях`. В `quick`: уровень; школа; дистанция; сейв/урон.
 
-**Черта:** секции `## Параметры` (`phb:auto:parameters`) и `## Эффект` (`phb:auto:effect`).
+**Черта:** `## Требования` и `## Эффект`.
 
-После создания файла — запись в `toc.yaml` и `_index/*.yaml`, затем `python scripts/build_rules_index.py`.
+После создания — `toc.yaml`, `_index/*.yaml`, `_index/lookup.yaml`. Оглавление для людей — [`INDEX.md`](../INDEX.md).

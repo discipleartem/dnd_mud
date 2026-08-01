@@ -3,10 +3,17 @@
 from pathlib import Path
 from typing import Any
 
-from core.catalog_loader import load_catalog
-from core.levels import clamp_level
+from core.platform.catalog_loader import load_catalog
 
 CONSTANTS_FILE = Path("database/core/constants.yaml")
+
+MAX_CHARACTER_LEVEL = 10
+
+
+def clamp_level(level: int) -> int:
+    """Ограничить уровень диапазоном 1–MAX_CHARACTER_LEVEL."""
+    return max(1, min(level, MAX_CHARACTER_LEVEL))
+
 
 ABILITY_MODIFIER_SCORE_MIN = 1
 ABILITY_MODIFIER_SCORE_MAX = 30
@@ -71,17 +78,6 @@ def difficulty_class(tier: str) -> int:
     return defaults.get(tier, 10)
 
 
-def cover_bonus(tier: str) -> int | str | None:
-    """Бонус укрытия к КД или описание полного укрытия."""
-    raw = _load_constants().get("situational_modifiers", {})
-    if not isinstance(raw, dict):
-        return None
-    cover = raw.get("cover", {})
-    if isinstance(cover, dict):
-        return cover.get(tier)
-    return None
-
-
 def ability_modifier(score: int) -> int:
     """Модификатор характеристики (PHB): таблица из YAML, clamp 1–30."""
     clamped = max(
@@ -96,13 +92,3 @@ def ability_modifier(score: int) -> int:
         if isinstance(value, int):
             return value
     return (clamped - 10) // 2
-
-
-def size_label(size_id: str) -> str:
-    """Читаемое название размера."""
-    raw = _load_constants().get("sizes", {})
-    if isinstance(raw, dict):
-        label = raw.get(size_id)
-        if isinstance(label, str):
-            return label
-    return size_id

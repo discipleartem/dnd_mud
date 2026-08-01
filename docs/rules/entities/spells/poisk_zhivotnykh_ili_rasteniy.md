@@ -1,26 +1,32 @@
 ---
+id: poisk_zhivotnykh_ili_rasteniy
+type: spell
 phb_chapter: 11
-phb_section: Поиск Животных Или Растений
 phb_pages:
 - 211
 - 289
-phb_part: 3
-id: poisk_zhivotnykh_ili_rasteniy
-tags:
-- spell
-- прорицание (ритуал)
-- level-2
-mud_status: planned
-type: spell
+quick: 2; Прорицание; На себя
+aliases:
+- poisk_zhivotnykh_ili_rasteniy
+- poisk zhivotnykh ili rasteniy
+- Поиск Животных Или Растений
+level: 2
+school: прорицание
+casting_time: 1 действие
+range: На себя
+components: В, С, М (кусочек меха ищейки)
+duration: Мгновенная
 ---
 
 # Поиск Животных Или Растений
 
-> Источник: PHB, гл. 11. Пересказ правил, не дословная копия PHB.
+> Источник: PHB 2014. Пересказ механики, не дословная копия.
 
 ## Параметры
 
-<!-- phb:auto:parameters -->
+
+
+
 | Параметр | Значение |
 |----------|----------|
 | Уровень | 2 уровень |
@@ -29,21 +35,6 @@ type: spell
 | Дистанция | На себя |
 | Компоненты | В, С, М (кусочек меха ищейки) |
 | Длительность | Мгновенная |
-<!-- /phb:auto:parameters -->
 
 ## Эффект
-
-<!-- phb:auto:effect -->
-- Назовите определённый вид зверя или растения.
 - Сконцентрировавшись на голосе природы в окружении, вы узнаёте направление и расстояние до ближайшего существа или растения этого вида в пределах 5 миль, если они вообще есть.
-<!-- /phb:auto:effect -->
-
-## Реализация в MUD
-
-<!-- mud:implementation -->
-| Аспект | Значение |
-|--------|----------|
-| Статус | planned |
-| YAML | — |
-| Core | — |
-<!-- /mud:implementation -->

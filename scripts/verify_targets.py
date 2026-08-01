@@ -28,67 +28,111 @@ CROSS_CUTTING_MODULES = frozenset(
 )
 
 CORE_MODULE_TESTS: dict[str, list[str]] = {
-    "core/feat_visibility.py": ["tests/test_feats.py"],
-    "core/feat_descriptions.py": ["tests/test_feats.py"],
-    "core/feat_requirements.py": ["tests/test_feats.py"],
-    "core/feat_apply.py": ["tests/test_feats.py"],
-    "core/feats_loader.py": ["tests/test_feats.py"],
-    "core/character_storage.py": ["tests/test_character.py"],
-    "core/scenario_actions.py": [
-        "tests/test_models.py",
-        "tests/test_class_features.py",
+    "core/feats/catalog.py": ["tests/core/feats/test_feats.py"],
+    "core/feats/apply.py": ["tests/core/feats/test_feats.py"],
+    "core/feats/text.py": ["tests/core/feats/test_feats.py"],
+    "core/feats/requirements.py": ["tests/core/feats/test_feats.py"],
+    "core/character/storage.py": ["tests/core/character/test_character.py"],
+    "core/grants/normalize.py": ["tests/core/grants/test_grants.py"],
+    "core/catalogs/classes.py": [
+        "tests/core/progression/test_subclasses.py",
+        "tests/core/mechanics/test_proficiencies.py",
     ],
-    "core/grant_mechanics.py": ["tests/test_grants.py"],
-    "core/grants.py": ["tests/test_grants.py"],
-    "core/classes.py": [
-        "tests/test_subclasses.py",
-        "tests/test_proficiencies.py",
+    "core/progression/xp_levels.py": [
+        "tests/core/progression/test_progression.py"
     ],
-    "core/levels.py": ["tests/test_progression.py"],
-    "core/hp_bonuses.py": ["tests/test_progression.py"],
-    "core/dice.py": ["tests/test_stats.py"],
-    "core/constants.py": ["tests/test_stats.py"],
-    "core/difficulty.py": ["tests/test_stats.py"],
-    "core/races.py": ["tests/test_grants.py"],
-    "core/adventure.py": ["tests/test_models.py"],
-    "core/backgrounds.py": ["tests/test_models.py"],
-    "core/mod_loader.py": ["tests/test_catalog_loader.py"],
-    "core/skills.py": ["tests/test_proficiencies.py"],
-    "core/proficiency_collect.py": ["tests/test_proficiencies.py"],
-    "core/proficiency_checks.py": ["tests/test_proficiencies.py"],
-    "core/settings.py": ["tests/test_menus_main.py"],
+    "core/progression/hp.py": ["tests/core/progression/test_progression.py"],
+    "core/progression/asi.py": ["tests/core/progression/test_asi.py"],
+    "core/progression/class_progression.py": [
+        "tests/core/progression/test_progression.py"
+    ],
+    "core/progression/level_up.py": [
+        "tests/core/progression/test_progression.py"
+    ],
+    "core/inventory/items.py": ["tests/core/inventory/test_inventory.py"],
+    "core/inventory/armor_class.py": [
+        "tests/core/inventory/test_inventory.py"
+    ],
+    "core/inventory/equip_defaults.py": [
+        "tests/core/inventory/test_inventory.py"
+    ],
+    "core/inventory/starting_equipment.py": [
+        "tests/core/inventory/test_starting_equipment.py"
+    ],
+    "core/mechanics/proficiencies.py": [
+        "tests/core/mechanics/test_proficiencies.py"
+    ],
+    "core/mechanics/proficiency_collect.py": [
+        "tests/core/mechanics/test_proficiencies.py"
+    ],
+    "core/mechanics/dice.py": ["tests/core/mechanics/test_stats.py"],
+    "core/constants.py": ["tests/core/mechanics/test_stats.py"],
+    "core/engine/difficulty.py": ["tests/core/mechanics/test_stats.py"],
+    "core/catalogs/races.py": ["tests/core/grants/test_grants.py"],
+    "core/catalogs/adventure.py": ["tests/core/character/test_models.py"],
+    "core/catalogs/backgrounds.py": ["tests/core/character/test_models.py"],
+    "core/platform/mod_loader.py": [
+        "tests/core/platform/test_catalog_loader.py"
+    ],
+    "core/platform/catalog_session.py": [
+        "tests/core/platform/test_catalog_loader.py"
+    ],
+    "core/catalogs/skills.py": ["tests/core/mechanics/test_proficiencies.py"],
+    "core/platform/settings.py": ["tests/ui/test_menus_main.py"],
+    "core/engine/scenario_actions.py": [
+        "tests/core/character/test_models.py",
+        "tests/core/progression/test_class_features.py",
+    ],
+    "core/engine/game_engine.py": ["tests/core/engine/test_game_engine.py"],
+    "core/engine/combat/rolls.py": ["tests/core/engine/test_phase2_engine.py"],
 }
 
+CORE_PACKAGE_PREFIX_TESTS: list[tuple[str, list[str]]] = [
+    ("core/feats/", ["tests/core/feats/test_feats.py"]),
+    ("core/grants/", ["tests/core/grants/test_grants.py"]),
+    ("core/progression/", ["tests/core/progression/test_progression.py"]),
+    ("core/inventory/", ["tests/core/inventory/test_inventory.py"]),
+    ("core/character/", ["tests/core/character/test_character.py"]),
+    ("core/catalogs/", ["tests/core/platform/test_catalog_loader.py"]),
+    ("core/platform/", ["tests/core/platform/test_catalog_loader.py"]),
+    ("core/mechanics/", ["tests/core/mechanics/test_stats.py"]),
+    ("core/engine/", ["tests/core/engine/test_game_engine.py"]),
+]
+
 DATA_PATH_TESTS = [
-    "tests/test_catalog_loader.py",
-    "tests/test_data_schema.py",
-    "tests/test_io.py",
+    "tests/core/platform/test_catalog_loader.py",
+    "tests/data/test_data_schema.py",
+    "tests/core/platform/test_io.py",
 ]
 
 UI_MENU_TESTS: dict[str, str] = {
-    "characters_menu": "tests/test_menus_characters_hub.py",
-    "main_menu": "tests/test_menus_main.py",
-    "new_game": "tests/test_menus_new_game.py",
-    "scenario_flow": "tests/test_progression.py",
-    "settings": "tests/test_menus_main.py",
-    "backgrounds": "tests/test_models.py",
-    "languages": "tests/test_languages.py",
-    "skills": "tests/test_proficiencies.py",
-    "proficiencies": "tests/test_proficiencies.py",
-    "expertise": "tests/test_expertise.py",
-    "asi": "tests/test_asi.py",
-    "level_up": "tests/test_progression.py",
-    "class_features": "tests/test_class_features.py",
-    "subclass_trainer": "tests/test_subclasses.py",
-    "_deps": "tests/test_menus_new_game.py",
-    "_common": "tests/test_menus_main.py",
+    "characters_menu": "tests/ui/test_menus_characters_hub.py",
+    "main_menu": "tests/ui/test_menus_main.py",
+    "new_game": "tests/ui/test_menus_new_game.py",
+    "flow": "tests/core/progression/test_progression.py",
+    "settings": "tests/ui/test_menus_main.py",
+    "backgrounds": "tests/core/character/test_models.py",
+    "languages": "tests/core/catalogs/test_languages.py",
+    "skills": "tests/core/mechanics/test_proficiencies.py",
+    "proficiencies": "tests/core/mechanics/test_proficiencies.py",
+    "expertise": "tests/core/mechanics/test_expertise.py",
+    "asi": "tests/core/progression/test_asi.py",
+    "level_up": "tests/core/progression/test_progression.py",
+    "class_features": "tests/core/progression/test_class_features.py",
+    "subclass_trainer": "tests/core/progression/test_subclasses.py",
+    "console": "tests/ui/test_menus_main.py",
+    "steps": "tests/ui/test_menus_creation.py",
+    "handlers": "tests/ui/test_menus_creation.py",
 }
 
 UI_PREFIX_TESTS: list[tuple[str, str]] = [
-    ("ui/menus/_creation_", "tests/test_menus_creation.py"),
-    ("ui/menus/_display/", "tests/test_equipment.py"),
-    ("ui/menus/feats/", "tests/test_feats.py"),
-    ("ui/menus/stats/", "tests/test_menus_stats.py"),
+    ("ui/menus/creation/", "tests/ui/test_menus_creation.py"),
+    ("ui/menus/hub/", "tests/ui/test_menus_main.py"),
+    ("ui/menus/progression/", "tests/core/progression/test_progression.py"),
+    ("ui/menus/scenario/", "tests/core/progression/test_progression.py"),
+    ("ui/menus/display/", "tests/core/inventory/test_equipment.py"),
+    ("ui/menus/feats/", "tests/core/feats/test_feats.py"),
+    ("ui/menus/stats/", "tests/ui/test_menus_stats.py"),
 ]
 
 
@@ -125,12 +169,10 @@ def _existing_test(path: str) -> str | None:
 
 def _glob_core_tests(stem: str) -> list[str]:
     found: list[str] = []
-    direct = _existing_test(f"tests/test_{stem}.py")
-    if direct:
-        found.append(direct)
-    for candidate in sorted(TESTS_DIR.glob(f"test_{stem}_*.py")):
-        rel = candidate.relative_to(ROOT).as_posix()
-        found.append(rel)
+    for candidate in sorted(TESTS_DIR.rglob(f"test_{stem}.py")):
+        found.append(candidate.relative_to(ROOT).as_posix())
+    for candidate in sorted(TESTS_DIR.rglob(f"test_{stem}_*.py")):
+        found.append(candidate.relative_to(ROOT).as_posix())
     return found
 
 
@@ -179,6 +221,10 @@ def source_to_tests(path: str) -> list[str]:
         return [
             p for p in CORE_MODULE_TESTS[path] if _existing_test(p) is not None
         ]
+
+    for prefix, tests in CORE_PACKAGE_PREFIX_TESTS:
+        if path.startswith(prefix) and path.endswith(".py"):
+            return [p for p in tests if _existing_test(p) is not None]
 
     if path.startswith(("database/", "mods/")):
         return [p for p in DATA_PATH_TESTS if _existing_test(p)]

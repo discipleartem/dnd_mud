@@ -1,27 +1,22 @@
 ---
+id: half_orc
+type: race
 phb_chapter: 2
-phb_section: Полуорк
 phb_pages:
 - 40
 - 41
-phb_part: 1
-id: half_orc
-type: race
-tags:
-- race
-mud_status: partial
 quick: Сила +2, Телосложение +1; тёмное зрение; неукротимость; свирепые атаки
-mud_refs:
-  yaml: database/races/races.yaml#half_orc
+aliases:
+- half_orc
+- half orc
+- Полуорк
 ---
 
 # Полуорк
 
-> Источник: PHB, стр. 40–41. Только механика.
+> Источник: PHB 2014. Пересказ механики, не дословная копия.
 
-## Правила (PHB)
-
-<!-- phb:auto:summary -->
+## Механика
 ### Увеличение характеристик
 
 - Сила +2, Телосложение +1.
@@ -49,14 +44,3 @@ mud_refs:
 ### Языки
 
 - Общий и орочий.
-<!-- /phb:auto:summary -->
-
-## Реализация в MUD
-
-<!-- mud:implementation -->
-| Аспект | Значение |
-|--------|----------|
-| Статус | partial |
-| YAML | `database/races/races.yaml#half_orc` |
-| Core | `core/races.py` |
-<!-- /mud:implementation -->

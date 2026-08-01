@@ -1,27 +1,21 @@
 ---
+id: soldier
+type: background
 phb_chapter: 4
-phb_section: Солдат
 phb_pages:
 - 121
 - 142
-phb_part: 1
-id: soldier
-tags:
-- background
-mud_status: partial
-type: background
-mud_refs:
-  yaml: database/backgrounds/backgrounds.yaml#soldier
 quick: 'Атлетика, Запугивание; умение: Воинское звание'
+aliases:
+- soldier
+- Солдат
 ---
 
 # Солдат
 
-> Источник: PHB, гл. 4. Только механика (навыки, снаряжение, умение).
+> Источник: PHB 2014. Пересказ механики, не дословная копия.
 
-## Правила (PHB)
-
-<!-- phb:auto:summary -->
+## Механика
 ### Навыки
 
 - Атлетика
@@ -43,15 +37,3 @@ quick: 'Атлетика, Запугивание; умение: Воинское
 ### Умение: Воинское звание
 
 - Солдаты уважают ваше звание; можете получить доступ к лагерям и казармам.
-
-<!-- /phb:auto:summary -->
-
-## Реализация в MUD
-
-<!-- mud:implementation -->
-| Аспект | Значение |
-|--------|----------|
-| Статус | partial |
-| YAML | `database/backgrounds/backgrounds.yaml#soldier` |
-| Core | `core/backgrounds.py` |
-<!-- /mud:implementation -->

@@ -46,7 +46,7 @@ UI-строки — из YAML (`database/strings/`); f-strings в коде — �
 
 Verify — [`dnd-mud-verify/reference.md`](../skills/dnd-mud-verify/reference.md). Lint: `make check` (ruff + black + mypy).
 
-venv: [`01-operations.mdc`](~/.cursor/rules/01-operations.mdc) §Virtual environment.
+venv: [`venv.mdc`](~/.cursor/rules/venv.mdc).
 
 ## Ограничения
 

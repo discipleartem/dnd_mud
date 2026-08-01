@@ -11,7 +11,7 @@ alwaysApply: true
 
 ## Commands
 
-`.venv` обязателен — [`01-operations.mdc`](~/.cursor/rules/01-operations.mdc) §Virtual environment.
+`.venv` обязателен — [`venv.mdc`](~/.cursor/rules/venv.mdc).
 
 ```bash
 make install          # venv + pip install -e ".[dev]"
@@ -32,32 +32,33 @@ Verify/review policy — [`dnd-mud-workflow.mdc`](dnd-mud-workflow.mdc) §Verify
 
 ## D&D 5e — источник истины и поиск правил
 
-**Канон редакции:** Player's Handbook **2014** (рус. перевод PHantom, 2016), локальный файл `docs/PHB_ D&D_2023 RUS.pdf` (331 стр.; в git не коммитится — `.gitignore` → `docs/*.pdf`). Имя файла «2023» — локальное обозначение копии, **не** редакция правил 2024.
+**Канон редакции:** Player's Handbook **2014** (рус. перевод PHantom, 2016). **Не** редакция правил 2024.
 
-Код, YAML и [`docs/DND_RULES.md`](docs/DND_RULES.md) описывают **реализацию в MUD**; при расхождении с PHB верен PDF.
+| Слой | Где | Содержание |
+|------|-----|------------|
+| Механика PHB (агенты + люди) | [`docs/rules/`](docs/rules/) | Пересказ **только механики**, без лора; без `mud_*` / `phb:auto` |
+| Статус реализации в MUD | [`docs/DND_RULES.md`](docs/DND_RULES.md), `database/` | Что уже в игре |
+| Официальные правила | веб PHB 2014 / SRD 5.1 | При пробелах и конфликтах |
+
+Локальный PDF PHB (`docs/*.pdf`) — рабочая копия, **не** в git и **не** шаг поиска по умолчанию.
 
 ### Алгоритм поиска (агенты и разработчики)
 
-Искать информацию **строго по порядку**; переходить к следующему шагу только если на текущем ответа нет или он явно неполный. **Не опираться на память модели** и не выдумывать правила.
+Искать **строго по порядку**; к следующему шагу — только если на текущем ответа нет или он явно неполный. **Не опираться на память модели** и не выдумывать правила.
 
 | Шаг | Источник | Как искать |
 |-----|----------|------------|
-| **1** | [`docs/rules/`](docs/rules/) | [`_index/lookup.yaml`](docs/rules/_index/lookup.yaml) (`by_alias` / `by_id`); детали — markdown `phb:auto`; обзор — [`docs/rules/README.md`](docs/rules/README.md), [`docs/DND_RULES.md`](docs/DND_RULES.md) |
-| **2** | [`docs/PHB_ D&D_2023 RUS.pdf`](docs/PHB_%20D%26D_2023%20RUS.pdf) | Локальный PHB; см. §Доступ к PHB PDF ниже |
-| **3** | Интернет | Официальные правила **D&D 5e до редакции 2024** (PHB 2014 / SRD 5.1). **Не** использовать правила PHB 2024+ как канон для этого проекта |
+| **1a** | [`docs/rules/_index/lookup.yaml`](docs/rules/_index/lookup.yaml) | `by_alias` (RU/EN/slug, регистр не важен) → `id`, или сразу `by_id` |
+| **1b** | та же запись `by_id` | Прочитать `quick` — краткая механика **без** открытия файла |
+| **1c** | `file` из `by_id` | Детали карточки (параметры, эффекты, таблицы) |
+| **1d** | обзор / статус | Человек: [`docs/rules/INDEX.md`](docs/rules/INDEX.md); guide: [`docs/rules/README.md`](docs/rules/README.md); MUD: [`docs/DND_RULES.md`](docs/DND_RULES.md) |
+| **2** | Интернет | Официальные правила **D&D 5e до редакции 2024** (PHB 2014 / SRD 5.1). **Не** PHB 2024+ |
 
-**При противоречии между источниками:** PDF (шаг 2) > пересказ в `docs/rules/` (шаг 1) > веб (шаг 3). После уточнения по PDF при необходимости дополняй `docs/rules/` (пересказ, не дословная копия).
+**Вспомогательные индексы** (не вместо lookup): [`toc.yaml`](docs/rules/toc.yaml), [`_index/entities.yaml`](docs/rules/_index/entities.yaml), [`_index/spells.yaml`](docs/rules/_index/spells.yaml), заклинания [по уровню](docs/rules/_index/spells/by-level.md) / [по школе](docs/rules/_index/spells/by-school.md).
 
-### Доступ к PHB PDF (агент)
+**При противоречии:** шаг 2 > шаг 1. После уточнения обнови карточку в `docs/rules/` (`quick`, `aliases`) и вручную `lookup.yaml` / `toc.yaml` / `_index/*`. Генераторов индексов нет.
 
-Инструменты чтения/поиска могут не видеть PDF, пока в [`.gitignore`](../.gitignore) активна строка `docs/*.pdf` (даже если файл лежит в `docs/`).
-
-1. Временно закомментировать: `# docs/*.pdf` (строка ~20).
-2. Прочитать/найти нужное в `docs/PHB_ D&D_2023 RUS.pdf`.
-3. **Обязательно вернуть** активное игнорирование: раскомментировать `docs/*.pdf` (убрать `#`).
-4. PDF **не коммитить** и не добавлять в stage (`git add`).
-
-Если после шага 1 файл всё ещё недоступен — его нет локально; попроси пользователя положить PDF в `docs/`.
+Подробнее: [`docs/rules/README.md`](../docs/rules/README.md).
 
 ## Agent-loop
 
@@ -67,10 +68,11 @@ Verify/review policy — [`dnd-mud-workflow.mdc`](dnd-mud-workflow.mdc) §Verify
 
 | Файл | Globs | Канон |
 |------|-------|-------|
-| `dnd-mud-workflow.mdc` | always | git/verify/review overrides |
+| `dnd-mud-workflow.mdc` | always | git/verify/review/dead-code overrides |
+| `ironbee-devtools-use.mdc` | always | stub: browser/IronBee forbidden |
 | `dnd-mud-python.mdc` | `**/*.py` | Python 3.12, KISS |
 | `dnd-mud-tests.mdc` | `tests/**` | pytest |
 | `dnd-mud-core.mdc` | `core/**`, `ui/**`, `main.py` | слои, механика |
 | `dnd-mud-data.mdc` | `database/**`, `mods/**`, `**/*.json` | YAML/JSON |
 
-Global: [`00-global.mdc`](~/.cursor/rules/00-global.mdc) · [`01-operations.mdc`](~/.cursor/rules/01-operations.mdc)
+Global: [`00-global.mdc`](~/.cursor/rules/00-global.mdc) · [`git.mdc`](~/.cursor/rules/git.mdc) · [`task-cycle.mdc`](~/.cursor/rules/task-cycle.mdc)

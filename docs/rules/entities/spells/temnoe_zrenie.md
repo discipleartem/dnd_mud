@@ -1,26 +1,32 @@
 ---
+id: temnoe_zrenie
+type: spell
 phb_chapter: 11
-phb_section: Тёмное Зрение
 phb_pages:
 - 211
 - 289
-phb_part: 3
-id: temnoe_zrenie
-tags:
-- spell
-- transmutation
-- level-2
-mud_status: planned
-type: spell
+quick: 2; transmutation; Касание
+aliases:
+- temnoe_zrenie
+- temnoe zrenie
+- Тёмное Зрение
+level: 2
+school: transmutation
+casting_time: 1 действие
+range: Касание
+components: В, С, М (щепотка сушёной морковки или агат)
+duration: 8 часов
 ---
 
 # Тёмное Зрение
 
-> Источник: PHB, гл. 11. Пересказ правил, не дословная копия PHB.
+> Источник: PHB 2014. Пересказ механики, не дословная копия.
 
 ## Параметры
 
-<!-- phb:auto:parameters -->
+
+
+
 | Параметр | Значение |
 |----------|----------|
 | Уровень | 2 уровень |
@@ -29,21 +35,7 @@ type: spell
 | Дистанция | Касание |
 | Компоненты | В, С, М (щепотка сушёной морковки или агат) |
 | Длительность | 8 часов |
-<!-- /phb:auto:parameters -->
 
 ## Эффект
-
-<!-- phb:auto:effect -->
 - Вы касаетесь согласного существа и даруете ему возможность видеть в темноте.
 - Пока заклинание активно, это существо обладает тёмным зрением в пределах 60 футов.
-<!-- /phb:auto:effect -->
-
-## Реализация в MUD
-
-<!-- mud:implementation -->
-| Аспект | Значение |
-|--------|----------|
-| Статус | planned |
-| YAML | — |
-| Core | — |
-<!-- /mud:implementation -->

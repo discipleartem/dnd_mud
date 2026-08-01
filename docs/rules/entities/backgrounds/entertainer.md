@@ -1,27 +1,21 @@
 ---
+id: entertainer
+type: background
 phb_chapter: 4
-phb_section: Артист
 phb_pages:
 - 121
 - 142
-phb_part: 1
-id: entertainer
-tags:
-- background
-mud_status: partial
-type: background
-mud_refs:
-  yaml: database/backgrounds/backgrounds.yaml#entertainer
 quick: 'Акробатика, Выступление; умение: По многочисленным просьбам'
+aliases:
+- entertainer
+- Артист
 ---
 
 # Артист
 
-> Источник: PHB, гл. 4. Только механика (навыки, снаряжение, умение).
+> Источник: PHB 2014. Пересказ механики, не дословная копия.
 
-## Правила (PHB)
-
-<!-- phb:auto:summary -->
+## Механика
 ### Навыки
 
 - Акробатика
@@ -42,15 +36,3 @@ quick: 'Акробатика, Выступление; умение: По мно�
 ### Умение: По многочисленным просьбам
 
 - Можете найти место для выступления в таверне или постоялом дворе.
-
-<!-- /phb:auto:summary -->
-
-## Реализация в MUD
-
-<!-- mud:implementation -->
-| Аспект | Значение |
-|--------|----------|
-| Статус | partial |
-| YAML | `database/backgrounds/backgrounds.yaml#entertainer` |
-| Core | `core/backgrounds.py` |
-<!-- /mud:implementation -->

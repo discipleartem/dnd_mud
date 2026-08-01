@@ -8,7 +8,7 @@ description: >-
 
 # dnd_mud — документация после задачи
 
-Канон: [`01-operations.mdc`](~/.cursor/rules/01-operations.mdc) §Task cycle ш.3 · [`AGENTS.md`](../../AGENTS.md) §Steps. Политика verify: [`dnd-mud-workflow.mdc`](../../rules/dnd-mud-workflow.mdc) §Verify / review.
+Канон: [`task-cycle.mdc`](~/.cursor/rules/task-cycle.mdc) ш.3 · [`AGENTS.md`](../../AGENTS.md) §Steps. Политика verify: [`dnd-mud-workflow.mdc`](../../rules/dnd-mud-workflow.mdc) §Verify / review.
 
 ## Когда выполнять
 
@@ -24,11 +24,11 @@ description: >-
 
 1. По `git diff` (working tree, staged; при необходимости `origin/dev...HEAD`) определить затронутые области.
 2. Обновить **только** релевантные файлы из таблицы ниже — факты, не дублирование.
-3. **Commit финализации** — после шагов 1–2, по [`user-protocols.mdc`](~/.cursor/rules/user-protocols.mdc) §Commit procedure:
-   - на task-ветке commit **auto** ([`01-operations.mdc`](~/.cursor/rules/01-operations.mdc) §Commits; project local overrides user «commit по запросу»)
+3. **Commit финализации** — после шагов 1–2, по [`git.mdc`](~/.cursor/rules/git.mdc) §Commit procedure:
+   - на task-ветке commit **auto** ([`git.mdc`](~/.cursor/rules/git.mdc) §Commits; project local overrides user «commit по запросу»)
    - незакоммиченный код + docs: один коммит `feat:`/`fix:`/… (docs в том же коммите), если уместно; иначе сначала код, затем `docs:`
    - код уже в подзадачах, изменились только docs: `docs: <краткое описание>` (Conventional Commits, английский)
-   - не коммитить `.coverage`, `saves/` ([`dnd-mud-workflow.mdc`](../../rules/dnd-mud-workflow.mdc) §Git)
+   - не коммитить `.coverage`, `saves/` ([`dnd-mud-workflow.mdc`](../../rules/dnd-mud-workflow.mdc) Overrides / Git scope)
    - если diff пустой — commit пропустить
 4. Перейти к [`dnd-mud-review`](../dnd-mud-review/SKILL.md) (**один раз** на task-ветку).
 
@@ -38,7 +38,8 @@ description: >-
 |-----------|----------|
 | Публичные функции, модули `core/`, контракты | `docs/API.md` |
 | Слои, потоки данных, новые модули | `docs/ARCHITECTURE.md` |
-| D&D-механика, правила игры | `docs/DND_RULES.md`, `docs/rules/*.md` |
+| D&D-механика, правила игры | `docs/DND_RULES.md` (статус MUD); `docs/rules/` (+ `INDEX.md`, `lookup.yaml`, карточки) |
+| Алгоритм поиска PHB / agent guide | `.cursor/rules/00-project.mdc` §D&D 5e, `AGENTS.md`, `docs/rules/README.md` |
 | Продуктовые требования, scope | `docs/MUD_PRD.md` |
 | Заметные фичи / фиксы для пользователей | `docs/CHANGELOG.md` |
 | Workflow разработки, команды | `docs/DEVELOPMENT.md`, `.cursor/rules/dnd-mud-workflow.mdc` |

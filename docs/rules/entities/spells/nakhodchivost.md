@@ -1,26 +1,31 @@
 ---
+id: nakhodchivost
+type: spell
 phb_chapter: 11
-phb_section: Находчивость
 phb_pages:
 - 211
 - 289
-phb_part: 3
-id: nakhodchivost
-tags:
-- spell
-- transmutation
-- level-8
-mud_status: planned
-type: spell
+quick: 8; transmutation; На себя
+aliases:
+- nakhodchivost
+- Находчивость
+level: 8
+school: transmutation
+casting_time: 1 действие
+range: На себя
+components: В
+duration: 1 час
 ---
 
 # Находчивость
 
-> Источник: PHB, гл. 11. Пересказ правил, не дословная копия PHB.
+> Источник: PHB 2014. Пересказ механики, не дословная копия.
 
 ## Параметры
 
-<!-- phb:auto:parameters -->
+
+
+
 | Параметр | Значение |
 |----------|----------|
 | Уровень | 8 уровень |
@@ -29,21 +34,6 @@ type: spell
 | Дистанция | На себя |
 | Компоненты | В |
 | Длительность | 1 час |
-<!-- /phb:auto:parameters -->
 
 ## Эффект
-
-<!-- phb:auto:effect -->
 - Пока заклинание не окончится, каждый раз, когда вы совершаете проверку Харизмы, вы можете заменить выпавший результат числом «15».
-- Кроме того, что бы вы ни говорили, магия, проверяющая, говорите ли вы правду, показывает, что вы искренни.
-<!-- /phb:auto:effect -->
-
-## Реализация в MUD
-
-<!-- mud:implementation -->
-| Аспект | Значение |
-|--------|----------|
-| Статус | planned |
-| YAML | — |
-| Core | — |
-<!-- /mud:implementation -->

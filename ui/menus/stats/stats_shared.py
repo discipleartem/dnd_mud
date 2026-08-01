@@ -4,16 +4,27 @@ from typing import Literal
 
 from colorama import Fore, Style
 
-from core.localization import get_string
-from core.types import StatMap, StringsDict
-from ui.menus import _deps
-from ui.menus._common import (
-    SEPARATOR,
-    _ability_name,
-    _choice_prompt,
-    _stats_total_line,
+from core.catalogs.races import get_race_bonuses
+from core.mechanics.stats import (
+    ABILITY_SCORE_DEFAULT,
+    ABILITY_SCORE_MAX,
+    ABILITY_SCORE_MIN,
+    POINT_BUY_COSTS,
+    STAT_NAMES,
+    can_assign_point_buy_value,
+    validate_final_stats,
 )
-from ui.menus._display import (
+from core.platform.localization import get_string
+from core.types import StatMap, StringsDict
+from ui.input_handler import get_int_input
+from ui.menus.console import (
+    SEPARATOR,
+    ability_name,
+    choice_prompt,
+    run_options_with_back,
+    stats_total_line,
+)
+from ui.menus.display import (
     _print_final_stat_line,
     _print_stats_generation_header,
 )
@@ -43,9 +54,7 @@ def _prompt_pool_value_manual(
     while True:
         print(f"{Fore.YELLOW}{enter_msg} {back_hint}{Style.RESET_ALL}")
         print()
-        value = _deps.get_int_input(
-            _choice_prompt(strings), 0, value_max, strings
-        )
+        value = get_int_input(choice_prompt(strings), 0, value_max, strings)
         if value == 0:
             return None
         if value < value_min:
@@ -82,16 +91,16 @@ def _prompt_point_buy_stat_value(
     while True:
         print(f"{Fore.YELLOW}{enter_msg}{Style.RESET_ALL}")
         print()
-        value = _deps.get_int_input(
-            _choice_prompt(strings),
-            _deps.POINT_BUY_MIN,
-            _deps.POINT_BUY_MAX,
+        value = get_int_input(
+            choice_prompt(strings),
+            ABILITY_SCORE_MIN,
+            ABILITY_SCORE_MAX,
             strings,
         )
-        if _deps.can_assign_point_buy_value(stats, stat, value):
+        if can_assign_point_buy_value(stats, stat, value):
             stats[stat] = value
             return
-        if value not in _deps.POINT_BUY_COSTS:
+        if value not in POINT_BUY_COSTS:
             print(
                 f"{Fore.RED}"
                 f"{get_string(strings, 'character.stats_max_value_15')}"
@@ -119,8 +128,8 @@ def _assign_stats_from_pool(
     selected: StatMap = {}
     pool = list(available)
 
-    for stat in _deps.STAT_NAMES:
-        stat_name = _ability_name(strings, stat)
+    for stat in STAT_NAMES:
+        stat_name = ability_name(strings, stat)
         _print_stats_generation_header(strings, race_id, subrace_id)
 
         if selected:
@@ -130,7 +139,7 @@ def _assign_stats_from_pool(
                 f"{Style.RESET_ALL}"
             )
             for s, v in selected.items():
-                s_name = _ability_name(strings, s)
+                s_name = ability_name(strings, s)
                 print(f"  {s_name}: {v}")
             print()
 
@@ -171,39 +180,23 @@ def _confirm_stats(
 ) -> ConfirmStatsResult:
     """Подтверждение выбранных характеристик."""
     if race_bonuses is None:
-        race_bonuses = _deps.get_race_bonuses(race_id, subrace_id)
+        race_bonuses = get_race_bonuses(race_id, subrace_id)
 
     print(SEPARATOR)
-    print(_stats_total_line(strings))
+    print(stats_total_line(strings))
     print(SEPARATOR)
     print()
 
-    for stat in _deps.STAT_NAMES:
-        stat_value = stats.get(stat, _deps.ABILITY_SCORE_DEFAULT)
+    for stat in STAT_NAMES:
+        stat_value = stats.get(stat, ABILITY_SCORE_DEFAULT)
         _print_final_stat_line(strings, stat, stat_value, race_bonuses)
 
     print()
-    print(
-        f"  {Fore.YELLOW}1{Style.RESET_ALL}. "
-        f"{get_string(strings, 'character.stats_confirm')}"
-    )
+    options = [get_string(strings, "character.stats_confirm")]
     if allow_reroll:
-        print(
-            f"  {Fore.YELLOW}2{Style.RESET_ALL}. "
-            f"{get_string(strings, reroll_label_key)}"
-        )
-    print(
-        f"  {Fore.YELLOW}0{Style.RESET_ALL}."
-        f" {get_string(strings, 'character.back')}"
-    )
-    print()
-
-    max_choice = 2 if allow_reroll else 1
-    choice = _deps.get_int_input(
-        _choice_prompt(strings), 0, max_choice, strings
-    )
-
-    if choice == 0:
+        options.append(get_string(strings, reroll_label_key))
+    choice = run_options_with_back(strings, options)
+    if choice is None:
         return "back"
     if choice == 2:
         return "reroll"
@@ -229,17 +222,17 @@ def _run_stats_confirm_loop(
             return "retry_finalize"
         return "reroll"
     final_stats, race_bonuses = finalized
-    over_limit = _deps.validate_final_stats(final_stats)
+    over_limit = validate_final_stats(final_stats)
     if over_limit is not None:
         stat_id, value = over_limit
-        stat_name = _ability_name(strings, stat_id)
-        if value < _deps.ABILITY_SCORE_MIN:
+        stat_name = ability_name(strings, stat_id)
+        if value < ABILITY_SCORE_MIN:
             msg = get_string(
                 strings,
                 "character.stats_below_min",
                 stat=stat_name,
                 value=value,
-                min=_deps.ABILITY_SCORE_MIN,
+                min=ABILITY_SCORE_MIN,
             )
         else:
             msg = get_string(
@@ -247,7 +240,7 @@ def _run_stats_confirm_loop(
                 "character.stats_exceeds_max",
                 stat=stat_name,
                 value=value,
-                max=_deps.ABILITY_SCORE_MAX,
+                max=ABILITY_SCORE_MAX,
             )
         print(f"{Fore.RED}{msg}{Style.RESET_ALL}")
         print()

@@ -1,26 +1,32 @@
 ---
+id: planarnyy_soyuznik
+type: spell
 phb_chapter: 11
-phb_section: Планарный Союзник
 phb_pages:
 - 211
 - 289
-phb_part: 3
-id: planarnyy_soyuznik
-tags:
-- spell
-- вызов
-- level-6
-mud_status: planned
-type: spell
+quick: 6; Вызов; 60 футов
+aliases:
+- planarnyy_soyuznik
+- planarnyy soyuznik
+- Планарный Союзник
+level: 6
+school: вызов
+casting_time: 10 минут
+range: 60 футов
+components: В, С
+duration: Мгновенная
 ---
 
 # Планарный Союзник
 
-> Источник: PHB, гл. 11. Пересказ правил, не дословная копия PHB.
+> Источник: PHB 2014. Пересказ механики, не дословная копия.
 
 ## Параметры
 
-<!-- phb:auto:parameters -->
+
+
+
 | Параметр | Значение |
 |----------|----------|
 | Уровень | 6 уровень |
@@ -29,22 +35,7 @@ type: spell
 | Дистанция | 60 футов |
 | Компоненты | В, С |
 | Длительность | Мгновенная |
-<!-- /phb:auto:parameters -->
 
 ## Эффект
-
-<!-- phb:auto:effect -->
 - Вы просите иномировую сущность оказать помощь.
 - Сущность должна быть известна вам: это может быть бог, предтеча, демонический повелитель или другая сущность космического масштаба.
-- 256
-<!-- /phb:auto:effect -->
-
-## Реализация в MUD
-
-<!-- mud:implementation -->
-| Аспект | Значение |
-|--------|----------|
-| Статус | planned |
-| YAML | — |
-| Core | — |
-<!-- /mud:implementation -->

@@ -42,7 +42,7 @@ database/*.yaml      → test_data_schema (+ test_catalog_loader при loader)
 | Делать | Не делать |
 |--------|-----------|
 | `assert`, прямой вызов `core.*` / `ui.*` | Фабрики, базовые классы, тяжёлый mock |
-| Monkeypatch через `ui.menus._deps` для меню | `@pytest.mark.parametrize` >3 кейсов без разных веток |
+| Monkeypatch по модулю-потребителю (`ui.menus.new_game`, `_common`, …) | `@pytest.mark.parametrize` >3 кейсов без разных веток |
 | `pytestmark = usefixtures("catalog_caches_cleared")` только где нужны каталоги | autouse сброс кэша на весь сьют |
 | Golden-path в `tests/creation_helpers.py` | Копипаста variant_human в 3+ файлах |
 | Имя `test_<what>_<condition>_<expected>` | Погоня за % coverage; import smoke |

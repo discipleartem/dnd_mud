@@ -1,17 +1,16 @@
-"""Увеличение характеристик (ASI) при повышении уровня."""
+"""Увеличение характеристик (ASI)."""
 
-from core.classes import get_class_dict, iter_class_grants
-from core.dice import ability_modifier
-from core.models import Character
-from core.stats import (
+from core.catalogs.classes import get_class_dict, iter_class_grants
+from core.character.models import Character
+from core.mechanics.dice import ability_modifier
+from core.mechanics.stats import (
     ABILITY_SCORE_DEFAULT,
     ABILITY_SCORE_MAX,
     STAT_NAMES,
     apply_bonuses_to_stats,
 )
+from core.progression.xp_levels import ASI_FEATURE_ID
 from core.types import StatMap
-
-ASI_FEATURE_ID = "ability_score_improvement"
 
 
 def feat_id_from_asi_choice(asi_value: str) -> str | None:

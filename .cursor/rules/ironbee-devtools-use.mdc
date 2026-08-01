@@ -1,0 +1,15 @@
+---
+description: Console MUD — IronBee/browser verify forbidden; use dnd-mud-review
+alwaysApply: true
+---
+
+# IronBee DevTools — dnd_mud (console)
+
+**Console MUD — browser / IronBee verify forbidden.**
+
+- **Do not** use IronBee browser, node, or backend MCP tools for this project.
+- **Do not** use Cursor built-in browser agent/MCP for verification.
+- Verify: skill [`dnd-mud-review`](../skills/dnd-mud-review/SKILL.md) (`make verify-scope` once at end of task branch) + smoke `python main.py` when UI is in the diff.
+- Policy override: [`dnd-mud-workflow.mdc`](dnd-mud-workflow.mdc).
+
+If the IronBee extension regenerates this file with browser ENABLED, treat that as a settings bug: set `ironbeeDevTools.platform.browser.enable` = **false** for this workspace and restore this stub. Canon: stub + platform off — [`user-rules-minimal.md`](~/.cursor/docs/user-rules-minimal.md) §IronBee.

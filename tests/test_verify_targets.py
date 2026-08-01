@@ -10,62 +10,79 @@ import scripts.verify_targets as vt
 
 
 def test_core_and_ui_mapping() -> None:
-    assert vt.source_to_tests("core/difficulty.py") == ["tests/test_stats.py"]
-    assert vt.source_to_tests("core/feat_visibility.py") == [
-        "tests/test_feats.py"
+    assert vt.source_to_tests("core/engine/difficulty.py") == [
+        "tests/core/mechanics/test_stats.py"
     ]
-    assert vt.source_to_tests("core/scenario_actions.py") == [
-        "tests/test_models.py",
-        "tests/test_class_features.py",
+    assert vt.source_to_tests("core/feats/catalog.py") == [
+        "tests/core/feats/test_feats.py"
     ]
-    assert vt.source_to_tests("core/dice.py") == ["tests/test_stats.py"]
-    assert vt.source_to_tests("core/races.py") == ["tests/test_grants.py"]
-    assert vt.source_to_tests("core/adventure.py") == ["tests/test_models.py"]
-    assert vt.source_to_tests("core/backgrounds.py") == [
-        "tests/test_models.py"
+    assert vt.source_to_tests("core/engine/scenario_actions.py") == [
+        "tests/core/character/test_models.py",
+        "tests/core/progression/test_class_features.py",
     ]
-    assert vt.source_to_tests("core/grant_mechanics.py") == [
-        "tests/test_grants.py"
+    assert vt.source_to_tests("core/mechanics/dice.py") == [
+        "tests/core/mechanics/test_stats.py"
     ]
-    assert vt.source_to_tests("core/mod_loader.py") == [
-        "tests/test_catalog_loader.py"
+    assert vt.source_to_tests("core/catalogs/races.py") == [
+        "tests/core/grants/test_grants.py"
     ]
-    assert vt.source_to_tests("ui/menus/class_features.py") == [
-        "tests/test_class_features.py"
+    assert vt.source_to_tests("core/catalogs/adventure.py") == [
+        "tests/core/character/test_models.py"
     ]
-    assert vt.source_to_tests("ui/menus/scenario_flow.py") == [
-        "tests/test_progression.py"
+    assert vt.source_to_tests("core/catalogs/backgrounds.py") == [
+        "tests/core/character/test_models.py"
+    ]
+    assert vt.source_to_tests("core/grants/normalize.py") == [
+        "tests/core/grants/test_grants.py"
+    ]
+    assert vt.source_to_tests("core/progression/xp_levels.py") == [
+        "tests/core/progression/test_progression.py"
+    ]
+    assert vt.source_to_tests("core/platform/mod_loader.py") == [
+        "tests/core/platform/test_catalog_loader.py"
+    ]
+    assert vt.source_to_tests("ui/menus/progression/class_features.py") == [
+        "tests/core/progression/test_class_features.py",
+        "tests/core/progression/test_progression.py",
+    ]
+    assert vt.source_to_tests("ui/menus/scenario/flow.py") == [
+        "tests/core/progression/test_progression.py"
     ]
     assert vt.source_to_tests("ui/menus/stats/stats_flow.py") == [
-        "tests/test_menus_stats.py"
+        "tests/ui/test_menus_stats.py"
     ]
-    assert vt.source_to_tests("ui/menus/_display/_race.py") == [
-        "tests/test_equipment.py"
+    assert vt.source_to_tests("ui/menus/display/__init__.py") == [
+        "tests/core/inventory/test_equipment.py"
     ]
-    assert vt.source_to_tests("ui/menus/characters_menu.py") == [
-        "tests/test_menus_characters_hub.py"
+    assert vt.source_to_tests("ui/menus/hub/characters_menu.py") == [
+        "tests/ui/test_menus_characters_hub.py",
+        "tests/ui/test_menus_main.py",
     ]
-    assert vt.source_to_tests("ui/menus/new_game.py") == [
-        "tests/test_menus_new_game.py"
+    assert vt.source_to_tests("ui/menus/hub/new_game.py") == [
+        "tests/ui/test_menus_new_game.py",
+        "tests/ui/test_menus_main.py",
     ]
-    assert vt.source_to_tests("ui/menus/_creation_handlers.py") == [
-        "tests/test_menus_creation.py"
+    assert vt.source_to_tests("ui/menus/creation/handlers.py") == [
+        "tests/ui/test_menus_creation.py"
     ]
-    assert vt.source_to_tests("ui/menus/skills.py") == [
-        "tests/test_proficiencies.py"
+    assert vt.source_to_tests("ui/menus/creation/skills.py") == [
+        "tests/core/mechanics/test_proficiencies.py",
+        "tests/ui/test_menus_creation.py",
     ]
-    assert vt.source_to_tests("ui/menus/backgrounds.py") == [
-        "tests/test_models.py"
+    assert vt.source_to_tests("ui/menus/creation/backgrounds.py") == [
+        "tests/core/character/test_models.py",
+        "tests/ui/test_menus_creation.py",
     ]
-    assert vt.source_to_tests("ui/menus/subclass_trainer.py") == [
-        "tests/test_subclasses.py"
+    assert vt.source_to_tests("ui/menus/progression/subclass_trainer.py") == [
+        "tests/core/progression/test_subclasses.py",
+        "tests/core/progression/test_progression.py",
     ]
-    assert vt.source_to_tests("main.py") == ["tests/test_menus_main.py"]
+    assert vt.source_to_tests("main.py") == ["tests/ui/test_menus_main.py"]
 
 
 def test_database_and_infra_fallbacks() -> None:
     tests = vt.source_to_tests("database/races/races.yaml")
-    assert "tests/test_catalog_loader.py" in tests
+    assert "tests/core/platform/test_catalog_loader.py" in tests
     assert vt.requires_full_suite(["tests/conftest.py"]) is True
     lint, full = vt.resolve_lint_paths(["core/types.py"])
     assert full is True
@@ -76,12 +93,12 @@ def test_database_and_infra_fallbacks() -> None:
 def test_resolve_test_paths_yaml_only() -> None:
     tests, full = vt.resolve_test_paths(["database/races/races.yaml"])
     assert full is False
-    assert "tests/test_data_schema.py" in tests
+    assert "tests/data/test_data_schema.py" in tests
 
 
 def test_resolve_test_paths_mixed_mapped_and_unmapped() -> None:
     tests, full = vt.resolve_test_paths(
-        ["core/difficulty.py", "tools/unknown_helper.py"]
+        ["core/engine/difficulty.py", "tools/unknown_helper.py"]
     )
     assert full is True
     assert tests == []
@@ -93,11 +110,13 @@ def test_cmd_resolve_tests_staged(
     monkeypatch.setattr(
         vt,
         "_git_changed_paths",
-        lambda mode, base: ["core/difficulty.py"],
+        lambda mode, base: ["core/engine/difficulty.py"],
     )
     args = Namespace(mode="staged", base="origin/dev")
     assert vt.cmd_resolve_tests(args) == 0
-    assert capsys.readouterr().out.strip() == "tests/test_stats.py"
+    assert (
+        capsys.readouterr().out.strip() == "tests/core/mechanics/test_stats.py"
+    )
 
 
 def test_cmd_resolve_lint_infra_full(

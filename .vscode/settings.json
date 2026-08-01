@@ -22,5 +22,17 @@
   "github-actions.workflows.pinned.workflows": [
     ".github/workflows/sync-dev-with-main.yml",
     ".github/workflows/pr-dev-to-main-check.yml"
-  ]
+  ],
+  "python.defaultInterpreterPath": "${workspaceFolder}/.venv/bin/python",
+  "python.terminal.activateEnvironment": false,
+  "terminal.integrated.profiles.linux": {
+    "bash": {
+      "path": "bash",
+      "args": [
+        "--init-file",
+        "${workspaceFolder}/.vscode/terminal-init.sh"
+      ]
+    }
+  },
+  "terminal.integrated.defaultProfile.linux": "bash"
 }

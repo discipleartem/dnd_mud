@@ -56,51 +56,30 @@ dnd_mud/
 ├── main.py                  # Точка входа
 ├── pyproject.toml           # Конфигурация проекта
 ├── README.md
-├── core/                    # Игровое ядро
-│   ├── models.py            # Dataclass: Character, Adventure
-│   ├── character.py         # Узкий фасад для flow-оркестраторов (_deps)
-│   ├── grants_context.py    # CreationContext, ResolvedGrants (без циклов import)
-│   ├── character_builder.py # resolve_creation_grants, resolve_grants_for_context
-│   ├── character_build.py   # build_new_character (сборка без записи на диск)
-│   ├── character_migrate.py # CHARACTERS_SCHEMA_VERSION, migrate_character_data
-│   ├── catalog_loader.py    # load_catalog — единая загрузка YAML-каталогов + mod overlay
-│   ├── hp_bonuses.py        # Бонусы HP из grants (раса, черта)
-│   ├── feats_loader.py      # Загрузка feats.yaml
-│   ├── grant_mechanics.py   # Парсинг proficiency-токенов из grants
-│   ├── feats.py             # Публичный фасад черт (гранты + apply)
-│   ├── character_storage.py # CRUD персонажей; thin wrapper build_new_character
-│   ├── slug.py              # make_save_slug — транслитерация имён
-│   ├── stats.py             # Генерация и валидация характеристик
-│   ├── races.py             # Справочник рас
-│   ├── classes.py           # Справочник классов
-│   ├── io.py                # load_yaml / load_json
-│   ├── adventure.py         # Загрузка приключений из YAML
-│   ├── difficulty.py        # Фильтр приключений по режиму сложности
-│   ├── dice.py              # Броски кубиков
-│   ├── localization.py      # Локализация UI и resolve_localized_text
-│   ├── grants.py            # Нормализация grants[] из YAML
-│   ├── mod_loader.py        # Deep-merge overlay модов; gating по режиму
-│   ├── game_engine.py       # GameEngine / GameSession (сценарии)
-│   ├── session_storage.py   # Сессии приключений (saves/sessions/)
-│   └── settings.py          # Настройки пользователя (JSON)
+├── core/                    # Игровое ядро (пакеты + leaf-imports, без фасадов)
+│   ├── types.py             # StatMap, CharacterClass, CharacterBuildParams, …
+│   ├── constants.py         # PB, DC, MAX_CHARACTER_LEVEL, ability_modifier
+│   ├── platform/            # io, catalog_loader, catalog_session, localization, settings, mod_loader
+│   ├── catalogs/            # races, classes, backgrounds, equipment, abilities, skills, languages, adventure
+│   ├── grants/              # normalize, format, labels, context, resolve
+│   ├── character/           # models, build, finalize, migrate, storage
+│   ├── feats/               # catalog, apply, text, requirements
+│   ├── progression/         # xp_levels, hp, asi, class_progression, level_up
+│   ├── inventory/           # items, armor_class, equip_defaults, starting_equipment
+│   ├── mechanics/           # dice, stats, checks, proficiencies, expertise, hp_bonus
+│   └── engine/              # game_engine, session_*, scenario_*, difficulty, combat/
 ├── ui/                      # Пользовательский интерфейс
 │   ├── input_handler.py     # Валидация ввода (числа, строки, выбор)
+│   ├── terminal_wrap.py
 │   └── menus/               # Пакет экранов меню
-│       ├── main_menu.py
-│       ├── load_game.py
-│       ├── mods_menu.py
-│       ├── new_game.py
-│       ├── _creation_steps.py  # Тонкий loop создания персонажа
-│       ├── _creation_handlers.py, _creation_navigation.py, _creation_finalize.py, _creation_state.py
-│       ├── characters_menu.py
-│       ├── _corrupt_saves.py
+│       ├── console.py       # print_screen_header, run_numbered_menu, …
+│       ├── hub/             # main_menu, new_game, load_game, characters, mods, settings
+│       ├── creation/        # steps, handlers, selectors, equipment, …
+│       ├── progression/     # level_up, asi, class_features, subclass_trainer
+│       ├── scenario/        # flow (GameEngine runner)
+│       ├── display/         # Отображение (класс, раса, stats, персонаж)
 │       ├── feats/           # Выбор черт (creation + level-up)
-│       ├── settings.py
-│       ├── stats/           # Генерация характеристик (подпакет)
-│       ├── _common.py       # _print_numbered_row, _run_numbered_menu, _read_numbered_choice, …
-│       ├── _display/        # Пакет отображения (класс, раса, stats, персонаж)
-│       ├── _selectors.py
-│       └── _deps.py         # Re-export core.character + input_handler (flows only)
+│       └── stats/           # Генерация характеристик
 ├── database/                # YAML-справочники D&D 5e
 │   ├── races/
 │   │   └── races.yaml       # Расы и подрасы
@@ -108,17 +87,24 @@ dnd_mud/
 │   │   └── classes.yaml     # Классы персонажей
 │   ├── backgrounds/
 │   │   └── backgrounds.yaml # Предыстории PHB (grants[])
+│   ├── equipment/           # weapon, armor, tools, equipment
+│   ├── progression/
+│   │   └── feats.yaml
 │   ├── content/adventures.yaml
 │   ├── core/
 │   │   ├── settings.json.example
 │   │   ├── mods_state.json  # Включённые моды
+│   │   ├── abilities.yaml
+│   │   ├── skills.yaml
+│   │   ├── constants.yaml
 │   │   └── languages.yaml
 │   ├── strings/
 │       ├── ru.yaml
 │       └── en.yaml
 ├── saves/                   # Пользовательские данные (gitignored)
-│   └── characters/          # Сохранённые персонажи (по одному JSON на персонажа)
-├── adventures/      # Сценарии приключений (tutorial, lost_mine)
+│   ├── characters/          # Сохранённые персонажи (по одному JSON на персонажа)
+│   └── sessions/            # Снимки приключений
+├── adventures/              # Сценарии приключений (tutorial, lost_mine)
 │   ├── tutorial.yaml
 │   └── lost_mine.yaml
 ├── mods/
@@ -126,17 +112,21 @@ dnd_mud/
 ├── tests/                   # pytest (число: pytest --collect-only -q)
 │   ├── conftest.py
 │   ├── creation_helpers.py  # flat_stats, minimal_character, fighter_acolyte_creation
-│   ├── test_*.py            # ~20 файлов: core / menus / data / meta
+│   ├── core/                # зеркало пакетов core/
+│   ├── ui/                  # UI smoke (menus)
+│   ├── data/                # schema / data validation
 │   └── …                    # см. группы в §Тестирование ниже
 └── docs/                    # Документация
     ├── README.md            # Индекс документации
     ├── DATA_SCHEMA.md       # Схема YAML (grants, subraces, mods)
     ├── DND_RULES.md         # Правила D&D 5e (оглавление PHB)
-    ├── rules/               # Справочник PHB (layout agent-v2)
+    ├── rules/               # Справочник PHB (layout agent-v2; только механика)
     │   ├── README.md        # Guide для агентов
+    │   ├── toc.yaml         # Каталог id → file
     │   ├── _index/lookup.yaml
     │   ├── chapters/        # Главы 00–11
-    │   └── entities/        # Карточки рас, классов, заклинаний…
+    │   ├── entities/        # Карточки рас, классов, заклинаний…
+    │   └── reference/       # Appendices, glossaries
     ├── MUD_PRD.md
     ├── ARCHITECTURE.md
     ├── API.md
@@ -147,12 +137,7 @@ dnd_mud/
 
 ### UI → core imports
 
-| Слой | Импорт |
-|------|--------|
-| Flows (`_creation_steps`, `new_game`, `characters_menu`, …) | `ui/menus/_deps` |
-| Экраны (`feats/`, `level_up`, `_display/`) | Прямые `from core.*` |
-
-`core/character.py` синхронизирован с `_deps` — не дублировать leaf-API в фасаде.
+Все UI-модули импортируют leaf-модули `core.<pkg>.<module>` напрямую (без package facades). Monkeypatch в тестах — по имени модуля-потребителя.
 
 ## Линтинг и форматирование
 
@@ -197,25 +182,25 @@ make install-hooks   # или make install — подключает .githooks/pr
 - На сценарий — **один** тест на слой: core **или** 0–1 UI smoke (monkeypatch-навигация), не дублировать unit + integration одного пути
 - Похожие кейсы — `@pytest.mark.parametrize`, не копии функций; мелкие домены — в существующий `test_*.py`, не новый файл на 1–2 теста
 - При фиче или фиксе — минимальный diff в `tests/`: столько assert, сколько нужно для изменённого поведения
-- Эталоны стиля: `tests/test_stats.py` (короткий unit), `tests/test_menus_creation.py` (UI smoke)
+- Эталоны стиля: `tests/core/mechanics/test_stats.py` (короткий unit), `tests/ui/test_menus_creation.py` (UI smoke)
 - Бюджет и антипаттерны: `.cursor/rules/dnd-mud-tests.mdc` §Бюджет на PR
 
-Покрытие — актуальный список: `pytest --collect-only -q`. Группы файлов:
+Покрытие — актуальный список: `pytest --collect-only -q`. Layout зеркалит пакеты:
 
-| Группа | Файлы (примеры) |
-|--------|-----------------|
-| **core** | `test_stats`, `test_grants`, `test_character`, `test_character_builder`, `test_proficiencies`, `test_progression`, `test_feats`, `test_subclasses`, `test_asi`, `test_expertise`, `test_languages`, `test_class_features`, `test_equipment` |
-| **menus** | `test_menus_main`, `test_menus_creation`, `test_menus_new_game`, `test_menus_characters_hub`, `test_menus_stats` |
-| **data** | `test_catalog_loader`, `test_data_schema`, `test_io`, `test_models` (adventures/backgrounds) |
-| **meta** | `test_verify_targets`, `test_localization` |
+| Группа | Путь (примеры) |
+|--------|----------------|
+| **core** | `tests/core/mechanics/`, `tests/core/grants/`, `tests/core/character/`, `tests/core/progression/`, `tests/core/feats/`, `tests/core/inventory/`, `tests/core/catalogs/`, `tests/core/platform/`, `tests/core/engine/` |
+| **ui** | `tests/ui/test_menus_*.py` |
+| **data** | `tests/data/test_data_schema.py` |
+| **meta** | `tests/test_verify_targets.py` (корень `tests/`) |
 
 Подробные правила для агентов: `.cursor/rules/dnd-mud-tests.mdc`. Не обязательно закрывать все пробелы из backlog Pre-Alpha — тест добавляется при реальном поведении, баге или риске регрессии.
 
 Запуск конкретного тестового файла:
 
 ```bash
-pytest tests/test_menus_creation.py -v
-pytest tests/test_data_schema.py -v
+pytest tests/ui/test_menus_creation.py -v
+pytest tests/data/test_data_schema.py -v
 ```
 
 ## Git Workflow
@@ -224,15 +209,19 @@ pytest tests/test_data_schema.py -v
 
 | Тема | Канон |
 |------|-------|
-| Agent-loop, steps, skills | [`AGENTS.md`](../AGENTS.md) · [`.cursor/skills/README.md`](../.cursor/skills/README.md) |
-| Git-старт, rebase, multi-branch, `merged/*` policy | [`.cursor/rules/dnd-mud-workflow.mdc`](../.cursor/rules/dnd-mud-workflow.mdc) |
-| Task cycle (global) | [`01-operations.mdc`](~/.cursor/rules/01-operations.mdc) §Task cycle |
-| Verify policy + commands | workflow §Verify / review · [`dnd-mud-verify/reference.md`](../.cursor/skills/dnd-mud-verify/reference.md) |
+| Agent-loop, steps | [`AGENTS.md`](../AGENTS.md) |
+| Skills index | [`.cursor/skills/README.md`](../.cursor/skills/README.md) |
+| Git-старт, `merged/*`, verify / dead-code policy | [`.cursor/rules/dnd-mud-workflow.mdc`](../.cursor/rules/dnd-mud-workflow.mdc) |
+| Multi-branch (N PR) | [`.cursor/skills/dnd-mud-multi-branch`](../.cursor/skills/dnd-mud-multi-branch/SKILL.md) |
+| Task cycle (global) | [`task-cycle.mdc`](~/.cursor/rules/task-cycle.mdc) |
+| Verify commands | [`dnd-mud-verify/reference.md`](../.cursor/skills/dnd-mud-verify/reference.md) |
 | Review | [`.cursor/skills/dnd-mud-review`](../.cursor/skills/dnd-mud-review/SKILL.md) |
 | Fix plan | [`.cursor/skills/dnd-mud-fix-plan`](../.cursor/skills/dnd-mud-fix-plan/SKILL.md) |
 | Push / PR task → `dev` | [`.cursor/skills/dnd-mud-git-pr`](../.cursor/skills/dnd-mud-git-pr/SKILL.md) |
+| Dead code (1× post-refactor / 1× pre-PR → `dev`) | [`dead-code-cleaner`](~/.cursor/agents/dead-code-cleaner.md) · workflow §Dead code |
 | Release `dev` → `main` | [`.cursor/skills/dnd-mud-release`](../.cursor/skills/dnd-mud-release/SKILL.md) |
 | Sync `dev`←`main` | [`git-dev-main-sync.md`](~/.cursor/docs/git-dev-main-sync.md) |
+| Settings UI / IronBee cleanup | [`user-rules-minimal.md`](~/.cursor/docs/user-rules-minimal.md) |
 
 IDE: расширения **GitHub Pull Requests** и **GitHub Actions** — [`.vscode/settings.json`](../.vscode/settings.json).
 
@@ -254,6 +243,7 @@ Quality gate PR `task → dev`: один раз [`dnd-mud-review`](../.cursor/sk
 | План с N PR / фаз → **N part-веток** (имя из `### PR-N: \`branch\``) | План «17 PR» на 1 ветке — нарушение workflow |
 | Merge всех part в `feat/<slug>` перед review | Review на part-ветке или с незакрытыми PR |
 | Review **один раз** в конце task-ветки (`dnd-mud-review` = verify-scope + diff) | Не гонять full test/lint между подзадачами |
+| `dead-code-cleaner` **1×** post-refactor и **1×** перед первым PR → `dev` | Дорогой субагент; не на retry PR/merge |
 | `rebase origin/dev` перед review | Минимальный diff для bugbot |
 | Plan mode для крупных задач | Меньше итераций fix в Agent |
 | Узкий scope в промпте | Меньше лишних файлов в контексте |
@@ -295,7 +285,7 @@ Rulesets: **Settings → Rules**. Только **`main_rules`** на `refs/heads
 git fetch origin && git checkout dev && git pull origin dev
 git log dev..origin/main --oneline   # must be empty
 git merge origin/main --no-commit --no-ff && git merge --abort   # пробная проверка, не релиз
-make test
+make verify
 gh pr create --base main --head dev --title "release: …"
 # CI dev-sync-and-mergeable → gh pr merge <number> --squash
 ```
@@ -320,7 +310,7 @@ overlays:
     path: overlay.yaml
 ```
 
-Overlay-фрагмент (`overlay.yaml`) — partial YAML с ключом каталога (`races:`, …). Runtime: `core/catalog_loader.load_catalog` → deep-merge через `core/mod_loader.py`; режим — `set_mod_gating_difficulty()` (по умолчанию `normal` в `main.py`, при игре — `Character.difficulty`).
+Overlay-фрагмент (`overlay.yaml`) — partial YAML с ключом каталога (`races:`, …). Runtime: `core.platform.catalog_loader.load_catalog` → deep-merge через `core.platform.mod_loader`; режим — `set_mod_gating_difficulty()` / `CatalogSession` (по умолчанию `normal` в `main.py`, при игре — `Character.difficulty`).
 
 ## Добавление локализации
 
@@ -376,21 +366,21 @@ races:
 ## Текущее состояние разработки
 
 ### Реализовано (core)
-- ✅ `core/models.py` — типизированные dataclass: Character, Adventure
-- ✅ `core/character.py` — фасад API персонажей, adventure, backgrounds, dice, languages
-- ✅ `core/dice.py` — `roll`, `roll_ability_score`, `ability_modifier`
-- ✅ `core/localization.py` — YAML-словари с fallback на английский
-- ✅ `core/settings.py` — настройки пользователя (язык)
-- ✅ `core/adventure.py` — загрузка приключений из YAML
-- ✅ `core/difficulty.py` — `adventure_allows_difficulty()`; UI-фильтр в `_select_adventure()`
+- ✅ `core/character/models.py` — типизированные dataclass: Character, Adventure
+- ✅ `core/mechanics/stats.py` / `core/catalogs/races.py` / `core/character/storage.py` — leaf API без фасада
+- ✅ `core/mechanics/dice.py` — `roll`, `roll_ability_score`, `ability_modifier`
+- ✅ `core/platform/localization.py` — YAML-словари с fallback на английский
+- ✅ `core/platform/settings.py` — настройки пользователя (язык)
+- ✅ `core/catalogs/adventure.py` — загрузка приключений из YAML
+- ✅ `core/engine/difficulty.py` — `adventure_allows_difficulty()`; UI-фильтр в `_select_adventure()`
 
 ### Реализовано (ui)
 - ✅ `ui/input_handler.py` — валидация ввода (int, str)
-- ✅ `ui/menus/` — главное меню, настройки, languages, flows
+- ✅ `ui/menus/` — hub, creation, progression, scenario, display, feats, stats
 - ✅ `ui/menus/stats/` — генерация характеристик (standard / point-buy / random)
-- ✅ Flow «Новая игра» (персонаж → приключение → `scenario_flow.run_scenario`)
-- ✅ Flow «Создать персонажа» — `ui/menus/_creation_steps.py` (`show_create_character_flow`)
-- ✅ Flow «Загрузить игру» — `ui/menus/load_game.py` (список сессий, resume сценария)
+- ✅ Flow «Новая игра» (персонаж → приключение → `scenario.flow.run_scenario`)
+- ✅ Flow «Создать персонажа» — `ui/menus/creation/steps.py` (`show_create_character_flow`)
+- ✅ Flow «Загрузить игру» — `ui/menus/hub/load_game.py` (список сессий, resume сценария)
 
 ### Тестирование
 - ✅ pytest suite (`make test`; число кейсов: `pytest --collect-only -q`)
@@ -413,7 +403,7 @@ races:
 ### Генерация характеристик
 
 Спецификация UX (методы, HardCore, расовые бонусы, переквалификация): [MUD_PRD.md §3.4.5](MUD_PRD.md#345-генерация-характеристик-реализовано).  
-API: `core/character.py`, UI: `show_stats_generation_flow` в `ui/menus/stats/stats_flow.py`.
+API: `core/mechanics/stats.py`, UI: `show_stats_generation_flow` в `ui/menus/stats/stats_flow.py`.
 
 ### База данных
 - ✅ Справочники: `races/races.yaml`, `classes/classes.yaml`, `content/adventures.yaml`

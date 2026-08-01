@@ -1,24 +1,22 @@
 ---
+id: 07-ability-scores
+type: chapter
 phb_chapter: 7
-phb_section: Использование характеристик
 phb_pages:
 - 173
 - 180
-phb_part: 2
-id: 07-ability-scores
-tags:
-- chapter
-mud_status: partial
-type: chapter
+quick: Модификаторы, проверки, спасброски, навыки, пассивные
+aliases:
+- 07-ability-scores
+- 07 ability scores
+- Использование характеристик
 ---
 
 # Использование характеристик
 
-> Источник: PHB, стр. 173–180. Пересказ правил, не дословная копия PHB.
+> Источник: PHB 2014. Пересказ механики, не дословная копия.
 
-## Правила (PHB)
-
-<!-- phb:auto:summary -->
+## Механика
 ### Изические И Умственные Способности
 
 - любого существа можно описать с помощью шести характеристик:
@@ -94,48 +92,3 @@ type: chapter
 - Толкание, волочение и подъём.
 - Вы можете толкать, тянуть и отрывать от земли вес в фунтах, вдвое превышающий вашу грузоподъёмность (или значение Силы, умноженное на 30).
 - Если вы толкаете или тянете вес, превышающий грузоподъёмность, ваша скорость падает до 5 футов.
-<!-- /phb:auto:summary -->
-## Реализация в MUD
-
-<!-- mud:implementation -->
-| Аспект | Значение |
-|--------|----------|
-| Статус | **Частично:** модификатор, генерация stats; **спасброски при создании** (`core/checks.py`); проверки навыков в engine — Phase 2 |
-| YAML | [`database/core/abilities.yaml`](../../database/core/abilities.yaml), [`database/core/skills.yaml`](../../database/core/skills.yaml), [`database/core/constants.yaml`](../../database/core/constants.yaml) |
-| Core | [`core/dice.py`](../../core/dice.py), [`core/stats.py`](../../core/stats.py), [`core/abilities.py`](../../core/abilities.py) |
-| Режимы | HardCore: целевые полные проверки в engine; Normal: может упрощаться в сценариях |
-
-### Реализовано сейчас
-
-| Механика | Модуль |
-|----------|--------|
-| `ability_modifier(score)` | `core/dice.py` |
-| Генерация и валидация stats | `core/stats.py` |
-| Применение расовых бонусов | `core/races.py`, `core/stats.py` |
-| Привязка навыков к характеристикам | `core/abilities.py` |
-| Бонус мастерства по уровню | `core/constants.proficiency_bonus()` |
-| Владение навыками при создании | `core/skills.py`, UI |
-| Спасброски при создании (`saving_throw_modifier`, `saving_throw`) | `core/checks.py`, `Character.save_proficiencies` |
-
-### Запланировано (game engine)
-
-| Механика | Целевая реализация |
-|----------|-------------------|
-| `ability_check`, `skill_check`, `passive_skill` | Phase 2 engine API |
-| Спасброски в сценариях и бою (вызов `saving_throw` из engine) | Phase 2 engine API |
-| Преимущество/помеха на к20 в приключениях | Phase 2 engine API |
-
-- Использование проверок в сценариях приключений (`adventures/*.yaml`)
-- Соревновательные проверки
-- Автоматическая помеха от невладения доспехом/щитом в combat flow — см. `core/combat.armor_wearing_penalty()` (КД щита без владения всё равно +2 — `compute_ac`)
-
-### Связь с режимами MUD
-
-| Режим | Поведение (целевое) |
-|-------|---------------------|
-| `hardcore` | Сл, преимущество/помеха, смерть при 0 HP — по PHB |
-| `normal` | Допускаются упрощения в YAML-приключениях |
-| `easy` | TBD |
-
-См. [ARCHITECTURE.md](../ARCHITECTURE.md), [09-combat.md](09-combat.md).
-<!-- /mud:implementation -->

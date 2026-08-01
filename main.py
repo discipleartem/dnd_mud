@@ -11,9 +11,9 @@ from pathlib import Path
 
 from colorama import Fore, Style, init
 
-from core.localization import get_string, load_strings
-from core.mod_loader import set_mod_gating_difficulty
-from core.settings import load_settings, save_settings
+from core.platform.catalog_session import get_catalog_session
+from core.platform.localization import get_string, load_strings
+from core.platform.settings import load_settings, save_settings
 from core.types import RuntimeSettings, StringsDict
 from ui.menus import (
     show_characters_menu,
@@ -80,7 +80,7 @@ def main() -> int:
     # Загружаем настройки
     settings = load_settings()
 
-    set_mod_gating_difficulty("normal")
+    get_catalog_session().set_difficulty("normal")
 
     # Загружаем строки интерфейса на выбранном языке
     strings = load_strings(settings["language"])

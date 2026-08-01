@@ -1,26 +1,30 @@
 ---
+id: sokrytie_razuma
+type: spell
 phb_chapter: 11
-phb_section: Сокрытие Разума
 phb_pages:
 - 211
 - 289
-phb_part: 3
-id: sokrytie_razuma
-tags:
-- spell
-- abjuration
-- level-8
-mud_status: planned
-type: spell
+quick: 8; abjuration; Касание — иммунитет к психич. урону и чтению мыслей
+aliases:
+- sokrytie_razuma
+- сокрытие разума
+- Mind Blank
+- sokrytie razuma
+level: 8
+school: abjuration
+casting_time: 1 действие
+range: Касание
+components: В, С
+duration: 24 часа
 ---
 
 # Сокрытие Разума
 
-> Источник: PHB, гл. 11. Пересказ правил, не дословная копия PHB.
+> Источник: PHB 2014. Пересказ механики, не дословная копия.
 
 ## Параметры
 
-<!-- phb:auto:parameters -->
 | Параметр | Значение |
 |----------|----------|
 | Уровень | 8 уровень |
@@ -29,20 +33,7 @@ type: spell
 | Дистанция | Касание |
 | Компоненты | В, С |
 | Длительность | 24 часа |
-<!-- /phb:auto:parameters -->
 
 ## Эффект
 
-<!-- phb:auto:effect -->
-- 278
-<!-- /phb:auto:effect -->
-
-## Реализация в MUD
-
-<!-- mud:implementation -->
-| Аспект | Значение |
-|--------|----------|
-| Статус | planned |
-| YAML | — |
-| Core | — |
-<!-- /mud:implementation -->
+- Касание согласного существа: иммунитет к урону психической энергией и к эффектам, читающим мысли/эмоции или определяющим истину (прорицания, подобные заклинания, включая исполнение желаний, пытающееся повлиять на разум).

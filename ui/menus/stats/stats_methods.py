@@ -1,12 +1,34 @@
 """Методы генерации характеристик: standard array, point-buy, random."""
 
+from typing import Literal
+
 from colorama import Fore, Style
 
-from core.localization import get_string
+from core.mechanics.dice import roll_ability_score
+from core.mechanics.stats import (
+    POINT_BUY_BUDGET,
+    POINT_BUY_COSTS,
+    STANDARD_ARRAY,
+    STANDARD_ARRAY_MAX,
+    STANDARD_ARRAY_MIN,
+    STAT_NAMES,
+    generate_stats_point_buy,
+    generate_stats_random,
+    generate_stats_standard_array,
+    point_buy_points_remaining,
+    validate_point_buy_finish,
+)
+from core.platform.localization import get_string
 from core.types import StatMap, StringsDict
-from ui.menus import _deps
-from ui.menus._common import _ability_name, _choice_prompt, _press_enter
-from ui.menus._display import (
+from ui.input_handler import get_int_input
+from ui.menus.console import (
+    ability_name,
+    choice_prompt,
+    press_enter,
+    print_back_row,
+    run_options_with_back,
+)
+from ui.menus.display import (
     _print_point_buy_cost_table,
     _print_stats_generation_header,
 )
@@ -26,17 +48,17 @@ def _select_stats_standard_array(
     while True:
         selected = _assign_stats_from_pool(
             strings,
-            list(_deps.STANDARD_ARRAY),
-            value_min=_deps.STANDARD_ARRAY_MIN,
-            value_max=_deps.STANDARD_ARRAY_MAX,
+            list(STANDARD_ARRAY),
+            value_min=STANDARD_ARRAY_MIN,
+            value_max=STANDARD_ARRAY_MAX,
             race_id=race_id,
             subrace_id=subrace_id,
         )
         if selected is None:
             return None
 
-        selected_values = [selected[stat] for stat in _deps.STAT_NAMES]
-        stats = _deps.generate_stats_standard_array(
+        selected_values = [selected[stat] for stat in STAT_NAMES]
+        stats = generate_stats_standard_array(
             selected_values, race_id, subrace_id
         )
         result = _run_stats_confirm_loop(
@@ -53,6 +75,103 @@ def _select_stats_standard_array(
         continue
 
 
+def _render_point_buy_screen(
+    strings: StringsDict,
+    stats: StatMap,
+    race_id: str,
+    subrace_id: str | None,
+) -> int:
+    """Экран распределения point-buy; вернуть оставшиеся очки."""
+    _print_stats_generation_header(strings, race_id, subrace_id)
+    _print_point_buy_cost_table(strings)
+
+    stat_values = [stats[stat] for stat in STAT_NAMES]
+    points_available = point_buy_points_remaining(stat_values)
+
+    points_msg = get_string(
+        strings,
+        "character.stats_points_available",
+        available=points_available,
+        total=POINT_BUY_BUDGET,
+    )
+    print(f"{Fore.CYAN}{points_msg}{Style.RESET_ALL}")
+    print()
+    print(
+        f"{Fore.YELLOW}"
+        f"{get_string(strings, 'character.stats_current')}"
+        f"{Style.RESET_ALL}"
+    )
+
+    for idx, stat in enumerate(STAT_NAMES, 1):
+        stat_name = ability_name(strings, stat)
+        cost = POINT_BUY_COSTS[stats[stat]]
+        cost_msg = get_string(
+            strings, "character.stats_cost_points", cost=cost
+        )
+        print(
+            f"  {Fore.YELLOW}{idx}{Style.RESET_ALL}. {stat_name}: "
+            f"{Fore.CYAN}{stats[stat]}{Style.RESET_ALL} {cost_msg}"
+        )
+
+    print()
+    print(
+        f"{Fore.GREEN}"
+        f"{get_string(strings, 'character.stats_commands')}"
+        f"{Style.RESET_ALL}"
+    )
+    choose_increase = get_string(
+        strings, "character.stats_choose_stat_increase"
+    )
+    print(f"  {Fore.YELLOW}1-6{Style.RESET_ALL}. " f"{choose_increase}")
+    print_back_row(
+        strings,
+        back_label_key="character.stats_finish_distribution",
+    )
+    print()
+    return points_available
+
+
+def _finish_point_buy_distribution(
+    strings: StringsDict,
+    stat_values: list[int],
+    race_id: str,
+    subrace_id: str | None,
+    *,
+    points_available: int,
+) -> StatMap | None | Literal["retry", "reroll"]:
+    """Завершить point-buy или показать ошибку валидации."""
+    error_key = validate_point_buy_finish(stat_values)
+    if error_key is None:
+        stats_result = generate_stats_point_buy(
+            stat_values, race_id, subrace_id
+        )
+        result = _run_stats_confirm_loop(
+            strings,
+            stats_result,
+            race_id,
+            subrace_id,
+            reroll_label_key="character.stats_reroll_redistribute",
+        )
+        if isinstance(result, dict):
+            return result
+        if result is None:
+            return None
+        return "reroll"
+
+    if error_key == "character.stats_points_unspent":
+        unspent = get_string(
+            strings,
+            error_key,
+            remaining=points_available,
+        )
+        print(f"{Fore.RED}{unspent}{Style.RESET_ALL}")
+    else:
+        overspent = get_string(strings, error_key)
+        print(f"{Fore.RED}{overspent}{Style.RESET_ALL}")
+    press_enter(strings)
+    return "retry"
+
+
 def _select_stats_point_buy(
     strings: StringsDict,
     race_id: str,
@@ -60,98 +179,56 @@ def _select_stats_point_buy(
 ) -> StatMap | None:
     """Система покупки очков (Point-buy)."""
     while True:
-        stats = {stat: 8 for stat in _deps.STAT_NAMES}
+        stats = {stat: 8 for stat in STAT_NAMES}
 
         while True:
-            _print_stats_generation_header(strings, race_id, subrace_id)
-            _print_point_buy_cost_table(strings)
-
-            stat_values = [stats[stat] for stat in _deps.STAT_NAMES]
-            points_available = _deps.point_buy_points_remaining(stat_values)
-
-            points_msg = get_string(
-                strings,
-                "character.stats_points_available",
-                available=points_available,
-                total=_deps.POINT_BUY_BUDGET,
-            )
-            print(f"{Fore.CYAN}{points_msg}{Style.RESET_ALL}")
-            print()
-            print(
-                f"{Fore.YELLOW}"
-                f"{get_string(strings, 'character.stats_current')}"
-                f"{Style.RESET_ALL}"
+            points_available = _render_point_buy_screen(
+                strings, stats, race_id, subrace_id
             )
 
-            for idx, stat in enumerate(_deps.STAT_NAMES, 1):
-                stat_name = _ability_name(strings, stat)
-                cost = _deps.POINT_BUY_COSTS[stats[stat]]
-                cost_msg = get_string(
-                    strings, "character.stats_cost_points", cost=cost
-                )
-                print(
-                    f"  {Fore.YELLOW}{idx}{Style.RESET_ALL}. {stat_name}: "
-                    f"{Fore.CYAN}{stats[stat]}{Style.RESET_ALL} {cost_msg}"
-                )
-
-            print()
-            print(
-                f"{Fore.GREEN}"
-                f"{get_string(strings, 'character.stats_commands')}"
-                f"{Style.RESET_ALL}"
-            )
-            choose_increase = get_string(
-                strings, "character.stats_choose_stat_increase"
-            )
-            print(
-                f"  {Fore.YELLOW}1-6{Style.RESET_ALL}. " f"{choose_increase}"
-            )
-            print(
-                f"  {Fore.YELLOW}0{Style.RESET_ALL}. "
-                f"{get_string(strings, 'character.stats_finish_distribution')}"
-            )
-            print()
-
-            choice = _deps.get_int_input(
-                _choice_prompt(strings), 0, 6, strings
-            )
+            choice = get_int_input(choice_prompt(strings), 0, 6, strings)
 
             if choice == 0:
-                error_key = _deps.validate_point_buy_finish(stat_values)
-                if error_key is None:
-                    stats_result = _deps.generate_stats_point_buy(
-                        stat_values, race_id, subrace_id
-                    )
-                    result = _run_stats_confirm_loop(
-                        strings,
-                        stats_result,
-                        race_id,
-                        subrace_id,
-                        reroll_label_key="character.stats_reroll_redistribute",
-                    )
-                    if isinstance(result, dict):
-                        return result
-                    if result is None:
-                        return None
-                    break
-                if error_key == "character.stats_points_unspent":
-                    unspent = get_string(
-                        strings,
-                        error_key,
-                        remaining=points_available,
-                    )
-                    print(f"{Fore.RED}{unspent}{Style.RESET_ALL}")
-                else:
-                    overspent = get_string(strings, error_key)
-                    print(f"{Fore.RED}{overspent}{Style.RESET_ALL}")
-                _press_enter(strings)
-                continue
+                stat_values = [stats[stat] for stat in STAT_NAMES]
+                result = _finish_point_buy_distribution(
+                    strings,
+                    stat_values,
+                    race_id,
+                    subrace_id,
+                    points_available=points_available,
+                )
+                if result == "retry":
+                    continue
+                if isinstance(result, dict):
+                    return result
+                if result is None:
+                    return None
+                break
 
-            stat_to_modify = _deps.STAT_NAMES[choice - 1]
-            stat_name = _ability_name(strings, stat_to_modify)
+            stat_to_modify = STAT_NAMES[choice - 1]
+            stat_name = ability_name(strings, stat_to_modify)
             _prompt_point_buy_stat_value(
                 strings, stat_name, stats, stat_to_modify
             )
+
+
+def _select_stats_random(
+    strings: StringsDict,
+    race_id: str,
+    subrace_id: str | None,
+    *,
+    allow_regenerate: bool = True,
+    hardcore_rolls: list[int] | None = None,
+) -> StatMap | None:
+    """Случайная генерация характеристик (Normal с рероллом / HardCore)."""
+    if not allow_regenerate:
+        return _select_stats_random_hardcore(
+            strings,
+            race_id,
+            subrace_id,
+            hardcore_rolls=hardcore_rolls,
+        )
+    return _select_stats_random_normal(strings, race_id, subrace_id)
 
 
 def _select_stats_random_normal(
@@ -173,7 +250,7 @@ def _select_stats_random_normal(
         print()
 
         if rolls is None:
-            rolls = [_deps.roll_ability_score() for _ in range(6)]
+            rolls = [roll_ability_score() for _ in range(6)]
             rolls.sort(reverse=True)
 
         print(
@@ -188,24 +265,14 @@ def _select_stats_random_normal(
         )
         print(f"  {rolls_display}")
         print()
-        print(
-            f"  {Fore.YELLOW}1{Style.RESET_ALL}. "
-            f"{get_string(strings, 'character.stats_random_accept')}"
+        roll_choice = run_options_with_back(
+            strings,
+            [
+                get_string(strings, "character.stats_random_accept"),
+                get_string(strings, "character.stats_random_regenerate"),
+            ],
         )
-        print(
-            f"  {Fore.YELLOW}2{Style.RESET_ALL}. "
-            f"{get_string(strings, 'character.stats_random_regenerate')}"
-        )
-        print(
-            f"  {Fore.YELLOW}0{Style.RESET_ALL}. "
-            f"{get_string(strings, 'character.back')}"
-        )
-        print()
-
-        roll_choice = _deps.get_int_input(
-            _choice_prompt(strings), 0, 2, strings
-        )
-        if roll_choice == 0:
+        if roll_choice is None:
             return None
         if roll_choice == 2:
             rolls = None
@@ -224,10 +291,8 @@ def _select_stats_random_normal(
             if selected is None:
                 break
 
-            selected_values = [selected[stat] for stat in _deps.STAT_NAMES]
-            stats = _deps.generate_stats_random(
-                selected_values, race_id, subrace_id
-            )
+            selected_values = [selected[stat] for stat in STAT_NAMES]
+            stats = generate_stats_random(selected_values, race_id, subrace_id)
             result = _run_stats_confirm_loop(
                 strings,
                 stats,
@@ -251,12 +316,12 @@ def _select_stats_random_hardcore(
     hardcore_rolls: list[int] | None = None,
 ) -> StatMap | None:
     """Случайный метод для HardCore режима (без перегенерации)."""
-    stat_count = len(_deps.STAT_NAMES)
+    stat_count = len(STAT_NAMES)
     if hardcore_rolls is not None and len(hardcore_rolls) == stat_count:
         base_values = list(hardcore_rolls)
         rolls_shown = True
     else:
-        base_values = [_deps.roll_ability_score() for _ in _deps.STAT_NAMES]
+        base_values = [roll_ability_score() for _ in STAT_NAMES]
         rolls_shown = False
         if hardcore_rolls is not None:
             hardcore_rolls[:] = base_values
@@ -276,17 +341,17 @@ def _select_stats_random_hardcore(
             )
             print()
 
-            for stat, roll in zip(_deps.STAT_NAMES, base_values, strict=True):
-                stat_name = _ability_name(strings, stat)
+            for stat, roll in zip(STAT_NAMES, base_values, strict=True):
+                stat_name = ability_name(strings, stat)
                 print(f"  {stat_name}: {Fore.YELLOW}{roll}{Style.RESET_ALL}")
 
             print()
-            _press_enter(strings)
+            press_enter(strings)
             rolls_shown = True
             if hardcore_rolls is not None:
                 hardcore_rolls[:] = base_values
 
-        stats = _deps.generate_stats_random(base_values, race_id, subrace_id)
+        stats = generate_stats_random(base_values, race_id, subrace_id)
         result = _run_stats_confirm_loop(
             strings,
             stats,

@@ -1,6 +1,6 @@
 # Схема YAML-справочников dnd_mud
 
-Канон формата данных в `database/`. Источник правил — PHB (`docs/PHB_ D&D_2023 RUS.pdf`, локально). Принципы: **DRY → KISS → YAGNI**.
+Канон формата данных в `database/`. Источник правил — PHB **2014**. Принципы: **DRY → KISS → YAGNI**.
 
 См. также: [`ARCHITECTURE.md`](ARCHITECTURE.md) § Data Layer, [`DEVELOPMENT.md`](DEVELOPMENT.md) § Создание мода.
 
@@ -114,7 +114,7 @@ backgrounds:
       description: { ru: "...", en: "..." }
 ```
 
-Grant `equipment_item` — фиксированные предметы предыстории (`core/backgrounds.get_background_equipment_items`).
+Grant `equipment_item` — фиксированные предметы предыстории (`core.inventory.background_equipment.get_background_equipment_items`).
 
 `inventory_tool_pools` — whitelist пулов: выбранные на шаге владений инструменты попадают в инвентарь только если id входит в разрешённый пул (например `soldier_gaming` → `dice_set` / `playing_cards`). Владение без предмета (thieves' tools у преступника) — только `tool_proficiency`, не `equipment_item`.
 
@@ -233,11 +233,11 @@ races:
 
 ### Сборка персонажа
 
-**Реализовано:** `core/grants_context.py` — `CreationContext`, `ResolvedGrants`; `core/character_builder.py` — `resolve_creation_grants`, `resolve_grants_for_context`, `merge_languages_with_feats`.
+**Реализовано:** `core/grants_context.py` — `CreationContext`, `ResolvedGrants`; `core/grants_resolve.py` — `resolve_creation_grants`, `resolve_grants_for_context`, `merge_languages_with_feats` (реэкспорт из `character_build`).
 
 | ID | Задача | Статус |
 |----|--------|--------|
-| `char-builder` | `grants_context` + `character_builder`, единый `resolve_creation_grants` | ✅ реализовано |
+| `char-builder` | `grants_context` + `grants_resolve` / `character_build`, единый `resolve_creation_grants` | ✅ реализовано |
 
 ### Классы и progression
 
@@ -266,8 +266,8 @@ races:
 
 | ID | Задача | Триггер | Целевые файлы |
 |----|--------|---------|---------------|
-| `phb-races` | Все 9 рас и подрасы PHB в YAML | Задача наполнения из PDF гл. 2 | `database/races/races.yaml` |
-| `phb-classes` | Все 12 классов и подклассы PHB | Задача наполнения из PDF гл. 3 | `database/classes/classes.yaml` |
+| `phb-races` | Все 9 рас и подрасы PHB в YAML | Задача наполнения по PHB гл. 2 | `database/races/races.yaml` |
+| `phb-classes` | Все 12 классов и подклассы PHB | Задача наполнения по PHB гл. 3 | `database/classes/classes.yaml` |
 
 ### Локализация
 

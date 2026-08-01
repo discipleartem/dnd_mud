@@ -1,26 +1,32 @@
 ---
+id: maloe_vosstanovlenie
+type: spell
 phb_chapter: 11
-phb_section: Малое Восстановление
 phb_pages:
 - 211
 - 289
-phb_part: 3
-id: maloe_vosstanovlenie
-tags:
-- spell
-- abjuration
-- level-2
-mud_status: planned
-type: spell
+quick: 2; abjuration; Касание
+aliases:
+- maloe_vosstanovlenie
+- maloe vosstanovlenie
+- Малое Восстановление
+level: 2
+school: abjuration
+casting_time: 1 действие
+range: Касание
+components: В, С
+duration: Мгновенная
 ---
 
 # Малое Восстановление
 
-> Источник: PHB, гл. 11. Пересказ правил, не дословная копия PHB.
+> Источник: PHB 2014. Пересказ механики, не дословная копия.
 
 ## Параметры
 
-<!-- phb:auto:parameters -->
+
+
+
 | Параметр | Значение |
 |----------|----------|
 | Уровень | 2 уровень |
@@ -29,21 +35,7 @@ type: spell
 | Дистанция | Касание |
 | Компоненты | В, С |
 | Длительность | Мгновенная |
-<!-- /phb:auto:parameters -->
 
 ## Эффект
-
-<!-- phb:auto:effect -->
 - Вы касаетесь существа и можете окончить одну болезнь или одно состояние, в котором оно находится.
 - Этим состоянием может быть глухота, отравление, паралич или слепота.
-<!-- /phb:auto:effect -->
-
-## Реализация в MUD
-
-<!-- mud:implementation -->
-| Аспект | Значение |
-|--------|----------|
-| Статус | planned |
-| YAML | — |
-| Core | — |
-<!-- /mud:implementation -->

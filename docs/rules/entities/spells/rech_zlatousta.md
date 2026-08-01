@@ -1,26 +1,30 @@
 ---
+id: rech_zlatousta
+type: spell
 phb_chapter: 11
-phb_section: Речь Златоуста
 phb_pages:
 - 211
 - 289
-phb_part: 3
-id: rech_zlatousta
-tags:
-- spell
-- enchantment
-- level-2
-mud_status: planned
-type: spell
+quick: 2; enchantment; 60 футов — помеха на Внимательность к другим (Муд)
+aliases:
+- rech_zlatousta
+- Речь Златоуста
+- Enthrall
+- rech zlatousta
+level: 2
+school: enchantment
+casting_time: 1 действие
+range: 60 футов
+components: В, С
+duration: 1 минута
 ---
 
 # Речь Златоуста
 
-> Источник: PHB, гл. 11. Пересказ правил, не дословная копия PHB.
+> Источник: PHB 2014. Пересказ механики, не дословная копия.
 
 ## Параметры
 
-<!-- phb:auto:parameters -->
 | Параметр | Значение |
 |----------|----------|
 | Уровень | 2 уровень |
@@ -29,20 +33,8 @@ type: spell
 | Дистанция | 60 футов |
 | Компоненты | В, С |
 | Длительность | 1 минута |
-<!-- /phb:auto:parameters -->
 
 ## Эффект
 
-<!-- phb:auto:effect -->
-_См. PHB PDF._
-<!-- /phb:auto:effect -->
-
-## Реализация в MUD
-
-<!-- mud:implementation -->
-| Аспект | Значение |
-|--------|----------|
-| Статус | planned |
-| YAML | — |
-| Core | — |
-<!-- /mud:implementation -->
+- Существа на выбор в пределах дистанции, слышащие вас: спасбросок Мудрости (автоуспех при бою с вами/союзниками).
+- При провале: помеха на проверки Внимательности для восприятия других, кроме вас, пока заклинание активно / цель больше не слышит / вы недееспособны.

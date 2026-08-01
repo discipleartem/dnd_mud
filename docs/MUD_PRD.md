@@ -29,11 +29,11 @@
 - Режим сложности «Лёгкая» (`easy`): старт с 3 уровня, обязательный выбор подкласса
 - Выбор подкласса по режимам (`normal` / `hardcore` / `easy`); NPC-наставник в меню персонажей и сценариях
 - Прогрессия XP и потолок уровня **10** (`MAX_CHARACTER_LEVEL`)
-- Минимальный scenario runner (`core/scenario_actions.py`, `ui/menus/scenario_flow.py`): grant XP, subclass_training; tutorial / lost_mine
+- Минимальный scenario runner (`core/engine/scenario_actions.py`, `ui/menus/scenario/flow.py`): grant XP, subclass_training; tutorial / lost_mine
 - База данных правил D&D 5e (YAML-справочники в `database/`)
 - Локализация (русский/английский, YAML-словари)
-- Броски кубиков (`roll`, `roll_ability_score`, `ability_modifier` в `core/dice.py`)
-- Модель персонажа (`core/models.py`: Character dataclass; сохранение через `core/character.py` в JSON)
+- Броски кубиков (`roll`, `roll_ability_score`, `ability_modifier` в `core/mechanics/dice.py`)
+- Модель персонажа (`core/character/models.py`: Character dataclass; сборка — `core/character/build.py`; сохранение — `core/character/storage.py` в JSON)
 - Загрузка приключений из YAML
 - Адаптивный вывод текста с переносом по ширине терминала
 
@@ -43,7 +43,7 @@
 
 ### Нереализованная механика D&D 5e (Phase 2)
 
-Справочник правил — [`DND_RULES.md`](DND_RULES.md) и `docs/rules/`. Ниже перечислено то, что **описано в docs по PHB, но ещё не реализовано в игре** — это запланированный функционал, а не расхождение с каноном.
+Справочник механики — [`docs/rules/INDEX.md`](rules/INDEX.md) / [`lookup.yaml`](rules/_index/lookup.yaml); статус в игре — [`DND_RULES.md`](DND_RULES.md). Ниже перечислено то, что **описано в docs по PHB, но ещё не реализовано в игре** — это запланированный функционал, а не расхождение с каноном.
 
 | Область PHB | Статус | Заметки |
 |-------------|--------|---------|
@@ -206,7 +206,7 @@
 **Особенности рас (grants).** На экране выбора показываются название и описание из YAML. **Владения** из `grants[]` (оружие, доспехи, инструменты) применяются через `core/proficiencies.py` (нормализация — `core/grants.py`). Прочая механика (тёмное зрение, сопротивления, владения **навыками** lore college и т.д.) — Phase 2. Исключение: выборные бонусы к характеристикам (`type: ability_increase`, напр. variant human) — реализованы в flow генерации stats (§3.4.6). Схема YAML: [`DATA_SCHEMA.md`](DATA_SCHEMA.md).
 
 #### 3.4.4. Выбор подрасы
-- У каждой расы механика в `subraces`; при одной подрасе — автовыбор (`auto_select_subrace_id`), экран пропускается.
+- У каждой расы механика в `subraces`; выбор подрасы через UI (`select_subrace`).
 - При нескольких подрасах — экран описания и выбор (включая variant human).
 - Fallback: `human` + `subrace: null` в save → `standard`.
 
@@ -222,7 +222,7 @@
 
 - На **каждом** экране «ГЕНЕРАЦИЯ ХАРАКТЕРИСТИК» внутри выбранного метода (кроме меню выбора метода): показать суммарные бонусы от расы и подрасы через `get_race_bonuses()` (например, «Расовые бонусы: Сила+1, …»).
 - **После распределения**: экран итоговых значений **с уже применёнными** расовыми бонусами (база + бонус; подпись «Итого (с расовыми бонусами)»).
-- Функции `generate_stats_*` в `core/character.py` возвращают финальные значения (база + расовый бонус).
+- Функции `generate_stats_*` в `core/stats.py` возвращают финальные значения (база + расовый бонус).
 - **Выборные бонусы** (напр. variant human): после распределения базовых значений UI вызывает `get_choice_ability_bonus_mechanics()` и экран выбора характеристик; итог — через `apply_bonuses_to_stats()` / `get_effective_race_bonuses()`.
 
 **Режим Normal** (`normal`) — см. §3.2.1
@@ -319,7 +319,7 @@
 #### 3.4.13. Стартовое снаряжение класса (реализовано)
 - Источник: `starting_equipment` в `database/classes/classes.yaml`; PHB-наборы — `database/equipment/equipment.yaml`.
 - Шаг **после** навыков (и expertise): выбор опций а/б по группам (оружие, доспех, набор и т.д.); pool-опции — подменю конкретного id с учётом владений.
-- Результат: `equipment_choices` в JSON; `inventory` и `equipped` формируются в `save_character` (`core/starting_equipment.py`, `core/inventory.equip_defaults`).
+- Результат: `equipment_choices` в JSON; `inventory` и `equipped` формируются в `build_new_character` / `persist_character` (`core/starting_equipment.py`, `core/inventory.equip_defaults`).
 - UI: `ui/menus/equipment.py`; карточка персонажа — инвентарь, экипировка, КД.
 - См. [`rules/chapters/05-equipment.md`](rules/chapters/05-equipment.md), [`rules/chapters/01-character-creation.md`](rules/chapters/01-character-creation.md).
 
@@ -405,15 +405,16 @@ dnd_mud/
 ├── pyproject.toml
 ├── README.md
 ├── main.py                          # точка входа
-├── core/                            # ядро (модели, механика, loaders)
-│   ├── models.py, character.py, character_storage.py
-│   ├── game_engine.py, scenario_actions.py, session_storage.py
-│   ├── grants.py, character_builder.py, progression/, inventory/, feats/
-│   ├── dice.py, checks.py, localization.py, mod_loader.py
+├── core/                            # ядро (пакеты + leaf-imports)
+│   ├── types.py, constants.py
+│   ├── character/                   # models, build, storage, migrate, finalize
+│   ├── platform/, catalogs/, grants/, feats/
+│   ├── progression/, inventory/, mechanics/
+│   ├── engine/                      # game_engine, scenario_*, session_*, combat/
 │   └── …                            # см. docs/ARCHITECTURE.md
 ├── ui/                              # пользовательский интерфейс
 │   ├── input_handler.py, terminal_wrap.py
-│   └── menus/                       # flows, _creation_*, _display/, feats/
+│   └── menus/                       # hub/, creation/, progression/, scenario/, display/, feats/, stats/, console.py
 ├── database/                        # YAML-справочники + JSON-конфиг
 │   ├── races/races.yaml
 │   ├── classes/classes.yaml
@@ -563,7 +564,7 @@ races:
 
 ### 6.1. Core (ядро)
 - `models.py` – dataclass `Character`, `Adventure`; `to_dict()` / `from_dict()`.
-- `character.py` – `save_character()`, `load_characters()`, генерация характеристик, загрузка рас/классов из YAML.
+- `character_storage.py` / `character_build.py` – `persist_character()`, `build_new_character(CharacterBuildParams)`, `load_characters()`, генерация характеристик, загрузка рас/классов из YAML.
 - `dice.py` – `roll()`, `roll_ability_score()`, `ability_modifier()`.
 - `adventure.py` – `load_adventures() -> list[Adventure]`; имя через `Adventure.get_name()`.
 - `difficulty.py` – `adventure_allows_difficulty()` для фильтрации приключений по режиму.
