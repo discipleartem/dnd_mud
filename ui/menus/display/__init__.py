@@ -18,7 +18,6 @@ from ui.menus.display.equipment_view import (
 )
 from ui.menus.display.grants import (
     format_grant_line_text,
-    format_grant_lines,
 )
 from ui.menus.display.race_background import (
     _format_bonuses,
@@ -52,7 +51,6 @@ __all__ = [
     "_print_stats_generation_header",
     "_print_subclass_info",
     "format_grant_line_text",
-    "format_grant_lines",
     "format_inventory_line",
     "format_versatile_damage_dice",
     "get_equipped_display",

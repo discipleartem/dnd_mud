@@ -1,5 +1,7 @@
 """Методы генерации характеристик: standard array, point-buy, random."""
 
+from typing import Literal
+
 from colorama import Fore, Style
 
 from core.mechanics.dice import roll_ability_score
@@ -19,7 +21,13 @@ from core.mechanics.stats import (
 from core.platform.localization import get_string
 from core.types import StatMap, StringsDict
 from ui.input_handler import get_int_input
-from ui.menus.console import ability_name, choice_prompt, press_enter
+from ui.menus.console import (
+    ability_name,
+    choice_prompt,
+    press_enter,
+    print_back_row,
+    run_options_with_back,
+)
 from ui.menus.display import (
     _print_point_buy_cost_table,
     _print_stats_generation_header,
@@ -67,6 +75,103 @@ def _select_stats_standard_array(
         continue
 
 
+def _render_point_buy_screen(
+    strings: StringsDict,
+    stats: StatMap,
+    race_id: str,
+    subrace_id: str | None,
+) -> int:
+    """Экран распределения point-buy; вернуть оставшиеся очки."""
+    _print_stats_generation_header(strings, race_id, subrace_id)
+    _print_point_buy_cost_table(strings)
+
+    stat_values = [stats[stat] for stat in STAT_NAMES]
+    points_available = point_buy_points_remaining(stat_values)
+
+    points_msg = get_string(
+        strings,
+        "character.stats_points_available",
+        available=points_available,
+        total=POINT_BUY_BUDGET,
+    )
+    print(f"{Fore.CYAN}{points_msg}{Style.RESET_ALL}")
+    print()
+    print(
+        f"{Fore.YELLOW}"
+        f"{get_string(strings, 'character.stats_current')}"
+        f"{Style.RESET_ALL}"
+    )
+
+    for idx, stat in enumerate(STAT_NAMES, 1):
+        stat_name = ability_name(strings, stat)
+        cost = POINT_BUY_COSTS[stats[stat]]
+        cost_msg = get_string(
+            strings, "character.stats_cost_points", cost=cost
+        )
+        print(
+            f"  {Fore.YELLOW}{idx}{Style.RESET_ALL}. {stat_name}: "
+            f"{Fore.CYAN}{stats[stat]}{Style.RESET_ALL} {cost_msg}"
+        )
+
+    print()
+    print(
+        f"{Fore.GREEN}"
+        f"{get_string(strings, 'character.stats_commands')}"
+        f"{Style.RESET_ALL}"
+    )
+    choose_increase = get_string(
+        strings, "character.stats_choose_stat_increase"
+    )
+    print(f"  {Fore.YELLOW}1-6{Style.RESET_ALL}. " f"{choose_increase}")
+    print_back_row(
+        strings,
+        back_label_key="character.stats_finish_distribution",
+    )
+    print()
+    return points_available
+
+
+def _finish_point_buy_distribution(
+    strings: StringsDict,
+    stat_values: list[int],
+    race_id: str,
+    subrace_id: str | None,
+    *,
+    points_available: int,
+) -> StatMap | None | Literal["retry", "reroll"]:
+    """Завершить point-buy или показать ошибку валидации."""
+    error_key = validate_point_buy_finish(stat_values)
+    if error_key is None:
+        stats_result = generate_stats_point_buy(
+            stat_values, race_id, subrace_id
+        )
+        result = _run_stats_confirm_loop(
+            strings,
+            stats_result,
+            race_id,
+            subrace_id,
+            reroll_label_key="character.stats_reroll_redistribute",
+        )
+        if isinstance(result, dict):
+            return result
+        if result is None:
+            return None
+        return "reroll"
+
+    if error_key == "character.stats_points_unspent":
+        unspent = get_string(
+            strings,
+            error_key,
+            remaining=points_available,
+        )
+        print(f"{Fore.RED}{unspent}{Style.RESET_ALL}")
+    else:
+        overspent = get_string(strings, error_key)
+        print(f"{Fore.RED}{overspent}{Style.RESET_ALL}")
+    press_enter(strings)
+    return "retry"
+
+
 def _select_stats_point_buy(
     strings: StringsDict,
     race_id: str,
@@ -77,87 +182,28 @@ def _select_stats_point_buy(
         stats = {stat: 8 for stat in STAT_NAMES}
 
         while True:
-            _print_stats_generation_header(strings, race_id, subrace_id)
-            _print_point_buy_cost_table(strings)
-
-            stat_values = [stats[stat] for stat in STAT_NAMES]
-            points_available = point_buy_points_remaining(stat_values)
-
-            points_msg = get_string(
-                strings,
-                "character.stats_points_available",
-                available=points_available,
-                total=POINT_BUY_BUDGET,
+            points_available = _render_point_buy_screen(
+                strings, stats, race_id, subrace_id
             )
-            print(f"{Fore.CYAN}{points_msg}{Style.RESET_ALL}")
-            print()
-            print(
-                f"{Fore.YELLOW}"
-                f"{get_string(strings, 'character.stats_current')}"
-                f"{Style.RESET_ALL}"
-            )
-
-            for idx, stat in enumerate(STAT_NAMES, 1):
-                stat_name = ability_name(strings, stat)
-                cost = POINT_BUY_COSTS[stats[stat]]
-                cost_msg = get_string(
-                    strings, "character.stats_cost_points", cost=cost
-                )
-                print(
-                    f"  {Fore.YELLOW}{idx}{Style.RESET_ALL}. {stat_name}: "
-                    f"{Fore.CYAN}{stats[stat]}{Style.RESET_ALL} {cost_msg}"
-                )
-
-            print()
-            print(
-                f"{Fore.GREEN}"
-                f"{get_string(strings, 'character.stats_commands')}"
-                f"{Style.RESET_ALL}"
-            )
-            choose_increase = get_string(
-                strings, "character.stats_choose_stat_increase"
-            )
-            print(
-                f"  {Fore.YELLOW}1-6{Style.RESET_ALL}. " f"{choose_increase}"
-            )
-            print(
-                f"  {Fore.YELLOW}0{Style.RESET_ALL}. "
-                f"{get_string(strings, 'character.stats_finish_distribution')}"
-            )
-            print()
 
             choice = get_int_input(choice_prompt(strings), 0, 6, strings)
 
             if choice == 0:
-                error_key = validate_point_buy_finish(stat_values)
-                if error_key is None:
-                    stats_result = generate_stats_point_buy(
-                        stat_values, race_id, subrace_id
-                    )
-                    result = _run_stats_confirm_loop(
-                        strings,
-                        stats_result,
-                        race_id,
-                        subrace_id,
-                        reroll_label_key="character.stats_reroll_redistribute",
-                    )
-                    if isinstance(result, dict):
-                        return result
-                    if result is None:
-                        return None
-                    break
-                if error_key == "character.stats_points_unspent":
-                    unspent = get_string(
-                        strings,
-                        error_key,
-                        remaining=points_available,
-                    )
-                    print(f"{Fore.RED}{unspent}{Style.RESET_ALL}")
-                else:
-                    overspent = get_string(strings, error_key)
-                    print(f"{Fore.RED}{overspent}{Style.RESET_ALL}")
-                press_enter(strings)
-                continue
+                stat_values = [stats[stat] for stat in STAT_NAMES]
+                result = _finish_point_buy_distribution(
+                    strings,
+                    stat_values,
+                    race_id,
+                    subrace_id,
+                    points_available=points_available,
+                )
+                if result == "retry":
+                    continue
+                if isinstance(result, dict):
+                    return result
+                if result is None:
+                    return None
+                break
 
             stat_to_modify = STAT_NAMES[choice - 1]
             stat_name = ability_name(strings, stat_to_modify)
@@ -219,22 +265,14 @@ def _select_stats_random_normal(
         )
         print(f"  {rolls_display}")
         print()
-        print(
-            f"  {Fore.YELLOW}1{Style.RESET_ALL}. "
-            f"{get_string(strings, 'character.stats_random_accept')}"
+        roll_choice = run_options_with_back(
+            strings,
+            [
+                get_string(strings, "character.stats_random_accept"),
+                get_string(strings, "character.stats_random_regenerate"),
+            ],
         )
-        print(
-            f"  {Fore.YELLOW}2{Style.RESET_ALL}. "
-            f"{get_string(strings, 'character.stats_random_regenerate')}"
-        )
-        print(
-            f"  {Fore.YELLOW}0{Style.RESET_ALL}. "
-            f"{get_string(strings, 'character.back')}"
-        )
-        print()
-
-        roll_choice = get_int_input(choice_prompt(strings), 0, 2, strings)
-        if roll_choice == 0:
+        if roll_choice is None:
             return None
         if roll_choice == 2:
             rolls = None

@@ -4,13 +4,11 @@ from typing import Any
 
 from core.grants.format import (
     format_grant_line_text,
-    format_grant_lines,
 )
 from core.types import StringsDict
 
 __all__ = [
     "format_grant_line_text",
-    "format_grant_lines",
     "_print_grant_line",
 ]
 

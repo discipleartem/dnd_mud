@@ -5,6 +5,7 @@ from colorama import Fore, Style
 from core.platform.localization import get_string
 from core.types import StringsDict
 from ui.menus.console import (
+    SCREEN_WIDTH,
     SEPARATOR,
     print_screen_header,
     run_numbered_menu,
@@ -32,7 +33,7 @@ def show_main_menu(strings: StringsDict) -> int:
     print(SEPARATOR)
     print(
         f"{Fore.YELLOW}"
-        f"{get_string(strings, 'menu.caption').center(78)}"
+        f"{get_string(strings, 'menu.caption').center(SCREEN_WIDTH)}"
         f"{Style.RESET_ALL}"
     )
     print(SEPARATOR)

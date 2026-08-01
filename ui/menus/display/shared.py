@@ -114,3 +114,19 @@ def _format_proficiency_token_list(
     """Локализованный список токенов владений."""
     names = [proficiency_token_label(t, strings, language) for t in tokens]
     return ", ".join(names)
+
+
+def format_expertise_display(
+    strings: StringsDict,
+    skill_expertise: list[str],
+    tool_expertise: list[str],
+) -> str:
+    """Строка компетентности для карточки персонажа."""
+    from ui.menus.console import skill_name
+
+    parts: list[str] = []
+    for skill_id in skill_expertise:
+        parts.append(skill_name(strings, skill_id))
+    for tool_id in tool_expertise:
+        parts.append(get_string(strings, f"tools.{tool_id}"))
+    return ", ".join(parts) if parts else ""

@@ -14,9 +14,8 @@ from core.catalogs.languages import (
 from core.platform.localization import get_string
 from core.types import StringsDict
 from ui.menus.console import (
-    print_pick_list,
+    pick_from_pool_loop,
     print_screen_header,
-    read_pool_pick,
 )
 
 
@@ -39,47 +38,43 @@ def _pick_language_choices(
     taken_suffix = get_string(strings, "character.languages_taken_suffix")
 
     for pick_idx in range(1, count + 1):
-        while True:
-            print_screen_header(
-                get_string(strings, "character.languages_caption")
+        prompt = get_string(
+            strings,
+            prompt_key,
+            current=pick_offset + pick_idx,
+            total=total,
+        )
+        lang_pool = resolve_language_pool(pool_spec, current)
+
+        def _before_known() -> None:
+            if not current:
+                return
+            names = ", ".join(
+                get_language_name(lang_id, language) for lang_id in current
             )
-            if current:
-                names = ", ".join(
-                    get_language_name(lang_id, language) for lang_id in current
-                )
-                known_line = get_string(
-                    strings,
-                    "character.languages_known",
-                    list=names,
-                )
-                print(f"{Fore.CYAN}{known_line}{Style.RESET_ALL}")
-                print()
-            prompt = get_string(
+            known_line = get_string(
                 strings,
-                prompt_key,
-                current=pick_offset + pick_idx,
-                total=total,
+                "character.languages_known",
+                list=names,
             )
-            lang_pool = resolve_language_pool(pool_spec, current)
-            selectable = print_pick_list(
-                lang_pool,
-                set(current),
-                label_for=lambda lang_id: get_language_name(lang_id, language),
-                taken_suffix=taken_suffix,
-            )
-            picked = read_pool_pick(
-                strings,
-                selectable,
-                prompt=prompt,
-                empty_key="character.languages_pool_empty",
-            )
-            if picked == "":
-                continue
-            if picked is None:
-                return None
-            added.append(picked)
-            current.append(picked)
-            break
+            print(f"{Fore.CYAN}{known_line}{Style.RESET_ALL}")
+            print()
+
+        picked = pick_from_pool_loop(
+            strings,
+            lang_pool,
+            set(current),
+            label_for=lambda lang_id: get_language_name(lang_id, language),
+            taken_suffix=taken_suffix,
+            prompt=prompt,
+            empty_key="character.languages_pool_empty",
+            header=get_string(strings, "character.languages_caption"),
+            before_list=_before_known,
+        )
+        if picked is None:
+            return None
+        added.append(picked)
+        current.append(picked)
 
     return added
 
