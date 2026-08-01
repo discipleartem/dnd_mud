@@ -18,7 +18,7 @@ from ui.menus.console import (
     print_screen_header,
     read_numbered_choice,
 )
-from ui.menus.scenario_flow import run_scenario_with_engine
+from ui.menus.scenario.flow import run_scenario_with_engine
 
 
 def show_load_game_flow(

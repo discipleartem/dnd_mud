@@ -75,7 +75,7 @@ def test_armor_menu_shows_unavailable_chain_mail(
     from core.inventory.starting_equipment import (
         list_equipment_options_by_group,
     )
-    from ui.menus.equipment import _pick_option_for_group
+    from ui.menus.creation.equipment import _pick_option_for_group
 
     groups = list_equipment_options_by_group("cleric")
     patch_int_input(monkeypatch, [0])
@@ -109,7 +109,7 @@ def test_weapon_menu_warhammer_available_for_dwarf_weapon_proficiency(
     from core.inventory.starting_equipment import (
         list_equipment_options_by_group,
     )
-    from ui.menus.equipment import _pick_option_for_group
+    from ui.menus.creation.equipment import _pick_option_for_group
 
     groups = list_equipment_options_by_group("cleric")
     dwarf_weapons = [
@@ -147,7 +147,7 @@ def test_weapon_menu_shows_unavailable_warhammer_without_proficiency(
     from core.inventory.starting_equipment import (
         list_equipment_options_by_group,
     )
-    from ui.menus.equipment import _pick_option_for_group
+    from ui.menus.creation.equipment import _pick_option_for_group
 
     groups = list_equipment_options_by_group("cleric")
     patch_int_input(monkeypatch, [0])

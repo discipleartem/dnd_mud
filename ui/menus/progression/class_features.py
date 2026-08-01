@@ -10,8 +10,8 @@ from core.progression.class_progression import (
     needs_class_feature_picks,
 )
 from core.types import LanguageCode, StringsDict
-from ui.menus._subclass_picks import apply_subclass_picks
 from ui.menus.console import print_screen_header, print_success_and_wait
+from ui.menus.creation.subclass_picks import apply_subclass_picks
 
 
 def apply_pending_class_features(

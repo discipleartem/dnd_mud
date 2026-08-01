@@ -15,7 +15,7 @@ from ui.menus.console import (
     print_screen_header,
     run_numbered_menu,
 )
-from ui.menus.mods_menu import show_mods_menu
+from ui.menus.hub.mods_menu import show_mods_menu
 
 
 def select_difficulty(strings: StringsDict) -> GameDifficulty | None:

@@ -33,7 +33,7 @@ def select_level_up_feat_or_asi(
     from dataclasses import replace
 
     from core.progression.asi import apply_asi_one_two, apply_asi_two_one
-    from ui.menus.asi import select_asi_mode, select_asi_stats
+    from ui.menus.progression.asi import select_asi_mode, select_asi_stats
 
     print_screen_header(
         get_string(

@@ -3,7 +3,8 @@
 from core.character.models import Adventure, Character
 from core.character.storage import LoadCharactersResult
 from core.types import CharacterClass
-from ui.menus import _creation_steps, new_game
+from ui.menus.creation import steps as _creation_steps
+from ui.menus.hub import new_game
 
 
 def test_select_adventure_filters_and_choice(

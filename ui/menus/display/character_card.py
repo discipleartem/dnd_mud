@@ -23,6 +23,7 @@ from ui.menus.console import (
     ability_name,
     skill_name,
 )
+from ui.menus.creation.expertise import format_expertise_display
 from ui.menus.display.class_info import (
     _character_class_label,
     _character_subclass_label,
@@ -44,7 +45,6 @@ from ui.menus.display.shared import (
 from ui.menus.display.stats import (
     _format_character_stats_compact,
 )
-from ui.menus.expertise import format_expertise_display
 
 
 def _format_character_feats(char: Character, language: str = "ru") -> str:

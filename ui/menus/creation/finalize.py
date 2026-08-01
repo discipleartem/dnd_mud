@@ -7,8 +7,8 @@ from core.character.finalize import (
 from core.character.models import Character
 from core.platform.localization import get_string
 from core.types import StringsDict
-from ui.menus._creation_state import _CreationState
 from ui.menus.console import print_success_and_wait
+from ui.menus.creation.state import _CreationState
 
 
 def merge_feat_languages(state: _CreationState) -> None:

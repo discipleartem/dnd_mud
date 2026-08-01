@@ -10,8 +10,6 @@ from core.character.storage import (
 )
 from core.platform.localization import get_string
 from core.types import LanguageCode, StringsDict
-from ui.menus import _creation_steps
-from ui.menus._corrupt_saves import show_corrupt_save_warnings_if_any
 from ui.menus.console import (
     confirm_yes_no,
     print_cancelled,
@@ -20,6 +18,8 @@ from ui.menus.console import (
     read_numbered_choice,
     run_numbered_menu,
 )
+from ui.menus.creation import steps as _creation_steps
+from ui.menus.creation.corrupt_saves import show_corrupt_save_warnings_if_any
 from ui.menus.display import _print_characters_list
 
 

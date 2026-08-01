@@ -11,7 +11,7 @@ from core.catalogs.languages import (
     load_languages,
     resolve_language_pool,
 )
-from ui.menus.languages import select_creation_languages
+from ui.menus.creation.languages import select_creation_languages
 
 pytestmark = pytest.mark.usefixtures("catalog_caches_cleared")
 

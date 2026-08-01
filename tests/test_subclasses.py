@@ -15,7 +15,7 @@ from core.progression.class_progression import (
     subclass_offered_at_creation,
 )
 from core.types import CharacterClass
-from ui.menus.subclass_trainer import (
+from ui.menus.progression.subclass_trainer import (
     assign_subclass_from_menu,
     run_subclass_trainer,
 )
@@ -121,7 +121,7 @@ def test_assign_subclass_from_menu_champion(
         return character
 
     monkeypatch.setattr(
-        "ui.menus.subclass_trainer.update_character",
+        "ui.menus.progression.subclass_trainer.update_character",
         fake_update,
     )
     patch_int_input(monkeypatch, [3])

@@ -9,6 +9,11 @@ from core.catalogs.races import (
     get_choice_ability_bonus_mechanics,
     get_race_bonuses,
 )
+from core.grants.format import (
+    _grant_description,
+    _grant_display_name,
+    _grant_pool_label,
+)
 from core.grants.normalize import (
     ABILITY_INCREASE,
     grants_from_entity,
@@ -25,9 +30,6 @@ from ui.menus.console import (
     ability_name,
 )
 from ui.menus.display.grants import (
-    _grant_description,
-    _grant_display_name,
-    _grant_pool_label,
     _print_grant_line,
 )
 

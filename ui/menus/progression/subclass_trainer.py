@@ -14,10 +14,10 @@ from core.progression.class_progression import (
     needs_class_feature_picks,
 )
 from core.types import LanguageCode, StringsDict
-from ui.menus._selectors import select_subclass
-from ui.menus._subclass_picks import apply_subclass_picks
-from ui.menus.class_features import apply_pending_class_features
 from ui.menus.console import print_screen_header, print_success_and_wait
+from ui.menus.creation.selectors import select_subclass
+from ui.menus.creation.subclass_picks import apply_subclass_picks
+from ui.menus.progression.class_features import apply_pending_class_features
 
 
 def assign_subclass_from_menu(

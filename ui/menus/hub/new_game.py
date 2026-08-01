@@ -12,15 +12,15 @@ from core.platform.catalog_session import get_catalog_session
 from core.platform.localization import get_string
 from core.types import RuntimeSettings, StringsDict
 from ui.input_handler import get_int_input
-from ui.menus import _creation_steps
-from ui.menus._corrupt_saves import show_corrupt_save_warnings_if_any
 from ui.menus.console import (
     press_enter,
     print_screen_header,
     run_numbered_menu,
 )
+from ui.menus.creation import steps as _creation_steps
+from ui.menus.creation.corrupt_saves import show_corrupt_save_warnings_if_any
 from ui.menus.display import _print_characters_list
-from ui.menus.scenario_flow import run_scenario
+from ui.menus.scenario.flow import run_scenario
 
 SelectCharacterResult = Character | Literal["create"] | None
 

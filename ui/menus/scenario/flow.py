@@ -15,15 +15,15 @@ from core.engine.session_runner import (
 )
 from core.platform.localization import get_string, resolve_localized_text
 from core.types import LanguageCode, StringsDict
-from ui.menus.class_features import apply_pending_class_features
 from ui.menus.console import (
     press_enter,
     print_numbered_row,
     print_screen_header,
     read_numbered_choice,
 )
-from ui.menus.level_up import run_pending_level_ups
-from ui.menus.subclass_trainer import assign_subclass_from_menu
+from ui.menus.progression.class_features import apply_pending_class_features
+from ui.menus.progression.level_up import run_pending_level_ups
+from ui.menus.progression.subclass_trainer import assign_subclass_from_menu
 from ui.terminal_wrap import wrap_text
 
 

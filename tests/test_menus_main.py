@@ -8,8 +8,8 @@ import pytest
 import core.platform.settings as settings_mod
 from core.platform.localization import get_string
 from ui.input_handler import get_int_input, get_str_input
-from ui.menus import main_menu
-from ui.menus import settings as settings_menu
+from ui.menus.hub import main_menu
+from ui.menus.hub import settings as settings_menu
 
 
 @pytest.mark.parametrize(

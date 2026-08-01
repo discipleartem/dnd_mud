@@ -41,10 +41,11 @@ def test_core_and_ui_mapping() -> None:
     assert vt.source_to_tests("core/platform/mod_loader.py") == [
         "tests/test_catalog_loader.py"
     ]
-    assert vt.source_to_tests("ui/menus/class_features.py") == [
-        "tests/test_class_features.py"
+    assert vt.source_to_tests("ui/menus/progression/class_features.py") == [
+        "tests/test_class_features.py",
+        "tests/test_progression.py",
     ]
-    assert vt.source_to_tests("ui/menus/scenario_flow.py") == [
+    assert vt.source_to_tests("ui/menus/scenario/flow.py") == [
         "tests/test_progression.py"
     ]
     assert vt.source_to_tests("ui/menus/stats/stats_flow.py") == [
@@ -53,23 +54,28 @@ def test_core_and_ui_mapping() -> None:
     assert vt.source_to_tests("ui/menus/display/__init__.py") == [
         "tests/test_equipment.py"
     ]
-    assert vt.source_to_tests("ui/menus/characters_menu.py") == [
-        "tests/test_menus_characters_hub.py"
+    assert vt.source_to_tests("ui/menus/hub/characters_menu.py") == [
+        "tests/test_menus_characters_hub.py",
+        "tests/test_menus_main.py",
     ]
-    assert vt.source_to_tests("ui/menus/new_game.py") == [
-        "tests/test_menus_new_game.py"
+    assert vt.source_to_tests("ui/menus/hub/new_game.py") == [
+        "tests/test_menus_new_game.py",
+        "tests/test_menus_main.py",
     ]
-    assert vt.source_to_tests("ui/menus/_creation_handlers.py") == [
+    assert vt.source_to_tests("ui/menus/creation/handlers.py") == [
         "tests/test_menus_creation.py"
     ]
-    assert vt.source_to_tests("ui/menus/skills.py") == [
-        "tests/test_proficiencies.py"
+    assert vt.source_to_tests("ui/menus/creation/skills.py") == [
+        "tests/test_proficiencies.py",
+        "tests/test_menus_creation.py",
     ]
-    assert vt.source_to_tests("ui/menus/backgrounds.py") == [
-        "tests/test_models.py"
+    assert vt.source_to_tests("ui/menus/creation/backgrounds.py") == [
+        "tests/test_models.py",
+        "tests/test_menus_creation.py",
     ]
-    assert vt.source_to_tests("ui/menus/subclass_trainer.py") == [
-        "tests/test_subclasses.py"
+    assert vt.source_to_tests("ui/menus/progression/subclass_trainer.py") == [
+        "tests/test_subclasses.py",
+        "tests/test_progression.py",
     ]
     assert vt.source_to_tests("main.py") == ["tests/test_menus_main.py"]
 

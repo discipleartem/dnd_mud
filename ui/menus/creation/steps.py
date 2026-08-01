@@ -4,10 +4,10 @@ from core.character.models import Character
 from core.platform.localization import get_string
 from core.types import StringsDict
 from ui.input_handler import get_str_input
-from ui.menus._creation_handlers import _STEP_HANDLERS
-from ui.menus._creation_state import CreationStep, _CreationState
 from ui.menus.console import print_screen_header
-from ui.menus.settings import select_difficulty
+from ui.menus.creation.handlers import _STEP_HANDLERS
+from ui.menus.creation.state import CreationStep, _CreationState
+from ui.menus.hub.settings import select_difficulty
 
 
 def show_create_character_flow(

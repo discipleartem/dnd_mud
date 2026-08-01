@@ -4,7 +4,7 @@ import pytest
 
 from core.character.models import Character
 from core.character.storage import LoadCharactersResult
-from ui.menus import characters_menu
+from ui.menus.hub import characters_menu
 
 
 def _patch_load_characters(

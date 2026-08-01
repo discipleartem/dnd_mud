@@ -90,7 +90,7 @@ UI_MENU_TESTS: dict[str, str] = {
     "characters_menu": "tests/test_menus_characters_hub.py",
     "main_menu": "tests/test_menus_main.py",
     "new_game": "tests/test_menus_new_game.py",
-    "scenario_flow": "tests/test_progression.py",
+    "flow": "tests/test_progression.py",
     "settings": "tests/test_menus_main.py",
     "backgrounds": "tests/test_models.py",
     "languages": "tests/test_languages.py",
@@ -102,10 +102,15 @@ UI_MENU_TESTS: dict[str, str] = {
     "class_features": "tests/test_class_features.py",
     "subclass_trainer": "tests/test_subclasses.py",
     "console": "tests/test_menus_main.py",
+    "steps": "tests/test_menus_creation.py",
+    "handlers": "tests/test_menus_creation.py",
 }
 
 UI_PREFIX_TESTS: list[tuple[str, str]] = [
-    ("ui/menus/_creation_", "tests/test_menus_creation.py"),
+    ("ui/menus/creation/", "tests/test_menus_creation.py"),
+    ("ui/menus/hub/", "tests/test_menus_main.py"),
+    ("ui/menus/progression/", "tests/test_progression.py"),
+    ("ui/menus/scenario/", "tests/test_progression.py"),
     ("ui/menus/display/", "tests/test_equipment.py"),
     ("ui/menus/feats/", "tests/test_feats.py"),
     ("ui/menus/stats/", "tests/test_menus_stats.py"),

@@ -25,8 +25,8 @@ from core.progression.xp_levels import (
     xp_for_level,
 )
 from core.types import CharacterClass
-from ui.menus import level_up as level_up_menu
-from ui.menus.scenario_flow import run_scenario
+from ui.menus.progression import level_up as level_up_menu
+from ui.menus.scenario.flow import run_scenario
 
 pytestmark = pytest.mark.usefixtures("catalog_caches_cleared")
 
@@ -202,14 +202,17 @@ def test_run_scenario_grant_xp_levels_character(
     )
     saved: list[Character] = []
     monkeypatch.setattr(
-        "ui.menus.scenario_flow.update_character",
+        "ui.menus.scenario.flow.update_character",
         lambda char: saved.append(char),
     )
     monkeypatch.setattr(
-        "ui.menus.scenario_flow.assign_subclass_from_menu",
+        "ui.menus.scenario.flow.assign_subclass_from_menu",
         lambda *args, **kwargs: None,
     )
-    monkeypatch.setattr("ui.menus.level_up.press_enter", lambda strings: None)
+    monkeypatch.setattr(
+        "ui.menus.progression.level_up.press_enter",
+        lambda strings: None,
+    )
     patch_int_input(monkeypatch, [1, 1])
     result = run_scenario(adventure, character, ru_strings, "ru")
     assert result.level == 3

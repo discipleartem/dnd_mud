@@ -115,13 +115,13 @@ def patch_int_input():
         # Прямые импорты get_int_input — патчим точки использования.
         for target in (
             "ui.menus.console.get_int_input",
-            "ui.menus.new_game.get_int_input",
+            "ui.menus.hub.new_game.get_int_input",
             "ui.menus.stats.stats_methods.get_int_input",
             "ui.menus.stats.stats_shared.get_int_input",
             "ui.menus.stats.stats_choice_bonuses.get_int_input",
-            "ui.menus.settings.get_int_input",
+            "ui.menus.hub.settings.get_int_input",
             "ui.menus.feats._selection.get_int_input",
-            "ui.menus.expertise.get_int_input",
+            "ui.menus.creation.expertise.get_int_input",
         ):
             monkeypatch.setattr(target, fake_get_int_input)
 
@@ -185,7 +185,7 @@ def fighter_l1_hardcore() -> Any:
 @pytest.fixture
 def patch_level_up_ui(monkeypatch: pytest.MonkeyPatch) -> None:
     """Заглушки UI повышения уровня."""
-    from ui.menus import level_up as level_up_menu
+    from ui.menus.progression import level_up as level_up_menu
 
     monkeypatch.setattr(level_up_menu, "press_enter", lambda strings: None)
     monkeypatch.setattr(

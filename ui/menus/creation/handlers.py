@@ -10,24 +10,28 @@ from core.mechanics.stats import ABILITY_SCORE_DEFAULT
 from core.platform.localization import get_string
 from core.progression.class_progression import subclass_offered_at_creation
 from core.types import StringsDict
-from ui.menus._creation_finalize import finalize_creation, merge_feat_languages
-from ui.menus._creation_navigation import (
+from ui.menus.console import print_screen_header, run_numbered_menu
+from ui.menus.creation.backgrounds import select_creation_background
+from ui.menus.creation.equipment import select_creation_equipment
+from ui.menus.creation.expertise import select_creation_expertise
+from ui.menus.creation.finalize import finalize_creation, merge_feat_languages
+from ui.menus.creation.languages import select_creation_languages
+from ui.menus.creation.navigation import (
     back_step_from_equipment,
     back_step_from_feats,
     back_step_from_proficiencies,
     back_step_from_skills,
     step_after_class_choice,
 )
-from ui.menus._creation_state import CreationStep, _CreationState
-from ui.menus._selectors import select_class, select_subclass, select_subrace
-from ui.menus.backgrounds import select_creation_background
-from ui.menus.console import print_screen_header, run_numbered_menu
-from ui.menus.equipment import select_creation_equipment
-from ui.menus.expertise import select_creation_expertise
+from ui.menus.creation.proficiencies import select_creation_proficiencies
+from ui.menus.creation.selectors import (
+    select_class,
+    select_subclass,
+    select_subrace,
+)
+from ui.menus.creation.skills import select_creation_skills
+from ui.menus.creation.state import CreationStep, _CreationState
 from ui.menus.feats import select_creation_feats
-from ui.menus.languages import select_creation_languages
-from ui.menus.proficiencies import select_creation_proficiencies
-from ui.menus.skills import select_creation_skills
 from ui.menus.stats.stats_flow import show_stats_generation_flow
 
 

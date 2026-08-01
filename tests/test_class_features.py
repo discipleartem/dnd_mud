@@ -11,7 +11,7 @@ from core.progression.class_progression import (
     needs_class_feature_picks,
 )
 from core.types import CharacterClass
-from ui.menus.class_features import apply_pending_class_features
+from ui.menus.progression.class_features import apply_pending_class_features
 
 
 def test_bard_class_features_by_level() -> None:
@@ -57,10 +57,10 @@ def test_apply_pending_class_features_champion_marks_applied(
         difficulty="normal",
     )
     monkeypatch.setattr(
-        "ui.menus.class_features.update_character", lambda c: c
+        "ui.menus.progression.class_features.update_character", lambda c: c
     )
     monkeypatch.setattr(
-        "ui.menus.class_features.print_success_and_wait",
+        "ui.menus.progression.class_features.print_success_and_wait",
         lambda *args, **kwargs: None,
     )
     result = apply_pending_class_features(ru_strings, char, "ru")

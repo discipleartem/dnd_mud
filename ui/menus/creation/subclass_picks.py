@@ -8,9 +8,9 @@ from core.mechanics.proficiencies import (
 )
 from core.progression.class_progression import subclass_skill_picks_pending
 from core.types import LanguageCode, StringsDict
-from ui.menus.expertise import apply_pending_expertise
-from ui.menus.proficiencies import _pick_tools
-from ui.menus.skills import add_subclass_skills_from_menu
+from ui.menus.creation.expertise import apply_pending_expertise
+from ui.menus.creation.proficiencies import _pick_tools
+from ui.menus.creation.skills import add_subclass_skills_from_menu
 
 
 def apply_subclass_picks(

@@ -23,7 +23,7 @@ from core.mechanics.stats import (
 )
 from core.types import CharacterBuildParams, CharacterClass
 from tests.creation_helpers import fighter_acolyte_creation
-from ui.menus._creation_state import _CreationState
+from ui.menus.creation.state import _CreationState
 
 
 @pytest.mark.parametrize(

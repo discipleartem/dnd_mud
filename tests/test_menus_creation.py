@@ -5,22 +5,22 @@ from typing import Any
 
 import pytest
 
-import ui.menus._creation_handlers as creation_handlers
+import ui.menus.creation.handlers as creation_handlers
 from core.types import CharacterClass
 from tests.creation_helpers import flat_stats
-from ui.menus import _creation_steps
-from ui.menus._creation_handlers import (
+from ui.menus.creation import steps as _creation_steps
+from ui.menus.creation.handlers import (
     _handle_equipment,
     _handle_feats,
     _handle_skills,
 )
-from ui.menus._creation_navigation import (
+from ui.menus.creation.navigation import (
     back_step_from_feats,
     feats_step_required,
     step_after_class_choice,
 )
-from ui.menus._creation_state import _CreationState
-from ui.menus._selectors import select_subrace
+from ui.menus.creation.selectors import select_subrace
+from ui.menus.creation.state import _CreationState
 
 
 def test_select_subrace_half_orc_shows_menu_with_back(
@@ -64,7 +64,7 @@ def test_select_subrace_human_menu(
 ):
     """Выбор подрасы человека — меню standard/variant."""
     monkeypatch.setattr(
-        "ui.menus._selectors.load_race_full",
+        "ui.menus.creation.selectors.load_race_full",
         lambda _race_id, language="ru": human_race_with_subraces,
     )
     patch_int_input(monkeypatch, [1])
