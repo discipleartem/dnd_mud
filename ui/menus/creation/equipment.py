@@ -6,11 +6,13 @@ from typing import Any
 from colorama import Fore, Style
 
 from core.catalogs.equipment import (
+    get_tool_name,
+    get_weapon_name,
+)
+from core.inventory.equipment_text import (
     format_item_list_hint,
     format_versatile_catalog_hint,
     format_weapon_list_damage,
-    get_tool_name,
-    get_weapon_name,
     weapon_property_hint,
 )
 from core.inventory.starting_equipment import (

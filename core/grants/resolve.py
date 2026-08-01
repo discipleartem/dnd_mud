@@ -9,7 +9,6 @@ from core.mechanics.proficiency_collect import (
     get_class_saving_throws,
     get_racial_proficiency_tokens,
     get_subclass_proficiency_tokens,
-    merge_proficiency_tokens,
 )
 from core.platform.io import merge_unique
 
@@ -49,15 +48,15 @@ def resolve_creation_grants(
     bg_tools: list[str] = []
     if background_id:
         bg_tools, _ = get_background_tool_proficiencies(background_id)
-    weapons = merge_proficiency_tokens(cw, rw, sw)
-    armors = merge_proficiency_tokens(ca, ra, sa)
-    tools = merge_proficiency_tokens(ct, rt, st, bg_tools)
+    weapons = merge_unique(cw, rw, sw)
+    armors = merge_unique(ca, ra, sa)
+    tools = merge_unique(ct, rt, st, bg_tools)
     if extra_weapon_tokens:
-        weapons = merge_proficiency_tokens(weapons, extra_weapon_tokens)
+        weapons = merge_unique(weapons, extra_weapon_tokens)
     if extra_armor_tokens:
-        armors = merge_proficiency_tokens(armors, extra_armor_tokens)
+        armors = merge_unique(armors, extra_armor_tokens)
     if extra_tool_tokens:
-        tools = merge_proficiency_tokens(tools, extra_tool_tokens)
+        tools = merge_unique(tools, extra_tool_tokens)
 
     languages = list(extra_languages) if extra_languages else []
     save_ids = list(get_class_saving_throws(class_id))

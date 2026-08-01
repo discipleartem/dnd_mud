@@ -14,7 +14,6 @@ from core.grants.resolve import (
     resolve_creation_grants,
     resolve_grants_for_context,
 )
-from core.mechanics.proficiency_collect import merge_proficiency_tokens
 from core.platform.io import merge_unique
 
 __all__ = [
@@ -76,15 +75,9 @@ def merge_feat_extras_into_grants(
         if save_id not in save_ids:
             save_ids.append(save_id)
     return ResolvedGrants(
-        weapon_tokens=tuple(
-            merge_proficiency_tokens(list(base.weapon_tokens), fw)
-        ),
-        armor_tokens=tuple(
-            merge_proficiency_tokens(list(base.armor_tokens), fa)
-        ),
-        tool_tokens=tuple(
-            merge_proficiency_tokens(list(base.tool_tokens), ft)
-        ),
+        weapon_tokens=tuple(merge_unique(list(base.weapon_tokens), fw)),
+        armor_tokens=tuple(merge_unique(list(base.armor_tokens), fa)),
+        tool_tokens=tuple(merge_unique(list(base.tool_tokens), ft)),
         skill_ids=tuple(merge_unique(list(base.skill_ids), feat_skills)),
         language_ids=tuple(languages),
         save_ids=tuple(save_ids),

@@ -5,6 +5,7 @@ from typing import Any
 
 from colorama import Fore, Style
 
+from core.grants.labels import ability_name, skill_name
 from core.platform.localization import get_string
 from core.types import StringsDict
 from ui.input_handler import get_int_input, safe_input
@@ -12,15 +13,12 @@ from ui.input_handler import get_int_input, safe_input
 SCREEN_WIDTH = 78
 SEPARATOR = f"{Fore.YELLOW}{'=' * SCREEN_WIDTH}{Style.RESET_ALL}"
 
-
-def ability_name(strings: StringsDict, stat_key: str) -> str:
-    """Локализованное имя характеристики."""
-    return get_string(strings, f"stats.{stat_key}")
-
-
-def skill_name(strings: StringsDict, skill_key: str) -> str:
-    """Локализованное имя навыка."""
-    return get_string(strings, f"skills.{skill_key}")
+__all__ = [
+    "SCREEN_WIDTH",
+    "SEPARATOR",
+    "ability_name",
+    "skill_name",
+]
 
 
 def press_enter(strings: StringsDict) -> None:

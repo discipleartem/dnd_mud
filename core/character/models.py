@@ -14,6 +14,7 @@ from core.types import (
     GameDifficulty,
     InventoryItem,
     StatMap,
+    parse_game_difficulty,
 )
 
 
@@ -24,15 +25,6 @@ def parse_character_class(raw: object) -> CharacterClass:
     if raw is None or raw == "":
         raise ValueError("class_id is required")
     return CharacterClass(str(raw))
-
-
-def _parse_difficulty(raw: object) -> GameDifficulty:
-    """Режим сложности из JSON."""
-    if raw == "hardcore":
-        return "hardcore"
-    if raw == "easy":
-        return "easy"
-    return "normal"
 
 
 def _json_list[T](
@@ -199,7 +191,7 @@ class Character:
             current_hp=current_hp,
             max_hp=max_hp,
             experience=int(data.get("experience", 0)),
-            difficulty=_parse_difficulty(data.get("difficulty", "normal")),
+            difficulty=parse_game_difficulty(data.get("difficulty", "normal")),
             subrace=str(subrace) if subrace is not None else None,
             subclass_id=(
                 str(subclass_raw) if subclass_raw is not None else None
