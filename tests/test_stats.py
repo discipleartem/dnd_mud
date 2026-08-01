@@ -10,7 +10,7 @@ from core.constants import (
     difficulty_class,
     proficiency_bonus,
 )
-from core.difficulty import (
+from core.engine.difficulty import (
     adventure_allows_difficulty,
     adventure_requires_hardcore,
     adventure_unavailable_reason,

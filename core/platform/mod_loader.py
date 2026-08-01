@@ -13,18 +13,19 @@ logger = logging.getLogger(__name__)
 MODS_DIR = Path("mods")
 MODS_STATE_FILE = Path("database/core/mods_state.json")
 
-_mod_gating_difficulty: GameDifficulty | None = None
-
 
 def set_mod_gating_difficulty(difficulty: GameDifficulty | None) -> None:
     """Режим для фильтрации модов с ``requires_game_difficulty``."""
-    global _mod_gating_difficulty
-    _mod_gating_difficulty = difficulty
+    from core.platform.catalog_session import get_catalog_session
+
+    get_catalog_session().set_difficulty(difficulty)
 
 
 def get_mod_gating_difficulty() -> GameDifficulty | None:
     """Текущий режим gating модов (None — без фильтра по сложности)."""
-    return _mod_gating_difficulty
+    from core.platform.catalog_session import get_catalog_session
+
+    return get_catalog_session().difficulty
 
 
 def _mod_allowed_for_difficulty(
@@ -174,7 +175,7 @@ def _enabled_mod_ids(
     difficulty = (
         game_difficulty
         if game_difficulty is not None
-        else _mod_gating_difficulty
+        else get_mod_gating_difficulty()
     )
     result: list[str] = []
     for mod_id in enabled:

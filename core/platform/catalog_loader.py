@@ -4,15 +4,12 @@ from collections.abc import Callable
 from pathlib import Path
 from typing import Any
 
-from core.platform.localization import (
-    clear_strings_cache,
-    resolve_localized_text,
-)
+from core.platform.catalog_session import get_catalog_session
+from core.platform.localization import resolve_localized_text
 from core.platform.mod_loader import (
     clear_mod_loader_cache,
     get_mod_gating_difficulty,
     load_merged_catalog,
-    set_mod_gating_difficulty,
 )
 from core.types import GameDifficulty
 
@@ -33,25 +30,22 @@ def clear_catalog_cache() -> None:
 
 def clear_all_catalog_caches() -> None:
     """Сбросить все кэши загрузчиков каталогов и строк (для тестов)."""
-    clear_catalog_cache()
-    clear_strings_cache()
+    get_catalog_session().clear_caches()
 
 
 def reload_catalogs() -> None:
     """Перезагрузить каталоги и строки без рестарта интерпретатора."""
-    clear_all_catalog_caches()
+    get_catalog_session().clear_caches()
 
 
 def bootstrap_session_catalogs(difficulty: GameDifficulty) -> None:
     """Синхронизировать mod overlay перед сессией приключения."""
-    set_mod_gating_difficulty(difficulty)
-    reload_catalogs()
+    get_catalog_session().bootstrap(difficulty)
 
 
 def reset_session_catalogs() -> None:
     """Вернуть mod gating к normal после сессии приключения."""
-    set_mod_gating_difficulty("normal")
-    reload_catalogs()
+    get_catalog_session().reset()
 
 
 def load_catalog_items(

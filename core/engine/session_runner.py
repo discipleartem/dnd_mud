@@ -1,11 +1,11 @@
-"""Application helpers для сессии приключения (без UI I/O)."""
+"""Helpers сессии приключения без UI I/O (storage I/O допустим)."""
 
 from collections.abc import Callable
 
 from core.character.models import Adventure, Character
 from core.character.storage import update_character
-from core.game_engine import GameEngine, UiAction
-from core.session_storage import SessionSnapshot, save_session
+from core.engine.game_engine import GameEngine, UiAction
+from core.engine.session_storage import SessionSnapshot, save_session
 
 
 def resolve_menu_character(

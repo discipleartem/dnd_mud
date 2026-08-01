@@ -7,13 +7,13 @@ from colorama import Fore, Style
 
 from core.character.models import Adventure, Character
 from core.character.storage import update_character
-from core.game_engine import GameEngine, GameSession, UiAction
-from core.platform.localization import get_string, resolve_localized_text
-from core.session_runner import (
+from core.engine.game_engine import GameEngine, GameSession, UiAction
+from core.engine.session_runner import (
     apply_pending_ui_actions,
     persist_adventure_session,
     resolve_menu_character,
 )
+from core.platform.localization import get_string, resolve_localized_text
 from core.types import LanguageCode, StringsDict
 from ui.menus.class_features import apply_pending_class_features
 from ui.menus.console import (

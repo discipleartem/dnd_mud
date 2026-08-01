@@ -21,7 +21,7 @@ def test_skill_check_and_passive() -> None:
 
 
 def test_skill_check_scenario_action_returns_message() -> None:
-    from core.scenario_actions import apply_scenario_action
+    from core.engine.scenario_actions import apply_scenario_action
 
     character = Character(
         name="Hero",

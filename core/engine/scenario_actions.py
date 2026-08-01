@@ -98,7 +98,7 @@ def apply_scenario_action(
         return ScenarioActionResult(character=character, message_key=key)
 
     if action in ("skill_check", "ability_check"):
-        from core.engine_rules import check_roll_flags
+        from core.engine.engine_rules import check_roll_flags
         from core.mechanics.checks import ability_check, skill_check
 
         is_skill = action == "skill_check"

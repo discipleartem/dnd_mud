@@ -4,12 +4,12 @@ from dataclasses import dataclass, field
 from typing import Any, Literal
 
 from core.character.models import Adventure, Character
-from core.scenario_actions import (
+from core.engine.scenario_actions import (
     ScenarioActionResult,
     apply_scenario_action,
     load_scenario,
 )
-from core.scenario_rooms import node_exits, resolve_exit
+from core.engine.scenario_rooms import node_exits, resolve_exit
 from core.types import GameDifficulty
 
 UiActionKind = Literal[

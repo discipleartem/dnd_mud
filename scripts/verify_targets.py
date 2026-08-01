@@ -33,10 +33,6 @@ CORE_MODULE_TESTS: dict[str, list[str]] = {
     "core/feats/text.py": ["tests/test_feats.py"],
     "core/feats/requirements.py": ["tests/test_feats.py"],
     "core/character/storage.py": ["tests/test_character.py"],
-    "core/scenario_actions.py": [
-        "tests/test_models.py",
-        "tests/test_class_features.py",
-    ],
     "core/grants/normalize.py": ["tests/test_grants.py"],
     "core/catalogs/classes.py": [
         "tests/test_subclasses.py",
@@ -56,13 +52,20 @@ CORE_MODULE_TESTS: dict[str, list[str]] = {
     "core/mechanics/proficiencies.py": ["tests/test_proficiencies.py"],
     "core/mechanics/dice.py": ["tests/test_stats.py"],
     "core/constants.py": ["tests/test_stats.py"],
-    "core/difficulty.py": ["tests/test_stats.py"],
+    "core/engine/difficulty.py": ["tests/test_stats.py"],
     "core/catalogs/races.py": ["tests/test_grants.py"],
     "core/catalogs/adventure.py": ["tests/test_models.py"],
     "core/catalogs/backgrounds.py": ["tests/test_models.py"],
     "core/platform/mod_loader.py": ["tests/test_catalog_loader.py"],
+    "core/platform/catalog_session.py": ["tests/test_catalog_loader.py"],
     "core/catalogs/skills.py": ["tests/test_proficiencies.py"],
     "core/platform/settings.py": ["tests/test_menus_main.py"],
+    "core/engine/scenario_actions.py": [
+        "tests/test_models.py",
+        "tests/test_class_features.py",
+    ],
+    "core/engine/game_engine.py": ["tests/test_game_engine.py"],
+    "core/engine/combat/rolls.py": ["tests/test_phase2_engine.py"],
 }
 
 CORE_PACKAGE_PREFIX_TESTS: list[tuple[str, list[str]]] = [
@@ -74,6 +77,7 @@ CORE_PACKAGE_PREFIX_TESTS: list[tuple[str, list[str]]] = [
     ("core/catalogs/", ["tests/test_catalog_loader.py"]),
     ("core/platform/", ["tests/test_catalog_loader.py"]),
     ("core/mechanics/", ["tests/test_stats.py"]),
+    ("core/engine/", ["tests/test_game_engine.py"]),
 ]
 
 DATA_PATH_TESTS = [

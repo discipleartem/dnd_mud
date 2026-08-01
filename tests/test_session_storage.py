@@ -5,8 +5,8 @@ from pathlib import Path
 import pytest
 
 from core.character.models import Adventure, Character
-from core.game_engine import GameEngine, GameSession
-from core.session_storage import (
+from core.engine.game_engine import GameEngine, GameSession
+from core.engine.session_storage import (
     SessionSnapshot,
     delete_session,
     list_sessions,
@@ -21,7 +21,7 @@ from core.types import CharacterClass
 def sessions_dir(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
     """Изолированный каталог saves/sessions."""
     path = tmp_path / "sessions"
-    monkeypatch.setattr("core.session_storage.SESSIONS_DIR", path)
+    monkeypatch.setattr("core.engine.session_storage.SESSIONS_DIR", path)
     return path
 
 

@@ -10,11 +10,13 @@ import scripts.verify_targets as vt
 
 
 def test_core_and_ui_mapping() -> None:
-    assert vt.source_to_tests("core/difficulty.py") == ["tests/test_stats.py"]
+    assert vt.source_to_tests("core/engine/difficulty.py") == [
+        "tests/test_stats.py"
+    ]
     assert vt.source_to_tests("core/feats/catalog.py") == [
         "tests/test_feats.py"
     ]
-    assert vt.source_to_tests("core/scenario_actions.py") == [
+    assert vt.source_to_tests("core/engine/scenario_actions.py") == [
         "tests/test_models.py",
         "tests/test_class_features.py",
     ]
@@ -90,7 +92,7 @@ def test_resolve_test_paths_yaml_only() -> None:
 
 def test_resolve_test_paths_mixed_mapped_and_unmapped() -> None:
     tests, full = vt.resolve_test_paths(
-        ["core/difficulty.py", "tools/unknown_helper.py"]
+        ["core/engine/difficulty.py", "tools/unknown_helper.py"]
     )
     assert full is True
     assert tests == []
@@ -102,7 +104,7 @@ def test_cmd_resolve_tests_staged(
     monkeypatch.setattr(
         vt,
         "_git_changed_paths",
-        lambda mode, base: ["core/difficulty.py"],
+        lambda mode, base: ["core/engine/difficulty.py"],
     )
     args = Namespace(mode="staged", base="origin/dev")
     assert vt.cmd_resolve_tests(args) == 0

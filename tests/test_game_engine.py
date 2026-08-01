@@ -1,7 +1,7 @@
 """Тесты game engine."""
 
 from core.character.models import Adventure, Character
-from core.game_engine import GameEngine, GameSession
+from core.engine.game_engine import GameEngine, GameSession
 from core.types import CharacterClass
 
 

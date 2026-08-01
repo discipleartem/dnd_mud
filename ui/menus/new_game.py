@@ -7,11 +7,8 @@ from colorama import Fore, Style
 from core.catalogs.adventure import load_adventures
 from core.character.models import Adventure, Character
 from core.character.storage import load_characters
-from core.difficulty import adventure_unavailable_reason
-from core.platform.catalog_loader import (
-    bootstrap_session_catalogs,
-    reset_session_catalogs,
-)
+from core.engine.difficulty import adventure_unavailable_reason
+from core.platform.catalog_session import get_catalog_session
 from core.platform.localization import get_string
 from core.types import RuntimeSettings, StringsDict
 from ui.input_handler import get_int_input
@@ -195,7 +192,7 @@ def show_new_game_flow(
         if character is None:
             return
 
-        bootstrap_session_catalogs(character.difficulty)
+        get_catalog_session().bootstrap(character.difficulty)
         try:
             while True:
                 adventure = _select_adventure(strings, language, character)
@@ -207,4 +204,4 @@ def show_new_game_flow(
                 )
                 return
         finally:
-            reset_session_catalogs()
+            get_catalog_session().reset()

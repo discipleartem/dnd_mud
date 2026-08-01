@@ -1,11 +1,11 @@
 """Тесты Phase 2: комнаты, бой, проверки по сложности."""
 
 from core.character.models import Character
-from core.combat import attack_roll, roll_initiative
-from core.engine_rules import check_roll_flags
-from core.game_engine import GameEngine, GameSession
-from core.scenario_actions import apply_scenario_action
-from core.scenario_rooms import node_exits, resolve_exit
+from core.engine.combat.rolls import attack_roll, roll_initiative
+from core.engine.engine_rules import check_roll_flags
+from core.engine.game_engine import GameEngine, GameSession
+from core.engine.scenario_actions import apply_scenario_action
+from core.engine.scenario_rooms import node_exits, resolve_exit
 from core.types import CharacterClass
 
 

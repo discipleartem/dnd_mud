@@ -5,11 +5,11 @@ from typing import Any
 import pytest
 
 from core.character.models import Character
+from core.engine.scenario_actions import apply_scenario_action
 from core.progression.class_progression import (
     class_features_applied_at_creation,
     needs_class_feature_picks,
 )
-from core.scenario_actions import apply_scenario_action
 from core.types import CharacterClass
 from ui.menus.class_features import apply_pending_class_features
 
