@@ -1,0 +1,196 @@
+---
+id: ru-en
+type: glossary
+phb_chapter: 0
+phb_pages: [317, 320]
+quick: "Словарь PHB RU→EN"
+aliases: [ru-en, Русско-английский словарь]
+---
+
+# Русско-английский словарь
+
+> Источник: PHB 2014. Термины из словаря книги.
+
+- **Бессознательный** — Unconscious
+- **Испуганный** — Frightened
+- **Сбитый с ног / Лежащий** — Prone
+- **ничком                                            Внимательность** — Perception
+- **Невидимый** — Invisible
+- **Недееспособный** — Incapacitated
+- **Оглохший** — Deafened
+- **Окаменевший** — Petrified
+- **Опутанный** — Restrained
+- **Ослеплённый** — Blinded
+- **Отравленный** — Poisoned
+- **Очарованный** — Charmed
+- **Ошеломлённый** — Stunned
+- **Парализованный** — Paralyzed
+- **Схваченный** — Grappled
+- **Скрытность** — Stealth
+- **ЧЕРТЫ / FEATS                                      Убеждение** — Persuasion
+- **Артистичный** — Actor
+- **Атлетичный** — Athlete
+- **Бдительный** — Alert
+- **Боевой заклинатель** — War Caster
+- **Борец** — Grappler
+- **Везунчик** — Lucky
+- **Верховой боец** — Mounted Combatant
+- **Внимательный** — Observant
+- **Воинский адепт** — Martial Adept
+- **Воодушевляющий лидер** — Inspiring Leader
+- **Двойное оружие** — Dual Wielder
+- **Дикий атакующий** — Savage Attacker
+- **Драчун** — Tavern Brawler
+- **Знаток лёгких доспехов** — Lightly Armored
+- **Знаток средних доспехов** — Moderately Armored
+- **Знаток тяжёлых доспехов** — Heavily Armored
+- **Исследователь подземелий** — Dungeon Delver
+- **Крепкий** — Tough
+- **Лекарь** — Healer
+- **Мастер большого оружия** — Great Weapon Master
+- **Мастер древкового оружия** — Polearm Master
+- **Мастер оружия** — Weapon Master
+- **Мастер средних доспехов** — Medium Armor Master
+- **Мастер тяжёлых доспехов** — Heavy Armor Master
+- **Мастер щитов** — Shield Master
+- **Меткие заклинания** — Spell Sniper
+- **Меткий стрелок** — Sharpshooter
+- **Налётчик** — Charger
+- **Оборонительный дуэлянт** — Defensive Duelist
+- **Одарённый** — Skilled
+- **Отличная память** — Keen Mind
+- **Подвижный** — Mobile
+- **Посвящённый в магию** — Magic Initiate
+- **Проныра** — Skulker
+- **Ритуальный заклинатель** — Ritual Caster
+- **Стихийный адепт** — Elemental Adept
+- **Стойкий** — Durable
+- **Страж** — Sentinel
+- **Убийца магов** — Mage Slayer
+- **Устойчивый** — Resilient
+- **Эксперт в арбалетах** — Crossbow Expert
+- **Языковед** — Linguist
+- **Адское возмездие** — Hellish rebuke
+- **Антипатия/симпатия** — Antipathy/sympathy
+- **Аура живучести** — Aura of vitality
+- **Аура жизни** — Aura of life
+- **Аура очищения** — Aura of purity
+- **Аура святости** — Holy aura
+- **Безмолвный образ** — Silent image
+- **Бесследное передвижение** — Pass without trace
+- **Благословение** — Bless
+- **Божественное** — Divine favor
+- **благоволение                                           Животные чувства** — Beast sense
+- **Божественное оружие** — Spiritual weapon
+- **Божественное слово** — Divine word
+- **Брызги кислоты** — Acid splash
+- **Быстрый колчан** — Swift quiver
+- **Ведьмин снаряд** — Witch bolt
+- **Великолепный особняк** — Mordenkainen’s magnificent
+- **Морденкайнена** — mansion
+- **Верный пёс** — Mordenkainen’s faithful
+- **Морденкайнена** — hound
+- **Вечный огонь** — Continual flame
+- **Вещий сон** — Dream
+- **Видение невидимого** — See invisibility
+- **Власть над водами** — Control water
+- **Власть над погодой** — Control weather
+- **Внушение** — Suggestion
+- **Возрождение** — Revivify
+- **Волна грома** — Thunderwave
+- **Волшебная рука** — Mage hand
+- **Волшебная стрела** — Magic missile
+- **Волшебные уста** — Magic mouth
+- **Волшебный замок** — Arcane lock
+- **Волшебный сосуд** — Magic jar
+- **Воображаемая сила** — Phantasmal force
+- **Воображаемый убийца** — Phantasmal killer
+- **Воскрешение** — Resurrection
+- **Воспламеняющаяся туча** — Incendiary cloud
+- **Восставший труп** — Animate dead
+- **Врата** — Gate
+- **Вызов на дуэль** — Compelled duel
+- **Высшая невидимость** — Greater invisibility
+- **Высшее восстановление** — Greater restoration
+- **Гадание** — Augury
+- **Газообразная форма** — Gaseous form
+- **Героизм** — Heroism
+- **Гигантское насекомое** — Giant insect
+- **Гипнотический узор** — Hypnotic pattern
+- **Глухота/слепота** — Blindness/deafness
+- **Гневная кара** — Wrathful smite
+- **Голод Хадара** — Hunger of Hadar
+- **Горящий клинок** — Flame blade
+- **Град** — Ice storm
+- **Град шипов** — Hail of thorns
+- **Гроза гнева** — Storm of vengeance
+- **Громовая кара** — Thunderous smite
+- **Движение почвы** — Move earth
+- **Двойник** — Clone
+- **Демиплан** — Demiplane
+- **Диссонирующий шёпот** — Dissonant whisper
+- **Длань Бигби** — Bigby’s hand
+- **Дневной свет** — Daylight
+- **Лечение ран** — Cure wounds
+- **Лунный луч** — Moonbeam
+- **Луч болезни** — Ray of sickness
+- **Луч слабости** — Ray of enfeeblement
+- **Луч холода** — Ray of frost
+- **Магические врата** — Arcane gate
+- **Магический глаз** — Arcane eye
+- **Магический круг** — Magic circle
+- **Магическое оружие** — Magic weapon
+- **Малая иллюзия** — Minor illusion
+- **Малое восстановление** — Lesser restoration
+- **Мантия крестоносца** — Crusader's mantle
+- **Маскировка** — Disguise self
+- **Маяк надежды** — Beacon of hope
+- **Мельфова кислотная стрела Melf's acid arrow         Открывание** — Knock
+- **Ментальная связь Рэри** — Rary’s telepathic bond
+- **Мерцание** — Blink
+- **Метель** — Sleet storm
+- **Метеоритный дождь** — Meteor swarm
+- **Метка охотника** — Hunter's mark
+- **Меткий удар** — True strike
+- **Меч Морденкайнена** — Mordenkainen’s sword
+- **Мираж** — Hallucinatory terrain
+- **Мистический заряд** — Eldritch blast
+- **Множественное внушение Mass suggestion              Паутина** — Web
+- **Множественное лечащее Mass healing word             Переносящая дверь** — Dimension door
+- **слово                                               Перст смерти** — Finger of death
+- **Множественное лечение** — Mass cure wounds
+- **ран                                                 Планарные узы** — Planar binding
+- **Множественное полное** — Mass heal
+- **исцеление                                           Пляшущая молния** — Chain lightning
+- **Молебен лечения** — Prayer of healing
+- **Молниевая стрела** — Lightning arrow
+- **Молния** — Lightning bolt
+- **Наблюдение** — Scrying
+- **Нанесение ран** — Inflict wounds
+- **Направленный снаряд** — Guiding bolt
+- **Находчивость** — Glibness
+- **Нашествие насекомых** — Insect plague
+- **Небесный огонь** — Flame strike
+- **Невидимое письмо** — Illusory script
+- **Невидимость** — Invisibility
+- **Невидимый слуга** — Unseen servant
+- **Необнаружимость** — Nondetection
+- **Нетленные останки** — Gentle repose
+- **Нистулова ложная аура** — Nystul’s magic aura
+- **Обет** — Geas
+- **Облако кинжалов** — Cloud of daggers
+- **Облако смерти** — Cloudkill
+- **Область истины** — Zone of truth
+- **Обнаружение болезней и Detect poison and disease    Поражение** — Harm
+- **яда                                                 Порча** — Bane
+- **Обнаружение добра и зла Detect evil and good        Порыв ветра** — Gust of wind
+- **Обнаружение магии** — Detect magic
+- **Обнаружение мыслей** — Detect thoughts
+- **Образ** — Major image
+- **Общение** — Commune
+- **Общение с природой** — Commune with nature
+- **Оглушающая кара** — Staggering smite
+- **Огненная буря** — Fire storm
+- **Огненная стена** — Wall of fire
+- **Огненные ладони** — Burning hands
+- **Огненный снаряд** — Fire bolt

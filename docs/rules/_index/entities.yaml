@@ -96,6 +96,12 @@ entries:
   pages:
   - 207
   - 289
+- id: appendices
+  type: chapter
+  file: chapters/appendices.md
+  pages:
+  - 290
+  - 326
 - id: acolyte
   type: background
   file: entities/backgrounds/acolyte.md
@@ -552,3 +558,45 @@ entries:
   pages:
   - 42
   - 43
+- id: A-conditions
+  type: appendix
+  file: reference/appendices/A-conditions.md
+  pages:
+  - 290
+  - 292
+- id: B-gods
+  type: appendix
+  file: reference/appendices/B-gods.md
+  pages:
+  - 293
+  - 299
+- id: C-planes
+  type: appendix
+  file: reference/appendices/C-planes.md
+  pages:
+  - 300
+  - 303
+- id: D-creatures
+  type: appendix
+  file: reference/appendices/D-creatures.md
+  pages:
+  - 304
+  - 311
+- id: E-literature
+  type: appendix
+  file: reference/appendices/E-literature.md
+  pages:
+  - 312
+  - 312
+- id: en-ru
+  type: glossary
+  file: reference/glossaries/en-ru.md
+  pages:
+  - 313
+  - 316
+- id: ru-en
+  type: glossary
+  file: reference/glossaries/ru-en.md
+  pages:
+  - 317
+  - 320
