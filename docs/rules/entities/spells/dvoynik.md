@@ -34,7 +34,7 @@ type: spell
 ## Эффект
 
 <!-- phb:auto:effect -->
-_См. PHB PDF._
+_См. PHB._
 <!-- /phb:auto:effect -->
 
 ## Реализация в MUD

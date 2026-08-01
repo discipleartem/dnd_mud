@@ -8,13 +8,9 @@
 
 | Параметр | Значение |
 |----------|----------|
-| Канон | Player's Handbook 2014 (рус. перевод PHantom, файл `docs/PHB_ D&D_2023 RUS.pdf`) |
-| Локальный файл | `docs/PHB_ D&D_2023 RUS.pdf` (331 стр.) |
-| В репозитории | PDF **не коммитится** (см. `.gitignore`) |
+| Канон | Player's Handbook **2014** (рус. перевод PHantom, 2016); не редакция 2024 |
 | Машиночитаемый индекс | [`rules/_index/lookup.yaml`](rules/_index/lookup.yaml) (layout `agent-v2`) — единая точка входа; также [`rules/toc.yaml`](rules/toc.yaml), [`rules/_index/entities.yaml`](rules/_index/entities.yaml), [`rules/_index/spells.yaml`](rules/_index/spells.yaml) |
 | Терминология RU↔EN | [`rules/reference/glossaries/ru-en.md`](rules/reference/glossaries/ru-en.md), [`rules/reference/glossaries/en-ru.md`](rules/reference/glossaries/en-ru.md) |
-
-Имя файла PDF «2023» — локальное обозначение копии; это **не** отдельная редакция правил 2024.
 
 ### Алгоритм поиска правил
 
@@ -23,16 +19,15 @@
 | Шаг | Источник | Действие |
 |-----|----------|----------|
 | 1 | [`docs/rules/`](rules/) | [`lookup.yaml`](rules/_index/lookup.yaml) (`by_alias` / `by_id` → `quick`, `file`); для PHB — `phb:auto` в markdown |
-| 2 | `docs/PHB_ D&D_2023 RUS.pdf` | Локальный PHB (процедура доступа — [`.cursor/rules/00-project.mdc`](../.cursor/rules/00-project.mdc)) |
-| 3 | Интернет | D&D **5e до редакции 2024** (PHB 2014 / SRD 5.1) |
+| 2 | Интернет | D&D **5e до редакции 2024** (PHB 2014 / SRD 5.1) |
 
-**При расхождении:** PDF > пересказ в `docs/rules/` > веб. Код и YAML отражают реализацию в MUD.
+**При расхождении:** официальные правила 5e до 2024 > пересказ в `docs/rules/`. Код и YAML отражают реализацию в MUD.
 
 ### Политика каталога ядра
 
-В `database/races/races.yaml` и `database/classes/classes.yaml` допускаются **только** официальные расы/подрасы и классы/подклассы из этого PHB. Расширения — моды `type: addon`.
+В `database/races/races.yaml` и `database/classes/classes.yaml` допускаются **только** официальные расы/подрасы и классы/подклассы из PHB 2014. Расширения — моды `type: addon`.
 
-Текст в `docs/rules/` — **пересказ механики** PHB (без лора и флавора), не дословная копия. Актуализация из PDF — **агентами** (см. [`rules/README.md`](rules/README.md)); после правок — `scripts/build_rules_index.py` для индексов. Правила PHB в `phb:auto`, MUD — в `mud:*`. Материалы D&D © Wizards of the Coast; лицензия MIT репозитория на них не распространяется.
+Текст в `docs/rules/` — **пересказ механики** PHB (без лора и флавора), не дословная копия. После правок справочника — `scripts/build_rules_index.py` для индексов. Правила PHB в `phb:auto`, MUD — в `mud:*`. Материалы D&D © Wizards of the Coast; лицензия MIT репозитория на них не распространяется.
 
 ## Аудитория
 

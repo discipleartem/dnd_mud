@@ -1,6 +1,6 @@
 # Схема YAML-справочников dnd_mud
 
-Канон формата данных в `database/`. Источник правил — PHB (`docs/PHB_ D&D_2023 RUS.pdf`, локально). Принципы: **DRY → KISS → YAGNI**.
+Канон формата данных в `database/`. Источник правил — PHB **2014**. Принципы: **DRY → KISS → YAGNI**.
 
 См. также: [`ARCHITECTURE.md`](ARCHITECTURE.md) § Data Layer, [`DEVELOPMENT.md`](DEVELOPMENT.md) § Создание мода.
 
@@ -266,8 +266,8 @@ races:
 
 | ID | Задача | Триггер | Целевые файлы |
 |----|--------|---------|---------------|
-| `phb-races` | Все 9 рас и подрасы PHB в YAML | Задача наполнения из PDF гл. 2 | `database/races/races.yaml` |
-| `phb-classes` | Все 12 классов и подклассы PHB | Задача наполнения из PDF гл. 3 | `database/classes/classes.yaml` |
+| `phb-races` | Все 9 рас и подрасы PHB в YAML | Задача наполнения по PHB гл. 2 | `database/races/races.yaml` |
+| `phb-classes` | Все 12 классов и подклассы PHB | Задача наполнения по PHB гл. 3 | `database/classes/classes.yaml` |
 
 ### Локализация
 

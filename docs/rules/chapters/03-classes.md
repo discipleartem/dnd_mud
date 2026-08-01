@@ -50,7 +50,7 @@ type: chapter
 <!-- mud:implementation -->
 ### Политика каталога (PHB)
 
-**В ядре допускаются только официальные классы и подклассы из** [`docs/PHB_ D&D_2023 RUS.pdf`](../PHB_%20D%26D_2023%20RUS.pdf) **(глава 3).** Канон — [`database/classes/classes.yaml`](../../database/classes/classes.yaml). Классы и подклассы вне PHB — только через моды `type: addon`.
+**В ядре допускаются только официальные классы и подклассы из PHB 2014 (глава 3).** Канон — [`database/classes/classes.yaml`](../../database/classes/classes.yaml). Классы и подклассы вне PHB — только через моды `type: addon`.
 
 | Аспект | Значение |
 |--------|----------|
