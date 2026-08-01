@@ -4,14 +4,14 @@ from typing import Any
 
 from colorama import Fore, Style
 
-from core.backgrounds import get_background_language_choice
-from core.languages import (
+from core.catalogs.backgrounds import get_background_language_choice
+from core.catalogs.languages import (
     get_fixed_racial_languages,
     get_language_name,
     get_racial_language_choices,
     resolve_language_pool,
 )
-from core.localization import get_string
+from core.platform.localization import get_string
 from core.types import StringsDict
 from ui.menus.console import (
     print_pick_list,

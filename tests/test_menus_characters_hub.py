@@ -2,8 +2,8 @@
 
 import pytest
 
-from core.character_storage import LoadCharactersResult
-from core.models import Character
+from core.character.models import Character
+from core.character.storage import LoadCharactersResult
 from ui.menus import characters_menu
 
 

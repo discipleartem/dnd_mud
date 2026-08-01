@@ -2,13 +2,13 @@
 
 from colorama import Fore, Style
 
-from core.character_storage import (
+from core.character.models import Character
+from core.character.storage import (
     delete_all_characters,
     delete_character,
     load_characters,
 )
-from core.localization import get_string
-from core.models import Character
+from core.platform.localization import get_string
 from core.types import LanguageCode, StringsDict
 from ui.menus import _creation_steps
 from ui.menus._corrupt_saves import show_corrupt_save_warnings_if_any

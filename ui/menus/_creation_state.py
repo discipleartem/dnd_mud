@@ -3,10 +3,10 @@
 from dataclasses import dataclass, field
 from typing import Any, Literal
 
-from core.character_build import build_new_character
-from core.character_storage import unique_save_slug
-from core.models import Character
-from core.progression import (
+from core.character.build import build_new_character
+from core.character.models import Character
+from core.character.storage import unique_save_slug
+from core.progression.class_progression import (
     class_features_applied_at_creation,
     start_level_for_difficulty,
 )

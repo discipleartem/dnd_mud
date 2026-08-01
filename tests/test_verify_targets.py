@@ -11,22 +11,32 @@ import scripts.verify_targets as vt
 
 def test_core_and_ui_mapping() -> None:
     assert vt.source_to_tests("core/difficulty.py") == ["tests/test_stats.py"]
-    assert vt.source_to_tests("core/feats.py") == ["tests/test_feats.py"]
+    assert vt.source_to_tests("core/feats/catalog.py") == [
+        "tests/test_feats.py"
+    ]
     assert vt.source_to_tests("core/scenario_actions.py") == [
         "tests/test_models.py",
         "tests/test_class_features.py",
     ]
-    assert vt.source_to_tests("core/dice.py") == ["tests/test_stats.py"]
-    assert vt.source_to_tests("core/races.py") == ["tests/test_grants.py"]
-    assert vt.source_to_tests("core/adventure.py") == ["tests/test_models.py"]
-    assert vt.source_to_tests("core/backgrounds.py") == [
+    assert vt.source_to_tests("core/mechanics/dice.py") == [
+        "tests/test_stats.py"
+    ]
+    assert vt.source_to_tests("core/catalogs/races.py") == [
+        "tests/test_grants.py"
+    ]
+    assert vt.source_to_tests("core/catalogs/adventure.py") == [
         "tests/test_models.py"
     ]
-    assert vt.source_to_tests("core/grants.py") == ["tests/test_grants.py"]
-    assert vt.source_to_tests("core/progression.py") == [
+    assert vt.source_to_tests("core/catalogs/backgrounds.py") == [
+        "tests/test_models.py"
+    ]
+    assert vt.source_to_tests("core/grants/normalize.py") == [
+        "tests/test_grants.py"
+    ]
+    assert vt.source_to_tests("core/progression/xp_levels.py") == [
         "tests/test_progression.py"
     ]
-    assert vt.source_to_tests("core/mod_loader.py") == [
+    assert vt.source_to_tests("core/platform/mod_loader.py") == [
         "tests/test_catalog_loader.py"
     ]
     assert vt.source_to_tests("ui/menus/class_features.py") == [

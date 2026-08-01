@@ -3,7 +3,7 @@
 from pathlib import Path
 from typing import Any
 
-from core.catalog_loader import load_catalog
+from core.platform.catalog_loader import load_catalog
 
 CONSTANTS_FILE = Path("database/core/constants.yaml")
 

@@ -4,12 +4,12 @@ from typing import Any
 
 from colorama import Fore, Style
 
-from core.backgrounds import (
+from core.catalogs.backgrounds import (
     get_background_skills,
     load_background_full,
     load_backgrounds,
 )
-from core.localization import get_string
+from core.platform.localization import get_string
 from core.types import StringsDict
 from ui.menus.console import print_screen_header, read_numbered_choice
 from ui.menus.display import _print_background_info

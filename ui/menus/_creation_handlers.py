@@ -3,14 +3,12 @@
 from collections.abc import Callable
 from dataclasses import dataclass
 
-from core.localization import get_string
-from core.models import Character
-from core.progression import (
-    expertise_step_required,
-    subclass_offered_at_creation,
-)
-from core.races import load_races
-from core.stats import ABILITY_SCORE_DEFAULT
+from core.catalogs.races import load_races
+from core.character.models import Character
+from core.mechanics.expertise import expertise_step_required
+from core.mechanics.stats import ABILITY_SCORE_DEFAULT
+from core.platform.localization import get_string
+from core.progression.class_progression import subclass_offered_at_creation
 from core.types import StringsDict
 from ui.menus._creation_finalize import finalize_creation, merge_feat_languages
 from ui.menus._creation_navigation import (

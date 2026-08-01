@@ -5,18 +5,13 @@ from typing import Any
 
 from colorama import Fore, Style
 
-from core.equipment import (
+from core.catalogs.equipment import (
     format_versatile_catalog_hint,
     get_tool_name,
     get_weapon_name,
     weapon_property_hint,
 )
-from core.localization import get_string
-from core.proficiencies import (
-    has_tool_proficiency,
-    has_weapon_proficiency,
-)
-from core.starting_equipment import (
+from core.inventory.starting_equipment import (
     all_weapons_in_pool,
     equipment_option_available,
     equipment_option_strength_warning,
@@ -27,6 +22,11 @@ from core.starting_equipment import (
     option_needs_weapon_pick,
     tools_for_pool,
 )
+from core.mechanics.proficiencies import (
+    has_tool_proficiency,
+    has_weapon_proficiency,
+)
+from core.platform.localization import get_string
 from core.types import StringsDict
 from ui.menus.console import (
     format_pick_menu_label,
@@ -232,13 +232,13 @@ def select_creation_equipment(
             if kind == "weapon":
                 name = get_weapon_name(item_id, language)
             elif kind == "armor":
-                from core.equipment import get_armor_name
+                from core.catalogs.equipment import get_armor_name
 
                 name = get_armor_name(item_id, language)
             elif kind == "tool":
                 name = get_tool_name(item_id, language)
             else:
-                from core.equipment import get_equipment_item_name
+                from core.catalogs.equipment import get_equipment_item_name
 
                 name = get_equipment_item_name(item_id, language)
             line = f"  {Fore.CYAN}• {name}{Style.RESET_ALL}"

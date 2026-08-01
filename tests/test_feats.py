@@ -2,19 +2,25 @@ from typing import Any
 
 import pytest
 
-from core.classes import character_has_spellcasting
-from core.feats import (
-    FeatRequirementContext,
+from core.catalogs.classes import character_has_spellcasting
+from core.feats.apply import (
     apply_feat_grants_to_character,
     apply_feats_to_stats,
-    feat_full_description_lines,
-    feat_meets_requirements,
-    feat_summary_description,
-    get_feat_skill_ids,
-    list_feats_for_selection,
-    load_feat,
     resolve_feat_ability_bonuses,
     tough_hp_adjustment_on_acquire,
+)
+from core.feats.catalog import (
+    get_feat_skill_ids,
+    load_feat,
+)
+from core.feats.requirements import (
+    FeatRequirementContext,
+    feat_meets_requirements,
+    list_feats_for_selection,
+)
+from core.feats.text import (
+    feat_full_description_lines,
+    feat_summary_description,
 )
 from core.types import CharacterClass
 
@@ -31,7 +37,7 @@ pytestmark = pytest.mark.usefixtures("catalog_caches_cleared")
 
 
 def test_feat_meets_requirements_and_spellcasting_context() -> None:
-    from core.feats import build_feat_selection_context
+    from core.feats.requirements import build_feat_selection_context
 
     ctx_ok = FeatRequirementContext(
         stats={"dexterity": 14, "strength": 10},
@@ -107,7 +113,7 @@ def test_list_feats_for_selection_requirements_split() -> None:
 
 
 def test_redundant_proficiency_feats_hidden_fighter() -> None:
-    from core.feats import build_feat_selection_context
+    from core.feats.requirements import build_feat_selection_context
 
     ctx = build_feat_selection_context(
         stats=_CREATION_STATS,
@@ -131,7 +137,7 @@ def test_redundant_proficiency_feats_hidden_fighter() -> None:
 
 
 def test_redundant_proficiency_feats_hidden_dwarf() -> None:
-    from core.feats import build_feat_selection_context
+    from core.feats.requirements import build_feat_selection_context
 
     ctx = build_feat_selection_context(
         stats=_CREATION_STATS,
@@ -149,7 +155,7 @@ def test_redundant_proficiency_feats_hidden_dwarf() -> None:
 
 
 def test_apply_feat_grants_to_character_merges_skills_and_tools() -> None:
-    from core.models import Character
+    from core.character.models import Character
 
     char = Character(
         name="Hero",

@@ -2,22 +2,20 @@
 
 from colorama import Fore, Style
 
-from core.backgrounds import load_background_full
-from core.classes import (
+from core.catalogs.backgrounds import load_background_full
+from core.catalogs.classes import (
     get_subclass_choice_level,
 )
-from core.languages import get_language_name
-from core.localization import (
+from core.catalogs.languages import get_language_name
+from core.catalogs.races import (
+    load_race_full,
+)
+from core.character.models import Character
+from core.platform.localization import (
     get_string,
     resolve_localized_text,
 )
-from core.models import Character
-from core.progression import (
-    subclass_is_active,
-)
-from core.races import (
-    load_race_full,
-)
+from core.progression.class_progression import subclass_is_active
 from core.types import (
     StringsDict,
 )
@@ -51,7 +49,7 @@ from ui.menus.expertise import format_expertise_display
 
 def _format_character_feats(char: Character, language: str = "ru") -> str:
     """Список названий черт персонажа через запятую."""
-    from core.feats import load_feat
+    from core.feats.catalog import load_feat
 
     names: list[str] = []
     for feat_id in char.feat_ids:

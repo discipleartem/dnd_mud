@@ -1,11 +1,11 @@
 """Финализация и сохранение персонажа после создания."""
 
-from core.creation_finalize import (
+from core.character.finalize import (
     merge_feat_languages_into,
     persist_built_character,
 )
-from core.localization import get_string
-from core.models import Character
+from core.character.models import Character
+from core.platform.localization import get_string
 from core.types import StringsDict
 from ui.menus._creation_state import _CreationState
 from ui.menus.console import print_success_and_wait

@@ -4,10 +4,10 @@ from typing import Any
 
 from colorama import Fore, Style
 
-from core.equipment import (
+from core.catalogs.equipment import (
     proficiency_token_label,
 )
-from core.localization import (
+from core.platform.localization import (
     get_string,
 )
 from core.types import (

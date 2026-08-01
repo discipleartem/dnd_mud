@@ -2,7 +2,7 @@
 
 from colorama import Fore, Style
 
-from core.localization import get_string
+from core.platform.localization import get_string
 from core.types import StringsDict
 from ui.menus.console import (
     SEPARATOR,

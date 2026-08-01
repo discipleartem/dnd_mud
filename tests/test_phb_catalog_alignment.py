@@ -8,8 +8,8 @@ from typing import Any
 import pytest
 import yaml
 
-from core.classes import get_class_dict
-from core.races import collect_race_grants, get_race_bonuses
+from core.catalogs.classes import get_class_dict
+from core.catalogs.races import collect_race_grants, get_race_bonuses
 
 pytestmark = pytest.mark.usefixtures("catalog_caches_cleared")
 

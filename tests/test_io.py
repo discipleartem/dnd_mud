@@ -4,7 +4,7 @@ from pathlib import Path
 
 import pytest
 
-from core.io import CatalogLoadError, load_json, load_yaml
+from core.platform.io import CatalogLoadError, load_json, load_yaml
 
 
 def test_load_yaml_and_json_happy_path(tmp_path: Path) -> None:

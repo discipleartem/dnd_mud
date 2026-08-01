@@ -1,7 +1,7 @@
 """Шаги state machine создания персонажа."""
 
-from core.localization import get_string
-from core.models import Character
+from core.character.models import Character
+from core.platform.localization import get_string
 from core.types import StringsDict
 from ui.input_handler import get_str_input
 from ui.menus._creation_handlers import _STEP_HANDLERS

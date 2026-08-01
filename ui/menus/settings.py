@@ -2,7 +2,7 @@
 
 from colorama import Fore, Style
 
-from core.localization import get_string, load_strings
+from core.platform.localization import get_string, load_strings
 from core.types import (
     GameDifficulty,
     LanguageCode,

@@ -2,22 +2,22 @@
 
 import pytest
 
-from core.grants_resolve import build_fixed_proficiencies
-from core.proficiencies import (
-    get_background_tool_proficiencies,
-    get_class_proficiency_tokens,
-    get_subclass_proficiency_tokens,
-    has_armor_proficiency,
-    has_weapon_proficiency,
-    merge_proficiency_tokens,
-)
-from core.skills import (
+from core.catalogs.skills import (
     apply_racial_proficiencies,
     available_skills,
     get_class_skill_config,
     get_subclass_skill_choices,
     merge_proficiencies,
     subclass_skills_active,
+)
+from core.grants.resolve import build_fixed_proficiencies
+from core.mechanics.proficiencies import (
+    get_background_tool_proficiencies,
+    get_class_proficiency_tokens,
+    get_subclass_proficiency_tokens,
+    has_armor_proficiency,
+    has_weapon_proficiency,
+    merge_proficiency_tokens,
 )
 
 pytestmark = pytest.mark.usefixtures("catalog_caches_cleared")

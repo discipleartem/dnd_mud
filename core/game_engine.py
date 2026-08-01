@@ -3,7 +3,7 @@
 from dataclasses import dataclass, field
 from typing import Any, Literal
 
-from core.models import Adventure, Character
+from core.character.models import Adventure, Character
 from core.scenario_actions import (
     ScenarioActionResult,
     apply_scenario_action,

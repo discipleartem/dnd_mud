@@ -4,13 +4,15 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
-from core.io import load_yaml
-from core.models import Character
-from core.progression import (
-    grant_experience,
-    has_pending_level_up,
+from core.character.models import Character
+from core.platform.io import load_yaml
+from core.progression.class_progression import (
     needs_class_feature_picks,
     needs_subclass_npc,
+)
+from core.progression.xp_levels import (
+    grant_experience,
+    has_pending_level_up,
 )
 from core.types import GameDifficulty
 
@@ -96,8 +98,8 @@ def apply_scenario_action(
         return ScenarioActionResult(character=character, message_key=key)
 
     if action in ("skill_check", "ability_check"):
-        from core.checks import ability_check, skill_check
         from core.engine_rules import check_roll_flags
+        from core.mechanics.checks import ability_check, skill_check
 
         is_skill = action == "skill_check"
         field = "skill" if is_skill else "ability"

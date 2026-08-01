@@ -238,7 +238,7 @@ def test_handle_equipment_stores_choices_and_finalizes(
     ru_strings: dict[str, Any],
 ) -> None:
     """Шаг equipment сохраняет выборы и завершает создание."""
-    from core.models import Character
+    from core.character.models import Character
 
     state = _CreationState(
         name="Hero",

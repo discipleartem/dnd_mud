@@ -2,7 +2,11 @@
 
 from typing import Any
 
-from core.localization import get_string, load_strings, resolve_localized_text
+from core.platform.localization import (
+    get_string,
+    load_strings,
+    resolve_localized_text,
+)
 
 
 def _flatten_keys(data: dict[str, Any], prefix: str = "") -> set[str]:

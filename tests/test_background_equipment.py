@@ -4,9 +4,9 @@ from pathlib import Path
 
 import pytest
 
-from core.backgrounds import get_background_equipment_items
-from core.character_build import build_new_character
-from core.character_storage import persist_character
+from core.catalogs.backgrounds import get_background_equipment_items
+from core.character.build import build_new_character
+from core.character.storage import persist_character
 from core.types import CharacterBuildParams, CharacterClass
 from tests.creation_helpers import flat_stats
 

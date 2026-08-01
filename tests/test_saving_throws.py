@@ -4,10 +4,10 @@ from unittest.mock import patch
 
 import pytest
 
-from core.character_build import resolve_creation_grants
-from core.checks import saving_throw, saving_throw_modifier
-from core.models import Character
-from core.proficiencies import get_class_saving_throws
+from core.character.build import resolve_creation_grants
+from core.character.models import Character
+from core.mechanics.checks import saving_throw, saving_throw_modifier
+from core.mechanics.proficiencies import get_class_saving_throws
 from core.types import CharacterClass
 
 pytestmark = pytest.mark.usefixtures("catalog_caches_cleared")
@@ -61,7 +61,7 @@ def test_saving_throw_with_dc() -> None:
         save_proficiencies=["strength"],
         level=1,
     )
-    with patch("core.checks.roll_d20", return_value=(15, [15])):
+    with patch("core.mechanics.checks.roll_d20", return_value=(15, [15])):
         result = saving_throw(char, "strength", dc=18)
     assert result["roll"] == 15
     assert result["modifier"] == 5

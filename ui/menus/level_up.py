@@ -4,19 +4,21 @@ from dataclasses import replace
 
 from colorama import Fore, Style
 
-from core.feats import (
+from core.character.models import Character
+from core.feats.apply import (
     apply_feat_grants_to_character,
-    load_feat,
     tough_hp_adjustment_on_acquire,
 )
-from core.localization import get_string
-from core.models import Character
-from core.progression import (
-    AsiResolution,
-    HpGainBreakdown,
+from core.feats.catalog import load_feat
+from core.platform.localization import get_string
+from core.progression.asi import (
     con_hp_bonus_from_asi,
     feat_id_from_asi_choice,
     pending_asi_at_level,
+)
+from core.progression.hp import HpGainBreakdown
+from core.progression.level_up import (
+    AsiResolution,
     process_pending_level_ups,
 )
 from core.types import LanguageCode, StringsDict

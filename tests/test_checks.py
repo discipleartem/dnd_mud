@@ -1,7 +1,7 @@
 """Тесты расширенных проверок."""
 
-from core.checks import ability_check, passive_skill, skill_check
-from core.models import Character
+from core.character.models import Character
+from core.mechanics.checks import ability_check, passive_skill, skill_check
 from core.types import CharacterClass
 
 

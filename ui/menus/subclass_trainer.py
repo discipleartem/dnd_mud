@@ -2,14 +2,14 @@
 
 from colorama import Fore, Style
 
-from core.character_storage import update_character
-from core.classes import (
+from core.catalogs.classes import (
     get_subclass_choice_level,
     load_subclasses,
 )
-from core.localization import get_string
-from core.models import Character
-from core.progression import (
+from core.character.models import Character
+from core.character.storage import update_character
+from core.platform.localization import get_string
+from core.progression.class_progression import (
     mark_class_features_applied,
     needs_class_feature_picks,
 )

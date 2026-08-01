@@ -4,9 +4,13 @@ from typing import Any
 
 from colorama import Fore, Style
 
-from core.classes import load_class_full, load_classes, load_subclasses
-from core.localization import get_string
-from core.races import load_race_full
+from core.catalogs.classes import (
+    load_class_full,
+    load_classes,
+    load_subclasses,
+)
+from core.catalogs.races import load_race_full
+from core.platform.localization import get_string
 from core.types import StringsDict
 from ui.menus.console import (
     SEPARATOR,

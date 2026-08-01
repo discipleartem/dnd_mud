@@ -6,7 +6,7 @@ from typing import Any
 import pytest
 from colorama import Fore
 
-from core.equipment import (
+from core.catalogs.equipment import (
     load_armor,
     load_tool,
     load_weapon,
@@ -15,8 +15,8 @@ from core.equipment import (
     tools_by_category,
     weapon_matches_category,
 )
-from core.localization import load_strings
-from core.models import Character
+from core.character.models import Character
+from core.platform.localization import load_strings
 from core.types import CharacterClass
 from ui.menus.console import sort_ids_by_proficiency
 from ui.menus.display import (
@@ -44,8 +44,8 @@ def test_sort_ids_by_proficiency() -> None:
 
 
 def test_option_display_label_strips_proficiency_hint() -> None:
-    from core.localization import load_strings
-    from core.starting_equipment import format_equipment_option_label
+    from core.inventory.starting_equipment import format_equipment_option_label
+    from core.platform.localization import load_strings
 
     ru_strings = load_strings("ru")
     option = {
@@ -72,7 +72,9 @@ def test_armor_menu_shows_unavailable_chain_mail(
     from io import StringIO
     from unittest.mock import patch
 
-    from core.starting_equipment import list_equipment_options_by_group
+    from core.inventory.starting_equipment import (
+        list_equipment_options_by_group,
+    )
     from ui.menus.equipment import _pick_option_for_group
 
     groups = list_equipment_options_by_group("cleric")
@@ -104,7 +106,9 @@ def test_weapon_menu_warhammer_available_for_dwarf_weapon_proficiency(
     from io import StringIO
     from unittest.mock import patch
 
-    from core.starting_equipment import list_equipment_options_by_group
+    from core.inventory.starting_equipment import (
+        list_equipment_options_by_group,
+    )
     from ui.menus.equipment import _pick_option_for_group
 
     groups = list_equipment_options_by_group("cleric")
@@ -140,7 +144,9 @@ def test_weapon_menu_shows_unavailable_warhammer_without_proficiency(
     from io import StringIO
     from unittest.mock import patch
 
-    from core.starting_equipment import list_equipment_options_by_group
+    from core.inventory.starting_equipment import (
+        list_equipment_options_by_group,
+    )
     from ui.menus.equipment import _pick_option_for_group
 
     groups = list_equipment_options_by_group("cleric")
@@ -164,7 +170,7 @@ def test_weapon_menu_shows_unavailable_warhammer_without_proficiency(
 
 
 def test_weapon_and_tool_catalog() -> None:
-    from core.equipment import (
+    from core.catalogs.equipment import (
         armor_equipped_hint,
         format_versatile_catalog_hint,
         format_weapon_property_labels,
@@ -320,7 +326,7 @@ def test_print_race_info_grants(
 def test_format_class_proficiencies_localizes_rogue_tools(
     ru_strings: dict[str, Any],
 ) -> None:
-    from core.classes import load_class_full
+    from core.catalogs.classes import load_class_full
     from ui.menus.display import _format_class_proficiencies
 
     rogue = load_class_full("rogue", "ru")

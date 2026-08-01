@@ -11,9 +11,9 @@ from pathlib import Path
 
 from colorama import Fore, Style, init
 
-from core.localization import get_string, load_strings
-from core.mod_loader import set_mod_gating_difficulty
-from core.settings import load_settings, save_settings
+from core.platform.localization import get_string, load_strings
+from core.platform.mod_loader import set_mod_gating_difficulty
+from core.platform.settings import load_settings, save_settings
 from core.types import RuntimeSettings, StringsDict
 from ui.menus import (
     show_characters_menu,

@@ -5,17 +5,17 @@ from pathlib import Path
 
 import pytest
 
-from core.character_build import build_new_character
-from core.character_migrate import migrate_character_data
-from core.character_storage import (
+from core.catalogs.races import get_race_bonuses
+from core.character.build import build_new_character
+from core.character.migrate import migrate_character_data
+from core.character.models import Character
+from core.character.storage import (
     delete_character,
     load_characters,
     make_save_slug,
     persist_character,
 )
-from core.models import Character
-from core.races import get_race_bonuses
-from core.stats import (
+from core.mechanics.stats import (
     STAT_NAMES,
     can_assign_point_buy_value,
     generate_stats_standard_array,
@@ -151,7 +151,7 @@ def test_starting_max_hp_and_hardcore(
     assert saved.current_hp == saved.max_hp
     stats["constitution"] = 14
     monkeypatch.setattr(
-        "core.progression_hp.roll",
+        "core.progression.hp.roll",
         lambda count, sides, modifier=0: 5 + modifier,
     )
     hard_character = build_new_character(
@@ -175,7 +175,7 @@ def test_hardcore_l1_hp_floor_on_create(
     stats = dict.fromkeys(STAT_NAMES, 10)
     stats["constitution"] = 8  # модификатор −1
     monkeypatch.setattr(
-        "core.progression_hp.roll",
+        "core.progression.hp.roll",
         lambda count, sides, modifier=0: 1 + modifier,
     )
     character = build_new_character(

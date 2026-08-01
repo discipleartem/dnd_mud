@@ -2,7 +2,7 @@
 
 import pytest
 
-from core.stats import STAT_NAMES
+from core.mechanics.stats import STAT_NAMES
 from ui.menus import stats as stats_menu
 from ui.menus.stats import stats_choice_bonuses, stats_methods, stats_shared
 

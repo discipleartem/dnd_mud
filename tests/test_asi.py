@@ -2,8 +2,8 @@
 
 import pytest
 
-from core.models import Character
-from core.progression import (
+from core.character.models import Character
+from core.progression.asi import (
     apply_asi_one_two,
     apply_asi_two_one,
     cap_stats,

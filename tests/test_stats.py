@@ -4,7 +4,7 @@ import random
 
 import pytest
 
-from core import dice
+from core.character.models import Adventure, Character
 from core.constants import (
     ability_modifier,
     difficulty_class,
@@ -15,8 +15,8 @@ from core.difficulty import (
     adventure_requires_hardcore,
     adventure_unavailable_reason,
 )
-from core.models import Adventure, Character
-from core.stats import (
+from core.mechanics import dice
+from core.mechanics.stats import (
     ABILITY_SCORE_MAX,
     ABILITY_SCORE_MIN,
     STAT_NAMES,

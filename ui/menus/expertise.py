@@ -2,14 +2,14 @@
 
 from colorama import Fore, Style
 
-from core.expertise import (
+from core.character.models import Character
+from core.mechanics.expertise import (
     ExpertiseGrant,
     default_rogue_tool_expertise,
     get_expertise_grants,
     pending_expertise_grants,
 )
-from core.localization import get_string
-from core.models import Character
+from core.platform.localization import get_string
 from core.types import StringsDict
 from ui.input_handler import get_int_input
 from ui.menus.console import (

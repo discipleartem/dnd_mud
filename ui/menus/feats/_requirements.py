@@ -4,14 +4,16 @@ from typing import Any
 
 from colorama import Fore, Style
 
-from core.equipment import proficiency_token_label
-from core.feats import (
+from core.catalogs.equipment import proficiency_token_label
+from core.feats.requirements import (
     FeatRequirementContext,
-    feat_full_description_lines,
-    feat_summary_description,
     requirement_met,
 )
-from core.localization import get_string
+from core.feats.text import (
+    feat_full_description_lines,
+    feat_summary_description,
+)
+from core.platform.localization import get_string
 from core.types import StringsDict
 from ui.menus.console import (
     ability_name,

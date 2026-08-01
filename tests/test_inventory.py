@@ -2,15 +2,17 @@
 
 import pytest
 
-from core.inventory import (
-    add_items_to_inventory,
-    compute_ac,
+from core.character.models import Character
+from core.inventory.armor_class import compute_ac
+from core.inventory.equip_defaults import (
     default_equipped,
     equip_defaults,
+)
+from core.inventory.items import (
+    add_items_to_inventory,
     expand_pack_contents,
     inventory_excluding_equipped,
 )
-from core.models import Character
 from core.types import CharacterClass, EquippedState, InventoryItem
 from ui.menus.display import (
     format_inventory_line,

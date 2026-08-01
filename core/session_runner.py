@@ -2,9 +2,9 @@
 
 from collections.abc import Callable
 
-from core.character_storage import update_character
+from core.character.models import Adventure, Character
+from core.character.storage import update_character
 from core.game_engine import GameEngine, UiAction
-from core.models import Adventure, Character
 from core.session_storage import SessionSnapshot, save_session
 
 

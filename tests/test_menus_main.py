@@ -5,8 +5,8 @@ from typing import Any
 
 import pytest
 
-import core.settings as settings_mod
-from core.localization import get_string
+import core.platform.settings as settings_mod
+from core.platform.localization import get_string
 from ui.input_handler import get_int_input, get_str_input
 from ui.menus import main_menu
 from ui.menus import settings as settings_menu

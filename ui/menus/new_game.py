@@ -4,15 +4,15 @@ from typing import Literal
 
 from colorama import Fore, Style
 
-from core.adventure import load_adventures
-from core.catalog_loader import (
+from core.catalogs.adventure import load_adventures
+from core.character.models import Adventure, Character
+from core.character.storage import load_characters
+from core.difficulty import adventure_unavailable_reason
+from core.platform.catalog_loader import (
     bootstrap_session_catalogs,
     reset_session_catalogs,
 )
-from core.character_storage import load_characters
-from core.difficulty import adventure_unavailable_reason
-from core.localization import get_string
-from core.models import Adventure, Character
+from core.platform.localization import get_string
 from core.types import RuntimeSettings, StringsDict
 from ui.input_handler import get_int_input
 from ui.menus import _creation_steps

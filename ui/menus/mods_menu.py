@@ -2,9 +2,9 @@
 
 from colorama import Fore, Style
 
-from core.catalog_loader import reload_catalogs
-from core.localization import get_string, resolve_localized_text
-from core.mod_loader import (
+from core.platform.catalog_loader import reload_catalogs
+from core.platform.localization import get_string, resolve_localized_text
+from core.platform.mod_loader import (
     get_enabled_mod_ids,
     list_available_mods,
     set_mod_enabled,

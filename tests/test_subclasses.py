@@ -5,9 +5,9 @@ from typing import Any, Literal
 
 import pytest
 
-from core.classes import get_subclass_choice_level, load_class_full
-from core.models import Character
-from core.progression import (
+from core.catalogs.classes import get_subclass_choice_level, load_class_full
+from core.character.models import Character
+from core.progression.class_progression import (
     features_up_to_level,
     needs_subclass_npc,
     start_level_for_difficulty,

@@ -4,13 +4,13 @@ from pathlib import Path
 
 import pytest
 
-from core.catalog_loader import (
+from core.catalogs.races import RACES_FILE
+from core.platform.catalog_loader import (
     clear_all_catalog_caches,
     clear_catalog_cache,
     load_catalog,
 )
-from core.io import CatalogLoadError
-from core.races import RACES_FILE
+from core.platform.io import CatalogLoadError
 
 pytestmark = pytest.mark.usefixtures("catalog_caches_cleared")
 
@@ -40,13 +40,16 @@ def test_dragonborn_mod_overlay(tmp_path, monkeypatch):
     """Включённый mod добавляет расу dragonborn."""
     import json
 
-    from core.mod_loader import clear_mod_loader_cache, load_merged_catalog
+    from core.platform.mod_loader import (
+        clear_mod_loader_cache,
+        load_merged_catalog,
+    )
 
     state_path = tmp_path / "mods_state.json"
     state_path.write_text(
         json.dumps({"enabled": ["dragonborn_pack"]}), encoding="utf-8"
     )
-    monkeypatch.setattr("core.mod_loader.MODS_STATE_FILE", state_path)
+    monkeypatch.setattr("core.platform.mod_loader.MODS_STATE_FILE", state_path)
     clear_mod_loader_cache()
     clear_all_catalog_caches()
     races = load_merged_catalog("database/races/races.yaml", "races")
@@ -59,7 +62,10 @@ def test_corrupt_mod_manifest_skips_overlay(
     """Битый manifest.yaml включённого мода не роняет загрузку каталога."""
     import json
 
-    from core.mod_loader import clear_mod_loader_cache, load_merged_catalog
+    from core.platform.mod_loader import (
+        clear_mod_loader_cache,
+        load_merged_catalog,
+    )
 
     mod_id = "broken_pack"
     mod_dir = tmp_path / "mods" / mod_id
@@ -70,8 +76,8 @@ def test_corrupt_mod_manifest_skips_overlay(
 
     state_path = tmp_path / "mods_state.json"
     state_path.write_text(json.dumps({"enabled": [mod_id]}), encoding="utf-8")
-    monkeypatch.setattr("core.mod_loader.MODS_DIR", tmp_path / "mods")
-    monkeypatch.setattr("core.mod_loader.MODS_STATE_FILE", state_path)
+    monkeypatch.setattr("core.platform.mod_loader.MODS_DIR", tmp_path / "mods")
+    monkeypatch.setattr("core.platform.mod_loader.MODS_STATE_FILE", state_path)
     clear_mod_loader_cache()
     clear_all_catalog_caches()
 

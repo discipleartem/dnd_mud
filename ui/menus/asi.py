@@ -2,8 +2,8 @@
 
 from colorama import Fore, Style
 
-from core.localization import get_string
-from core.stats import ABILITY_SCORE_DEFAULT, STAT_NAMES
+from core.mechanics.stats import ABILITY_SCORE_DEFAULT, STAT_NAMES
+from core.platform.localization import get_string
 from core.types import StatMap, StringsDict
 from ui.menus.console import (
     ability_name,

@@ -2,19 +2,19 @@
 
 import pytest
 
-from core.grants import (
-    grants_from_entity,
-    inherit_flags,
-    mechanics_from_grant_entry,
-    normalize_armor_token,
-    proficiency_tokens_from_grant,
-)
-from core.races import (
+from core.catalogs.races import (
     collect_race_grants,
     get_race_and_subrace,
     get_race_bonuses,
     load_races,
     resolve_subrace_id,
+)
+from core.grants.normalize import (
+    grants_from_entity,
+    inherit_flags,
+    mechanics_from_grant_entry,
+    normalize_armor_token,
+    proficiency_tokens_from_grant,
 )
 
 pytestmark = pytest.mark.usefixtures("catalog_caches_cleared")
@@ -64,7 +64,7 @@ def test_variant_human_inherits_race_language_grant() -> None:
 
 def test_subrace_yaml_grants_do_not_duplicate_parent() -> None:
     """В YAML подраса не повторяют grants базовой расы с тем же type и name."""
-    from core.races import load_races_yaml
+    from core.catalogs.races import load_races_yaml
 
     for race_id, race_info in load_races_yaml().items():
         if not isinstance(race_info, dict):

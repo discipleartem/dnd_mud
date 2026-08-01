@@ -1,13 +1,13 @@
 """Тесты компетентности (экспертизы) при создании."""
 
-from core.expertise import (
+from core.character.models import Character
+from core.mechanics.expertise import (
     ExpertiseGrant,
     expertise_step_required,
     get_expertise_grants,
     pending_expertise_grants,
     validate_expertise_selection,
 )
-from core.models import Character
 from core.types import CharacterClass
 
 

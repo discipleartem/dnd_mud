@@ -4,9 +4,7 @@ from typing import Any
 
 from colorama import Fore, Style
 
-from core.feats import get_feat_skill_ids
-from core.localization import get_string
-from core.skills import (
+from core.catalogs.skills import (
     get_class_skill_config,
     get_fixed_racial_proficiencies_with_source,
     get_race_skill_choices_with_source,
@@ -14,6 +12,8 @@ from core.skills import (
     get_subclass_skill_choices,
     resolve_skill_pool,
 )
+from core.feats.catalog import get_feat_skill_ids
+from core.platform.localization import get_string
 from core.types import StringsDict
 from ui.menus.console import (
     print_pick_list,

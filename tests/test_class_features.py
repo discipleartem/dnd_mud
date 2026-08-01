@@ -4,8 +4,8 @@ from typing import Any
 
 import pytest
 
-from core.models import Character
-from core.progression import (
+from core.character.models import Character
+from core.progression.class_progression import (
     class_features_applied_at_creation,
     needs_class_feature_picks,
 )

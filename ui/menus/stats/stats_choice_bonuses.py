@@ -2,15 +2,15 @@
 
 from colorama import Fore, Style
 
-from core.localization import get_string
-from core.races import (
+from core.catalogs.races import (
     build_bonuses_from_choices,
     get_choice_ability_bonus_mechanics,
     get_effective_race_bonuses,
     get_race_bonuses,
     has_choice_ability_bonuses,
 )
-from core.stats import STAT_NAMES, apply_bonuses_to_stats
+from core.mechanics.stats import STAT_NAMES, apply_bonuses_to_stats
+from core.platform.localization import get_string
 from core.types import StatMap, StringsDict
 from ui.input_handler import get_int_input
 from ui.menus.console import (

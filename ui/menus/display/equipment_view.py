@@ -4,7 +4,7 @@ from typing import Literal
 
 from colorama import Fore, Style
 
-from core.equipment import (
+from core.catalogs.equipment import (
     armor_equipped_hint,
     default_ammunition_pack_size,
     format_dice_for_display,
@@ -16,21 +16,23 @@ from core.equipment import (
     weapon_range,
     weapon_versatile_dice,
 )
-from core.inventory import (
-    compute_ac,
+from core.character.models import Character
+from core.inventory.armor_class import compute_ac
+from core.inventory.equip_defaults import (
     default_equipped,
-    inventory_excluding_equipped,
-    inventory_item_quantity,
-    item_display_name,
     main_hand_uses_both_hands,
     weapon_is_two_handed,
     weapon_is_versatile,
 )
-from core.localization import (
+from core.inventory.items import (
+    inventory_excluding_equipped,
+    inventory_item_quantity,
+    item_display_name,
+)
+from core.platform.localization import (
     get_string,
     load_strings,
 )
-from core.models import Character
 from core.types import (
     EquippedState,
     InventoryItem,

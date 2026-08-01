@@ -5,7 +5,7 @@ from typing import Any
 
 import pytest
 
-from core.languages import (
+from core.catalogs.languages import (
     get_fixed_racial_languages,
     get_racial_language_choices,
     load_languages,

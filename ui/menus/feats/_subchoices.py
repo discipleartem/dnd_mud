@@ -2,19 +2,22 @@
 
 from typing import Any
 
-from core.equipment import (
+from core.catalogs.equipment import (
     all_tool_ids,
     all_weapon_ids,
     proficiency_token_label,
 )
-from core.feats import load_feat
-from core.languages import (
+from core.catalogs.languages import (
     get_language_name,
     load_languages,
 )
-from core.localization import get_string
-from core.proficiencies import has_tool_proficiency, has_weapon_proficiency
-from core.skill_ids import PHB_SKILL_IDS
+from core.catalogs.skill_ids import PHB_SKILL_IDS
+from core.feats.catalog import load_feat
+from core.mechanics.proficiencies import (
+    has_tool_proficiency,
+    has_weapon_proficiency,
+)
+from core.platform.localization import get_string
 from core.types import StatMap, StringsDict
 from ui.menus.console import (
     ability_name,

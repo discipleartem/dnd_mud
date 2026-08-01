@@ -4,8 +4,9 @@ from pathlib import Path
 
 import pytest
 
-from core.catalog_loader import load_catalog, reload_catalogs
-from core.mod_loader import (
+from core.catalogs.races import RACES_FILE
+from core.platform.catalog_loader import load_catalog, reload_catalogs
+from core.platform.mod_loader import (
     _enabled_mod_ids,
     _mod_allowed_for_difficulty,
     get_enabled_mod_ids,
@@ -16,7 +17,6 @@ from core.mod_loader import (
     set_mod_enabled,
     set_mod_gating_difficulty,
 )
-from core.races import RACES_FILE
 from core.types import GameDifficulty
 
 pytestmark = pytest.mark.usefixtures("catalog_caches_cleared")
@@ -26,7 +26,7 @@ def test_get_enabled_mod_ids_reads_state(
     monkeypatch: pytest.MonkeyPatch, tmp_path: Path
 ) -> None:
     state_file = tmp_path / "mods_state.json"
-    monkeypatch.setattr("core.mod_loader.MODS_STATE_FILE", state_file)
+    monkeypatch.setattr("core.platform.mod_loader.MODS_STATE_FILE", state_file)
     assert get_enabled_mod_ids() == frozenset()
     save_mods_state(["dragonborn_pack"])
     assert get_enabled_mod_ids() == frozenset({"dragonborn_pack"})
@@ -51,11 +51,11 @@ def test_enabled_mod_ids_respects_gating(
     monkeypatch: pytest.MonkeyPatch, tmp_path: Path
 ) -> None:
     state_file = tmp_path / "mods_state.json"
-    monkeypatch.setattr("core.mod_loader.MODS_STATE_FILE", state_file)
+    monkeypatch.setattr("core.platform.mod_loader.MODS_STATE_FILE", state_file)
     save_mods_state(["dragonborn_pack"])
     set_mod_gating_difficulty("normal")
     monkeypatch.setattr(
-        "core.mod_loader._load_mod_manifest",
+        "core.platform.mod_loader._load_mod_manifest",
         lambda mod_id: {"requires_game_difficulty": "hardcore"},
     )
     assert _enabled_mod_ids() == []
@@ -74,7 +74,7 @@ def test_load_catalog_passes_mod_gating_difficulty(
     from pathlib import Path
 
     seen: list[GameDifficulty | None] = []
-    from core.mod_loader import load_merged_yaml as original_yaml
+    from core.platform.mod_loader import load_merged_yaml as original_yaml
 
     def spy_yaml(
         path: Path,
@@ -84,7 +84,7 @@ def test_load_catalog_passes_mod_gating_difficulty(
         seen.append(game_difficulty)
         return original_yaml(path, game_difficulty=game_difficulty)
 
-    monkeypatch.setattr("core.mod_loader.load_merged_yaml", spy_yaml)
+    monkeypatch.setattr("core.platform.mod_loader.load_merged_yaml", spy_yaml)
     set_mod_gating_difficulty("hardcore")
     reload_catalogs()
     load_catalog(RACES_FILE, "races")
@@ -101,7 +101,7 @@ def test_set_mod_enabled_persists_state(
     monkeypatch: pytest.MonkeyPatch, tmp_path: Path
 ) -> None:
     state_file = tmp_path / "mods_state.json"
-    monkeypatch.setattr("core.mod_loader.MODS_STATE_FILE", state_file)
+    monkeypatch.setattr("core.platform.mod_loader.MODS_STATE_FILE", state_file)
     set_mod_enabled("dragonborn_pack", True)
     assert get_enabled_mod_ids() == frozenset({"dragonborn_pack"})
     set_mod_enabled("dragonborn_pack", False)
@@ -123,9 +123,9 @@ def test_mod_enable_conflict_blocks_second_mod(
         if conflicts:
             lines.append(f"conflicts: {conflicts}")
         (mod_path / "manifest.yaml").write_text("\n".join(lines) + "\n")
-    monkeypatch.setattr("core.mod_loader.MODS_DIR", mods_dir)
+    monkeypatch.setattr("core.platform.mod_loader.MODS_DIR", mods_dir)
     state_file = tmp_path / "mods_state.json"
-    monkeypatch.setattr("core.mod_loader.MODS_STATE_FILE", state_file)
+    monkeypatch.setattr("core.platform.mod_loader.MODS_STATE_FILE", state_file)
 
     assert set_mod_enabled("mod_a", True) is None
     error = set_mod_enabled("mod_b", True)
@@ -149,9 +149,9 @@ def test_mod_enable_requires_dependency(
         if requires:
             lines.append(f"requires: {requires}")
         (mod_path / "manifest.yaml").write_text("\n".join(lines) + "\n")
-    monkeypatch.setattr("core.mod_loader.MODS_DIR", mods_dir)
+    monkeypatch.setattr("core.platform.mod_loader.MODS_DIR", mods_dir)
     state_file = tmp_path / "mods_state.json"
-    monkeypatch.setattr("core.mod_loader.MODS_STATE_FILE", state_file)
+    monkeypatch.setattr("core.platform.mod_loader.MODS_STATE_FILE", state_file)
 
     error = mod_enable_error("addon_pack")
     assert error is not None
@@ -167,7 +167,7 @@ def test_mod_overlay_delete_and_replace_entity(
 ) -> None:
     import json
 
-    from core.mod_loader import load_merged_yaml
+    from core.platform.mod_loader import load_merged_yaml
 
     catalog = tmp_path / "database" / "races" / "races.yaml"
     catalog.parent.mkdir(parents=True)
@@ -223,8 +223,8 @@ def test_mod_overlay_delete_and_replace_entity(
 
     state_path = tmp_path / "mods_state.json"
     state_path.write_text(json.dumps({"enabled": [mod_id]}), encoding="utf-8")
-    monkeypatch.setattr("core.mod_loader.MODS_DIR", tmp_path / "mods")
-    monkeypatch.setattr("core.mod_loader.MODS_STATE_FILE", state_path)
+    monkeypatch.setattr("core.platform.mod_loader.MODS_DIR", tmp_path / "mods")
+    monkeypatch.setattr("core.platform.mod_loader.MODS_STATE_FILE", state_path)
 
     merged = load_merged_yaml(catalog)
     races = merged.get("races", {})

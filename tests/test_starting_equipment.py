@@ -4,7 +4,7 @@ from typing import Any
 
 import pytest
 
-from core.starting_equipment import (
+from core.inventory.starting_equipment import (
     all_weapons_in_pool,
     equipment_option_available,
     equipment_option_strength_warning,

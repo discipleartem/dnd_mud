@@ -4,26 +4,24 @@ from typing import Any
 
 from colorama import Fore, Style
 
-from core.classes import (
+from core.catalogs.classes import (
     load_classes,
     load_subclasses,
 )
-from core.equipment import (
+from core.catalogs.equipment import (
     proficiency_token_label,
 )
-from core.localization import (
-    get_string,
-)
-from core.models import Character
-from core.progression import (
-    ASI_FEATURE_ID,
-    features_up_to_level,
-)
-from core.starting_equipment import (
+from core.character.models import Character
+from core.inventory.starting_equipment import (
     STARTING_EQUIPMENT_SECTION_KEYS,
     STARTING_EQUIPMENT_SECTION_ORDER,
     summarize_class_starting_equipment,
 )
+from core.platform.localization import (
+    get_string,
+)
+from core.progression.class_progression import features_up_to_level
+from core.progression.xp_levels import ASI_FEATURE_ID
 from core.types import (
     StringsDict,
 )

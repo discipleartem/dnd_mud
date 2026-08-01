@@ -5,10 +5,10 @@ from typing import Any
 
 from colorama import Fore, Style
 
-from core.character_storage import update_character
+from core.character.models import Adventure, Character
+from core.character.storage import update_character
 from core.game_engine import GameEngine, GameSession, UiAction
-from core.localization import get_string, resolve_localized_text
-from core.models import Adventure, Character
+from core.platform.localization import get_string, resolve_localized_text
 from core.session_runner import (
     apply_pending_ui_actions,
     persist_adventure_session,

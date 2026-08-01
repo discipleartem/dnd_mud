@@ -2,20 +2,24 @@
 
 from typing import Any
 
-from core.feats import (
+from core.feats.apply import (
     apply_feats_to_stats,
-    build_feat_selection_context,
-    creation_known_for_feat_picks,
-    get_feat_skill_ids,
-    get_race_feat_grants,
-    list_feats_for_selection,
-    load_feat,
     resolve_feat_ability_bonuses,
 )
-from core.grants import proficiency_tokens_and_skills_from_grant
-from core.localization import get_string
-from core.progression import cap_stats
-from core.stats import apply_bonuses_to_stats
+from core.feats.catalog import (
+    get_feat_skill_ids,
+    get_race_feat_grants,
+    load_feat,
+)
+from core.feats.requirements import (
+    build_feat_selection_context,
+    creation_known_for_feat_picks,
+    list_feats_for_selection,
+)
+from core.grants.normalize import proficiency_tokens_and_skills_from_grant
+from core.mechanics.stats import apply_bonuses_to_stats
+from core.platform.localization import get_string
+from core.progression.asi import cap_stats
 from core.types import StatMap, StringsDict
 from ui.menus.console import print_screen_header
 from ui.menus.feats._selection import _pick_feat_from_lists

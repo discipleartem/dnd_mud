@@ -2,22 +2,22 @@
 
 from typing import Any
 
-from core.equipment import (
+from core.catalogs.equipment import (
     get_tool_name,
     get_weapon_name,
     proficiency_token_label,
 )
-from core.grant_labels import (
+from core.grants.labels import (
     grant_damage_string_key,
     grant_pool_string_key,
     grant_type_string_key,
     spell_string_key,
 )
-from core.grants import (
+from core.grants.normalize import (
     ABILITY_INCREASE,
     normalize_armor_token,
 )
-from core.localization import (
+from core.platform.localization import (
     get_string,
 )
 from core.types import (
