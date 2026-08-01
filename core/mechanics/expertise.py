@@ -14,6 +14,7 @@ __all__ = [
     "expertise_step_required",
     "get_expertise_grants",
     "grant_expertise_satisfied",
+    "merge_expertise_lists",
     "pending_expertise_grants",
     "validate_expertise_selection",
 ]
@@ -191,3 +192,21 @@ def validate_expertise_selection(
 def default_rogue_tool_expertise() -> list[str]:
     """ID воровских инструментов для альтернативы плута."""
     return [THIEVES_TOOLS_ID]
+
+
+def merge_expertise_lists(
+    skill_expertise: list[str],
+    tool_expertise: list[str],
+    new_skills: list[str],
+    new_tools: list[str],
+) -> tuple[list[str], list[str]]:
+    """Объединить списки компетентности без дубликатов."""
+    merged_skills = list(skill_expertise)
+    merged_tools = list(tool_expertise)
+    for skill_id in new_skills:
+        if skill_id not in merged_skills:
+            merged_skills.append(skill_id)
+    for tool_id in new_tools:
+        if tool_id not in merged_tools:
+            merged_tools.append(tool_id)
+    return merged_skills, merged_tools

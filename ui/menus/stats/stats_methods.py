@@ -4,7 +4,7 @@ from typing import Literal
 
 from colorama import Fore, Style
 
-from core.mechanics.dice import roll_ability_score
+from core.mechanics.dice import roll_ability_score, roll_stat_pool
 from core.mechanics.stats import (
     POINT_BUY_BUDGET,
     POINT_BUY_COSTS,
@@ -250,8 +250,7 @@ def _select_stats_random_normal(
         print()
 
         if rolls is None:
-            rolls = [roll_ability_score() for _ in range(6)]
-            rolls.sort(reverse=True)
+            rolls = roll_stat_pool()
 
         print(
             f"{Fore.CYAN}"

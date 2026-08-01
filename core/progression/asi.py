@@ -43,6 +43,20 @@ def pending_asi_at_level(character: Character, new_level: int) -> bool:
     return str(new_level) not in character.asi_choices
 
 
+def would_exceed_cap(current: int, amount: int) -> bool:
+    """Проверить, превысит ли прибавка максимум характеристики."""
+    return current + amount > ABILITY_SCORE_MAX
+
+
+def apply_asi_pick(stats: StatMap, picks: tuple[str, str]) -> StatMap:
+    """Применить ASI (+2 к одной или +1 к двум) с ограничением потолка."""
+    if picks[0] == picks[1]:
+        result = apply_asi_two_one(stats, picks[0])
+    else:
+        result = apply_asi_one_two(stats, picks[0], picks[1])
+    return cap_stats(result)
+
+
 def apply_asi_two_one(stats: StatMap, stat: str) -> StatMap:
     """+2 к одной характеристике (макс. 20)."""
     if stat not in STAT_NAMES:

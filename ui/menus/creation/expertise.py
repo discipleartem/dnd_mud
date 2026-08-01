@@ -7,6 +7,7 @@ from core.mechanics.expertise import (
     ExpertiseGrant,
     default_rogue_tool_expertise,
     get_expertise_grants,
+    merge_expertise_lists,
     pending_expertise_grants,
 )
 from core.platform.localization import get_string
@@ -154,12 +155,12 @@ def select_creation_expertise(
         if result is None:
             return None
         skill_part, tool_part = result
-        for skill_id in skill_part:
-            if skill_id not in all_skill_expertise:
-                all_skill_expertise.append(skill_id)
-        for tool_id in tool_part:
-            if tool_id not in all_tool_expertise:
-                all_tool_expertise.append(tool_id)
+        all_skill_expertise, all_tool_expertise = merge_expertise_lists(
+            all_skill_expertise,
+            all_tool_expertise,
+            skill_part,
+            tool_part,
+        )
 
     return all_skill_expertise, all_tool_expertise
 
@@ -182,11 +183,11 @@ def apply_pending_expertise(
         if result is None:
             return None
         skill_part, tool_part = result
-        for skill_id in skill_part:
-            if skill_id not in all_skill_expertise:
-                all_skill_expertise.append(skill_id)
-        for tool_id in tool_part:
-            if tool_id not in all_tool_expertise:
-                all_tool_expertise.append(tool_id)
+        all_skill_expertise, all_tool_expertise = merge_expertise_lists(
+            all_skill_expertise,
+            all_tool_expertise,
+            skill_part,
+            tool_part,
+        )
 
     return all_skill_expertise, all_tool_expertise
