@@ -53,17 +53,17 @@ def test_format_equipment_option_label_armor_hints(
         format_equipment_option_label(
             armor_opts["scale_mail"], ru_strings, "ru"
         )
-        == "а) Чешуйчатый доспех (средние доспехи)"
+        == "а) Чешуйчатый доспех (средние доспехи, КД 14 + Лов, макс. 2)"
     )
     assert (
         format_equipment_option_label(armor_opts["leather"], ru_strings, "ru")
-        == "б) Кожаный доспех (лёгкие доспехи)"
+        == "б) Кожаный доспех (лёгкие доспехи, КД 11 + Лов)"
     )
     assert (
         format_equipment_option_label(
             armor_opts["chain_mail"], ru_strings, "ru"
         )
-        == "в) Кольчуга (тяжёлые доспехи)"
+        == "в) Кольчуга (тяжёлые доспехи, КД 16)"
     )
 
     weapon_opts = {opt["id"]: opt for opt in groups["weapon"]}
@@ -71,7 +71,38 @@ def test_format_equipment_option_label_armor_hints(
         format_equipment_option_label(
             weapon_opts["warhammer"], ru_strings, "ru"
         )
-        == "б) Боевой молот (воинское оружие)"
+        == "б) Боевой молот (воинское оружие, 1к8/1к10)"
+    )
+
+
+def test_format_equipment_option_label_pack_and_melee(
+    ru_strings: dict[str, Any],
+) -> None:
+    fighter = list_equipment_options_by_group("fighter")
+    armor = {opt["id"]: opt for opt in fighter["armor"]}
+    assert format_equipment_option_label(
+        armor["leather_longbow"], ru_strings, "ru"
+    ) == (
+        "б) Кожаный доспех, длинный лук и 20 стрел "
+        "(лёгкие доспехи, КД 11 + Лов, 1к8)"
+    )
+    pack = {opt["id"]: opt for opt in fighter["pack"]}
+    pack_label = format_equipment_option_label(
+        pack["dungeoneers_pack"], ru_strings, "ru"
+    )
+    assert pack_label.startswith("а) Набор исследователя подземелий (")
+    assert "Рюкзак" in pack_label
+    assert "Шлямбур ×10" in pack_label
+
+    rogue = list_equipment_options_by_group("rogue")
+    melee = {opt["id"]: opt for opt in rogue["melee"]}
+    assert (
+        format_equipment_option_label(melee["rapier"], ru_strings, "ru")
+        == "а) Рапира (1к8)"
+    )
+    assert (
+        format_equipment_option_label(melee["shortsword"], ru_strings, "ru")
+        == "б) Короткий меч (1к6)"
     )
 
 

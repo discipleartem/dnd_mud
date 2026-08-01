@@ -7,6 +7,7 @@ import pytest
 from colorama import Fore
 
 from core.catalogs.equipment import (
+    get_weapon_name,
     load_armor,
     load_tool,
     load_weapon,
@@ -91,7 +92,7 @@ def test_armor_menu_shows_unavailable_chain_mail(
             9,
         )
         output = buf.getvalue()
-    assert "Кольчуга (тяжёлые доспехи)" in output
+    assert "Кольчуга (тяжёлые доспехи, КД 16)" in output
     assert "(Сил 13)" in output
     assert Fore.RED in output or "\x1b[31m" in output
     assert output.count("Чешуйчатый") == 1
@@ -133,7 +134,8 @@ def test_weapon_menu_warhammer_available_for_dwarf_weapon_proficiency(
         )
         output = buf.getvalue()
     assert "а) Булава" in output
-    assert "\x1b[36mб) Боевой молот (воинское оружие)\x1b[0m" in output
+    assert "б) Боевой молот (воинское оружие, 1к8/1к10)" in output
+    assert "\x1b[36m" in output
 
 
 def test_weapon_menu_shows_unavailable_warhammer_without_proficiency(
@@ -164,7 +166,7 @@ def test_weapon_menu_shows_unavailable_warhammer_without_proficiency(
         )
         output = buf.getvalue()
     assert "а) Булава" in output
-    assert "б) Боевой молот (воинское оружие)" in output
+    assert "б) Боевой молот (воинское оружие, 1к8/1к10)" in output
     assert "2. б) Боевой молот" not in output
     assert Fore.LIGHTBLACK_EX in output or "\x1b[90m" in output
 
@@ -208,6 +210,9 @@ def test_weapon_and_tool_catalog() -> None:
     assert get_equipment_item_name("crossbow_case", "ru") == "Сумка для болтов"
 
     assert load_weapon("longsword").get("category") == "martial_melee"
+    assert get_weapon_name("maul", "ru").startswith("Двуручный")
+    assert get_weapon_name("longbow", "ru") == "Длинный лук"
+    assert get_weapon_name("greatsword", "ru") == "Двуручный меч"
     assert weapon_matches_category("simple", "club")
     assert not weapon_matches_category("martial", "club")
     assert load_armor("shield").get("category") == "shield"

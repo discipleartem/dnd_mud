@@ -4,8 +4,12 @@ from pathlib import Path
 from typing import Any
 
 from core.platform.catalog_loader import load_catalog
-from core.platform.localization import get_string, resolve_localized_text
-from core.types import StringsDict
+from core.platform.localization import (
+    get_string,
+    load_strings,
+    resolve_localized_text,
+)
+from core.types import LanguageCode, StringsDict
 
 WEAPONS_FILE = Path("database/equipment/weapon.yaml")
 ARMOR_FILE = Path("database/equipment/armor.yaml")
@@ -146,9 +150,27 @@ def resolve_tool_pool(pool: str) -> list[str]:
 
 
 def get_weapon_name(weapon_id: str, language: str = "ru") -> str:
-    """Локализованное имя оружия."""
+    """Локализованное имя оружия; для двуручного ближнего — префикс."""
     info = load_weapon(weapon_id)
-    return _item_name(info.get("name", weapon_id), language, weapon_id)
+    name = _item_name(info.get("name", weapon_id), language, weapon_id)
+    props = info.get("properties")
+    if not isinstance(props, dict) or not props.get("two_handed"):
+        return name
+    category = str(info.get("category", ""))
+    if not category.endswith("_melee"):
+        return name
+    lower = name.casefold()
+    if "двуручн" in lower or "two-handed" in lower:
+        return name
+    lang: LanguageCode = "en" if language == "en" else "ru"
+    prefix = get_string(
+        load_strings(lang),
+        "weapon_name.two_handed_prefix",
+        default="",
+    )
+    if not prefix:
+        return name
+    return f"{prefix}{name}"
 
 
 _WEAPON_AMMUNITION_ITEM: dict[str, str] = {

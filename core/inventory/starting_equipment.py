@@ -7,12 +7,15 @@ from core.catalogs.equipment import (
     all_weapon_ids,
     armor_category,
     armor_strength_requirement,
+    load_equipment_item,
     proficiency_token_label,
     resolve_tool_pool,
     weapon_matches_category,
 )
+from core.inventory.equipment_text import format_item_list_hint
 from core.inventory.items import (
     add_items_to_inventory,
+    expand_pack_contents,
     item_display_name,
     normalize_inventory_item,
 )
@@ -368,22 +371,76 @@ def equipment_option_requirement_key(option: dict[str, Any]) -> str | None:
     return None
 
 
+def _option_pack_content_hints(
+    option: dict[str, Any],
+    language: str,
+) -> list[str]:
+    """Состав набора (pack), если опция — набор снаряжения."""
+    raw_items = option.get("items", [])
+    if not isinstance(raw_items, list):
+        return []
+    hints: list[str] = []
+    for entry in raw_items:
+        if not isinstance(entry, dict) or entry.get("kind") != "equipment":
+            continue
+        item_id = str(entry.get("id", ""))
+        if load_equipment_item(item_id).get("category") != "pack":
+            continue
+        for content in expand_pack_contents(item_id):
+            name = item_display_name(
+                str(content["kind"]), str(content["id"]), language
+            )
+            qty = int(content.get("qty", 1))
+            hints.append(f"{name} ×{qty}" if qty > 1 else name)
+    return hints
+
+
+def _option_mechanical_hints(
+    option: dict[str, Any],
+    strings: StringsDict,
+    language: str,
+) -> list[str]:
+    """КД доспехов и кубы урона оружия из items опции."""
+    raw_items = option.get("items", [])
+    if not isinstance(raw_items, list):
+        return []
+    hints: list[str] = []
+    for entry in raw_items:
+        if not isinstance(entry, dict):
+            continue
+        kind = str(entry.get("kind", ""))
+        item_id = str(entry.get("id", ""))
+        if kind not in ("armor", "weapon"):
+            continue
+        hint = format_item_list_hint(kind, item_id, strings, language)
+        if hint:
+            hints.append(hint)
+    return hints
+
+
 def format_equipment_option_label(
     option: dict[str, Any],
     strings: StringsDict,
     language: str,
 ) -> str:
-    """Подпись опции без «(если владеете)»; тип доспеха/оружия в скобках."""
+    """Подпись опции без «(если владеете)»; тип / КД / кубы / состав набора."""
     label = option.get("label", {})
     if isinstance(label, dict):
         text = resolve_localized_text(label, language, fallback="?")
     else:
         text = str(label)
     text = _strip_proficiency_label_suffix(text)
+    parts: list[str] = []
     req_key = equipment_option_requirement_key(option)
     if req_key:
-        hint = proficiency_token_label(req_key, strings, language)
-        text = f"{text} ({hint})"
+        parts.append(proficiency_token_label(req_key, strings, language))
+    pack_hints = _option_pack_content_hints(option, language)
+    if pack_hints:
+        parts.extend(pack_hints)
+    else:
+        parts.extend(_option_mechanical_hints(option, strings, language))
+    if parts:
+        text = f"{text} ({', '.join(parts)})"
     return text
 
 
