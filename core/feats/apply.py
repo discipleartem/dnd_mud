@@ -18,6 +18,7 @@ from core.mechanics.stats import (
     apply_bonuses_to_stats,
 )
 from core.platform.io import merge_unique
+from core.progression.asi import cap_stats
 from core.types import StatMap
 
 
@@ -44,6 +45,16 @@ def get_feat_hp_bonus_sources(feat_ids: list[str]) -> list[HpBonusSource]:
             name = str(grant.get("name", "")).strip() or feat_name
             sources.append(HpBonusSource(name=name, amount=amount))
     return sources
+
+
+def apply_feat_pick(
+    stats: StatMap,
+    feat_id: str,
+    subchoices: dict[str, Any] | None = None,
+) -> StatMap:
+    """Применить бонусы выбранной черты к характеристикам с учётом потолка."""
+    bonuses = resolve_feat_ability_bonuses(feat_id, subchoices)
+    return cap_stats(apply_bonuses_to_stats(stats, bonuses))
 
 
 def resolve_feat_ability_bonuses(

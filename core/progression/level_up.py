@@ -12,11 +12,10 @@ from core.catalogs.classes import (
 from core.character.models import Character
 from core.feats.apply import (
     apply_feat_grants_to_character,
-    resolve_feat_ability_bonuses,
+    apply_feat_pick,
     tough_hp_adjustment_on_acquire,
 )
 from core.grants.normalize import proficiency_tokens_and_skills_from_grant
-from core.mechanics.stats import apply_bonuses_to_stats
 from core.platform.io import merge_unique
 from core.progression.asi import (
     apply_asi_two_one,
@@ -28,6 +27,7 @@ from core.progression.asi import (
 )
 from core.progression.hp import HpGainBreakdown, hp_gain_breakdown_for_level_up
 from core.progression.xp_levels import has_pending_level_up
+from core.types import StatMap
 
 
 def apply_level_up(character: Character, hp_gain: int) -> Character:
@@ -105,6 +105,41 @@ class AsiResolution:
     tough_bonus: int = 0
 
 
+def resolve_level_up_asi(
+    character: Character,
+    new_level: int,
+    *,
+    stats: StatMap,
+    feat_ids: list[str],
+    feat_choices: dict[str, dict[str, Any]],
+    asi_value: str,
+) -> AsiResolution:
+    """Собрать AsiResolution после UI-выбора ASI или черты."""
+    old_stats = character.stats.copy()
+    had_tough = "tough" in character.feat_ids
+    asi_choices = dict(character.asi_choices)
+    asi_choices[str(new_level)] = asi_value
+    con_bonus = con_hp_bonus_from_asi(old_stats, stats, new_level)
+    char = replace(
+        character,
+        stats=stats,
+        feat_ids=feat_ids,
+        feat_choices=feat_choices,
+        asi_choices=asi_choices,
+    )
+    feat_id = feat_id_from_asi_choice(asi_value)
+    if feat_id:
+        char = apply_feat_grants_to_character(
+            char, feat_id, feat_choices.get(feat_id, {})
+        )
+    tough_bonus = 0
+    if feat_id == "tough" and not had_tough:
+        tough_bonus = tough_hp_adjustment_on_acquire(new_level)
+    return AsiResolution(
+        character=char, con_bonus=con_bonus, tough_bonus=tough_bonus
+    )
+
+
 def _headless_asi_resolution(
     character: Character, new_level: int
 ) -> AsiResolution:
@@ -135,8 +170,7 @@ def _headless_asi_resolution(
         if feat_id and feat_id not in feat_ids:
             sub = feat_choices.get(feat_id, {})
             feat_ids.append(feat_id)
-            bonuses = resolve_feat_ability_bonuses(feat_id, sub)
-            stats = cap_stats(apply_bonuses_to_stats(stats, bonuses))
+            stats = apply_feat_pick(stats, feat_id, sub)
         con_bonus = con_hp_bonus_from_asi(old_stats, stats, new_level)
         char = replace(
             char,

@@ -2,10 +2,7 @@
 
 from typing import Any
 
-from core.feats.apply import (
-    apply_feats_to_stats,
-    resolve_feat_ability_bonuses,
-)
+from core.feats.apply import apply_feat_pick, apply_feats_to_stats
 from core.feats.catalog import get_race_feat_grants
 from core.feats.requirements import (
     build_feat_selection_context,
@@ -15,9 +12,7 @@ from core.feats.requirements import (
 from core.feats.selection_side_effects import (
     accumulate_feat_proficiency_knowledge,
 )
-from core.mechanics.stats import apply_bonuses_to_stats
 from core.platform.localization import get_string
-from core.progression.asi import cap_stats
 from core.types import StatMap, StringsDict
 from ui.menus.console import print_screen_header
 from ui.menus.feats._selection import _pick_feat_from_lists
@@ -111,10 +106,7 @@ def select_creation_feats(
 
             feat_choices[feat_id] = sub
             feat_ids.append(feat_id)
-            bonuses = resolve_feat_ability_bonuses(feat_id, sub)
-            working_stats = cap_stats(
-                apply_bonuses_to_stats(working_stats, bonuses)
-            )
+            working_stats = apply_feat_pick(working_stats, feat_id, sub)
             accumulate_feat_proficiency_knowledge(
                 feat_id,
                 sub,

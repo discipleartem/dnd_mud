@@ -2,7 +2,7 @@
 
 import random
 
-__all__ = ["roll", "roll_ability_score"]
+__all__ = ["roll", "roll_ability_score", "roll_stat_pool"]
 
 
 def roll(count: int = 1, sides: int = 20, modifier: int = 0) -> int:
@@ -31,3 +31,10 @@ def roll_ability_score() -> int:
     rolls = [roll(1, 6) for _ in range(4)]
     rolls.sort()
     return sum(rolls[1:])
+
+
+def roll_stat_pool() -> list[int]:
+    """Сгенерировать пул из шести бросков 4d6, отсортированный по убыванию."""
+    pool = [roll_ability_score() for _ in range(6)]
+    pool.sort(reverse=True)
+    return pool
