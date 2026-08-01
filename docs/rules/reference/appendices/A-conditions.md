@@ -2,9 +2,14 @@
 id: A-conditions
 type: appendix
 phb_chapter: 0
-phb_pages: [290, 292]
-quick: "Состояния PHB: эффекты и истощение 1–6"
-aliases: [состояния, conditions, A-conditions]
+phb_pages:
+- 290
+- 292
+quick: 'Состояния PHB: эффекты и истощение 1–6'
+aliases:
+- состояния
+- conditions
+- A-conditions
 ---
 
 # Состояния

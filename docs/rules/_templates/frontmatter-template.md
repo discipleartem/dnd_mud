@@ -1,24 +1,24 @@
 ---
 id: example_id
-type: chapter  # chapter | race | class | background | feat | spell | reference
-phb_chapter: 0
+type: chapter  # chapter | race | class | background | feat | spell | appendix | glossary
 phb_pages: [0, 0]
-quick: "Краткая механика в 1–2 предложения (для lookup.yaml; без флавора)"
-aliases: [пример, example]
+quick: "Обязательно: 1 строка механики для lookup (без флавора)"
+aliases: [Пример, пример, example]
+# spell additionally: level, school, casting_time, range, components, duration
 ---
 
 # Заголовок (RU)
 
-> Источник: PHB 2014, стр. N–M. Пересказ механики, не дословная копия. © Wizards of the Coast.
+> Источник: PHB 2014, стр. N–M. Пересказ механики, не дословная копия.
 
 ## Секция механики
 
-(структурированный пересказ правил — без лора)
+(структурированный пересказ — только механика)
 
 ---
 
-**Заклинание:** секции `## Параметры`, `## Эффект`, опционально `## На больших уровнях`.
+**Заклинание:** `## Параметры` / `## Эффект` / опционально `## На больших уровнях`. В `quick`: уровень; школа; дистанция; сейв/урон.
 
-**Черта:** секции `## Требования` и `## Эффект`.
+**Черта:** `## Требования` и `## Эффект`.
 
-После создания файла — запись в `toc.yaml`, `_index/*.yaml` и `_index/lookup.yaml`.
+После создания — `toc.yaml`, `_index/*.yaml`, `_index/lookup.yaml`. Оглавление для людей — [`INDEX.md`](../INDEX.md).

@@ -5,7 +5,7 @@ phb_chapter: 0
 phb_pages:
 - 5
 - 9
-quick: ''
+quick: 'Как играть: кости, проверки, преимущества/помехи — обзор'
 aliases:
 - 00-introduction
 - Введение

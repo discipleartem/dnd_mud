@@ -5,7 +5,7 @@ phb_chapter: 6
 phb_pages:
 - 163
 - 170
-quick: ''
+quick: Мультикласс и черты — обзор главы 6
 aliases:
 - 06-individual-options
 - Индивидуальные опции

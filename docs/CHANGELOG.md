@@ -3,6 +3,7 @@
 ## [Unreleased]
 
 ### Changed
+- **Справочник PHB UX/agent:** обязательный `quick` у всех карточек; эффекты заклинаний без флавора; `rules/INDEX.md` для людей; aliases в обоих регистрах
 - **Справочник PHB `docs/rules/` (agent-v2):** полная замена — только механика без лора и без MUD-блоков; ручные `lookup.yaml` / `toc.yaml`; статус MUD — в [`DND_RULES.md`](DND_RULES.md)
 - **Architecture package restructure:** `core/` разбит на пакеты (`platform/`, `catalogs/`, `grants/`, `character/`, `feats/`, `progression/`, `inventory/`, `mechanics/`, `engine/` + `combat/`); leaf-imports без package facades; `CatalogSession` в `platform/catalog_session.py`; grant format в `core/grants/format.py`; `ui/menus/` — `hub/`, `creation/`, `progression/`, `scenario/`, `display/`, `feats/`, `stats/`; тесты зеркалят пакеты (`tests/core/…`, `tests/ui/`, `tests/data/`)
 - **Clean Code epic (B+C):** leaf `grants_resolve` / `feat_catalog`; sibling-модули feats/progression/inventory + фасады; UI `console.py` вместо `_common`; `grant_labels`, `session_runner`, `creation_finalize`; docs sync (нет `character_builder` / `_display`)

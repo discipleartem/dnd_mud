@@ -6,119 +6,119 @@ by_id:
     pages:
     - 5
     - 9
-    quick: ''
+    quick: 'Как играть: кости, проверки, преимущества/помехи — обзор'
   01-character-creation:
     type: chapter
     file: chapters/01-character-creation.md
     pages:
     - 11
     - 16
-    quick: ''
+    quick: 'Шаги создания: раса → класс → характеристики → предыстория → снаряжение'
   02-races:
     type: chapter
     file: chapters/02-races.md
     pages:
     - 17
     - 44
-    quick: ''
+    quick: '9 рас PHB: бонусы характеристик, размер, скорость, черты расы/подрасы'
   03-classes:
     type: chapter
     file: chapters/03-classes.md
     pages:
     - 45
     - 120
-    quick: ''
+    quick: '12 классов: кости хитов, владения, таблица уровней, ключевые умения'
   03-subclasses:
     type: chapter
     file: chapters/03-subclasses.md
     pages:
     - 48
     - 119
-    quick: ''
+    quick: Подкласс на уровне класса (обычно 2–3); детали в entities/classes
   04-backgrounds:
     type: chapter
     file: chapters/04-backgrounds.md
     pages:
     - 121
     - 142
-    quick: ''
+    quick: '13 предысторий: навыки, инструменты, снаряжение, особенность'
   05-equipment-reference:
     type: chapter
     file: chapters/05-equipment-reference.md
     pages:
     - 143
     - 161
-    quick: ''
+    quick: Справочные таблицы оружия/доспехов/предметов
   05-equipment:
     type: chapter
     file: chapters/05-equipment.md
     pages:
     - 143
     - 161
-    quick: ''
+    quick: Монеты, доспехи, оружие, снаряжение, инструменты, расходы
   06-feats:
     type: chapter
     file: chapters/06-feats.md
     pages:
     - 166
     - 172
-    quick: ''
+    quick: Черты вместо ASI; список в entities/feats
   06-individual-options:
     type: chapter
     file: chapters/06-individual-options.md
     pages:
     - 163
     - 170
-    quick: ''
+    quick: Мультикласс и черты — обзор главы 6
   06-multiclass:
     type: chapter
     file: chapters/06-multiclass.md
     pages:
     - 163
     - 165
-    quick: ''
+    quick: Требования, владения, ячейки заклинаний при мультиклассе
   07-ability-scores:
     type: chapter
     file: chapters/07-ability-scores.md
     pages:
     - 173
     - 180
-    quick: ''
+    quick: Модификаторы, проверки, спасброски, навыки, пассивные
   08-adventures:
     type: chapter
     file: chapters/08-adventures.md
     pages:
     - 181
     - 188
-    quick: ''
+    quick: Время, перемещение, окружение, отдых, взаимодействие
   09-combat:
     type: chapter
     file: chapters/09-combat.md
     pages:
     - 189
     - 198
-    quick: ''
+    quick: Инициатива, ход, действия, атака, урон, укрытие, состояния в бою
   10-spellcasting:
     type: chapter
     file: chapters/10-spellcasting.md
     pages:
     - 201
     - 206
-    quick: ''
+    quick: Ячейки, подготовка, компоненты, концентрация, школы
   11-spells:
     type: chapter
     file: chapters/11-spells.md
     pages:
     - 207
     - 289
-    quick: ''
+    quick: Каталог заклинаний PHB; карточки в entities/spells
   appendices:
     type: chapter
     file: chapters/appendices.md
     pages:
     - 290
     - 326
-    quick: 'Приложения PHB: состояния, существа; лор богов/планов/литературы исключён'
+    quick: Состояния, статблоки существ; лор богов/планов исключён
   acolyte:
     type: background
     file: entities/backgrounds/acolyte.md
@@ -657,1911 +657,2644 @@ by_id:
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 4; abjuration; На себя (30-футовый радиус) [конц.] — Все невраждебные существа в ауре (включая вас) обладают сопротивлением
+      к урону некротической энер… / От вас исходит защищающая
+    level: 4
+    school: abjuration
   aura_of_purity:
     type: spell
     file: entities/spells/aura_of_purity.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 4; abjuration; На себя (30-футовый радиус) [конц.] — Все невраждебные существа в ауре (включая вас) не могут заболеть,
+      имеют сопротивление к урону ядо… / От вас исходит очищающая а
+    level: 4
+    school: abjuration
   aura_of_vitality:
     type: spell
     file: entities/spells/aura_of_vitality.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 3; evocation; На себя (30-футовый радиус) [конц.] — Вы можете бонусным действием восстанавливать одному любому
+      существу в ауре (включая себя) 2к6 хитов. / Если цель причиняет урон
+    level: 3
+    school: evocation
   aura_svyatosti:
     type: spell
     file: entities/spells/aura_svyatosti.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 8; abjuration; На себя [конц.] — это заклинание, используя ячейку 2 уровня или выше, вы можете сделать целью одно
+      дополнительное с… / Пока заклинание активно, ваши атаки оружием пр
+    level: 8
+    school: abjuration
   bless:
     type: spell
     file: entities/spells/bless.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 1; enchantment; 30 футов [конц.] — Каждый раз, когда до окончания заклинания цель совершает бросок атаки или спасбросок,
+      она может б…
+    level: 1
+    school: enchantment
   bozhestvennoe_blagovolenie:
     type: spell
     file: entities/spells/bozhestvennoe_blagovolenie.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 1; evocation; На себя [конц.]
+    level: 1
+    school: evocation
   bozhestvennoe_oruzhie:
     type: spell
     file: entities/spells/bozhestvennoe_oruzhie.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 2; evocation; 60 футов — Когда вы накладываете это заклинание, вы можете совершить рукопашную атаку заклинанием
+      по существ… / При попадании цель получает урон силовым полем, равный
+    level: 2
+    school: evocation
   bozhestvennoe_slovo:
     type: spell
     file: entities/spells/bozhestvennoe_slovo.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 7; evocation; 30 футов — Все эти существа, слышащие вас, должны совершить спасбросок Харизмы. / При провале существо
+      попадает под действие эффекта, основанного на текущем количеств
+    level: 7
+    school: evocation
   burning_hands:
     type: spell
     file: entities/spells/burning_hands.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 1; evocation; На себя (15-футовый конус) — Существо получает урон огнём 3к6 в случае провала и половину этого урона
+      в случае успеха. / Все существа в пределах 15-футового конуса до
+    level: 1
+    school: evocation
   bystryy_kolchan:
     type: spell
     file: entities/spells/bystryy_kolchan.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 5; transmutation; Касание [конц.]
+    level: 5
+    school: transmutation
   charm_person:
     type: spell
     file: entities/spells/charm_person.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 1; enchantment; 30 футов — Он должен совершить спасбросок Мудрости, с преимуществом, если вы или ваши спутники
+      сражаетесь с … / Если он проваливает спасбросок, он очарован вами, по
+    level: 1
+    school: enchantment
   cure_wounds:
     type: spell
     file: entities/spells/cure_wounds.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 1; evocation; Касание — Существо, которого вы касаетесь, восстанавливает количество хитов, равное 1к8 + ваш модификатор
+      б…
+    level: 1
+    school: evocation
   demiplan:
     type: spell
     file: entities/spells/demiplan.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 8; Вызов; 60 футов
+    level: 8
+    school: вызов
   detect_magic:
     type: spell
     file: entities/spells/detect_magic.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 1; Прорицание; На себя [конц.]
+    level: 1
+    school: прорицание
   dispel_magic:
     type: spell
     file: entities/spells/dispel_magic.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 3; abjuration; 120 футов
+    level: 3
+    school: abjuration
   dissoniruyushchiy_shepot:
     type: spell
     file: entities/spells/dissoniruyushchiy_shepot.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 1; enchantment; 60 футов — Цель должна совершить спасбросок Мудрости. / В случае провала она получает урон психической
+      энергией 3к6 и должна немедленно реакцией перемест…
+    level: 1
+    school: enchantment
   dlan_bigbi:
     type: spell
     file: entities/spells/dlan_bigbi.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 5; evocation; 120 футов [конц.] — Рука перемещается так, что находится между вами и целью, предоставляя вам от
+      цели укрытие на поло… / Когда хиты руки опускаются до 0, заклинание о
+    level: 5
+    school: evocation
   dnevnoy_svet:
     type: spell
     file: entities/spells/dnevnoy_svet.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 3; evocation; 60 футов — Из точки, выбранной вами в пределах дистанции, распространяется сфера света с радиусом
+      60 футов.
+    level: 3
+    school: evocation
   dospekh_agatisa:
     type: spell
     file: entities/spells/dospekh_agatisa.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 1; abjuration; На себя — Если существо попадает по вам рукопашной атакой, пока у вас есть эти хиты, оно получает
+      урон холо…
+    level: 1
+    school: abjuration
   dospekhi_maga:
     type: spell
     file: entities/spells/dospekhi_maga.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 1; abjuration; Касание
+    level: 1
+    school: abjuration
   drebezgi:
     type: spell
     file: entities/spells/drebezgi.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 2; evocation; 60 футов — Все существа в сфере с радиусом 10 футов с центром на этой точке должны совершить спасбросок
+      Тело… / Существа, изготовленные из неорганической материи, так
+    level: 2
+    school: evocation
   drevesnyy_put:
     type: spell
     file: entities/spells/drevesnyy_put.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 5; Вызов; На себя [конц.] — Оба дерева должны быть живыми, и размер обоих должен быть не меньше вашего.
+    level: 5
+    school: вызов
   dromidzhevo_poyavlenie:
     type: spell
     file: entities/spells/dromidzhevo_poyavlenie.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 6; Вызов; Касание
+    level: 6
+    school: вызов
   druzhba_s_zhivotnymi:
     type: spell
     file: entities/spells/druzhba_s_zhivotnymi.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 1; enchantment; 30 футов — Скорость этих существ в этой области уменьшена вдвое, и когда такое существо впервые
+      за ход входи… / При провале существо получает урон излучением 3к8 (е
+    level: 1
+    school: enchantment
   dvizhenie_pochvy:
     type: spell
     file: entities/spells/dvizhenie_pochvy.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 6; transmutation; 120 футов [конц.] — Высота таких изменений не может превышать половины самой большой стороны
+      области. / В конце каждых 10 минут концентрации на этом заклинании вы
+    level: 6
+    school: transmutation
   dvoynik:
     type: spell
     file: entities/spells/dvoynik.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 8; necromancy; Касание
+    level: 8
+    school: necromancy
   faerie_fire:
     type: spell
     file: entities/spells/faerie_fire.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 1; evocation; 60 футов [конц.] — Все существа в этой области тоже подсвечиваются, если проваливают спасбросок Ловкости.
+      / Все предметы в кубе с длиной ребра 20 футов в пределах дис
+    level: 1
+    school: evocation
   falshivyy_dvoynik:
     type: spell
     file: entities/spells/falshivyy_dvoynik.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 5; illusion; На себя [конц.] — Вы становитесь невидимым, и в то же время в том месте, где вы были, появляется ваш
+      иллюзорный дво… / Двойник существует, пока заклинание активно, но
+    level: 5
+    school: illusion
   fireball:
     type: spell
     file: entities/spells/fireball.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 3; evocation; 150 футов — Все существа в пределах сферы с радиусом 20 футов с центром в этой точке должны совершить
+      спасбро… / Цель получает урон огнём 8к6 при провале или половину
+    level: 3
+    school: evocation
   fly:
     type: spell
     file: entities/spells/fly.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 3; transmutation; Касание [конц.] — Когда заклинание оканчивается, цель падает, если всё ещё находится в полёте
+      и ничем не может оста…
+    level: 3
+    school: transmutation
   gaseous_form:
     type: spell
     file: entities/spells/gaseous_form.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 3; transmutation; Касание [конц.] — Существо получает сопротивление к немагическому урону, и совершает с преимуществом
+      спасброски Сил… / Заклинание оканчивается, если хиты существа
+    level: 3
+    school: transmutation
   gigantskoe_nasekomoe:
     type: spell
     file: entities/spells/gigantskoe_nasekomoe.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 4; transmutation; 30 футов [конц.] — Существо сохраняет гигантский размер всю длительность заклинания, пока его
+      хиты не опустятся до 0…
+    level: 4
+    school: transmutation
   gipnoticheskiy_uzor:
     type: spell
     file: entities/spells/gipnoticheskiy_uzor.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 3; illusion; 120 футов [конц.] — Все существа в этой области, видящие узор, должны совершить спасбросок Мудрости.
+      / Заклинание заканчивается для отдельного существа, если оно получ
+    level: 3
+    school: illusion
   gnevnaya_kara:
     type: spell
     file: entities/spells/gnevnaya_kara.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 1; evocation; На себя [конц.] — В следующий раз, когда вы попадёте атакой рукопашным оружием, пока активно это
+      заклинание, ваша а… / Кроме того, если цель — существо, оно должно со
+    level: 1
+    school: evocation
   golod_khadara:
     type: spell
     file: entities/spells/golod_khadara.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 3; Вызов; 150 футов [конц.] — Все существа, начинающие ход в этой местности, получают урон холодом 2к6. / Все существа,
+      оканчивающие ход в этой местности, должны преуспеть в спасбр
+    level: 3
+    school: вызов
   goryashchiy_klinok:
     type: spell
     file: entities/spells/goryashchiy_klinok.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 2; evocation; На себя [конц.]
+    level: 2
+    school: evocation
   grad:
     type: spell
     file: entities/spells/grad.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 4; evocation; 300 футов — Все существа в цилиндре должны совершить спасбросок Ловкости. / Существо получает дробящий
+      урон 2к8 и урон холодом 4к6 при провале, или половину этого уро
+    level: 4
+    school: evocation
   grad_shipov:
     type: spell
     file: entities/spells/grad_shipov.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 1; Вызов; На себя [конц.] — В дополнение к обычному эффекту атаки, цель и все существа в пределах 5 футов от неё,
+      должны сове… / При провале существо получает колющий урон 1к10, ил
+    level: 1
+    school: вызов
   groza_gneva:
     type: spell
     file: entities/spells/groza_gneva.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: '9; Вызов; Видимость [конц.] — 1 уровень, воплощение Время накладывания: 1 бонусное действие Дистанция: На себя
+      Компоненты: В Дл… / Все существа, находящиеся под облаками (на рассто'
+    level: 9
+    school: вызов
   healing_word:
     type: spell
     file: entities/spells/healing_word.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 1; evocation; 60 футов — Существо на ваш выбор, видимое в пределах дистанции, восстанавливает количество хитов,
+      равное 1к4…
+    level: 1
+    school: evocation
   heroism:
     type: spell
     file: entities/spells/heroism.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 1; enchantment; Касание [конц.] — Пока заклинание активно, существо получает иммунитет к состоянию испуга, и в
+      начале каждого своег… / Когда это заклинание оканчивается, цель теряе
+    level: 1
+    school: enchantment
   invisibility:
     type: spell
     file: entities/spells/invisibility.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 2; illusion; Касание [конц.] — Существо, которого вы касаетесь, становится невидимым до окончания действия заклинания.
+      / Всё, что цель несёт или носит, становится невидимым, пока о
+    level: 2
+    school: illusion
   ispolnenie_zhelaniy:
     type: spell
     file: entities/spells/ispolnenie_zhelaniy.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 9; Вызов; На себя — Вы даруете до десяти существам, видимым вами, сопротивление к выбранному вами виду урона. /
+      Вы позволяете до двенадцати другим существам, видимым вами, восстано
+    level: 9
+    school: вызов
   istinnoe_voskreshenie:
     type: spell
     file: entities/spells/istinnoe_voskreshenie.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 9; necromancy; Касание
+    level: 9
+    school: necromancy
   istinnoe_zrenie:
     type: spell
     file: entities/spells/istinnoe_zrenie.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 6; divination; Касание
+    level: 6
+    school: divination
   izgnanie:
     type: spell
     file: entities/spells/izgnanie.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 4; abjuration; 60 футов [конц.]
+    level: 4
+    school: abjuration
   izgonyayushchaya_kara:
     type: spell
     file: entities/spells/izgonyayushchaya_kara.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 5; abjuration; На себя [конц.]
+    level: 5
+    school: abjuration
   izgotovlenie:
     type: spell
     file: entities/spells/izgotovlenie.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 4; transmutation; 120 футов — Вы можете создать предмет Большого или меньшего размера (помещающийся в куб с длиной
+      ребра 10 фут… / Если вы работаете с металлом, камнем или другой м
+    level: 4
+    school: transmutation
   izmenenie_formy_kamnya:
     type: spell
     file: entities/spells/izmenenie_formy_kamnya.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 4; transmutation; Касание
+    level: 4
+    school: transmutation
   izmenenie_pamyati:
     type: spell
     file: entities/spells/izmenenie_pamyati.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 5; enchantment; 30 футов [конц.] — Если вы с ним сражаетесь, оно совершает спасбросок с преимуществом. / Одно существо,
+      которое вы видите, должно совершить спасбросок Мудрости.
+    level: 5
+    school: enchantment
   izmenenie_tyagoteniya:
     type: spell
     file: entities/spells/izmenenie_tyagoteniya.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 7; transmutation; 100 футов [конц.] — Это заклинание обращает гравитацию в цилиндре с радиусом 50 футов и высотой
+      100 футов с центром н…
+    level: 7
+    school: transmutation
   izolyatsiya:
     type: spell
     file: entities/spells/izolyatsiya.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 7; transmutation; Касание
+    level: 7
+    school: transmutation
   kamennaya_kozha:
     type: spell
     file: entities/spells/kamennaya_kozha.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 4; abjuration; Касание [конц.] — Пока заклинание активно, цель получает сопротивление к немагическому дробящему,
+      колющему и рубяще…
+    level: 4
+    school: abjuration
   kamennaya_stena:
     type: spell
     file: entities/spells/kamennaya_stena.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 5; evocation; 120 футов [конц.] — Если существо со всех сторон окружается стеной (или стеной и другой сплошной
+      поверхностью), это с… / Стена является предметом, изготовленным из ка
+    level: 5
+    school: evocation
   khozhdenie_po_vetru:
     type: spell
     file: entities/spells/khozhdenie_po_vetru.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 6; transmutation; 30 футов — Находясь в форме облака, существо получает скорость полёта 300 футов и сопротивление
+      к урону от н… / Возврат занимает 1 минуту, во время которой сущест
+    level: 6
+    school: transmutation
   khozhdenie_po_vode:
     type: spell
     file: entities/spells/khozhdenie_po_vode.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 3; Преобразование; 30 футов — Это заклинание дарует способность перемещаться по жидкой поверхности — такой как
+      вода, кислота, г…
+    level: 3
+    school: преобразование
   kleymyashchaya_kara:
     type: spell
     file: entities/spells/kleymyashchaya_kara.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 2; evocation; На себя [конц.] — Атака причиняет цели дополнительный урон излучением 2к6. / это заклинание, используя
+      ячейку 4 уровня или выше, прерванное заклинание автоматически н
+    level: 2
+    school: evocation
   konus_kholoda:
     type: spell
     file: entities/spells/konus_kholoda.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 5; evocation; На себя (60-футовый конус) — Все существа в 60-футовом конусе должны совершить спасбросок Телосложения.
+      / Существа получают урон холодом 8к8 при провале, или половину
+    level: 5
+    school: evocation
   korona_bezumiya:
     type: spell
     file: entities/spells/korona_bezumiya.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 2; enchantment; 120 футов [конц.] — Кроме того, когда такое существо преуспевает в спасброске от заклинания или
+      магического эффекта, … / Один гуманоид на ваш выбор, видимый вами в
+    level: 2
+    school: enchantment
   krug_smerti:
     type: spell
     file: entities/spells/krug_smerti.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 6; necromancy; 150 футов — Все существа в этой области должны совершить спасбросок Телосложения. / Цель получает
+      урон некротической энергией 8к6 при провале или половину этого урон
+    level: 6
+    school: necromancy
   krug_teleportatsii:
     type: spell
     file: entities/spells/krug_teleportatsii.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 5; Вызов; 10 футов
+    level: 5
+    school: вызов
   labirint:
     type: spell
     file: entities/spells/labirint.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 8; Вызов; 60 футов [конц.]
+    level: 8
+    school: вызов
   ledyanaya_stena:
     type: spell
     file: entities/spells/ledyanaya_stena.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 6; evocation; 120 футов [конц.] — Если стена при появлении проходит по пространству существа, это существо выталкивается
+      по одну из… / При провале существо получает урон холодом 10
+    level: 6
+    school: evocation
   leomundov_potaynoy_sunduk:
     type: spell
     file: entities/spells/leomundov_potaynoy_sunduk.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 4; Вызов; Касание
+    level: 4
+    school: вызов
   leomundova_khizhina:
     type: spell
     file: entities/spells/leomundova_khizhina.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 3; Воплощение; На себя (полусфера с радиусом 10 футов) — Над вами и вокруг вас появляется купол из силового поля
+      радиусом 10 футов, остающийся неподвижным…
+    level: 3
+    school: воплощение
   levitatsiya:
     type: spell
     file: entities/spells/levitatsiya.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 2; transmutation; 60 футов [конц.]
+    level: 2
+    school: transmutation
   lightning_bolt:
     type: spell
     file: entities/spells/lightning_bolt.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 3; evocation; На себя (100-футовая линия) — Все существа в линии должны совершить спасбросок Ловкости. / При провале
+      существо получает урон электричеством 8к6, или половину урона п
+    level: 3
+    school: evocation
   luch_bolezni:
     type: spell
     file: entities/spells/luch_bolezni.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 1; necromancy; 60 футов — Совершите дальнобойную атаку заклинанием по цели. / При попадании цель получает урон
+      ядом 2к8 и должна совершить спасбросок Телосложения.
+    level: 1
+    school: necromancy
   luch_slabosti:
     type: spell
     file: entities/spells/luch_slabosti.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 2; necromancy; 60 футов [конц.] — Совершите по цели дальнобойную атаку заклинанием. / При попадании цель до конца
+      действия заклинания причиняет только половину урона атаками оружие
+    level: 2
+    school: necromancy
   lunnyy_luch:
     type: spell
     file: entities/spells/lunnyy_luch.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 2; evocation; 120 футов [конц.] — Когда существо впервые за ход входит в область заклинания или начинает там ход,
+      оно окутывается п… / Бледный серебристый луч сияет в цилиндре с ра
+    level: 2
+    school: evocation
   magic_missile:
     type: spell
     file: entities/spells/magic_missile.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 1; evocation; 120 футов — Каждый дротик причиняет урон силовым полем 1к4 + 1.
+    level: 1
+    school: evocation
   magicheskiy_glaz:
     type: spell
     file: entities/spells/magicheskiy_glaz.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 4; divination; 30 футов [конц.] — Вы создаёте невидимый магический глаз в пределах дистанции, который парит в воздухе
+      на время длит… / Глаз может удаляться от вас на любое расстоян
+    level: 4
+    school: divination
   magicheskoe_oruzhie:
     type: spell
     file: entities/spells/magicheskoe_oruzhie.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 2; transmutation; Касание [конц.] — Пока заклинание активно, это оружие становится магическим оружием с бонусом
+      +1 к броскам атаки и …
+    level: 2
+    school: transmutation
   major_image:
     type: spell
     file: entities/spells/major_image.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 2; Иллюзия; 30 футов
+    level: 2
+    school: иллюзия
   maloe_vosstanovlenie:
     type: spell
     file: entities/spells/maloe_vosstanovlenie.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 2; abjuration; Касание
+    level: 2
+    school: abjuration
   mantiya_krestonostsa:
     type: spell
     file: entities/spells/mantiya_krestonostsa.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 3; evocation; На себя [конц.] — Находясь в ауре, все невраждебные существа (включая вас) при попадании атакой оружием
+      причиняют д… / От вас начинает исходить святая сила аурой с ра
+    level: 3
+    school: evocation
   maskirovka:
     type: spell
     file: entities/spells/maskirovka.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 1; illusion; На себя — Вы не можете менять основу тела, поэтому у новой формы должен быть такой же набор конечностей.
+    level: 1
+    school: illusion
   mayak_nadezhdy:
     type: spell
     file: entities/spells/mayak_nadezhdy.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 3; abjuration; 30 футов [конц.] — Пока заклинание активно, все цели совершают спасброски Мудрости и спасброски
+      от смерти с преимуще…
+    level: 3
+    school: abjuration
   mech_mordenkaynena:
     type: spell
     file: entities/spells/mech_mordenkaynena.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 7; evocation; 60 футов [конц.] — Когда меч появляется, вы совершаете рукопашную атаку заклинанием по цели на ваш
+      выбор, находящейс… / При попадании цель получает урон силовым полем
+    level: 7
+    school: evocation
   mentalnaya_svyaz_reri:
     type: spell
     file: entities/spells/mentalnaya_svyaz_reri.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 5; Прорицание; 30 футов — Общение возможно на любом расстоянии, но оно не может простираться на другие планы существования.
+    level: 5
+    school: прорицание
   mertsanie:
     type: spell
     file: entities/spells/mertsanie.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 3; transmutation; На себя
+    level: 3
+    school: transmutation
   meteor_swarm:
     type: spell
     file: entities/spells/meteor_swarm.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 9; evocation; 1 миля — Все существа в сфере с радиусом 40 футов с центром на каждой из точек должны совершить спасбросок…
+      / Заклинание причиняет урон предметам и воспламеняет горюч
+    level: 9
+    school: evocation
   metka_okhotnika:
     type: spell
     file: entities/spells/metka_okhotnika.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 1; divination; 90 футов [конц.] — Пока заклинание активно, вы причиняете цели дополнительный урон 1к6 каждый раз,
+      когда попадаете п… / Если хиты цели опускаются до 0, пока заклинан
+    level: 1
+    school: divination
   mirazh:
     type: spell
     file: entities/spells/mirazh.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 4; illusion; 300 футов — Вы заставляете природную местность в пределах куба с длиной ребра 150 футов, находящегося
+      в преде…
+    level: 4
+    school: illusion
   mnozhestvennoe_lechenie_ran:
     type: spell
     file: entities/spells/mnozhestvennoe_lechenie_ran.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 5; evocation; 60 футов — Все цели восстанавливают хиты в количестве, равном 3к8 + модификатор вашей базовой характеристики.
+      / это заклинание, используя ячейку 6 уровня или выше, во
+    level: 5
+    school: evocation
   mnozhestvennoe_vnushenie:
     type: spell
     file: entities/spells/mnozhestvennoe_vnushenie.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 6; enchantment; 60 футов — Каждая цель должна совершить спасбросок Мудрости. / Если вы или кто-то из ваших спутников
+      причиняют урон существу, находящемуся под действием этого з…
+    level: 6
+    school: enchantment
   moleben_lecheniya:
     type: spell
     file: entities/spells/moleben_lecheniya.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: '2; evocation; 30 футов — 3 уровень, воплощение 3 уровень, преобразование Время накладывания: 1 бонусное действие
+      Дистанция… / Каждое из шести существ на ваш выбор, видимых в предел'
+    level: 2
+    school: evocation
   nablyudenie:
     type: spell
     file: entities/spells/nablyudenie.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 5; divination; На себя [конц.] — Цель должна совершить спасбросок Мудрости, модифицируемый тем, как хорошо вы знаете
+      цель, и тем, … / Если цель знает, что вы накладываете это закли
+    level: 5
+    school: divination
   nakhodchivost:
     type: spell
     file: entities/spells/nakhodchivost.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 8; transmutation; На себя
+    level: 8
+    school: transmutation
   nanesenie_ran:
     type: spell
     file: entities/spells/nanesenie_ran.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 1; necromancy; Касание — Совершите рукопашную атаку заклинанием по существу в пределах досягаемости. / При попадании
+      цель получает урон некротической энергией 3к10.
+    level: 1
+    school: necromancy
   napravlennyy_snaryad:
     type: spell
     file: entities/spells/napravlennyy_snaryad.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 1; evocation; 120 футов — При попадании цель получает урон излучением 4к6, и следующий бросок атаки по цели, совершённый
+      до… / Совершите дальнобойную атаку заклинанием по цели.
+    level: 1
+    school: evocation
   nashestvie_nasekomykh:
     type: spell
     file: entities/spells/nashestvie_nasekomykh.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 5; Вызов; 300 футов [конц.] — Когда сфера появляется, все находящиеся в ней существа должны совершить спасбросок
+      Телосложения. / Существо получает колющий урон 4к10 при провале, ил
+    level: 5
+    school: вызов
   nebesnyy_ogon:
     type: spell
     file: entities/spells/nebesnyy_ogon.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 5; evocation; 60 футов — Все существа в цилиндре с радиусом 10 футов и высотой 40 футов с центром на точке в пределах
+      дист… / Существо получает урон излучением 4к6 и урон огнём 4к6
+    level: 5
+    school: evocation
   neobnaruzhimost:
     type: spell
     file: entities/spells/neobnaruzhimost.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 3; abjuration; Касание — Цель не может стать целью магии школы Прорицания, и её не воспринимают магические наблюдательные
+      …
+    level: 3
+    school: abjuration
   netlennye_ostanki:
     type: spell
     file: entities/spells/netlennye_ostanki.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 2; Некромантия; Касание
+    level: 2
+    school: некромантия
   nevidimoe_pismo:
     type: spell
     file: entities/spells/nevidimoe_pismo.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 1; Иллюзия; Касание
+    level: 1
+    school: иллюзия
   nevidimyy_sluga:
     type: spell
     file: entities/spells/nevidimyy_sluga.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 1; Вызов; 60 футов — Если его хиты опускаются до 0, заклинание оканчивается. / Это заклинание создаёт невидимую,
+      бессознательную и бесформенную силу, выполняющую отдаваемые вам…
+    level: 1
+    school: вызов
   nistulova_lozhnaya_magiya:
     type: spell
     file: entities/spells/nistulova_lozhnaya_magiya.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 2; illusion; Касание
+    level: 2
+    school: illusion
   obet:
     type: spell
     file: entities/spells/obet.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 5; enchantment; 60 футов
+    level: 5
+    school: enchantment
   obnaruzhenie_mysley:
     type: spell
     file: entities/spells/obnaruzhenie_mysley.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 2; divination; На себя [конц.] — Если вы погружаетесь глубже, цель должна совершить спасбросок Мудрости. / Если
+      у выбранного существа Интеллект равен 3 или ниже, или если оно не мо
+    level: 2
+    school: divination
   obraz:
     type: spell
     file: entities/spells/obraz.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 3; illusion; 120 футов [конц.] — Вы не можете создать жар или холод, достаточный для получения урона, звук, громкость
+      которого мож… / Вы создаёте образ предмета, существа или друго
+    level: 3
+    school: illusion
   obshchenie:
     type: spell
     file: entities/spells/obshchenie.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 5; Прорицание; На себя
+    level: 5
+    school: прорицание
   obshchenie_s_prirodoy:
     type: spell
     file: entities/spells/obshchenie_s_prirodoy.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 5; Прорицание; На себя — В пещерах и естественном подземном окружении радиус 300 футов.
+    level: 5
+    school: прорицание
   ochishchenie_pishchi_i_pitya:
     type: spell
     file: entities/spells/ochishchenie_pishchi_i_pitya.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 1; Преобразование; 10 футов — Вся немагическая еда и питьё в пределах сферы с радиусом 5 футов с центром на точке,
+      выбранной ва…
+    level: 1
+    school: преобразование
   oglushayushchaya_kara:
     type: spell
     file: entities/spells/oglushayushchaya_kara.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 4; evocation; На себя [конц.] — В следующий раз, когда вы попадёте по существу рукопашной атакой оружием, пока
+      активно это заклин… / Цель должна совершить спасбросок Мудрости.
+    level: 4
+    school: evocation
   ognennaya_burya:
     type: spell
     file: entities/spells/ognennaya_burya.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 7; evocation; 150 футов — Этот урон повреждает предметы и воспламеняет горючие предметы, которые никто не несёт
+      и не носит. / Все существа в этом пространстве должны совершить спас
+    level: 7
+    school: evocation
   ognennaya_stena:
     type: spell
     file: entities/spells/ognennaya_stena.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 4; evocation; 120 футов [конц.] — Когда стена появляется, все существа в её области должны совершить спасбросок
+      Ловкости. / При провале они получают урон огнём 5к8 или половину это
+    level: 4
+    school: evocation
   okamenenie:
     type: spell
     file: entities/spells/okamenenie.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 6; transmutation; 60 футов [конц.] — Если тело цели состоит из плоти, она должна совершить спасбросок Телосложения.
+      / Если оно провалит спасбросок три раза, оно превращается в каме
+    level: 6
+    school: transmutation
   okhrannye_runy:
     type: spell
     file: entities/spells/okhrannye_runy.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 3; abjuration; Касание
+    level: 3
+    school: abjuration
   oputyvanie:
     type: spell
     file: entities/spells/oputyvanie.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 1; Вызов; 90 футов [конц.] — Существа, находящиеся в этой области, когда вы накладываете заклинание, должны преуспеть
+      в спасбр… / Опутанное растениями существо может действием 250
+    level: 1
+    school: вызов
   oputyvayushchiy_udar:
     type: spell
     file: entities/spells/oputyvayushchiy_udar.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 1; Вызов; На себя [конц.] — Существа с размером Большое и ещё больше совершают этот спасбросок с преимуществом.
+      / Будучи опутанной этим заклинанием, цель получает колющий урон 1к6
+    level: 1
+    school: вызов
   ostanovka_vremeni:
     type: spell
     file: entities/spells/ostanovka_vremeni.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 9; transmutation; На себя — Для всех остальных существ время перестаёт течь, а вы получаете 1к4 + 1 ход подряд,
+      во время кото…
+    level: 9
+    school: transmutation
   otilyukov_ledyanoy_shar:
     type: spell
     file: entities/spells/otilyukov_ledyanoy_shar.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 6; evocation; 300 футов — Все существа в этой области должны совершить спасбросок Телосложения. / При провале существо
+      получает урон холодом 10к6.
+    level: 6
+    school: evocation
   otilyukov_uprugiy_shar:
     type: spell
     file: entities/spells/otilyukov_uprugiy_shar.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 4; evocation; 30 футов [конц.] — Сфера обладает иммунитетом ко всем видам урона, и находящееся внутри существо
+      или предмет не може… / Нежелающее существо должно совершить спасбросо
+    level: 4
+    school: evocation
   otkryvanie:
     type: spell
     file: entities/spells/otkryvanie.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 2; transmutation; 60 футов
+    level: 2
+    school: transmutation
   otrazheniya:
     type: spell
     file: entities/spells/otrazheniya.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 2; illusion; На себя — Она игнорирует остальной урон и эффекты. / Существо не попадает под действие этого заклинания,
+      если не может видеть, если полагается на друг…
+    level: 2
+    school: illusion
   ozhivlenie:
     type: spell
     file: entities/spells/ozhivlenie.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 5; necromancy; Касание — Все цели оживают и становятся существами под вашим контролем до окончания действия заклинания
+      или… / ПАРАМЕТРЫ ОЖИВЛЁННОГО ПРЕДМЕТА Размер Хиты КД Крошечны
+    level: 5
+    school: necromancy
   palyashchaya_kara:
     type: spell
     file: entities/spells/palyashchaya_kara.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 1; evocation; На себя [конц.] — Когда вы в следующий раз попадёте по существу рукопашной атакой оружием, пока заклинание
+      активно,… / Пока заклинание активно, цель в начале каждого
+    level: 1
+    school: evocation
   palyashchiy_luch:
     type: spell
     file: entities/spells/palyashchiy_luch.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 2; evocation; 120 футов — Для каждого луча совершите дальнобойную атаку заклинанием. / При попадании цель получает
+      урон огнём 2к6.
+    level: 2
+    school: evocation
   pass_without_trace:
     type: spell
     file: entities/spells/pass_without_trace.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 2; abjuration; На себя [конц.]
+    level: 2
+    school: abjuration
   pauk:
     type: spell
     file: entities/spells/pauk.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 2; transmutation; Касание [конц.]
+    level: 2
+    school: transmutation
   pautina:
     type: spell
     file: entities/spells/pautina.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 2; Вызов; 60 футов [конц.] — Любой 5-футовый куб паутины, соприкоснувшийся с огнём, сгорает за 1 раунд, причиняя
+      урон огнём 2к… / Все существа, начинающие ход в паутине, или входящ
+    level: 2
+    school: вызов
   perenosyashchaya_dver:
     type: spell
     file: entities/spells/perenosyashchaya_dver.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 4; Вызов; 500 футов — Если вы должны оказаться в месте, уже занятом существом или предметом, вы и все перемещающиеся
+      с …
+    level: 4
+    school: вызов
   perst_smerti:
     type: spell
     file: entities/spells/perst_smerti.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 7; necromancy; 60 футов — Цель должна совершить спасбросок Телосложения. / В случае провала она получает урон некротической
+      энергией 7к8 + 30, или половину этого урона в сл…
+    level: 7
+    school: necromancy
   planarnye_uzy:
     type: spell
     file: entities/spells/planarnye_uzy.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 5; abjuration; 60 футов — В конце накладывания заклинания цель должна совершить спасбросок Харизмы.
+    level: 5
+    school: abjuration
   planarnyy_soyuznik:
     type: spell
     file: entities/spells/planarnyy_soyuznik.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 6; Вызов; 60 футов
+    level: 6
+    school: вызов
   plyashushchaya_molniya:
     type: spell
     file: entities/spells/plyashushchaya_molniya.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 6; evocation; 150 футов — Цель должна совершить спасбросок Ловкости. / Цель получает урон электричеством 10к8 при
+      провале спасброска или половину этого урона в случае у…
+    level: 6
+    school: evocation
   pochtovoe_zhivotnoe:
     type: spell
     file: entities/spells/pochtovoe_zhivotnoe.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 2; Очарование; 30 футов
+    level: 2
+    school: очарование
   podchinenie_chudovishcha:
     type: spell
     file: entities/spells/podchinenie_chudovishcha.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 8; enchantment; 60 футов [конц.] — Если вы или дружественные вам существа сражаются с ним, оно совершает спасбросок
+      с преимуществом. / это заклинание с уровнем ячейки 9, концентрац
+    level: 8
+    school: enchantment
   podchinenie_lichnosti:
     type: spell
     file: entities/spells/podchinenie_lichnosti.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 5; enchantment; 60 футов [конц.] — Если вы или дружественные вам существа сражаются с ним, он совершает спасбросок
+      с преимуществом. / Каждый раз, когда цель получает урон, она сове
+    level: 5
+    school: enchantment
   podchinenie_zverya:
     type: spell
     file: entities/spells/podchinenie_zverya.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 4; enchantment; 60 футов [конц.] — Если вы или дружественные вам существа сражаются с ним, он совершает спасбросок
+      с преимуществом. / Зверь должен преуспеть в спасброске Мудрости,
+    level: 4
+    school: enchantment
   podmoga:
     type: spell
     file: entities/spells/podmoga.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 2; abjuration; 30 футов — На время длительности максимум хитов и текущие хиты всех целей увеличиваются на 5.
+    level: 2
+    school: abjuration
   podobie:
     type: spell
     file: entities/spells/podobie.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 7; illusion; Касание — Копия не может обучаться и становиться сильнее, так что она никогда не повышает уровень
+      и характе… / выглядит так же, как оригинал, но у него только половина
+    level: 7
+    school: illusion
   podsmatrivanie:
     type: spell
     file: entities/spells/podsmatrivanie.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 3; divination; 1 миля [конц.] — Вы создаёте невидимый сенсор в пределах дистанции в известном вам месте (месте,
+      которое вы уже ви… / Существо, способное увидеть сенсор (например, н
+    level: 3
+    school: divination
   podvodnoe_dykhanie:
     type: spell
     file: entities/spells/podvodnoe_dykhanie.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 3; Преобразование; 30 футов
+    level: 3
+    school: преобразование
   poisk_familyara:
     type: spell
     file: entities/spells/poisk_familyara.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 1; Вызов; 10 футов — Когда хиты фамильяра опускаются до 0, он исчезает, не оставляя физического тела. / Фамильяр
+      не может атаковать, но может совершать другие действия как обычно.
+    level: 1
+    school: вызов
   poisk_lovushek:
     type: spell
     file: entities/spells/poisk_lovushek.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 2; divination; 120 футов
+    level: 2
+    school: divination
   poisk_puti:
     type: spell
     file: entities/spells/poisk_puti.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 6; divination; На себя [конц.]
+    level: 6
+    school: divination
   poisk_skakuna:
     type: spell
     file: entities/spells/poisk_skakuna.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 2; Вызов; 30 футов
+    level: 2
+    school: вызов
   poisk_sushchestva:
     type: spell
     file: entities/spells/poisk_sushchestva.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 4; divination; На себя [конц.] — Это заклинание не может обнаружить существ, если прямой путь между вами перерезан
+      текущей водой ш…
+    level: 4
+    school: divination
   poisk_zhivotnykh_ili_rasteniy:
     type: spell
     file: entities/spells/poisk_zhivotnykh_ili_rasteniy.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 2; Прорицание; На себя
+    level: 2
+    school: прорицание
   polnoe_istselenie:
     type: spell
     file: entities/spells/polnoe_istselenie.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 6; evocation; 60 футов
+    level: 6
+    school: evocation
   polnoe_prevrashchenie:
     type: spell
     file: entities/spells/polnoe_prevrashchenie.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 9; transmutation; На себя [конц.] — Вы принимаете хиты и Кость Хитов нового облика. / Когда вы возвращаете свой
+      облик, ваши хиты будут такими же, как до превращения.
+    level: 9
+    school: transmutation
   ponimanie_yazykov:
     type: spell
     file: entities/spells/ponimanie_yazykov.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 1; Прорицание; На себя
+    level: 1
+    school: прорицание
   porcha:
     type: spell
     file: entities/spells/porcha.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 1; enchantment; 30 футов [конц.] — Пока заклинание активно, каждый раз, когда цель, провалившая этот спасбросок,
+      совершает бросок ат…
+    level: 1
+    school: enchantment
   poryv_vetra:
     type: spell
     file: entities/spells/poryv_vetra.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 2; evocation; На себя (60-футовая линия) [конц.]
+    level: 2
+    school: evocation
   poslanie:
     type: spell
     file: entities/spells/poslanie.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 3; evocation; Неограниченная
+    level: 3
+    school: evocation
   pospeshnoe_otstuplenie:
     type: spell
     file: entities/spells/pospeshnoe_otstuplenie.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 1; transmutation; На себя [конц.]
+    level: 1
+    school: transmutation
   predostorozhnost:
     type: spell
     file: entities/spells/predostorozhnost.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 6; evocation; На себя
+    level: 6
+    school: evocation
   predskazanie:
     type: spell
     file: entities/spells/predskazanie.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 4; Прорицание; На себя
+    level: 4
+    school: прорицание
   predvidenie:
     type: spell
     file: entities/spells/predvidenie.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 9; divination; Касание — Пока заклинание активно, цель нельзя застать врасплох, и она совершает с преимуществом
+      броски ата… / Кроме того, пока заклинание активно, другие существа с
+    level: 9
+    school: divination
   pregrada_magii:
     type: spell
     file: entities/spells/pregrada_magii.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 8; abjuration; На себя (сфера радиусом 10 футов) [конц.] — Ячейка, потраченная на накладывание подавленного заклинания,
+      всё равно тратится. / Вас окружает невидимая сфера антимагии
+    level: 8
+    school: abjuration
   prevrashchenie_v_zhivotnykh:
     type: spell
     file: entities/spells/prevrashchenie_v_zhivotnykh.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 8; transmutation; 30 футов [конц.] — Превращение держится всю длительность заклинания, или пока хиты цели не опустятся
+      до 0, или она н… / Цель принимает хиты нового облика, а по во
+    level: 8
+    school: transmutation
   prikaz:
     type: spell
     file: entities/spells/prikaz.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 1; enchantment; 60 футов — это заклинание, используя ячейку 2 уровня или выше, вы можете воздействовать на одно
+      дополнительн… / Если цель не может выполнить вашу команду, заклинани
+    level: 1
+    school: enchantment
   prikosnovenie_vampira:
     type: spell
     file: entities/spells/prikosnovenie_vampira.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 3; necromancy; На себя [конц.] — Совершите рукопашную атаку заклинанием по существу в пределах вашей досягаемости.
+      / При попадании цель получает урон некротической энергией 3к6, а
+    level: 3
+    school: necromancy
   prinuzhdenie:
     type: spell
     file: entities/spells/prinuzhdenie.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 4; enchantment; 30 футов [конц.] — Выбранные вами существа, которых вы видите в пределах дистанции, и которые слышат
+      вас, должны сов… / После перемещения из-за заклинания они могут
+    level: 4
+    school: enchantment
   pritvornaya_smert:
     type: spell
     file: entities/spells/pritvornaya_smert.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 3; Некромантия; Касание — Цель получает сопротивление всем видам урона кроме психической энергии.
+    level: 3
+    school: некромантия
   pritvorstvo:
     type: spell
     file: entities/spells/pritvorstvo.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 5; illusion; 30 футов — Несогласная цель может совершить спасбросок Харизмы, и в случае успеха заклинание на неё
+      не дейст… / Вы не можете менять вид тела цели, так что у неё должен
+    level: 5
+    school: illusion
   prizrachnyy_skakun:
     type: spell
     file: entities/spells/prizrachnyy_skakun.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 3; Иллюзия; 30 футов — Заклинание оканчивается, если вы окончите его действием или если скакун получит какой-либо
+      урон.
+    level: 3
+    school: иллюзия
   prizyv_elementalya:
     type: spell
     file: entities/spells/prizyv_elementalya.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 5; Вызов; 90 футов [конц.] — Элементаль исчезает, когда его хиты опускаются до 0, или когда заклинание оканчивается.
+      / Выберите область воды, воздуха, земли или огня, помещающуюся
+    level: 5
+    school: вызов
   prizyv_fei:
     type: spell
     file: entities/spells/prizyv_fei.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 6; Вызов; 90 футов [конц.] — Оно исчезает, когда его хиты опускаются до 0, или когда заклинание оканчивается. /
+      Если ваша концентрация нарушена, существо не исчезает.
+    level: 6
+    school: вызов
   prizyv_lesnykh_obitateley:
     type: spell
     file: entities/spells/prizyv_lesnykh_obitateley.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 4; Вызов; 60 футов [конц.] — Призванное существо исчезает, когда его хиты опускаются до 0, или когда заклинание
+      оканчивается. / это заклинание, используя ячейки большего уровня, вы
+    level: 4
+    school: вызов
   prizyv_malykh_elementaley:
     type: spell
     file: entities/spells/prizyv_malykh_elementaley.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: '4; Вызов; 90 футов [конц.] — Выберите один из вариантов того, кто появляется: • • • • Один элементаль с показателем
+      опасности … / это заклинание, используя ячейки большего уровня,'
+    level: 4
+    school: вызов
   prizyv_molnii:
     type: spell
     file: entities/spells/prizyv_molnii.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 3; Вызов; 120 футов [конц.] — Существо получает урон электричеством 3к10 при провале или половину этого урона в
+      случае успешног… / Появляется туча в форме цилиндра 10 футов в высот
+    level: 3
+    school: вызов
   prizyv_nebozhitelya:
     type: spell
     file: entities/spells/prizyv_nebozhitelya.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 7; Вызов; 90 футов [конц.] — Небожитель исчезает, когда его хиты опускаются до 0, или когда заклинание оканчивается.
+    level: 7
+    school: вызов
   prizyv_zagrazhdeniya:
     type: spell
     file: entities/spells/prizyv_zagrazhdeniya.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 3; Вызов; На себя (60-футовый конус) — При провале существо получает урон 3к8, а при успехе половину этого урона.
+      / Вид урона такой же, как у оружия или боеприпаса, использованного
+    level: 3
+    school: вызов
   prizyv_zalpa:
     type: spell
     file: entities/spells/prizyv_zalpa.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 5; Вызов; 150 футов — Все существа в цилиндре с радиусом 40 футов и высотой 20 футов должны совершить спасбросок
+      Ловкости. / При провале существо получает урон 8к8, а при успехе по
+    level: 5
+    school: вызов
   prizyv_zhivotnykh:
     type: spell
     file: entities/spells/prizyv_zhivotnykh.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: '3; Вызов; 60 футов [конц.] — Выберите один из вариантов того, кто появляется: • • • • Один зверь с показателем
+      опасности 2 или… / это заклинание, используя ячейки большего уровня,'
+    level: 3
+    school: вызов
   probuzhdenie_razuma:
     type: spell
     file: entities/spells/probuzhdenie_razuma.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 5; transmutation; Касание — У цели либо не должно быть значения Интеллекта, либо Интеллект должен быть не больше
+      3. / Пробуждённый зверь или растение очарован вами 30 дней, либо по
+    level: 5
+    school: transmutation
   proektsiya:
     type: spell
     file: entities/spells/proektsiya.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 7; illusion; 500 миль [конц.] — Если иллюзия получает урон, она исчезает, а заклинание оканчивается.
+    level: 7
+    school: illusion
   proklyatie:
     type: spell
     file: entities/spells/proklyatie.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 3; necromancy; Касание [конц.] — это заклинание, используя ячейку 4 уровня или выше, длительность будет «Концентрация,
+      вплоть до 1… / При использовании ячейки как минимум 5 уровня
+    level: 3
+    school: necromancy
   pryzhok:
     type: spell
     file: entities/spells/pryzhok.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 1; transmutation; Касание
+    level: 1
+    school: transmutation
   psevdozhizn:
     type: spell
     file: entities/spells/psevdozhizn.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 1; necromancy; На себя — Укрепив себя некромантским подобием жизни, вы получаете 1к4 + 4 временных хита на время
+      длительно…
+    level: 1
+    school: necromancy
   puteshestvie_cherez_rasteniya:
     type: spell
     file: entities/spells/puteshestvie_cherez_rasteniya.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 6; Вызов; 10 футов
+    level: 6
+    school: вызов
   pylayushchiy_shar:
     type: spell
     file: entities/spells/pylayushchiy_shar.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 2; Вызов; 60 футов [конц.] — Все существа, оканчивающие ход в пределах 5 футов от шара, должны совершать спасбросок
+      Ловкости. / Существа получают урон огнём 2к6 при провале или пол
+    level: 2
+    school: вызов
   raduzhnaya_stena:
     type: spell
     file: entities/spells/raduzhnaya_stena.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 9; abjuration; 60 футов — Если вы размещаете стену так, что она пройдёт по пространству, занятому существом, заклинание
+      про… / Коснувшись очередного слоя, существо должно совершить
+    level: 9
+    school: abjuration
   raduzhnye_bryzgi:
     type: spell
     file: entities/spells/raduzhnye_bryzgi.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 7; evocation; На себя (60-футовый конус) — Все существа в пределах 60-футового конуса должны совершить спасбросок
+      Ловкости. / Цель получает урон огнём 10к6 при провале или половину
+    level: 7
+    school: evocation
   raskalennyy_metall:
     type: spell
     file: entities/spells/raskalennyy_metall.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 2; transmutation; 60 футов [конц.] — Если оно не может уронить предмет, то до начала вашего следующего хода совершает
+      с помехой броски… / Все существа, находящиеся в физическом кон
+    level: 2
+    school: transmutation
   raspad:
     type: spell
     file: entities/spells/raspad.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 6; transmutation; 60 футов — Существо, ставшее целью этого заклинания, должно совершить спасбросок Ловкости. /
+      При провале оно получает урон силовым полем 10к6 + 40.
+    level: 6
+    school: transmutation
   razgovor_s_mertvymi:
     type: spell
     file: entities/spells/razgovor_s_mertvymi.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 3; necromancy; 10 футов — У трупа должен быть рот, и он не может быть нежитью. / Таким образом, труп не может узнавать
+      новую информацию, не осознаёт того, что происходило после е…
+    level: 3
+    school: necromancy
   razgovor_s_rasteniyami:
     type: spell
     file: entities/spells/razgovor_s_rasteniyami.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 3; transmutation; На себя (30-футовый радиус) — Вы можете также превратить на время действия заклинания труднопроходимую
+      местность, вызванную рас… / Вы можете превратить на время д
+    level: 3
+    school: transmutation
   razgovor_s_zhivotnymi:
     type: spell
     file: entities/spells/razgovor_s_zhivotnymi.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 1; Прорицание; На себя
+    level: 1
+    school: прорицание
   razmytyy_obraz:
     type: spell
     file: entities/spells/razmytyy_obraz.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 2; illusion; На себя [конц.] — Пока заклинание активно, все существа совершают по вам броски атаки с помехой. /
+      Атакующий получает иммунитет к этому эффекту, если полагается не на
+    level: 2
+    school: illusion
   razrushitelnaya_volna:
     type: spell
     file: entities/spells/razrushitelnaya_volna.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 5; evocation; На себя (30-футовый радиус) — Все существа, выбранные вами в пределах 30 футов, должны преуспеть
+      в спасброске Телосложения, ина… / Существо, преуспевшее в спасброске,
+    level: 5
+    school: evocation
   razyashchee_oko:
     type: spell
     file: entities/spells/razyashchee_oko.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 6; necromancy; На себя [конц.]
+    level: 6
+    school: necromancy
   rech_zlatousta:
     type: spell
     file: entities/spells/rech_zlatousta.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 2; enchantment; 60 футов
+    level: 2
+    school: enchantment
   regeneratsiya:
     type: spell
     file: entities/spells/regeneratsiya.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 7; transmutation; Касание — Цель восстанавливает 4к8 + 15 хитов. / Вы совершаете действием рукопашную атаку заклинанием
+      по исчадию, небожителю, нежити, фее или элем…
+    level: 7
+    school: transmutation
   resurrection:
     type: spell
     file: entities/spells/resurrection.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 7; necromancy; Касание — Пока вы не окончите продолжительный отдых, вы не можете накладывать заклинания, и совершаете
+      с по…
+    level: 7
+    school: necromancy
   rost_rasteniy:
     type: spell
     file: entities/spells/rost_rasteniy.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 3; transmutation; 150 футов — Все обычные растения в пределах 100-футового радиуса с центром на этой точке становятся
+      густыми и… / Все растения в радиусе полумили с центром на точк
+    level: 3
+    school: transmutation
   ruki_khadara:
     type: spell
     file: entities/spells/ruki_khadara.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 1; Вызов; На себя (10-футовый радиус) — В случае провала цель получает урон некротической энергией 2к6 и в следующем
+      ходу не может соверш… / Все существа в этой области должны сове
+    level: 1
+    school: вызов
   sfera_neuyazvimosti:
     type: spell
     file: entities/spells/sfera_neuyazvimosti.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 6; abjuration; На себя (10-футовый радиус) [конц.] — Все заклинания 5 уровня и ниже, наложенные снаружи барьера,
+      не могут подействовать на существ и п… / это заклинание, используя
+    level: 6
+    school: abjuration
   sglaz:
     type: spell
     file: entities/spells/sglaz.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 1; enchantment; 90 футов [конц.] — Пока заклинание активно, вы причиняете цели урон некротической энергией 1к6
+      каждый раз, когда поп… / Если хиты цели опускаются до 0, пока заклина
+    level: 1
+    school: enchantment
   shield_of_faith:
     type: spell
     file: entities/spells/shield_of_faith.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 1; abjuration; 60 футов [конц.]
+    level: 1
+    school: abjuration
   signal_trevogi:
     type: spell
     file: entities/spells/signal_trevogi.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 1; Ограждение; 30 футов — Выберите дверь, окно или область в пределах дистанции не больше куба с длиной ребра 20
+      футов.
+    level: 1
+    school: ограждение
   silovaya_stena:
     type: spell
     file: entities/spells/silovaya_stena.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 5; evocation; 120 футов [конц.] — Она обладает иммунитетом ко всем видам урона, и не может быть рассеяна рассеиванием
+      магии. / Невидимая стена из силового поля появляется в точке,
+    level: 5
+    school: evocation
   skolzhenie:
     type: spell
     file: entities/spells/skolzhenie.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 1; Вызов; 60 футов — Скользкий жир покрывает пол в квадрате с длиной стороны 10 футов с центром на точке в пределах
+      ди…
+    level: 1
+    school: вызов
   slaboumie:
     type: spell
     file: entities/spells/slaboumie.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 8; enchantment; 150 футов — Цель получает урон психической энергией 4к6 и должна совершить спасбросок Интеллекта.
+      / В конце каждых 30 дней существо может повторять спасбросок от эт
+    level: 8
+    school: enchantment
   sleep:
     type: spell
     file: entities/spells/sleep.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 1; enchantment; 90 футов — Бросьте 5к8; результат будет количеством хитов существ, на которых это заклинание может
+      подейство… / Начиная с существа с наименьшим количеством текущих
+    level: 1
+    school: enchantment
   sliyanie_s_kamnem:
     type: spell
     file: entities/spells/sliyanie_s_kamnem.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 3; Преобразование; Касание — Небольшие физические повреждения камня не причиняют вам вреда, но частичное разрушение
+      или измене… / Полное разрушение камня (или превращение его в дру
+    level: 3
+    school: преобразование
   smertnyy_uzhas:
     type: spell
     file: entities/spells/smertnyy_uzhas.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 9; illusion; 120 футов [конц.] — Все существа в сфере с радиусом 30 футов с центром на выбранной точке в пределах
+      дистанции, должн… / В конце каждого своего хода испуганное существ
+    level: 9
+    school: illusion
   smyatenie:
     type: spell
     file: entities/spells/smyatenie.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 4; enchantment; 90 футов [конц.] — это заклинание, используя ячейку 5 уровня или выше, радиус сферы увеличивается
+      на 5 футов за кажд… / В конце каждого своего хода цель может совер
+    level: 4
+    school: enchantment
   snyatie_proklyatya:
     type: spell
     file: entities/spells/snyatie_proklyatya.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 3; abjuration; Касание
+    level: 3
+    school: abjuration
   sokrytie_razuma:
     type: spell
     file: entities/spells/sokrytie_razuma.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 8; abjuration; Касание
+    level: 8
+    school: abjuration
   solnechnyy_luch:
     type: spell
     file: entities/spells/solnechnyy_luch.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 6; evocation; На себя (60-футовая линия) [конц.] — Нежить и слизи совершают этот спасбросок с помехой. / Все существа
+      в этой линии должны совершить спасбросок Телосложения.
+    level: 6
+    school: evocation
   solnechnyy_ozhog:
     type: spell
     file: entities/spells/solnechnyy_ozhog.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 8; evocation; 150 футов — Нежить и слизи совершают этот спасбросок с помехой. / Все существа, находящиеся в нём,
+      должны совершить спасбросок Телосложения.
+    level: 8
+    school: evocation
   sotvorenie:
     type: spell
     file: entities/spells/sotvorenie.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 5; illusion; 30 футов — это заклинание, используя ячейку 6 уровня или выше, длина ребра куба увеличивается на 5
+      футов за …
+    level: 5
+    school: illusion
   sotvorenie_ili_unichtozhenie_vody:
     type: spell
     file: entities/spells/sotvorenie_ili_unichtozhenie_vody.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 1; transmutation; 30 футов — это заклинание, используя ячейку 2 уровня или выше, вы создаёте или уничтожаете 10
+      дополнительных… / В качестве альтернативы, вы уничтожаете туман в ку
+    level: 1
+    school: transmutation
   sotvorenie_nezhiti:
     type: spell
     file: entities/spells/sotvorenie_nezhiti.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 6; necromancy; 10 футов — Такое использование заклинания только поддерживает контроль над уже созданными существами,
+      количе…
+    level: 6
+    school: necromancy
   sotvorenie_pishchi_i_vody:
     type: spell
     file: entities/spells/sotvorenie_pishchi_i_vody.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 3; Вызов; 30 футов
+    level: 3
+    school: вызов
   sozdanie_prokhoda:
     type: spell
     file: entities/spells/sozdanie_prokhoda.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 5; transmutation; 30 футов
+    level: 5
+    school: transmutation
   stena_klinkov:
     type: spell
     file: entities/spells/stena_klinkov.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 6; evocation; 90 футов [конц.]
+    level: 6
+    school: evocation
   stena_vetrov:
     type: spell
     file: entities/spells/stena_vetrov.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 3; evocation; 120 футов [конц.] — Существо получает дробящий урон 3к8 при провале, или половину этого урона при
+      успехе.
+    level: 3
+    school: evocation
   stikhiynoe_oruzhie:
     type: spell
     file: entities/spells/stikhiynoe_oruzhie.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: '3; transmutation; Касание [конц.] — Выберите один из следующих видов урона: звук, кислота, огонь, холод или электричество.
+      / Пока заклинание активно, оружие получает бонус +1 к бро'
+    level: 3
+    school: transmutation
   strazh_very:
     type: spell
     file: entities/spells/strazh_very.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 4; Вызов; 30 футов — При провале такое существо получает урон излучением 20, или половину этого урона при успехе.
+      / Страж исчезает, когда причинит суммарно 60 урона.
+    level: 4
+    school: вызов
   strazhi:
     type: spell
     file: entities/spells/strazhi.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 6; abjuration; Касание — Вы можете также указать пароль, произношение которого дарует иммунитет к этим эффектам.
+    level: 6
+    school: abjuration
   sverkayushchie_bryzgi:
     type: spell
     file: entities/spells/sverkayushchie_bryzgi.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 1; illusion; На себя (15-футовый конус)
+    level: 1
+    school: illusion
   svoboda_peremeshcheniya:
     type: spell
     file: entities/spells/svoboda_peremeshcheniya.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 4; abjuration; Касание — Пока заклинание активно, на перемещения цели не влияет труднопроходимая местность, а заклинания
+      и…
+    level: 4
+    school: abjuration
   svyatilishche:
     type: spell
     file: entities/spells/svyatilishche.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 5; evocation; Касание — Затронутые существа в области получают сопротивление к одному виду урона на ваш выбор кроме
+      дробя… / Обычный свет, а также магический свет, созданный заклин
+    level: 5
+    school: evocation
   svyaz_s_inym_mirom:
     type: spell
     file: entities/spells/svyaz_s_inym_mirom.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 5; Прорицание; На себя — Накладывая это заклинание, вы совершаете спасбросок Интеллекта со Сл 15. / При провале
+      вы получаете урон психической энергией 6к6 и становитесь безумным до
+    level: 5
+    school: прорицание
   tainstvennyy_mirazh:
     type: spell
     file: entities/spells/tainstvennyy_mirazh.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 7; illusion; Обзор
+    level: 7
+    school: illusion
   telekinez:
     type: spell
     file: entities/spells/telekinez.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 5; transmutation; 60 футов [конц.] — До конца вашего следующего хода существо становится опутанным телекинетической
+      хваткой.
+    level: 5
+    school: transmutation
   telepatiya:
     type: spell
     file: entities/spells/telepatiya.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 8; evocation; Без ограничений
+    level: 8
+    school: evocation
   teleport:
     type: spell
     file: entities/spells/teleport.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 7; Вызов; 10 футов — Если целью является предмет, он должен полностью помещаться в куб с длиной ребра 10 футов,
+      и его …
+    level: 7
+    school: вызов
   temnoe_zrenie:
     type: spell
     file: entities/spells/temnoe_zrenie.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 2; transmutation; Касание
+    level: 2
+    school: transmutation
   tenzerov_paryashchiy_disk:
     type: spell
     file: entities/spells/tenzerov_paryashchiy_disk.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 1; Вызов; 30 футов — Он может перелетать по неровной поверхности, перемещаться по лестницам, склонам и подобным
+      препят…
+    level: 1
+    school: вызов
   ternovaya_stena:
     type: spell
     file: entities/spells/ternovaya_stena.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 6; Вызов; 120 футов [конц.] — Когда стена появляется, все существа, находящиеся в ней, должны совершить спасбросок
+      Ловкости. / При провале существо получает колющий урон 7к8, или п
+    level: 6
+    school: вызов
   tishina:
     type: spell
     file: entities/spells/tishina.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 2; Иллюзия; 120 футов [конц.] — Все существа и предметы, полностью находящиеся в сфере, получают иммунитет к урону
+      звуком, и суще… / Пока заклинание активно, никакие звуки не могут
+    level: 2
+    school: иллюзия
   tma:
     type: spell
     file: entities/spells/tma.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 2; evocation; 60 футов [конц.] — Из точки, выбранной вами в пределах дистанции, расползается магическая тьма сферой
+      с радиусом 15 … / Существа с тёмным зрением не могут видеть скво
+    level: 2
+    school: evocation
   tryuk_s_verevkoy:
     type: spell
     file: entities/spells/tryuk_s_verevkoy.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 2; transmutation; Касание — На верхнем конце верёвки появляется невидимый вход в межпространство, существующий,
+      пока заклинан…
+    level: 2
+    school: transmutation
   tsepkaya_loza:
     type: spell
     file: entities/spells/tsepkaya_loza.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 4; Вызов; 30 футов [конц.]
+    level: 4
+    school: вызов
   tsunami:
     type: spell
     file: entities/spells/tsunami.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 8; Вызов; Видимость [конц.] — Когда стена появляется, все существа в её области должны совершить спасбросок Силы.
+      / При провале они получают дробящий урон 6к10 или половину этого у
+    level: 8
+    school: вызов
   tsvetnoy_sharik:
     type: spell
     file: entities/spells/tsvetnoy_sharik.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 1; evocation; 90 футов — Выберите звук, кислоту, огонь, холод, электричество или яд при создании сферы, а затем
+      совершите … / Если атака попадает, существо получает урон 3к8 выбран
+    level: 1
+    school: evocation
   tumannoe_oblako:
     type: spell
     file: entities/spells/tumannoe_oblako.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 1; Вызов; 120 футов [конц.] — Вы создаёте сферу с радиусом 20 футов из тумана с центром на точке в пределах дистанции.
+    level: 1
+    school: вызов
   tumannyy_shag:
     type: spell
     file: entities/spells/tumannyy_shag.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 2; Вызов; На себя
+    level: 2
+    school: вызов
   ubezhishche:
     type: spell
     file: entities/spells/ubezhishche.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 1; abjuration; 30 футов — Пока заклинание активно, все существа, нацеливающиеся на защищённое существо атаками
+      или вредонос…
+    level: 1
+    school: abjuration
   uderzhanie_chudovishcha:
     type: spell
     file: entities/spells/uderzhanie_chudovishcha.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 5; enchantment; 90 футов [конц.]
+    level: 5
+    school: enchantment
   uderzhanie_lichnosti:
     type: spell
     file: entities/spells/uderzhanie_lichnosti.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 2; enchantment; 60 футов [конц.]
+    level: 2
+    school: enchantment
   ukhod_v_inoy_mir:
     type: spell
     file: entities/spells/ukhod_v_inoy_mir.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 7; Вызов; Касание — Выберите существо в пределах досягаемости и совершите по нему рукопашную атаку заклинанием.
+      / При попадании существо должно совершить спасбросок Харизмы.
+    level: 7
+    school: вызов
   umirotvorenie:
     type: spell
     file: entities/spells/umirotvorenie.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 2; enchantment; 60 футов [конц.] — Все гуманоиды в сфере с радиусом 20 футов с центром в точке, выбранной в пределах
+      дистанции, долж… / Если существо проваливает спасбросок, выбери
+    level: 2
+    school: enchantment
   uskorenie:
     type: spell
     file: entities/spells/uskorenie.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 3; transmutation; 30 футов [конц.]
+    level: 3
+    school: transmutation
   usykhanie:
     type: spell
     file: entities/spells/usykhanie.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 4; necromancy; 30 футов — Если цель — растительное существо или магическое растение, оно совершает спасбросок с
+      помехой, и … / Цель должна совершить спасбросок Телосложения.
+    level: 4
+    school: necromancy
   uzilishche:
     type: spell
     file: entities/spells/uzilishche.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 7; evocation; 100 футов — Вокруг области, выбранной вами в пределах дистанции, возникает неподвижная, невидимая
+      тюрьма в фо… / Существо, находящееся в узилище, не может покинуть ег
+    level: 7
+    school: evocation
   velikolepnyy_osobnyak_mordenkaynena:
     type: spell
     file: entities/spells/velikolepnyy_osobnyak_mordenkaynena.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 7; Вызов; 300 футов — Дверь невидима, когда закрыта. / Вы можете создать любую планировку, но пространство не может
+      превышать 50 кубов с длиной ребра в …
+    level: 7
+    school: вызов
   veshchiy_son:
     type: spell
     file: entities/spells/veshchiy_son.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 5; illusion; Особая — Если у вас есть часть тела, клок волос, обрезки ногтей или другая подобная часть тела цели,
+      она с… / В этом случае посыльный может передать послание не длинне
+    level: 5
+    school: illusion
   videnie_nevidimogo:
     type: spell
     file: entities/spells/videnie_nevidimogo.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 2; divination; На себя — Пока заклинание активно, вы видите невидимых существ и предметы, как если бы они были
+      видимы, и в…
+    level: 2
+    school: divination
   vlast_nad_pogodoy:
     type: spell
     file: entities/spells/vlast_nad_pogodoy.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 8; transmutation; На себя (5-мильный радиус) [конц.] — Требуется 1к4 × 10 минут, чтобы новые условия вступили в
+      силу. / Цель должна совершить спасбросок Мудрости.
+    level: 8
+    school: transmutation
   volna_groma:
     type: spell
     file: entities/spells/volna_groma.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 1; evocation; На себя (15-футовый куб) — Все существа в кубе с длиной ребра 15 футов, исходящего от вас, должны
+      совершить спасбросок Телос… / При провале существо получает урон зву
+    level: 1
+    school: evocation
   volshebnyy_sosud:
     type: spell
     file: entities/spells/volshebnyy_sosud.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 6; necromancy; На себя
+    level: 6
+    school: necromancy
   volshebnyy_zamok:
     type: spell
     file: entities/spells/volshebnyy_zamok.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 2; abjuration; Касание
+    level: 2
+    school: abjuration
   voobrazhaemaya_sila:
     type: spell
     file: entities/spells/voobrazhaemaya_sila.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 2; illusion; 60 футов [конц.] — Цель должна совершить спасбросок Интеллекта. / Цель настолько уверена в существовании
+      иллюзии, что даже будет получать от неё урон.
+    level: 2
+    school: illusion
   voobrazhaemyy_ubiytsa:
     type: spell
     file: entities/spells/voobrazhaemyy_ubiytsa.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 4; illusion; 120 футов [конц.] — Цель должна совершить спасбросок Мудрости. / В конце каждого своего хода, пока
+      заклинание активно, цель должна преуспевать в спасброске Мудрос…
+    level: 4
+    school: illusion
   vosplamenyayushchayasya_tucha:
     type: spell
     file: entities/spells/vosplamenyayushchayasya_tucha.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 8; Вызов; 150 футов [конц.] — Когда облако появляется, все существа, находящиеся в нём, должны совершить спасбросок
+      Ловкости. / Существо получает урон огнём 10к8 при провале или по
+    level: 8
+    school: вызов
   vosstavshiy_trup:
     type: spell
     file: entities/spells/vosstavshiy_trup.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 3; necromancy; 10 футов
+    level: 3
+    school: necromancy
   vozrozhdenie:
     type: spell
     file: entities/spells/vozrozhdenie.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 3; necromancy; Касание — Это заклинание не может оживить существ, умерших от старости, а также не восстанавливает
+      отсутств…
+    level: 3
+    school: necromancy
   vysshaya_nevidimost:
     type: spell
     file: entities/spells/vysshaya_nevidimost.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 4; illusion; Касание [конц.]
+    level: 4
+    school: illusion
   vysshee_vosstanovlenie:
     type: spell
     file: entities/spells/vysshee_vosstanovlenie.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: '5; abjuration; Касание — Вы можете уменьшить уровень истощения цели на 1, или окончить на ней один из следующих
+      эффектов: …'
+    level: 5
+    school: abjuration
   vyzov_na_duel:
     type: spell
     file: entities/spells/vyzov_na_duel.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 1; enchantment; 30 футов [конц.] — Одно существо, которое вы видите в пределах дистанции, должно совершить спасбросок
+      Мудрости. / Заклинание оканчивается, если вы атакуете другое с
+    level: 1
+    school: enchantment
   zadannaya_illyuziya:
     type: spell
     file: entities/spells/zadannaya_illyuziya.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 6; illusion; 120 футов
+    level: 6
+    school: illusion
   zamedlenie:
     type: spell
     file: entities/spells/zamedlenie.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 3; transmutation; 120 футов [конц.] — Вы изменяете время для шести существ на ваш выбор, находящихся в кубе с длиной
+      ребра 40 футов в п… / Скорость попавшего под действие существа
+    level: 3
+    school: transmutation
   zamedlennyy_ognennyy_shar:
     type: spell
     file: entities/spells/zamedlennyy_ognennyy_shar.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 7; evocation; 150 футов [конц.] — Все существа в сфере с радиусом 20 футов с центром в этой точке должны совершить
+      спасбросок Ловко… / При провале существо получает урон огнём, рав
+    level: 7
+    school: evocation
   zapret:
     type: spell
     file: entities/spells/zapret.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 6; Ограждение; Касание
+    level: 6
+    school: ограждение
   zarazhenie:
     type: spell
     file: entities/spells/zarazhenie.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 5; necromancy; Касание
+    level: 5
+    school: necromancy
   zashchita_ot_dobra_i_zla:
     type: spell
     file: entities/spells/zashchita_ot_dobra_i_zla.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 1; abjuration; Касание [конц.] — Защита предоставляет несколько преимуществ. / Существа выбранного вида совершают
+      с помехой броски атаки по цели.
+    level: 1
+    school: abjuration
   zashchita_ot_energii:
     type: spell
     file: entities/spells/zashchita_ot_energii.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 3; abjuration; Касание [конц.] — Пока заклинание активно, согласное существо, которого вы коснулись, получает сопротивление
+      к одно…
+    level: 3
+    school: abjuration
   zashchita_ot_smerti:
     type: spell
     file: entities/spells/zashchita_ot_smerti.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 4; abjuration; Касание — Когда хиты цели впервые опускаются до 0 изза получения урона, хиты цели опускаются всего
+      лишь до … / Если заклинание ещё действует, а цель попадает под дей
+    level: 4
+    school: abjuration
   zashchita_ot_yada:
     type: spell
     file: entities/spells/zashchita_ot_yada.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 2; abjuration; Касание — Пока заклинание активно, цель совершает с преимуществом спасброски от отравленного состояния
+      и по…
+    level: 2
+    school: abjuration
   zatochenie:
     type: spell
     file: entities/spells/zatochenie.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 9; abjuration; 30 футов — Условия могут основываться на имени существа, его личности, или его божестве, но во всём
+      остально… / Цель опутана, пока заклинание активно, и в это время
+    level: 9
+    school: abjuration
   zavesa_strel:
     type: spell
     file: entities/spells/zavesa_strel.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 2; transmutation; 5 футов — Существо должно преуспеть в спасброске Ловкости, иначе оно получит колющий урон 1к6.
+    level: 2
+    school: transmutation
   zemletryasenie:
     type: spell
     file: entities/spells/zemletryasenie.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 8; evocation; 500 футов [конц.] — Все существа, находящиеся на земле и концентрирующиеся при этом, должны совершить
+      спасбросок Тело… / Пока заклинание активно, на земле в круге с р
+    level: 8
+    school: evocation
   zhivotnye_chuvstva:
     type: spell
     file: entities/spells/zhivotnye_chuvstva.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 2; Прорицание; Касание [конц.] — Пока заклинание активно, вы можете использовать свою базовую характеристику вместо
+      Силы для броск… / Воспринимая чувствами зверя, вы пользуетесь пр
+    level: 2
+    school: прорицание
   zhutkiy_smekh_tashi:
     type: spell
     file: entities/spells/zhutkiy_smekh_tashi.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 1; enchantment; 30 футов [конц.] — Спасбросок совершается с преимуществом, если он был вызван получением урона.
+      / В конце каждого своего хода, и каждый раз при получении урона цель
+    level: 1
+    school: enchantment
   zlovonnoe_oblako:
     type: spell
     file: entities/spells/zlovonnoe_oblako.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 3; Вызов; 90 футов [конц.] — Все существа, находящиеся полностью в облаке в начале своего хода, должны совершить
+      спасбросок Те… / Вы создаёте сферу с радиусом 20 футов жёлтого тошн
+    level: 3
+    school: вызов
   znak:
     type: spell
     file: entities/spells/znak.md
     pages:
     - 211
     - 289
-    quick: ''
+    quick: 7; abjuration; Касание — Все цели должны совершить спасбросок Телосложения, становясь недееспособными от мучительной
+      боли … / Все цели должны совершить спасбросок Мудрости, становя
+    level: 7
+    school: abjuration
   A-conditions:
     type: appendix
     file: reference/appendices/A-conditions.md
@@ -2614,1001 +3347,1380 @@ by_id:
 by_alias:
   00-introduction: 00-introduction
   Введение: 00-introduction
+  введение: 00-introduction
   01-character-creation: 01-character-creation
   Создание персонажа: 01-character-creation
+  создание персонажа: 01-character-creation
+  'Глава 1: Создание персонажа': 01-character-creation
+  'глава 1: создание персонажа': 01-character-creation
   02-races: 02-races
   Расы: 02-races
+  расы: 02-races
   03-classes: 03-classes
   Классы: 03-classes
+  классы: 03-classes
   03-subclasses: 03-subclasses
   Подклассы: 03-subclasses
+  подклассы: 03-subclasses
   04-backgrounds: 04-backgrounds
   Личность и предыстория: 04-backgrounds
+  личность и предыстория: 04-backgrounds
   05-equipment-reference: 05-equipment-reference
   Справочник снаряжения: 05-equipment-reference
+  справочник снаряжения: 05-equipment-reference
   05-equipment: 05-equipment
   Снаряжение: 05-equipment
+  снаряжение: 05-equipment
   06-feats: 06-feats
   Черты: 06-feats
+  черты: 06-feats
   06-individual-options: 06-individual-options
   Индивидуальные опции: 06-individual-options
+  индивидуальные опции: 06-individual-options
   06-multiclass: 06-multiclass
   Мультиклассирование: 06-multiclass
+  мультиклассирование: 06-multiclass
+  'Глава 6: Мультиклассирование': 06-multiclass
+  'глава 6: мультиклассирование': 06-multiclass
   07-ability-scores: 07-ability-scores
   07 ability scores: 07-ability-scores
   Использование характеристик: 07-ability-scores
+  использование характеристик: 07-ability-scores
   08-adventures: 08-adventures
   08 adventures: 08-adventures
   Приключения: 08-adventures
+  приключения: 08-adventures
   09-combat: 09-combat
   09 combat: 09-combat
   Сражение: 09-combat
+  сражение: 09-combat
   10-spellcasting: 10-spellcasting
   Использование заклинаний: 10-spellcasting
+  использование заклинаний: 10-spellcasting
   11-spells: 11-spells
   Заклинания: 11-spells
+  заклинания: 11-spells
   appendices: appendices
   приложения: appendices
   acolyte: acolyte
   Прислужник: acolyte
+  прислужник: acolyte
   charlatan: charlatan
   Шарлатан: charlatan
+  шарлатан: charlatan
   criminal: criminal
   Преступник: criminal
+  преступник: criminal
   entertainer: entertainer
   Артист: entertainer
+  артист: entertainer
   folk_hero: folk_hero
   folk hero: folk_hero
   Народный герой: folk_hero
+  народный герой: folk_hero
   guild_artisan: guild_artisan
   guild artisan: guild_artisan
   Гильдейский ремесленник: guild_artisan
+  гильдейский ремесленник: guild_artisan
   hermit: hermit
   Отшельник: hermit
+  отшельник: hermit
   noble: noble
   Благородный: noble
+  благородный: noble
   outlander: outlander
   Чужеземец: outlander
+  чужеземец: outlander
   sage: sage
   Мудрец: sage
+  мудрец: sage
   sailor: sailor
   Моряк: sailor
+  моряк: sailor
   soldier: soldier
   Солдат: soldier
+  солдат: soldier
   urchin: urchin
   Беспризорник: urchin
+  беспризорник: urchin
   barbarian: barbarian
   Варвар: barbarian
+  варвар: barbarian
   bard: bard
   Бард: bard
+  бард: bard
   cleric: cleric
   Жрец: cleric
+  жрец: cleric
   druid: druid
   Друид: druid
+  друид: druid
   fighter: fighter
   Воин: fighter
+  воин: fighter
   monk: monk
   Монах: monk
+  монах: monk
   paladin: paladin
   Паладин: paladin
+  паладин: paladin
   ranger: ranger
   Следопыт: ranger
+  следопыт: ranger
   rogue: rogue
   Плут: rogue
+  плут: rogue
   sorcerer: sorcerer
   Чародей: sorcerer
+  чародей: sorcerer
   warlock: warlock
   Колдун: warlock
+  колдун: warlock
   wizard: wizard
   Волшебник: wizard
+  волшебник: wizard
   actor: actor
   Артистичный: actor
+  артистичный: actor
   alert: alert
   Бдительный: alert
+  бдительный: alert
   athlete: athlete
   Атлетичный: athlete
+  атлетичный: athlete
   charger: charger
   Налётчик: charger
+  налётчик: charger
   crossbow_expert: crossbow_expert
   crossbow expert: crossbow_expert
   Эксперт в арбалетах: crossbow_expert
+  эксперт в арбалетах: crossbow_expert
   defensive_duelist: defensive_duelist
   defensive duelist: defensive_duelist
   Оборонительный дуэлянт: defensive_duelist
+  оборонительный дуэлянт: defensive_duelist
   dual_wielder: dual_wielder
   dual wielder: dual_wielder
   Использование двух оружий: dual_wielder
+  использование двух оружий: dual_wielder
   dungeon_delver: dungeon_delver
   dungeon delver: dungeon_delver
   Исследователь подземелий: dungeon_delver
+  исследователь подземелий: dungeon_delver
   durable: durable
   Стойкий: durable
+  стойкий: durable
   elemental_adept: elemental_adept
   elemental adept: elemental_adept
   Стихийный адепт: elemental_adept
+  стихийный адепт: elemental_adept
   grappler: grappler
   Борец: grappler
+  борец: grappler
   great_weapon_master: great_weapon_master
   great weapon master: great_weapon_master
   Мастер большого оружия: great_weapon_master
+  мастер большого оружия: great_weapon_master
   healer: healer
   Лекарь: healer
+  лекарь: healer
   heavily_armored: heavily_armored
   heavily armored: heavily_armored
   Знаток тяжёлых доспехов: heavily_armored
+  знаток тяжёлых доспехов: heavily_armored
   heavy_armor_master: heavy_armor_master
   heavy armor master: heavy_armor_master
   Мастер тяжёлых доспехов: heavy_armor_master
+  мастер тяжёлых доспехов: heavy_armor_master
   inspiring_leader: inspiring_leader
   inspiring leader: inspiring_leader
   Воодушевляющий лидер: inspiring_leader
+  воодушевляющий лидер: inspiring_leader
   keen_mind: keen_mind
   keen mind: keen_mind
   Отличная память: keen_mind
+  отличная память: keen_mind
   lightly_armored: lightly_armored
   lightly armored: lightly_armored
   Знаток лёгких доспехов: lightly_armored
+  знаток лёгких доспехов: lightly_armored
   linguist: linguist
   Языковед: linguist
+  языковед: linguist
   lucky: lucky
   Везунчик: lucky
+  везунчик: lucky
   mage_slayer: mage_slayer
   mage slayer: mage_slayer
   Убийца магов: mage_slayer
+  убийца магов: mage_slayer
   magic_initiate: magic_initiate
   magic initiate: magic_initiate
   Посвящённый в магию: magic_initiate
+  посвящённый в магию: magic_initiate
   martial_adept: martial_adept
   martial adept: martial_adept
   Воинский адепт: martial_adept
+  воинский адепт: martial_adept
   medium_armor_master: medium_armor_master
   medium armor master: medium_armor_master
   Мастер средних доспехов: medium_armor_master
+  мастер средних доспехов: medium_armor_master
   mobile: mobile
   Подвижный: mobile
+  подвижный: mobile
   moderately_armored: moderately_armored
   moderately armored: moderately_armored
   Знаток средних доспехов: moderately_armored
+  знаток средних доспехов: moderately_armored
   mounted_combatant: mounted_combatant
   mounted combatant: mounted_combatant
   Верховой боец: mounted_combatant
+  верховой боец: mounted_combatant
   observant: observant
   Внимательный: observant
+  внимательный: observant
   polearm_master: polearm_master
   polearm master: polearm_master
   Мастер древкового оружия: polearm_master
+  мастер древкового оружия: polearm_master
   resilient: resilient
   Устойчивый: resilient
+  устойчивый: resilient
   ritual_caster: ritual_caster
   ritual caster: ritual_caster
   Ритуальный заклинатель: ritual_caster
+  ритуальный заклинатель: ritual_caster
   savage_attacker: savage_attacker
   savage attacker: savage_attacker
   Дикий атакующий: savage_attacker
+  дикий атакующий: savage_attacker
   sentinel: sentinel
   Страж: sentinel
+  страж: sentinel
   sharpshooter: sharpshooter
   Меткий стрелок: sharpshooter
+  меткий стрелок: sharpshooter
   shield_master: shield_master
   shield master: shield_master
   Мастер щитов: shield_master
+  мастер щитов: shield_master
   skilled: skilled
   Одарённый: skilled
+  одарённый: skilled
   skulker: skulker
   Проныра: skulker
+  проныра: skulker
   spell_sniper: spell_sniper
   spell sniper: spell_sniper
   Меткие заклинания: spell_sniper
+  меткие заклинания: spell_sniper
   tavern_brawler: tavern_brawler
   tavern brawler: tavern_brawler
   Драчун: tavern_brawler
+  драчун: tavern_brawler
   tough: tough
   Крепкий: tough
+  крепкий: tough
   war_caster: war_caster
   war caster: war_caster
   Боевой заклинатель: war_caster
+  боевой заклинатель: war_caster
   weapon_master: weapon_master
   weapon master: weapon_master
   Мастер оружия: weapon_master
+  мастер оружия: weapon_master
   dragonborn: dragonborn
   Драконорождённый: dragonborn
+  драконорождённый: dragonborn
   dwarf: dwarf
   Дварф: dwarf
+  дварф: dwarf
   elf: elf
   Эльф: elf
+  эльф: elf
   gnome: gnome
   Гном: gnome
+  гном: gnome
   half_elf: half_elf
   half elf: half_elf
   Полуэльф: half_elf
+  полуэльф: half_elf
   half_orc: half_orc
   half orc: half_orc
   Полуорк: half_orc
+  полуорк: half_orc
   halfling: halfling
   Полурослик: halfling
+  полурослик: halfling
   human: human
   Человек: human
+  человек: human
   tiefling: tiefling
   Тифлинг: tiefling
+  тифлинг: tiefling
   aura_of_life: aura_of_life
   aura of life: aura_of_life
   Аура Жизни: aura_of_life
+  аура жизни: aura_of_life
   aura_of_purity: aura_of_purity
   aura of purity: aura_of_purity
   Аура Очищения: aura_of_purity
+  аура очищения: aura_of_purity
   aura_of_vitality: aura_of_vitality
   aura of vitality: aura_of_vitality
   Аура Живучести: aura_of_vitality
+  аура живучести: aura_of_vitality
   aura_svyatosti: aura_svyatosti
   aura svyatosti: aura_svyatosti
   Аура Святости: aura_svyatosti
+  аура святости: aura_svyatosti
   bless: bless
   Благословение: bless
+  благословение: bless
   bozhestvennoe_blagovolenie: bozhestvennoe_blagovolenie
   bozhestvennoe blagovolenie: bozhestvennoe_blagovolenie
   Божественное Благоволение: bozhestvennoe_blagovolenie
+  божественное благоволение: bozhestvennoe_blagovolenie
   bozhestvennoe_oruzhie: bozhestvennoe_oruzhie
   bozhestvennoe oruzhie: bozhestvennoe_oruzhie
   Божественное Оружие: bozhestvennoe_oruzhie
+  божественное оружие: bozhestvennoe_oruzhie
   bozhestvennoe_slovo: bozhestvennoe_slovo
   bozhestvennoe slovo: bozhestvennoe_slovo
   Божественное Слово: bozhestvennoe_slovo
+  божественное слово: bozhestvennoe_slovo
   burning_hands: burning_hands
   burning hands: burning_hands
   Огненные Ладони: burning_hands
+  огненные ладони: burning_hands
   bystryy_kolchan: bystryy_kolchan
   bystryy kolchan: bystryy_kolchan
   Быстрый Колчан: bystryy_kolchan
+  быстрый колчан: bystryy_kolchan
   charm_person: charm_person
   charm person: charm_person
   Очарование Личности: charm_person
+  очарование личности: charm_person
   cure_wounds: cure_wounds
   cure wounds: cure_wounds
   Лечение Ран: cure_wounds
+  лечение ран: cure_wounds
   demiplan: demiplan
   Демиплан: demiplan
+  демиплан: demiplan
   detect_magic: detect_magic
   detect magic: detect_magic
   Обнаружение Магии: detect_magic
+  обнаружение магии: detect_magic
   dispel_magic: dispel_magic
   dispel magic: dispel_magic
   Рассеивание Магии: dispel_magic
+  рассеивание магии: dispel_magic
   dissoniruyushchiy_shepot: dissoniruyushchiy_shepot
   dissoniruyushchiy shepot: dissoniruyushchiy_shepot
   Диссонирующий Шёпот: dissoniruyushchiy_shepot
+  диссонирующий шёпот: dissoniruyushchiy_shepot
   dlan_bigbi: dlan_bigbi
   dlan bigbi: dlan_bigbi
   Длань Бигби: dlan_bigbi
+  длань бигби: dlan_bigbi
   dnevnoy_svet: dnevnoy_svet
   dnevnoy svet: dnevnoy_svet
   Дневной Свет: dnevnoy_svet
+  дневной свет: dnevnoy_svet
   dospekh_agatisa: dospekh_agatisa
   dospekh agatisa: dospekh_agatisa
   Доспех Агатиса: dospekh_agatisa
+  доспех агатиса: dospekh_agatisa
   dospekhi_maga: dospekhi_maga
   dospekhi maga: dospekhi_maga
   Доспехи Мага: dospekhi_maga
+  доспехи мага: dospekhi_maga
   drebezgi: drebezgi
   Дребезги: drebezgi
+  дребезги: drebezgi
   drevesnyy_put: drevesnyy_put
   drevesnyy put: drevesnyy_put
   Древесный Путь: drevesnyy_put
+  древесный путь: drevesnyy_put
   dromidzhevo_poyavlenie: dromidzhevo_poyavlenie
   dromidzhevo poyavlenie: dromidzhevo_poyavlenie
   Дромиджево Появление: dromidzhevo_poyavlenie
+  дромиджево появление: dromidzhevo_poyavlenie
   druzhba_s_zhivotnymi: druzhba_s_zhivotnymi
   druzhba s zhivotnymi: druzhba_s_zhivotnymi
   Дружба С Животными: druzhba_s_zhivotnymi
+  дружба с животными: druzhba_s_zhivotnymi
   dvizhenie_pochvy: dvizhenie_pochvy
   dvizhenie pochvy: dvizhenie_pochvy
   Движение Почвы: dvizhenie_pochvy
+  движение почвы: dvizhenie_pochvy
   dvoynik: dvoynik
   Двойник: dvoynik
+  двойник: dvoynik
   faerie_fire: faerie_fire
   faerie fire: faerie_fire
   Огонь Фей: faerie_fire
+  огонь фей: faerie_fire
   falshivyy_dvoynik: falshivyy_dvoynik
   falshivyy dvoynik: falshivyy_dvoynik
   Фальшивый Двойник: falshivyy_dvoynik
+  фальшивый двойник: falshivyy_dvoynik
   fireball: fireball
   Огненный Шар: fireball
+  огненный шар: fireball
   fly: fly
   Полёт: fly
+  полёт: fly
   gaseous_form: gaseous_form
   gaseous form: gaseous_form
   Газообразная Форма: gaseous_form
+  газообразная форма: gaseous_form
   gigantskoe_nasekomoe: gigantskoe_nasekomoe
   gigantskoe nasekomoe: gigantskoe_nasekomoe
   Гигантское Насекомое: gigantskoe_nasekomoe
+  гигантское насекомое: gigantskoe_nasekomoe
   gipnoticheskiy_uzor: gipnoticheskiy_uzor
   gipnoticheskiy uzor: gipnoticheskiy_uzor
   Гипнотический Узор: gipnoticheskiy_uzor
+  гипнотический узор: gipnoticheskiy_uzor
   gnevnaya_kara: gnevnaya_kara
   gnevnaya kara: gnevnaya_kara
   Гневная Кара: gnevnaya_kara
+  гневная кара: gnevnaya_kara
   golod_khadara: golod_khadara
   golod khadara: golod_khadara
   Голод Хадара: golod_khadara
+  голод хадара: golod_khadara
   goryashchiy_klinok: goryashchiy_klinok
   goryashchiy klinok: goryashchiy_klinok
   Горящий Клинок: goryashchiy_klinok
+  горящий клинок: goryashchiy_klinok
   grad: grad
   Град: grad
+  град: grad
   grad_shipov: grad_shipov
   grad shipov: grad_shipov
   Град Шипов: grad_shipov
+  град шипов: grad_shipov
   groza_gneva: groza_gneva
   groza gneva: groza_gneva
   Гроза Гнева: groza_gneva
+  гроза гнева: groza_gneva
   healing_word: healing_word
   healing word: healing_word
   Лечащее Слово: healing_word
+  лечащее слово: healing_word
   heroism: heroism
   Героизм: heroism
+  героизм: heroism
   invisibility: invisibility
   Невидимость: invisibility
+  невидимость: invisibility
   ispolnenie_zhelaniy: ispolnenie_zhelaniy
   ispolnenie zhelaniy: ispolnenie_zhelaniy
   Исполнение Желаний: ispolnenie_zhelaniy
+  исполнение желаний: ispolnenie_zhelaniy
   istinnoe_voskreshenie: istinnoe_voskreshenie
   istinnoe voskreshenie: istinnoe_voskreshenie
   Истинное Воскрешение: istinnoe_voskreshenie
+  истинное воскрешение: istinnoe_voskreshenie
   istinnoe_zrenie: istinnoe_zrenie
   istinnoe zrenie: istinnoe_zrenie
   Истинное Зрение: istinnoe_zrenie
+  истинное зрение: istinnoe_zrenie
   izgnanie: izgnanie
   Изгнание: izgnanie
+  изгнание: izgnanie
   izgonyayushchaya_kara: izgonyayushchaya_kara
   izgonyayushchaya kara: izgonyayushchaya_kara
   Изгоняющая Кара: izgonyayushchaya_kara
+  изгоняющая кара: izgonyayushchaya_kara
   izgotovlenie: izgotovlenie
   Изготовление: izgotovlenie
+  изготовление: izgotovlenie
   izmenenie_formy_kamnya: izmenenie_formy_kamnya
   izmenenie formy kamnya: izmenenie_formy_kamnya
   Изменение Формы Камня: izmenenie_formy_kamnya
+  изменение формы камня: izmenenie_formy_kamnya
   izmenenie_pamyati: izmenenie_pamyati
   izmenenie pamyati: izmenenie_pamyati
   Изменение Памяти: izmenenie_pamyati
+  изменение памяти: izmenenie_pamyati
   izmenenie_tyagoteniya: izmenenie_tyagoteniya
   izmenenie tyagoteniya: izmenenie_tyagoteniya
   Изменение Тяготения: izmenenie_tyagoteniya
+  изменение тяготения: izmenenie_tyagoteniya
   izolyatsiya: izolyatsiya
   Изоляция: izolyatsiya
+  изоляция: izolyatsiya
   kamennaya_kozha: kamennaya_kozha
   kamennaya kozha: kamennaya_kozha
   Каменная Кожа: kamennaya_kozha
+  каменная кожа: kamennaya_kozha
   kamennaya_stena: kamennaya_stena
   kamennaya stena: kamennaya_stena
   Каменная Стена: kamennaya_stena
+  каменная стена: kamennaya_stena
   khozhdenie_po_vetru: khozhdenie_po_vetru
   khozhdenie po vetru: khozhdenie_po_vetru
   Хождение По Ветру: khozhdenie_po_vetru
+  хождение по ветру: khozhdenie_po_vetru
   khozhdenie_po_vode: khozhdenie_po_vode
   khozhdenie po vode: khozhdenie_po_vode
   Хождение По Воде: khozhdenie_po_vode
+  хождение по воде: khozhdenie_po_vode
   kleymyashchaya_kara: kleymyashchaya_kara
   kleymyashchaya kara: kleymyashchaya_kara
   Клеймящая Кара: kleymyashchaya_kara
+  клеймящая кара: kleymyashchaya_kara
   konus_kholoda: konus_kholoda
   konus kholoda: konus_kholoda
   Конус Холода: konus_kholoda
+  конус холода: konus_kholoda
   korona_bezumiya: korona_bezumiya
   korona bezumiya: korona_bezumiya
   Корона Безумия: korona_bezumiya
+  корона безумия: korona_bezumiya
   krug_smerti: krug_smerti
   krug smerti: krug_smerti
   Круг Смерти: krug_smerti
+  круг смерти: krug_smerti
   krug_teleportatsii: krug_teleportatsii
   krug teleportatsii: krug_teleportatsii
   Круг Телепортации: krug_teleportatsii
+  круг телепортации: krug_teleportatsii
   labirint: labirint
   Лабиринт: labirint
+  лабиринт: labirint
   ledyanaya_stena: ledyanaya_stena
   ledyanaya stena: ledyanaya_stena
   Ледяная Стена: ledyanaya_stena
+  ледяная стена: ledyanaya_stena
   leomundov_potaynoy_sunduk: leomundov_potaynoy_sunduk
   leomundov potaynoy sunduk: leomundov_potaynoy_sunduk
   Леомундов Потайной Сундук: leomundov_potaynoy_sunduk
+  леомундов потайной сундук: leomundov_potaynoy_sunduk
   leomundova_khizhina: leomundova_khizhina
   leomundova khizhina: leomundova_khizhina
   Леомундова Хижина: leomundova_khizhina
+  леомундова хижина: leomundova_khizhina
   levitatsiya: levitatsiya
   Левитация: levitatsiya
+  левитация: levitatsiya
   lightning_bolt: lightning_bolt
   lightning bolt: lightning_bolt
   Молния: lightning_bolt
+  молния: lightning_bolt
   luch_bolezni: luch_bolezni
   luch bolezni: luch_bolezni
   Луч Болезни: luch_bolezni
+  луч болезни: luch_bolezni
   luch_slabosti: luch_slabosti
   luch slabosti: luch_slabosti
   Луч Слабости: luch_slabosti
+  луч слабости: luch_slabosti
   lunnyy_luch: lunnyy_luch
   lunnyy luch: lunnyy_luch
   Лунный Луч: lunnyy_luch
+  лунный луч: lunnyy_luch
   magic_missile: magic_missile
   magic missile: magic_missile
   Волшебная Стрела: magic_missile
+  волшебная стрела: magic_missile
   magicheskiy_glaz: magicheskiy_glaz
   magicheskiy glaz: magicheskiy_glaz
   Магический Глаз: magicheskiy_glaz
+  магический глаз: magicheskiy_glaz
   magicheskoe_oruzhie: magicheskoe_oruzhie
   magicheskoe oruzhie: magicheskoe_oruzhie
   Магическое Оружие: magicheskoe_oruzhie
+  магическое оружие: magicheskoe_oruzhie
   major_image: major_image
   major image: major_image
   Волшебные Уста: major_image
+  волшебные уста: major_image
   maloe_vosstanovlenie: maloe_vosstanovlenie
   maloe vosstanovlenie: maloe_vosstanovlenie
   Малое Восстановление: maloe_vosstanovlenie
+  малое восстановление: maloe_vosstanovlenie
   mantiya_krestonostsa: mantiya_krestonostsa
   mantiya krestonostsa: mantiya_krestonostsa
   Мантия Крестоносца: mantiya_krestonostsa
+  мантия крестоносца: mantiya_krestonostsa
   maskirovka: maskirovka
   Маскировка: maskirovka
+  маскировка: maskirovka
   mayak_nadezhdy: mayak_nadezhdy
   mayak nadezhdy: mayak_nadezhdy
   Маяк Надежды: mayak_nadezhdy
+  маяк надежды: mayak_nadezhdy
   mech_mordenkaynena: mech_mordenkaynena
   mech mordenkaynena: mech_mordenkaynena
   Меч Морденкайнена: mech_mordenkaynena
+  меч морденкайнена: mech_mordenkaynena
   mentalnaya_svyaz_reri: mentalnaya_svyaz_reri
   mentalnaya svyaz reri: mentalnaya_svyaz_reri
   Ментальная Связь Рэри: mentalnaya_svyaz_reri
+  ментальная связь рэри: mentalnaya_svyaz_reri
   mertsanie: mertsanie
   Мерцание: mertsanie
+  мерцание: mertsanie
   meteor_swarm: meteor_swarm
   meteor swarm: meteor_swarm
   Метеоритный Дождь: meteor_swarm
+  метеоритный дождь: meteor_swarm
   metka_okhotnika: metka_okhotnika
   metka okhotnika: metka_okhotnika
   Метка Охотника: metka_okhotnika
+  метка охотника: metka_okhotnika
   mirazh: mirazh
   Мираж: mirazh
+  мираж: mirazh
   mnozhestvennoe_lechenie_ran: mnozhestvennoe_lechenie_ran
   mnozhestvennoe lechenie ran: mnozhestvennoe_lechenie_ran
   Множественное Лечение Ран: mnozhestvennoe_lechenie_ran
+  множественное лечение ран: mnozhestvennoe_lechenie_ran
   mnozhestvennoe_vnushenie: mnozhestvennoe_vnushenie
   mnozhestvennoe vnushenie: mnozhestvennoe_vnushenie
   Множественное Внушение: mnozhestvennoe_vnushenie
+  множественное внушение: mnozhestvennoe_vnushenie
   moleben_lecheniya: moleben_lecheniya
   moleben lecheniya: moleben_lecheniya
   Молебен Лечения: moleben_lecheniya
+  молебен лечения: moleben_lecheniya
   nablyudenie: nablyudenie
   Наблюдение: nablyudenie
+  наблюдение: nablyudenie
   nakhodchivost: nakhodchivost
   Находчивость: nakhodchivost
+  находчивость: nakhodchivost
   nanesenie_ran: nanesenie_ran
   nanesenie ran: nanesenie_ran
   Нанесение Ран: nanesenie_ran
+  нанесение ран: nanesenie_ran
   napravlennyy_snaryad: napravlennyy_snaryad
   napravlennyy snaryad: napravlennyy_snaryad
   Направленный Снаряд: napravlennyy_snaryad
+  направленный снаряд: napravlennyy_snaryad
   nashestvie_nasekomykh: nashestvie_nasekomykh
   nashestvie nasekomykh: nashestvie_nasekomykh
   Нашествие Насекомых: nashestvie_nasekomykh
+  нашествие насекомых: nashestvie_nasekomykh
   nebesnyy_ogon: nebesnyy_ogon
   nebesnyy ogon: nebesnyy_ogon
   Небесный Огонь: nebesnyy_ogon
+  небесный огонь: nebesnyy_ogon
   neobnaruzhimost: neobnaruzhimost
   Необнаружимость: neobnaruzhimost
+  необнаружимость: neobnaruzhimost
   netlennye_ostanki: netlennye_ostanki
   netlennye ostanki: netlennye_ostanki
   Нетленные Останки: netlennye_ostanki
+  нетленные останки: netlennye_ostanki
   nevidimoe_pismo: nevidimoe_pismo
   nevidimoe pismo: nevidimoe_pismo
   Невидимое Письмо: nevidimoe_pismo
+  невидимое письмо: nevidimoe_pismo
   nevidimyy_sluga: nevidimyy_sluga
   nevidimyy sluga: nevidimyy_sluga
   Невидимый Слуга: nevidimyy_sluga
+  невидимый слуга: nevidimyy_sluga
   nistulova_lozhnaya_magiya: nistulova_lozhnaya_magiya
   nistulova lozhnaya magiya: nistulova_lozhnaya_magiya
   Нистулова Ложная Магия: nistulova_lozhnaya_magiya
+  нистулова ложная магия: nistulova_lozhnaya_magiya
   obet: obet
   Обет: obet
+  обет: obet
   obnaruzhenie_mysley: obnaruzhenie_mysley
   obnaruzhenie mysley: obnaruzhenie_mysley
   Обнаружение Мыслей: obnaruzhenie_mysley
+  обнаружение мыслей: obnaruzhenie_mysley
   obraz: obraz
   Образ: obraz
+  образ: obraz
   obshchenie: obshchenie
   Общение: obshchenie
+  общение: obshchenie
   obshchenie_s_prirodoy: obshchenie_s_prirodoy
   obshchenie s prirodoy: obshchenie_s_prirodoy
   Общение С Природой: obshchenie_s_prirodoy
+  общение с природой: obshchenie_s_prirodoy
   ochishchenie_pishchi_i_pitya: ochishchenie_pishchi_i_pitya
   ochishchenie pishchi i pitya: ochishchenie_pishchi_i_pitya
   Очищение Пищи И Питья: ochishchenie_pishchi_i_pitya
+  очищение пищи и питья: ochishchenie_pishchi_i_pitya
   oglushayushchaya_kara: oglushayushchaya_kara
   oglushayushchaya kara: oglushayushchaya_kara
   Оглушающая Кара: oglushayushchaya_kara
+  оглушающая кара: oglushayushchaya_kara
   ognennaya_burya: ognennaya_burya
   ognennaya burya: ognennaya_burya
   Огненная Буря: ognennaya_burya
+  огненная буря: ognennaya_burya
   ognennaya_stena: ognennaya_stena
   ognennaya stena: ognennaya_stena
   Огненная Стена: ognennaya_stena
+  огненная стена: ognennaya_stena
   okamenenie: okamenenie
   Окаменение: okamenenie
+  окаменение: okamenenie
   okhrannye_runy: okhrannye_runy
   okhrannye runy: okhrannye_runy
   Охранные Руны: okhrannye_runy
+  охранные руны: okhrannye_runy
   oputyvanie: oputyvanie
   Опутывание: oputyvanie
+  опутывание: oputyvanie
   oputyvayushchiy_udar: oputyvayushchiy_udar
   oputyvayushchiy udar: oputyvayushchiy_udar
   Опутывающий Удар: oputyvayushchiy_udar
+  опутывающий удар: oputyvayushchiy_udar
   ostanovka_vremeni: ostanovka_vremeni
   ostanovka vremeni: ostanovka_vremeni
   Остановка Времени: ostanovka_vremeni
+  остановка времени: ostanovka_vremeni
   otilyukov_ledyanoy_shar: otilyukov_ledyanoy_shar
   otilyukov ledyanoy shar: otilyukov_ledyanoy_shar
   Отилюков Ледяной Шар: otilyukov_ledyanoy_shar
+  отилюков ледяной шар: otilyukov_ledyanoy_shar
   otilyukov_uprugiy_shar: otilyukov_uprugiy_shar
   otilyukov uprugiy shar: otilyukov_uprugiy_shar
   Отилюков Упругий Шар: otilyukov_uprugiy_shar
+  отилюков упругий шар: otilyukov_uprugiy_shar
   otkryvanie: otkryvanie
   Открывание: otkryvanie
+  открывание: otkryvanie
   otrazheniya: otrazheniya
   Отражения: otrazheniya
+  отражения: otrazheniya
   ozhivlenie: ozhivlenie
   Оживление: ozhivlenie
+  оживление: ozhivlenie
   palyashchaya_kara: palyashchaya_kara
   palyashchaya kara: palyashchaya_kara
   Палящая Кара: palyashchaya_kara
+  палящая кара: palyashchaya_kara
   palyashchiy_luch: palyashchiy_luch
   palyashchiy luch: palyashchiy_luch
   Палящий Луч: palyashchiy_luch
+  палящий луч: palyashchiy_luch
   pass_without_trace: pass_without_trace
   pass without trace: pass_without_trace
   Бесследное Передвижение: pass_without_trace
+  бесследное передвижение: pass_without_trace
   pauk: pauk
   Паук: pauk
+  паук: pauk
   pautina: pautina
   Паутина: pautina
+  паутина: pautina
   perenosyashchaya_dver: perenosyashchaya_dver
   perenosyashchaya dver: perenosyashchaya_dver
   Переносящая Дверь: perenosyashchaya_dver
+  переносящая дверь: perenosyashchaya_dver
   perst_smerti: perst_smerti
   perst smerti: perst_smerti
   Перст Смерти: perst_smerti
+  перст смерти: perst_smerti
   planarnye_uzy: planarnye_uzy
   planarnye uzy: planarnye_uzy
   Планарные Узы: planarnye_uzy
+  планарные узы: planarnye_uzy
   planarnyy_soyuznik: planarnyy_soyuznik
   planarnyy soyuznik: planarnyy_soyuznik
   Планарный Союзник: planarnyy_soyuznik
+  планарный союзник: planarnyy_soyuznik
   plyashushchaya_molniya: plyashushchaya_molniya
   plyashushchaya molniya: plyashushchaya_molniya
   Пляшущая Молния: plyashushchaya_molniya
+  пляшущая молния: plyashushchaya_molniya
   pochtovoe_zhivotnoe: pochtovoe_zhivotnoe
   pochtovoe zhivotnoe: pochtovoe_zhivotnoe
   Почтовое Животное: pochtovoe_zhivotnoe
+  почтовое животное: pochtovoe_zhivotnoe
   podchinenie_chudovishcha: podchinenie_chudovishcha
   podchinenie chudovishcha: podchinenie_chudovishcha
   Подчинение Чудовища: podchinenie_chudovishcha
+  подчинение чудовища: podchinenie_chudovishcha
   podchinenie_lichnosti: podchinenie_lichnosti
   podchinenie lichnosti: podchinenie_lichnosti
   Подчинение Личности: podchinenie_lichnosti
+  подчинение личности: podchinenie_lichnosti
   podchinenie_zverya: podchinenie_zverya
   podchinenie zverya: podchinenie_zverya
   Подчинение Зверя: podchinenie_zverya
+  подчинение зверя: podchinenie_zverya
   podmoga: podmoga
   Подмога: podmoga
+  подмога: podmoga
   podobie: podobie
   Подобие: podobie
+  подобие: podobie
   podsmatrivanie: podsmatrivanie
   Подсматривание: podsmatrivanie
+  подсматривание: podsmatrivanie
   podvodnoe_dykhanie: podvodnoe_dykhanie
   podvodnoe dykhanie: podvodnoe_dykhanie
   Подводное Дыхание: podvodnoe_dykhanie
+  подводное дыхание: podvodnoe_dykhanie
   poisk_familyara: poisk_familyara
   poisk familyara: poisk_familyara
   Поиск Фамильяра: poisk_familyara
+  поиск фамильяра: poisk_familyara
   poisk_lovushek: poisk_lovushek
   poisk lovushek: poisk_lovushek
   Поиск Ловушек: poisk_lovushek
+  поиск ловушек: poisk_lovushek
   poisk_puti: poisk_puti
   poisk puti: poisk_puti
   Поиск Пути: poisk_puti
+  поиск пути: poisk_puti
   poisk_skakuna: poisk_skakuna
   poisk skakuna: poisk_skakuna
   Поиск Скакуна: poisk_skakuna
+  поиск скакуна: poisk_skakuna
   poisk_sushchestva: poisk_sushchestva
   poisk sushchestva: poisk_sushchestva
   Поиск Существа: poisk_sushchestva
+  поиск существа: poisk_sushchestva
   poisk_zhivotnykh_ili_rasteniy: poisk_zhivotnykh_ili_rasteniy
   poisk zhivotnykh ili rasteniy: poisk_zhivotnykh_ili_rasteniy
   Поиск Животных Или Растений: poisk_zhivotnykh_ili_rasteniy
+  поиск животных или растений: poisk_zhivotnykh_ili_rasteniy
   polnoe_istselenie: polnoe_istselenie
   polnoe istselenie: polnoe_istselenie
   Полное Исцеление: polnoe_istselenie
+  полное исцеление: polnoe_istselenie
   polnoe_prevrashchenie: polnoe_prevrashchenie
   polnoe prevrashchenie: polnoe_prevrashchenie
   Полное Превращение: polnoe_prevrashchenie
+  полное превращение: polnoe_prevrashchenie
   ponimanie_yazykov: ponimanie_yazykov
   ponimanie yazykov: ponimanie_yazykov
   Понимание Языков: ponimanie_yazykov
+  понимание языков: ponimanie_yazykov
   porcha: porcha
   Порча: porcha
+  порча: porcha
   poryv_vetra: poryv_vetra
   poryv vetra: poryv_vetra
   Порыв Ветра: poryv_vetra
+  порыв ветра: poryv_vetra
   poslanie: poslanie
   Послание: poslanie
+  послание: poslanie
   pospeshnoe_otstuplenie: pospeshnoe_otstuplenie
   pospeshnoe otstuplenie: pospeshnoe_otstuplenie
   Поспешное Отступление: pospeshnoe_otstuplenie
+  поспешное отступление: pospeshnoe_otstuplenie
   predostorozhnost: predostorozhnost
   Предосторожность: predostorozhnost
+  предосторожность: predostorozhnost
   predskazanie: predskazanie
   Предсказание: predskazanie
+  предсказание: predskazanie
   predvidenie: predvidenie
   Предвидение: predvidenie
+  предвидение: predvidenie
   pregrada_magii: pregrada_magii
   pregrada magii: pregrada_magii
   Преграда Магии: pregrada_magii
+  преграда магии: pregrada_magii
   prevrashchenie_v_zhivotnykh: prevrashchenie_v_zhivotnykh
   prevrashchenie v zhivotnykh: prevrashchenie_v_zhivotnykh
   Превращение В Животных: prevrashchenie_v_zhivotnykh
+  превращение в животных: prevrashchenie_v_zhivotnykh
   prikaz: prikaz
   Приказ: prikaz
+  приказ: prikaz
   prikosnovenie_vampira: prikosnovenie_vampira
   prikosnovenie vampira: prikosnovenie_vampira
   Прикосновение Вампира: prikosnovenie_vampira
+  прикосновение вампира: prikosnovenie_vampira
   prinuzhdenie: prinuzhdenie
   Принуждение: prinuzhdenie
+  принуждение: prinuzhdenie
   pritvornaya_smert: pritvornaya_smert
   pritvornaya smert: pritvornaya_smert
   Притворная Смерть: pritvornaya_smert
+  притворная смерть: pritvornaya_smert
   pritvorstvo: pritvorstvo
   Притворство: pritvorstvo
+  притворство: pritvorstvo
   prizrachnyy_skakun: prizrachnyy_skakun
   prizrachnyy skakun: prizrachnyy_skakun
   Призрачный Скакун: prizrachnyy_skakun
+  призрачный скакун: prizrachnyy_skakun
   prizyv_elementalya: prizyv_elementalya
   prizyv elementalya: prizyv_elementalya
   Призыв Элементаля: prizyv_elementalya
+  призыв элементаля: prizyv_elementalya
   prizyv_fei: prizyv_fei
   prizyv fei: prizyv_fei
   Призыв Феи: prizyv_fei
+  призыв феи: prizyv_fei
   prizyv_lesnykh_obitateley: prizyv_lesnykh_obitateley
   prizyv lesnykh obitateley: prizyv_lesnykh_obitateley
   Призыв Лесных Обитателей: prizyv_lesnykh_obitateley
+  призыв лесных обитателей: prizyv_lesnykh_obitateley
   prizyv_malykh_elementaley: prizyv_malykh_elementaley
   prizyv malykh elementaley: prizyv_malykh_elementaley
   Призыв Малых Элементалей: prizyv_malykh_elementaley
+  призыв малых элементалей: prizyv_malykh_elementaley
   prizyv_molnii: prizyv_molnii
   prizyv molnii: prizyv_molnii
   Призыв Молнии: prizyv_molnii
+  призыв молнии: prizyv_molnii
   prizyv_nebozhitelya: prizyv_nebozhitelya
   prizyv nebozhitelya: prizyv_nebozhitelya
   Призыв Небожителя: prizyv_nebozhitelya
+  призыв небожителя: prizyv_nebozhitelya
   prizyv_zagrazhdeniya: prizyv_zagrazhdeniya
   prizyv zagrazhdeniya: prizyv_zagrazhdeniya
   Призыв Заграждения: prizyv_zagrazhdeniya
+  призыв заграждения: prizyv_zagrazhdeniya
   prizyv_zalpa: prizyv_zalpa
   prizyv zalpa: prizyv_zalpa
   Призыв Залпа: prizyv_zalpa
+  призыв залпа: prizyv_zalpa
   prizyv_zhivotnykh: prizyv_zhivotnykh
   prizyv zhivotnykh: prizyv_zhivotnykh
   Призыв Животных: prizyv_zhivotnykh
+  призыв животных: prizyv_zhivotnykh
   probuzhdenie_razuma: probuzhdenie_razuma
   probuzhdenie razuma: probuzhdenie_razuma
   Пробуждение Разума: probuzhdenie_razuma
+  пробуждение разума: probuzhdenie_razuma
   proektsiya: proektsiya
   Проекция: proektsiya
+  проекция: proektsiya
   proklyatie: proklyatie
   Проклятие: proklyatie
+  проклятие: proklyatie
   pryzhok: pryzhok
   Прыжок: pryzhok
+  прыжок: pryzhok
   psevdozhizn: psevdozhizn
   Псевдожизнь: psevdozhizn
+  псевдожизнь: psevdozhizn
   puteshestvie_cherez_rasteniya: puteshestvie_cherez_rasteniya
   puteshestvie cherez rasteniya: puteshestvie_cherez_rasteniya
   Путешествие Через Растения: puteshestvie_cherez_rasteniya
+  путешествие через растения: puteshestvie_cherez_rasteniya
   pylayushchiy_shar: pylayushchiy_shar
   pylayushchiy shar: pylayushchiy_shar
   Пылающий Шар: pylayushchiy_shar
+  пылающий шар: pylayushchiy_shar
   raduzhnaya_stena: raduzhnaya_stena
   raduzhnaya stena: raduzhnaya_stena
   Радужная Стена: raduzhnaya_stena
+  радужная стена: raduzhnaya_stena
   raduzhnye_bryzgi: raduzhnye_bryzgi
   raduzhnye bryzgi: raduzhnye_bryzgi
   Радужные Брызги: raduzhnye_bryzgi
+  радужные брызги: raduzhnye_bryzgi
   raskalennyy_metall: raskalennyy_metall
   raskalennyy metall: raskalennyy_metall
   Раскалённый Металл: raskalennyy_metall
+  раскалённый металл: raskalennyy_metall
   raspad: raspad
   Распад: raspad
+  распад: raspad
   razgovor_s_mertvymi: razgovor_s_mertvymi
   razgovor s mertvymi: razgovor_s_mertvymi
   Разговор С Мёртвыми: razgovor_s_mertvymi
+  разговор с мёртвыми: razgovor_s_mertvymi
   razgovor_s_rasteniyami: razgovor_s_rasteniyami
   razgovor s rasteniyami: razgovor_s_rasteniyami
   Разговор С Растениями: razgovor_s_rasteniyami
+  разговор с растениями: razgovor_s_rasteniyami
   razgovor_s_zhivotnymi: razgovor_s_zhivotnymi
   razgovor s zhivotnymi: razgovor_s_zhivotnymi
   Разговор С Животными: razgovor_s_zhivotnymi
+  разговор с животными: razgovor_s_zhivotnymi
   razmytyy_obraz: razmytyy_obraz
   razmytyy obraz: razmytyy_obraz
   Размытый Образ: razmytyy_obraz
+  размытый образ: razmytyy_obraz
   razrushitelnaya_volna: razrushitelnaya_volna
   razrushitelnaya volna: razrushitelnaya_volna
   Разрушительная Волна: razrushitelnaya_volna
+  разрушительная волна: razrushitelnaya_volna
   razyashchee_oko: razyashchee_oko
   razyashchee oko: razyashchee_oko
   Разящее Око: razyashchee_oko
+  разящее око: razyashchee_oko
   rech_zlatousta: rech_zlatousta
   rech zlatousta: rech_zlatousta
   Речь Златоуста: rech_zlatousta
+  речь златоуста: rech_zlatousta
   regeneratsiya: regeneratsiya
   Регенерация: regeneratsiya
+  регенерация: regeneratsiya
   resurrection: resurrection
   Воскрешение: resurrection
+  воскрешение: resurrection
   rost_rasteniy: rost_rasteniy
   rost rasteniy: rost_rasteniy
   Рост Растений: rost_rasteniy
+  рост растений: rost_rasteniy
   ruki_khadara: ruki_khadara
   ruki khadara: ruki_khadara
   Руки Хадара: ruki_khadara
+  руки хадара: ruki_khadara
   sfera_neuyazvimosti: sfera_neuyazvimosti
   sfera neuyazvimosti: sfera_neuyazvimosti
   Сфера Неуязвимости: sfera_neuyazvimosti
+  сфера неуязвимости: sfera_neuyazvimosti
   sglaz: sglaz
   Сглаз: sglaz
+  сглаз: sglaz
   shield_of_faith: shield_of_faith
   shield of faith: shield_of_faith
   Щит Веры: shield_of_faith
+  щит веры: shield_of_faith
   signal_trevogi: signal_trevogi
   signal trevogi: signal_trevogi
   Сигнал Тревоги: signal_trevogi
+  сигнал тревоги: signal_trevogi
   silovaya_stena: silovaya_stena
   silovaya stena: silovaya_stena
   Силовая Стена: silovaya_stena
+  силовая стена: silovaya_stena
   skolzhenie: skolzhenie
   Скольжение: skolzhenie
+  скольжение: skolzhenie
   slaboumie: slaboumie
   Слабоумие: slaboumie
+  слабоумие: slaboumie
   sleep: sleep
   Усыпление: sleep
+  усыпление: sleep
   sliyanie_s_kamnem: sliyanie_s_kamnem
   sliyanie s kamnem: sliyanie_s_kamnem
   Слияние С Камнем: sliyanie_s_kamnem
+  слияние с камнем: sliyanie_s_kamnem
   smertnyy_uzhas: smertnyy_uzhas
   smertnyy uzhas: smertnyy_uzhas
   Смертный Ужас: smertnyy_uzhas
+  смертный ужас: smertnyy_uzhas
   smyatenie: smyatenie
   Смятение: smyatenie
+  смятение: smyatenie
   snyatie_proklyatya: snyatie_proklyatya
   snyatie proklyatya: snyatie_proklyatya
   Снятие Проклятья: snyatie_proklyatya
+  снятие проклятья: snyatie_proklyatya
   sokrytie_razuma: sokrytie_razuma
   sokrytie razuma: sokrytie_razuma
   Сокрытие Разума: sokrytie_razuma
+  сокрытие разума: sokrytie_razuma
   solnechnyy_luch: solnechnyy_luch
   solnechnyy luch: solnechnyy_luch
   Солнечный Луч: solnechnyy_luch
+  солнечный луч: solnechnyy_luch
   solnechnyy_ozhog: solnechnyy_ozhog
   solnechnyy ozhog: solnechnyy_ozhog
   Солнечный Ожог: solnechnyy_ozhog
+  солнечный ожог: solnechnyy_ozhog
   sotvorenie: sotvorenie
   Сотворение: sotvorenie
+  сотворение: sotvorenie
   sotvorenie_ili_unichtozhenie_vody: sotvorenie_ili_unichtozhenie_vody
   sotvorenie ili unichtozhenie vody: sotvorenie_ili_unichtozhenie_vody
   Сотворение Или Уничтожение Воды: sotvorenie_ili_unichtozhenie_vody
+  сотворение или уничтожение воды: sotvorenie_ili_unichtozhenie_vody
   sotvorenie_nezhiti: sotvorenie_nezhiti
   sotvorenie nezhiti: sotvorenie_nezhiti
   Сотворение Нежити: sotvorenie_nezhiti
+  сотворение нежити: sotvorenie_nezhiti
   sotvorenie_pishchi_i_vody: sotvorenie_pishchi_i_vody
   sotvorenie pishchi i vody: sotvorenie_pishchi_i_vody
   Сотворение Пищи И Воды: sotvorenie_pishchi_i_vody
+  сотворение пищи и воды: sotvorenie_pishchi_i_vody
   sozdanie_prokhoda: sozdanie_prokhoda
   sozdanie prokhoda: sozdanie_prokhoda
   Создание Прохода: sozdanie_prokhoda
+  создание прохода: sozdanie_prokhoda
   stena_klinkov: stena_klinkov
   stena klinkov: stena_klinkov
   Стена Клинков: stena_klinkov
+  стена клинков: stena_klinkov
   stena_vetrov: stena_vetrov
   stena vetrov: stena_vetrov
   Стена Ветров: stena_vetrov
+  стена ветров: stena_vetrov
   stikhiynoe_oruzhie: stikhiynoe_oruzhie
   stikhiynoe oruzhie: stikhiynoe_oruzhie
   Стихийное Оружие: stikhiynoe_oruzhie
+  стихийное оружие: stikhiynoe_oruzhie
   strazh_very: strazh_very
   strazh very: strazh_very
   Страж Веры: strazh_very
+  страж веры: strazh_very
   strazhi: strazhi
   Стражи: strazhi
+  стражи: strazhi
   sverkayushchie_bryzgi: sverkayushchie_bryzgi
   sverkayushchie bryzgi: sverkayushchie_bryzgi
   Сверкающие Брызги: sverkayushchie_bryzgi
+  сверкающие брызги: sverkayushchie_bryzgi
   svoboda_peremeshcheniya: svoboda_peremeshcheniya
   svoboda peremeshcheniya: svoboda_peremeshcheniya
   Свобода Перемещения: svoboda_peremeshcheniya
+  свобода перемещения: svoboda_peremeshcheniya
   svyatilishche: svyatilishche
   Святилище: svyatilishche
+  святилище: svyatilishche
   svyaz_s_inym_mirom: svyaz_s_inym_mirom
   svyaz s inym mirom: svyaz_s_inym_mirom
   Связь С Иным Миром: svyaz_s_inym_mirom
+  связь с иным миром: svyaz_s_inym_mirom
   tainstvennyy_mirazh: tainstvennyy_mirazh
   tainstvennyy mirazh: tainstvennyy_mirazh
   Таинственный Мираж: tainstvennyy_mirazh
+  таинственный мираж: tainstvennyy_mirazh
   telekinez: telekinez
   Телекинез: telekinez
+  телекинез: telekinez
   telepatiya: telepatiya
   Телепатия: telepatiya
+  телепатия: telepatiya
   teleport: teleport
   Телепортация: teleport
+  телепортация: teleport
   temnoe_zrenie: temnoe_zrenie
   temnoe zrenie: temnoe_zrenie
   Тёмное Зрение: temnoe_zrenie
+  тёмное зрение: temnoe_zrenie
   tenzerov_paryashchiy_disk: tenzerov_paryashchiy_disk
   tenzerov paryashchiy disk: tenzerov_paryashchiy_disk
   Тензеров Парящий Диск: tenzerov_paryashchiy_disk
+  тензеров парящий диск: tenzerov_paryashchiy_disk
   ternovaya_stena: ternovaya_stena
   ternovaya stena: ternovaya_stena
   Терновая Стена: ternovaya_stena
+  терновая стена: ternovaya_stena
   tishina: tishina
   Тишина: tishina
+  тишина: tishina
   tma: tma
   Тьма: tma
+  тьма: tma
   tryuk_s_verevkoy: tryuk_s_verevkoy
   tryuk s verevkoy: tryuk_s_verevkoy
   Трюк С Верёвкой: tryuk_s_verevkoy
+  трюк с верёвкой: tryuk_s_verevkoy
   tsepkaya_loza: tsepkaya_loza
   tsepkaya loza: tsepkaya_loza
   Цепкая Лоза: tsepkaya_loza
+  цепкая лоза: tsepkaya_loza
   tsunami: tsunami
   Цунами: tsunami
+  цунами: tsunami
   tsvetnoy_sharik: tsvetnoy_sharik
   tsvetnoy sharik: tsvetnoy_sharik
   Цветной Шарик: tsvetnoy_sharik
+  цветной шарик: tsvetnoy_sharik
   tumannoe_oblako: tumannoe_oblako
   tumannoe oblako: tumannoe_oblako
   Туманное Облако: tumannoe_oblako
+  туманное облако: tumannoe_oblako
   tumannyy_shag: tumannyy_shag
   tumannyy shag: tumannyy_shag
   Туманный Шаг: tumannyy_shag
+  туманный шаг: tumannyy_shag
   ubezhishche: ubezhishche
   Убежище: ubezhishche
+  убежище: ubezhishche
   uderzhanie_chudovishcha: uderzhanie_chudovishcha
   uderzhanie chudovishcha: uderzhanie_chudovishcha
   Удержание Чудовища: uderzhanie_chudovishcha
+  удержание чудовища: uderzhanie_chudovishcha
   uderzhanie_lichnosti: uderzhanie_lichnosti
   uderzhanie lichnosti: uderzhanie_lichnosti
   Удержание Личности: uderzhanie_lichnosti
+  удержание личности: uderzhanie_lichnosti
   ukhod_v_inoy_mir: ukhod_v_inoy_mir
   ukhod v inoy mir: ukhod_v_inoy_mir
   Уход В Иной Мир: ukhod_v_inoy_mir
+  уход в иной мир: ukhod_v_inoy_mir
   umirotvorenie: umirotvorenie
   Умиротворение: umirotvorenie
+  умиротворение: umirotvorenie
   uskorenie: uskorenie
   Ускорение: uskorenie
+  ускорение: uskorenie
   usykhanie: usykhanie
   Усыхание: usykhanie
+  усыхание: usykhanie
   uzilishche: uzilishche
   Узилище: uzilishche
+  узилище: uzilishche
   velikolepnyy_osobnyak_mordenkaynena: velikolepnyy_osobnyak_mordenkaynena
   velikolepnyy osobnyak mordenkaynena: velikolepnyy_osobnyak_mordenkaynena
   Великолепный Особняк Морденкайнена: velikolepnyy_osobnyak_mordenkaynena
+  великолепный особняк морденкайнена: velikolepnyy_osobnyak_mordenkaynena
   veshchiy_son: veshchiy_son
   veshchiy son: veshchiy_son
   Вещий Сон: veshchiy_son
+  вещий сон: veshchiy_son
   videnie_nevidimogo: videnie_nevidimogo
   videnie nevidimogo: videnie_nevidimogo
   Видение Невидимого: videnie_nevidimogo
+  видение невидимого: videnie_nevidimogo
   vlast_nad_pogodoy: vlast_nad_pogodoy
   vlast nad pogodoy: vlast_nad_pogodoy
   Власть Над Погодой: vlast_nad_pogodoy
+  власть над погодой: vlast_nad_pogodoy
   volna_groma: volna_groma
   volna groma: volna_groma
   Волна Грома: volna_groma
+  волна грома: volna_groma
   volshebnyy_sosud: volshebnyy_sosud
   volshebnyy sosud: volshebnyy_sosud
   Волшебный Сосуд: volshebnyy_sosud
+  волшебный сосуд: volshebnyy_sosud
   volshebnyy_zamok: volshebnyy_zamok
   volshebnyy zamok: volshebnyy_zamok
   Волшебный Замок: volshebnyy_zamok
+  волшебный замок: volshebnyy_zamok
   voobrazhaemaya_sila: voobrazhaemaya_sila
   voobrazhaemaya sila: voobrazhaemaya_sila
   Воображаемая Сила: voobrazhaemaya_sila
+  воображаемая сила: voobrazhaemaya_sila
   voobrazhaemyy_ubiytsa: voobrazhaemyy_ubiytsa
   voobrazhaemyy ubiytsa: voobrazhaemyy_ubiytsa
   Воображаемый Убийца: voobrazhaemyy_ubiytsa
+  воображаемый убийца: voobrazhaemyy_ubiytsa
   vosplamenyayushchayasya_tucha: vosplamenyayushchayasya_tucha
   vosplamenyayushchayasya tucha: vosplamenyayushchayasya_tucha
   Воспламеняющаяся Туча: vosplamenyayushchayasya_tucha
+  воспламеняющаяся туча: vosplamenyayushchayasya_tucha
   vosstavshiy_trup: vosstavshiy_trup
   vosstavshiy trup: vosstavshiy_trup
   Восставший Труп: vosstavshiy_trup
+  восставший труп: vosstavshiy_trup
   vozrozhdenie: vozrozhdenie
   Возрождение: vozrozhdenie
+  возрождение: vozrozhdenie
   vysshaya_nevidimost: vysshaya_nevidimost
   vysshaya nevidimost: vysshaya_nevidimost
   Высшая Невидимость: vysshaya_nevidimost
+  высшая невидимость: vysshaya_nevidimost
   vysshee_vosstanovlenie: vysshee_vosstanovlenie
   vysshee vosstanovlenie: vysshee_vosstanovlenie
   Высшее Восстановление: vysshee_vosstanovlenie
+  высшее восстановление: vysshee_vosstanovlenie
   vyzov_na_duel: vyzov_na_duel
   vyzov na duel: vyzov_na_duel
   Вызов На Дуэль: vyzov_na_duel
+  вызов на дуэль: vyzov_na_duel
   zadannaya_illyuziya: zadannaya_illyuziya
   zadannaya illyuziya: zadannaya_illyuziya
   Заданная Иллюзия: zadannaya_illyuziya
+  заданная иллюзия: zadannaya_illyuziya
   zamedlenie: zamedlenie
   Замедление: zamedlenie
+  замедление: zamedlenie
   zamedlennyy_ognennyy_shar: zamedlennyy_ognennyy_shar
   zamedlennyy ognennyy shar: zamedlennyy_ognennyy_shar
   Замедленный Огненный Шар: zamedlennyy_ognennyy_shar
+  замедленный огненный шар: zamedlennyy_ognennyy_shar
   zapret: zapret
   Запрет: zapret
+  запрет: zapret
   zarazhenie: zarazhenie
   Заражение: zarazhenie
+  заражение: zarazhenie
   zashchita_ot_dobra_i_zla: zashchita_ot_dobra_i_zla
   zashchita ot dobra i zla: zashchita_ot_dobra_i_zla
   Защита От Добра И Зла: zashchita_ot_dobra_i_zla
+  защита от добра и зла: zashchita_ot_dobra_i_zla
   zashchita_ot_energii: zashchita_ot_energii
   zashchita ot energii: zashchita_ot_energii
   Защита От Энергии: zashchita_ot_energii
+  защита от энергии: zashchita_ot_energii
   zashchita_ot_smerti: zashchita_ot_smerti
   zashchita ot smerti: zashchita_ot_smerti
   Защита От Смерти: zashchita_ot_smerti
+  защита от смерти: zashchita_ot_smerti
   zashchita_ot_yada: zashchita_ot_yada
   zashchita ot yada: zashchita_ot_yada
   Защита От Яда: zashchita_ot_yada
+  защита от яда: zashchita_ot_yada
   zatochenie: zatochenie
   Заточение: zatochenie
+  заточение: zatochenie
   zavesa_strel: zavesa_strel
   zavesa strel: zavesa_strel
   Завеса Стрел: zavesa_strel
+  завеса стрел: zavesa_strel
   zemletryasenie: zemletryasenie
   Землетрясение: zemletryasenie
+  землетрясение: zemletryasenie
   zhivotnye_chuvstva: zhivotnye_chuvstva
   zhivotnye chuvstva: zhivotnye_chuvstva
   Животные Чувства: zhivotnye_chuvstva
+  животные чувства: zhivotnye_chuvstva
   zhutkiy_smekh_tashi: zhutkiy_smekh_tashi
   zhutkiy smekh tashi: zhutkiy_smekh_tashi
   Жуткий Смех Таши: zhutkiy_smekh_tashi
+  жуткий смех таши: zhutkiy_smekh_tashi
   zlovonnoe_oblako: zlovonnoe_oblako
   zlovonnoe oblako: zlovonnoe_oblako
   Зловонное Облако: zlovonnoe_oblako
+  зловонное облако: zlovonnoe_oblako
   znak: znak
   Знак: znak
+  знак: znak
   состояния: A-conditions
   conditions: A-conditions
   A-conditions: A-conditions
+  a-conditions: A-conditions
   B-gods: B-gods
+  b-gods: B-gods
   Боги мультивселенной: B-gods
+  боги мультивселенной: B-gods
   C-planes: C-planes
+  c-planes: C-planes
   Планы существования: C-planes
+  планы существования: C-planes
   параметры существ: D-creatures
   creatures: D-creatures
   D-creatures: D-creatures
+  d-creatures: D-creatures
   E-literature: E-literature
+  e-literature: E-literature
   Литература для вдохновения: E-literature
+  литература для вдохновения: E-literature
   en-ru: en-ru
   Англо-русский словарь: en-ru
+  англо-русский словарь: en-ru
   ru-en: ru-en
   Русско-английский словарь: ru-en
+  русско-английский словарь: ru-en
 summaries:
-  00-introduction: ''
-  01-character-creation: ''
-  02-races: ''
-  03-classes: ''
-  03-subclasses: ''
-  04-backgrounds: ''
-  05-equipment-reference: ''
-  05-equipment: ''
-  06-feats: ''
-  06-individual-options: ''
-  06-multiclass: ''
-  07-ability-scores: ''
-  08-adventures: ''
-  09-combat: ''
-  10-spellcasting: ''
-  11-spells: ''
-  appendices: 'Приложения PHB: состояния, существа; лор богов/планов/литературы исключён'
+  00-introduction: 'Как играть: кости, проверки, преимущества/помехи — обзор'
+  01-character-creation: 'Шаги создания: раса → класс → характеристики → предыстория → снаряжение'
+  02-races: '9 рас PHB: бонусы характеристик, размер, скорость, черты расы/подрасы'
+  03-classes: '12 классов: кости хитов, владения, таблица уровней, ключевые умения'
+  03-subclasses: Подкласс на уровне класса (обычно 2–3); детали в entities/classes
+  04-backgrounds: '13 предысторий: навыки, инструменты, снаряжение, особенность'
+  05-equipment-reference: Справочные таблицы оружия/доспехов/предметов
+  05-equipment: Монеты, доспехи, оружие, снаряжение, инструменты, расходы
+  06-feats: Черты вместо ASI; список в entities/feats
+  06-individual-options: Мультикласс и черты — обзор главы 6
+  06-multiclass: Требования, владения, ячейки заклинаний при мультиклассе
+  07-ability-scores: Модификаторы, проверки, спасброски, навыки, пассивные
+  08-adventures: Время, перемещение, окружение, отдых, взаимодействие
+  09-combat: Инициатива, ход, действия, атака, урон, укрытие, состояния в бою
+  10-spellcasting: Ячейки, подготовка, компоненты, концентрация, школы
+  11-spells: Каталог заклинаний PHB; карточки в entities/spells
+  appendices: Состояния, статблоки существ; лор богов/планов исключён
   acolyte: 'Проницательность, Религия; умение: Приют для верующих'
   charlatan: 'Ловкость рук, Обман; умение: Поддельная личность'
   criminal: 'Обман, Скрытность; умение: Криминальные связи'
@@ -3685,279 +4797,470 @@ summaries:
   halfling: Ловкость +2; размер Маленький; скорость 25 фт.; везунчик; храбрость
   human: 'Стандарт: все характеристики +1; вариант: +1 к двум, навык, черта, язык'
   tiefling: Интеллект +1, Харизма +2; тёмное зрение; сопротивление огню; дьявольское наследие
-  aura_of_life: ''
-  aura_of_purity: ''
-  aura_of_vitality: ''
-  aura_svyatosti: ''
-  bless: ''
-  bozhestvennoe_blagovolenie: ''
-  bozhestvennoe_oruzhie: ''
-  bozhestvennoe_slovo: ''
-  burning_hands: ''
-  bystryy_kolchan: ''
-  charm_person: ''
-  cure_wounds: ''
-  demiplan: ''
-  detect_magic: ''
-  dispel_magic: ''
-  dissoniruyushchiy_shepot: ''
-  dlan_bigbi: ''
-  dnevnoy_svet: ''
-  dospekh_agatisa: ''
-  dospekhi_maga: ''
-  drebezgi: ''
-  drevesnyy_put: ''
-  dromidzhevo_poyavlenie: ''
-  druzhba_s_zhivotnymi: ''
-  dvizhenie_pochvy: ''
-  dvoynik: ''
-  faerie_fire: ''
-  falshivyy_dvoynik: ''
-  fireball: ''
-  fly: ''
-  gaseous_form: ''
-  gigantskoe_nasekomoe: ''
-  gipnoticheskiy_uzor: ''
-  gnevnaya_kara: ''
-  golod_khadara: ''
-  goryashchiy_klinok: ''
-  grad: ''
-  grad_shipov: ''
-  groza_gneva: ''
-  healing_word: ''
-  heroism: ''
-  invisibility: ''
-  ispolnenie_zhelaniy: ''
-  istinnoe_voskreshenie: ''
-  istinnoe_zrenie: ''
-  izgnanie: ''
-  izgonyayushchaya_kara: ''
-  izgotovlenie: ''
-  izmenenie_formy_kamnya: ''
-  izmenenie_pamyati: ''
-  izmenenie_tyagoteniya: ''
-  izolyatsiya: ''
-  kamennaya_kozha: ''
-  kamennaya_stena: ''
-  khozhdenie_po_vetru: ''
-  khozhdenie_po_vode: ''
-  kleymyashchaya_kara: ''
-  konus_kholoda: ''
-  korona_bezumiya: ''
-  krug_smerti: ''
-  krug_teleportatsii: ''
-  labirint: ''
-  ledyanaya_stena: ''
-  leomundov_potaynoy_sunduk: ''
-  leomundova_khizhina: ''
-  levitatsiya: ''
-  lightning_bolt: ''
-  luch_bolezni: ''
-  luch_slabosti: ''
-  lunnyy_luch: ''
-  magic_missile: ''
-  magicheskiy_glaz: ''
-  magicheskoe_oruzhie: ''
-  major_image: ''
-  maloe_vosstanovlenie: ''
-  mantiya_krestonostsa: ''
-  maskirovka: ''
-  mayak_nadezhdy: ''
-  mech_mordenkaynena: ''
-  mentalnaya_svyaz_reri: ''
-  mertsanie: ''
-  meteor_swarm: ''
-  metka_okhotnika: ''
-  mirazh: ''
-  mnozhestvennoe_lechenie_ran: ''
-  mnozhestvennoe_vnushenie: ''
-  moleben_lecheniya: ''
-  nablyudenie: ''
-  nakhodchivost: ''
-  nanesenie_ran: ''
-  napravlennyy_snaryad: ''
-  nashestvie_nasekomykh: ''
-  nebesnyy_ogon: ''
-  neobnaruzhimost: ''
-  netlennye_ostanki: ''
-  nevidimoe_pismo: ''
-  nevidimyy_sluga: ''
-  nistulova_lozhnaya_magiya: ''
-  obet: ''
-  obnaruzhenie_mysley: ''
-  obraz: ''
-  obshchenie: ''
-  obshchenie_s_prirodoy: ''
-  ochishchenie_pishchi_i_pitya: ''
-  oglushayushchaya_kara: ''
-  ognennaya_burya: ''
-  ognennaya_stena: ''
-  okamenenie: ''
-  okhrannye_runy: ''
-  oputyvanie: ''
-  oputyvayushchiy_udar: ''
-  ostanovka_vremeni: ''
-  otilyukov_ledyanoy_shar: ''
-  otilyukov_uprugiy_shar: ''
-  otkryvanie: ''
-  otrazheniya: ''
-  ozhivlenie: ''
-  palyashchaya_kara: ''
-  palyashchiy_luch: ''
-  pass_without_trace: ''
-  pauk: ''
-  pautina: ''
-  perenosyashchaya_dver: ''
-  perst_smerti: ''
-  planarnye_uzy: ''
-  planarnyy_soyuznik: ''
-  plyashushchaya_molniya: ''
-  pochtovoe_zhivotnoe: ''
-  podchinenie_chudovishcha: ''
-  podchinenie_lichnosti: ''
-  podchinenie_zverya: ''
-  podmoga: ''
-  podobie: ''
-  podsmatrivanie: ''
-  podvodnoe_dykhanie: ''
-  poisk_familyara: ''
-  poisk_lovushek: ''
-  poisk_puti: ''
-  poisk_skakuna: ''
-  poisk_sushchestva: ''
-  poisk_zhivotnykh_ili_rasteniy: ''
-  polnoe_istselenie: ''
-  polnoe_prevrashchenie: ''
-  ponimanie_yazykov: ''
-  porcha: ''
-  poryv_vetra: ''
-  poslanie: ''
-  pospeshnoe_otstuplenie: ''
-  predostorozhnost: ''
-  predskazanie: ''
-  predvidenie: ''
-  pregrada_magii: ''
-  prevrashchenie_v_zhivotnykh: ''
-  prikaz: ''
-  prikosnovenie_vampira: ''
-  prinuzhdenie: ''
-  pritvornaya_smert: ''
-  pritvorstvo: ''
-  prizrachnyy_skakun: ''
-  prizyv_elementalya: ''
-  prizyv_fei: ''
-  prizyv_lesnykh_obitateley: ''
-  prizyv_malykh_elementaley: ''
-  prizyv_molnii: ''
-  prizyv_nebozhitelya: ''
-  prizyv_zagrazhdeniya: ''
-  prizyv_zalpa: ''
-  prizyv_zhivotnykh: ''
-  probuzhdenie_razuma: ''
-  proektsiya: ''
-  proklyatie: ''
-  pryzhok: ''
-  psevdozhizn: ''
-  puteshestvie_cherez_rasteniya: ''
-  pylayushchiy_shar: ''
-  raduzhnaya_stena: ''
-  raduzhnye_bryzgi: ''
-  raskalennyy_metall: ''
-  raspad: ''
-  razgovor_s_mertvymi: ''
-  razgovor_s_rasteniyami: ''
-  razgovor_s_zhivotnymi: ''
-  razmytyy_obraz: ''
-  razrushitelnaya_volna: ''
-  razyashchee_oko: ''
-  rech_zlatousta: ''
-  regeneratsiya: ''
-  resurrection: ''
-  rost_rasteniy: ''
-  ruki_khadara: ''
-  sfera_neuyazvimosti: ''
-  sglaz: ''
-  shield_of_faith: ''
-  signal_trevogi: ''
-  silovaya_stena: ''
-  skolzhenie: ''
-  slaboumie: ''
-  sleep: ''
-  sliyanie_s_kamnem: ''
-  smertnyy_uzhas: ''
-  smyatenie: ''
-  snyatie_proklyatya: ''
-  sokrytie_razuma: ''
-  solnechnyy_luch: ''
-  solnechnyy_ozhog: ''
-  sotvorenie: ''
-  sotvorenie_ili_unichtozhenie_vody: ''
-  sotvorenie_nezhiti: ''
-  sotvorenie_pishchi_i_vody: ''
-  sozdanie_prokhoda: ''
-  stena_klinkov: ''
-  stena_vetrov: ''
-  stikhiynoe_oruzhie: ''
-  strazh_very: ''
-  strazhi: ''
-  sverkayushchie_bryzgi: ''
-  svoboda_peremeshcheniya: ''
-  svyatilishche: ''
-  svyaz_s_inym_mirom: ''
-  tainstvennyy_mirazh: ''
-  telekinez: ''
-  telepatiya: ''
-  teleport: ''
-  temnoe_zrenie: ''
-  tenzerov_paryashchiy_disk: ''
-  ternovaya_stena: ''
-  tishina: ''
-  tma: ''
-  tryuk_s_verevkoy: ''
-  tsepkaya_loza: ''
-  tsunami: ''
-  tsvetnoy_sharik: ''
-  tumannoe_oblako: ''
-  tumannyy_shag: ''
-  ubezhishche: ''
-  uderzhanie_chudovishcha: ''
-  uderzhanie_lichnosti: ''
-  ukhod_v_inoy_mir: ''
-  umirotvorenie: ''
-  uskorenie: ''
-  usykhanie: ''
-  uzilishche: ''
-  velikolepnyy_osobnyak_mordenkaynena: ''
-  veshchiy_son: ''
-  videnie_nevidimogo: ''
-  vlast_nad_pogodoy: ''
-  volna_groma: ''
-  volshebnyy_sosud: ''
-  volshebnyy_zamok: ''
-  voobrazhaemaya_sila: ''
-  voobrazhaemyy_ubiytsa: ''
-  vosplamenyayushchayasya_tucha: ''
-  vosstavshiy_trup: ''
-  vozrozhdenie: ''
-  vysshaya_nevidimost: ''
-  vysshee_vosstanovlenie: ''
-  vyzov_na_duel: ''
-  zadannaya_illyuziya: ''
-  zamedlenie: ''
-  zamedlennyy_ognennyy_shar: ''
-  zapret: ''
-  zarazhenie: ''
-  zashchita_ot_dobra_i_zla: ''
-  zashchita_ot_energii: ''
-  zashchita_ot_smerti: ''
-  zashchita_ot_yada: ''
-  zatochenie: ''
-  zavesa_strel: ''
-  zemletryasenie: ''
-  zhivotnye_chuvstva: ''
-  zhutkiy_smekh_tashi: ''
-  zlovonnoe_oblako: ''
-  znak: ''
+  aura_of_life: 4; abjuration; На себя (30-футовый радиус) [конц.] — Все невраждебные существа в ауре (включая вас) обладают
+    сопротивлением к урону некротической энер… / От вас исходит защищающая
+  aura_of_purity: 4; abjuration; На себя (30-футовый радиус) [конц.] — Все невраждебные существа в ауре (включая вас) не могут
+    заболеть, имеют сопротивление к урону ядо… / От вас исходит очищающая а
+  aura_of_vitality: 3; evocation; На себя (30-футовый радиус) [конц.] — Вы можете бонусным действием восстанавливать одному
+    любому существу в ауре (включая себя) 2к6 хитов. / Если цель причиняет урон
+  aura_svyatosti: 8; abjuration; На себя [конц.] — это заклинание, используя ячейку 2 уровня или выше, вы можете сделать целью
+    одно дополнительное с… / Пока заклинание активно, ваши атаки оружием пр
+  bless: 1; enchantment; 30 футов [конц.] — Каждый раз, когда до окончания заклинания цель совершает бросок атаки или спасбросок,
+    она может б…
+  bozhestvennoe_blagovolenie: 1; evocation; На себя [конц.]
+  bozhestvennoe_oruzhie: 2; evocation; 60 футов — Когда вы накладываете это заклинание, вы можете совершить рукопашную атаку
+    заклинанием по существ… / При попадании цель получает урон силовым полем, равный
+  bozhestvennoe_slovo: 7; evocation; 30 футов — Все эти существа, слышащие вас, должны совершить спасбросок Харизмы. / При
+    провале существо попадает под действие эффекта, основанного на текущем количеств
+  burning_hands: 1; evocation; На себя (15-футовый конус) — Существо получает урон огнём 3к6 в случае провала и половину этого
+    урона в случае успеха. / Все существа в пределах 15-футового конуса до
+  bystryy_kolchan: 5; transmutation; Касание [конц.]
+  charm_person: 1; enchantment; 30 футов — Он должен совершить спасбросок Мудрости, с преимуществом, если вы или ваши спутники
+    сражаетесь с … / Если он проваливает спасбросок, он очарован вами, по
+  cure_wounds: 1; evocation; Касание — Существо, которого вы касаетесь, восстанавливает количество хитов, равное 1к8 + ваш
+    модификатор б…
+  demiplan: 8; Вызов; 60 футов
+  detect_magic: 1; Прорицание; На себя [конц.]
+  dispel_magic: 3; abjuration; 120 футов
+  dissoniruyushchiy_shepot: 1; enchantment; 60 футов — Цель должна совершить спасбросок Мудрости. / В случае провала она получает
+    урон психической энергией 3к6 и должна немедленно реакцией перемест…
+  dlan_bigbi: 5; evocation; 120 футов [конц.] — Рука перемещается так, что находится между вами и целью, предоставляя вам
+    от цели укрытие на поло… / Когда хиты руки опускаются до 0, заклинание о
+  dnevnoy_svet: 3; evocation; 60 футов — Из точки, выбранной вами в пределах дистанции, распространяется сфера света с радиусом
+    60 футов.
+  dospekh_agatisa: 1; abjuration; На себя — Если существо попадает по вам рукопашной атакой, пока у вас есть эти хиты, оно
+    получает урон холо…
+  dospekhi_maga: 1; abjuration; Касание
+  drebezgi: 2; evocation; 60 футов — Все существа в сфере с радиусом 10 футов с центром на этой точке должны совершить спасбросок
+    Тело… / Существа, изготовленные из неорганической материи, так
+  drevesnyy_put: 5; Вызов; На себя [конц.] — Оба дерева должны быть живыми, и размер обоих должен быть не меньше вашего.
+  dromidzhevo_poyavlenie: 6; Вызов; Касание
+  druzhba_s_zhivotnymi: 1; enchantment; 30 футов — Скорость этих существ в этой области уменьшена вдвое, и когда такое существо
+    впервые за ход входи… / При провале существо получает урон излучением 3к8 (е
+  dvizhenie_pochvy: 6; transmutation; 120 футов [конц.] — Высота таких изменений не может превышать половины самой большой
+    стороны области. / В конце каждых 10 минут концентрации на этом заклинании вы
+  dvoynik: 8; necromancy; Касание
+  faerie_fire: 1; evocation; 60 футов [конц.] — Все существа в этой области тоже подсвечиваются, если проваливают спасбросок
+    Ловкости. / Все предметы в кубе с длиной ребра 20 футов в пределах дис
+  falshivyy_dvoynik: 5; illusion; На себя [конц.] — Вы становитесь невидимым, и в то же время в том месте, где вы были, появляется
+    ваш иллюзорный дво… / Двойник существует, пока заклинание активно, но
+  fireball: 3; evocation; 150 футов — Все существа в пределах сферы с радиусом 20 футов с центром в этой точке должны совершить
+    спасбро… / Цель получает урон огнём 8к6 при провале или половину
+  fly: 3; transmutation; Касание [конц.] — Когда заклинание оканчивается, цель падает, если всё ещё находится в полёте и ничем
+    не может оста…
+  gaseous_form: 3; transmutation; Касание [конц.] — Существо получает сопротивление к немагическому урону, и совершает с преимуществом
+    спасброски Сил… / Заклинание оканчивается, если хиты существа
+  gigantskoe_nasekomoe: 4; transmutation; 30 футов [конц.] — Существо сохраняет гигантский размер всю длительность заклинания,
+    пока его хиты не опустятся до 0…
+  gipnoticheskiy_uzor: 3; illusion; 120 футов [конц.] — Все существа в этой области, видящие узор, должны совершить спасбросок
+    Мудрости. / Заклинание заканчивается для отдельного существа, если оно получ
+  gnevnaya_kara: 1; evocation; На себя [конц.] — В следующий раз, когда вы попадёте атакой рукопашным оружием, пока активно
+    это заклинание, ваша а… / Кроме того, если цель — существо, оно должно со
+  golod_khadara: 3; Вызов; 150 футов [конц.] — Все существа, начинающие ход в этой местности, получают урон холодом 2к6. /
+    Все существа, оканчивающие ход в этой местности, должны преуспеть в спасбр
+  goryashchiy_klinok: 2; evocation; На себя [конц.]
+  grad: 4; evocation; 300 футов — Все существа в цилиндре должны совершить спасбросок Ловкости. / Существо получает дробящий
+    урон 2к8 и урон холодом 4к6 при провале, или половину этого уро
+  grad_shipov: 1; Вызов; На себя [конц.] — В дополнение к обычному эффекту атаки, цель и все существа в пределах 5 футов от
+    неё, должны сове… / При провале существо получает колющий урон 1к10, ил
+  groza_gneva: '9; Вызов; Видимость [конц.] — 1 уровень, воплощение Время накладывания: 1 бонусное действие Дистанция: На
+    себя Компоненты: В Дл… / Все существа, находящиеся под облаками (на рассто'
+  healing_word: 1; evocation; 60 футов — Существо на ваш выбор, видимое в пределах дистанции, восстанавливает количество хитов,
+    равное 1к4…
+  heroism: 1; enchantment; Касание [конц.] — Пока заклинание активно, существо получает иммунитет к состоянию испуга, и в
+    начале каждого своег… / Когда это заклинание оканчивается, цель теряе
+  invisibility: 2; illusion; Касание [конц.] — Существо, которого вы касаетесь, становится невидимым до окончания действия
+    заклинания. / Всё, что цель несёт или носит, становится невидимым, пока о
+  ispolnenie_zhelaniy: 9; Вызов; На себя — Вы даруете до десяти существам, видимым вами, сопротивление к выбранному вами виду
+    урона. / Вы позволяете до двенадцати другим существам, видимым вами, восстано
+  istinnoe_voskreshenie: 9; necromancy; Касание
+  istinnoe_zrenie: 6; divination; Касание
+  izgnanie: 4; abjuration; 60 футов [конц.]
+  izgonyayushchaya_kara: 5; abjuration; На себя [конц.]
+  izgotovlenie: 4; transmutation; 120 футов — Вы можете создать предмет Большого или меньшего размера (помещающийся в куб
+    с длиной ребра 10 фут… / Если вы работаете с металлом, камнем или другой м
+  izmenenie_formy_kamnya: 4; transmutation; Касание
+  izmenenie_pamyati: 5; enchantment; 30 футов [конц.] — Если вы с ним сражаетесь, оно совершает спасбросок с преимуществом.
+    / Одно существо, которое вы видите, должно совершить спасбросок Мудрости.
+  izmenenie_tyagoteniya: 7; transmutation; 100 футов [конц.] — Это заклинание обращает гравитацию в цилиндре с радиусом 50
+    футов и высотой 100 футов с центром н…
+  izolyatsiya: 7; transmutation; Касание
+  kamennaya_kozha: 4; abjuration; Касание [конц.] — Пока заклинание активно, цель получает сопротивление к немагическому дробящему,
+    колющему и рубяще…
+  kamennaya_stena: 5; evocation; 120 футов [конц.] — Если существо со всех сторон окружается стеной (или стеной и другой сплошной
+    поверхностью), это с… / Стена является предметом, изготовленным из ка
+  khozhdenie_po_vetru: 6; transmutation; 30 футов — Находясь в форме облака, существо получает скорость полёта 300 футов и
+    сопротивление к урону от н… / Возврат занимает 1 минуту, во время которой сущест
+  khozhdenie_po_vode: 3; Преобразование; 30 футов — Это заклинание дарует способность перемещаться по жидкой поверхности —
+    такой как вода, кислота, г…
+  kleymyashchaya_kara: 2; evocation; На себя [конц.] — Атака причиняет цели дополнительный урон излучением 2к6. / это заклинание,
+    используя ячейку 4 уровня или выше, прерванное заклинание автоматически н
+  konus_kholoda: 5; evocation; На себя (60-футовый конус) — Все существа в 60-футовом конусе должны совершить спасбросок Телосложения.
+    / Существа получают урон холодом 8к8 при провале, или половину
+  korona_bezumiya: 2; enchantment; 120 футов [конц.] — Кроме того, когда такое существо преуспевает в спасброске от заклинания
+    или магического эффекта, … / Один гуманоид на ваш выбор, видимый вами в
+  krug_smerti: 6; necromancy; 150 футов — Все существа в этой области должны совершить спасбросок Телосложения. / Цель получает
+    урон некротической энергией 8к6 при провале или половину этого урон
+  krug_teleportatsii: 5; Вызов; 10 футов
+  labirint: 8; Вызов; 60 футов [конц.]
+  ledyanaya_stena: 6; evocation; 120 футов [конц.] — Если стена при появлении проходит по пространству существа, это существо
+    выталкивается по одну из… / При провале существо получает урон холодом 10
+  leomundov_potaynoy_sunduk: 4; Вызов; Касание
+  leomundova_khizhina: 3; Воплощение; На себя (полусфера с радиусом 10 футов) — Над вами и вокруг вас появляется купол из
+    силового поля радиусом 10 футов, остающийся неподвижным…
+  levitatsiya: 2; transmutation; 60 футов [конц.]
+  lightning_bolt: 3; evocation; На себя (100-футовая линия) — Все существа в линии должны совершить спасбросок Ловкости. /
+    При провале существо получает урон электричеством 8к6, или половину урона п
+  luch_bolezni: 1; necromancy; 60 футов — Совершите дальнобойную атаку заклинанием по цели. / При попадании цель получает
+    урон ядом 2к8 и должна совершить спасбросок Телосложения.
+  luch_slabosti: 2; necromancy; 60 футов [конц.] — Совершите по цели дальнобойную атаку заклинанием. / При попадании цель
+    до конца действия заклинания причиняет только половину урона атаками оружие
+  lunnyy_luch: 2; evocation; 120 футов [конц.] — Когда существо впервые за ход входит в область заклинания или начинает там
+    ход, оно окутывается п… / Бледный серебристый луч сияет в цилиндре с ра
+  magic_missile: 1; evocation; 120 футов — Каждый дротик причиняет урон силовым полем 1к4 + 1.
+  magicheskiy_glaz: 4; divination; 30 футов [конц.] — Вы создаёте невидимый магический глаз в пределах дистанции, который
+    парит в воздухе на время длит… / Глаз может удаляться от вас на любое расстоян
+  magicheskoe_oruzhie: 2; transmutation; Касание [конц.] — Пока заклинание активно, это оружие становится магическим оружием
+    с бонусом +1 к броскам атаки и …
+  major_image: 2; Иллюзия; 30 футов
+  maloe_vosstanovlenie: 2; abjuration; Касание
+  mantiya_krestonostsa: 3; evocation; На себя [конц.] — Находясь в ауре, все невраждебные существа (включая вас) при попадании
+    атакой оружием причиняют д… / От вас начинает исходить святая сила аурой с ра
+  maskirovka: 1; illusion; На себя — Вы не можете менять основу тела, поэтому у новой формы должен быть такой же набор конечностей.
+  mayak_nadezhdy: 3; abjuration; 30 футов [конц.] — Пока заклинание активно, все цели совершают спасброски Мудрости и спасброски
+    от смерти с преимуще…
+  mech_mordenkaynena: 7; evocation; 60 футов [конц.] — Когда меч появляется, вы совершаете рукопашную атаку заклинанием по
+    цели на ваш выбор, находящейс… / При попадании цель получает урон силовым полем
+  mentalnaya_svyaz_reri: 5; Прорицание; 30 футов — Общение возможно на любом расстоянии, но оно не может простираться на другие
+    планы существования.
+  mertsanie: 3; transmutation; На себя
+  meteor_swarm: 9; evocation; 1 миля — Все существа в сфере с радиусом 40 футов с центром на каждой из точек должны совершить
+    спасбросок… / Заклинание причиняет урон предметам и воспламеняет горюч
+  metka_okhotnika: 1; divination; 90 футов [конц.] — Пока заклинание активно, вы причиняете цели дополнительный урон 1к6 каждый
+    раз, когда попадаете п… / Если хиты цели опускаются до 0, пока заклинан
+  mirazh: 4; illusion; 300 футов — Вы заставляете природную местность в пределах куба с длиной ребра 150 футов, находящегося
+    в преде…
+  mnozhestvennoe_lechenie_ran: 5; evocation; 60 футов — Все цели восстанавливают хиты в количестве, равном 3к8 + модификатор
+    вашей базовой характеристики. / это заклинание, используя ячейку 6 уровня или выше, во
+  mnozhestvennoe_vnushenie: 6; enchantment; 60 футов — Каждая цель должна совершить спасбросок Мудрости. / Если вы или кто-то
+    из ваших спутников причиняют урон существу, находящемуся под действием этого з…
+  moleben_lecheniya: '2; evocation; 30 футов — 3 уровень, воплощение 3 уровень, преобразование Время накладывания: 1 бонусное
+    действие Дистанция… / Каждое из шести существ на ваш выбор, видимых в предел'
+  nablyudenie: 5; divination; На себя [конц.] — Цель должна совершить спасбросок Мудрости, модифицируемый тем, как хорошо
+    вы знаете цель, и тем, … / Если цель знает, что вы накладываете это закли
+  nakhodchivost: 8; transmutation; На себя
+  nanesenie_ran: 1; necromancy; Касание — Совершите рукопашную атаку заклинанием по существу в пределах досягаемости. / При
+    попадании цель получает урон некротической энергией 3к10.
+  napravlennyy_snaryad: 1; evocation; 120 футов — При попадании цель получает урон излучением 4к6, и следующий бросок атаки
+    по цели, совершённый до… / Совершите дальнобойную атаку заклинанием по цели.
+  nashestvie_nasekomykh: 5; Вызов; 300 футов [конц.] — Когда сфера появляется, все находящиеся в ней существа должны совершить
+    спасбросок Телосложения. / Существо получает колющий урон 4к10 при провале, ил
+  nebesnyy_ogon: 5; evocation; 60 футов — Все существа в цилиндре с радиусом 10 футов и высотой 40 футов с центром на точке
+    в пределах дист… / Существо получает урон излучением 4к6 и урон огнём 4к6
+  neobnaruzhimost: 3; abjuration; Касание — Цель не может стать целью магии школы Прорицания, и её не воспринимают магические
+    наблюдательные …
+  netlennye_ostanki: 2; Некромантия; Касание
+  nevidimoe_pismo: 1; Иллюзия; Касание
+  nevidimyy_sluga: 1; Вызов; 60 футов — Если его хиты опускаются до 0, заклинание оканчивается. / Это заклинание создаёт невидимую,
+    бессознательную и бесформенную силу, выполняющую отдаваемые вам…
+  nistulova_lozhnaya_magiya: 2; illusion; Касание
+  obet: 5; enchantment; 60 футов
+  obnaruzhenie_mysley: 2; divination; На себя [конц.] — Если вы погружаетесь глубже, цель должна совершить спасбросок Мудрости.
+    / Если у выбранного существа Интеллект равен 3 или ниже, или если оно не мо
+  obraz: 3; illusion; 120 футов [конц.] — Вы не можете создать жар или холод, достаточный для получения урона, звук, громкость
+    которого мож… / Вы создаёте образ предмета, существа или друго
+  obshchenie: 5; Прорицание; На себя
+  obshchenie_s_prirodoy: 5; Прорицание; На себя — В пещерах и естественном подземном окружении радиус 300 футов.
+  ochishchenie_pishchi_i_pitya: 1; Преобразование; 10 футов — Вся немагическая еда и питьё в пределах сферы с радиусом 5 футов
+    с центром на точке, выбранной ва…
+  oglushayushchaya_kara: 4; evocation; На себя [конц.] — В следующий раз, когда вы попадёте по существу рукопашной атакой
+    оружием, пока активно это заклин… / Цель должна совершить спасбросок Мудрости.
+  ognennaya_burya: 7; evocation; 150 футов — Этот урон повреждает предметы и воспламеняет горючие предметы, которые никто
+    не несёт и не носит. / Все существа в этом пространстве должны совершить спас
+  ognennaya_stena: 4; evocation; 120 футов [конц.] — Когда стена появляется, все существа в её области должны совершить спасбросок
+    Ловкости. / При провале они получают урон огнём 5к8 или половину это
+  okamenenie: 6; transmutation; 60 футов [конц.] — Если тело цели состоит из плоти, она должна совершить спасбросок Телосложения.
+    / Если оно провалит спасбросок три раза, оно превращается в каме
+  okhrannye_runy: 3; abjuration; Касание
+  oputyvanie: 1; Вызов; 90 футов [конц.] — Существа, находящиеся в этой области, когда вы накладываете заклинание, должны
+    преуспеть в спасбр… / Опутанное растениями существо может действием 250
+  oputyvayushchiy_udar: 1; Вызов; На себя [конц.] — Существа с размером Большое и ещё больше совершают этот спасбросок с преимуществом.
+    / Будучи опутанной этим заклинанием, цель получает колющий урон 1к6
+  ostanovka_vremeni: 9; transmutation; На себя — Для всех остальных существ время перестаёт течь, а вы получаете 1к4 + 1 ход
+    подряд, во время кото…
+  otilyukov_ledyanoy_shar: 6; evocation; 300 футов — Все существа в этой области должны совершить спасбросок Телосложения.
+    / При провале существо получает урон холодом 10к6.
+  otilyukov_uprugiy_shar: 4; evocation; 30 футов [конц.] — Сфера обладает иммунитетом ко всем видам урона, и находящееся внутри
+    существо или предмет не може… / Нежелающее существо должно совершить спасбросо
+  otkryvanie: 2; transmutation; 60 футов
+  otrazheniya: 2; illusion; На себя — Она игнорирует остальной урон и эффекты. / Существо не попадает под действие этого заклинания,
+    если не может видеть, если полагается на друг…
+  ozhivlenie: 5; necromancy; Касание — Все цели оживают и становятся существами под вашим контролем до окончания действия
+    заклинания или… / ПАРАМЕТРЫ ОЖИВЛЁННОГО ПРЕДМЕТА Размер Хиты КД Крошечны
+  palyashchaya_kara: 1; evocation; На себя [конц.] — Когда вы в следующий раз попадёте по существу рукопашной атакой оружием,
+    пока заклинание активно,… / Пока заклинание активно, цель в начале каждого
+  palyashchiy_luch: 2; evocation; 120 футов — Для каждого луча совершите дальнобойную атаку заклинанием. / При попадании цель
+    получает урон огнём 2к6.
+  pass_without_trace: 2; abjuration; На себя [конц.]
+  pauk: 2; transmutation; Касание [конц.]
+  pautina: 2; Вызов; 60 футов [конц.] — Любой 5-футовый куб паутины, соприкоснувшийся с огнём, сгорает за 1 раунд, причиняя
+    урон огнём 2к… / Все существа, начинающие ход в паутине, или входящ
+  perenosyashchaya_dver: 4; Вызов; 500 футов — Если вы должны оказаться в месте, уже занятом существом или предметом, вы и
+    все перемещающиеся с …
+  perst_smerti: 7; necromancy; 60 футов — Цель должна совершить спасбросок Телосложения. / В случае провала она получает урон
+    некротической энергией 7к8 + 30, или половину этого урона в сл…
+  planarnye_uzy: 5; abjuration; 60 футов — В конце накладывания заклинания цель должна совершить спасбросок Харизмы.
+  planarnyy_soyuznik: 6; Вызов; 60 футов
+  plyashushchaya_molniya: 6; evocation; 150 футов — Цель должна совершить спасбросок Ловкости. / Цель получает урон электричеством
+    10к8 при провале спасброска или половину этого урона в случае у…
+  pochtovoe_zhivotnoe: 2; Очарование; 30 футов
+  podchinenie_chudovishcha: 8; enchantment; 60 футов [конц.] — Если вы или дружественные вам существа сражаются с ним, оно
+    совершает спасбросок с преимуществом. / это заклинание с уровнем ячейки 9, концентрац
+  podchinenie_lichnosti: 5; enchantment; 60 футов [конц.] — Если вы или дружественные вам существа сражаются с ним, он совершает
+    спасбросок с преимуществом. / Каждый раз, когда цель получает урон, она сове
+  podchinenie_zverya: 4; enchantment; 60 футов [конц.] — Если вы или дружественные вам существа сражаются с ним, он совершает
+    спасбросок с преимуществом. / Зверь должен преуспеть в спасброске Мудрости,
+  podmoga: 2; abjuration; 30 футов — На время длительности максимум хитов и текущие хиты всех целей увеличиваются на 5.
+  podobie: 7; illusion; Касание — Копия не может обучаться и становиться сильнее, так что она никогда не повышает уровень
+    и характе… / выглядит так же, как оригинал, но у него только половина
+  podsmatrivanie: 3; divination; 1 миля [конц.] — Вы создаёте невидимый сенсор в пределах дистанции в известном вам месте
+    (месте, которое вы уже ви… / Существо, способное увидеть сенсор (например, н
+  podvodnoe_dykhanie: 3; Преобразование; 30 футов
+  poisk_familyara: 1; Вызов; 10 футов — Когда хиты фамильяра опускаются до 0, он исчезает, не оставляя физического тела. /
+    Фамильяр не может атаковать, но может совершать другие действия как обычно.
+  poisk_lovushek: 2; divination; 120 футов
+  poisk_puti: 6; divination; На себя [конц.]
+  poisk_skakuna: 2; Вызов; 30 футов
+  poisk_sushchestva: 4; divination; На себя [конц.] — Это заклинание не может обнаружить существ, если прямой путь между вами
+    перерезан текущей водой ш…
+  poisk_zhivotnykh_ili_rasteniy: 2; Прорицание; На себя
+  polnoe_istselenie: 6; evocation; 60 футов
+  polnoe_prevrashchenie: 9; transmutation; На себя [конц.] — Вы принимаете хиты и Кость Хитов нового облика. / Когда вы возвращаете
+    свой облик, ваши хиты будут такими же, как до превращения.
+  ponimanie_yazykov: 1; Прорицание; На себя
+  porcha: 1; enchantment; 30 футов [конц.] — Пока заклинание активно, каждый раз, когда цель, провалившая этот спасбросок,
+    совершает бросок ат…
+  poryv_vetra: 2; evocation; На себя (60-футовая линия) [конц.]
+  poslanie: 3; evocation; Неограниченная
+  pospeshnoe_otstuplenie: 1; transmutation; На себя [конц.]
+  predostorozhnost: 6; evocation; На себя
+  predskazanie: 4; Прорицание; На себя
+  predvidenie: 9; divination; Касание — Пока заклинание активно, цель нельзя застать врасплох, и она совершает с преимуществом
+    броски ата… / Кроме того, пока заклинание активно, другие существа с
+  pregrada_magii: 8; abjuration; На себя (сфера радиусом 10 футов) [конц.] — Ячейка, потраченная на накладывание подавленного
+    заклинания, всё равно тратится. / Вас окружает невидимая сфера антимагии
+  prevrashchenie_v_zhivotnykh: 8; transmutation; 30 футов [конц.] — Превращение держится всю длительность заклинания, или
+    пока хиты цели не опустятся до 0, или она н… / Цель принимает хиты нового облика, а по во
+  prikaz: 1; enchantment; 60 футов — это заклинание, используя ячейку 2 уровня или выше, вы можете воздействовать на одно
+    дополнительн… / Если цель не может выполнить вашу команду, заклинани
+  prikosnovenie_vampira: 3; necromancy; На себя [конц.] — Совершите рукопашную атаку заклинанием по существу в пределах вашей
+    досягаемости. / При попадании цель получает урон некротической энергией 3к6, а
+  prinuzhdenie: 4; enchantment; 30 футов [конц.] — Выбранные вами существа, которых вы видите в пределах дистанции, и которые
+    слышат вас, должны сов… / После перемещения из-за заклинания они могут
+  pritvornaya_smert: 3; Некромантия; Касание — Цель получает сопротивление всем видам урона кроме психической энергии.
+  pritvorstvo: 5; illusion; 30 футов — Несогласная цель может совершить спасбросок Харизмы, и в случае успеха заклинание на
+    неё не дейст… / Вы не можете менять вид тела цели, так что у неё должен
+  prizrachnyy_skakun: 3; Иллюзия; 30 футов — Заклинание оканчивается, если вы окончите его действием или если скакун получит
+    какой-либо урон.
+  prizyv_elementalya: 5; Вызов; 90 футов [конц.] — Элементаль исчезает, когда его хиты опускаются до 0, или когда заклинание
+    оканчивается. / Выберите область воды, воздуха, земли или огня, помещающуюся
+  prizyv_fei: 6; Вызов; 90 футов [конц.] — Оно исчезает, когда его хиты опускаются до 0, или когда заклинание оканчивается.
+    / Если ваша концентрация нарушена, существо не исчезает.
+  prizyv_lesnykh_obitateley: 4; Вызов; 60 футов [конц.] — Призванное существо исчезает, когда его хиты опускаются до 0, или
+    когда заклинание оканчивается. / это заклинание, используя ячейки большего уровня, вы
+  prizyv_malykh_elementaley: '4; Вызов; 90 футов [конц.] — Выберите один из вариантов того, кто появляется: • • • • Один элементаль
+    с показателем опасности … / это заклинание, используя ячейки большего уровня,'
+  prizyv_molnii: 3; Вызов; 120 футов [конц.] — Существо получает урон электричеством 3к10 при провале или половину этого урона
+    в случае успешног… / Появляется туча в форме цилиндра 10 футов в высот
+  prizyv_nebozhitelya: 7; Вызов; 90 футов [конц.] — Небожитель исчезает, когда его хиты опускаются до 0, или когда заклинание
+    оканчивается.
+  prizyv_zagrazhdeniya: 3; Вызов; На себя (60-футовый конус) — При провале существо получает урон 3к8, а при успехе половину
+    этого урона. / Вид урона такой же, как у оружия или боеприпаса, использованного
+  prizyv_zalpa: 5; Вызов; 150 футов — Все существа в цилиндре с радиусом 40 футов и высотой 20 футов должны совершить спасбросок
+    Ловкости. / При провале существо получает урон 8к8, а при успехе по
+  prizyv_zhivotnykh: '3; Вызов; 60 футов [конц.] — Выберите один из вариантов того, кто появляется: • • • • Один зверь с показателем
+    опасности 2 или… / это заклинание, используя ячейки большего уровня,'
+  probuzhdenie_razuma: 5; transmutation; Касание — У цели либо не должно быть значения Интеллекта, либо Интеллект должен быть
+    не больше 3. / Пробуждённый зверь или растение очарован вами 30 дней, либо по
+  proektsiya: 7; illusion; 500 миль [конц.] — Если иллюзия получает урон, она исчезает, а заклинание оканчивается.
+  proklyatie: 3; necromancy; Касание [конц.] — это заклинание, используя ячейку 4 уровня или выше, длительность будет «Концентрация,
+    вплоть до 1… / При использовании ячейки как минимум 5 уровня
+  pryzhok: 1; transmutation; Касание
+  psevdozhizn: 1; necromancy; На себя — Укрепив себя некромантским подобием жизни, вы получаете 1к4 + 4 временных хита на
+    время длительно…
+  puteshestvie_cherez_rasteniya: 6; Вызов; 10 футов
+  pylayushchiy_shar: 2; Вызов; 60 футов [конц.] — Все существа, оканчивающие ход в пределах 5 футов от шара, должны совершать
+    спасбросок Ловкости. / Существа получают урон огнём 2к6 при провале или пол
+  raduzhnaya_stena: 9; abjuration; 60 футов — Если вы размещаете стену так, что она пройдёт по пространству, занятому существом,
+    заклинание про… / Коснувшись очередного слоя, существо должно совершить
+  raduzhnye_bryzgi: 7; evocation; На себя (60-футовый конус) — Все существа в пределах 60-футового конуса должны совершить
+    спасбросок Ловкости. / Цель получает урон огнём 10к6 при провале или половину
+  raskalennyy_metall: 2; transmutation; 60 футов [конц.] — Если оно не может уронить предмет, то до начала вашего следующего
+    хода совершает с помехой броски… / Все существа, находящиеся в физическом кон
+  raspad: 6; transmutation; 60 футов — Существо, ставшее целью этого заклинания, должно совершить спасбросок Ловкости. / При
+    провале оно получает урон силовым полем 10к6 + 40.
+  razgovor_s_mertvymi: 3; necromancy; 10 футов — У трупа должен быть рот, и он не может быть нежитью. / Таким образом, труп
+    не может узнавать новую информацию, не осознаёт того, что происходило после е…
+  razgovor_s_rasteniyami: 3; transmutation; На себя (30-футовый радиус) — Вы можете также превратить на время действия заклинания
+    труднопроходимую местность, вызванную рас… / Вы можете превратить на время д
+  razgovor_s_zhivotnymi: 1; Прорицание; На себя
+  razmytyy_obraz: 2; illusion; На себя [конц.] — Пока заклинание активно, все существа совершают по вам броски атаки с помехой.
+    / Атакующий получает иммунитет к этому эффекту, если полагается не на
+  razrushitelnaya_volna: 5; evocation; На себя (30-футовый радиус) — Все существа, выбранные вами в пределах 30 футов, должны
+    преуспеть в спасброске Телосложения, ина… / Существо, преуспевшее в спасброске,
+  razyashchee_oko: 6; necromancy; На себя [конц.]
+  rech_zlatousta: 2; enchantment; 60 футов
+  regeneratsiya: 7; transmutation; Касание — Цель восстанавливает 4к8 + 15 хитов. / Вы совершаете действием рукопашную атаку
+    заклинанием по исчадию, небожителю, нежити, фее или элем…
+  resurrection: 7; necromancy; Касание — Пока вы не окончите продолжительный отдых, вы не можете накладывать заклинания, и
+    совершаете с по…
+  rost_rasteniy: 3; transmutation; 150 футов — Все обычные растения в пределах 100-футового радиуса с центром на этой точке
+    становятся густыми и… / Все растения в радиусе полумили с центром на точк
+  ruki_khadara: 1; Вызов; На себя (10-футовый радиус) — В случае провала цель получает урон некротической энергией 2к6 и в
+    следующем ходу не может соверш… / Все существа в этой области должны сове
+  sfera_neuyazvimosti: 6; abjuration; На себя (10-футовый радиус) [конц.] — Все заклинания 5 уровня и ниже, наложенные снаружи
+    барьера, не могут подействовать на существ и п… / это заклинание, используя
+  sglaz: 1; enchantment; 90 футов [конц.] — Пока заклинание активно, вы причиняете цели урон некротической энергией 1к6 каждый
+    раз, когда поп… / Если хиты цели опускаются до 0, пока заклина
+  shield_of_faith: 1; abjuration; 60 футов [конц.]
+  signal_trevogi: 1; Ограждение; 30 футов — Выберите дверь, окно или область в пределах дистанции не больше куба с длиной
+    ребра 20 футов.
+  silovaya_stena: 5; evocation; 120 футов [конц.] — Она обладает иммунитетом ко всем видам урона, и не может быть рассеяна
+    рассеиванием магии. / Невидимая стена из силового поля появляется в точке,
+  skolzhenie: 1; Вызов; 60 футов — Скользкий жир покрывает пол в квадрате с длиной стороны 10 футов с центром на точке в пределах
+    ди…
+  slaboumie: 8; enchantment; 150 футов — Цель получает урон психической энергией 4к6 и должна совершить спасбросок Интеллекта.
+    / В конце каждых 30 дней существо может повторять спасбросок от эт
+  sleep: 1; enchantment; 90 футов — Бросьте 5к8; результат будет количеством хитов существ, на которых это заклинание может
+    подейство… / Начиная с существа с наименьшим количеством текущих
+  sliyanie_s_kamnem: 3; Преобразование; Касание — Небольшие физические повреждения камня не причиняют вам вреда, но частичное
+    разрушение или измене… / Полное разрушение камня (или превращение его в дру
+  smertnyy_uzhas: 9; illusion; 120 футов [конц.] — Все существа в сфере с радиусом 30 футов с центром на выбранной точке в
+    пределах дистанции, должн… / В конце каждого своего хода испуганное существ
+  smyatenie: 4; enchantment; 90 футов [конц.] — это заклинание, используя ячейку 5 уровня или выше, радиус сферы увеличивается
+    на 5 футов за кажд… / В конце каждого своего хода цель может совер
+  snyatie_proklyatya: 3; abjuration; Касание
+  sokrytie_razuma: 8; abjuration; Касание
+  solnechnyy_luch: 6; evocation; На себя (60-футовая линия) [конц.] — Нежить и слизи совершают этот спасбросок с помехой.
+    / Все существа в этой линии должны совершить спасбросок Телосложения.
+  solnechnyy_ozhog: 8; evocation; 150 футов — Нежить и слизи совершают этот спасбросок с помехой. / Все существа, находящиеся
+    в нём, должны совершить спасбросок Телосложения.
+  sotvorenie: 5; illusion; 30 футов — это заклинание, используя ячейку 6 уровня или выше, длина ребра куба увеличивается на
+    5 футов за …
+  sotvorenie_ili_unichtozhenie_vody: 1; transmutation; 30 футов — это заклинание, используя ячейку 2 уровня или выше, вы создаёте
+    или уничтожаете 10 дополнительных… / В качестве альтернативы, вы уничтожаете туман в ку
+  sotvorenie_nezhiti: 6; necromancy; 10 футов — Такое использование заклинания только поддерживает контроль над уже созданными
+    существами, количе…
+  sotvorenie_pishchi_i_vody: 3; Вызов; 30 футов
+  sozdanie_prokhoda: 5; transmutation; 30 футов
+  stena_klinkov: 6; evocation; 90 футов [конц.]
+  stena_vetrov: 3; evocation; 120 футов [конц.] — Существо получает дробящий урон 3к8 при провале, или половину этого урона
+    при успехе.
+  stikhiynoe_oruzhie: '3; transmutation; Касание [конц.] — Выберите один из следующих видов урона: звук, кислота, огонь, холод
+    или электричество. / Пока заклинание активно, оружие получает бонус +1 к бро'
+  strazh_very: 4; Вызов; 30 футов — При провале такое существо получает урон излучением 20, или половину этого урона при успехе.
+    / Страж исчезает, когда причинит суммарно 60 урона.
+  strazhi: 6; abjuration; Касание — Вы можете также указать пароль, произношение которого дарует иммунитет к этим эффектам.
+  sverkayushchie_bryzgi: 1; illusion; На себя (15-футовый конус)
+  svoboda_peremeshcheniya: 4; abjuration; Касание — Пока заклинание активно, на перемещения цели не влияет труднопроходимая
+    местность, а заклинания и…
+  svyatilishche: 5; evocation; Касание — Затронутые существа в области получают сопротивление к одному виду урона на ваш выбор
+    кроме дробя… / Обычный свет, а также магический свет, созданный заклин
+  svyaz_s_inym_mirom: 5; Прорицание; На себя — Накладывая это заклинание, вы совершаете спасбросок Интеллекта со Сл 15. /
+    При провале вы получаете урон психической энергией 6к6 и становитесь безумным до
+  tainstvennyy_mirazh: 7; illusion; Обзор
+  telekinez: 5; transmutation; 60 футов [конц.] — До конца вашего следующего хода существо становится опутанным телекинетической
+    хваткой.
+  telepatiya: 8; evocation; Без ограничений
+  teleport: 7; Вызов; 10 футов — Если целью является предмет, он должен полностью помещаться в куб с длиной ребра 10 футов,
+    и его …
+  temnoe_zrenie: 2; transmutation; Касание
+  tenzerov_paryashchiy_disk: 1; Вызов; 30 футов — Он может перелетать по неровной поверхности, перемещаться по лестницам,
+    склонам и подобным препят…
+  ternovaya_stena: 6; Вызов; 120 футов [конц.] — Когда стена появляется, все существа, находящиеся в ней, должны совершить
+    спасбросок Ловкости. / При провале существо получает колющий урон 7к8, или п
+  tishina: 2; Иллюзия; 120 футов [конц.] — Все существа и предметы, полностью находящиеся в сфере, получают иммунитет к урону
+    звуком, и суще… / Пока заклинание активно, никакие звуки не могут
+  tma: 2; evocation; 60 футов [конц.] — Из точки, выбранной вами в пределах дистанции, расползается магическая тьма сферой
+    с радиусом 15 … / Существа с тёмным зрением не могут видеть скво
+  tryuk_s_verevkoy: 2; transmutation; Касание — На верхнем конце верёвки появляется невидимый вход в межпространство, существующий,
+    пока заклинан…
+  tsepkaya_loza: 4; Вызов; 30 футов [конц.]
+  tsunami: 8; Вызов; Видимость [конц.] — Когда стена появляется, все существа в её области должны совершить спасбросок Силы.
+    / При провале они получают дробящий урон 6к10 или половину этого у
+  tsvetnoy_sharik: 1; evocation; 90 футов — Выберите звук, кислоту, огонь, холод, электричество или яд при создании сферы,
+    а затем совершите … / Если атака попадает, существо получает урон 3к8 выбран
+  tumannoe_oblako: 1; Вызов; 120 футов [конц.] — Вы создаёте сферу с радиусом 20 футов из тумана с центром на точке в пределах
+    дистанции.
+  tumannyy_shag: 2; Вызов; На себя
+  ubezhishche: 1; abjuration; 30 футов — Пока заклинание активно, все существа, нацеливающиеся на защищённое существо атаками
+    или вредонос…
+  uderzhanie_chudovishcha: 5; enchantment; 90 футов [конц.]
+  uderzhanie_lichnosti: 2; enchantment; 60 футов [конц.]
+  ukhod_v_inoy_mir: 7; Вызов; Касание — Выберите существо в пределах досягаемости и совершите по нему рукопашную атаку заклинанием.
+    / При попадании существо должно совершить спасбросок Харизмы.
+  umirotvorenie: 2; enchantment; 60 футов [конц.] — Все гуманоиды в сфере с радиусом 20 футов с центром в точке, выбранной
+    в пределах дистанции, долж… / Если существо проваливает спасбросок, выбери
+  uskorenie: 3; transmutation; 30 футов [конц.]
+  usykhanie: 4; necromancy; 30 футов — Если цель — растительное существо или магическое растение, оно совершает спасбросок
+    с помехой, и … / Цель должна совершить спасбросок Телосложения.
+  uzilishche: 7; evocation; 100 футов — Вокруг области, выбранной вами в пределах дистанции, возникает неподвижная, невидимая
+    тюрьма в фо… / Существо, находящееся в узилище, не может покинуть ег
+  velikolepnyy_osobnyak_mordenkaynena: 7; Вызов; 300 футов — Дверь невидима, когда закрыта. / Вы можете создать любую планировку,
+    но пространство не может превышать 50 кубов с длиной ребра в …
+  veshchiy_son: 5; illusion; Особая — Если у вас есть часть тела, клок волос, обрезки ногтей или другая подобная часть тела
+    цели, она с… / В этом случае посыльный может передать послание не длинне
+  videnie_nevidimogo: 2; divination; На себя — Пока заклинание активно, вы видите невидимых существ и предметы, как если бы
+    они были видимы, и в…
+  vlast_nad_pogodoy: 8; transmutation; На себя (5-мильный радиус) [конц.] — Требуется 1к4 × 10 минут, чтобы новые условия
+    вступили в силу. / Цель должна совершить спасбросок Мудрости.
+  volna_groma: 1; evocation; На себя (15-футовый куб) — Все существа в кубе с длиной ребра 15 футов, исходящего от вас, должны
+    совершить спасбросок Телос… / При провале существо получает урон зву
+  volshebnyy_sosud: 6; necromancy; На себя
+  volshebnyy_zamok: 2; abjuration; Касание
+  voobrazhaemaya_sila: 2; illusion; 60 футов [конц.] — Цель должна совершить спасбросок Интеллекта. / Цель настолько уверена
+    в существовании иллюзии, что даже будет получать от неё урон.
+  voobrazhaemyy_ubiytsa: 4; illusion; 120 футов [конц.] — Цель должна совершить спасбросок Мудрости. / В конце каждого своего
+    хода, пока заклинание активно, цель должна преуспевать в спасброске Мудрос…
+  vosplamenyayushchayasya_tucha: 8; Вызов; 150 футов [конц.] — Когда облако появляется, все существа, находящиеся в нём, должны
+    совершить спасбросок Ловкости. / Существо получает урон огнём 10к8 при провале или по
+  vosstavshiy_trup: 3; necromancy; 10 футов
+  vozrozhdenie: 3; necromancy; Касание — Это заклинание не может оживить существ, умерших от старости, а также не восстанавливает
+    отсутств…
+  vysshaya_nevidimost: 4; illusion; Касание [конц.]
+  vysshee_vosstanovlenie: '5; abjuration; Касание — Вы можете уменьшить уровень истощения цели на 1, или окончить на ней один
+    из следующих эффектов: …'
+  vyzov_na_duel: 1; enchantment; 30 футов [конц.] — Одно существо, которое вы видите в пределах дистанции, должно совершить
+    спасбросок Мудрости. / Заклинание оканчивается, если вы атакуете другое с
+  zadannaya_illyuziya: 6; illusion; 120 футов
+  zamedlenie: 3; transmutation; 120 футов [конц.] — Вы изменяете время для шести существ на ваш выбор, находящихся в кубе
+    с длиной ребра 40 футов в п… / Скорость попавшего под действие существа
+  zamedlennyy_ognennyy_shar: 7; evocation; 150 футов [конц.] — Все существа в сфере с радиусом 20 футов с центром в этой точке
+    должны совершить спасбросок Ловко… / При провале существо получает урон огнём, рав
+  zapret: 6; Ограждение; Касание
+  zarazhenie: 5; necromancy; Касание
+  zashchita_ot_dobra_i_zla: 1; abjuration; Касание [конц.] — Защита предоставляет несколько преимуществ. / Существа выбранного
+    вида совершают с помехой броски атаки по цели.
+  zashchita_ot_energii: 3; abjuration; Касание [конц.] — Пока заклинание активно, согласное существо, которого вы коснулись,
+    получает сопротивление к одно…
+  zashchita_ot_smerti: 4; abjuration; Касание — Когда хиты цели впервые опускаются до 0 изза получения урона, хиты цели опускаются
+    всего лишь до … / Если заклинание ещё действует, а цель попадает под дей
+  zashchita_ot_yada: 2; abjuration; Касание — Пока заклинание активно, цель совершает с преимуществом спасброски от отравленного
+    состояния и по…
+  zatochenie: 9; abjuration; 30 футов — Условия могут основываться на имени существа, его личности, или его божестве, но во
+    всём остально… / Цель опутана, пока заклинание активно, и в это время
+  zavesa_strel: 2; transmutation; 5 футов — Существо должно преуспеть в спасброске Ловкости, иначе оно получит колющий урон
+    1к6.
+  zemletryasenie: 8; evocation; 500 футов [конц.] — Все существа, находящиеся на земле и концентрирующиеся при этом, должны
+    совершить спасбросок Тело… / Пока заклинание активно, на земле в круге с р
+  zhivotnye_chuvstva: 2; Прорицание; Касание [конц.] — Пока заклинание активно, вы можете использовать свою базовую характеристику
+    вместо Силы для броск… / Воспринимая чувствами зверя, вы пользуетесь пр
+  zhutkiy_smekh_tashi: 1; enchantment; 30 футов [конц.] — Спасбросок совершается с преимуществом, если он был вызван получением
+    урона. / В конце каждого своего хода, и каждый раз при получении урона цель
+  zlovonnoe_oblako: 3; Вызов; 90 футов [конц.] — Все существа, находящиеся полностью в облаке в начале своего хода, должны
+    совершить спасбросок Те… / Вы создаёте сферу с радиусом 20 футов жёлтого тошн
+  znak: 7; abjuration; Касание — Все цели должны совершить спасбросок Телосложения, становясь недееспособными от мучительной
+    боли … / Все цели должны совершить спасбросок Мудрости, становя
   A-conditions: 'Состояния PHB: эффекты и истощение 1–6'
   B-gods: Лор богов исключён из справочника агента. Механика доменов — в карточках жреца.
   C-planes: Лор планов исключён. Механика порталов/планарных эффектов — по конкретным заклин

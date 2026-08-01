@@ -5,7 +5,7 @@ phb_chapter: 3
 phb_pages:
 - 48
 - 119
-quick: ''
+quick: Подкласс на уровне класса (обычно 2–3); детали в entities/classes
 aliases:
 - 03-subclasses
 - Подклассы

@@ -2,7 +2,7 @@
 
 Справочник механики **Dungeons & Dragons 5-й редакции** для разработчиков и агентов проекта dnd_mud. Пересказ следует русской **Книге игрока** (PHB **2014**, перевод студии PHantom, 2016).
 
-Индекс документации — [`README.md`](README.md). Guide для агентов — [`rules/README.md`](rules/README.md).
+Индекс документации — [`README.md`](README.md). Оглавление справочника для людей — [`rules/INDEX.md`](rules/INDEX.md). Guide для агентов — [`rules/README.md`](rules/README.md) → [`rules/_index/lookup.yaml`](rules/_index/lookup.yaml).
 
 ## Источник и авторские права
 

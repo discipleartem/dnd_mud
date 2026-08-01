@@ -5,11 +5,17 @@ phb_chapter: 11
 phb_pages:
 - 211
 - 289
-quick: ''
+quick: 4; illusion; Касание [конц.]
 aliases:
 - vysshaya_nevidimost
 - vysshaya nevidimost
 - Высшая Невидимость
+level: 4
+school: illusion
+casting_time: 1 действие
+range: Касание
+components: В, С
+duration: Концентрация, вплоть до 1 минуты
 ---
 
 # Высшая Невидимость
@@ -17,6 +23,9 @@ aliases:
 > Источник: PHB 2014. Пересказ механики, не дословная копия.
 
 ## Параметры
+
+
+
 
 | Параметр | Значение |
 |----------|----------|
@@ -28,5 +37,3 @@ aliases:
 | Длительность | Концентрация, вплоть до 1 минуты |
 
 ## Эффект
-
-_См. PHB._

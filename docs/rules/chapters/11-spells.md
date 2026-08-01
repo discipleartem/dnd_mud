@@ -5,7 +5,7 @@ phb_chapter: 11
 phb_pages:
 - 207
 - 289
-quick: ''
+quick: Каталог заклинаний PHB; карточки в entities/spells
 aliases:
 - 11-spells
 - Заклинания

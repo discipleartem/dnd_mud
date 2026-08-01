@@ -2,9 +2,13 @@
 id: appendices
 type: chapter
 phb_chapter: 0
-phb_pages: [290, 326]
-quick: "Приложения PHB: состояния, существа; лор богов/планов/литературы исключён"
-aliases: [appendices, приложения]
+phb_pages:
+- 290
+- 326
+quick: Состояния, статблоки существ; лор богов/планов исключён
+aliases:
+- appendices
+- приложения
 ---
 
 # Приложения

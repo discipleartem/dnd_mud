@@ -5,11 +5,17 @@ phb_chapter: 11
 phb_pages:
 - 211
 - 289
-quick: ''
+quick: 6; necromancy; На себя [конц.]
 aliases:
 - razyashchee_oko
 - razyashchee oko
 - Разящее Око
+level: 6
+school: necromancy
+casting_time: 1 действие
+range: На себя
+components: В, С
+duration: Концентрация, вплоть до 1 минуты
 ---
 
 # Разящее Око
@@ -17,6 +23,9 @@ aliases:
 > Источник: PHB 2014. Пересказ механики, не дословная копия.
 
 ## Параметры
+
+
+
 
 | Параметр | Значение |
 |----------|----------|
@@ -28,5 +37,3 @@ aliases:
 | Длительность | Концентрация, вплоть до 1 минуты |
 
 ## Эффект
-
-- 272

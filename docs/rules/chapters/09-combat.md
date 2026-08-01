@@ -5,7 +5,7 @@ phb_chapter: 9
 phb_pages:
 - 189
 - 198
-quick: ''
+quick: Инициатива, ход, действия, атака, урон, укрытие, состояния в бою
 aliases:
 - 09-combat
 - 09 combat

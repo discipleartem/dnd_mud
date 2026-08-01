@@ -5,7 +5,7 @@ phb_chapter: 5
 phb_pages:
 - 143
 - 161
-quick: ''
+quick: Монеты, доспехи, оружие, снаряжение, инструменты, расходы
 aliases:
 - 05-equipment
 - Снаряжение

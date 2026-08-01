@@ -5,7 +5,7 @@ phb_chapter: 10
 phb_pages:
 - 201
 - 206
-quick: ''
+quick: Ячейки, подготовка, компоненты, концентрация, школы
 aliases:
 - 10-spellcasting
 - Использование заклинаний

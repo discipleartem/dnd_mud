@@ -2,9 +2,13 @@
 id: en-ru
 type: glossary
 phb_chapter: 0
-phb_pages: [313, 316]
-quick: "Словарь PHB EN→RU"
-aliases: [en-ru, Англо-русский словарь]
+phb_pages:
+- 313
+- 316
+quick: Словарь PHB EN→RU
+aliases:
+- en-ru
+- Англо-русский словарь
 ---
 
 # Англо-русский словарь

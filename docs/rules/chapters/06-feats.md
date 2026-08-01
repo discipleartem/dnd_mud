@@ -5,7 +5,7 @@ phb_chapter: 6
 phb_pages:
 - 166
 - 172
-quick: ''
+quick: Черты вместо ASI; список в entities/feats
 aliases:
 - 06-feats
 - Черты

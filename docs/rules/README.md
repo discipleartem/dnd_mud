@@ -1,66 +1,62 @@
-# Справочник правил — guide для агентов
+# Справочник правил — guide для агентов и игроков
 
-**Layout:** `agent-v2` · **Источник механики:** Player's Handbook **2014** (пересказ в этом каталоге; локальный PDF PHantom 2016 не коммитится).
+**Layout:** `agent-v2` · **Канон:** PHB **2014** (PHantom 2016). Локальный PDF не коммитится.
+
+| Аудитория | Точка входа |
+|-----------|-------------|
+| Человек / игрок | [`INDEX.md`](INDEX.md) — оглавление по главам |
+| Агент | [`_index/lookup.yaml`](_index/lookup.yaml) — поиск по имени |
+| Статус MUD | [`../DND_RULES.md`](../DND_RULES.md) |
 
 ## Политика контента
 
-**Только механика PHB** — без лора, флавора, историй, мировоззрения, таблиц личности и дословных цитат.
+**Только механика** — без лора, флавора, идеалов и дословных цитат PHB.
 
 | Включать | Исключать |
 |----------|-----------|
-| Увеличения характеристик, скорость, размер | Описания культуры, внешности, «характера расы» |
-| Владения, сопротивления, особые действия | Идеалы, привязанности, слабости, примеры NPC |
-| Параметры заклинаний и эффекты | Поэтические вступления и лор |
-| Требования и эффекты черт | Дублирование текста PHB «для атмосферы» |
+| Числа, таблицы, условия, действия | Культура, внешность, «характер расы» |
+| Владения, сопротивления, эффекты | Идеалы, привязанности, примеры NPC |
+| Параметры и эффекты заклинаний | Поэтические вступления |
 
-Статус реализации в MUD — в [`docs/DND_RULES.md`](../DND_RULES.md) и `database/`, **не** в карточках этого каталога.
+## Алгоритм агента (обязательный)
 
-## Быстрый старт (агент)
+1. [`lookup.yaml`](_index/lookup.yaml) → `by_alias` (RU/EN/slug, регистр не важен) → `id`
+2. `by_id[id].quick` — ответ без открытия файла, если хватает
+3. Иначе открыть `by_id[id].file`
+4. Нет / неполно → веб PHB 2014 / SRD 5.1 → обновить карточку + `quick` + `lookup.yaml`
 
-| Шаг | Действие |
-|-----|----------|
-| 1 | Открыть [`_index/lookup.yaml`](_index/lookup.yaml) |
-| 2 | Найти сущность: `by_alias` (RU/EN/slug) → `id`, или сразу `by_id` |
-| 3 | Прочитать `quick` — краткая механика без открытия файла |
-| 4 | При необходимости деталей — `file` из записи `by_id` |
-| 5 | Неполно / нет в справочнике → официальные правила 5e до 2024 (PHB 2014 / SRD 5.1), затем обновить `docs/rules/` |
+**Не использовать память модели.** Конфликт: официальные правила 5e до 2024 > этот каталог.
 
-**Не использовать память модели.** При конфликте: официальные правила 5e до 2024 > `docs/rules/`.
+## Индексы
 
-## Точки входа
-
-| Приоритет | Файл | Назначение |
-|-----------|------|------------|
-| **1** | [`_index/lookup.yaml`](_index/lookup.yaml) | Единый индекс: `by_id`, `by_alias`, `summaries` |
-| 2 | [`toc.yaml`](toc.yaml) | Каталог PHB: `id`, `type`, `file`, `pages` |
-| 3 | [`_index/entities.yaml`](_index/entities.yaml) | Сущности и главы (без заклинаний) |
-| 4 | [`_index/spells.yaml`](_index/spells.yaml) | Заклинания по EN-slug |
-| 5 | [`_index/spells/by-level.md`](_index/spells/by-level.md) | Группировка по уровню |
-| 6 | [`_index/spells/by-school.md`](_index/spells/by-school.md) | Группировка по школе |
-
-## Структура каталога
-
-```text
-docs/rules/
-  chapters/           # обзорные главы PHB
-  entities/           # races/, classes/, backgrounds/, spells/, feats/
-  reference/          # appendices/, glossaries/
-  _index/             # lookup.yaml + вспомогательные индексы
-  _templates/         # шаблон frontmatter
-```
+| Файл | Зачем |
+|------|-------|
+| [`lookup.yaml`](_index/lookup.yaml) | Единый SoT: `by_id`, `by_alias`, `summaries` (`quick`) |
+| [`toc.yaml`](toc.yaml) | Полный каталог `id → file/pages` |
+| [`entities.yaml`](_index/entities.yaml) | Всё кроме заклинаний |
+| [`spells.yaml`](_index/spells.yaml) | Заклинания + `level` / `school` |
+| [by-level](_index/spells/by-level.md) / [by-school](_index/spells/by-school.md) | Обзор для людей |
 
 ## Структура файла
 
-1. **Frontmatter** — `id`, `type`, `phb_chapter`, `phb_pages`, `quick`, опционально `aliases`
-2. **Секции механики** — структурированный пересказ (без HTML-маркеров автогенерации)
-3. Заклинания: `## Параметры` / `## Эффект` / опционально `## На больших уровнях`
+```yaml
+---
+id: fighter
+type: class          # chapter|race|class|background|feat|spell|appendix|glossary
+phb_pages: [70, 75]
+quick: "одна строка механики для lookup"
+aliases: [fighter, Воин, воин]
+# spell: level, school, casting_time, range, components, duration
+---
+```
 
-## Обновление справочника (агент)
+- Главы / расы / классы: секции механики списками
+- Заклинания: `## Параметры` → `## Эффект` → опционально `## На больших уровнях`
+- `quick` обязателен; для заклинаний — уровень, школа, дистанция, ключ эффекта (урон/сейв)
 
-Канон поиска — [`.cursor/rules/00-project.mdc`](../../.cursor/rules/00-project.mdc) §D&D 5e.
+## Обновление
 
-1. Уточнить механику по официальным правилам 5e до 2024 (PHB 2014 / SRD 5.1) или локальному PDF.
-2. Обновить markdown — пересказ механики (не дословная копия).
-3. Добавить или обновить `quick` и `aliases` в frontmatter.
-4. При новой сущности — файл по [`_templates/frontmatter-template.md`](_templates/frontmatter-template.md); запись в `toc.yaml` и `_index/entities.yaml` или `_index/spells.yaml`; обновить `lookup.yaml`.
-5. Индексы ведутся вручную (генераторов нет).
+1. Механика из PHB 2014 / SRD 5.1 (или локальный PDF).
+2. Пересказ в markdown + актуальный `quick` / `aliases`.
+3. Записи в `toc.yaml`, `_index/*.yaml`, `lookup.yaml` (вручную, без генераторов).
+4. Шаблон: [`_templates/frontmatter-template.md`](_templates/frontmatter-template.md).

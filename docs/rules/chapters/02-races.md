@@ -5,7 +5,7 @@ phb_chapter: 2
 phb_pages:
 - 17
 - 44
-quick: ''
+quick: '9 рас PHB: бонусы характеристик, размер, скорость, черты расы/подрасы'
 aliases:
 - 02-races
 - Расы

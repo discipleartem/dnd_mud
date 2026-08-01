@@ -5,7 +5,7 @@ phb_chapter: 8
 phb_pages:
 - 181
 - 188
-quick: ''
+quick: Время, перемещение, окружение, отдых, взаимодействие
 aliases:
 - 08-adventures
 - 08 adventures

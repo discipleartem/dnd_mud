@@ -5,11 +5,17 @@ phb_chapter: 11
 phb_pages:
 - 211
 - 289
-quick: ''
+quick: 5; abjuration; На себя [конц.]
 aliases:
 - izgonyayushchaya_kara
 - izgonyayushchaya kara
 - Изгоняющая Кара
+level: 5
+school: abjuration
+casting_time: 1 бонусное действие
+range: На себя
+components: В
+duration: Концентрация, вплоть до 1 минуты
 ---
 
 # Изгоняющая Кара
@@ -17,6 +23,9 @@ aliases:
 > Источник: PHB 2014. Пересказ механики, не дословная копия.
 
 ## Параметры
+
+
+
 
 | Параметр | Значение |
 |----------|----------|
@@ -28,5 +37,3 @@ aliases:
 | Длительность | Концентрация, вплоть до 1 минуты |
 
 ## Эффект
-
-_См. PHB._

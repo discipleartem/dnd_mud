@@ -6,2181 +6,2181 @@ entries:
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 4
+  school: abjuration
 - id: aura_of_purity
   type: spell
   file: entities/spells/aura_of_purity.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 4
+  school: abjuration
 - id: aura_of_vitality
   type: spell
   file: entities/spells/aura_of_vitality.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 3
+  school: evocation
 - id: aura_svyatosti
   type: spell
   file: entities/spells/aura_svyatosti.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 8
+  school: abjuration
 - id: bless
   type: spell
   file: entities/spells/bless.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 1
+  school: enchantment
 - id: bozhestvennoe_blagovolenie
   type: spell
   file: entities/spells/bozhestvennoe_blagovolenie.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 1
+  school: evocation
 - id: bozhestvennoe_oruzhie
   type: spell
   file: entities/spells/bozhestvennoe_oruzhie.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 2
+  school: evocation
 - id: bozhestvennoe_slovo
   type: spell
   file: entities/spells/bozhestvennoe_slovo.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 7
+  school: evocation
 - id: burning_hands
   type: spell
   file: entities/spells/burning_hands.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 1
+  school: evocation
 - id: bystryy_kolchan
   type: spell
   file: entities/spells/bystryy_kolchan.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 5
+  school: transmutation
 - id: charm_person
   type: spell
   file: entities/spells/charm_person.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 1
+  school: enchantment
 - id: cure_wounds
   type: spell
   file: entities/spells/cure_wounds.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 1
+  school: evocation
 - id: demiplan
   type: spell
   file: entities/spells/demiplan.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 8
+  school: вызов
 - id: detect_magic
   type: spell
   file: entities/spells/detect_magic.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 1
+  school: прорицание
 - id: dispel_magic
   type: spell
   file: entities/spells/dispel_magic.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 3
+  school: abjuration
 - id: dissoniruyushchiy_shepot
   type: spell
   file: entities/spells/dissoniruyushchiy_shepot.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 1
+  school: enchantment
 - id: dlan_bigbi
   type: spell
   file: entities/spells/dlan_bigbi.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 5
+  school: evocation
 - id: dnevnoy_svet
   type: spell
   file: entities/spells/dnevnoy_svet.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 3
+  school: evocation
 - id: dospekh_agatisa
   type: spell
   file: entities/spells/dospekh_agatisa.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 1
+  school: abjuration
 - id: dospekhi_maga
   type: spell
   file: entities/spells/dospekhi_maga.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 1
+  school: abjuration
 - id: drebezgi
   type: spell
   file: entities/spells/drebezgi.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 2
+  school: evocation
 - id: drevesnyy_put
   type: spell
   file: entities/spells/drevesnyy_put.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 5
+  school: вызов
 - id: dromidzhevo_poyavlenie
   type: spell
   file: entities/spells/dromidzhevo_poyavlenie.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 6
+  school: вызов
 - id: druzhba_s_zhivotnymi
   type: spell
   file: entities/spells/druzhba_s_zhivotnymi.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 1
+  school: enchantment
 - id: dvizhenie_pochvy
   type: spell
   file: entities/spells/dvizhenie_pochvy.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 6
+  school: transmutation
 - id: dvoynik
   type: spell
   file: entities/spells/dvoynik.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 8
+  school: necromancy
 - id: faerie_fire
   type: spell
   file: entities/spells/faerie_fire.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 1
+  school: evocation
 - id: falshivyy_dvoynik
   type: spell
   file: entities/spells/falshivyy_dvoynik.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 5
+  school: illusion
 - id: fireball
   type: spell
   file: entities/spells/fireball.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 3
+  school: evocation
 - id: fly
   type: spell
   file: entities/spells/fly.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 3
+  school: transmutation
 - id: gaseous_form
   type: spell
   file: entities/spells/gaseous_form.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 3
+  school: transmutation
 - id: gigantskoe_nasekomoe
   type: spell
   file: entities/spells/gigantskoe_nasekomoe.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 4
+  school: transmutation
 - id: gipnoticheskiy_uzor
   type: spell
   file: entities/spells/gipnoticheskiy_uzor.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 3
+  school: illusion
 - id: gnevnaya_kara
   type: spell
   file: entities/spells/gnevnaya_kara.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 1
+  school: evocation
 - id: golod_khadara
   type: spell
   file: entities/spells/golod_khadara.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 3
+  school: вызов
 - id: goryashchiy_klinok
   type: spell
   file: entities/spells/goryashchiy_klinok.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 2
+  school: evocation
 - id: grad
   type: spell
   file: entities/spells/grad.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 4
+  school: evocation
 - id: grad_shipov
   type: spell
   file: entities/spells/grad_shipov.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 1
+  school: вызов
 - id: groza_gneva
   type: spell
   file: entities/spells/groza_gneva.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 9
+  school: вызов
 - id: healing_word
   type: spell
   file: entities/spells/healing_word.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 1
+  school: evocation
 - id: heroism
   type: spell
   file: entities/spells/heroism.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 1
+  school: enchantment
 - id: invisibility
   type: spell
   file: entities/spells/invisibility.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 2
+  school: illusion
 - id: ispolnenie_zhelaniy
   type: spell
   file: entities/spells/ispolnenie_zhelaniy.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 9
+  school: вызов
 - id: istinnoe_voskreshenie
   type: spell
   file: entities/spells/istinnoe_voskreshenie.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 9
+  school: necromancy
 - id: istinnoe_zrenie
   type: spell
   file: entities/spells/istinnoe_zrenie.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 6
+  school: divination
 - id: izgnanie
   type: spell
   file: entities/spells/izgnanie.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 4
+  school: abjuration
 - id: izgonyayushchaya_kara
   type: spell
   file: entities/spells/izgonyayushchaya_kara.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 5
+  school: abjuration
 - id: izgotovlenie
   type: spell
   file: entities/spells/izgotovlenie.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 4
+  school: transmutation
 - id: izmenenie_formy_kamnya
   type: spell
   file: entities/spells/izmenenie_formy_kamnya.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 4
+  school: transmutation
 - id: izmenenie_pamyati
   type: spell
   file: entities/spells/izmenenie_pamyati.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 5
+  school: enchantment
 - id: izmenenie_tyagoteniya
   type: spell
   file: entities/spells/izmenenie_tyagoteniya.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 7
+  school: transmutation
 - id: izolyatsiya
   type: spell
   file: entities/spells/izolyatsiya.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 7
+  school: transmutation
 - id: kamennaya_kozha
   type: spell
   file: entities/spells/kamennaya_kozha.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 4
+  school: abjuration
 - id: kamennaya_stena
   type: spell
   file: entities/spells/kamennaya_stena.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 5
+  school: evocation
 - id: khozhdenie_po_vetru
   type: spell
   file: entities/spells/khozhdenie_po_vetru.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 6
+  school: transmutation
 - id: khozhdenie_po_vode
   type: spell
   file: entities/spells/khozhdenie_po_vode.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 3
+  school: преобразование
 - id: kleymyashchaya_kara
   type: spell
   file: entities/spells/kleymyashchaya_kara.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 2
+  school: evocation
 - id: konus_kholoda
   type: spell
   file: entities/spells/konus_kholoda.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 5
+  school: evocation
 - id: korona_bezumiya
   type: spell
   file: entities/spells/korona_bezumiya.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 2
+  school: enchantment
 - id: krug_smerti
   type: spell
   file: entities/spells/krug_smerti.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 6
+  school: necromancy
 - id: krug_teleportatsii
   type: spell
   file: entities/spells/krug_teleportatsii.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 5
+  school: вызов
 - id: labirint
   type: spell
   file: entities/spells/labirint.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 8
+  school: вызов
 - id: ledyanaya_stena
   type: spell
   file: entities/spells/ledyanaya_stena.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 6
+  school: evocation
 - id: leomundov_potaynoy_sunduk
   type: spell
   file: entities/spells/leomundov_potaynoy_sunduk.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 4
+  school: вызов
 - id: leomundova_khizhina
   type: spell
   file: entities/spells/leomundova_khizhina.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 3
+  school: воплощение
 - id: levitatsiya
   type: spell
   file: entities/spells/levitatsiya.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 2
+  school: transmutation
 - id: lightning_bolt
   type: spell
   file: entities/spells/lightning_bolt.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 3
+  school: evocation
 - id: luch_bolezni
   type: spell
   file: entities/spells/luch_bolezni.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 1
+  school: necromancy
 - id: luch_slabosti
   type: spell
   file: entities/spells/luch_slabosti.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 2
+  school: necromancy
 - id: lunnyy_luch
   type: spell
   file: entities/spells/lunnyy_luch.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 2
+  school: evocation
 - id: magic_missile
   type: spell
   file: entities/spells/magic_missile.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 1
+  school: evocation
 - id: magicheskiy_glaz
   type: spell
   file: entities/spells/magicheskiy_glaz.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 4
+  school: divination
 - id: magicheskoe_oruzhie
   type: spell
   file: entities/spells/magicheskoe_oruzhie.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 2
+  school: transmutation
 - id: major_image
   type: spell
   file: entities/spells/major_image.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 2
+  school: иллюзия
 - id: maloe_vosstanovlenie
   type: spell
   file: entities/spells/maloe_vosstanovlenie.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 2
+  school: abjuration
 - id: mantiya_krestonostsa
   type: spell
   file: entities/spells/mantiya_krestonostsa.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 3
+  school: evocation
 - id: maskirovka
   type: spell
   file: entities/spells/maskirovka.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 1
+  school: illusion
 - id: mayak_nadezhdy
   type: spell
   file: entities/spells/mayak_nadezhdy.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 3
+  school: abjuration
 - id: mech_mordenkaynena
   type: spell
   file: entities/spells/mech_mordenkaynena.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 7
+  school: evocation
 - id: mentalnaya_svyaz_reri
   type: spell
   file: entities/spells/mentalnaya_svyaz_reri.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 5
+  school: прорицание
 - id: mertsanie
   type: spell
   file: entities/spells/mertsanie.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 3
+  school: transmutation
 - id: meteor_swarm
   type: spell
   file: entities/spells/meteor_swarm.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 9
+  school: evocation
 - id: metka_okhotnika
   type: spell
   file: entities/spells/metka_okhotnika.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 1
+  school: divination
 - id: mirazh
   type: spell
   file: entities/spells/mirazh.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 4
+  school: illusion
 - id: mnozhestvennoe_lechenie_ran
   type: spell
   file: entities/spells/mnozhestvennoe_lechenie_ran.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 5
+  school: evocation
 - id: mnozhestvennoe_vnushenie
   type: spell
   file: entities/spells/mnozhestvennoe_vnushenie.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 6
+  school: enchantment
 - id: moleben_lecheniya
   type: spell
   file: entities/spells/moleben_lecheniya.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 2
+  school: evocation
 - id: nablyudenie
   type: spell
   file: entities/spells/nablyudenie.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 5
+  school: divination
 - id: nakhodchivost
   type: spell
   file: entities/spells/nakhodchivost.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 8
+  school: transmutation
 - id: nanesenie_ran
   type: spell
   file: entities/spells/nanesenie_ran.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 1
+  school: necromancy
 - id: napravlennyy_snaryad
   type: spell
   file: entities/spells/napravlennyy_snaryad.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 1
+  school: evocation
 - id: nashestvie_nasekomykh
   type: spell
   file: entities/spells/nashestvie_nasekomykh.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 5
+  school: вызов
 - id: nebesnyy_ogon
   type: spell
   file: entities/spells/nebesnyy_ogon.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 5
+  school: evocation
 - id: neobnaruzhimost
   type: spell
   file: entities/spells/neobnaruzhimost.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 3
+  school: abjuration
 - id: netlennye_ostanki
   type: spell
   file: entities/spells/netlennye_ostanki.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 2
+  school: некромантия
 - id: nevidimoe_pismo
   type: spell
   file: entities/spells/nevidimoe_pismo.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 1
+  school: иллюзия
 - id: nevidimyy_sluga
   type: spell
   file: entities/spells/nevidimyy_sluga.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 1
+  school: вызов
 - id: nistulova_lozhnaya_magiya
   type: spell
   file: entities/spells/nistulova_lozhnaya_magiya.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 2
+  school: illusion
 - id: obet
   type: spell
   file: entities/spells/obet.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 5
+  school: enchantment
 - id: obnaruzhenie_mysley
   type: spell
   file: entities/spells/obnaruzhenie_mysley.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 2
+  school: divination
 - id: obraz
   type: spell
   file: entities/spells/obraz.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 3
+  school: illusion
 - id: obshchenie
   type: spell
   file: entities/spells/obshchenie.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 5
+  school: прорицание
 - id: obshchenie_s_prirodoy
   type: spell
   file: entities/spells/obshchenie_s_prirodoy.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 5
+  school: прорицание
 - id: ochishchenie_pishchi_i_pitya
   type: spell
   file: entities/spells/ochishchenie_pishchi_i_pitya.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 1
+  school: преобразование
 - id: oglushayushchaya_kara
   type: spell
   file: entities/spells/oglushayushchaya_kara.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 4
+  school: evocation
 - id: ognennaya_burya
   type: spell
   file: entities/spells/ognennaya_burya.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 7
+  school: evocation
 - id: ognennaya_stena
   type: spell
   file: entities/spells/ognennaya_stena.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 4
+  school: evocation
 - id: okamenenie
   type: spell
   file: entities/spells/okamenenie.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 6
+  school: transmutation
 - id: okhrannye_runy
   type: spell
   file: entities/spells/okhrannye_runy.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 3
+  school: abjuration
 - id: oputyvanie
   type: spell
   file: entities/spells/oputyvanie.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 1
+  school: вызов
 - id: oputyvayushchiy_udar
   type: spell
   file: entities/spells/oputyvayushchiy_udar.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 1
+  school: вызов
 - id: ostanovka_vremeni
   type: spell
   file: entities/spells/ostanovka_vremeni.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 9
+  school: transmutation
 - id: otilyukov_ledyanoy_shar
   type: spell
   file: entities/spells/otilyukov_ledyanoy_shar.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 6
+  school: evocation
 - id: otilyukov_uprugiy_shar
   type: spell
   file: entities/spells/otilyukov_uprugiy_shar.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 4
+  school: evocation
 - id: otkryvanie
   type: spell
   file: entities/spells/otkryvanie.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 2
+  school: transmutation
 - id: otrazheniya
   type: spell
   file: entities/spells/otrazheniya.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 2
+  school: illusion
 - id: ozhivlenie
   type: spell
   file: entities/spells/ozhivlenie.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 5
+  school: necromancy
 - id: palyashchaya_kara
   type: spell
   file: entities/spells/palyashchaya_kara.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 1
+  school: evocation
 - id: palyashchiy_luch
   type: spell
   file: entities/spells/palyashchiy_luch.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 2
+  school: evocation
 - id: pass_without_trace
   type: spell
   file: entities/spells/pass_without_trace.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 2
+  school: abjuration
 - id: pauk
   type: spell
   file: entities/spells/pauk.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 2
+  school: transmutation
 - id: pautina
   type: spell
   file: entities/spells/pautina.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 2
+  school: вызов
 - id: perenosyashchaya_dver
   type: spell
   file: entities/spells/perenosyashchaya_dver.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 4
+  school: вызов
 - id: perst_smerti
   type: spell
   file: entities/spells/perst_smerti.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 7
+  school: necromancy
 - id: planarnye_uzy
   type: spell
   file: entities/spells/planarnye_uzy.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 5
+  school: abjuration
 - id: planarnyy_soyuznik
   type: spell
   file: entities/spells/planarnyy_soyuznik.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 6
+  school: вызов
 - id: plyashushchaya_molniya
   type: spell
   file: entities/spells/plyashushchaya_molniya.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 6
+  school: evocation
 - id: pochtovoe_zhivotnoe
   type: spell
   file: entities/spells/pochtovoe_zhivotnoe.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 2
+  school: очарование
 - id: podchinenie_chudovishcha
   type: spell
   file: entities/spells/podchinenie_chudovishcha.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 8
+  school: enchantment
 - id: podchinenie_lichnosti
   type: spell
   file: entities/spells/podchinenie_lichnosti.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 5
+  school: enchantment
 - id: podchinenie_zverya
   type: spell
   file: entities/spells/podchinenie_zverya.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 4
+  school: enchantment
 - id: podmoga
   type: spell
   file: entities/spells/podmoga.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 2
+  school: abjuration
 - id: podobie
   type: spell
   file: entities/spells/podobie.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 7
+  school: illusion
 - id: podsmatrivanie
   type: spell
   file: entities/spells/podsmatrivanie.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 3
+  school: divination
 - id: podvodnoe_dykhanie
   type: spell
   file: entities/spells/podvodnoe_dykhanie.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 3
+  school: преобразование
 - id: poisk_familyara
   type: spell
   file: entities/spells/poisk_familyara.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 1
+  school: вызов
 - id: poisk_lovushek
   type: spell
   file: entities/spells/poisk_lovushek.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 2
+  school: divination
 - id: poisk_puti
   type: spell
   file: entities/spells/poisk_puti.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 6
+  school: divination
 - id: poisk_skakuna
   type: spell
   file: entities/spells/poisk_skakuna.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 2
+  school: вызов
 - id: poisk_sushchestva
   type: spell
   file: entities/spells/poisk_sushchestva.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 4
+  school: divination
 - id: poisk_zhivotnykh_ili_rasteniy
   type: spell
   file: entities/spells/poisk_zhivotnykh_ili_rasteniy.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 2
+  school: прорицание
 - id: polnoe_istselenie
   type: spell
   file: entities/spells/polnoe_istselenie.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 6
+  school: evocation
 - id: polnoe_prevrashchenie
   type: spell
   file: entities/spells/polnoe_prevrashchenie.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 9
+  school: transmutation
 - id: ponimanie_yazykov
   type: spell
   file: entities/spells/ponimanie_yazykov.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 1
+  school: прорицание
 - id: porcha
   type: spell
   file: entities/spells/porcha.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 1
+  school: enchantment
 - id: poryv_vetra
   type: spell
   file: entities/spells/poryv_vetra.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 2
+  school: evocation
 - id: poslanie
   type: spell
   file: entities/spells/poslanie.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 3
+  school: evocation
 - id: pospeshnoe_otstuplenie
   type: spell
   file: entities/spells/pospeshnoe_otstuplenie.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 1
+  school: transmutation
 - id: predostorozhnost
   type: spell
   file: entities/spells/predostorozhnost.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 6
+  school: evocation
 - id: predskazanie
   type: spell
   file: entities/spells/predskazanie.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 4
+  school: прорицание
 - id: predvidenie
   type: spell
   file: entities/spells/predvidenie.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 9
+  school: divination
 - id: pregrada_magii
   type: spell
   file: entities/spells/pregrada_magii.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 8
+  school: abjuration
 - id: prevrashchenie_v_zhivotnykh
   type: spell
   file: entities/spells/prevrashchenie_v_zhivotnykh.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 8
+  school: transmutation
 - id: prikaz
   type: spell
   file: entities/spells/prikaz.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 1
+  school: enchantment
 - id: prikosnovenie_vampira
   type: spell
   file: entities/spells/prikosnovenie_vampira.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 3
+  school: necromancy
 - id: prinuzhdenie
   type: spell
   file: entities/spells/prinuzhdenie.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 4
+  school: enchantment
 - id: pritvornaya_smert
   type: spell
   file: entities/spells/pritvornaya_smert.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 3
+  school: некромантия
 - id: pritvorstvo
   type: spell
   file: entities/spells/pritvorstvo.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 5
+  school: illusion
 - id: prizrachnyy_skakun
   type: spell
   file: entities/spells/prizrachnyy_skakun.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 3
+  school: иллюзия
 - id: prizyv_elementalya
   type: spell
   file: entities/spells/prizyv_elementalya.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 5
+  school: вызов
 - id: prizyv_fei
   type: spell
   file: entities/spells/prizyv_fei.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 6
+  school: вызов
 - id: prizyv_lesnykh_obitateley
   type: spell
   file: entities/spells/prizyv_lesnykh_obitateley.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 4
+  school: вызов
 - id: prizyv_malykh_elementaley
   type: spell
   file: entities/spells/prizyv_malykh_elementaley.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 4
+  school: вызов
 - id: prizyv_molnii
   type: spell
   file: entities/spells/prizyv_molnii.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 3
+  school: вызов
 - id: prizyv_nebozhitelya
   type: spell
   file: entities/spells/prizyv_nebozhitelya.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 7
+  school: вызов
 - id: prizyv_zagrazhdeniya
   type: spell
   file: entities/spells/prizyv_zagrazhdeniya.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 3
+  school: вызов
 - id: prizyv_zalpa
   type: spell
   file: entities/spells/prizyv_zalpa.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 5
+  school: вызов
 - id: prizyv_zhivotnykh
   type: spell
   file: entities/spells/prizyv_zhivotnykh.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 3
+  school: вызов
 - id: probuzhdenie_razuma
   type: spell
   file: entities/spells/probuzhdenie_razuma.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 5
+  school: transmutation
 - id: proektsiya
   type: spell
   file: entities/spells/proektsiya.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 7
+  school: illusion
 - id: proklyatie
   type: spell
   file: entities/spells/proklyatie.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 3
+  school: necromancy
 - id: pryzhok
   type: spell
   file: entities/spells/pryzhok.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 1
+  school: transmutation
 - id: psevdozhizn
   type: spell
   file: entities/spells/psevdozhizn.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 1
+  school: necromancy
 - id: puteshestvie_cherez_rasteniya
   type: spell
   file: entities/spells/puteshestvie_cherez_rasteniya.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 6
+  school: вызов
 - id: pylayushchiy_shar
   type: spell
   file: entities/spells/pylayushchiy_shar.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 2
+  school: вызов
 - id: raduzhnaya_stena
   type: spell
   file: entities/spells/raduzhnaya_stena.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 9
+  school: abjuration
 - id: raduzhnye_bryzgi
   type: spell
   file: entities/spells/raduzhnye_bryzgi.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 7
+  school: evocation
 - id: raskalennyy_metall
   type: spell
   file: entities/spells/raskalennyy_metall.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 2
+  school: transmutation
 - id: raspad
   type: spell
   file: entities/spells/raspad.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 6
+  school: transmutation
 - id: razgovor_s_mertvymi
   type: spell
   file: entities/spells/razgovor_s_mertvymi.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 3
+  school: necromancy
 - id: razgovor_s_rasteniyami
   type: spell
   file: entities/spells/razgovor_s_rasteniyami.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 3
+  school: transmutation
 - id: razgovor_s_zhivotnymi
   type: spell
   file: entities/spells/razgovor_s_zhivotnymi.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 1
+  school: прорицание
 - id: razmytyy_obraz
   type: spell
   file: entities/spells/razmytyy_obraz.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 2
+  school: illusion
 - id: razrushitelnaya_volna
   type: spell
   file: entities/spells/razrushitelnaya_volna.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 5
+  school: evocation
 - id: razyashchee_oko
   type: spell
   file: entities/spells/razyashchee_oko.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 6
+  school: necromancy
 - id: rech_zlatousta
   type: spell
   file: entities/spells/rech_zlatousta.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 2
+  school: enchantment
 - id: regeneratsiya
   type: spell
   file: entities/spells/regeneratsiya.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 7
+  school: transmutation
 - id: resurrection
   type: spell
   file: entities/spells/resurrection.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 7
+  school: necromancy
 - id: rost_rasteniy
   type: spell
   file: entities/spells/rost_rasteniy.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 3
+  school: transmutation
 - id: ruki_khadara
   type: spell
   file: entities/spells/ruki_khadara.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 1
+  school: вызов
 - id: sfera_neuyazvimosti
   type: spell
   file: entities/spells/sfera_neuyazvimosti.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 6
+  school: abjuration
 - id: sglaz
   type: spell
   file: entities/spells/sglaz.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 1
+  school: enchantment
 - id: shield_of_faith
   type: spell
   file: entities/spells/shield_of_faith.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 1
+  school: abjuration
 - id: signal_trevogi
   type: spell
   file: entities/spells/signal_trevogi.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 1
+  school: ограждение
 - id: silovaya_stena
   type: spell
   file: entities/spells/silovaya_stena.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 5
+  school: evocation
 - id: skolzhenie
   type: spell
   file: entities/spells/skolzhenie.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 1
+  school: вызов
 - id: slaboumie
   type: spell
   file: entities/spells/slaboumie.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 8
+  school: enchantment
 - id: sleep
   type: spell
   file: entities/spells/sleep.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 1
+  school: enchantment
 - id: sliyanie_s_kamnem
   type: spell
   file: entities/spells/sliyanie_s_kamnem.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 3
+  school: преобразование
 - id: smertnyy_uzhas
   type: spell
   file: entities/spells/smertnyy_uzhas.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 9
+  school: illusion
 - id: smyatenie
   type: spell
   file: entities/spells/smyatenie.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 4
+  school: enchantment
 - id: snyatie_proklyatya
   type: spell
   file: entities/spells/snyatie_proklyatya.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 3
+  school: abjuration
 - id: sokrytie_razuma
   type: spell
   file: entities/spells/sokrytie_razuma.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 8
+  school: abjuration
 - id: solnechnyy_luch
   type: spell
   file: entities/spells/solnechnyy_luch.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 6
+  school: evocation
 - id: solnechnyy_ozhog
   type: spell
   file: entities/spells/solnechnyy_ozhog.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 8
+  school: evocation
 - id: sotvorenie
   type: spell
   file: entities/spells/sotvorenie.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 5
+  school: illusion
 - id: sotvorenie_ili_unichtozhenie_vody
   type: spell
   file: entities/spells/sotvorenie_ili_unichtozhenie_vody.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 1
+  school: transmutation
 - id: sotvorenie_nezhiti
   type: spell
   file: entities/spells/sotvorenie_nezhiti.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 6
+  school: necromancy
 - id: sotvorenie_pishchi_i_vody
   type: spell
   file: entities/spells/sotvorenie_pishchi_i_vody.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 3
+  school: вызов
 - id: sozdanie_prokhoda
   type: spell
   file: entities/spells/sozdanie_prokhoda.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 5
+  school: transmutation
 - id: stena_klinkov
   type: spell
   file: entities/spells/stena_klinkov.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 6
+  school: evocation
 - id: stena_vetrov
   type: spell
   file: entities/spells/stena_vetrov.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 3
+  school: evocation
 - id: stikhiynoe_oruzhie
   type: spell
   file: entities/spells/stikhiynoe_oruzhie.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 3
+  school: transmutation
 - id: strazh_very
   type: spell
   file: entities/spells/strazh_very.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 4
+  school: вызов
 - id: strazhi
   type: spell
   file: entities/spells/strazhi.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 6
+  school: abjuration
 - id: sverkayushchie_bryzgi
   type: spell
   file: entities/spells/sverkayushchie_bryzgi.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 1
+  school: illusion
 - id: svoboda_peremeshcheniya
   type: spell
   file: entities/spells/svoboda_peremeshcheniya.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 4
+  school: abjuration
 - id: svyatilishche
   type: spell
   file: entities/spells/svyatilishche.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 5
+  school: evocation
 - id: svyaz_s_inym_mirom
   type: spell
   file: entities/spells/svyaz_s_inym_mirom.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 5
+  school: прорицание
 - id: tainstvennyy_mirazh
   type: spell
   file: entities/spells/tainstvennyy_mirazh.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 7
+  school: illusion
 - id: telekinez
   type: spell
   file: entities/spells/telekinez.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 5
+  school: transmutation
 - id: telepatiya
   type: spell
   file: entities/spells/telepatiya.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 8
+  school: evocation
 - id: teleport
   type: spell
   file: entities/spells/teleport.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 7
+  school: вызов
 - id: temnoe_zrenie
   type: spell
   file: entities/spells/temnoe_zrenie.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 2
+  school: transmutation
 - id: tenzerov_paryashchiy_disk
   type: spell
   file: entities/spells/tenzerov_paryashchiy_disk.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 1
+  school: вызов
 - id: ternovaya_stena
   type: spell
   file: entities/spells/ternovaya_stena.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 6
+  school: вызов
 - id: tishina
   type: spell
   file: entities/spells/tishina.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 2
+  school: иллюзия
 - id: tma
   type: spell
   file: entities/spells/tma.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 2
+  school: evocation
 - id: tryuk_s_verevkoy
   type: spell
   file: entities/spells/tryuk_s_verevkoy.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 2
+  school: transmutation
 - id: tsepkaya_loza
   type: spell
   file: entities/spells/tsepkaya_loza.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 4
+  school: вызов
 - id: tsunami
   type: spell
   file: entities/spells/tsunami.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 8
+  school: вызов
 - id: tsvetnoy_sharik
   type: spell
   file: entities/spells/tsvetnoy_sharik.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 1
+  school: evocation
 - id: tumannoe_oblako
   type: spell
   file: entities/spells/tumannoe_oblako.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 1
+  school: вызов
 - id: tumannyy_shag
   type: spell
   file: entities/spells/tumannyy_shag.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 2
+  school: вызов
 - id: ubezhishche
   type: spell
   file: entities/spells/ubezhishche.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 1
+  school: abjuration
 - id: uderzhanie_chudovishcha
   type: spell
   file: entities/spells/uderzhanie_chudovishcha.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 5
+  school: enchantment
 - id: uderzhanie_lichnosti
   type: spell
   file: entities/spells/uderzhanie_lichnosti.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 2
+  school: enchantment
 - id: ukhod_v_inoy_mir
   type: spell
   file: entities/spells/ukhod_v_inoy_mir.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 7
+  school: вызов
 - id: umirotvorenie
   type: spell
   file: entities/spells/umirotvorenie.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 2
+  school: enchantment
 - id: uskorenie
   type: spell
   file: entities/spells/uskorenie.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 3
+  school: transmutation
 - id: usykhanie
   type: spell
   file: entities/spells/usykhanie.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 4
+  school: necromancy
 - id: uzilishche
   type: spell
   file: entities/spells/uzilishche.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 7
+  school: evocation
 - id: velikolepnyy_osobnyak_mordenkaynena
   type: spell
   file: entities/spells/velikolepnyy_osobnyak_mordenkaynena.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 7
+  school: вызов
 - id: veshchiy_son
   type: spell
   file: entities/spells/veshchiy_son.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 5
+  school: illusion
 - id: videnie_nevidimogo
   type: spell
   file: entities/spells/videnie_nevidimogo.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 2
+  school: divination
 - id: vlast_nad_pogodoy
   type: spell
   file: entities/spells/vlast_nad_pogodoy.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 8
+  school: transmutation
 - id: volna_groma
   type: spell
   file: entities/spells/volna_groma.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 1
+  school: evocation
 - id: volshebnyy_sosud
   type: spell
   file: entities/spells/volshebnyy_sosud.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 6
+  school: necromancy
 - id: volshebnyy_zamok
   type: spell
   file: entities/spells/volshebnyy_zamok.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 2
+  school: abjuration
 - id: voobrazhaemaya_sila
   type: spell
   file: entities/spells/voobrazhaemaya_sila.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 2
+  school: illusion
 - id: voobrazhaemyy_ubiytsa
   type: spell
   file: entities/spells/voobrazhaemyy_ubiytsa.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 4
+  school: illusion
 - id: vosplamenyayushchayasya_tucha
   type: spell
   file: entities/spells/vosplamenyayushchayasya_tucha.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 8
+  school: вызов
 - id: vosstavshiy_trup
   type: spell
   file: entities/spells/vosstavshiy_trup.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 3
+  school: necromancy
 - id: vozrozhdenie
   type: spell
   file: entities/spells/vozrozhdenie.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 3
+  school: necromancy
 - id: vysshaya_nevidimost
   type: spell
   file: entities/spells/vysshaya_nevidimost.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 4
+  school: illusion
 - id: vysshee_vosstanovlenie
   type: spell
   file: entities/spells/vysshee_vosstanovlenie.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 5
+  school: abjuration
 - id: vyzov_na_duel
   type: spell
   file: entities/spells/vyzov_na_duel.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 1
+  school: enchantment
 - id: zadannaya_illyuziya
   type: spell
   file: entities/spells/zadannaya_illyuziya.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 6
+  school: illusion
 - id: zamedlenie
   type: spell
   file: entities/spells/zamedlenie.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 3
+  school: transmutation
 - id: zamedlennyy_ognennyy_shar
   type: spell
   file: entities/spells/zamedlennyy_ognennyy_shar.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 7
+  school: evocation
 - id: zapret
   type: spell
   file: entities/spells/zapret.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 6
+  school: ограждение
 - id: zarazhenie
   type: spell
   file: entities/spells/zarazhenie.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 5
+  school: necromancy
 - id: zashchita_ot_dobra_i_zla
   type: spell
   file: entities/spells/zashchita_ot_dobra_i_zla.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 1
+  school: abjuration
 - id: zashchita_ot_energii
   type: spell
   file: entities/spells/zashchita_ot_energii.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 3
+  school: abjuration
 - id: zashchita_ot_smerti
   type: spell
   file: entities/spells/zashchita_ot_smerti.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 4
+  school: abjuration
 - id: zashchita_ot_yada
   type: spell
   file: entities/spells/zashchita_ot_yada.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 2
+  school: abjuration
 - id: zatochenie
   type: spell
   file: entities/spells/zatochenie.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 9
+  school: abjuration
 - id: zavesa_strel
   type: spell
   file: entities/spells/zavesa_strel.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 2
+  school: transmutation
 - id: zemletryasenie
   type: spell
   file: entities/spells/zemletryasenie.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 8
+  school: evocation
 - id: zhivotnye_chuvstva
   type: spell
   file: entities/spells/zhivotnye_chuvstva.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 2
+  school: прорицание
 - id: zhutkiy_smekh_tashi
   type: spell
   file: entities/spells/zhutkiy_smekh_tashi.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 1
+  school: enchantment
 - id: zlovonnoe_oblako
   type: spell
   file: entities/spells/zlovonnoe_oblako.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 3
+  school: вызов
 - id: znak
   type: spell
   file: entities/spells/znak.md
   pages:
   - 211
   - 289
-  level: null
-  school: null
+  level: 7
+  school: abjuration

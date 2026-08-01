@@ -6,9 +6,9 @@
 
 | Аудитория | С чего начать |
 |-----------|---------------|
-| Игрок / обзор PHB | [`DND_RULES.md`](DND_RULES.md) → [`rules/chapters/`](rules/chapters/) |
+| Игрок / обзор PHB | [`rules/INDEX.md`](rules/INDEX.md) → [`DND_RULES.md`](DND_RULES.md) (статус MUD) |
 | Разработчик кода | [`DEVELOPMENT.md`](DEVELOPMENT.md) → [`ARCHITECTURE.md`](ARCHITECTURE.md) → [`API.md`](API.md) |
-| Агент (Cursor) | [`AGENTS.md`](../AGENTS.md) → [`rules/README.md`](rules/README.md) → [`rules/_index/lookup.yaml`](rules/_index/lookup.yaml) |
+| Агент (Cursor) | [`AGENTS.md`](../AGENTS.md) → [`rules/_index/lookup.yaml`](rules/_index/lookup.yaml) (`quick`) → [`rules/README.md`](rules/README.md) |
 | Продукт / UI-flow | [`MUD_PRD.md`](MUD_PRD.md) |
 | Данные YAML | [`DATA_SCHEMA.md`](DATA_SCHEMA.md) |
 

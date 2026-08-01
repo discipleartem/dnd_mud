@@ -5,7 +5,7 @@ phb_chapter: 7
 phb_pages:
 - 173
 - 180
-quick: ''
+quick: Модификаторы, проверки, спасброски, навыки, пассивные
 aliases:
 - 07-ability-scores
 - 07 ability scores

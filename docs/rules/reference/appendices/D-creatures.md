@@ -2,9 +2,14 @@
 id: D-creatures
 type: appendix
 phb_chapter: 0
-phb_pages: [304, 311]
-quick: "Статблоки существ приложения Г PHB (фамильяры, скакуны, звери, нежить)"
-aliases: [параметры существ, creatures, D-creatures]
+phb_pages:
+- 304
+- 311
+quick: Статблоки существ приложения Г PHB (фамильяры, скакуны, звери, нежить)
+aliases:
+- параметры существ
+- creatures
+- D-creatures
 ---
 
 # Параметры существ

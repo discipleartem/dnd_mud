@@ -5,7 +5,7 @@ phb_chapter: 5
 phb_pages:
 - 143
 - 161
-quick: ''
+quick: Справочные таблицы оружия/доспехов/предметов
 aliases:
 - 05-equipment-reference
 - Справочник снаряжения

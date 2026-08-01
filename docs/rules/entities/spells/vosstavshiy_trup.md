@@ -5,11 +5,17 @@ phb_chapter: 11
 phb_pages:
 - 211
 - 289
-quick: ''
+quick: 3; necromancy; 10 футов
 aliases:
 - vosstavshiy_trup
 - vosstavshiy trup
 - Восставший Труп
+level: 3
+school: necromancy
+casting_time: 1 минута
+range: 10 футов
+components: В, С, М (капля крови, кусочек плоти и щепотка костной пыли)
+duration: Мгновенная
 ---
 
 # Восставший Труп
@@ -17,6 +23,9 @@ aliases:
 > Источник: PHB 2014. Пересказ механики, не дословная копия.
 
 ## Параметры
+
+
+
 
 | Параметр | Значение |
 |----------|----------|
@@ -28,5 +37,3 @@ aliases:
 | Длительность | Мгновенная |
 
 ## Эффект
-
-_См. PHB._
