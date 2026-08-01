@@ -18,9 +18,10 @@
 ### Fixed
 - **Создание персонажа UI:** локализация grants `equipment_item` и пулов `musical_instruments` / `artisans_tools`; в a/b-выборе снаряжения — КД/кубы и состав наборов; префикс «Двуручный» у двуручного ближнего оружия; текст ошибки имени про пробелы
 - **Снаряжение UI:** заголовки выбора групп (`melee`/`ranged`/…) локализованы; в списках инвентаря и стартового снаряжения у оружия — кубы урона, у доспехов/щитов — КД
-- **Mod gating:** после сессии приключения `reset_session_catalogs()` возвращает gating к `normal` (`new_game` / `load_game`)
+- **Mod gating:** после сессии приключения `CatalogSession.reset()` возвращает gating к `normal` (`new_game` / `load_game`)
 
 ### Removed
+- **Dead code audit:** пустой stub `core/engine/combat/turn_order.py`; неиспользуемые `filter_available_options`, `roll_hp_gain_for_level_up`, `racial_languages_step_required`, `get_race_skill_choices`, `bootstrap_session_catalogs`, `reset_session_catalogs`; путь CLI `scripts/validate_data.py` → `tests/data/test_data_schema.py`
 - **`scripts/build_rules_index.py` / `scripts/rules_class_data.py`:** индексы справочника ведутся вручную; локальный PDF PHB в `docs/*.pdf` игнорируется git
 - **PDF-workflow:** `scripts/phb_spell_parse.py` и синк заклинаний из PDF в `build_rules_index.py`; алгоритм поиска правил — `docs/rules/` → веб (PHB 2014 / SRD 5.1), без локального PDF
 - **kwargs-`build_new_character` / `to_kwargs` / draft plan:** единственный API — `build_new_character(CharacterBuildParams)`; удалены мёртвые `_handle_action_result`, `_versatile_can_switch_to_two_hands`; черновик `docs/refactor-simplify-ae2709.md`

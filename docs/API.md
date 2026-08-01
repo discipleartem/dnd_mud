@@ -268,7 +268,6 @@ get_language_name(lang_id: str, language: str = "ru") -> str
 get_fixed_racial_languages(race_id: str, subrace_id: str | None = None) -> list[str]
 get_racial_language_choices(race_id: str, subrace_id: str | None = None) -> list[dict[str, Any]]
 resolve_language_pool(pool: str, known_languages: list[str]) -> list[str]
-racial_languages_step_required(race_id: str, subrace_id: str | None = None) -> bool
 ```
 
 Каталог: `database/core/languages.yaml`. Пул `common` — только обычные языки PHB; `exotic` / `any` — по явному разрешению в YAML расы или предыстории.
@@ -419,15 +418,13 @@ load_catalog_items(
     name_key: str = "name",
     fallback: Callable[[str, str], str] | None = None,
 ) -> list[dict[str, Any]]
-bootstrap_session_catalogs(difficulty: GameDifficulty) -> None
-reset_session_catalogs() -> None
 clear_catalog_cache() -> None
 clear_all_catalog_caches() -> None
 ```
 
 Deep-merge модов через `mod_loader` (overlay по полю `target` — путь к базовому YAML в `manifest.yaml`); кэш `@lru_cache` на `load_catalog` и `load_merged_catalog`.  
 `load_catalog_items` — универсальный загрузчик элементов каталога с локализацией (DRY для `load_races`, `load_languages` и т.д.).  
-`bootstrap_session_catalogs` / `reset_session_catalogs` делегируют в `CatalogSession` (`core/platform/catalog_session.py`).
+Bootstrap/reset mod gating — `CatalogSession.bootstrap` / `.reset` (`core/platform/catalog_session.py`); UI: `get_catalog_session()` в `new_game` / `load_game`.
 
 ---
 
@@ -517,7 +514,6 @@ format_inventory_line(inventory, language="ru", *, equipped=None) -> str
 get_class_starting_equipment_config(class_id: str) -> dict
 equipment_choice_label(choice_id, strings) -> str
 resolve_starting_items(class_id, choices, weapon_proficiencies, armor_proficiencies) -> list[dict]
-filter_available_options(class_id, weapon_proficiencies, armor_proficiencies) -> dict
 weapons_for_pool(pool: str, weapon_proficiencies: list[str]) -> list[str]
 ```
 

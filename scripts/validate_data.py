@@ -15,7 +15,7 @@ def main() -> int:
             sys.executable,
             "-m",
             "pytest",
-            "tests/test_data_schema.py",
+            "tests/data/test_data_schema.py",
             "-q",
         ],
         cwd=root,

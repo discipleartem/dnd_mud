@@ -105,18 +105,6 @@ def get_fixed_racial_proficiencies_with_source(
     return result
 
 
-def get_race_skill_choices(
-    race_id: str, subrace_id: str | None = None
-) -> list[dict[str, Any]]:
-    """Выборные расовые владения навыками."""
-    return [
-        mechanics
-        for mechanics, _source in get_race_skill_choices_with_source(
-            race_id, subrace_id
-        )
-    ]
-
-
 def get_race_skill_choices_with_source(
     race_id: str, subrace_id: str | None = None
 ) -> list[tuple[dict[str, Any], str]]:

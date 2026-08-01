@@ -117,31 +117,6 @@ def hp_gain_breakdown_for_level_up(
     )
 
 
-def roll_hp_gain_for_level_up(
-    class_id: str,
-    stats: StatMap,
-    new_level: int,
-    difficulty: GameDifficulty,
-    race_id: str | None = None,
-    subrace_id: str | None = None,
-    feat_ids: list[str] | None = None,
-) -> tuple[int, int | None]:
-    """Прирост HP за повышение до new_level.
-
-    Для HardCore возвращает также значение броска кости.
-    """
-    breakdown = hp_gain_breakdown_for_level_up(
-        class_id,
-        stats,
-        new_level,
-        difficulty,
-        race_id,
-        subrace_id,
-        feat_ids,
-    )
-    return breakdown.total, breakdown.dice_roll
-
-
 def max_hp_for_level(
     class_id: str,
     stats: StatMap,

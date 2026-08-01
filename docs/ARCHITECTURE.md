@@ -66,7 +66,7 @@ UI не читает файлы данных напрямую — только �
 | `core/constants.py` | PB, DC; `MAX_CHARACTER_LEVEL`, `clamp_level`; ability modifier |
 | **`core/platform/`** | I/O, каталоги, локализация, настройки, моды |
 | `platform/io.py` | `load_file()`, `load_yaml()` / `load_json()` (`strict`), `save_json()` / `merge_unique()` |
-| `platform/catalog_loader.py` | `load_catalog()`, `load_catalog_items()`, `bootstrap_session_catalogs()`, `reload_catalogs()` |
+| `platform/catalog_loader.py` | `load_catalog()`, `load_catalog_items()`, `reload_catalogs()` |
 | `platform/catalog_session.py` | `CatalogSession` — gating модов (`set_mod_gating_difficulty` / `get_mod_gating_difficulty`) и сброс кэшей; `get_catalog_session()` |
 | `platform/localization.py` | `load_strings()` (кэш), `get_string()` |
 | `platform/settings.py` | Настройки в `database/core/settings.json` |
@@ -132,7 +132,7 @@ UI не читает файлы данных напрямую — только �
 | `engine/scenario_actions.py` | Чистая логика action-узлов (без UI) |
 | `engine/engine_rules.py` | Преимущество/помеха проверок по `GameDifficulty` |
 | `engine/difficulty.py` | `adventure_allows_difficulty()` |
-| `engine/combat/` | Phase 2: `roll_initiative`, `attack_roll` (`rolls`, `turn_order`) |
+| `engine/combat/` | Phase 2: `roll_initiative`, `attack_roll` (`rolls`) |
 
 ### 3. Data Layer (`database/`, `saves/`)
 
