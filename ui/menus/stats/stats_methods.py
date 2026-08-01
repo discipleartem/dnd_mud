@@ -38,6 +38,10 @@ from ui.menus.stats.stats_shared import (
     _run_stats_confirm_loop,
 )
 
+PointBuyDistributionResult = StatMap | None | Literal["retry", "reroll"]
+RandomAssignResult = StatMap | None | Literal["reroll"]
+RandomRollsPhaseResult = list[int] | None | Literal["regenerate"]
+
 
 def _select_stats_standard_array(
     strings: StringsDict,
@@ -138,7 +142,7 @@ def _finish_point_buy_distribution(
     subrace_id: str | None,
     *,
     points_available: int,
-) -> StatMap | None | Literal["retry", "reroll"]:
+) -> PointBuyDistributionResult:
     """Завершить point-buy или показать ошибку валидации."""
     error_key = validate_point_buy_finish(stat_values)
     if error_key is None:
@@ -172,6 +176,35 @@ def _finish_point_buy_distribution(
     return "retry"
 
 
+def _run_point_buy_distribution_phase(
+    strings: StringsDict,
+    stats: StatMap,
+    race_id: str,
+    subrace_id: str | None,
+) -> PointBuyDistributionResult:
+    """Один цикл распределения point-buy до завершения, отмены или реролла."""
+    while True:
+        points_available = _render_point_buy_screen(
+            strings, stats, race_id, subrace_id
+        )
+
+        choice = get_int_input(choice_prompt(strings), 0, 6, strings)
+
+        if choice == 0:
+            stat_values = [stats[stat] for stat in STAT_NAMES]
+            return _finish_point_buy_distribution(
+                strings,
+                stat_values,
+                race_id,
+                subrace_id,
+                points_available=points_available,
+            )
+
+        stat_to_modify = STAT_NAMES[choice - 1]
+        stat_name = ability_name(strings, stat_to_modify)
+        _prompt_point_buy_stat_value(strings, stat_name, stats, stat_to_modify)
+
+
 def _select_stats_point_buy(
     strings: StringsDict,
     race_id: str,
@@ -180,36 +213,15 @@ def _select_stats_point_buy(
     """Система покупки очков (Point-buy)."""
     while True:
         stats = {stat: 8 for stat in STAT_NAMES}
-
-        while True:
-            points_available = _render_point_buy_screen(
-                strings, stats, race_id, subrace_id
-            )
-
-            choice = get_int_input(choice_prompt(strings), 0, 6, strings)
-
-            if choice == 0:
-                stat_values = [stats[stat] for stat in STAT_NAMES]
-                result = _finish_point_buy_distribution(
-                    strings,
-                    stat_values,
-                    race_id,
-                    subrace_id,
-                    points_available=points_available,
-                )
-                if result == "retry":
-                    continue
-                if isinstance(result, dict):
-                    return result
-                if result is None:
-                    return None
-                break
-
-            stat_to_modify = STAT_NAMES[choice - 1]
-            stat_name = ability_name(strings, stat_to_modify)
-            _prompt_point_buy_stat_value(
-                strings, stat_name, stats, stat_to_modify
-            )
+        result = _run_point_buy_distribution_phase(
+            strings, stats, race_id, subrace_id
+        )
+        if result == "retry":
+            continue
+        if isinstance(result, dict):
+            return result
+        if result is None:
+            return None
 
 
 def _select_stats_random(
@@ -231,6 +243,89 @@ def _select_stats_random(
     return _select_stats_random_normal(strings, race_id, subrace_id)
 
 
+def _random_normal_rolls_phase(
+    strings: StringsDict,
+    race_id: str,
+    subrace_id: str | None,
+    rolls: list[int] | None,
+) -> RandomRollsPhaseResult:
+    """Фаза бросков Normal: принять, перегенерировать или выйти."""
+    _print_stats_generation_header(strings, race_id, subrace_id)
+
+    print(
+        f"{Fore.YELLOW}"
+        f"{get_string(strings, 'character.stats_generating_random')}"
+        f"{Style.RESET_ALL}"
+    )
+    print()
+
+    if rolls is None:
+        rolls = roll_stat_pool()
+
+    print(
+        f"{Fore.CYAN}"
+        f"{get_string(strings, 'character.stats_random_rolls')}"
+        f"{Style.RESET_ALL}"
+    )
+    rolls_display = get_string(
+        strings,
+        "character.stats_available",
+        values=rolls,
+    )
+    print(f"  {rolls_display}")
+    print()
+    roll_choice = run_numbered_menu(
+        strings,
+        [
+            get_string(strings, "character.stats_random_accept"),
+            get_string(strings, "character.stats_random_regenerate"),
+        ],
+        prompt_key="common.choice_prompt",
+        back_label_key="character.back",
+    )
+    if roll_choice is None:
+        return None
+    if roll_choice == 2:
+        return "regenerate"
+    return rolls
+
+
+def _random_normal_assign_phase(
+    strings: StringsDict,
+    rolls: list[int],
+    race_id: str,
+    subrace_id: str | None,
+) -> RandomAssignResult:
+    """Фаза распределения бросков Normal до подтверждения или отмены."""
+    while True:
+        selected = _assign_stats_from_pool(
+            strings,
+            rolls,
+            value_min=min(rolls),
+            value_max=max(rolls),
+            show_counts=True,
+            race_id=race_id,
+            subrace_id=subrace_id,
+        )
+        if selected is None:
+            return None
+
+        selected_values = [selected[stat] for stat in STAT_NAMES]
+        stats = generate_stats_random(selected_values, race_id, subrace_id)
+        result = _run_stats_confirm_loop(
+            strings,
+            stats,
+            race_id,
+            subrace_id,
+            reroll_label_key="character.stats_reroll_regenerate",
+        )
+        if isinstance(result, dict):
+            return result
+        if result is None:
+            return None
+        return "reroll"
+
+
 def _select_stats_random_normal(
     strings: StringsDict,
     race_id: str,
@@ -240,73 +335,23 @@ def _select_stats_random_normal(
     rolls: list[int] | None = None
 
     while True:
-        _print_stats_generation_header(strings, race_id, subrace_id)
-
-        print(
-            f"{Fore.YELLOW}"
-            f"{get_string(strings, 'character.stats_generating_random')}"
-            f"{Style.RESET_ALL}"
+        rolls_phase = _random_normal_rolls_phase(
+            strings, race_id, subrace_id, rolls
         )
-        print()
-
-        if rolls is None:
-            rolls = roll_stat_pool()
-
-        print(
-            f"{Fore.CYAN}"
-            f"{get_string(strings, 'character.stats_random_rolls')}"
-            f"{Style.RESET_ALL}"
-        )
-        rolls_display = get_string(
-            strings,
-            "character.stats_available",
-            values=rolls,
-        )
-        print(f"  {rolls_display}")
-        print()
-        roll_choice = run_numbered_menu(
-            strings,
-            [
-                get_string(strings, "character.stats_random_accept"),
-                get_string(strings, "character.stats_random_regenerate"),
-            ],
-            prompt_key="common.choice_prompt",
-            back_label_key="character.back",
-        )
-        if roll_choice is None:
+        if rolls_phase is None:
             return None
-        if roll_choice == 2:
+        if rolls_phase == "regenerate":
             rolls = None
             continue
 
-        while True:
-            selected = _assign_stats_from_pool(
-                strings,
-                rolls,
-                value_min=min(rolls),
-                value_max=max(rolls),
-                show_counts=True,
-                race_id=race_id,
-                subrace_id=subrace_id,
-            )
-            if selected is None:
-                break
-
-            selected_values = [selected[stat] for stat in STAT_NAMES]
-            stats = generate_stats_random(selected_values, race_id, subrace_id)
-            result = _run_stats_confirm_loop(
-                strings,
-                stats,
-                race_id,
-                subrace_id,
-                reroll_label_key="character.stats_reroll_regenerate",
-            )
-            if isinstance(result, dict):
-                return result
-            if result is None:
-                break
+        assign_result = _random_normal_assign_phase(
+            strings, rolls_phase, race_id, subrace_id
+        )
+        if isinstance(assign_result, dict):
+            return assign_result
+        if assign_result == "reroll":
             rolls = None
-            break
+            continue
 
 
 def _select_stats_random_hardcore(
