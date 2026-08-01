@@ -16,7 +16,7 @@ ui/  →  core/  →  database/ (YAML) + saves/ (JSON)
 
 - **UI** (`ui/menus/`, `ui/input_handler.py`) — отображение и ввод; без бизнес-логики
 - **Core** (`core/`) — модели, механика, загрузчики; не зависит от UI
-- **Data** — core читает/пишет через свои модули (`core/io.py`, loaders)
+- **Data** — core читает/пишет через свои модули (`core/platform/io.py`, loaders)
 
 UI не читает и не пишет файлы данных напрямую.
 
@@ -25,7 +25,7 @@ UI не читает и не пишет файлы данных напрямую
 Все пользовательские строки — через локализацию:
 
 ```python
-from core.localization import get_string, load_strings
+from core.platform.localization import get_string, load_strings
 
 strings = load_strings(language)
 message = get_string(strings, "menu.new_game")  # ✅
@@ -38,7 +38,8 @@ message = "New Game"                            # ❌
 
 Поиск правил — [`00-project.mdc`](00-project.mdc) §D&D 5e — источник истины и поиск правил (`docs/rules/` → веб, 5e до 2024).
 
-- Модели в `core/models.py` — `dataclass` для `Character`, `Adventure`
+- Модели в `core/character/models.py` — `dataclass` для `Character`, `Adventure`
 - `class_id: CharacterClass` на `Character` (`core/types.py`, `StrEnum`); legacy JSON с `str` нормализуется в `__post_init__`
 - Баланс из YAML — без magic numbers в Python
 - Явные проверки условий; эффекты apply/remove явно
+- Импорты в `core/` — leaf-only (`core.<pkg>.<module>`); пакетные `__init__.py` без фасадов

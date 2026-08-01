@@ -2,12 +2,12 @@
 
 from colorama import Fore, Style
 
-from core.dice import ability_modifier
-from core.localization import (
+from core.character.models import Character
+from core.mechanics.dice import ability_modifier
+from core.mechanics.stats import POINT_BUY_COSTS, STAT_NAMES
+from core.platform.localization import (
     get_string,
 )
-from core.models import Character
-from core.stats import POINT_BUY_COSTS, STAT_NAMES
 from core.types import (
     StatMap,
     StringsDict,

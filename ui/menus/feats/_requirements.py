@@ -1,103 +1,28 @@
-"""Форматирование и отображение требований черт."""
+"""Отображение и подтверждение требований черт."""
 
 from typing import Any
 
 from colorama import Fore, Style
 
-from core.equipment import proficiency_token_label
-from core.feats import (
+from core.feats.requirement_text import (
+    _format_or_ability_requirements,
+    _format_requirement_text,
+    _split_feat_requirements,
+)
+from core.feats.requirements import (
     FeatRequirementContext,
-    feat_full_description_lines,
-    feat_summary_description,
     requirement_met,
 )
-from core.localization import get_string
+from core.feats.text import (
+    feat_full_description_lines,
+    feat_summary_description,
+)
+from core.platform.localization import get_string
 from core.types import StringsDict
 from ui.menus.console import (
-    ability_name,
     confirm_yes_no,
     print_screen_header,
 )
-
-
-def _split_feat_requirements(
-    feat: dict[str, Any],
-) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
-    """AND- и OR-группы требований из записи черты."""
-    raw_reqs = feat.get("requirements", [])
-    if not isinstance(raw_reqs, list):
-        return [], []
-    and_reqs: list[dict[str, Any]] = []
-    or_reqs: list[dict[str, Any]] = []
-    for req in raw_reqs:
-        if not isinstance(req, dict):
-            continue
-        if req.get("alternative"):
-            or_reqs.append(req)
-        else:
-            and_reqs.append(req)
-    return and_reqs, or_reqs
-
-
-def _format_or_ability_requirements(
-    strings: StringsDict,
-    or_reqs: list[dict[str, Any]],
-) -> str | None:
-    """OR-группа ability_score — «Интеллект или Мудрость 13+»."""
-    if not or_reqs:
-        return None
-    if not all(req.get("type") == "ability_score" for req in or_reqs):
-        return None
-    values = {int(req.get("value", 0)) for req in or_reqs}
-    if len(values) != 1:
-        return None
-    value = next(iter(values))
-    abilities = [
-        ability_name(strings, str(req.get("target", ""))) for req in or_reqs
-    ]
-    or_sep = get_string(strings, "character.feat_req_or_sep")
-    return get_string(
-        strings,
-        "character.feat_req_ability_or",
-        abilities=or_sep.join(abilities),
-        value=value,
-    )
-
-
-def _format_requirement_text(
-    strings: StringsDict,
-    req: dict[str, Any],
-    ctx: FeatRequirementContext,
-    language: str,
-) -> str:
-    """Текст одного требования для экрана выбора."""
-    rtype = req.get("type", "")
-    if rtype == "ability_score":
-        target = str(req.get("target", ""))
-        value = int(req.get("value", 0))
-        current = int(ctx.stats.get(target, 0))
-        return get_string(
-            strings,
-            "character.feat_req_ability",
-            ability=ability_name(strings, target),
-            value=value,
-            current=current,
-        )
-    if rtype == "armor_proficiency":
-        raw = req.get("armors", [])
-        armors = [str(a) for a in raw] if isinstance(raw, list) else []
-        labels = [
-            proficiency_token_label(armor, strings, language)
-            for armor in armors
-        ]
-        return get_string(
-            strings,
-            "character.feat_req_armor",
-            armors=", ".join(labels),
-        )
-    if rtype == "spellcasting":
-        return get_string(strings, "character.feat_req_spellcasting")
-    return ""
 
 
 def _requirement_line_color(met: bool, *, muted: bool) -> str:

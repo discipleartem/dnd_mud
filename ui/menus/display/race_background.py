@@ -4,18 +4,23 @@ from typing import Any
 
 from colorama import Fore, Style
 
-from core.grants import (
+from core.catalogs.languages import get_language_name
+from core.catalogs.races import (
+    get_choice_ability_bonus_mechanics,
+    get_race_bonuses,
+)
+from core.grants.format import (
+    _grant_description,
+    _grant_display_name,
+    _grant_pool_label,
+)
+from core.grants.normalize import (
     ABILITY_INCREASE,
     grants_from_entity,
     grants_of_type,
 )
-from core.languages import get_language_name
-from core.localization import (
+from core.platform.localization import (
     get_string,
-)
-from core.races import (
-    get_choice_ability_bonus_mechanics,
-    get_race_bonuses,
 )
 from core.types import (
     StatMap,
@@ -25,9 +30,6 @@ from ui.menus.console import (
     ability_name,
 )
 from ui.menus.display.grants import (
-    _grant_description,
-    _grant_display_name,
-    _grant_pool_label,
     _print_grant_line,
 )
 

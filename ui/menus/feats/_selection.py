@@ -4,8 +4,8 @@ from typing import Any
 
 from colorama import Fore, Style
 
-from core.feats import FeatRequirementContext
-from core.localization import get_string
+from core.feats.requirements import FeatRequirementContext
+from core.platform.localization import get_string
 from core.types import StringsDict
 from ui.input_handler import get_int_input
 from ui.menus.console import SEPARATOR

@@ -29,11 +29,11 @@
 - Режим сложности «Лёгкая» (`easy`): старт с 3 уровня, обязательный выбор подкласса
 - Выбор подкласса по режимам (`normal` / `hardcore` / `easy`); NPC-наставник в меню персонажей и сценариях
 - Прогрессия XP и потолок уровня **10** (`MAX_CHARACTER_LEVEL`)
-- Минимальный scenario runner (`core/scenario_actions.py`, `ui/menus/scenario_flow.py`): grant XP, subclass_training; tutorial / lost_mine
+- Минимальный scenario runner (`core/engine/scenario_actions.py`, `ui/menus/scenario/flow.py`): grant XP, subclass_training; tutorial / lost_mine
 - База данных правил D&D 5e (YAML-справочники в `database/`)
 - Локализация (русский/английский, YAML-словари)
-- Броски кубиков (`roll`, `roll_ability_score`, `ability_modifier` в `core/dice.py`)
-- Модель персонажа (`core/models.py`: Character dataclass; сохранение через `core/character_storage.py` в JSON)
+- Броски кубиков (`roll`, `roll_ability_score`, `ability_modifier` в `core/mechanics/dice.py`)
+- Модель персонажа (`core/character/models.py`: Character dataclass; сборка — `core/character/build.py`; сохранение — `core/character/storage.py` в JSON)
 - Загрузка приключений из YAML
 - Адаптивный вывод текста с переносом по ширине терминала
 
@@ -405,16 +405,16 @@ dnd_mud/
 ├── pyproject.toml
 ├── README.md
 ├── main.py                          # точка входа
-├── core/                            # ядро (модели, механика, loaders)
-│   ├── models.py, character.py, character_storage.py
-│   ├── game_engine.py, scenario_actions.py, session_storage.py
-│   ├── grants.py, grants_resolve.py, character_build.py
-│   ├── progression.py (+ xp_levels/asi/… siblings), inventory.py (+ siblings)
-│   ├── feats.py (+ feat_* siblings), dice.py, checks.py, localization.py
+├── core/                            # ядро (пакеты + leaf-imports)
+│   ├── types.py, constants.py
+│   ├── character/                   # models, build, storage, migrate, finalize
+│   ├── platform/, catalogs/, grants/, feats/
+│   ├── progression/, inventory/, mechanics/
+│   ├── engine/                      # game_engine, scenario_*, session_*, combat/
 │   └── …                            # см. docs/ARCHITECTURE.md
 ├── ui/                              # пользовательский интерфейс
 │   ├── input_handler.py, terminal_wrap.py
-│   └── menus/                       # flows, console.py, display/, feats/
+│   └── menus/                       # hub/, creation/, progression/, scenario/, display/, feats/, stats/, console.py
 ├── database/                        # YAML-справочники + JSON-конфиг
 │   ├── races/races.yaml
 │   ├── classes/classes.yaml

@@ -2,9 +2,8 @@
 
 from colorama import Fore, Style
 
-from core.dice import roll_ability_score
-from core.localization import get_string
-from core.stats import (
+from core.mechanics.dice import roll_ability_score
+from core.mechanics.stats import (
     POINT_BUY_BUDGET,
     POINT_BUY_COSTS,
     STANDARD_ARRAY,
@@ -17,6 +16,7 @@ from core.stats import (
     point_buy_points_remaining,
     validate_point_buy_finish,
 )
+from core.platform.localization import get_string
 from core.types import StatMap, StringsDict
 from ui.input_handler import get_int_input
 from ui.menus.console import ability_name, choice_prompt, press_enter

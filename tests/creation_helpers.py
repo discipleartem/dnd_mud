@@ -4,8 +4,8 @@ from __future__ import annotations
 
 from typing import Any
 
-from core.models import Character
-from core.stats import STAT_NAMES
+from core.character.models import Character
+from core.mechanics.stats import STAT_NAMES
 from core.types import CharacterClass
 
 VARIANT_HUMAN_STATS: dict[str, int] = {

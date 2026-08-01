@@ -35,7 +35,7 @@ def _error(
 ) -> str:
     """Локализованное сообщение об ошибке или запасной текст."""
     if strings is not None:
-        from core.localization import get_string
+        from core.platform.localization import get_string
 
         result = get_string(strings, key, **kwargs)
         if result != key:

@@ -4,9 +4,8 @@ from typing import Literal
 
 from colorama import Fore, Style
 
-from core.localization import get_string
-from core.races import get_race_bonuses
-from core.stats import (
+from core.catalogs.races import get_race_bonuses
+from core.mechanics.stats import (
     ABILITY_SCORE_DEFAULT,
     ABILITY_SCORE_MAX,
     ABILITY_SCORE_MIN,
@@ -15,6 +14,7 @@ from core.stats import (
     can_assign_point_buy_value,
     validate_final_stats,
 )
+from core.platform.localization import get_string
 from core.types import StatMap, StringsDict
 from ui.input_handler import get_int_input
 from ui.menus.console import (

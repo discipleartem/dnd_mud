@@ -1,6 +1,6 @@
 """Оркестратор flow генерации характеристик."""
 
-from core.localization import get_string
+from core.platform.localization import get_string
 from core.types import GameDifficulty, StatMap, StringsDict
 from ui.menus.console import (
     print_screen_header,
