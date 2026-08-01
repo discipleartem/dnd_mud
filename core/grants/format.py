@@ -511,14 +511,3 @@ def format_grant_line_text(
         "character.feature_line_name_only",
         name=name,
     )
-
-
-def format_grant_lines(
-    grants: list[dict[str, Any]],
-    strings: StringsDict,
-    language: str = "ru",
-) -> list[str]:
-    """Строки особенностей для списка grants."""
-    return [
-        format_grant_line_text(grant, strings, language) for grant in grants
-    ]
