@@ -16,7 +16,7 @@ ui/  →  core/  →  database/ (YAML) + saves/ (JSON)
 
 - **UI** (`ui/menus/`, `ui/input_handler.py`) — отображение и ввод; без бизнес-логики
 - **Core** (`core/`) — модели, механика, загрузчики; не зависит от UI
-- **Data** — core читает/пишет через свои модули (`core/io.py`, loaders)
+- **Data** — core читает/пишет через свои модули (`core/platform/io.py`, loaders)
 
 UI не читает и не пишет файлы данных напрямую.
 
@@ -42,3 +42,4 @@ message = "New Game"                            # ❌
 - `class_id: CharacterClass` на `Character` (`core/types.py`, `StrEnum`); legacy JSON с `str` нормализуется в `__post_init__`
 - Баланс из YAML — без magic numbers в Python
 - Явные проверки условий; эффекты apply/remove явно
+- Импорты в `core/` — leaf-only (`core.<pkg>.<module>`); пакетные `__init__.py` без фасадов

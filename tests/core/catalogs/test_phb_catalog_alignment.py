@@ -13,8 +13,8 @@ from core.catalogs.races import collect_race_grants, get_race_bonuses
 
 pytestmark = pytest.mark.usefixtures("catalog_caches_cleared")
 
-ROOT = Path(__file__).resolve().parent.parent
-FIXTURE = Path(__file__).resolve().parent / "fixtures" / "phb_equipment.yaml"
+ROOT = Path(__file__).resolve().parents[3]
+FIXTURE = ROOT / "tests" / "fixtures" / "phb_equipment.yaml"
 
 
 def _load_yaml(path: Path, key: str) -> dict[str, Any]:

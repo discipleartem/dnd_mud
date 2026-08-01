@@ -79,7 +79,7 @@ Re-export типов: `core.types`. Функции персонажа — leaf-�
 
 ---
 
-## core.models — Модели данных
+## core.character.models — Модели данных
 
 ### Character
 
@@ -141,24 +141,24 @@ class Adventure:
 
 ## Персонажи (leaf-модули)
 
-Фасад `core.character` удалён. Импортировать напрямую:
+Пакетные фасады отсутствуют. Импортировать leaf-модули напрямую:
 
 | Область | Модуль |
 |---------|--------|
-| CRUD / slug | `core.character_storage` |
-| Сборка | `core.character_build` |
-| Stats | `core.stats` |
-| Расы / бонусы | `core.races` |
-| Классы | `core.classes` |
+| CRUD / slug | `core.character.storage` |
+| Сборка | `core.character.build` |
+| Stats | `core.mechanics.stats` |
+| Расы / бонусы | `core.catalogs.races` |
+| Классы | `core.catalogs.classes` |
 
 ### Константы и save/load
 
 ```python
-STANDARD_ARRAY = [15, 14, 13, 12, 10, 8]  # core.stats
-STAT_NAMES = [...]  # core.stats
-CHARACTERS_DIR = Path("saves/characters")  # core.character_storage
-RACES_FILE = Path("database/races/races.yaml")  # core.races
-CLASSES_FILE = Path("database/classes/classes.yaml")  # core.classes
+STANDARD_ARRAY = [15, 14, 13, 12, 10, 8]  # core.mechanics.stats
+STAT_NAMES = [...]  # core.mechanics.stats
+CHARACTERS_DIR = Path("saves/characters")  # core.character.storage
+RACES_FILE = Path("database/races/races.yaml")  # core.catalogs.races
+CLASSES_FILE = Path("database/classes/classes.yaml")  # core.catalogs.classes
 ```
 
 ### Сохранение и загрузка
@@ -196,18 +196,18 @@ ABILITY_SCORE_DEFAULT = 10
 ABILITY_SCORE_MAX = 20
 ```
 
-`build_new_character` (`core/character_build.py`) собирает `Character` из `CharacterBuildParams` без записи на диск (feat merge, HP, inventory, `equip_defaults`).  
+`build_new_character` (`core/character/build.py`) собирает `Character` из `CharacterBuildParams` без записи на диск (feat merge, HP, inventory, `equip_defaults`).  
 `persist_character` записывает готовую модель в `saves/characters/{save_slug}.json`.  
-Flow создания: `_CreationState.to_character()` (передаёт `unique_save_slug`) → `persist_character()` (`ui/menus/_creation_finalize.py`).  
+Flow создания: `_CreationState.to_character()` (передаёт `unique_save_slug`) → `persist_character()` (`ui/menus/creation/finalize.py`).  
 `build_new_character` задаёт `current_hp` = `max_hp` = `max_hp_for_level(..., difficulty)`.  
 Параметр `apply_feat_stat_bonuses=False` — если `stats` уже содержат бонусы черт (flow создания после `select_creation_feats`).  
-`max_hp_for_level` — см. `core.progression` (HP на уровне 1–10, включая режим Normal/Easy/HardCore).  
+`max_hp_for_level` — см. `core.progression.hp` (HP на уровне 1–10, включая режим Normal/Easy/HardCore).  
 `update_character` — перезапись JSON после изменений (подкласс, XP и т.д.).
 `validate_final_stats` — первое нарушение границ PHB (1–20) после всех бонусов; UI вызывает при финализации характеристик.
 
 ### Генерация характеристик
 
-**Константы** (`core/stats.py`):
+**Константы** (`core/mechanics/stats.py`):
 
 ```python
 STANDARD_ARRAY = [15, 14, 13, 12, 10, 8]
@@ -239,7 +239,7 @@ generate_stats_random(random_values: list[int], race_id: str, subrace_id: str | 
 
 Все функции возвращают словарь `{stat_name: value}` с **уже применёнными** расовыми бонусами.
 
-`roll_ability_score()` — в `core.dice` (4d6, убрать наименьший, сумма остальных трёх).
+`roll_ability_score()` — в `core.mechanics.dice` (4d6, убрать наименьший, сумма остальных трёх).
 
 **UI** (`ui/menus/stats/stats_flow.py`):
 
@@ -258,7 +258,7 @@ show_stats_generation_flow(
 
 UX-детали (расовые бонусы до/после, экран подтверждения): [MUD_PRD.md §3.4.6](MUD_PRD.md#346-генерация-характеристик-реализовано).
 
-### Языки (`core/languages.py`)
+### Языки (`core/catalogs/languages.py`)
 
 ```python
 load_languages(language: str = "ru") -> list[dict[str, Any]]
@@ -271,9 +271,9 @@ racial_languages_step_required(race_id: str, subrace_id: str | None = None) -> b
 
 Каталог: `database/core/languages.yaml`. Пул `common` — только обычные языки PHB; `exotic` / `any` — по явному разрешению в YAML расы или предыстории.
 
-**UI:** `select_creation_languages(strings, race_id, subrace_id, background_id, language) -> list[str] | None` (`ui/menus/languages.py`).
+**UI:** `select_creation_languages(strings, race_id, subrace_id, background_id, language) -> list[str] | None` (`ui/menus/creation/languages.py`).
 
-### Расы (`core/races.py`)
+### Расы (`core/catalogs/races.py`)
 
 Каталог: `database/races/races.yaml` через `load_merged_catalog` (overlay модов). Схема: [`DATA_SCHEMA.md`](DATA_SCHEMA.md).
 
@@ -284,7 +284,7 @@ collect_race_grants(race_id: str, subrace_id: str | None = None) -> list[dict[st
 
 `resolve_subrace_id` — fallback `human` + `subrace: null` → `standard`.
 
-### Предыстории (`core/backgrounds.py`)
+### Предыстории (`core/catalogs/backgrounds.py`)
 
 ```python
 load_backgrounds(language: str = "ru") -> list[dict[str, Any]]
@@ -295,13 +295,13 @@ get_background_language_choice(background_id: str) -> dict[str, Any] | None
 
 Каталог: `database/backgrounds/backgrounds.yaml` (13 PHB); механика — только `grants[]` (top-level `skills`, `languages`, `tool_proficiencies` не читаются).
 
-**UI:** `select_creation_background(strings, language) -> tuple[str, list[str]] | None` (`ui/menus/backgrounds.py`) — `(background_id, skills)`.
+**UI:** `select_creation_background(strings, language) -> tuple[str, list[str]] | None` (`ui/menus/creation/backgrounds.py`) — `(background_id, skills)`.
 
-**UI:** `select_creation_proficiencies(...)` (`ui/menus/proficiencies.py`) — выбор инструментов из пулов класса/предыстории/расы.
+**UI:** `select_creation_proficiencies(...)` (`ui/menus/creation/proficiencies.py`) — выбор инструментов из пулов класса/предыстории/расы.
 
 ---
 
-## core.grants_context — Контекст создания и владения
+## core.grants.context — Контекст создания и владения
 
 ```python
 @dataclass(frozen=True)
@@ -333,15 +333,15 @@ class ResolvedGrants:
 
 ---
 
-## core.grants_resolve — Сборка владений
+## core.grants.resolve — Сборка владений
 
 `resolve_grants_for_context`, `resolve_creation_grants`, `merge_languages_with_feats`,
 `merge_expertise_with_feats`, `build_fixed_proficiencies` — leaf-модуль.
-`character_build` реэкспортирует resolve/merge для совместимости.
+`core.character.build` использует resolve/merge через leaf-import.
 
 ---
 
-## core.character_build — Сборка модели персонажа
+## core.character.build — Сборка модели персонажа
 
 ```python
 build_new_character(params: CharacterBuildParams) -> Character
@@ -359,12 +359,12 @@ merge_expertise_with_feats(skill_expertise, feat_ids, feat_choices) -> list[str]
 ```
 
 Единственный API сборки — `build_new_character(CharacterBuildParams)`.  
-Creation flow передаёт `unique_save_slug` из `core.character_storage`.  
-Функции `resolve_grants_for_context`, `resolve_creation_grants`, `merge_languages_with_feats`, `merge_expertise_with_feats` живут в `core/grants_resolve.py` и реэкспортируются из `character_build`.
+Creation flow передаёт `unique_save_slug` из `core.character.storage`.  
+Функции `resolve_grants_for_context`, `resolve_creation_grants`, `merge_languages_with_feats`, `merge_expertise_with_feats` живут в `core/grants/resolve.py` (не реэкспортируются из package facade).
 
 ---
 
-## core.character_migrate — Версия JSON сейва
+## core.character.migrate — Версия JSON сейва
 
 ```python
 CHARACTERS_SCHEMA_VERSION = 1
@@ -377,7 +377,7 @@ migrate_character_data(data: dict[str, Any]) -> dict[str, Any]
 ---
 
 
-## core.grants — Нормализация grants и proficiency-токены
+## core.grants.normalize — Нормализация grants и proficiency-токены
 
 Единый формат эффектов из YAML (`grants[]`) и разбор владений
 (бывший `core.grant_mechanics`). Схема типов: [`DATA_SCHEMA.md`](DATA_SCHEMA.md).
@@ -406,7 +406,7 @@ proficiency_tokens_and_skills_from_grant(grant, choices=None) -> tuple[weapons, 
 
 ---
 
-## core.catalog_loader — Единая загрузка каталогов
+## core.platform.catalog_loader — Единая загрузка каталогов
 
 ```python
 load_catalog(path: Path | str, root_key: str) -> dict[str, Any]
@@ -425,12 +425,11 @@ clear_all_catalog_caches() -> None
 
 Deep-merge модов через `mod_loader` (overlay по полю `target` — путь к базовому YAML в `manifest.yaml`); кэш `@lru_cache` на `load_catalog` и `load_merged_catalog`.  
 `load_catalog_items` — универсальный загрузчик элементов каталога с локализацией (DRY для `load_races`, `load_languages` и т.д.).  
-`bootstrap_session_catalogs` — `set_mod_gating_difficulty` + `reload_catalogs` перед сессией приключения.  
-`reset_session_catalogs` — вернуть gating к `normal` после сессии (`new_game` / `load_game`).
+`bootstrap_session_catalogs` / `reset_session_catalogs` делегируют в `CatalogSession` (`core/platform/catalog_session.py`).
 
 ---
 
-## core.mod_loader — Overlay модов (низкий уровень)
+## core.platform.mod_loader — Overlay модов (низкий уровень)
 
 ```python
 MODS_DIR = Path("mods")
@@ -451,7 +450,7 @@ Overlay actions в YAML мода: `delete` (секция → список id), `
 
 ---
 
-## core.equipment — Каталог снаряжения
+## core.catalogs.equipment — Каталог снаряжения
 
 Источник: `database/equipment/*.yaml`.
 
@@ -474,7 +473,7 @@ weapon_matches_category(category: str, weapon_id: str) -> bool
 
 ---
 
-## core.checks — Спасброски и к20
+## core.mechanics.checks — Спасброски и к20
 
 ```python
 roll_d20(*, advantage: bool = False, disadvantage: bool = False) -> tuple[int, list[int]]
@@ -486,6 +485,8 @@ saving_throw(character, ability_id, *, dc=None, advantage=False, disadvantage=Fa
 
 ## core.inventory — Инвентарь и КД
 
+Leaf-модули: `items`, `armor_class`, `equip_defaults` (без package facade).
+
 ```python
 add_items_to_inventory(inventory, new_items) -> list[dict]
 equip_defaults(character: Character) -> dict[str, Any]
@@ -496,7 +497,7 @@ get_equipped_display(character, language="ru") -> dict[str, str]
 
 ---
 
-## core.starting_equipment — Стартовое снаряжение класса
+## core.inventory.starting_equipment — Стартовое снаряжение класса
 
 Источник: `starting_equipment` в `database/classes/classes.yaml`.
 
@@ -523,7 +524,7 @@ difficulty_class(tier: str) -> int
 
 ---
 
-## core.abilities — Характеристики и навыки (метаданные)
+## core.catalogs.abilities — Характеристики и навыки (метаданные)
 
 Источники: `database/core/abilities.yaml`, `database/core/skills.yaml`.
 
@@ -534,13 +535,13 @@ skill_ability_map() -> dict[str, str]
 ability_for_skill(skill_id: str) -> str | None
 ```
 
-`core/stats.py` → `STAT_NAMES` и `core/skills.py` → `PHB_SKILL_IDS` загружаются из YAML с fallback.
+`core/mechanics/stats.py` → `STAT_NAMES` и `core/catalogs/skills.py` → `PHB_SKILL_IDS` загружаются из YAML с fallback.
 
 ---
 
 ## core.feats — Черты
 
-Источник: `database/progression/feats.yaml`. Фасад `core/feats.py`; реализация — `feat_catalog`, `feat_apply`, `feat_text`, `feat_requirements`. UI: пакет `ui/menus/feats/` (`select_creation_feats`, `select_level_up_feat_or_asi`).
+Источник: `database/progression/feats.yaml`. Leaf-модули: `core.feats.catalog`, `apply`, `text`, `requirements`. UI: пакет `ui/menus/feats/` (`select_creation_feats`, `select_level_up_feat_or_asi`).
 
 ```python
 load_feats() -> list[dict[str, Any]]
@@ -557,13 +558,13 @@ apply_feat_grants_to_character(character, feat_id, choices) -> Character
 tough_hp_adjustment_on_acquire(level) -> int
 ```
 
-`apply_feat_grants_to_character` — владения, навыки, языки и экспертиза одной черты; вызывается при левелапе (`level_up.py`, `resolve_pending_level_ups`).
+`apply_feat_grants_to_character` — владения, навыки, языки и экспертиза одной черты; вызывается при левелапе (`progression/level_up.py`, `resolve_pending_level_ups`).
 
 `list_feats_for_selection` — eligible (требования OK + новые владения), blocked (требования не выполнены) и hidden (нет новых владений; показываются в конце списка, не выбираются). Уже взятые черты не возвращаются. См. [`rules/chapters/06-feats.md`](rules/chapters/06-feats.md) §«Фильтрация списка».
 
 **Запланировано (Phase 2):** постоянная проверка требований — `feat_is_active`, `active_feat_ids`, `feat_requirement_context_from_character`; см. [`rules/chapters/06-feats.md`](rules/chapters/06-feats.md) §«Запланировано». **Resilient** (`save_proficiency` в YAML): владение спасброском применяется **при создании** через `get_feat_save_proficiencies` → `save_proficiencies` на `Character`.
 
-## core.hp_bonus — Бонусы HP из grants
+## core.mechanics.hp_bonus — Бонусы HP из grants
 
 ```python
 HpBonusSource(name: str, amount: int)
@@ -571,9 +572,9 @@ hit_point_bonus_amount(mechanics: dict) -> int
 hit_point_bonus_sources_from_grants(grants: list[dict]) -> list[HpBonusSource]
 ```
 
-Также реэкспорт из `core.progression`.
+Импорт из leaf-модуля (без package facade).
 
-## core.expertise — Компетентность (expertise)
+## core.mechanics.expertise — Компетентность (expertise)
 
 ```python
 ExpertiseGrant / ExpertiseAlternative
@@ -584,11 +585,11 @@ validate_expertise_selection(...) -> bool
 default_rogue_tool_expertise() -> list[str]
 ```
 
-Также реэкспорт из `core.progression`.
+Импорт из leaf-модуля (без package facade).
 
-## core.progression — ASI (фрагмент)
+## core.progression.asi — ASI (фрагмент)
 
-ASI и связанные helpers живут в `core/progression.py` (не отдельный `core.asi`).
+ASI и связанные helpers живут в `core/progression/asi.py`.
 
 ```python
 class_grants_asi_at_level(class_id, level) -> bool
@@ -599,7 +600,7 @@ con_hp_bonus_from_asi(old_stats, new_stats, level) -> int
 
 ---
 
-## core.proficiencies — Владения
+## core.mechanics.proficiencies — Владения
 
 Merge токенов из класса, подкласса, расы, предыстории и черт. На персонаже хранятся **токены** (`simple`, `martial`, `longsword`, `light`, `thieves_tools`, …), не развёрнутые списки предметов.
 
@@ -622,7 +623,7 @@ get_class_saving_throws(class_id: str) -> list[str]
 apply_subclass_proficiencies_to_character(character) -> Character
 ```
 
-Импорт из `core.proficiencies`.
+Импорт из `core.mechanics.proficiencies`.
 
 ---
 
@@ -659,13 +660,13 @@ apply_subclass_proficiencies_to_character(character) -> Character
 }
 ```
 
-Имя файла — slug из `core.character_storage.unique_save_slug()` (`make_save_slug` + суффикс при коллизии: `hero_2.json`, …).
+Имя файла — slug из `core.character.storage.unique_save_slug()` (`make_save_slug` + суффикс при коллизии: `hero_2.json`, …).
 
 > **Save format:** `to_dict()` / `from_dict()` используют только `class_id` (ключ `"class"` не поддерживается).
 
 ---
 
-## core.character_storage.make_save_slug — Slug сохранений
+## core.character.storage.make_save_slug — Slug сохранений
 
 ```python
 make_save_slug(name: str) -> str
@@ -677,7 +678,7 @@ unique_save_slug(name: str) -> str
 
 ---
 
-## core.io — Загрузка YAML/JSON
+## core.platform.io — Загрузка YAML/JSON
 
 ```python
 load_file(
@@ -697,7 +698,7 @@ merge_unique(*parts: list[str]) -> list[str]
 
 ---
 
-## core.localization — Локализация
+## core.platform.localization — Локализация
 
 ```python
 load_strings(language: str) -> dict[str, Any]
@@ -724,7 +725,7 @@ get_string(
 
 ---
 
-## core.settings — Настройки пользователя
+## core.platform.settings — Настройки пользователя
 
 ```python
 SETTINGS_PATH = Path("database/core/settings.json")
@@ -765,7 +766,7 @@ save_settings(language: str) -> None
 | Место | Поле / функция | Назначение |
 |-------|----------------|------------|
 | `Character` | `difficulty: GameDifficulty` | Режим персонажа на всю сессию |
-| `ui/menus/settings.py` | `select_difficulty()` | Экран выбора в «Создать персонажа» |
+| `ui/menus/hub/settings.py` | `select_difficulty()` | Экран выбора в «Создать персонажа» |
 
 **Влияние на генерацию характеристик** (`show_stats_generation_flow`):
 
@@ -779,11 +780,11 @@ save_settings(language: str) -> None
 
 - Параметризация правил в `game_engine` по режиму (HardCore = полная механика D&D 5e)
 
-**Mod gating:** `set_mod_gating_difficulty()` / `get_mod_gating_difficulty()` в `core/mod_loader.py`; `load_catalog()` передаёт режим в overlay. По умолчанию в `main.py` — `normal`; перед игрой — `character.difficulty` (`new_game`, `load_game`).
+**Mod gating:** `set_mod_gating_difficulty()` / `get_mod_gating_difficulty()` в `core/platform/mod_loader.py` (состояние — `CatalogSession` в `core/platform/catalog_session.py`); `load_catalog()` передаёт режим в overlay. По умолчанию в `main.py` — `normal`; перед игрой — `character.difficulty` (`new_game`, `load_game`).
 
 ---
 
-## core.session_storage — Сессии приключений
+## core.engine.session_storage — Сессии приключений
 
 ```python
 SessionSnapshot  # save_slug, character_save_slug, adventure_id, current_node_id, …
@@ -799,7 +800,7 @@ load_character_for_session(snapshot, characters_dir) -> Character | None
 
 ---
 
-## core.difficulty — Режим сложности и приключения
+## core.engine.difficulty — Режим сложности и приключения
 
 ```python
 adventure_requires_hardcore(adventure: Adventure) -> bool
@@ -807,7 +808,7 @@ adventure_allows_difficulty(adventure: Adventure, game_difficulty: GameDifficult
 adventure_unavailable_reason(adventure: Adventure, character: Character) -> str | None
 ```
 
-`adventure_unavailable_reason` возвращает ключ локализации (`adventures.unavailable_reason_level` / `adventures.unavailable_reason_hardcore`) или `None`, если приключение доступно. Используется в `_select_adventure()` (`ui/menus/new_game.py`).
+`adventure_unavailable_reason` возвращает ключ локализации (`adventures.unavailable_reason_level` / `adventures.unavailable_reason_hardcore`) или `None`, если приключение доступно. Используется в `_select_adventure()` (`ui/menus/hub/new_game.py`).
 
 ---
 
@@ -823,7 +824,7 @@ def clamp_level(level: int) -> int
 
 ---
 
-## core.classes — Классы
+## core.catalogs.classes — Классы
 
 ```python
 get_class_dict(class_id: str) -> dict[str, Any]
@@ -843,7 +844,7 @@ grants_at_level(class_info: dict[str, Any], level: int) -> list[dict[str, Any]]
 
 ---
 
-## core.subclasses — Подклассы и режимы
+## core.progression.class_progression — Подклассы и режимы
 
 ```python
 def features_up_to_level(features: list, max_level: int = MAX_CHARACTER_LEVEL) -> list
@@ -857,6 +858,8 @@ def effective_subclass_id(character: Character) -> str | None
 ---
 
 ## core.progression — Опыт и уровни
+
+Leaf-модули: `xp_levels`, `hp`, `asi`, `class_progression`, `level_up` (без package facade).
 
 ```python
 XP_THRESHOLDS: list[int]  # PHB, уровни 1–10
@@ -889,9 +892,9 @@ def apply_experience(character: Character, amount: int) -> Character
 
 **HP по режиму:** Normal/Easy — макс. кость на 1 ур. (`max(1, …)`), среднее на 2+; HardCore — бросок кости на каждом уровне с полом `max(1, кость + CON)`.
 
-**Левелап:** сценарии и UI начисляют XP через `grant_experience`; повышение — по одному уровню (`apply_level_up` + экран `ui/menus/level_up.py`). `apply_experience` — convenience для тестов (XP + все уровни без UI).
+**Левелап:** сценарии и UI начисляют XP через `grant_experience`; повышение — по одному уровню (`apply_level_up` + экран `ui/menus/progression/level_up.py`). `apply_experience` — convenience для тестов (XP + все уровни без UI).
 
-**UI:** `run_pending_level_ups(strings, character, language) -> Character` (`ui/menus/level_up.py`).
+**UI:** `run_pending_level_ups(strings, character, language) -> Character` (`ui/menus/progression/level_up.py`).
 
 **Сценарии:** action `grant_xp` → `ScenarioActionResult.level_up_pending`; runner вызывает `run_pending_level_ups` перед сохранением.
 
@@ -899,7 +902,7 @@ Re-export: `MAX_CHARACTER_LEVEL`, `clamp_level` из `core.constants`.
 
 ---
 
-## core.scenario_actions — Логика сценария (без UI)
+## core.engine.scenario_actions — Логика сценария (без UI)
 
 ```python
 @dataclass
@@ -920,9 +923,9 @@ def apply_scenario_action(
 ) -> ScenarioActionResult
 ```
 
-Действия: `grant_xp`, `subclass_training`, `skill_check`, `ability_check`, `exit`. `difficulty` задаёт преимущество/помеху проверок (`core/engine_rules.check_roll_flags`). Узлы могут содержать `exits` (направление → node id) — см. `core/scenario_rooms`, `GameEngine.step_exit`.
+Действия: `grant_xp`, `subclass_training`, `skill_check`, `ability_check`, `exit`. `difficulty` задаёт преимущество/помеху проверок (`core.engine.engine_rules.check_roll_flags`). Узлы могут содержать `exits` (направление → node id) — см. `core.engine.scenario_rooms`, `GameEngine.step_exit`.
 
-## ui.menus.scenario_flow — Интерактивный runner
+## ui.menus.scenario.flow — Интерактивный runner
 
 ```python
 def run_scenario(
@@ -933,9 +936,9 @@ def run_scenario(
 ) -> Character
 ```
 
-Вызывает `apply_scenario_action`, затем UI: левелап (`level_up.py`), подкласс (`subclass_trainer`), особенности класса (`class_features.py`).
+Вызывает `apply_scenario_action`, затем UI: левелап (`progression/level_up.py`), подкласс (`progression/subclass_trainer`), особенности класса (`progression/class_features.py`).
 
-## core.adventure — Приключения
+## core.catalogs.adventure — Приключения
 
 ```python
 load_adventures() -> list[Adventure]
@@ -946,7 +949,7 @@ load_adventures() -> list[Adventure]
 
 ---
 
-## core.dice — Броски кубиков
+## core.mechanics.dice — Броски кубиков
 
 ```python
 roll(count=1, sides=20, modifier=0) -> int
@@ -989,7 +992,7 @@ show_new_game_flow(strings: dict, settings: dict) -> None
 show_load_game_flow(strings: dict, language: str = "ru") -> None
 show_characters_menu(strings: dict, language: str = "ru") -> None
 show_mods_menu(strings: dict, language: str = "ru") -> None
-show_create_character_flow(strings: dict, language: str = "ru") -> Character | None  # ui/menus/_creation_steps.py; из hub «Персонажи»
+show_create_character_flow(strings: dict, language: str = "ru") -> Character | None  # ui/menus/creation/steps.py; из hub «Персонажи»
 show_stats_generation_flow(strings: StringsDict, race_id: str, subrace_id: str | None, difficulty: GameDifficulty) -> StatMap | None
 show_settings(strings: dict, settings: dict) -> dict
 show_languages_menu(strings: dict, settings: dict) -> dict
