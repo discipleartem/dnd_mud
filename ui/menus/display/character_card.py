@@ -23,7 +23,6 @@ from ui.menus.console import (
     ability_name,
     skill_name,
 )
-from ui.menus.creation.expertise import format_expertise_display
 from ui.menus.display.class_info import (
     _character_class_label,
     _character_subclass_label,
@@ -41,6 +40,7 @@ from ui.menus.display.shared import (
     _empty_field_value,
     _format_proficiency_token_list,
     _print_labeled_field,
+    format_expertise_display,
 )
 from ui.menus.display.stats import (
     _format_character_stats_compact,
@@ -202,21 +202,16 @@ def _print_character_saving_throws(
     )
 
 
-def _print_character_card(
-    idx: int,
+def _print_character_card_identity(
     char: Character,
     strings: StringsDict,
-    language: str = "ru",
+    language: str,
+    *,
+    indent: str,
 ) -> None:
-    """Вывести карточку персонажа в списке выбора."""
-    mode = _difficulty_label(strings, char.difficulty)
-    mode_color = _difficulty_color(char.difficulty)
+    """Имя, раса, подраса, языки, предыстория и черты."""
     base_race = _character_base_race_label(char, language)
     subrace = _character_subrace_label(char, language)
-    class_label = _character_class_label(char, language)
-    indent = "     "
-
-    print(f"  {Fore.YELLOW}{idx}{Style.RESET_ALL}.")
 
     _print_labeled_field(
         strings,
@@ -271,6 +266,18 @@ def _print_character_card(
             feats_display,
             indent=indent,
         )
+
+
+def _print_character_card_build(
+    char: Character,
+    strings: StringsDict,
+    language: str,
+    *,
+    indent: str,
+) -> None:
+    """Класс, подкласс, уровень, HP/XP и характеристики."""
+    class_label = _character_class_label(char, language)
+
     _print_labeled_field(
         strings,
         "choose_character.field_class",
@@ -317,6 +324,23 @@ def _print_character_card(
             strings, "choose_character.stats_line", stats=stats_compact
         )
         print(f"{indent}{stats_line}")
+
+
+def _print_character_card(
+    idx: int,
+    char: Character,
+    strings: StringsDict,
+    language: str = "ru",
+) -> None:
+    """Вывести карточку персонажа в списке выбора."""
+    mode = _difficulty_label(strings, char.difficulty)
+    mode_color = _difficulty_color(char.difficulty)
+    indent = "     "
+
+    print(f"  {Fore.YELLOW}{idx}{Style.RESET_ALL}.")
+
+    _print_character_card_identity(char, strings, language, indent=indent)
+    _print_character_card_build(char, strings, language, indent=indent)
 
     _print_character_skills_and_expertise(char, strings, indent=indent)
 
