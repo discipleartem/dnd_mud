@@ -18,7 +18,7 @@ from core.equipment import (
 from core.localization import load_strings
 from core.models import Character
 from core.types import CharacterClass
-from ui.menus._common import _sort_ids_by_proficiency
+from ui.menus.console import sort_ids_by_proficiency
 from ui.menus.display import (
     _format_ability_modifier,
     _format_character_feats,
@@ -36,7 +36,7 @@ def test_sort_ids_by_proficiency() -> None:
 
     items = ["viola", "lute", "flute", "drum"]
     profs = ["lute", "flute"]
-    sorted_items = _sort_ids_by_proficiency(
+    sorted_items = sort_ids_by_proficiency(
         items, profs, has_prof, name_key=name_key
     )
     assert sorted_items[:2] == ["flute", "lute"]

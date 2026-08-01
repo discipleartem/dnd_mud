@@ -8,11 +8,11 @@ from core.classes import load_class_full, load_classes, load_subclasses
 from core.localization import get_string
 from core.races import load_race_full
 from core.types import StringsDict
-from ui.menus._common import (
+from ui.menus.console import (
     SEPARATOR,
-    _print_numbered_row,
-    _print_screen_header,
-    _read_numbered_choice,
+    print_numbered_row,
+    print_screen_header,
+    read_numbered_choice,
 )
 from ui.menus.display import (
     _print_class_info,
@@ -31,7 +31,7 @@ def select_subrace(
     if not isinstance(subraces, dict) or not subraces:
         return False, None
 
-    _print_screen_header(get_string(strings, "character.subrace_caption"))
+    print_screen_header(get_string(strings, "character.subrace_caption"))
 
     race_name = race_full.get("name", race_id)
     print(f"{Fore.CYAN}{race_name}{Style.RESET_ALL}")
@@ -47,10 +47,10 @@ def select_subrace(
     for idx, (_choice_subrace_id, subrace_info) in enumerate(choices, 1):
         print()
         name = f"{Fore.CYAN}{subrace_info.get('name', '?')}{Style.RESET_ALL}"
-        _print_numbered_row(idx, name)
+        print_numbered_row(idx, name)
         _print_race_info(subrace_info, strings, language)
 
-    choice = _read_numbered_choice(
+    choice = read_numbered_choice(
         strings,
         len(choices),
         prompt_key="character.subrace_prompt",
@@ -67,7 +67,7 @@ def select_class(
 ) -> dict[str, Any] | None:
     """Выбрать класс персонажа (краткий обзор каждого класса)."""
     classes = load_classes(language)
-    _print_screen_header(get_string(strings, "character.class_caption"))
+    print_screen_header(get_string(strings, "character.class_caption"))
 
     class_details: list[dict[str, Any]] = []
     for cls in classes:
@@ -83,10 +83,10 @@ def select_class(
             f"{class_info.get('name', '?')}"
             f"{Style.RESET_ALL}"
         )
-        _print_numbered_row(idx, name)
+        print_numbered_row(idx, name)
         _print_class_summary(class_info, strings, language=language)
 
-    choice = _read_numbered_choice(
+    choice = read_numbered_choice(
         strings,
         len(class_details),
         prompt_key="character.class_prompt",
@@ -108,7 +108,7 @@ def select_subclass(
     if not subclasses:
         return None
 
-    _print_screen_header(get_string(strings, "character.subclass_caption"))
+    print_screen_header(get_string(strings, "character.subclass_caption"))
 
     class_label = class_full.get("name", class_id)
     print(f"{Fore.CYAN}{Style.BRIGHT}{class_label}{Style.RESET_ALL}")
@@ -131,10 +131,10 @@ def select_subclass(
             f"{sub_info.get('name', '?')}"
             f"{Style.RESET_ALL}"
         )
-        _print_numbered_row(idx, name)
+        print_numbered_row(idx, name)
         _print_subclass_info(sub_info, strings)
 
-    choice = _read_numbered_choice(
+    choice = read_numbered_choice(
         strings,
         len(subclasses),
         prompt_key="character.subclass_prompt",

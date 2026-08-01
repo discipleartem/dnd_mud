@@ -12,7 +12,7 @@ from core.models import Character
 from core.progression import cap_stats
 from core.stats import apply_bonuses_to_stats
 from core.types import StatMap, StringsDict
-from ui.menus._common import _print_screen_header
+from ui.menus.console import print_screen_header
 from ui.menus.feats._selection import _pick_feat_from_lists
 from ui.menus.feats._subchoices import _resolve_feat_subchoices
 
@@ -35,7 +35,7 @@ def select_level_up_feat_or_asi(
     from core.progression import apply_asi_one_two, apply_asi_two_one
     from ui.menus.asi import select_asi_mode, select_asi_stats
 
-    _print_screen_header(
+    print_screen_header(
         get_string(
             strings,
             "level_up.asi_feature_heading",
@@ -69,7 +69,7 @@ def select_level_up_feat_or_asi(
         print()
         return None
 
-    _print_screen_header(get_string(strings, "character.feat_caption"))
+    print_screen_header(get_string(strings, "character.feat_caption"))
     selected = _pick_feat_from_lists(
         strings, eligible, blocked, hidden, ctx, language
     )

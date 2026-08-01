@@ -65,7 +65,7 @@ def test_language_pick_prompts_acolyte_variant_human(
         calls.append((prompt, args, kwargs))
         return 1
 
-    monkeypatch.setattr("ui.menus._common.get_int_input", fake_get_int_input)
+    monkeypatch.setattr("ui.menus.console.get_int_input", fake_get_int_input)
     result = select_creation_languages(
         ru_strings, "human", "variant_human", "acolyte", "ru"
     )

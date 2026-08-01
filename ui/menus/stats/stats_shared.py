@@ -17,11 +17,11 @@ from core.stats import (
 )
 from core.types import StatMap, StringsDict
 from ui.input_handler import get_int_input
-from ui.menus._common import (
+from ui.menus.console import (
     SEPARATOR,
-    _ability_name,
-    _choice_prompt,
-    _stats_total_line,
+    ability_name,
+    choice_prompt,
+    stats_total_line,
 )
 from ui.menus.display import (
     _print_final_stat_line,
@@ -53,7 +53,7 @@ def _prompt_pool_value_manual(
     while True:
         print(f"{Fore.YELLOW}{enter_msg} {back_hint}{Style.RESET_ALL}")
         print()
-        value = get_int_input(_choice_prompt(strings), 0, value_max, strings)
+        value = get_int_input(choice_prompt(strings), 0, value_max, strings)
         if value == 0:
             return None
         if value < value_min:
@@ -91,7 +91,7 @@ def _prompt_point_buy_stat_value(
         print(f"{Fore.YELLOW}{enter_msg}{Style.RESET_ALL}")
         print()
         value = get_int_input(
-            _choice_prompt(strings),
+            choice_prompt(strings),
             ABILITY_SCORE_MIN,
             ABILITY_SCORE_MAX,
             strings,
@@ -128,7 +128,7 @@ def _assign_stats_from_pool(
     pool = list(available)
 
     for stat in STAT_NAMES:
-        stat_name = _ability_name(strings, stat)
+        stat_name = ability_name(strings, stat)
         _print_stats_generation_header(strings, race_id, subrace_id)
 
         if selected:
@@ -138,7 +138,7 @@ def _assign_stats_from_pool(
                 f"{Style.RESET_ALL}"
             )
             for s, v in selected.items():
-                s_name = _ability_name(strings, s)
+                s_name = ability_name(strings, s)
                 print(f"  {s_name}: {v}")
             print()
 
@@ -182,7 +182,7 @@ def _confirm_stats(
         race_bonuses = get_race_bonuses(race_id, subrace_id)
 
     print(SEPARATOR)
-    print(_stats_total_line(strings))
+    print(stats_total_line(strings))
     print(SEPARATOR)
     print()
 
@@ -207,7 +207,7 @@ def _confirm_stats(
     print()
 
     max_choice = 2 if allow_reroll else 1
-    choice = get_int_input(_choice_prompt(strings), 0, max_choice, strings)
+    choice = get_int_input(choice_prompt(strings), 0, max_choice, strings)
 
     if choice == 0:
         return "back"
@@ -238,7 +238,7 @@ def _run_stats_confirm_loop(
     over_limit = validate_final_stats(final_stats)
     if over_limit is not None:
         stat_id, value = over_limit
-        stat_name = _ability_name(strings, stat_id)
+        stat_name = ability_name(strings, stat_id)
         if value < ABILITY_SCORE_MIN:
             msg = get_string(
                 strings,

@@ -10,8 +10,8 @@ from core.progression import (
     needs_class_feature_picks,
 )
 from core.types import LanguageCode, StringsDict
-from ui.menus._common import _print_screen_header, _print_success_and_wait
 from ui.menus._subclass_picks import apply_subclass_picks
+from ui.menus.console import print_screen_header, print_success_and_wait
 
 
 def apply_pending_class_features(
@@ -27,7 +27,7 @@ def apply_pending_class_features(
     if not subclass_id:
         return character
 
-    _print_screen_header(get_string(strings, "class_features.caption"))
+    print_screen_header(get_string(strings, "class_features.caption"))
     intro = get_string(strings, "class_features.intro")
     print(f"{Fore.CYAN}{intro}{Style.RESET_ALL}")
     print()
@@ -40,5 +40,5 @@ def apply_pending_class_features(
     update_character(updated)
 
     msg = get_string(strings, "class_features.success")
-    _print_success_and_wait(strings, msg)
+    print_success_and_wait(strings, msg)
     return updated

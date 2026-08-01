@@ -13,10 +13,10 @@ from core.races import (
 from core.stats import STAT_NAMES, apply_bonuses_to_stats
 from core.types import StatMap, StringsDict
 from ui.input_handler import get_int_input
-from ui.menus._common import (
-    _ability_name,
-    _choice_prompt,
-    _print_screen_header,
+from ui.menus.console import (
+    ability_name,
+    choice_prompt,
+    print_screen_header,
 )
 
 
@@ -37,7 +37,7 @@ def _select_choice_ability_bonuses(
     chosen_stats: list[str] = []
 
     for pick_num in range(1, count + 1):
-        _print_screen_header(
+        print_screen_header(
             get_string(strings, "character.stats_choice_bonus_caption")
         )
         prompt = get_string(
@@ -57,7 +57,7 @@ def _select_choice_ability_bonuses(
                 f"{Style.RESET_ALL}"
             )
             for stat in chosen_stats:
-                print(f"  {_ability_name(strings, stat)} +{value}")
+                print(f"  {ability_name(strings, stat)} +{value}")
             print()
 
         available = list(STAT_NAMES)
@@ -70,7 +70,7 @@ def _select_choice_ability_bonuses(
             f"{Style.RESET_ALL}"
         )
         for idx, stat in enumerate(available, 1):
-            stat_name = _ability_name(strings, stat)
+            stat_name = ability_name(strings, stat)
             stat_msg = get_string(
                 strings,
                 "character.stat_line",
@@ -87,7 +87,7 @@ def _select_choice_ability_bonuses(
         print()
 
         choice = get_int_input(
-            _choice_prompt(strings), 0, len(available), strings
+            choice_prompt(strings), 0, len(available), strings
         )
         if choice == 0:
             return None

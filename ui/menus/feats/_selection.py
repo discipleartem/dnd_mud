@@ -8,7 +8,7 @@ from core.feats import FeatRequirementContext
 from core.localization import get_string
 from core.types import StringsDict
 from ui.input_handler import get_int_input
-from ui.menus._common import SEPARATOR
+from ui.menus.console import SEPARATOR
 from ui.menus.feats._requirements import (
     _confirm_feat_selection,
     _print_feat_details,

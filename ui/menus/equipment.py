@@ -28,12 +28,12 @@ from core.starting_equipment import (
     tools_for_pool,
 )
 from core.types import StringsDict
-from ui.menus._common import (
-    _format_pick_menu_label,
-    _print_screen_header,
-    _read_numbered_choice,
-    _run_numbered_menu,
-    _sort_ids_by_proficiency,
+from ui.menus.console import (
+    format_pick_menu_label,
+    print_screen_header,
+    read_numbered_choice,
+    run_numbered_menu,
+    sort_ids_by_proficiency,
 )
 
 
@@ -49,8 +49,8 @@ def _pick_sorted_item_from_pool(
     if not item_ids:
         return None
     labels = [label_for(item_id) for item_id in item_ids]
-    _print_screen_header(get_string(strings, caption_key))
-    choice = _run_numbered_menu(
+    print_screen_header(get_string(strings, caption_key))
+    choice = run_numbered_menu(
         strings,
         labels,
         prompt_key=prompt_key,
@@ -69,7 +69,7 @@ def _format_weapon_menu_label(
 ) -> str:
     """Подпись оружия в меню: имя + свойства PHB серым."""
     name = get_weapon_name(weapon_id, language)
-    line = _format_pick_menu_label(name, proficient)
+    line = format_pick_menu_label(name, proficient)
     catalog = format_versatile_catalog_hint(weapon_id, strings, language)
     if catalog:
         line += f" {Fore.LIGHTBLACK_EX}({catalog}){Style.RESET_ALL}"
@@ -87,7 +87,7 @@ def _pick_weapon_from_pool(
     language: str,
 ) -> str | None:
     """Выбор оружия из пула."""
-    weapons = _sort_ids_by_proficiency(
+    weapons = sort_ids_by_proficiency(
         all_weapons_in_pool(pool),
         weapon_proficiencies,
         has_weapon_proficiency,
@@ -114,7 +114,7 @@ def _pick_tool_from_pool(
     language: str,
 ) -> str | None:
     """Выбор инструмента из пула."""
-    tools = _sort_ids_by_proficiency(
+    tools = sort_ids_by_proficiency(
         tools_for_pool(pool),
         tool_proficiencies,
         has_tool_proficiency,
@@ -125,7 +125,7 @@ def _pick_tool_from_pool(
         tools,
         caption_key="character.equipment_tool_pick",
         prompt_key="character.equipment_tool_prompt",
-        label_for=lambda tool_id: _format_pick_menu_label(
+        label_for=lambda tool_id: format_pick_menu_label(
             get_tool_name(tool_id, language),
             has_tool_proficiency(tool_proficiencies, tool_id),
         ),
@@ -164,7 +164,7 @@ def _pick_option_for_group(
             opt, weapon_proficiencies, armor_proficiencies
         )
     ]
-    _print_screen_header(
+    print_screen_header(
         get_string(strings, "character.equipment_choice_heading", id=choice_id)
     )
     for opt in options:
@@ -179,7 +179,7 @@ def _pick_option_for_group(
             )
         else:
             print(f"  {Fore.LIGHTBLACK_EX}{label}{Style.RESET_ALL}")
-    choice = _read_numbered_choice(
+    choice = read_numbered_choice(
         strings,
         len(selectable),
         prompt_key="character.equipment_option_prompt",
@@ -222,7 +222,7 @@ def select_creation_equipment(
     if not option_groups and not fixed:
         return {}
 
-    _print_screen_header(get_string(strings, "character.equipment_caption"))
+    print_screen_header(get_string(strings, "character.equipment_caption"))
     if fixed:
         print(get_string(strings, "character.equipment_fixed_heading"))
         for item in fixed:

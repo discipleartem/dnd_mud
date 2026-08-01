@@ -11,13 +11,13 @@ from core.localization import get_string, resolve_localized_text
 from core.models import Adventure, Character
 from core.session_storage import SessionSnapshot, save_session
 from core.types import LanguageCode, StringsDict
-from ui.menus._common import (
-    _press_enter,
-    _print_numbered_row,
-    _print_screen_header,
-    _read_numbered_choice,
-)
 from ui.menus.class_features import apply_pending_class_features
+from ui.menus.console import (
+    press_enter,
+    print_numbered_row,
+    print_screen_header,
+    read_numbered_choice,
+)
 from ui.menus.level_up import run_pending_level_ups
 from ui.menus.subclass_trainer import assign_subclass_from_menu
 from ui.terminal_wrap import wrap_text
@@ -172,7 +172,7 @@ def run_scenario_with_engine(
         description = resolve_localized_text(
             node.get("description"), language, fallback=""
         )
-        _print_screen_header(adventure.get_name(language))
+        print_screen_header(adventure.get_name(language))
         if description:
             print(wrap_text(description))
             print()
@@ -206,8 +206,8 @@ def run_scenario_with_engine(
             label = resolve_localized_text(
                 choice.get("text"), language, fallback=""
             )
-            _print_numbered_row(idx, label)
-        choice_num = _read_numbered_choice(
+            print_numbered_row(idx, label)
+        choice_num = read_numbered_choice(
             strings,
             len(choices),
             prompt_key="scenario.choice_prompt",
@@ -255,7 +255,7 @@ def run_scenario(
             f"{Style.RESET_ALL}"
         )
         print()
-        _press_enter(strings)
+        press_enter(strings)
         return character
 
     session = GameSession(

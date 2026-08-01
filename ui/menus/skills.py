@@ -15,11 +15,11 @@ from core.skills import (
     resolve_skill_pool,
 )
 from core.types import StringsDict
-from ui.menus._common import (
-    _print_pick_list,
-    _print_screen_header,
-    _read_pool_pick,
-    _skill_name,
+from ui.menus.console import (
+    print_pick_list,
+    print_screen_header,
+    read_pool_pick,
+    skill_name,
 )
 
 SkillSource = str
@@ -44,7 +44,7 @@ def _print_proficient_summary(
         f"{Style.RESET_ALL}"
     )
     for skill_id in proficient:
-        name = _skill_name(strings, skill_id)
+        name = skill_name(strings, skill_id)
         source = _source_label(strings, sources[skill_id])
         line = get_string(
             strings,
@@ -74,15 +74,15 @@ def _pick_one_skill(
         total=total,
     )
     while True:
-        _print_screen_header(get_string(strings, "character.skills_caption"))
+        print_screen_header(get_string(strings, "character.skills_caption"))
         _print_proficient_summary(strings, proficient, sources)
-        selectable = _print_pick_list(
+        selectable = print_pick_list(
             pool,
             set(proficient),
-            label_for=lambda skill_id: _skill_name(strings, skill_id),
+            label_for=lambda skill_id: skill_name(strings, skill_id),
             taken_suffix=taken_suffix,
         )
-        picked = _read_pool_pick(
+        picked = read_pool_pick(
             strings,
             selectable,
             prompt=prompt,

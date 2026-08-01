@@ -19,7 +19,7 @@ from core.stats import (
 )
 from core.types import StatMap, StringsDict
 from ui.input_handler import get_int_input
-from ui.menus._common import _ability_name, _choice_prompt, _press_enter
+from ui.menus.console import ability_name, choice_prompt, press_enter
 from ui.menus.display import (
     _print_point_buy_cost_table,
     _print_stats_generation_header,
@@ -98,7 +98,7 @@ def _select_stats_point_buy(
             )
 
             for idx, stat in enumerate(STAT_NAMES, 1):
-                stat_name = _ability_name(strings, stat)
+                stat_name = ability_name(strings, stat)
                 cost = POINT_BUY_COSTS[stats[stat]]
                 cost_msg = get_string(
                     strings, "character.stats_cost_points", cost=cost
@@ -126,7 +126,7 @@ def _select_stats_point_buy(
             )
             print()
 
-            choice = get_int_input(_choice_prompt(strings), 0, 6, strings)
+            choice = get_int_input(choice_prompt(strings), 0, 6, strings)
 
             if choice == 0:
                 error_key = validate_point_buy_finish(stat_values)
@@ -156,11 +156,11 @@ def _select_stats_point_buy(
                 else:
                     overspent = get_string(strings, error_key)
                     print(f"{Fore.RED}{overspent}{Style.RESET_ALL}")
-                _press_enter(strings)
+                press_enter(strings)
                 continue
 
             stat_to_modify = STAT_NAMES[choice - 1]
-            stat_name = _ability_name(strings, stat_to_modify)
+            stat_name = ability_name(strings, stat_to_modify)
             _prompt_point_buy_stat_value(
                 strings, stat_name, stats, stat_to_modify
             )
@@ -233,7 +233,7 @@ def _select_stats_random_normal(
         )
         print()
 
-        roll_choice = get_int_input(_choice_prompt(strings), 0, 2, strings)
+        roll_choice = get_int_input(choice_prompt(strings), 0, 2, strings)
         if roll_choice == 0:
             return None
         if roll_choice == 2:
@@ -304,11 +304,11 @@ def _select_stats_random_hardcore(
             print()
 
             for stat, roll in zip(STAT_NAMES, base_values, strict=True):
-                stat_name = _ability_name(strings, stat)
+                stat_name = ability_name(strings, stat)
                 print(f"  {stat_name}: {Fore.YELLOW}{roll}{Style.RESET_ALL}")
 
             print()
-            _press_enter(strings)
+            press_enter(strings)
             rolls_shown = True
             if hardcore_rolls is not None:
                 hardcore_rolls[:] = base_values

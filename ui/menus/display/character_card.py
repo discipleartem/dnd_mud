@@ -21,9 +21,9 @@ from core.races import (
 from core.types import (
     StringsDict,
 )
-from ui.menus._common import (
-    _ability_name,
-    _skill_name,
+from ui.menus.console import (
+    ability_name,
+    skill_name,
 )
 from ui.menus.display.class_info import (
     _character_class_label,
@@ -154,7 +154,7 @@ def _print_character_skills_and_expertise(
     """Навыки и компетентность на карточке персонажа."""
     if char.skills:
         skills_line = ", ".join(
-            _skill_name(strings, skill_id) for skill_id in char.skills
+            skill_name(strings, skill_id) for skill_id in char.skills
         )
         skills_display = f"{Fore.CYAN}{skills_line}{Style.RESET_ALL}"
     else:
@@ -193,7 +193,7 @@ def _print_character_saving_throws(
         return
     parts: list[str] = []
     for ability_id in char.save_proficiencies:
-        name = _ability_name(strings, ability_id)
+        name = ability_name(strings, ability_id)
         parts.append(name)
     value = f"{Fore.CYAN}{', '.join(parts)}{Style.RESET_ALL}"
     _print_labeled_field(

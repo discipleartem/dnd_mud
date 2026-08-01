@@ -16,11 +16,11 @@ from core.proficiencies import (
 )
 from core.progression import start_level_for_difficulty
 from core.types import GameDifficulty, StringsDict
-from ui.menus._common import (
-    _format_pick_menu_label,
-    _print_screen_header,
-    _read_pool_pick,
-    _sort_ids_by_proficiency,
+from ui.menus.console import (
+    format_pick_menu_label,
+    print_screen_header,
+    read_pool_pick,
+    sort_ids_by_proficiency,
 )
 
 
@@ -78,7 +78,7 @@ def _pick_tools(
     current = list(known_tools)
     for pick_idx in range(1, choice.count + 1):
         while True:
-            _print_screen_header(
+            print_screen_header(
                 get_string(strings, "character.proficiencies_caption")
             )
             source_label = get_string(
@@ -103,7 +103,7 @@ def _pick_tools(
                     f"  {Fore.LIGHTBLACK_EX}{name} {taken}"
                     f"{Style.RESET_ALL}"
                 )
-            selectable = _sort_ids_by_proficiency(
+            selectable = sort_ids_by_proficiency(
                 [tool_id for tool_id in pool if tool_id not in current],
                 known_tools,
                 has_tool_proficiency,
@@ -111,7 +111,7 @@ def _pick_tools(
             )
             for idx, tool_id in enumerate(selectable, 1):
                 name = get_tool_name(tool_id, language)
-                label = _format_pick_menu_label(
+                label = format_pick_menu_label(
                     name,
                     has_tool_proficiency(known_tools, tool_id),
                 )
@@ -119,7 +119,7 @@ def _pick_tools(
             tool_prompt = get_string(
                 strings, "character.proficiencies_tool_prompt"
             )
-            picked_id = _read_pool_pick(
+            picked_id = read_pool_pick(
                 strings,
                 selectable,
                 prompt=tool_prompt,
@@ -171,7 +171,7 @@ def select_creation_proficiencies(
         return weapons, armors, tools, []
 
     caption = get_string(strings, "character.proficiencies_caption")
-    _print_screen_header(caption)
+    print_screen_header(caption)
     _print_summary(strings, weapons, armors, tools, language)
 
     background_tool_picks: list[str] = []

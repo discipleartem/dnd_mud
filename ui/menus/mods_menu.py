@@ -10,10 +10,10 @@ from core.mod_loader import (
     set_mod_enabled,
 )
 from core.types import StringsDict
-from ui.menus._common import (
-    _press_enter,
-    _print_screen_header,
-    _run_numbered_menu,
+from ui.menus.console import (
+    press_enter,
+    print_screen_header,
+    run_numbered_menu,
 )
 
 
@@ -21,12 +21,12 @@ def show_mods_menu(strings: StringsDict, language: str = "ru") -> None:
     """Список модов: включить / выключить."""
     mods = list_available_mods()
     if not mods:
-        _print_screen_header(get_string(strings, "mods.caption"))
+        print_screen_header(get_string(strings, "mods.caption"))
         print(
             f"{Fore.YELLOW}{get_string(strings, 'mods.none')}{Style.RESET_ALL}"
         )
         print()
-        _press_enter(strings)
+        press_enter(strings)
         return
 
     enabled = set(get_enabled_mod_ids())
@@ -49,8 +49,8 @@ def show_mods_menu(strings: StringsDict, language: str = "ru") -> None:
                 )
             )
 
-        _print_screen_header(get_string(strings, "mods.caption"))
-        choice = _run_numbered_menu(
+        print_screen_header(get_string(strings, "mods.caption"))
+        choice = run_numbered_menu(
             strings,
             options,
             prompt_key="mods.prompt",
@@ -72,7 +72,7 @@ def show_mods_menu(strings: StringsDict, language: str = "ru") -> None:
                 f"{Style.RESET_ALL}"
             )
             print()
-            _press_enter(strings)
+            press_enter(strings)
             continue
         reload_catalogs()
         if new_state:
@@ -85,4 +85,4 @@ def show_mods_menu(strings: StringsDict, language: str = "ru") -> None:
             f"{Style.RESET_ALL}"
         )
         print()
-        _press_enter(strings)
+        press_enter(strings)

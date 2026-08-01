@@ -60,7 +60,7 @@ def test_apply_pending_class_features_champion_marks_applied(
         "ui.menus.class_features.update_character", lambda c: c
     )
     monkeypatch.setattr(
-        "ui.menus.class_features._print_success_and_wait",
+        "ui.menus.class_features.print_success_and_wait",
         lambda *args, **kwargs: None,
     )
     result = apply_pending_class_features(ru_strings, char, "ru")

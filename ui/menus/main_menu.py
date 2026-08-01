@@ -4,17 +4,17 @@ from colorama import Fore, Style
 
 from core.localization import get_string
 from core.types import StringsDict
-from ui.menus._common import (
+from ui.menus.console import (
     SEPARATOR,
-    _print_screen_header,
-    _run_numbered_menu,
+    print_screen_header,
+    run_numbered_menu,
 )
 
 
 def show_welcome_screen(version: str, strings: StringsDict) -> None:
     """Показать приветственный экран."""
     print()
-    _print_screen_header(get_string(strings, "welcome.title"))
+    print_screen_header(get_string(strings, "welcome.title"))
     print(
         f"{Fore.GREEN}{get_string(strings, 'welcome.subtitle')}"
         f"{Style.RESET_ALL}"
@@ -51,7 +51,7 @@ def show_main_menu(strings: StringsDict) -> int:
         print()
         print(SEPARATOR)
 
-    choice = _run_numbered_menu(
+    choice = run_numbered_menu(
         strings,
         options,
         prompt_key="menu.prompt",

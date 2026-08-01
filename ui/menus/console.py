@@ -12,23 +12,23 @@ from ui.input_handler import get_int_input
 SEPARATOR = f"{Fore.YELLOW}{'=' * 78}{Style.RESET_ALL}"
 
 
-def _ability_name(strings: StringsDict, stat_key: str) -> str:
+def ability_name(strings: StringsDict, stat_key: str) -> str:
     """Локализованное имя характеристики."""
     return get_string(strings, f"stats.{stat_key}")
 
 
-def _skill_name(strings: StringsDict, skill_key: str) -> str:
+def skill_name(strings: StringsDict, skill_key: str) -> str:
     """Локализованное имя навыка."""
     return get_string(strings, f"skills.{skill_key}")
 
 
-def _press_enter(strings: StringsDict) -> None:
+def press_enter(strings: StringsDict) -> None:
     """Ожидание нажатия Enter."""
     prompt = get_string(strings, "common.press_enter")
     input(f"{Fore.CYAN}{prompt}{Style.RESET_ALL}")
 
 
-def _confirm_yes_no(
+def confirm_yes_no(
     strings: StringsDict, prompt_key: str, **kwargs: Any
 ) -> bool:
     """Подтвердить действие: 1 — да, 0 — нет."""
@@ -41,7 +41,7 @@ def _confirm_yes_no(
     return choice == 1
 
 
-def _print_cancelled(
+def print_cancelled(
     strings: StringsDict, key: str = "characters_menu.cancelled"
 ) -> None:
     """Сообщение об отмене действия и ожидание Enter."""
@@ -51,10 +51,10 @@ def _print_cancelled(
         f"{Style.RESET_ALL}"
     )
     print()
-    _press_enter(strings)
+    press_enter(strings)
 
 
-def _print_success_and_wait(
+def print_success_and_wait(
     strings: StringsDict,
     msg: str,
     *,
@@ -63,15 +63,15 @@ def _print_success_and_wait(
     """Вывести сообщение об успехе и дождаться Enter."""
     print(f"{color}{msg}{Style.RESET_ALL}")
     print()
-    _press_enter(strings)
+    press_enter(strings)
 
 
-def _choice_prompt(strings: StringsDict) -> str:
+def choice_prompt(strings: StringsDict) -> str:
     """Подсказка для числового выбора."""
     return get_string(strings, "common.choice_prompt")
 
 
-def _print_screen_header(caption: str) -> None:
+def print_screen_header(caption: str) -> None:
     """Заголовок экрана: разделитель, подпись по центру, разделитель."""
     from ui.terminal_wrap import terminal_width, wrap_text
 
@@ -83,24 +83,24 @@ def _print_screen_header(caption: str) -> None:
     print()
 
 
-def _stats_caption_line(strings: StringsDict) -> str:
+def stats_caption_line(strings: StringsDict) -> str:
     """Заголовок экрана генерации характеристик."""
     caption = get_string(strings, "character.stats_generation_caption")
     return f"{Fore.YELLOW}{caption.center(78)}{Style.RESET_ALL}"
 
 
-def _stats_total_line(strings: StringsDict) -> str:
+def stats_total_line(strings: StringsDict) -> str:
     """Заголовок итоговых характеристик."""
     total = get_string(strings, "character.stats_total")
     return f"{Fore.YELLOW}{total.center(78)}{Style.RESET_ALL}"
 
 
-def _print_numbered_row(idx: int, label: str, *, prefix: str = "  ") -> None:
+def print_numbered_row(idx: int, label: str, *, prefix: str = "  ") -> None:
     """Строка нумерованного меню: жёлтый индекс и подпись."""
     print(f"{prefix}{Fore.YELLOW}{idx}{Style.RESET_ALL}. {label}")
 
 
-def _run_numbered_menu(
+def run_numbered_menu(
     strings: StringsDict,
     options: list[str],
     *,
@@ -111,7 +111,7 @@ def _run_numbered_menu(
 ) -> int | None:
     """Нумерованное меню: 1..N — опции, 0 — назад. None при выборе 0."""
     for idx, label in enumerate(options, 1):
-        _print_numbered_row(idx, label)
+        print_numbered_row(idx, label)
     if before_back is not None:
         before_back()
     print()
@@ -134,7 +134,7 @@ def _run_numbered_menu(
     return choice
 
 
-def _pick_n_from_pool(
+def pick_n_from_pool(
     strings: StringsDict,
     pool: list[str],
     count: int,
@@ -150,9 +150,9 @@ def _pick_n_from_pool(
         available = [item for item in pool if item not in picked]
         if not available:
             return None
-        _print_screen_header(header)
+        print_screen_header(header)
         labels = [label_for(item) for item in available]
-        choice = _run_numbered_menu(
+        choice = run_numbered_menu(
             strings,
             labels,
             prompt_key=prompt_key,
@@ -165,7 +165,7 @@ def _pick_n_from_pool(
     return picked
 
 
-def _read_numbered_choice(
+def read_numbered_choice(
     strings: StringsDict,
     count: int,
     *,
@@ -200,7 +200,7 @@ def _proficiency_menu_marker(proficient: bool) -> str:
     return ""
 
 
-def _sort_ids_by_proficiency(
+def sort_ids_by_proficiency(
     item_ids: list[str],
     proficiencies: list[str],
     has_proficiency: Callable[[list[str], str], bool],
@@ -217,13 +217,13 @@ def _sort_ids_by_proficiency(
     )
 
 
-def _format_pick_menu_label(name: str, proficient: bool) -> str:
+def format_pick_menu_label(name: str, proficient: bool) -> str:
     """Подпись пункта меню выбора с опциональной «*» владения."""
     marker = _proficiency_menu_marker(proficient)
     return f"{marker}{Fore.CYAN}{name}{Style.RESET_ALL}"
 
 
-def _print_pick_list(
+def print_pick_list(
     pool: list[str],
     taken: set[str],
     *,
@@ -246,11 +246,11 @@ def _print_pick_list(
             if format_selectable is not None:
                 format_selectable(idx, item_id, name)
             else:
-                _print_numbered_row(idx, f"{Fore.CYAN}{name}{Style.RESET_ALL}")
+                print_numbered_row(idx, f"{Fore.CYAN}{name}{Style.RESET_ALL}")
     return selectable
 
 
-def _read_pool_pick(
+def read_pool_pick(
     strings: StringsDict,
     selectable: list[str],
     *,
@@ -258,7 +258,7 @@ def _read_pool_pick(
     empty_key: str,
     back_label_key: str = "character.back",
 ) -> str | None:
-    """Ввод выбора из пула после _print_pick_list; None — «Назад»."""
+    """Ввод выбора из пула после print_pick_list; None — «Назад»."""
     print()
     if not selectable:
         print(f"{Fore.RED}{get_string(strings, empty_key)}{Style.RESET_ALL}")

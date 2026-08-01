@@ -10,17 +10,17 @@ from core.types import (
     StringsDict,
 )
 from ui.input_handler import get_int_input
-from ui.menus._common import (
-    _press_enter,
-    _print_screen_header,
-    _run_numbered_menu,
+from ui.menus.console import (
+    press_enter,
+    print_screen_header,
+    run_numbered_menu,
 )
 from ui.menus.mods_menu import show_mods_menu
 
 
 def select_difficulty(strings: StringsDict) -> GameDifficulty | None:
     """Экран выбора сложности при создании персонажа."""
-    _print_screen_header(get_string(strings, "difficulty.caption"))
+    print_screen_header(get_string(strings, "difficulty.caption"))
 
     options: list[tuple[GameDifficulty, str, str]] = [
         ("easy", get_string(strings, "difficulty.easy"), str(Fore.GREEN)),
@@ -62,7 +62,7 @@ def show_languages_menu(
 ) -> RuntimeSettings:
     """Меню выбора языка."""
     while True:
-        _print_screen_header(get_string(strings, "languages.caption"))
+        print_screen_header(get_string(strings, "languages.caption"))
 
         current = settings["language"]
         lang_name = get_string(
@@ -78,7 +78,7 @@ def show_languages_menu(
             get_string(strings, f"languages.lang_{code}")
             for code in lang_codes
         ]
-        choice = _run_numbered_menu(
+        choice = run_numbered_menu(
             strings,
             options,
             prompt_key="languages.prompt",
@@ -98,7 +98,7 @@ def show_languages_menu(
         )
         print(f"{Fore.GREEN}{msg}{Style.RESET_ALL}")
         print()
-        _press_enter(strings)
+        press_enter(strings)
 
     return settings
 
@@ -109,8 +109,8 @@ def show_settings(
     """Экран настроек."""
     while True:
         options = [get_string(strings, "settings.option_mods")]
-        _print_screen_header(get_string(strings, "settings.caption"))
-        choice = _run_numbered_menu(
+        print_screen_header(get_string(strings, "settings.caption"))
+        choice = run_numbered_menu(
             strings,
             options,
             prompt_key="settings.prompt",

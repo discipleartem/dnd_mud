@@ -13,10 +13,10 @@ from core.feats import (
 )
 from core.localization import get_string
 from core.types import StringsDict
-from ui.menus._common import (
-    _ability_name,
-    _confirm_yes_no,
-    _print_screen_header,
+from ui.menus.console import (
+    ability_name,
+    confirm_yes_no,
+    print_screen_header,
 )
 
 
@@ -53,7 +53,7 @@ def _format_or_ability_requirements(
         return None
     value = next(iter(values))
     abilities = [
-        _ability_name(strings, str(req.get("target", ""))) for req in or_reqs
+        ability_name(strings, str(req.get("target", ""))) for req in or_reqs
     ]
     or_sep = get_string(strings, "character.feat_req_or_sep")
     return get_string(
@@ -79,7 +79,7 @@ def _format_requirement_text(
         return get_string(
             strings,
             "character.feat_req_ability",
-            ability=_ability_name(strings, target),
+            ability=ability_name(strings, target),
             value=value,
             current=current,
         )
@@ -181,7 +181,7 @@ def _print_feat_full_description(
     language: str,
 ) -> None:
     """Экран полного описания выбранной черты."""
-    _print_screen_header(get_string(strings, "character.feat_detail_caption"))
+    print_screen_header(get_string(strings, "character.feat_detail_caption"))
     name = str(feat.get("name", "?"))
     print(f"  {Fore.CYAN}{Style.BRIGHT}{name}{Style.RESET_ALL}")
     print()
@@ -213,4 +213,4 @@ def _confirm_feat_selection(
 ) -> bool:
     """Показать полное описание и подтвердить выбор."""
     _print_feat_full_description(strings, feat, ctx, language)
-    return _confirm_yes_no(strings, "character.feat_confirm_prompt")
+    return confirm_yes_no(strings, "character.feat_confirm_prompt")

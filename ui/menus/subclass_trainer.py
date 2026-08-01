@@ -14,10 +14,10 @@ from core.progression import (
     needs_class_feature_picks,
 )
 from core.types import LanguageCode, StringsDict
-from ui.menus._common import _print_screen_header, _print_success_and_wait
 from ui.menus._selectors import select_subclass
 from ui.menus._subclass_picks import apply_subclass_picks
 from ui.menus.class_features import apply_pending_class_features
+from ui.menus.console import print_screen_header, print_success_and_wait
 
 
 def assign_subclass_from_menu(
@@ -72,7 +72,7 @@ def run_subclass_trainer(
         print()
         return character
 
-    _print_screen_header(
+    print_screen_header(
         get_string(strings, "characters_menu.subclass_trainer_caption")
     )
 
@@ -90,5 +90,5 @@ def run_subclass_trainer(
     msg = get_string(
         strings, "characters_menu.subclass_trainer_success", name=name
     )
-    _print_success_and_wait(strings, msg)
+    print_success_and_wait(strings, msg)
     return updated

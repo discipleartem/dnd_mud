@@ -2,9 +2,9 @@
 
 from core.localization import get_string
 from core.types import GameDifficulty, StatMap, StringsDict
-from ui.menus._common import (
-    _print_screen_header,
-    _run_numbered_menu,
+from ui.menus.console import (
+    print_screen_header,
+    run_numbered_menu,
 )
 from ui.menus.stats.stats_methods import (
     _select_stats_point_buy,
@@ -32,7 +32,7 @@ def show_stats_generation_flow(
         )
 
     while True:
-        _print_screen_header(
+        print_screen_header(
             get_string(strings, "character.stats_generation_caption")
         )
 
@@ -42,7 +42,7 @@ def show_stats_generation_flow(
             get_string(strings, "character.stats_random"),
         ]
 
-        choice = _run_numbered_menu(
+        choice = run_numbered_menu(
             strings,
             methods,
             prompt_key="character.stats_generation_method_prompt",

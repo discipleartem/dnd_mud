@@ -17,9 +17,9 @@ from core.localization import (
 from core.types import (
     StringsDict,
 )
-from ui.menus._common import (
-    _ability_name,
-    _skill_name,
+from ui.menus.console import (
+    ability_name,
+    skill_name,
 )
 
 # ============================================================================
@@ -132,7 +132,7 @@ def _format_spellcasting_grant(
     if not entries:
         return ""
     ability = str(grant.get("ability", ""))
-    ability_label = _ability_name(strings, ability) if ability else ""
+    ability_label = ability_name(strings, ability) if ability else ""
     return get_string(
         strings,
         "character.grant_spellcasting_list",
@@ -181,7 +181,7 @@ def _format_skill_proficiency_labels(
         get_string(
             strings,
             "character.grant_skill_proficiency",
-            skill=_skill_name(strings, str(skill_id)),
+            skill=skill_name(strings, str(skill_id)),
         )
         for skill_id in skills
     ]
@@ -242,7 +242,7 @@ def _grant_description(
                     strings,
                     "character.grant_cantrip_choice",
                     source=source,
-                    ability=_ability_name(strings, ability),
+                    ability=ability_name(strings, ability),
                 )
         case "immunity":
             if grant.get("effect") == "magical_sleep":
@@ -257,7 +257,7 @@ def _grant_description(
                 return get_string(
                     strings,
                     "character.grant_skill_expertise",
-                    skill=_skill_name(strings, skill),
+                    skill=skill_name(strings, skill),
                 )
         case "skill_proficiency":
             return _skill_proficiency_description(grant, strings)
@@ -345,7 +345,7 @@ def _skill_proficiency_description(
         return get_string(
             strings,
             "character.grant_skill_proficiency",
-            skill=_skill_name(strings, skills),
+            skill=skill_name(strings, skills),
         )
     return ""
 
@@ -405,7 +405,7 @@ def _advantage_description(
         return get_string(
             strings,
             "character.grant_advantage_skill_terrain",
-            skill=_skill_name(strings, skill),
+            skill=skill_name(strings, skill),
             terrain=terrain_label,
         )
     if grant.get("save") and grant.get("effect"):
@@ -418,7 +418,7 @@ def _advantage_description(
         return get_string(
             strings,
             "character.grant_advantage_save",
-            save=_ability_name(strings, str(grant["save"])),
+            save=ability_name(strings, str(grant["save"])),
             effect=effect_label,
         )
     return ""

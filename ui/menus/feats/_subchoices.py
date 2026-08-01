@@ -15,12 +15,12 @@ from core.languages import (
 from core.localization import get_string
 from core.skills import PHB_SKILL_IDS
 from core.types import StatMap, StringsDict
-from ui.menus._common import (
-    _ability_name,
-    _pick_n_from_pool,
-    _print_screen_header,
-    _run_numbered_menu,
-    _skill_name,
+from ui.menus.console import (
+    ability_name,
+    pick_n_from_pool,
+    print_screen_header,
+    run_numbered_menu,
+    skill_name,
 )
 from ui.menus.feats._constants import (
     ELEMENTAL_DAMAGE_TYPES,
@@ -38,9 +38,9 @@ def _pick_ability_for_feat(
     if not isinstance(choice_list, list) or not choice_list:
         return None
     amount = int(feat.get("ability_bonuses_amount", 1))
-    labels = [f"{_ability_name(strings, s)} +{amount}" for s in choice_list]
-    _print_screen_header(get_string(strings, "character.feat_pick_ability"))
-    choice = _run_numbered_menu(
+    labels = [f"{ability_name(strings, s)} +{amount}" for s in choice_list]
+    print_screen_header(get_string(strings, "character.feat_pick_ability"))
+    choice = run_numbered_menu(
         strings,
         labels,
         prompt_key="character.feat_pick_ability_prompt",
@@ -67,7 +67,7 @@ def _pick_weapons_for_feat(
         for w in all_weapon_ids()
         if not has_weapon_proficiency(proficiencies, w)
     ]
-    return _pick_n_from_pool(
+    return pick_n_from_pool(
         strings,
         pool,
         count,
@@ -97,12 +97,12 @@ def _pick_skills_or_tools(
     ]
 
     for pick_num in range(1, count + 1):
-        _print_screen_header(get_string(strings, "character.feat_caption"))
+        print_screen_header(get_string(strings, "character.feat_caption"))
         options: list[tuple[str, str, str]] = []
         for sid in skill_pool:
             if any(p.get("id") == sid for p in picked):
                 continue
-            options.append(("skill", sid, _skill_name(strings, sid)))
+            options.append(("skill", sid, skill_name(strings, sid)))
         for tid in tool_pool:
             if any(p.get("id") == tid for p in picked):
                 continue
@@ -116,7 +116,7 @@ def _pick_skills_or_tools(
         if not options:
             return None
         labels = [label for _, _, label in options]
-        choice = _run_numbered_menu(
+        choice = run_numbered_menu(
             strings,
             labels,
             prompt_key="character.feat_pick_skill_tool",
@@ -136,8 +136,8 @@ def _pick_elemental_damage(strings: StringsDict) -> str | None:
         get_string(strings, f"character.feat_element_{dtype}")
         for dtype in ELEMENTAL_DAMAGE_TYPES
     ]
-    _print_screen_header(get_string(strings, "character.feat_caption"))
-    choice = _run_numbered_menu(
+    print_screen_header(get_string(strings, "character.feat_caption"))
+    choice = run_numbered_menu(
         strings,
         labels,
         prompt_key="character.feat_pick_element",
@@ -154,8 +154,8 @@ def _pick_spell_class(strings: StringsDict) -> str | None:
         get_string(strings, f"classes.{cls_id}.name", default=cls_id)
         for cls_id in MAGIC_INITIATE_CLASSES
     ]
-    _print_screen_header(get_string(strings, "character.feat_caption"))
-    choice = _run_numbered_menu(
+    print_screen_header(get_string(strings, "character.feat_caption"))
+    choice = run_numbered_menu(
         strings,
         labels,
         prompt_key="character.feat_pick_caster_class",
@@ -181,7 +181,7 @@ def _pick_languages_for_feat(
         for entry in all_langs
         if str(entry.get("id", "")) not in known
     ]
-    return _pick_n_from_pool(
+    return pick_n_from_pool(
         strings,
         pool,
         count,
@@ -196,12 +196,12 @@ def _pick_expertise_skills(
     count: int,
 ) -> list[str] | None:
     """Выбор навыков для skill_expert (экспертное владение)."""
-    return _pick_n_from_pool(
+    return pick_n_from_pool(
         strings,
         list(PHB_SKILL_IDS),
         count,
         header=get_string(strings, "character.feat_caption"),
-        label_for=lambda sid: _skill_name(strings, sid),
+        label_for=lambda sid: skill_name(strings, sid),
         prompt_key="character.feat_pick_expertise",
     )
 

@@ -5,11 +5,11 @@ from colorama import Fore, Style
 from core.localization import get_string
 from core.stats import ABILITY_SCORE_DEFAULT, STAT_NAMES
 from core.types import StatMap, StringsDict
-from ui.menus._common import (
-    _ability_name,
-    _print_screen_header,
-    _read_numbered_choice,
-    _run_numbered_menu,
+from ui.menus.console import (
+    ability_name,
+    print_screen_header,
+    read_numbered_choice,
+    run_numbered_menu,
 )
 
 
@@ -19,7 +19,7 @@ def select_asi_mode(strings: StringsDict) -> str | None:
         get_string(strings, "level_up.asi_increase_stats"),
         get_string(strings, "level_up.asi_take_feat"),
     ]
-    choice = _run_numbered_menu(
+    choice = run_numbered_menu(
         strings,
         labels,
         prompt_key="level_up.asi_or_feat_prompt",
@@ -40,7 +40,7 @@ def select_asi_stats(
         get_string(strings, "level_up.asi_two_one"),
         get_string(strings, "level_up.asi_one_two"),
     ]
-    mode = _run_numbered_menu(
+    mode = run_numbered_menu(
         strings,
         labels,
         prompt_key="level_up.asi_mode_prompt",
@@ -79,7 +79,7 @@ def _pick_one_stat(
     """Выбор одной характеристики для ASI."""
     exclude = exclude or []
     available = [s for s in STAT_NAMES if s not in exclude]
-    _print_screen_header(get_string(strings, "level_up.asi_pick_stat"))
+    print_screen_header(get_string(strings, "level_up.asi_pick_stat"))
     print(
         f"{Fore.CYAN}{get_string(strings, 'level_up.asi_cap_warning')}"
         f"{Style.RESET_ALL}"
@@ -93,10 +93,10 @@ def _pick_one_stat(
             cap_note = f" ({get_string(strings, 'level_up.asi_at_cap')})"
         print(
             f"  {Fore.YELLOW}{idx}{Style.RESET_ALL}. "
-            f"{_ability_name(strings, stat)}: {current}{cap_note}"
+            f"{ability_name(strings, stat)}: {current}{cap_note}"
         )
     print()
-    choice = _read_numbered_choice(
+    choice = read_numbered_choice(
         strings,
         len(available),
         prompt_key="common.choice_prompt",

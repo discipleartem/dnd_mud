@@ -205,7 +205,7 @@ def test_run_scenario_grant_xp_levels_character(
         "ui.menus.scenario_flow.assign_subclass_from_menu",
         lambda *args, **kwargs: None,
     )
-    monkeypatch.setattr("ui.menus.level_up._press_enter", lambda strings: None)
+    monkeypatch.setattr("ui.menus.level_up.press_enter", lambda strings: None)
     patch_int_input(monkeypatch, [1, 1])
     result = run_scenario(adventure, character, ru_strings, "ru")
     assert result.level == 3

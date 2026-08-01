@@ -11,15 +11,15 @@ from core.localization import get_string
 from core.models import Character
 from core.types import LanguageCode, StringsDict
 from ui.menus import _creation_steps
-from ui.menus._common import (
-    _confirm_yes_no,
-    _print_cancelled,
-    _print_screen_header,
-    _print_success_and_wait,
-    _read_numbered_choice,
-    _run_numbered_menu,
-)
 from ui.menus._corrupt_saves import show_corrupt_save_warnings_if_any
+from ui.menus.console import (
+    confirm_yes_no,
+    print_cancelled,
+    print_screen_header,
+    print_success_and_wait,
+    read_numbered_choice,
+    run_numbered_menu,
+)
 from ui.menus.display import _print_characters_list
 
 
@@ -29,9 +29,9 @@ def _select_character_to_delete(
     language: LanguageCode,
 ) -> Character | None:
     """Выбор персонажа для удаления."""
-    _print_screen_header(get_string(strings, "characters_menu.caption"))
+    print_screen_header(get_string(strings, "characters_menu.caption"))
     _print_characters_list(strings, characters, language)
-    choice = _read_numbered_choice(
+    choice = read_numbered_choice(
         strings,
         len(characters),
         prompt_key="characters_menu.select_prompt",
@@ -52,12 +52,12 @@ def _delete_one_character(
     if character is None:
         return
 
-    if not _confirm_yes_no(
+    if not confirm_yes_no(
         strings,
         "characters_menu.confirm_delete_one",
         name=character.name,
     ):
-        _print_cancelled(strings)
+        print_cancelled(strings)
         return
 
     if character.save_slug:
@@ -68,17 +68,17 @@ def _delete_one_character(
         "characters_menu.delete_success",
         name=character.name,
     )
-    _print_success_and_wait(strings, msg)
+    print_success_and_wait(strings, msg)
 
 
 def _delete_all_characters(strings: StringsDict, count: int) -> None:
     """Удалить всех персонажей с подтверждением."""
-    if not _confirm_yes_no(
+    if not confirm_yes_no(
         strings,
         "characters_menu.confirm_delete_all",
         count=count,
     ):
-        _print_cancelled(strings)
+        print_cancelled(strings)
         return
 
     deleted = delete_all_characters()
@@ -87,7 +87,7 @@ def _delete_all_characters(strings: StringsDict, count: int) -> None:
         "characters_menu.delete_all_success",
         count=deleted,
     )
-    _print_success_and_wait(strings, msg)
+    print_success_and_wait(strings, msg)
 
 
 def show_characters_menu(
@@ -107,7 +107,7 @@ def show_characters_menu(
         characters = list(load_result.characters)
         has_characters = bool(characters)
 
-        _print_screen_header(get_string(strings, "characters_menu.caption"))
+        print_screen_header(get_string(strings, "characters_menu.caption"))
 
         if has_characters:
             _print_characters_list(strings, characters, language)
@@ -124,7 +124,7 @@ def show_characters_menu(
             options.append(get_string(strings, "characters_menu.delete_one"))
             options.append(get_string(strings, "characters_menu.delete_all"))
 
-        choice = _run_numbered_menu(
+        choice = run_numbered_menu(
             strings,
             options,
             prompt_key="characters_menu.prompt",
