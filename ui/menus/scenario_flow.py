@@ -9,7 +9,11 @@ from core.character_storage import update_character
 from core.game_engine import GameEngine, GameSession, UiAction
 from core.localization import get_string, resolve_localized_text
 from core.models import Adventure, Character
-from core.session_storage import SessionSnapshot, save_session
+from core.session_runner import (
+    apply_pending_ui_actions,
+    persist_adventure_session,
+    resolve_menu_character,
+)
 from core.types import LanguageCode, StringsDict
 from ui.menus.class_features import apply_pending_class_features
 from ui.menus.console import (
@@ -45,10 +49,7 @@ def _persist_menu_result(
     character: Character,
 ) -> Character:
     """Сохранить персонажа после UI-меню или вернуть исходного."""
-    if updated is not None:
-        return updated
-    update_character(character)
-    return character
+    return resolve_menu_character(updated, character)
 
 
 def _run_character_menu_action(
@@ -78,13 +79,14 @@ def _handle_engine_ui(
     language: LanguageCode,
 ) -> Character:
     """Обработать UI-действия из движка."""
-    current = character
-    for action in pending:
+
+    def _dispatch(action: UiAction, current: Character) -> Character:
         handler = _PENDING_UI_HANDLERS.get(action.kind)
-        if handler is not None:
-            current = handler(strings, current, language, action)
-    update_character(current)
-    return current
+        if handler is None:
+            return current
+        return handler(strings, current, language, action)
+
+    return apply_pending_ui_actions(pending, character, _dispatch)
 
 
 def _handle_level_up_ui(
@@ -135,21 +137,7 @@ _PENDING_UI_HANDLERS: dict[
 
 def _persist_session(engine: GameEngine, adventure: Adventure) -> None:
     """Сохранить снимок сессии приключения."""
-    session = engine.session
-    if not session.character.save_slug:
-        return
-    slug = f"{session.character.save_slug}_{adventure.id}"
-    save_session(
-        SessionSnapshot(
-            save_slug=slug,
-            character_save_slug=session.character.save_slug,
-            adventure_id=adventure.id,
-            current_node_id=session.current_node_id,
-            difficulty=session.difficulty,
-            flags=dict(session.flags),
-            script_file=session.script_file,
-        )
-    )
+    persist_adventure_session(engine, adventure)
 
 
 def run_scenario_with_engine(
