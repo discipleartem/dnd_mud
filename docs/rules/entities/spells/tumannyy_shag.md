@@ -1,26 +1,32 @@
 ---
+id: tumannyy_shag
+type: spell
 phb_chapter: 11
-phb_section: Туманный Шаг
 phb_pages:
 - 211
 - 289
-phb_part: 3
-id: tumannyy_shag
-tags:
-- spell
-- вызов
-- level-2
-mud_status: planned
-type: spell
+quick: 2; Вызов; На себя
+aliases:
+- tumannyy_shag
+- tumannyy shag
+- Туманный Шаг
+level: 2
+school: вызов
+casting_time: 1 бонусное действие
+range: На себя
+components: В
+duration: Мгновенная
 ---
 
 # Туманный Шаг
 
-> Источник: PHB, гл. 11. Пересказ правил, не дословная копия PHB.
+> Источник: PHB 2014. Пересказ механики, не дословная копия.
 
 ## Параметры
 
-<!-- phb:auto:parameters -->
+
+
+
 | Параметр | Значение |
 |----------|----------|
 | Уровень | 2 уровень |
@@ -29,20 +35,6 @@ type: spell
 | Дистанция | На себя |
 | Компоненты | В |
 | Длительность | Мгновенная |
-<!-- /phb:auto:parameters -->
 
 ## Эффект
-
-<!-- phb:auto:effect -->
 - Окутавшись серебристым туманом, вы телепортируетесь на 30 футов в свободное пространство, видимое вами.
-<!-- /phb:auto:effect -->
-
-## Реализация в MUD
-
-<!-- mud:implementation -->
-| Аспект | Значение |
-|--------|----------|
-| Статус | planned |
-| YAML | — |
-| Core | — |
-<!-- /mud:implementation -->

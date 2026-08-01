@@ -6,7 +6,21 @@
 
 ## Поиск правил D&D (PHB)
 
-Канон алгоритма — [`00-project.mdc`](.cursor/rules/00-project.mdc) §D&D 5e. Guide: [`docs/rules/README.md`](docs/rules/README.md). Не использовать память модели.
+**Не использовать память модели.** Канон — [`00-project.mdc`](.cursor/rules/00-project.mdc) §D&D 5e.
+
+```
+lookup.yaml (by_alias|by_id) → quick → file → (если мало) веб PHB 2014/SRD 5.1 → обновить rules + lookup
+```
+
+| Шаг | Действие |
+|-----|----------|
+| 1a | [`docs/rules/_index/lookup.yaml`](docs/rules/_index/lookup.yaml): `by_alias` (RU/EN/slug) → `id` |
+| 1b | `by_id[id].quick` — достаточно ли для ответа? |
+| 1c | иначе открыть `by_id[id].file` |
+| 1d | статус MUD — [`docs/DND_RULES.md`](docs/DND_RULES.md); оглавление для людей — [`docs/rules/INDEX.md`](docs/rules/INDEX.md) |
+| 2 | веб: PHB **2014** / SRD 5.1 (**не** 2024+); затем обновить карточку + `quick`/`aliases` + `lookup.yaml` вручную |
+
+Guide: [`docs/rules/README.md`](docs/rules/README.md). Конфликт: официальные 5e до 2024 > `docs/rules/`.
 
 ## Agent-loop
 

@@ -1,26 +1,32 @@
 ---
+id: pospeshnoe_otstuplenie
+type: spell
 phb_chapter: 11
-phb_section: Поспешное Отступление
 phb_pages:
 - 211
 - 289
-phb_part: 3
-id: pospeshnoe_otstuplenie
-tags:
-- spell
-- transmutation
-- level-1
-mud_status: planned
-type: spell
+quick: 1; transmutation; На себя [конц.]
+aliases:
+- pospeshnoe_otstuplenie
+- pospeshnoe otstuplenie
+- Поспешное Отступление
+level: 1
+school: transmutation
+casting_time: 1 бонусное действие
+range: На себя
+components: В, С
+duration: Концентрация, вплоть до 10 минут
 ---
 
 # Поспешное Отступление
 
-> Источник: PHB, гл. 11. Пересказ правил, не дословная копия PHB.
+> Источник: PHB 2014. Пересказ механики, не дословная копия.
 
 ## Параметры
 
-<!-- phb:auto:parameters -->
+
+
+
 | Параметр | Значение |
 |----------|----------|
 | Уровень | 1 уровень |
@@ -29,21 +35,7 @@ type: spell
 | Дистанция | На себя |
 | Компоненты | В, С |
 | Длительность | Концентрация, вплоть до 10 минут |
-<!-- /phb:auto:parameters -->
 
 ## Эффект
-
-<!-- phb:auto:effect -->
 - Это заклинание позволяет перемещаться с невероятной скоростью.
 - Когда вы накладываете это заклинание, а также в последующие ходы, бонусным действием, пока активно заклинание, вы можете совершать действие Рывок.
-<!-- /phb:auto:effect -->
-
-## Реализация в MUD
-
-<!-- mud:implementation -->
-| Аспект | Значение |
-|--------|----------|
-| Статус | planned |
-| YAML | — |
-| Core | — |
-<!-- /mud:implementation -->

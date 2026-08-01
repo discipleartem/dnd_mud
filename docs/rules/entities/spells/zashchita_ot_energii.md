@@ -1,26 +1,33 @@
 ---
+id: zashchita_ot_energii
+type: spell
 phb_chapter: 11
-phb_section: Защита От Энергии
 phb_pages:
 - 211
 - 289
-phb_part: 3
-id: zashchita_ot_energii
-tags:
-- spell
-- abjuration
-- level-3
-mud_status: planned
-type: spell
+quick: 3; abjuration; Касание [конц.] — Пока заклинание активно, согласное существо, которого вы коснулись,
+  получает сопротивление к одно…
+aliases:
+- zashchita_ot_energii
+- zashchita ot energii
+- Защита От Энергии
+level: 3
+school: abjuration
+casting_time: 1 действие
+range: Касание
+components: В, С
+duration: Концентрация, вплоть до 1 часа
 ---
 
 # Защита От Энергии
 
-> Источник: PHB, гл. 11. Пересказ правил, не дословная копия PHB.
+> Источник: PHB 2014. Пересказ механики, не дословная копия.
 
 ## Параметры
 
-<!-- phb:auto:parameters -->
+
+
+
 | Параметр | Значение |
 |----------|----------|
 | Уровень | 3 уровень |
@@ -29,20 +36,6 @@ type: spell
 | Дистанция | Касание |
 | Компоненты | В, С |
 | Длительность | Концентрация, вплоть до 1 часа |
-<!-- /phb:auto:parameters -->
 
 ## Эффект
-
-<!-- phb:auto:effect -->
 - Пока заклинание активно, согласное существо, которого вы коснулись, получает сопротивление к одному виду урона на ваш выбор: звук, кислота, огонь, холод или электричество.
-<!-- /phb:auto:effect -->
-
-## Реализация в MUD
-
-<!-- mud:implementation -->
-| Аспект | Значение |
-|--------|----------|
-| Статус | planned |
-| YAML | — |
-| Core | — |
-<!-- /mud:implementation -->

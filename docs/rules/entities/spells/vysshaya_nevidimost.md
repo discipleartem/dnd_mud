@@ -1,26 +1,30 @@
 ---
+id: vysshaya_nevidimost
+type: spell
 phb_chapter: 11
-phb_section: Высшая Невидимость
 phb_pages:
 - 211
 - 289
-phb_part: 3
-id: vysshaya_nevidimost
-tags:
-- spell
-- illusion
-- level-4
-mud_status: planned
-type: spell
+quick: 4; illusion; Касание [конц.] — невидимость не срывается атакой/заклинанием
+aliases:
+- vysshaya_nevidimost
+- высшая невидимость
+- greater invisibility
+- vysshaya nevidimost
+level: 4
+school: illusion
+casting_time: 1 действие
+range: Касание
+components: В, С
+duration: Концентрация, вплоть до 1 минуты
 ---
 
 # Высшая Невидимость
 
-> Источник: PHB, гл. 11. Пересказ правил, не дословная копия PHB.
+> Источник: PHB 2014. Пересказ механики, не дословная копия.
 
 ## Параметры
 
-<!-- phb:auto:parameters -->
 | Параметр | Значение |
 |----------|----------|
 | Уровень | 4 уровень |
@@ -29,20 +33,8 @@ type: spell
 | Дистанция | Касание |
 | Компоненты | В, С |
 | Длительность | Концентрация, вплоть до 1 минуты |
-<!-- /phb:auto:parameters -->
 
 ## Эффект
 
-<!-- phb:auto:effect -->
-_См. PHB._
-<!-- /phb:auto:effect -->
-
-## Реализация в MUD
-
-<!-- mud:implementation -->
-| Аспект | Значение |
-|--------|----------|
-| Статус | planned |
-| YAML | — |
-| Core | — |
-<!-- /mud:implementation -->
+- Существо, которого вы касаетесь, становится невидимым до конца заклинания; снаряжение на нём тоже.
+- Невидимость не срывается от атаки или накладывания заклинаний.

@@ -1,18 +1,249 @@
 ---
 id: en-ru
 type: glossary
+phb_chapter: 0
+phb_pages: [313, 316]
+quick: "Словарь PHB EN→RU (236 терминов)"
+aliases: [en-ru, Англо-русский словарь, англо-русский словарь]
 ---
 
-# Русско-английский словарь PHB
+# Англо-русский словарь
 
-> Источник: PHB, стр. 317–320.
+> Источник: PHB 2014. Термины из словаря книги.
 
-- Э. Гэри Гайгэкс, Руководство Мастера (1979) —
-
-<!-- phb:auto:glossary -->
-# Русско-английский словарь PHB
-
-> Источник: PHB, стр. 317–320.
-
-- Э. Гэри Гайгэкс, Руководство Мастера (1979) —
-<!-- /phb:auto:glossary -->
+- **Blinded** — Ослеплённый
+- **Charmed** — Очарованный
+- **Deafened** — Оглохший
+- **Frightened** — Испуганный
+- **Grappled** — Схваченный
+- **Incapacitated** — Недееспособный
+- **Invisible** — Невидимый
+- **Paralyzed** — Парализованный
+- **Petrified** — Окаменевший
+- **Poisoned** — Отравленный
+- **Prone** — Сбитый с ног / Лежащий
+- **Restrained** — Опутанный
+- **Stunned** — Ошеломлённый
+- **Unconscious** — Бессознательный
+- **Sleight of Hand** — Ловкость рук
+- **Actor** — Артистичный
+- **Alert** — Бдительный
+- **Athlete** — Атлетичный
+- **Charger** — Налётчик
+- **Crossbow Expert** — Эксперт в арбалетах
+- **Defensive Duelist** — Оборонительный дуэлянт
+- **Dual Wielder** — Двойное оружие
+- **Dungeon Delver** — Исследователь подземелий
+- **Durable** — Стойкий
+- **Elemental Adept** — Стихийный адепт
+- **Grappler** — Борец
+- **Great Weapon Master** — Мастер большого оружия
+- **Healer** — Лекарь
+- **Heavily Armored** — Знаток тяжёлых доспехов
+- **Heavy Armor Master** — Мастер тяжёлых доспехов
+- **Inspiring Leader** — Воодушевляющий лидер
+- **Keen Mind** — Отличная память
+- **Lightly Armored** — Знаток лёгких доспехов
+- **Linguist** — Языковед
+- **Lucky** — Везунчик
+- **Mage Slayer** — Убийца магов
+- **Magic Initiate** — Посвящённый в магию
+- **Martial Adept** — Воинский адепт
+- **Medium Armor Master** — Мастер средних доспехов
+- **Mobile** — Подвижный
+- **Moderately Armored** — Знаток средних доспехов
+- **Mounted Combatant** — Верховой боец
+- **Observant** — Внимательный
+- **Polearm Master** — Мастер древкового оружия
+- **Resilient** — Устойчивый
+- **Ritual Caster** — Ритуальный заклинатель
+- **Savage Attacker** — Дикий атакующий
+- **Sentinel** — Страж
+- **Sharpshooter** — Меткий стрелок
+- **Shield Master** — Мастер щитов
+- **Skilled** — Одарённый
+- **Skulker** — Проныра
+- **Spell Sniper** — Меткие заклинания
+- **Tavern Brawler** — Драчун
+- **Tough** — Крепкий
+- **War Caster** — Боевой заклинатель
+- **Weapon Master** — Мастер оружия
+- **Acid splash** — Брызги кислоты
+- **Aid** — Подмога
+- **Alarm** — Сигнал тревоги
+- **Alter self** — Смена обличья
+- **Animal friendship** — Дружба с животными
+- **Animal messenger** — Почтовое животное
+- **Animal shapes** — Превращение в животных
+- **Animate dead** — Восставший труп
+- **Animate objects** — Оживление вещей
+- **Antilife shell** — Преграда жизни
+- **Antimagic field** — Преграда магии
+- **Antipathy/sympathy** — Антипатия/симпатия
+- **Arcane eye** — Магический глаз
+- **Arcane gate** — Магические врата
+- **Arcane lock** — Волшебный замок
+- **Armor of Agathys** — Доспех Агатиса
+- **Arms of Hadar** — Руки Хадара
+- **Astral projection** — Проекция в астрал
+- **Augury** — Гадание
+- **Aura of life** — Аура жизни
+- **Aura of purity** — Аура очищения
+- **Aura of vitality** — Аура живучести
+- **Awaken** — Пробуждение разума
+- **Bane** — Порча
+- **Banishing smite** — Изгоняющая кара
+- **Banishment** — Изгнание
+- **Barkskin** — Дубовая кора
+- **Beacon of hope** — Маяк надежды
+- **Beast sense** — Животные чувства
+- **Bestow curse** — Проклятие
+- **Blade barrier** — Стена клинков
+- **Blade ward** — Защита от оружия
+- **Bless** — Благословение
+- **Blight** — Усыхание
+- **Blinding smite** — Ослепляющая кара
+- **Blindness/deafness** — Глухота/слепота
+- **Blink** — Мерцание
+- **Blur** — Размытый образ
+- **Branding smite** — Клеймящая кара
+- **Burning hands** — Огненные ладони
+- **Call lightning** — Призыв молнии
+- **Calm emotions** — Умиротворение
+- **Chain lightning** — Пляшущая молния
+- **Charm person** — Очарование личности
+- **Chill touch** — Леденящее прикосновение
+- **Chromatic orb** — Цветной шарик
+- **Circle of death** — Круг смерти
+- **Circle of power** — Круг силы
+- **Clairvoyance** — Подсматривание
+- **Clone** — Двойник
+- **Cloud of daggers** — Облако кинжалов
+- **Cloudkill** — Облако смерти
+- **Color spray** — Сверкающие брызги
+- **Command** — Приказ
+- **Commune** — Общение
+- **Commune with nature** — Общение с природой
+- **Compelled duel** — Вызов на дуэль
+- **Comprehend languages** — Понимание языков
+- **Compulsion** — Принуждение
+- **Cone of cold** — Конус холода
+- **Confusion** — Смятение
+- **Evard's black tentackles** — Эвардовы чёрные щупальца
+- **Expeditious retreat** — Поспешное отступление
+- **Eyebite** — Разящее око
+- **Fabricate** — Изготовление
+- **Faerie fire** — Огонь фей
+- **False life** — Псевдожизнь
+- **Fear** — Ужас
+- **Feather fall** — Падение пёрышком
+- **Feeblemind** — Слабоумие
+- **Feign death** — Притворная смерть
+- **Find familiar** — Поиск фамильяра
+- **Find steed** — Поиск скакуна
+- **Find the path** — Поиск пути
+- **Find traps** — Поиск ловушек
+- **Finger of death** — Перст смерти
+- **Fire bolt** — Огненный снаряд
+- **Fire shield** — Огненный щит
+- **Fire storm** — Огненная буря
+- **Fireball** — Огненный шар
+- **Flame blade** — Горящий клинок
+- **Flame strike** — Небесный огонь
+- **Flaming sphere** — Пылающий шар
+- **Flesh to stone** — Окаменение
+- **Fly** — Полёт
+- **Fog cloud** — Туманное облако
+- **Forbiddance** — Запрет
+- **Forcecage** — Узилище
+- **Foresight** — Предвидение
+- **Freedom of movement** — Свобода перемещения
+- **Friends** — Дружба
+- **Gaseous form** — Газообразная форма
+- **Gate** — Врата
+- **Geas** — Обет
+- **Gentle repose** — Нетленные останки
+- **Giant insect** — Гигантское насекомое
+- **Glibness** — Находчивость
+- **Globe of invulnerability** — Сфера неуязвимости
+- **Glyph of warding** — Охранные руны
+- **Goodberry** — Чудо-ягоды
+- **Grasping vine** — Цепкая лоза
+- **Grease** — Скольжение
+- **Greater invisibility** — Высшая невидимость
+- **Greater restoration** — Высшее восстановление
+- **Guardian of faith** — Страж веры
+- **Guards and wards** — Стражи
+- **Guidance** — Указание
+- **Guiding bolt** — Направленный снаряд
+- **Gust of wind** — Порыв ветра
+- **Hail of thorns** — Град шипов
+- **Hallow** — Святилище
+- **Hallucinatory terrain** — Мираж
+- **Harm** — Поражение
+- **Haste** — Ускорение
+- **Heal** — Полное исцеление
+- **Healing word** — Лечащее слово
+- **Heat metal** — Раскалённый металл
+- **Hellish rebuke** — Адское возмездие
+- **Heroism** — Героизм
+- **Hex** — Сглаз
+- **Hold monster** — Удержание чудовища
+- **Hold person** — Удержание личности
+- **Holy aura** — Аура святости
+- **Pass without trace** — Бесследное передвижение
+- **Passwall** — Создание прохода
+- **Phantasmal force** — Воображаемая сила
+- **Phantasmal killer** — Воображаемый убийца
+- **Phantom steed** — Прирачный скакун
+- **Planar ally** — Планарный союзник
+- **Planar binding** — Планарные узы
+- **Plane shift** — Уход в иной мир
+- **Plant growth** — Рост растений
+- **Poison spray** — Ядовитые брызги
+- **Polymorph** — Превращение
+- **Power word heal** — Слово Силы: исцеление
+- **Power word kill** — Слово Силы: смерть
+- **Power word stun** — Слово Силы: оглушение
+- **Prayer of healing** — Молебен лечения
+- **Prestidigitation** — Фокусы
+- **Prismatic spray** — Радужные брызги
+- **Prismatic wall** — Радужная стена
+- **Produce flame** — Сотворение пламени
+- **Programmed illusion** — Заданная иллюзия
+- **Project image** — Проекция
+- **Protection from energy** — Защита от энергии
+- **Protection from evil and** — Защита от добра и зла
+- **good                                                   Thaumaturgy** — Чудотворство
+- **Protection from poison** — Защита от яда
+- **Purify food and drink** — Очищение пищи и питья
+- **Raise dead** — Оживление
+- **Ray of enfeeblement** — Луч слабости
+- **Ray of frost** — Луч холода
+- **Ray of sickness** — Луч болезни
+- **Regenerate** — Регенерация
+- **Reincarnate** — Реинкарнация
+- **Remove curse** — Снятие проклятья
+- **Resistance** — Сопротивление
+- **Resurrection** — Воскрешение
+- **Reverse gravity** — Изменение тяготения
+- **Revivify** — Возрождение
+- **Rope trick** — Трюк с верёвкой
+- **Sacred flame** — Священное пламя
+- **Sanctuary** — Убежище
+- **Scorching ray** — Палящий луч
+- **Scrying** — Наблюдение
+- **Searing smite** — Палящая кара
+- **See invisibility** — Видение невидимого
+- **Seeming** — Притворство
+- **Sending** — Послание
+- **Sequester** — Изоляция
+- **Shapechange** — Полное превращение
+- **Shatter** — Дребезги
+- **Shield** — Щит
+- **Shield of faith** — Щит веры
+- **Shillelagh** — Дубинка
+- **Shocking grasp** — Электрошок
+- **Silence** — Тишина
+- **Silent image** — Безмолвный образ
+- **Simulacrum** — Подобие

@@ -1,27 +1,21 @@
 ---
+id: bard
+type: class
 phb_chapter: 3
-phb_section: Бард
 phb_pages:
 - 51
 - 55
-phb_part: 1
-id: bard
-type: class
-tags:
-- class
-mud_status: partial
 quick: к8; Харизма; вдохновение барда; заклинатель; коллегия с 3 ур.
-mud_refs:
-  yaml: database/classes/classes.yaml#bard
+aliases:
+- bard
+- Бард
 ---
 
 # Бард
 
-> Источник: PHB, стр. 51–55. Только механика.
+> Источник: PHB 2014. Пересказ механики, не дословная копия.
 
-## Правила (PHB)
-
-<!-- phb:auto:summary -->
+## Механика
 ### Хиты и основа
 
 - Кость хитов: 1к8; коллегия бардов с 3 уровня.
@@ -51,14 +45,3 @@ mud_refs:
 
 - **Доблести:** Средние доспехи, щиты, воинское оружие; Боевое вдохновение; Дополнительная атака (6 ур.).
 - **Знаний:** 3 доп. навыка; Острое словцо; Дополнительные тайны магии (6 ур.).
-<!-- /phb:auto:summary -->
-
-## Реализация в MUD
-
-<!-- mud:implementation -->
-| Аспект | Значение |
-|--------|----------|
-| Статус | partial |
-| YAML | `database/classes/classes.yaml#bard` |
-| Core | `core/classes.py`, `core/subclasses.py` |
-<!-- /mud:implementation -->

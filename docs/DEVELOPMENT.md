@@ -120,11 +120,13 @@ dnd_mud/
     ├── README.md            # Индекс документации
     ├── DATA_SCHEMA.md       # Схема YAML (grants, subraces, mods)
     ├── DND_RULES.md         # Правила D&D 5e (оглавление PHB)
-    ├── rules/               # Справочник PHB (layout agent-v2)
+    ├── rules/               # Справочник PHB (layout agent-v2; только механика)
     │   ├── README.md        # Guide для агентов
+    │   ├── toc.yaml         # Каталог id → file
     │   ├── _index/lookup.yaml
     │   ├── chapters/        # Главы 00–11
-    │   └── entities/        # Карточки рас, классов, заклинаний…
+    │   ├── entities/        # Карточки рас, классов, заклинаний…
+    │   └── reference/       # Appendices, glossaries
     ├── MUD_PRD.md
     ├── ARCHITECTURE.md
     ├── API.md

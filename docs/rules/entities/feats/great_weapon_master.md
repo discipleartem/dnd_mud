@@ -1,46 +1,29 @@
 ---
+id: great_weapon_master
+type: feat
 phb_chapter: 6
-phb_section: Мастер большого оружия
 phb_pages:
 - 166
 - 172
-phb_part: 1
-id: great_weapon_master
-tags:
-- feat
-mud_status: partial
-type: feat
-mud_refs:
-  yaml: database/progression/feats.yaml#great_weapon_master
 quick: Бонусная атака при крите/убийстве; −5/+10 на тяжёлое оружие.
+aliases:
+- great_weapon_master
+- great weapon master
+- Мастер большого оружия
 ---
 
 # Мастер большого оружия
 
-> Источник: PHB, гл. 6. Пересказ из feats.yaml / PHB.
+> Источник: PHB 2014. Пересказ механики, не дословная копия.
 
 ## Параметры
 
-<!-- phb:auto:parameters -->
 | Параметр | Значение |
 |----------|----------|
 | Требование | — |
-<!-- /phb:auto:parameters -->
 
 ## Эффект
 
-<!-- phb:auto:effect -->
 - Вы научились использовать вес своего оружия, позволяя инерции усиливать ваши атаки. Вы получаете следующие преимущества:
 - В свой ход, когда вы совершаете критическое попадание рукопашным оружием или опускаете им хиты существа до 0, вы можете бонусным действием совершить одну атаку рукопашным оружием.
 - Перед совершением атаки рукопашным оружием со свойством «тяжёлое», которым вы владеете, вы можете принять штраф −5 к броску атаки. Если такая атака попадает, вы добавляете +10 к урону от этой атаки.
-<!-- /phb:auto:effect -->
-
-## Реализация в MUD
-
-<!-- mud:implementation -->
-| Аспект | Значение |
-|--------|----------|
-| Статус | partial |
-| YAML | `database/progression/feats.yaml#great_weapon_master` |
-| Core | `core/feats.py` |
-<!-- /mud:implementation -->

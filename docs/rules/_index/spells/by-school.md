@@ -1,653 +1,322 @@
----
-id: by-school
-type: index
----
-
-# Индекс заклинаний по школе
-
-## Воплощение
-
-- [Аура Живучести](level-3-aura_of_vitality.md) (`aura_of_vitality`)
-- [Божественное Благоволение](level-1-bozhestvennoe_blagovolenie.md) (`bozhestvennoe_blagovolenie`)
-- [Божественное Оружие](level-2-bozhestvennoe_oruzhie.md) (`bozhestvennoe_oruzhie`)
-- [Божественное Слово](level-7-bozhestvennoe_slovo.md) (`bozhestvennoe_slovo`)
-- [Волна Грома](level-1-volna_groma.md) (`volna_groma`)
-- [Волшебная Стрела](level-1-magic_missile.md) (`magic_missile`)
-- [Гневная Кара](level-1-gnevnaya_kara.md) (`gnevnaya_kara`)
-- [Горящий Клинок](level-2-goryashchiy_klinok.md) (`goryashchiy_klinok`)
-- [Град](level-4-grad.md) (`grad`)
-- [Длань Бигби](level-5-dlan_bigbi.md) (`dlan_bigbi`)
-- [Дневной Свет](level-3-dnevnoy_svet.md) (`dnevnoy_svet`)
-- [Дребезги](level-2-drebezgi.md) (`drebezgi`)
-- [Замедленный Огненный Шар](level-7-zamedlennyy_ognennyy_shar.md) (`zamedlennyy_ognennyy_shar`)
-- [Землетрясение](level-8-zemletryasenie.md) (`zemletryasenie`)
-- [Каменная Стена](level-5-kamennaya_stena.md) (`kamennaya_stena`)
-- [Клеймящая Кара](level-2-kleymyashchaya_kara.md) (`kleymyashchaya_kara`)
-- [Конус Холода](level-5-konus_kholoda.md) (`konus_kholoda`)
-- [Ледяная Стена](level-6-ledyanaya_stena.md) (`ledyanaya_stena`)
-- [Лечащее Слово](level-1-healing_word.md) (`healing_word`)
-- [Лечение Ран](level-1-cure_wounds.md) (`cure_wounds`)
-- [Лунный Луч](level-2-lunnyy_luch.md) (`lunnyy_luch`)
-- [Мантия Крестоносца](level-3-mantiya_krestonostsa.md) (`mantiya_krestonostsa`)
-- [Метеоритный Дождь](level-9-meteor_swarm.md) (`meteor_swarm`)
-- [Меч Морденкайнена](level-7-mech_mordenkaynena.md) (`mech_mordenkaynena`)
-- [Множественное Лечение Ран](level-5-mnozhestvennoe_lechenie_ran.md) (`mnozhestvennoe_lechenie_ran`)
-- [Молебен Лечения](level-2-moleben_lecheniya.md) (`moleben_lecheniya`)
-- [Молния](level-3-molniya.md) (`molniya`)
-- [Направленный Снаряд](level-1-napravlennyy_snaryad.md) (`napravlennyy_snaryad`)
-- [Небесный Огонь](level-5-nebesnyy_ogon.md) (`nebesnyy_ogon`)
-- [Оглушающая Кара](level-4-oglushayushchaya_kara.md) (`oglushayushchaya_kara`)
-- [Огненная Буря](level-7-ognennaya_burya.md) (`ognennaya_burya`)
-- [Огненная Стена](level-4-ognennaya_stena.md) (`ognennaya_stena`)
-- [Огненные Ладони](level-1-burning_hands.md) (`burning_hands`)
-- [Огненный Шар](level-3-fireball.md) (`fireball`)
-- [Огонь Фей](level-1-faerie_fire.md) (`faerie_fire`)
-- [Отилюков Ледяной Шар](level-6-otilyukov_ledyanoy_shar.md) (`otilyukov_ledyanoy_shar`)
-- [Отилюков Упругий Шар](level-4-otilyukov_uprugiy_shar.md) (`otilyukov_uprugiy_shar`)
-- [Палящая Кара](level-1-palyashchaya_kara.md) (`palyashchaya_kara`)
-- [Палящий Луч](level-2-palyashchiy_luch.md) (`palyashchiy_luch`)
-- [Пляшущая Молния](level-6-plyashushchaya_molniya.md) (`plyashushchaya_molniya`)
-- [Полное Исцеление](level-6-polnoe_istselenie.md) (`polnoe_istselenie`)
-- [Порыв Ветра](level-2-poryv_vetra.md) (`poryv_vetra`)
-- [Послание](level-3-poslanie.md) (`poslanie`)
-- [Предосторожность](level-6-predostorozhnost.md) (`predostorozhnost`)
-- [Радужные Брызги](level-7-raduzhnye_bryzgi.md) (`raduzhnye_bryzgi`)
-- [Разрушительная Волна](level-5-razrushitelnaya_volna.md) (`razrushitelnaya_volna`)
-- [Святилище](level-5-svyatilishche.md) (`svyatilishche`)
-- [Силовая Стена](level-5-silovaya_stena.md) (`silovaya_stena`)
-- [Солнечный Луч](level-6-solnechnyy_luch.md) (`solnechnyy_luch`)
-- [Солнечный Ожог](level-8-solnechnyy_ozhog.md) (`solnechnyy_ozhog`)
-- [Стена Ветров](level-3-stena_vetrov.md) (`stena_vetrov`)
-- [Стена Клинков](level-6-stena_klinkov.md) (`stena_klinkov`)
-- [Телепатия](level-8-telepatiya.md) (`telepatiya`)
-- [Тьма](level-2-tma.md) (`tma`)
-- [Узилище](level-7-uzilishche.md) (`uzilishche`)
-- [Цветной Шарик](level-1-tsvetnoy_sharik.md) (`tsvetnoy_sharik`)
-
-## Воплощение (Ритуал)
-
-- [Леомундова Хижина](level-3-leomundova_khizhina.md) (`leomundova_khizhina`)
-
-## Вызов
-
-- [Великолепный Особняк Морденкайнена](level-7-velikolepnyy_osobnyak_mordenkaynena.md) (`velikolepnyy_osobnyak_mordenkaynena`)
-- [Воспламеняющаяся Туча](level-8-vosplamenyayushchayasya_tucha.md) (`vosplamenyayushchayasya_tucha`)
-- [Голод Хадара](level-3-golod_khadara.md) (`golod_khadara`)
-- [Град Шипов](level-1-grad_shipov.md) (`grad_shipov`)
-- [Гроза Гнева](level-9-groza_gneva.md) (`groza_gneva`)
-- [Демиплан](level-8-demiplan.md) (`demiplan`)
-- [Древесный Путь](level-5-drevesnyy_put.md) (`drevesnyy_put`)
-- [Зловонное Облако](level-3-zlovonnoe_oblako.md) (`zlovonnoe_oblako`)
-- [Исполнение Желаний](level-9-ispolnenie_zhelaniy.md) (`ispolnenie_zhelaniy`)
-- [Круг Телепортации](level-5-krug_teleportatsii.md) (`krug_teleportatsii`)
-- [Лабиринт](level-8-labirint.md) (`labirint`)
-- [Леомундов Потайной Сундук](level-4-leomundov_potaynoy_sunduk.md) (`leomundov_potaynoy_sunduk`)
-- [Нашествие Насекомых](level-5-nashestvie_nasekomykh.md) (`nashestvie_nasekomykh`)
-- [Опутывание](level-1-oputyvanie.md) (`oputyvanie`)
-- [Опутывающий Удар](level-1-oputyvayushchiy_udar.md) (`oputyvayushchiy_udar`)
-- [Паутина](level-2-pautina.md) (`pautina`)
-- [Переносящая Дверь](level-4-perenosyashchaya_dver.md) (`perenosyashchaya_dver`)
-- [Планарный Союзник](level-6-planarnyy_soyuznik.md) (`planarnyy_soyuznik`)
-- [Поиск Скакуна](level-2-poisk_skakuna.md) (`poisk_skakuna`)
-- [Призыв Животных](level-3-prizyv_zhivotnykh.md) (`prizyv_zhivotnykh`)
-- [Призыв Заграждения](level-3-prizyv_zagrazhdeniya.md) (`prizyv_zagrazhdeniya`)
-- [Призыв Залпа](level-5-prizyv_zalpa.md) (`prizyv_zalpa`)
-- [Призыв Лесных Обитателей](level-4-prizyv_lesnykh_obitateley.md) (`prizyv_lesnykh_obitateley`)
-- [Призыв Малых Элементалей](level-4-prizyv_malykh_elementaley.md) (`prizyv_malykh_elementaley`)
-- [Призыв Молнии](level-3-prizyv_molnii.md) (`prizyv_molnii`)
-- [Призыв Небожителя](level-7-prizyv_nebozhitelya.md) (`prizyv_nebozhitelya`)
-- [Призыв Феи](level-6-prizyv_fei.md) (`prizyv_fei`)
-- [Призыв Элементаля](level-5-prizyv_elementalya.md) (`prizyv_elementalya`)
-- [Путешествие Через Растения](level-6-puteshestvie_cherez_rasteniya.md) (`puteshestvie_cherez_rasteniya`)
-- [Пылающий Шар](level-2-pylayushchiy_shar.md) (`pylayushchiy_shar`)
-- [Руки Хадара](level-1-ruki_khadara.md) (`ruki_khadara`)
-- [Скольжение](level-1-skolzhenie.md) (`skolzhenie`)
-- [Сотворение Пищи И Воды](level-3-sotvorenie_pishchi_i_vody.md) (`sotvorenie_pishchi_i_vody`)
-- [Страж Веры](level-4-strazh_very.md) (`strazh_very`)
-- [Телепортация](level-7-teleport.md) (`teleport`)
-- [Терновая Стена](level-6-ternovaya_stena.md) (`ternovaya_stena`)
-- [Туманное Облако](level-1-tumannoe_oblako.md) (`tumannoe_oblako`)
-- [Туманный Шаг](level-2-tumannyy_shag.md) (`tumannyy_shag`)
-- [Уход В Иной Мир](level-7-ukhod_v_inoy_mir.md) (`ukhod_v_inoy_mir`)
-- [Цепкая Лоза](level-4-tsepkaya_loza.md) (`tsepkaya_loza`)
-- [Цунами](level-8-tsunami.md) (`tsunami`)
-
-## Вызов (Ритуал)
-
-- [Дромиджево Появление](level-6-dromidzhevo_poyavlenie.md) (`dromidzhevo_poyavlenie`)
-- [Невидимый Слуга](level-1-nevidimyy_sluga.md) (`nevidimyy_sluga`)
-- [Поиск Фамильяра](level-1-poisk_familyara.md) (`poisk_familyara`)
-- [Тензеров Парящий Диск](level-1-tenzerov_paryashchiy_disk.md) (`tenzerov_paryashchiy_disk`)
-
-## Иллюзия
-
-- [Вещий Сон](level-5-veshchiy_son.md) (`veshchiy_son`)
-- [Воображаемая Сила](level-2-voobrazhaemaya_sila.md) (`voobrazhaemaya_sila`)
-- [Воображаемый Убийца](level-4-voobrazhaemyy_ubiytsa.md) (`voobrazhaemyy_ubiytsa`)
-- [Высшая Невидимость](level-4-vysshaya_nevidimost.md) (`vysshaya_nevidimost`)
-- [Гипнотический Узор](level-3-gipnoticheskiy_uzor.md) (`gipnoticheskiy_uzor`)
-- [Заданная Иллюзия](level-6-zadannaya_illyuziya.md) (`zadannaya_illyuziya`)
-- [Маскировка](level-1-maskirovka.md) (`maskirovka`)
-- [Мираж](level-4-mirazh.md) (`mirazh`)
-- [Невидимость](level-2-invisibility.md) (`invisibility`)
-- [Нистулова Ложная Магия](level-2-nistulova_lozhnaya_magiya.md) (`nistulova_lozhnaya_magiya`)
-- [Образ](level-3-obraz.md) (`obraz`)
-- [Отражения](level-2-otrazheniya.md) (`otrazheniya`)
-- [Подобие](level-7-podobie.md) (`podobie`)
-- [Притворство](level-5-pritvorstvo.md) (`pritvorstvo`)
-- [Проекция](level-7-proektsiya.md) (`proektsiya`)
-- [Размытый Образ](level-2-razmytyy_obraz.md) (`razmytyy_obraz`)
-- [Сверкающие Брызги](level-1-sverkayushchie_bryzgi.md) (`sverkayushchie_bryzgi`)
-- [Смертный Ужас](level-9-smertnyy_uzhas.md) (`smertnyy_uzhas`)
-- [Сотворение](level-5-sotvorenie.md) (`sotvorenie`)
-- [Таинственный Мираж](level-7-tainstvennyy_mirazh.md) (`tainstvennyy_mirazh`)
-- [Фальшивый Двойник](level-5-falshivyy_dvoynik.md) (`falshivyy_dvoynik`)
-
-## Иллюзия (Ритуал)
-
-- [Волшебные Уста](level-2-major_image.md) (`major_image`)
-- [Невидимое Письмо](level-1-nevidimoe_pismo.md) (`nevidimoe_pismo`)
-- [Призрачный Скакун](level-3-prizrachnyy_skakun.md) (`prizrachnyy_skakun`)
-- [Тишина](level-2-tishina.md) (`tishina`)
-
-## Некромантия
-
-- [Возрождение](level-3-vozrozhdenie.md) (`vozrozhdenie`)
-- [Волшебный Сосуд](level-6-volshebnyy_sosud.md) (`volshebnyy_sosud`)
-- [Воскрешение](level-7-resurrection.md) (`resurrection`)
-- [Восставший Труп](level-3-vosstavshiy_trup.md) (`vosstavshiy_trup`)
-- [Двойник](level-8-dvoynik.md) (`dvoynik`)
-- [Заражение](level-5-zarazhenie.md) (`zarazhenie`)
-- [Истинное Воскрешение](level-9-istinnoe_voskreshenie.md) (`istinnoe_voskreshenie`)
-- [Круг Смерти](level-6-krug_smerti.md) (`krug_smerti`)
-- [Луч Болезни](level-1-luch_bolezni.md) (`luch_bolezni`)
-- [Луч Слабости](level-2-luch_slabosti.md) (`luch_slabosti`)
-- [Нанесение Ран](level-1-nanesenie_ran.md) (`nanesenie_ran`)
-- [Оживление](level-5-ozhivlenie.md) (`ozhivlenie`)
-- [Перст Смерти](level-7-perst_smerti.md) (`perst_smerti`)
-- [Прикосновение Вампира](level-3-prikosnovenie_vampira.md) (`prikosnovenie_vampira`)
-- [Проклятие](level-3-proklyatie.md) (`proklyatie`)
-- [Псевдожизнь](level-1-psevdozhizn.md) (`psevdozhizn`)
-- [Разговор С Мёртвыми](level-3-razgovor_s_mertvymi.md) (`razgovor_s_mertvymi`)
-- [Разящее Око](level-6-razyashchee_oko.md) (`razyashchee_oko`)
-- [Сотворение Нежити](level-6-sotvorenie_nezhiti.md) (`sotvorenie_nezhiti`)
-- [Усыхание](level-4-usykhanie.md) (`usykhanie`)
-
-## Некромантия (Ритуал)
-
-- [Нетленные Останки](level-2-netlennye_ostanki.md) (`netlennye_ostanki`)
-- [Притворная Смерть](level-3-pritvornaya_smert.md) (`pritvornaya_smert`)
-
-## Ограждение
-
-- [Аура Жизни](level-4-aura_of_life.md) (`aura_of_life`)
-- [Аура Очищения](level-4-aura_of_purity.md) (`aura_of_purity`)
-- [Аура Святости](level-8-aura_svyatosti.md) (`aura_svyatosti`)
-- [Бесследное Передвижение](level-2-pass_without_trace.md) (`pass_without_trace`)
-- [Волшебный Замок](level-2-volshebnyy_zamok.md) (`volshebnyy_zamok`)
-- [Высшее Восстановление](level-5-vysshee_vosstanovlenie.md) (`vysshee_vosstanovlenie`)
-- [Доспех Агатиса](level-1-dospekh_agatisa.md) (`dospekh_agatisa`)
-- [Доспехи Мага](level-1-dospekhi_maga.md) (`dospekhi_maga`)
-- [Заточение](level-9-zatochenie.md) (`zatochenie`)
-- [Защита От Добра И Зла](level-1-zashchita_ot_dobra_i_zla.md) (`zashchita_ot_dobra_i_zla`)
-- [Защита От Смерти](level-4-zashchita_ot_smerti.md) (`zashchita_ot_smerti`)
-- [Защита От Энергии](level-3-zashchita_ot_energii.md) (`zashchita_ot_energii`)
-- [Защита От Яда](level-2-zashchita_ot_yada.md) (`zashchita_ot_yada`)
-- [Знак](level-7-znak.md) (`znak`)
-- [Изгнание](level-4-izgnanie.md) (`izgnanie`)
-- [Изгоняющая Кара](level-5-izgonyayushchaya_kara.md) (`izgonyayushchaya_kara`)
-- [Каменная Кожа](level-4-kamennaya_kozha.md) (`kamennaya_kozha`)
-- [Малое Восстановление](level-2-maloe_vosstanovlenie.md) (`maloe_vosstanovlenie`)
-- [Маяк Надежды](level-3-mayak_nadezhdy.md) (`mayak_nadezhdy`)
-- [Необнаружимость](level-3-neobnaruzhimost.md) (`neobnaruzhimost`)
-- [Охранные Руны](level-3-okhrannye_runy.md) (`okhrannye_runy`)
-- [Планарные Узы](level-5-planarnye_uzy.md) (`planarnye_uzy`)
-- [Подмога](level-2-podmoga.md) (`podmoga`)
-- [Преграда Магии](level-8-pregrada_magii.md) (`pregrada_magii`)
-- [Радужная Стена](level-9-raduzhnaya_stena.md) (`raduzhnaya_stena`)
-- [Рассеивание Магии](level-3-dispel_magic.md) (`dispel_magic`)
-- [Свобода Перемещения](level-4-svoboda_peremeshcheniya.md) (`svoboda_peremeshcheniya`)
-- [Снятие Проклятья](level-3-snyatie_proklyatya.md) (`snyatie_proklyatya`)
-- [Сокрытие Разума](level-8-sokrytie_razuma.md) (`sokrytie_razuma`)
-- [Стражи](level-6-strazhi.md) (`strazhi`)
-- [Сфера Неуязвимости](level-6-sfera_neuyazvimosti.md) (`sfera_neuyazvimosti`)
-- [Убежище](level-1-ubezhishche.md) (`ubezhishche`)
-- [Щит Веры](level-1-shield_of_faith.md) (`shield_of_faith`)
-
-## Ограждение (Ритуал)
-
-- [Запрет](level-6-zapret.md) (`zapret`)
-- [Сигнал Тревоги](level-1-signal_trevogi.md) (`signal_trevogi`)
-
-## Очарование
-
-- [Благословение](level-1-bless.md) (`bless`)
-- [Вызов На Дуэль](level-1-vyzov_na_duel.md) (`vyzov_na_duel`)
-- [Героизм](level-1-heroism.md) (`heroism`)
-- [Диссонирующий Шёпот](level-1-dissoniruyushchiy_shepot.md) (`dissoniruyushchiy_shepot`)
-- [Дружба С Животными](level-1-druzhba_s_zhivotnymi.md) (`druzhba_s_zhivotnymi`)
-- [Жуткий Смех Таши](level-1-zhutkiy_smekh_tashi.md) (`zhutkiy_smekh_tashi`)
-- [Изменение Памяти](level-5-izmenenie_pamyati.md) (`izmenenie_pamyati`)
-- [Корона Безумия](level-2-korona_bezumiya.md) (`korona_bezumiya`)
-- [Множественное Внушение](level-6-mnozhestvennoe_vnushenie.md) (`mnozhestvennoe_vnushenie`)
-- [Обет](level-5-obet.md) (`obet`)
-- [Очарование Личности](level-1-charm_person.md) (`charm_person`)
-- [Подчинение Зверя](level-4-podchinenie_zverya.md) (`podchinenie_zverya`)
-- [Подчинение Личности](level-5-podchinenie_lichnosti.md) (`podchinenie_lichnosti`)
-- [Подчинение Чудовища](level-8-podchinenie_chudovishcha.md) (`podchinenie_chudovishcha`)
-- [Порча](level-1-porcha.md) (`porcha`)
-- [Приказ](level-1-prikaz.md) (`prikaz`)
-- [Принуждение](level-4-prinuzhdenie.md) (`prinuzhdenie`)
-- [Речь Златоуста](level-2-rech_zlatousta.md) (`rech_zlatousta`)
-- [Сглаз](level-1-sglaz.md) (`sglaz`)
-- [Слабоумие](level-8-slaboumie.md) (`slaboumie`)
-- [Смятение](level-4-smyatenie.md) (`smyatenie`)
-- [Удержание Личности](level-2-uderzhanie_lichnosti.md) (`uderzhanie_lichnosti`)
-- [Удержание Чудовища](level-5-uderzhanie_chudovishcha.md) (`uderzhanie_chudovishcha`)
-- [Умиротворение](level-2-umirotvorenie.md) (`umirotvorenie`)
-- [Усыпление](level-1-sleep.md) (`sleep`)
-
-## Очарование (Ритуал)
-
-- [Почтовое Животное](level-2-pochtovoe_zhivotnoe.md) (`pochtovoe_zhivotnoe`)
-
-## Преобразование
-
-- [Быстрый Колчан](level-5-bystryy_kolchan.md) (`bystryy_kolchan`)
-- [Власть Над Погодой](level-8-vlast_nad_pogodoy.md) (`vlast_nad_pogodoy`)
-- [Газообразная Форма](level-3-gaseous_form.md) (`gaseous_form`)
-- [Гигантское Насекомое](level-4-gigantskoe_nasekomoe.md) (`gigantskoe_nasekomoe`)
-- [Движение Почвы](level-6-dvizhenie_pochvy.md) (`dvizhenie_pochvy`)
-- [Завеса Стрел](level-2-zavesa_strel.md) (`zavesa_strel`)
-- [Замедление](level-3-zamedlenie.md) (`zamedlenie`)
-- [Изготовление](level-4-izgotovlenie.md) (`izgotovlenie`)
-- [Изменение Тяготения](level-7-izmenenie_tyagoteniya.md) (`izmenenie_tyagoteniya`)
-- [Изменение Формы Камня](level-4-izmenenie_formy_kamnya.md) (`izmenenie_formy_kamnya`)
-- [Изоляция](level-7-izolyatsiya.md) (`izolyatsiya`)
-- [Левитация](level-2-levitatsiya.md) (`levitatsiya`)
-- [Магическое Оружие](level-2-magicheskoe_oruzhie.md) (`magicheskoe_oruzhie`)
-- [Мерцание](level-3-mertsanie.md) (`mertsanie`)
-- [Находчивость](level-8-nakhodchivost.md) (`nakhodchivost`)
-- [Окаменение](level-6-okamenenie.md) (`okamenenie`)
-- [Остановка Времени](level-9-ostanovka_vremeni.md) (`ostanovka_vremeni`)
-- [Открывание](level-2-otkryvanie.md) (`otkryvanie`)
-- [Паук](level-2-pauk.md) (`pauk`)
-- [Полёт](level-3-fly.md) (`fly`)
-- [Полное Превращение](level-9-polnoe_prevrashchenie.md) (`polnoe_prevrashchenie`)
-- [Поспешное Отступление](level-1-pospeshnoe_otstuplenie.md) (`pospeshnoe_otstuplenie`)
-- [Превращение В Животных](level-8-prevrashchenie_v_zhivotnykh.md) (`prevrashchenie_v_zhivotnykh`)
-- [Пробуждение Разума](level-5-probuzhdenie_razuma.md) (`probuzhdenie_razuma`)
-- [Прыжок](level-1-pryzhok.md) (`pryzhok`)
-- [Разговор С Растениями](level-3-razgovor_s_rasteniyami.md) (`razgovor_s_rasteniyami`)
-- [Раскалённый Металл](level-2-raskalennyy_metall.md) (`raskalennyy_metall`)
-- [Распад](level-6-raspad.md) (`raspad`)
-- [Регенерация](level-7-regeneratsiya.md) (`regeneratsiya`)
-- [Рост Растений](level-3-rost_rasteniy.md) (`rost_rasteniy`)
-- [Создание Прохода](level-5-sozdanie_prokhoda.md) (`sozdanie_prokhoda`)
-- [Сотворение Или Уничтожение Воды](level-1-sotvorenie_ili_unichtozhenie_vody.md) (`sotvorenie_ili_unichtozhenie_vody`)
-- [Стихийное Оружие](level-3-stikhiynoe_oruzhie.md) (`stikhiynoe_oruzhie`)
-- [Тёмное Зрение](level-2-temnoe_zrenie.md) (`temnoe_zrenie`)
-- [Телекинез](level-5-telekinez.md) (`telekinez`)
-- [Трюк С Верёвкой](level-2-tryuk_s_verevkoy.md) (`tryuk_s_verevkoy`)
-- [Ускорение](level-3-uskorenie.md) (`uskorenie`)
-- [Хождение По Ветру](level-6-khozhdenie_po_vetru.md) (`khozhdenie_po_vetru`)
-
-## Преобразование (Ритуал)
-
-- [Очищение Пищи И Питья](level-1-ochishchenie_pishchi_i_pitya.md) (`ochishchenie_pishchi_i_pitya`)
-- [Подводное Дыхание](level-3-podvodnoe_dykhanie.md) (`podvodnoe_dykhanie`)
-- [Слияние С Камнем](level-3-sliyanie_s_kamnem.md) (`sliyanie_s_kamnem`)
-- [Хождение По Воде](level-3-khozhdenie_po_vode.md) (`khozhdenie_po_vode`)
-
-## Прорицание
-
-- [Видение Невидимого](level-2-videnie_nevidimogo.md) (`videnie_nevidimogo`)
-- [Истинное Зрение](level-6-istinnoe_zrenie.md) (`istinnoe_zrenie`)
-- [Магический Глаз](level-4-magicheskiy_glaz.md) (`magicheskiy_glaz`)
-- [Метка Охотника](level-1-metka_okhotnika.md) (`metka_okhotnika`)
-- [Наблюдение](level-5-nablyudenie.md) (`nablyudenie`)
-- [Обнаружение Мыслей](level-2-obnaruzhenie_mysley.md) (`obnaruzhenie_mysley`)
-- [Подсматривание](level-3-podsmatrivanie.md) (`podsmatrivanie`)
-- [Поиск Ловушек](level-2-poisk_lovushek.md) (`poisk_lovushek`)
-- [Поиск Пути](level-6-poisk_puti.md) (`poisk_puti`)
-- [Поиск Существа](level-4-poisk_sushchestva.md) (`poisk_sushchestva`)
-- [Предвидение](level-9-predvidenie.md) (`predvidenie`)
-
-## Прорицание (Ритуал)
-
-- [Животные Чувства](level-2-zhivotnye_chuvstva.md) (`zhivotnye_chuvstva`)
-- [Ментальная Связь Рэри](level-5-mentalnaya_svyaz_reri.md) (`mentalnaya_svyaz_reri`)
-- [Обнаружение Магии](level-1-detect_magic.md) (`detect_magic`)
-- [Общение](level-5-obshchenie.md) (`obshchenie`)
-- [Общение С Природой](level-5-obshchenie_s_prirodoy.md) (`obshchenie_s_prirodoy`)
-- [Поиск Животных Или Растений](level-2-poisk_zhivotnykh_ili_rasteniy.md) (`poisk_zhivotnykh_ili_rasteniy`)
-- [Понимание Языков](level-1-ponimanie_yazykov.md) (`ponimanie_yazykov`)
-- [Предсказание](level-4-predskazanie.md) (`predskazanie`)
-- [Разговор С Животными](level-1-razgovor_s_zhivotnymi.md) (`razgovor_s_zhivotnymi`)
-- [Связь С Иным Миром](level-5-svyaz_s_inym_mirom.md) (`svyaz_s_inym_mirom`)
-
-<!-- phb:auto:indexes -->
-# Индекс заклинаний по школе
-
-## Воплощение
-
-- [Аура Живучести](../entities/spells/aura_of_vitality.md) (`aura_of_vitality`)
-- [Божественное Благоволение](../entities/spells/bozhestvennoe_blagovolenie.md) (`bozhestvennoe_blagovolenie`)
-- [Божественное Оружие](../entities/spells/bozhestvennoe_oruzhie.md) (`bozhestvennoe_oruzhie`)
-- [Божественное Слово](../entities/spells/bozhestvennoe_slovo.md) (`bozhestvennoe_slovo`)
-- [Волна Грома](../entities/spells/volna_groma.md) (`volna_groma`)
-- [Волшебная Стрела](../entities/spells/magic_missile.md) (`magic_missile`)
-- [Гневная Кара](../entities/spells/gnevnaya_kara.md) (`gnevnaya_kara`)
-- [Горящий Клинок](../entities/spells/goryashchiy_klinok.md) (`goryashchiy_klinok`)
-- [Град](../entities/spells/grad.md) (`grad`)
-- [Длань Бигби](../entities/spells/dlan_bigbi.md) (`dlan_bigbi`)
-- [Дневной Свет](../entities/spells/dnevnoy_svet.md) (`dnevnoy_svet`)
-- [Дребезги](../entities/spells/drebezgi.md) (`drebezgi`)
-- [Замедленный Огненный Шар](../entities/spells/zamedlennyy_ognennyy_shar.md) (`zamedlennyy_ognennyy_shar`)
-- [Землетрясение](../entities/spells/zemletryasenie.md) (`zemletryasenie`)
-- [Каменная Стена](../entities/spells/kamennaya_stena.md) (`kamennaya_stena`)
-- [Клеймящая Кара](../entities/spells/kleymyashchaya_kara.md) (`kleymyashchaya_kara`)
-- [Конус Холода](../entities/spells/konus_kholoda.md) (`konus_kholoda`)
-- [Ледяная Стена](../entities/spells/ledyanaya_stena.md) (`ledyanaya_stena`)
-- [Лечащее Слово](../entities/spells/healing_word.md) (`healing_word`)
-- [Лечение Ран](../entities/spells/cure_wounds.md) (`cure_wounds`)
-- [Лунный Луч](../entities/spells/lunnyy_luch.md) (`lunnyy_luch`)
-- [Мантия Крестоносца](../entities/spells/mantiya_krestonostsa.md) (`mantiya_krestonostsa`)
-- [Метеоритный Дождь](../entities/spells/meteor_swarm.md) (`meteor_swarm`)
-- [Меч Морденкайнена](../entities/spells/mech_mordenkaynena.md) (`mech_mordenkaynena`)
-- [Множественное Лечение Ран](../entities/spells/mnozhestvennoe_lechenie_ran.md) (`mnozhestvennoe_lechenie_ran`)
-- [Молебен Лечения](../entities/spells/moleben_lecheniya.md) (`moleben_lecheniya`)
-- [Молния](../entities/spells/molniya.md) (`molniya`)
-- [Молниевая Стрела](../entities/spells/lightning_bolt.md) (`lightning_bolt`)
-- [Направленный Снаряд](../entities/spells/napravlennyy_snaryad.md) (`napravlennyy_snaryad`)
-- [Небесный Огонь](../entities/spells/nebesnyy_ogon.md) (`nebesnyy_ogon`)
-- [Оглушающая Кара](../entities/spells/oglushayushchaya_kara.md) (`oglushayushchaya_kara`)
-- [Огненная Буря](../entities/spells/ognennaya_burya.md) (`ognennaya_burya`)
-- [Огненная Стена](../entities/spells/ognennaya_stena.md) (`ognennaya_stena`)
-- [Огненные Ладони](../entities/spells/burning_hands.md) (`burning_hands`)
-- [Огненный Шар](../entities/spells/fireball.md) (`fireball`)
-- [Огонь Фей](../entities/spells/faerie_fire.md) (`faerie_fire`)
-- [Отилюков Ледяной Шар](../entities/spells/otilyukov_ledyanoy_shar.md) (`otilyukov_ledyanoy_shar`)
-- [Отилюков Упругий Шар](../entities/spells/otilyukov_uprugiy_shar.md) (`otilyukov_uprugiy_shar`)
-- [Палящая Кара](../entities/spells/palyashchaya_kara.md) (`palyashchaya_kara`)
-- [Палящий Луч](../entities/spells/palyashchiy_luch.md) (`palyashchiy_luch`)
-- [Пляшущая Молния](../entities/spells/plyashushchaya_molniya.md) (`plyashushchaya_molniya`)
-- [Полное Исцеление](../entities/spells/polnoe_istselenie.md) (`polnoe_istselenie`)
-- [Порыв Ветра](../entities/spells/poryv_vetra.md) (`poryv_vetra`)
-- [Послание](../entities/spells/poslanie.md) (`poslanie`)
-- [Предосторожность](../entities/spells/predostorozhnost.md) (`predostorozhnost`)
-- [Радужные Брызги](../entities/spells/raduzhnye_bryzgi.md) (`raduzhnye_bryzgi`)
-- [Разрушительная Волна](../entities/spells/razrushitelnaya_volna.md) (`razrushitelnaya_volna`)
-- [Святилище](../entities/spells/svyatilishche.md) (`svyatilishche`)
-- [Силовая Стена](../entities/spells/silovaya_stena.md) (`silovaya_stena`)
-- [Солнечный Луч](../entities/spells/solnechnyy_luch.md) (`solnechnyy_luch`)
-- [Солнечный Ожог](../entities/spells/solnechnyy_ozhog.md) (`solnechnyy_ozhog`)
-- [Стена Ветров](../entities/spells/stena_vetrov.md) (`stena_vetrov`)
-- [Стена Клинков](../entities/spells/stena_klinkov.md) (`stena_klinkov`)
-- [Телепатия](../entities/spells/telepatiya.md) (`telepatiya`)
-- [Тьма](../entities/spells/tma.md) (`tma`)
-- [Узилище](../entities/spells/uzilishche.md) (`uzilishche`)
-- [Цветной Шарик](../entities/spells/tsvetnoy_sharik.md) (`tsvetnoy_sharik`)
-
-## Воплощение (Ритуал)
-
-- [Леомундова Хижина](../entities/spells/leomundova_khizhina.md) (`leomundova_khizhina`)
-
-## Вызов
-
-- [Великолепный Особняк Морденкайнена](../entities/spells/velikolepnyy_osobnyak_mordenkaynena.md) (`velikolepnyy_osobnyak_mordenkaynena`)
-- [Воспламеняющаяся Туча](../entities/spells/vosplamenyayushchayasya_tucha.md) (`vosplamenyayushchayasya_tucha`)
-- [Голод Хадара](../entities/spells/golod_khadara.md) (`golod_khadara`)
-- [Град Шипов](../entities/spells/grad_shipov.md) (`grad_shipov`)
-- [Гроза Гнева](../entities/spells/groza_gneva.md) (`groza_gneva`)
-- [Демиплан](../entities/spells/demiplan.md) (`demiplan`)
-- [Древесный Путь](../entities/spells/drevesnyy_put.md) (`drevesnyy_put`)
-- [Зловонное Облако](../entities/spells/zlovonnoe_oblako.md) (`zlovonnoe_oblako`)
-- [Исполнение Желаний](../entities/spells/ispolnenie_zhelaniy.md) (`ispolnenie_zhelaniy`)
-- [Круг Телепортации](../entities/spells/krug_teleportatsii.md) (`krug_teleportatsii`)
-- [Лабиринт](../entities/spells/labirint.md) (`labirint`)
-- [Леомундов Потайной Сундук](../entities/spells/leomundov_potaynoy_sunduk.md) (`leomundov_potaynoy_sunduk`)
-- [Нашествие Насекомых](../entities/spells/nashestvie_nasekomykh.md) (`nashestvie_nasekomykh`)
-- [Опутывание](../entities/spells/oputyvanie.md) (`oputyvanie`)
-- [Опутывающий Удар](../entities/spells/oputyvayushchiy_udar.md) (`oputyvayushchiy_udar`)
-- [Паутина](../entities/spells/pautina.md) (`pautina`)
-- [Переносящая Дверь](../entities/spells/perenosyashchaya_dver.md) (`perenosyashchaya_dver`)
-- [Планарный Союзник](../entities/spells/planarnyy_soyuznik.md) (`planarnyy_soyuznik`)
-- [Поиск Скакуна](../entities/spells/poisk_skakuna.md) (`poisk_skakuna`)
-- [Призыв Животных](../entities/spells/prizyv_zhivotnykh.md) (`prizyv_zhivotnykh`)
-- [Призыв Заграждения](../entities/spells/prizyv_zagrazhdeniya.md) (`prizyv_zagrazhdeniya`)
-- [Призыв Залпа](../entities/spells/prizyv_zalpa.md) (`prizyv_zalpa`)
-- [Призыв Лесных Обитателей](../entities/spells/prizyv_lesnykh_obitateley.md) (`prizyv_lesnykh_obitateley`)
-- [Призыв Малых Элементалей](../entities/spells/prizyv_malykh_elementaley.md) (`prizyv_malykh_elementaley`)
-- [Призыв Молнии](../entities/spells/prizyv_molnii.md) (`prizyv_molnii`)
-- [Призыв Небожителя](../entities/spells/prizyv_nebozhitelya.md) (`prizyv_nebozhitelya`)
-- [Призыв Феи](../entities/spells/prizyv_fei.md) (`prizyv_fei`)
-- [Призыв Элементаля](../entities/spells/prizyv_elementalya.md) (`prizyv_elementalya`)
-- [Путешествие Через Растения](../entities/spells/puteshestvie_cherez_rasteniya.md) (`puteshestvie_cherez_rasteniya`)
-- [Пылающий Шар](../entities/spells/pylayushchiy_shar.md) (`pylayushchiy_shar`)
-- [Руки Хадара](../entities/spells/ruki_khadara.md) (`ruki_khadara`)
-- [Скольжение](../entities/spells/skolzhenie.md) (`skolzhenie`)
-- [Сотворение Пищи И Воды](../entities/spells/sotvorenie_pishchi_i_vody.md) (`sotvorenie_pishchi_i_vody`)
-- [Страж Веры](../entities/spells/strazh_very.md) (`strazh_very`)
-- [Телепортация](../entities/spells/teleport.md) (`teleport`)
-- [Терновая Стена](../entities/spells/ternovaya_stena.md) (`ternovaya_stena`)
-- [Туманное Облако](../entities/spells/tumannoe_oblako.md) (`tumannoe_oblako`)
-- [Туманный Шаг](../entities/spells/tumannyy_shag.md) (`tumannyy_shag`)
-- [Уход В Иной Мир](../entities/spells/ukhod_v_inoy_mir.md) (`ukhod_v_inoy_mir`)
-- [Цепкая Лоза](../entities/spells/tsepkaya_loza.md) (`tsepkaya_loza`)
-- [Цунами](../entities/spells/tsunami.md) (`tsunami`)
-
-## Вызов (Ритуал)
-
-- [Дромиджево Появление](../entities/spells/dromidzhevo_poyavlenie.md) (`dromidzhevo_poyavlenie`)
-- [Невидимый Слуга](../entities/spells/nevidimyy_sluga.md) (`nevidimyy_sluga`)
-- [Поиск Фамильяра](../entities/spells/poisk_familyara.md) (`poisk_familyara`)
-- [Тензеров Парящий Диск](../entities/spells/tenzerov_paryashchiy_disk.md) (`tenzerov_paryashchiy_disk`)
-
-## Иллюзия
-
-- [Вещий Сон](../entities/spells/veshchiy_son.md) (`veshchiy_son`)
-- [Воображаемая Сила](../entities/spells/voobrazhaemaya_sila.md) (`voobrazhaemaya_sila`)
-- [Воображаемый Убийца](../entities/spells/voobrazhaemyy_ubiytsa.md) (`voobrazhaemyy_ubiytsa`)
-- [Высшая Невидимость](../entities/spells/vysshaya_nevidimost.md) (`vysshaya_nevidimost`)
-- [Гипнотический Узор](../entities/spells/gipnoticheskiy_uzor.md) (`gipnoticheskiy_uzor`)
-- [Заданная Иллюзия](../entities/spells/zadannaya_illyuziya.md) (`zadannaya_illyuziya`)
-- [Маскировка](../entities/spells/maskirovka.md) (`maskirovka`)
-- [Мираж](../entities/spells/mirazh.md) (`mirazh`)
-- [Невидимость](../entities/spells/invisibility.md) (`invisibility`)
-- [Нистулова Ложная Магия](../entities/spells/nistulova_lozhnaya_magiya.md) (`nistulova_lozhnaya_magiya`)
-- [Образ](../entities/spells/obraz.md) (`obraz`)
-- [Отражения](../entities/spells/otrazheniya.md) (`otrazheniya`)
-- [Подобие](../entities/spells/podobie.md) (`podobie`)
-- [Притворство](../entities/spells/pritvorstvo.md) (`pritvorstvo`)
-- [Проекция](../entities/spells/proektsiya.md) (`proektsiya`)
-- [Размытый Образ](../entities/spells/razmytyy_obraz.md) (`razmytyy_obraz`)
-- [Сверкающие Брызги](../entities/spells/sverkayushchie_bryzgi.md) (`sverkayushchie_bryzgi`)
-- [Смертный Ужас](../entities/spells/smertnyy_uzhas.md) (`smertnyy_uzhas`)
-- [Сотворение](../entities/spells/sotvorenie.md) (`sotvorenie`)
-- [Таинственный Мираж](../entities/spells/tainstvennyy_mirazh.md) (`tainstvennyy_mirazh`)
-- [Фальшивый Двойник](../entities/spells/falshivyy_dvoynik.md) (`falshivyy_dvoynik`)
-
-## Иллюзия (Ритуал)
-
-- [Волшебные Уста](../entities/spells/major_image.md) (`major_image`)
-- [Невидимое Письмо](../entities/spells/nevidimoe_pismo.md) (`nevidimoe_pismo`)
-- [Призрачный Скакун](../entities/spells/prizrachnyy_skakun.md) (`prizrachnyy_skakun`)
-- [Тишина](../entities/spells/tishina.md) (`tishina`)
-
-## Некромантия
-
-- [Возрождение](../entities/spells/vozrozhdenie.md) (`vozrozhdenie`)
-- [Волшебный Сосуд](../entities/spells/volshebnyy_sosud.md) (`volshebnyy_sosud`)
-- [Воскрешение](../entities/spells/resurrection.md) (`resurrection`)
-- [Восставший Труп](../entities/spells/vosstavshiy_trup.md) (`vosstavshiy_trup`)
-- [Двойник](../entities/spells/dvoynik.md) (`dvoynik`)
-- [Заражение](../entities/spells/zarazhenie.md) (`zarazhenie`)
-- [Истинное Воскрешение](../entities/spells/istinnoe_voskreshenie.md) (`istinnoe_voskreshenie`)
-- [Круг Смерти](../entities/spells/krug_smerti.md) (`krug_smerti`)
-- [Луч Болезни](../entities/spells/luch_bolezni.md) (`luch_bolezni`)
-- [Луч Слабости](../entities/spells/luch_slabosti.md) (`luch_slabosti`)
-- [Нанесение Ран](../entities/spells/nanesenie_ran.md) (`nanesenie_ran`)
-- [Оживление](../entities/spells/ozhivlenie.md) (`ozhivlenie`)
-- [Перст Смерти](../entities/spells/perst_smerti.md) (`perst_smerti`)
-- [Прикосновение Вампира](../entities/spells/prikosnovenie_vampira.md) (`prikosnovenie_vampira`)
-- [Проклятие](../entities/spells/proklyatie.md) (`proklyatie`)
-- [Псевдожизнь](../entities/spells/psevdozhizn.md) (`psevdozhizn`)
-- [Разговор С Мёртвыми](../entities/spells/razgovor_s_mertvymi.md) (`razgovor_s_mertvymi`)
-- [Разящее Око](../entities/spells/razyashchee_oko.md) (`razyashchee_oko`)
-- [Сотворение Нежити](../entities/spells/sotvorenie_nezhiti.md) (`sotvorenie_nezhiti`)
-- [Усыхание](../entities/spells/usykhanie.md) (`usykhanie`)
-
-## Некромантия (Ритуал)
-
-- [Нетленные Останки](../entities/spells/netlennye_ostanki.md) (`netlennye_ostanki`)
-- [Притворная Смерть](../entities/spells/pritvornaya_smert.md) (`pritvornaya_smert`)
-
-## Ограждение
-
-- [Аура Жизни](../entities/spells/aura_of_life.md) (`aura_of_life`)
-- [Аура Очищения](../entities/spells/aura_of_purity.md) (`aura_of_purity`)
-- [Аура Святости](../entities/spells/aura_svyatosti.md) (`aura_svyatosti`)
-- [Бесследное Передвижение](../entities/spells/pass_without_trace.md) (`pass_without_trace`)
-- [Волшебный Замок](../entities/spells/volshebnyy_zamok.md) (`volshebnyy_zamok`)
-- [Высшее Восстановление](../entities/spells/vysshee_vosstanovlenie.md) (`vysshee_vosstanovlenie`)
-- [Доспех Агатиса](../entities/spells/dospekh_agatisa.md) (`dospekh_agatisa`)
-- [Доспехи Мага](../entities/spells/dospekhi_maga.md) (`dospekhi_maga`)
-- [Заточение](../entities/spells/zatochenie.md) (`zatochenie`)
-- [Защита От Добра И Зла](../entities/spells/zashchita_ot_dobra_i_zla.md) (`zashchita_ot_dobra_i_zla`)
-- [Защита От Смерти](../entities/spells/zashchita_ot_smerti.md) (`zashchita_ot_smerti`)
-- [Защита От Энергии](../entities/spells/zashchita_ot_energii.md) (`zashchita_ot_energii`)
-- [Защита От Яда](../entities/spells/zashchita_ot_yada.md) (`zashchita_ot_yada`)
-- [Знак](../entities/spells/znak.md) (`znak`)
-- [Изгнание](../entities/spells/izgnanie.md) (`izgnanie`)
-- [Изгоняющая Кара](../entities/spells/izgonyayushchaya_kara.md) (`izgonyayushchaya_kara`)
-- [Каменная Кожа](../entities/spells/kamennaya_kozha.md) (`kamennaya_kozha`)
-- [Малое Восстановление](../entities/spells/maloe_vosstanovlenie.md) (`maloe_vosstanovlenie`)
-- [Маяк Надежды](../entities/spells/mayak_nadezhdy.md) (`mayak_nadezhdy`)
-- [Необнаружимость](../entities/spells/neobnaruzhimost.md) (`neobnaruzhimost`)
-- [Охранные Руны](../entities/spells/okhrannye_runy.md) (`okhrannye_runy`)
-- [Планарные Узы](../entities/spells/planarnye_uzy.md) (`planarnye_uzy`)
-- [Подмога](../entities/spells/podmoga.md) (`podmoga`)
-- [Преграда Магии](../entities/spells/pregrada_magii.md) (`pregrada_magii`)
-- [Радужная Стена](../entities/spells/raduzhnaya_stena.md) (`raduzhnaya_stena`)
-- [Рассеивание Магии](../entities/spells/dispel_magic.md) (`dispel_magic`)
-- [Свобода Перемещения](../entities/spells/svoboda_peremeshcheniya.md) (`svoboda_peremeshcheniya`)
-- [Снятие Проклятья](../entities/spells/snyatie_proklyatya.md) (`snyatie_proklyatya`)
-- [Сокрытие Разума](../entities/spells/sokrytie_razuma.md) (`sokrytie_razuma`)
-- [Стражи](../entities/spells/strazhi.md) (`strazhi`)
-- [Сфера Неуязвимости](../entities/spells/sfera_neuyazvimosti.md) (`sfera_neuyazvimosti`)
-- [Убежище](../entities/spells/ubezhishche.md) (`ubezhishche`)
-- [Щит Веры](../entities/spells/shield_of_faith.md) (`shield_of_faith`)
-
-## Ограждение (Ритуал)
-
-- [Запрет](../entities/spells/zapret.md) (`zapret`)
-- [Сигнал Тревоги](../entities/spells/signal_trevogi.md) (`signal_trevogi`)
-
-## Очарование
-
-- [Благословение](../entities/spells/bless.md) (`bless`)
-- [Вызов На Дуэль](../entities/spells/vyzov_na_duel.md) (`vyzov_na_duel`)
-- [Героизм](../entities/spells/heroism.md) (`heroism`)
-- [Диссонирующий Шёпот](../entities/spells/dissoniruyushchiy_shepot.md) (`dissoniruyushchiy_shepot`)
-- [Дружба С Животными](../entities/spells/druzhba_s_zhivotnymi.md) (`druzhba_s_zhivotnymi`)
-- [Жуткий Смех Таши](../entities/spells/zhutkiy_smekh_tashi.md) (`zhutkiy_smekh_tashi`)
-- [Изменение Памяти](../entities/spells/izmenenie_pamyati.md) (`izmenenie_pamyati`)
-- [Корона Безумия](../entities/spells/korona_bezumiya.md) (`korona_bezumiya`)
-- [Множественное Внушение](../entities/spells/mnozhestvennoe_vnushenie.md) (`mnozhestvennoe_vnushenie`)
-- [Обет](../entities/spells/obet.md) (`obet`)
-- [Очарование Личности](../entities/spells/charm_person.md) (`charm_person`)
-- [Подчинение Зверя](../entities/spells/podchinenie_zverya.md) (`podchinenie_zverya`)
-- [Подчинение Личности](../entities/spells/podchinenie_lichnosti.md) (`podchinenie_lichnosti`)
-- [Подчинение Чудовища](../entities/spells/podchinenie_chudovishcha.md) (`podchinenie_chudovishcha`)
-- [Порча](../entities/spells/porcha.md) (`porcha`)
-- [Приказ](../entities/spells/prikaz.md) (`prikaz`)
-- [Принуждение](../entities/spells/prinuzhdenie.md) (`prinuzhdenie`)
-- [Речь Златоуста](../entities/spells/rech_zlatousta.md) (`rech_zlatousta`)
-- [Сглаз](../entities/spells/sglaz.md) (`sglaz`)
-- [Слабоумие](../entities/spells/slaboumie.md) (`slaboumie`)
-- [Смятение](../entities/spells/smyatenie.md) (`smyatenie`)
-- [Удержание Личности](../entities/spells/uderzhanie_lichnosti.md) (`uderzhanie_lichnosti`)
-- [Удержание Чудовища](../entities/spells/uderzhanie_chudovishcha.md) (`uderzhanie_chudovishcha`)
-- [Умиротворение](../entities/spells/umirotvorenie.md) (`umirotvorenie`)
-- [Усыпление](../entities/spells/sleep.md) (`sleep`)
-
-## Очарование (Ритуал)
-
-- [Почтовое Животное](../entities/spells/pochtovoe_zhivotnoe.md) (`pochtovoe_zhivotnoe`)
-
-## Преобразование
-
-- [Быстрый Колчан](../entities/spells/bystryy_kolchan.md) (`bystryy_kolchan`)
-- [Власть Над Погодой](../entities/spells/vlast_nad_pogodoy.md) (`vlast_nad_pogodoy`)
-- [Газообразная Форма](../entities/spells/gaseous_form.md) (`gaseous_form`)
-- [Гигантское Насекомое](../entities/spells/gigantskoe_nasekomoe.md) (`gigantskoe_nasekomoe`)
-- [Движение Почвы](../entities/spells/dvizhenie_pochvy.md) (`dvizhenie_pochvy`)
-- [Завеса Стрел](../entities/spells/zavesa_strel.md) (`zavesa_strel`)
-- [Замедление](../entities/spells/zamedlenie.md) (`zamedlenie`)
-- [Изготовление](../entities/spells/izgotovlenie.md) (`izgotovlenie`)
-- [Изменение Тяготения](../entities/spells/izmenenie_tyagoteniya.md) (`izmenenie_tyagoteniya`)
-- [Изменение Формы Камня](../entities/spells/izmenenie_formy_kamnya.md) (`izmenenie_formy_kamnya`)
-- [Изоляция](../entities/spells/izolyatsiya.md) (`izolyatsiya`)
-- [Левитация](../entities/spells/levitatsiya.md) (`levitatsiya`)
-- [Магическое Оружие](../entities/spells/magicheskoe_oruzhie.md) (`magicheskoe_oruzhie`)
-- [Мерцание](../entities/spells/mertsanie.md) (`mertsanie`)
-- [Находчивость](../entities/spells/nakhodchivost.md) (`nakhodchivost`)
-- [Окаменение](../entities/spells/okamenenie.md) (`okamenenie`)
-- [Остановка Времени](../entities/spells/ostanovka_vremeni.md) (`ostanovka_vremeni`)
-- [Открывание](../entities/spells/otkryvanie.md) (`otkryvanie`)
-- [Паук](../entities/spells/pauk.md) (`pauk`)
-- [Полёт](../entities/spells/fly.md) (`fly`)
-- [Полное Превращение](../entities/spells/polnoe_prevrashchenie.md) (`polnoe_prevrashchenie`)
-- [Поспешное Отступление](../entities/spells/pospeshnoe_otstuplenie.md) (`pospeshnoe_otstuplenie`)
-- [Превращение В Животных](../entities/spells/prevrashchenie_v_zhivotnykh.md) (`prevrashchenie_v_zhivotnykh`)
-- [Пробуждение Разума](../entities/spells/probuzhdenie_razuma.md) (`probuzhdenie_razuma`)
-- [Прыжок](../entities/spells/pryzhok.md) (`pryzhok`)
-- [Разговор С Растениями](../entities/spells/razgovor_s_rasteniyami.md) (`razgovor_s_rasteniyami`)
-- [Раскалённый Металл](../entities/spells/raskalennyy_metall.md) (`raskalennyy_metall`)
-- [Распад](../entities/spells/raspad.md) (`raspad`)
-- [Регенерация](../entities/spells/regeneratsiya.md) (`regeneratsiya`)
-- [Рост Растений](../entities/spells/rost_rasteniy.md) (`rost_rasteniy`)
-- [Создание Прохода](../entities/spells/sozdanie_prokhoda.md) (`sozdanie_prokhoda`)
-- [Сотворение Или Уничтожение Воды](../entities/spells/sotvorenie_ili_unichtozhenie_vody.md) (`sotvorenie_ili_unichtozhenie_vody`)
-- [Стихийное Оружие](../entities/spells/stikhiynoe_oruzhie.md) (`stikhiynoe_oruzhie`)
-- [Тёмное Зрение](../entities/spells/temnoe_zrenie.md) (`temnoe_zrenie`)
-- [Телекинез](../entities/spells/telekinez.md) (`telekinez`)
-- [Трюк С Верёвкой](../entities/spells/tryuk_s_verevkoy.md) (`tryuk_s_verevkoy`)
-- [Ускорение](../entities/spells/uskorenie.md) (`uskorenie`)
-- [Хождение По Ветру](../entities/spells/khozhdenie_po_vetru.md) (`khozhdenie_po_vetru`)
-
-## Преобразование (Ритуал)
-
-- [Очищение Пищи И Питья](../entities/spells/ochishchenie_pishchi_i_pitya.md) (`ochishchenie_pishchi_i_pitya`)
-- [Подводное Дыхание](../entities/spells/podvodnoe_dykhanie.md) (`podvodnoe_dykhanie`)
-- [Слияние С Камнем](../entities/spells/sliyanie_s_kamnem.md) (`sliyanie_s_kamnem`)
-- [Хождение По Воде](../entities/spells/khozhdenie_po_vode.md) (`khozhdenie_po_vode`)
-
-## Прорицание
-
-- [Видение Невидимого](../entities/spells/videnie_nevidimogo.md) (`videnie_nevidimogo`)
-- [Истинное Зрение](../entities/spells/istinnoe_zrenie.md) (`istinnoe_zrenie`)
-- [Магический Глаз](../entities/spells/magicheskiy_glaz.md) (`magicheskiy_glaz`)
-- [Метка Охотника](../entities/spells/metka_okhotnika.md) (`metka_okhotnika`)
-- [Наблюдение](../entities/spells/nablyudenie.md) (`nablyudenie`)
-- [Обнаружение Мыслей](../entities/spells/obnaruzhenie_mysley.md) (`obnaruzhenie_mysley`)
-- [Подсматривание](../entities/spells/podsmatrivanie.md) (`podsmatrivanie`)
-- [Поиск Ловушек](../entities/spells/poisk_lovushek.md) (`poisk_lovushek`)
-- [Поиск Пути](../entities/spells/poisk_puti.md) (`poisk_puti`)
-- [Поиск Существа](../entities/spells/poisk_sushchestva.md) (`poisk_sushchestva`)
-- [Предвидение](../entities/spells/predvidenie.md) (`predvidenie`)
-
-## Прорицание (Ритуал)
-
-- [Животные Чувства](../entities/spells/zhivotnye_chuvstva.md) (`zhivotnye_chuvstva`)
-- [Ментальная Связь Рэри](../entities/spells/mentalnaya_svyaz_reri.md) (`mentalnaya_svyaz_reri`)
-- [Обнаружение Магии](../entities/spells/detect_magic.md) (`detect_magic`)
-- [Общение](../entities/spells/obshchenie.md) (`obshchenie`)
-- [Общение С Природой](../entities/spells/obshchenie_s_prirodoy.md) (`obshchenie_s_prirodoy`)
-- [Поиск Животных Или Растений](../entities/spells/poisk_zhivotnykh_ili_rasteniy.md) (`poisk_zhivotnykh_ili_rasteniy`)
-- [Понимание Языков](../entities/spells/ponimanie_yazykov.md) (`ponimanie_yazykov`)
-- [Предсказание](../entities/spells/predskazanie.md) (`predskazanie`)
-- [Разговор С Животными](../entities/spells/razgovor_s_zhivotnymi.md) (`razgovor_s_zhivotnymi`)
-- [Связь С Иным Миром](../entities/spells/svyaz_s_inym_mirom.md) (`svyaz_s_inym_mirom`)
-<!-- /phb:auto:indexes -->
+# Заклинания по школе
+
+## abjuration
+
+- [`aura_of_life`](../../entities/spells/aura_of_life.md) — 4; abjuration; На себя (30-футовый радиус) [конц.] — Все невраждебные существа в ауре (включая вас) обладают сопротивлением к урону некротической энер… / От вас исходит защищающая
+- [`aura_of_purity`](../../entities/spells/aura_of_purity.md) — 4; abjuration; На себя (30-футовый радиус) [конц.] — Все невраждебные существа в ауре (включая вас) не могут заболеть, имеют сопротивление к урону ядо… / От вас исходит очищающая а
+- [`aura_svyatosti`](../../entities/spells/aura_svyatosti.md) — 8; abjuration; На себя [конц.] — это заклинание, используя ячейку 2 уровня или выше, вы можете сделать целью одно дополнительное с… / Пока заклинание активно, ваши атаки оружием пр
+- [`dispel_magic`](../../entities/spells/dispel_magic.md) — 3; abjuration; 120 футов
+- [`dospekh_agatisa`](../../entities/spells/dospekh_agatisa.md) — 1; abjuration; На себя — Если существо попадает по вам рукопашной атакой, пока у вас есть эти хиты, оно получает урон холо…
+- [`dospekhi_maga`](../../entities/spells/dospekhi_maga.md) — 1; abjuration; Касание
+- [`izgnanie`](../../entities/spells/izgnanie.md) — 4; abjuration; 60 футов [конц.]
+- [`izgonyayushchaya_kara`](../../entities/spells/izgonyayushchaya_kara.md) — 5; abjuration; На себя [конц.] — след. попадание +5к10 силовым; ≤50 HP — изгнание
+- [`kamennaya_kozha`](../../entities/spells/kamennaya_kozha.md) — 4; abjuration; Касание [конц.] — Пока заклинание активно, цель получает сопротивление к немагическому дробящему, колющему и рубяще…
+- [`maloe_vosstanovlenie`](../../entities/spells/maloe_vosstanovlenie.md) — 2; abjuration; Касание
+- [`mayak_nadezhdy`](../../entities/spells/mayak_nadezhdy.md) — 3; abjuration; 30 футов [конц.] — Пока заклинание активно, все цели совершают спасброски Мудрости и спасброски от смерти с преимуще…
+- [`neobnaruzhimost`](../../entities/spells/neobnaruzhimost.md) — 3; abjuration; Касание — Цель не может стать целью магии школы Прорицания, и её не воспринимают магические наблюдательные …
+- [`okhrannye_runy`](../../entities/spells/okhrannye_runy.md) — 3; abjuration; Касание — глиф: взрыв 5к8 (Лов) или хранимое заклинание
+- [`pass_without_trace`](../../entities/spells/pass_without_trace.md) — 2; abjuration; На себя [конц.]
+- [`planarnye_uzy`](../../entities/spells/planarnye_uzy.md) — 5; abjuration; 60 футов — В конце накладывания заклинания цель должна совершить спасбросок Харизмы.
+- [`podmoga`](../../entities/spells/podmoga.md) — 2; abjuration; 30 футов — На время длительности максимум хитов и текущие хиты всех целей увеличиваются на 5.
+- [`pregrada_magii`](../../entities/spells/pregrada_magii.md) — 8; abjuration; На себя (сфера радиусом 10 футов) [конц.] — Ячейка, потраченная на накладывание подавленного заклинания, всё равно тратится. / Вас окружает невидимая сфера антимагии
+- [`raduzhnaya_stena`](../../entities/spells/raduzhnaya_stena.md) — 9; abjuration; 60 футов — Если вы размещаете стену так, что она пройдёт по пространству, занятому существом, заклинание про… / Коснувшись очередного слоя, существо должно совершить
+- [`sfera_neuyazvimosti`](../../entities/spells/sfera_neuyazvimosti.md) — 6; abjuration; На себя (10-футовый радиус) [конц.] — Все заклинания 5 уровня и ниже, наложенные снаружи барьера, не могут подействовать на существ и п… / это заклинание, используя
+- [`shield_of_faith`](../../entities/spells/shield_of_faith.md) — 1; abjuration; 60 футов [конц.] — цель +2 КД
+- [`snyatie_proklyatya`](../../entities/spells/snyatie_proklyatya.md) — 3; abjuration; Касание
+- [`sokrytie_razuma`](../../entities/spells/sokrytie_razuma.md) — 8; abjuration; Касание — иммунитет к психич. урону и чтению мыслей
+- [`strazhi`](../../entities/spells/strazhi.md) — 6; abjuration; Касание — Вы можете также указать пароль, произношение которого дарует иммунитет к этим эффектам.
+- [`svoboda_peremeshcheniya`](../../entities/spells/svoboda_peremeshcheniya.md) — 4; abjuration; Касание — Пока заклинание активно, на перемещения цели не влияет труднопроходимая местность, а заклинания и…
+- [`ubezhishche`](../../entities/spells/ubezhishche.md) — 1; abjuration; 30 футов — Пока заклинание активно, все существа, нацеливающиеся на защищённое существо атаками или вредонос…
+- [`volshebnyy_zamok`](../../entities/spells/volshebnyy_zamok.md) — 2; abjuration; Касание — магический замок; Сл взлома +10
+- [`vysshee_vosstanovlenie`](../../entities/spells/vysshee_vosstanovlenie.md) — 5; abjuration; Касание — Вы можете уменьшить уровень истощения цели на 1, или окончить на ней один из следующих эффектов: …
+- [`zapret`](../../entities/spells/zapret.md) — 6; abjuration; Касание [ритуал] — блок телепортов; 5к10 выбранным видам
+- [`zashchita_ot_dobra_i_zla`](../../entities/spells/zashchita_ot_dobra_i_zla.md) — 1; abjuration; Касание [конц.] — Защита предоставляет несколько преимуществ. / Существа выбранного вида совершают с помехой броски атаки по цели.
+- [`zashchita_ot_energii`](../../entities/spells/zashchita_ot_energii.md) — 3; abjuration; Касание [конц.] — Пока заклинание активно, согласное существо, которого вы коснулись, получает сопротивление к одно…
+- [`zashchita_ot_smerti`](../../entities/spells/zashchita_ot_smerti.md) — 4; abjuration; Касание — Когда хиты цели впервые опускаются до 0 изза получения урона, хиты цели опускаются всего лишь до … / Если заклинание ещё действует, а цель попадает под дей
+- [`zashchita_ot_yada`](../../entities/spells/zashchita_ot_yada.md) — 2; abjuration; Касание — Пока заклинание активно, цель совершает с преимуществом спасброски от отравленного состояния и по…
+- [`zatochenie`](../../entities/spells/zatochenie.md) — 9; abjuration; 30 футов — Условия могут основываться на имени существа, его личности, или его божестве, но во всём остально… / Цель опутана, пока заклинание активно, и в это время
+- [`znak`](../../entities/spells/znak.md) — 7; abjuration; Касание — Все цели должны совершить спасбросок Телосложения, становясь недееспособными от мучительной боли … / Все цели должны совершить спасбросок Мудрости, становя
+
+## conjuration
+
+- [`dromidzhevo_poyavlenie`](../../entities/spells/dromidzhevo_poyavlenie.md) — 6; conjuration; Касание [ритуал] — метка на предмете; раздавить сапфир → предмет в руке
+
+## divination
+
+- [`istinnoe_zrenie`](../../entities/spells/istinnoe_zrenie.md) — 6; divination; Касание
+- [`magicheskiy_glaz`](../../entities/spells/magicheskiy_glaz.md) — 4; divination; 30 футов [конц.] — Вы создаёте невидимый магический глаз в пределах дистанции, который парит в воздухе на время длит… / Глаз может удаляться от вас на любое расстоян
+- [`metka_okhotnika`](../../entities/spells/metka_okhotnika.md) — 1; divination; 90 футов [конц.] — Пока заклинание активно, вы причиняете цели дополнительный урон 1к6 каждый раз, когда попадаете п… / Если хиты цели опускаются до 0, пока заклинан
+- [`nablyudenie`](../../entities/spells/nablyudenie.md) — 5; divination; На себя [конц.] — Цель должна совершить спасбросок Мудрости, модифицируемый тем, как хорошо вы знаете цель, и тем, … / Если цель знает, что вы накладываете это закли
+- [`obnaruzhenie_mysley`](../../entities/spells/obnaruzhenie_mysley.md) — 2; divination; На себя [конц.] — Если вы погружаетесь глубже, цель должна совершить спасбросок Мудрости. / Если у выбранного существа Интеллект равен 3 или ниже, или если оно не мо
+- [`podsmatrivanie`](../../entities/spells/podsmatrivanie.md) — 3; divination; 1 миля [конц.] — Вы создаёте невидимый сенсор в пределах дистанции в известном вам месте (месте, которое вы уже ви… / Существо, способное увидеть сенсор (например, н
+- [`poisk_lovushek`](../../entities/spells/poisk_lovushek.md) — 2; divination; 120 футов
+- [`poisk_puti`](../../entities/spells/poisk_puti.md) — 6; divination; На себя [конц.] — кратчайший путь к известному месту
+- [`poisk_sushchestva`](../../entities/spells/poisk_sushchestva.md) — 4; divination; На себя [конц.] — Это заклинание не может обнаружить существ, если прямой путь между вами перерезан текущей водой ш…
+- [`predvidenie`](../../entities/spells/predvidenie.md) — 9; divination; Касание — Пока заклинание активно, цель нельзя застать врасплох, и она совершает с преимуществом броски ата… / Кроме того, пока заклинание активно, другие существа с
+- [`videnie_nevidimogo`](../../entities/spells/videnie_nevidimogo.md) — 2; divination; На себя — Пока заклинание активно, вы видите невидимых существ и предметы, как если бы они были видимы, и в…
+
+## enchantment
+
+- [`bless`](../../entities/spells/bless.md) — 1; enchantment; 30 футов [конц.] — Каждый раз, когда до окончания заклинания цель совершает бросок атаки или спасбросок, она может б…
+- [`charm_person`](../../entities/spells/charm_person.md) — 1; enchantment; 30 футов — Он должен совершить спасбросок Мудрости, с преимуществом, если вы или ваши спутники сражаетесь с … / Если он проваливает спасбросок, он очарован вами, по
+- [`dissoniruyushchiy_shepot`](../../entities/spells/dissoniruyushchiy_shepot.md) — 1; enchantment; 60 футов — Цель должна совершить спасбросок Мудрости. / В случае провала она получает урон психической энергией 3к6 и должна немедленно реакцией перемест…
+- [`druzhba_s_zhivotnymi`](../../entities/spells/druzhba_s_zhivotnymi.md) — 1; enchantment; 30 футов — Скорость этих существ в этой области уменьшена вдвое, и когда такое существо впервые за ход входи… / При провале существо получает урон излучением 3к8 (е
+- [`heroism`](../../entities/spells/heroism.md) — 1; enchantment; Касание [конц.] — Пока заклинание активно, существо получает иммунитет к состоянию испуга, и в начале каждого своег… / Когда это заклинание оканчивается, цель теряе
+- [`izmenenie_pamyati`](../../entities/spells/izmenenie_pamyati.md) — 5; enchantment; 30 футов [конц.] — Если вы с ним сражаетесь, оно совершает спасбросок с преимуществом. / Одно существо, которое вы видите, должно совершить спасбросок Мудрости.
+- [`korona_bezumiya`](../../entities/spells/korona_bezumiya.md) — 2; enchantment; 120 футов [конц.] — Кроме того, когда такое существо преуспевает в спасброске от заклинания или магического эффекта, … / Один гуманоид на ваш выбор, видимый вами в
+- [`mnozhestvennoe_vnushenie`](../../entities/spells/mnozhestvennoe_vnushenie.md) — 6; enchantment; 60 футов — Каждая цель должна совершить спасбросок Мудрости. / Если вы или кто-то из ваших спутников причиняют урон существу, находящемуся под действием этого з…
+- [`obet`](../../entities/spells/obet.md) — 5; enchantment; 60 футов — приказ; провал Муд → очарование; ослушание 5к10 психич./день
+- [`podchinenie_chudovishcha`](../../entities/spells/podchinenie_chudovishcha.md) — 8; enchantment; 60 футов [конц.] — Если вы или дружественные вам существа сражаются с ним, оно совершает спасбросок с преимуществом. / это заклинание с уровнем ячейки 9, концентрац
+- [`podchinenie_lichnosti`](../../entities/spells/podchinenie_lichnosti.md) — 5; enchantment; 60 футов [конц.] — Если вы или дружественные вам существа сражаются с ним, он совершает спасбросок с преимуществом. / Каждый раз, когда цель получает урон, она сове
+- [`podchinenie_zverya`](../../entities/spells/podchinenie_zverya.md) — 4; enchantment; 60 футов [конц.] — Если вы или дружественные вам существа сражаются с ним, он совершает спасбросок с преимуществом. / Зверь должен преуспеть в спасброске Мудрости,
+- [`porcha`](../../entities/spells/porcha.md) — 1; enchantment; 30 футов [конц.] — Пока заклинание активно, каждый раз, когда цель, провалившая этот спасбросок, совершает бросок ат…
+- [`prikaz`](../../entities/spells/prikaz.md) — 1; enchantment; 60 футов — это заклинание, используя ячейку 2 уровня или выше, вы можете воздействовать на одно дополнительн… / Если цель не может выполнить вашу команду, заклинани
+- [`prinuzhdenie`](../../entities/spells/prinuzhdenie.md) — 4; enchantment; 30 футов [конц.] — Выбранные вами существа, которых вы видите в пределах дистанции, и которые слышат вас, должны сов… / После перемещения из-за заклинания они могут
+- [`rech_zlatousta`](../../entities/spells/rech_zlatousta.md) — 2; enchantment; 60 футов — помеха на Внимательность к другим (Муд)
+- [`sglaz`](../../entities/spells/sglaz.md) — 1; enchantment; 90 футов [конц.] — Пока заклинание активно, вы причиняете цели урон некротической энергией 1к6 каждый раз, когда поп… / Если хиты цели опускаются до 0, пока заклина
+- [`slaboumie`](../../entities/spells/slaboumie.md) — 8; enchantment; 150 футов — Цель получает урон психической энергией 4к6 и должна совершить спасбросок Интеллекта. / В конце каждых 30 дней существо может повторять спасбросок от эт
+- [`sleep`](../../entities/spells/sleep.md) — 1; enchantment; 90 футов — Бросьте 5к8; результат будет количеством хитов существ, на которых это заклинание может подейство… / Начиная с существа с наименьшим количеством текущих
+- [`smyatenie`](../../entities/spells/smyatenie.md) — 4; enchantment; 90 футов [конц.] — это заклинание, используя ячейку 5 уровня или выше, радиус сферы увеличивается на 5 футов за кажд… / В конце каждого своего хода цель может совер
+- [`uderzhanie_chudovishcha`](../../entities/spells/uderzhanie_chudovishcha.md) — 5; enchantment; 90 футов [конц.]
+- [`uderzhanie_lichnosti`](../../entities/spells/uderzhanie_lichnosti.md) — 2; enchantment; 60 футов [конц.]
+- [`umirotvorenie`](../../entities/spells/umirotvorenie.md) — 2; enchantment; 60 футов [конц.] — Все гуманоиды в сфере с радиусом 20 футов с центром в точке, выбранной в пределах дистанции, долж… / Если существо проваливает спасбросок, выбери
+- [`vyzov_na_duel`](../../entities/spells/vyzov_na_duel.md) — 1; enchantment; 30 футов [конц.] — Одно существо, которое вы видите в пределах дистанции, должно совершить спасбросок Мудрости. / Заклинание оканчивается, если вы атакуете другое с
+- [`zhutkiy_smekh_tashi`](../../entities/spells/zhutkiy_smekh_tashi.md) — 1; enchantment; 30 футов [конц.] — Спасбросок совершается с преимуществом, если он был вызван получением урона. / В конце каждого своего хода, и каждый раз при получении урона цель
+
+## evocation
+
+- [`aura_of_vitality`](../../entities/spells/aura_of_vitality.md) — 3; evocation; На себя (30-футовый радиус) [конц.] — Вы можете бонусным действием восстанавливать одному любому существу в ауре (включая себя) 2к6 хитов. / Если цель причиняет урон
+- [`bozhestvennoe_blagovolenie`](../../entities/spells/bozhestvennoe_blagovolenie.md) — 1; evocation; На себя [конц.] — оружие +1к4 излучением
+- [`bozhestvennoe_oruzhie`](../../entities/spells/bozhestvennoe_oruzhie.md) — 2; evocation; 60 футов — Когда вы накладываете это заклинание, вы можете совершить рукопашную атаку заклинанием по существ… / При попадании цель получает урон силовым полем, равный
+- [`bozhestvennoe_slovo`](../../entities/spells/bozhestvennoe_slovo.md) — 7; evocation; 30 футов — Все эти существа, слышащие вас, должны совершить спасбросок Харизмы. / При провале существо попадает под действие эффекта, основанного на текущем количеств
+- [`burning_hands`](../../entities/spells/burning_hands.md) — 1; evocation; На себя (15-футовый конус) — Существо получает урон огнём 3к6 в случае провала и половину этого урона в случае успеха. / Все существа в пределах 15-футового конуса до
+- [`cure_wounds`](../../entities/spells/cure_wounds.md) — 1; evocation; Касание — Существо, которого вы касаетесь, восстанавливает количество хитов, равное 1к8 + ваш модификатор б…
+- [`dlan_bigbi`](../../entities/spells/dlan_bigbi.md) — 5; evocation; 120 футов [конц.] — Рука перемещается так, что находится между вами и целью, предоставляя вам от цели укрытие на поло… / Когда хиты руки опускаются до 0, заклинание о
+- [`dnevnoy_svet`](../../entities/spells/dnevnoy_svet.md) — 3; evocation; 60 футов — Из точки, выбранной вами в пределах дистанции, распространяется сфера света с радиусом 60 футов.
+- [`drebezgi`](../../entities/spells/drebezgi.md) — 2; evocation; 60 футов — Все существа в сфере с радиусом 10 футов с центром на этой точке должны совершить спасбросок Тело… / Существа, изготовленные из неорганической материи, так
+- [`faerie_fire`](../../entities/spells/faerie_fire.md) — 1; evocation; 60 футов [конц.] — Все существа в этой области тоже подсвечиваются, если проваливают спасбросок Ловкости. / Все предметы в кубе с длиной ребра 20 футов в пределах дис
+- [`fireball`](../../entities/spells/fireball.md) — 3; evocation; 150 футов — Все существа в пределах сферы с радиусом 20 футов с центром в этой точке должны совершить спасбро… / Цель получает урон огнём 8к6 при провале или половину
+- [`gnevnaya_kara`](../../entities/spells/gnevnaya_kara.md) — 1; evocation; На себя [конц.] — В следующий раз, когда вы попадёте атакой рукопашным оружием, пока активно это заклинание, ваша а… / Кроме того, если цель — существо, оно должно со
+- [`goryashchiy_klinok`](../../entities/spells/goryashchiy_klinok.md) — 2; evocation; На себя [конц.]
+- [`grad`](../../entities/spells/grad.md) — 4; evocation; 300 футов — Все существа в цилиндре должны совершить спасбросок Ловкости. / Существо получает дробящий урон 2к8 и урон холодом 4к6 при провале, или половину этого уро
+- [`healing_word`](../../entities/spells/healing_word.md) — 1; evocation; 60 футов — Существо на ваш выбор, видимое в пределах дистанции, восстанавливает количество хитов, равное 1к4…
+- [`kamennaya_stena`](../../entities/spells/kamennaya_stena.md) — 5; evocation; 120 футов [конц.] — Если существо со всех сторон окружается стеной (или стеной и другой сплошной поверхностью), это с… / Стена является предметом, изготовленным из ка
+- [`kleymyashchaya_kara`](../../entities/spells/kleymyashchaya_kara.md) — 2; evocation; На себя [конц.] — Атака причиняет цели дополнительный урон излучением 2к6. / это заклинание, используя ячейку 4 уровня или выше, прерванное заклинание автоматически н
+- [`konus_kholoda`](../../entities/spells/konus_kholoda.md) — 5; evocation; На себя (60-футовый конус) — Все существа в 60-футовом конусе должны совершить спасбросок Телосложения. / Существа получают урон холодом 8к8 при провале, или половину
+- [`ledyanaya_stena`](../../entities/spells/ledyanaya_stena.md) — 6; evocation; 120 футов [конц.] — Если стена при появлении проходит по пространству существа, это существо выталкивается по одну из… / При провале существо получает урон холодом 10
+- [`lightning_bolt`](../../entities/spells/lightning_bolt.md) — 3; evocation; На себя (100-футовая линия) — Все существа в линии должны совершить спасбросок Ловкости. / При провале существо получает урон электричеством 8к6, или половину урона п
+- [`lunnyy_luch`](../../entities/spells/lunnyy_luch.md) — 2; evocation; 120 футов [конц.] — Когда существо впервые за ход входит в область заклинания или начинает там ход, оно окутывается п… / Бледный серебристый луч сияет в цилиндре с ра
+- [`magic_missile`](../../entities/spells/magic_missile.md) — 1; evocation; 120 футов — Каждый дротик причиняет урон силовым полем 1к4 + 1.
+- [`mantiya_krestonostsa`](../../entities/spells/mantiya_krestonostsa.md) — 3; evocation; На себя [конц.] — Находясь в ауре, все невраждебные существа (включая вас) при попадании атакой оружием причиняют д… / От вас начинает исходить святая сила аурой с ра
+- [`mech_mordenkaynena`](../../entities/spells/mech_mordenkaynena.md) — 7; evocation; 60 футов [конц.] — Когда меч появляется, вы совершаете рукопашную атаку заклинанием по цели на ваш выбор, находящейс… / При попадании цель получает урон силовым полем
+- [`meteor_swarm`](../../entities/spells/meteor_swarm.md) — 9; evocation; 1 миля — Все существа в сфере с радиусом 40 футов с центром на каждой из точек должны совершить спасбросок… / Заклинание причиняет урон предметам и воспламеняет горюч
+- [`mnozhestvennoe_lechenie_ran`](../../entities/spells/mnozhestvennoe_lechenie_ran.md) — 5; evocation; 60 футов — Все цели восстанавливают хиты в количестве, равном 3к8 + модификатор вашей базовой характеристики. / это заклинание, используя ячейку 6 уровня или выше, во
+- [`moleben_lecheniya`](../../entities/spells/moleben_lecheniya.md) — 2; evocation; 30 футов — 3 уровень, воплощение 3 уровень, преобразование Время накладывания: 1 бонусное действие Дистанция… / Каждое из шести существ на ваш выбор, видимых в предел
+- [`napravlennyy_snaryad`](../../entities/spells/napravlennyy_snaryad.md) — 1; evocation; 120 футов — При попадании цель получает урон излучением 4к6, и следующий бросок атаки по цели, совершённый до… / Совершите дальнобойную атаку заклинанием по цели.
+- [`nebesnyy_ogon`](../../entities/spells/nebesnyy_ogon.md) — 5; evocation; 60 футов — Все существа в цилиндре с радиусом 10 футов и высотой 40 футов с центром на точке в пределах дист… / Существо получает урон излучением 4к6 и урон огнём 4к6
+- [`oglushayushchaya_kara`](../../entities/spells/oglushayushchaya_kara.md) — 4; evocation; На себя [конц.] — В следующий раз, когда вы попадёте по существу рукопашной атакой оружием, пока активно это заклин… / Цель должна совершить спасбросок Мудрости.
+- [`ognennaya_burya`](../../entities/spells/ognennaya_burya.md) — 7; evocation; 150 футов — Этот урон повреждает предметы и воспламеняет горючие предметы, которые никто не несёт и не носит. / Все существа в этом пространстве должны совершить спас
+- [`ognennaya_stena`](../../entities/spells/ognennaya_stena.md) — 4; evocation; 120 футов [конц.] — Когда стена появляется, все существа в её области должны совершить спасбросок Ловкости. / При провале они получают урон огнём 5к8 или половину это
+- [`otilyukov_ledyanoy_shar`](../../entities/spells/otilyukov_ledyanoy_shar.md) — 6; evocation; 300 футов — Все существа в этой области должны совершить спасбросок Телосложения. / При провале существо получает урон холодом 10к6.
+- [`otilyukov_uprugiy_shar`](../../entities/spells/otilyukov_uprugiy_shar.md) — 4; evocation; 30 футов [конц.] — Сфера обладает иммунитетом ко всем видам урона, и находящееся внутри существо или предмет не може… / Нежелающее существо должно совершить спасбросо
+- [`palyashchaya_kara`](../../entities/spells/palyashchaya_kara.md) — 1; evocation; На себя [конц.] — Когда вы в следующий раз попадёте по существу рукопашной атакой оружием, пока заклинание активно,… / Пока заклинание активно, цель в начале каждого
+- [`palyashchiy_luch`](../../entities/spells/palyashchiy_luch.md) — 2; evocation; 120 футов — Для каждого луча совершите дальнобойную атаку заклинанием. / При попадании цель получает урон огнём 2к6.
+- [`plyashushchaya_molniya`](../../entities/spells/plyashushchaya_molniya.md) — 6; evocation; 150 футов — Цель должна совершить спасбросок Ловкости. / Цель получает урон электричеством 10к8 при провале спасброска или половину этого урона в случае у…
+- [`polnoe_istselenie`](../../entities/spells/polnoe_istselenie.md) — 6; evocation; 60 футов
+- [`poryv_vetra`](../../entities/spells/poryv_vetra.md) — 2; evocation; На себя (60-футовая линия) [конц.]
+- [`poslanie`](../../entities/spells/poslanie.md) — 3; evocation; Неограниченная
+- [`predostorozhnost`](../../entities/spells/predostorozhnost.md) — 6; evocation; На себя — отложенное заклинание ≤5 ур. по условию
+- [`raduzhnye_bryzgi`](../../entities/spells/raduzhnye_bryzgi.md) — 7; evocation; На себя (60-футовый конус) — Все существа в пределах 60-футового конуса должны совершить спасбросок Ловкости. / Цель получает урон огнём 10к6 при провале или половину
+- [`razrushitelnaya_volna`](../../entities/spells/razrushitelnaya_volna.md) — 5; evocation; На себя (30-футовый радиус) — Все существа, выбранные вами в пределах 30 футов, должны преуспеть в спасброске Телосложения, ина… / Существо, преуспевшее в спасброске,
+- [`silovaya_stena`](../../entities/spells/silovaya_stena.md) — 5; evocation; 120 футов [конц.] — Она обладает иммунитетом ко всем видам урона, и не может быть рассеяна рассеиванием магии. / Невидимая стена из силового поля появляется в точке,
+- [`solnechnyy_luch`](../../entities/spells/solnechnyy_luch.md) — 6; evocation; На себя (60-футовая линия) [конц.] — Нежить и слизи совершают этот спасбросок с помехой. / Все существа в этой линии должны совершить спасбросок Телосложения.
+- [`solnechnyy_ozhog`](../../entities/spells/solnechnyy_ozhog.md) — 8; evocation; 150 футов — Нежить и слизи совершают этот спасбросок с помехой. / Все существа, находящиеся в нём, должны совершить спасбросок Телосложения.
+- [`stena_klinkov`](../../entities/spells/stena_klinkov.md) — 6; evocation; 90 футов [конц.]
+- [`stena_vetrov`](../../entities/spells/stena_vetrov.md) — 3; evocation; 120 футов [конц.] — Существо получает дробящий урон 3к8 при провале, или половину этого урона при успехе.
+- [`svyatilishche`](../../entities/spells/svyatilishche.md) — 5; evocation; Касание — Затронутые существа в области получают сопротивление к одному виду урона на ваш выбор кроме дробя… / Обычный свет, а также магический свет, созданный заклин
+- [`telepatiya`](../../entities/spells/telepatiya.md) — 8; evocation; Без ограничений
+- [`tma`](../../entities/spells/tma.md) — 2; evocation; 60 футов [конц.] — Из точки, выбранной вами в пределах дистанции, расползается магическая тьма сферой с радиусом 15 … / Существа с тёмным зрением не могут видеть скво
+- [`tsvetnoy_sharik`](../../entities/spells/tsvetnoy_sharik.md) — 1; evocation; 90 футов — Выберите звук, кислоту, огонь, холод, электричество или яд при создании сферы, а затем совершите … / Если атака попадает, существо получает урон 3к8 выбран
+- [`uzilishche`](../../entities/spells/uzilishche.md) — 7; evocation; 100 футов — Вокруг области, выбранной вами в пределах дистанции, возникает неподвижная, невидимая тюрьма в фо… / Существо, находящееся в узилище, не может покинуть ег
+- [`volna_groma`](../../entities/spells/volna_groma.md) — 1; evocation; На себя (15-футовый куб) — Все существа в кубе с длиной ребра 15 футов, исходящего от вас, должны совершить спасбросок Телос… / При провале существо получает урон зву
+- [`zamedlennyy_ognennyy_shar`](../../entities/spells/zamedlennyy_ognennyy_shar.md) — 7; evocation; 150 футов [конц.] — Все существа в сфере с радиусом 20 футов с центром в этой точке должны совершить спасбросок Ловко… / При провале существо получает урон огнём, рав
+- [`zemletryasenie`](../../entities/spells/zemletryasenie.md) — 8; evocation; 500 футов [конц.] — Все существа, находящиеся на земле и концентрирующиеся при этом, должны совершить спасбросок Тело… / Пока заклинание активно, на земле в круге с р
+
+## illusion
+
+- [`falshivyy_dvoynik`](../../entities/spells/falshivyy_dvoynik.md) — 5; illusion; На себя [конц.] — Вы становитесь невидимым, и в то же время в том месте, где вы были, появляется ваш иллюзорный дво… / Двойник существует, пока заклинание активно, но
+- [`gipnoticheskiy_uzor`](../../entities/spells/gipnoticheskiy_uzor.md) — 3; illusion; 120 футов [конц.] — Все существа в этой области, видящие узор, должны совершить спасбросок Мудрости. / Заклинание заканчивается для отдельного существа, если оно получ
+- [`invisibility`](../../entities/spells/invisibility.md) — 2; illusion; Касание [конц.] — Существо, которого вы касаетесь, становится невидимым до окончания действия заклинания. / Всё, что цель несёт или носит, становится невидимым, пока о
+- [`magic_mouth`](../../entities/spells/magic_mouth.md) — 2; illusion; 30 футов [ритуал] — сообщение на предмете по условию
+- [`maskirovka`](../../entities/spells/maskirovka.md) — 1; illusion; На себя — Вы не можете менять основу тела, поэтому у новой формы должен быть такой же набор конечностей.
+- [`mirazh`](../../entities/spells/mirazh.md) — 4; illusion; 300 футов — Вы заставляете природную местность в пределах куба с длиной ребра 150 футов, находящегося в преде…
+- [`nevidimoe_pismo`](../../entities/spells/nevidimoe_pismo.md) — 1; illusion; Касание [ритуал] — скрытое письмо; читают вы и указанные
+- [`nistulova_lozhnaya_magiya`](../../entities/spells/nistulova_lozhnaya_magiya.md) — 2; illusion; Касание
+- [`obraz`](../../entities/spells/obraz.md) — 3; illusion; 120 футов [конц.] — Вы не можете создать жар или холод, достаточный для получения урона, звук, громкость которого мож… / Вы создаёте образ предмета, существа или друго
+- [`otrazheniya`](../../entities/spells/otrazheniya.md) — 2; illusion; На себя — Она игнорирует остальной урон и эффекты. / Существо не попадает под действие этого заклинания, если не может видеть, если полагается на друг…
+- [`podobie`](../../entities/spells/podobie.md) — 7; illusion; Касание — Копия не может обучаться и становиться сильнее, так что она никогда не повышает уровень и характе… / выглядит так же, как оригинал, но у него только половина
+- [`pritvorstvo`](../../entities/spells/pritvorstvo.md) — 5; illusion; 30 футов — Несогласная цель может совершить спасбросок Харизмы, и в случае успеха заклинание на неё не дейст… / Вы не можете менять вид тела цели, так что у неё должен
+- [`proektsiya`](../../entities/spells/proektsiya.md) — 7; illusion; 500 миль [конц.] — Если иллюзия получает урон, она исчезает, а заклинание оканчивается.
+- [`razmytyy_obraz`](../../entities/spells/razmytyy_obraz.md) — 2; illusion; На себя [конц.] — Пока заклинание активно, все существа совершают по вам броски атаки с помехой. / Атакующий получает иммунитет к этому эффекту, если полагается не на
+- [`smertnyy_uzhas`](../../entities/spells/smertnyy_uzhas.md) — 9; illusion; 120 футов [конц.] — Все существа в сфере с радиусом 30 футов с центром на выбранной точке в пределах дистанции, должн… / В конце каждого своего хода испуганное существ
+- [`sotvorenie`](../../entities/spells/sotvorenie.md) — 5; illusion; 30 футов — это заклинание, используя ячейку 6 уровня или выше, длина ребра куба увеличивается на 5 футов за …
+- [`sverkayushchie_bryzgi`](../../entities/spells/sverkayushchie_bryzgi.md) — 1; illusion; конус 15 фт. — 6к10 хитов ослеплены до конца след. хода
+- [`tainstvennyy_mirazh`](../../entities/spells/tainstvennyy_mirazh.md) — 7; illusion; обзор — иллюзия местности до 1 мили² на 10 дней
+- [`veshchiy_son`](../../entities/spells/veshchiy_son.md) — 5; illusion; Особая — Если у вас есть часть тела, клок волос, обрезки ногтей или другая подобная часть тела цели, она с… / В этом случае посыльный может передать послание не длинне
+- [`voobrazhaemaya_sila`](../../entities/spells/voobrazhaemaya_sila.md) — 2; illusion; 60 футов [конц.] — Цель должна совершить спасбросок Интеллекта. / Цель настолько уверена в существовании иллюзии, что даже будет получать от неё урон.
+- [`voobrazhaemyy_ubiytsa`](../../entities/spells/voobrazhaemyy_ubiytsa.md) — 4; illusion; 120 футов [конц.] — Цель должна совершить спасбросок Мудрости. / В конце каждого своего хода, пока заклинание активно, цель должна преуспевать в спасброске Мудрос…
+- [`vysshaya_nevidimost`](../../entities/spells/vysshaya_nevidimost.md) — 4; illusion; Касание [конц.] — невидимость не срывается атакой/заклинанием
+- [`zadannaya_illyuziya`](../../entities/spells/zadannaya_illyuziya.md) — 6; illusion; 120 футов
+
+## necromancy
+
+- [`dvoynik`](../../entities/spells/dvoynik.md) — 8; necromancy; Касание — выращивание клона 120 дней; смерть → перенос души
+- [`istinnoe_voskreshenie`](../../entities/spells/istinnoe_voskreshenie.md) — 9; necromancy; Касание
+- [`krug_smerti`](../../entities/spells/krug_smerti.md) — 6; necromancy; 150 футов — Все существа в этой области должны совершить спасбросок Телосложения. / Цель получает урон некротической энергией 8к6 при провале или половину этого урон
+- [`luch_bolezni`](../../entities/spells/luch_bolezni.md) — 1; necromancy; 60 футов — Совершите дальнобойную атаку заклинанием по цели. / При попадании цель получает урон ядом 2к8 и должна совершить спасбросок Телосложения.
+- [`luch_slabosti`](../../entities/spells/luch_slabosti.md) — 2; necromancy; 60 футов [конц.] — Совершите по цели дальнобойную атаку заклинанием. / При попадании цель до конца действия заклинания причиняет только половину урона атаками оружие
+- [`nanesenie_ran`](../../entities/spells/nanesenie_ran.md) — 1; necromancy; Касание — Совершите рукопашную атаку заклинанием по существу в пределах досягаемости. / При попадании цель получает урон некротической энергией 3к10.
+- [`netlennye_ostanki`](../../entities/spells/netlennye_ostanki.md) — 2; necromancy; Касание [ритуал] — труп не гниёт; не становится нежитью
+- [`ozhivlenie`](../../entities/spells/ozhivlenie.md) — 5; necromancy; Касание — Все цели оживают и становятся существами под вашим контролем до окончания действия заклинания или… / ПАРАМЕТРЫ ОЖИВЛЁННОГО ПРЕДМЕТА Размер Хиты КД Крошечны
+- [`perst_smerti`](../../entities/spells/perst_smerti.md) — 7; necromancy; 60 футов — Цель должна совершить спасбросок Телосложения. / В случае провала она получает урон некротической энергией 7к8 + 30, или половину этого урона в сл…
+- [`prikosnovenie_vampira`](../../entities/spells/prikosnovenie_vampira.md) — 3; necromancy; На себя [конц.] — Совершите рукопашную атаку заклинанием по существу в пределах вашей досягаемости. / При попадании цель получает урон некротической энергией 3к6, а
+- [`proklyatie`](../../entities/spells/proklyatie.md) — 3; necromancy; Касание [конц.] — это заклинание, используя ячейку 4 уровня или выше, длительность будет «Концентрация, вплоть до 1… / При использовании ячейки как минимум 5 уровня
+- [`psevdozhizn`](../../entities/spells/psevdozhizn.md) — 1; necromancy; На себя — Укрепив себя некромантским подобием жизни, вы получаете 1к4 + 4 временных хита на время длительно…
+- [`razgovor_s_mertvymi`](../../entities/spells/razgovor_s_mertvymi.md) — 3; necromancy; 10 футов — У трупа должен быть рот, и он не может быть нежитью. / Таким образом, труп не может узнавать новую информацию, не осознаёт того, что происходило после е…
+- [`razyashchee_oko`](../../entities/spells/razyashchee_oko.md) — 6; necromancy; На себя [конц.] — каждый ход: сон / паника / болезнь (Муд)
+- [`resurrection`](../../entities/spells/resurrection.md) — 7; necromancy; Касание — Пока вы не окончите продолжительный отдых, вы не можете накладывать заклинания, и совершаете с по…
+- [`sotvorenie_nezhiti`](../../entities/spells/sotvorenie_nezhiti.md) — 6; necromancy; 10 футов — Такое использование заклинания только поддерживает контроль над уже созданными существами, количе…
+- [`usykhanie`](../../entities/spells/usykhanie.md) — 4; necromancy; 30 футов — Если цель — растительное существо или магическое растение, оно совершает спасбросок с помехой, и … / Цель должна совершить спасбросок Телосложения.
+- [`volshebnyy_sosud`](../../entities/spells/volshebnyy_sosud.md) — 6; necromancy; На себя
+- [`vosstavshiy_trup`](../../entities/spells/vosstavshiy_trup.md) — 3; necromancy; 10 футов — скелет/зомби; контроль 24 ч; upcast +2
+- [`vozrozhdenie`](../../entities/spells/vozrozhdenie.md) — 3; necromancy; Касание — Это заклинание не может оживить существ, умерших от старости, а также не восстанавливает отсутств…
+- [`zarazhenie`](../../entities/spells/zarazhenie.md) — 5; necromancy; Касание — атака заклинанием; болезнь после 3 провалов Тел
+
+## transmutation
+
+- [`bystryy_kolchan`](../../entities/spells/bystryy_kolchan.md) — 5; transmutation; Касание [конц.]
+- [`dvizhenie_pochvy`](../../entities/spells/dvizhenie_pochvy.md) — 6; transmutation; 120 футов [конц.] — Высота таких изменений не может превышать половины самой большой стороны области. / В конце каждых 10 минут концентрации на этом заклинании вы
+- [`fly`](../../entities/spells/fly.md) — 3; transmutation; Касание [конц.] — Когда заклинание оканчивается, цель падает, если всё ещё находится в полёте и ничем не может оста…
+- [`gaseous_form`](../../entities/spells/gaseous_form.md) — 3; transmutation; Касание [конц.] — Существо получает сопротивление к немагическому урону, и совершает с преимуществом спасброски Сил… / Заклинание оканчивается, если хиты существа
+- [`gigantskoe_nasekomoe`](../../entities/spells/gigantskoe_nasekomoe.md) — 4; transmutation; 30 футов [конц.] — Существо сохраняет гигантский размер всю длительность заклинания, пока его хиты не опустятся до 0…
+- [`izgotovlenie`](../../entities/spells/izgotovlenie.md) — 4; transmutation; 120 футов — Вы можете создать предмет Большого или меньшего размера (помещающийся в куб с длиной ребра 10 фут… / Если вы работаете с металлом, камнем или другой м
+- [`izmenenie_formy_kamnya`](../../entities/spells/izmenenie_formy_kamnya.md) — 4; transmutation; Касание
+- [`izmenenie_tyagoteniya`](../../entities/spells/izmenenie_tyagoteniya.md) — 7; transmutation; 100 футов [конц.] — Это заклинание обращает гравитацию в цилиндре с радиусом 50 футов и высотой 100 футов с центром н…
+- [`izolyatsiya`](../../entities/spells/izolyatsiya.md) — 7; transmutation; Касание — скрытие от прорицаний; существо: стазис + невидимость
+- [`khozhdenie_po_vetru`](../../entities/spells/khozhdenie_po_vetru.md) — 6; transmutation; 30 футов — Находясь в форме облака, существо получает скорость полёта 300 футов и сопротивление к урону от н… / Возврат занимает 1 минуту, во время которой сущест
+- [`levitatsiya`](../../entities/spells/levitatsiya.md) — 2; transmutation; 60 футов [конц.]
+- [`magicheskoe_oruzhie`](../../entities/spells/magicheskoe_oruzhie.md) — 2; transmutation; Касание [конц.] — Пока заклинание активно, это оружие становится магическим оружием с бонусом +1 к броскам атаки и …
+- [`mertsanie`](../../entities/spells/mertsanie.md) — 3; transmutation; На себя
+- [`nakhodchivost`](../../entities/spells/nakhodchivost.md) — 8; transmutation; На себя
+- [`okamenenie`](../../entities/spells/okamenenie.md) — 6; transmutation; 60 футов [конц.] — Если тело цели состоит из плоти, она должна совершить спасбросок Телосложения. / Если оно провалит спасбросок три раза, оно превращается в каме
+- [`ostanovka_vremeni`](../../entities/spells/ostanovka_vremeni.md) — 9; transmutation; На себя — Для всех остальных существ время перестаёт течь, а вы получаете 1к4 + 1 ход подряд, во время кото…
+- [`otkryvanie`](../../entities/spells/otkryvanie.md) — 2; transmutation; 60 футов
+- [`pauk`](../../entities/spells/pauk.md) — 2; transmutation; Касание [конц.]
+- [`polnoe_prevrashchenie`](../../entities/spells/polnoe_prevrashchenie.md) — 9; transmutation; На себя [конц.] — Вы принимаете хиты и Кость Хитов нового облика. / Когда вы возвращаете свой облик, ваши хиты будут такими же, как до превращения.
+- [`pospeshnoe_otstuplenie`](../../entities/spells/pospeshnoe_otstuplenie.md) — 1; transmutation; На себя [конц.]
+- [`prevrashchenie_v_zhivotnykh`](../../entities/spells/prevrashchenie_v_zhivotnykh.md) — 8; transmutation; 30 футов [конц.] — Превращение держится всю длительность заклинания, или пока хиты цели не опустятся до 0, или она н… / Цель принимает хиты нового облика, а по во
+- [`probuzhdenie_razuma`](../../entities/spells/probuzhdenie_razuma.md) — 5; transmutation; Касание — У цели либо не должно быть значения Интеллекта, либо Интеллект должен быть не больше 3. / Пробуждённый зверь или растение очарован вами 30 дней, либо по
+- [`pryzhok`](../../entities/spells/pryzhok.md) — 1; transmutation; Касание
+- [`raskalennyy_metall`](../../entities/spells/raskalennyy_metall.md) — 2; transmutation; 60 футов [конц.] — Если оно не может уронить предмет, то до начала вашего следующего хода совершает с помехой броски… / Все существа, находящиеся в физическом кон
+- [`raspad`](../../entities/spells/raspad.md) — 6; transmutation; 60 футов — Существо, ставшее целью этого заклинания, должно совершить спасбросок Ловкости. / При провале оно получает урон силовым полем 10к6 + 40.
+- [`razgovor_s_rasteniyami`](../../entities/spells/razgovor_s_rasteniyami.md) — 3; transmutation; На себя (30-футовый радиус) — Вы можете также превратить на время действия заклинания труднопроходимую местность, вызванную рас… / Вы можете превратить на время д
+- [`regeneratsiya`](../../entities/spells/regeneratsiya.md) — 7; transmutation; Касание — Цель восстанавливает 4к8 + 15 хитов. / Вы совершаете действием рукопашную атаку заклинанием по исчадию, небожителю, нежити, фее или элем…
+- [`rost_rasteniy`](../../entities/spells/rost_rasteniy.md) — 3; transmutation; 150 футов — Все обычные растения в пределах 100-футового радиуса с центром на этой точке становятся густыми и… / Все растения в радиусе полумили с центром на точк
+- [`sotvorenie_ili_unichtozhenie_vody`](../../entities/spells/sotvorenie_ili_unichtozhenie_vody.md) — 1; transmutation; 30 футов — это заклинание, используя ячейку 2 уровня или выше, вы создаёте или уничтожаете 10 дополнительных… / В качестве альтернативы, вы уничтожаете туман в ку
+- [`sozdanie_prokhoda`](../../entities/spells/sozdanie_prokhoda.md) — 5; transmutation; 30 футов
+- [`stikhiynoe_oruzhie`](../../entities/spells/stikhiynoe_oruzhie.md) — 3; transmutation; Касание [конц.] — Выберите один из следующих видов урона: звук, кислота, огонь, холод или электричество. / Пока заклинание активно, оружие получает бонус +1 к бро
+- [`telekinez`](../../entities/spells/telekinez.md) — 5; transmutation; 60 футов [конц.] — До конца вашего следующего хода существо становится опутанным телекинетической хваткой.
+- [`temnoe_zrenie`](../../entities/spells/temnoe_zrenie.md) — 2; transmutation; Касание
+- [`tryuk_s_verevkoy`](../../entities/spells/tryuk_s_verevkoy.md) — 2; transmutation; Касание — На верхнем конце верёвки появляется невидимый вход в межпространство, существующий, пока заклинан…
+- [`uskorenie`](../../entities/spells/uskorenie.md) — 3; transmutation; 30 футов [конц.]
+- [`vlast_nad_pogodoy`](../../entities/spells/vlast_nad_pogodoy.md) — 8; transmutation; На себя (5-мильный радиус) [конц.] — Требуется 1к4 × 10 минут, чтобы новые условия вступили в силу. / Цель должна совершить спасбросок Мудрости.
+- [`zamedlenie`](../../entities/spells/zamedlenie.md) — 3; transmutation; 120 футов [конц.] — Вы изменяете время для шести существ на ваш выбор, находящихся в кубе с длиной ребра 40 футов в п… / Скорость попавшего под действие существа
+- [`zavesa_strel`](../../entities/spells/zavesa_strel.md) — 2; transmutation; 5 футов — Существо должно преуспеть в спасброске Ловкости, иначе оно получит колющий урон 1к6.
+
+## воплощение
+
+- [`leomundova_khizhina`](../../entities/spells/leomundova_khizhina.md) — 3; Воплощение; На себя (полусфера с радиусом 10 футов) — Над вами и вокруг вас появляется купол из силового поля радиусом 10 футов, остающийся неподвижным…
+
+## вызов
+
+- [`demiplan`](../../entities/spells/demiplan.md) — 8; Вызов; 60 футов
+- [`drevesnyy_put`](../../entities/spells/drevesnyy_put.md) — 5; Вызов; На себя [конц.] — Оба дерева должны быть живыми, и размер обоих должен быть не меньше вашего.
+- [`golod_khadara`](../../entities/spells/golod_khadara.md) — 3; Вызов; 150 футов [конц.] — Все существа, начинающие ход в этой местности, получают урон холодом 2к6. / Все существа, оканчивающие ход в этой местности, должны преуспеть в спасбр
+- [`grad_shipov`](../../entities/spells/grad_shipov.md) — 1; Вызов; На себя [конц.] — В дополнение к обычному эффекту атаки, цель и все существа в пределах 5 футов от неё, должны сове… / При провале существо получает колющий урон 1к10, ил
+- [`groza_gneva`](../../entities/spells/groza_gneva.md) — 9; Вызов; Видимость [конц.] — 1 уровень, воплощение Время накладывания: 1 бонусное действие Дистанция: На себя Компоненты: В Дл… / Все существа, находящиеся под облаками (на рассто
+- [`ispolnenie_zhelaniy`](../../entities/spells/ispolnenie_zhelaniy.md) — 9; Вызов; На себя — Вы даруете до десяти существам, видимым вами, сопротивление к выбранному вами виду урона. / Вы позволяете до двенадцати другим существам, видимым вами, восстано
+- [`krug_teleportatsii`](../../entities/spells/krug_teleportatsii.md) — 5; Вызов; 10 футов
+- [`labirint`](../../entities/spells/labirint.md) — 8; Вызов; 60 футов [конц.]
+- [`leomundov_potaynoy_sunduk`](../../entities/spells/leomundov_potaynoy_sunduk.md) — 4; Вызов; Касание
+- [`nashestvie_nasekomykh`](../../entities/spells/nashestvie_nasekomykh.md) — 5; Вызов; 300 футов [конц.] — Когда сфера появляется, все находящиеся в ней существа должны совершить спасбросок Телосложения. / Существо получает колющий урон 4к10 при провале, ил
+- [`nevidimyy_sluga`](../../entities/spells/nevidimyy_sluga.md) — 1; Вызов; 60 футов — Если его хиты опускаются до 0, заклинание оканчивается. / Это заклинание создаёт невидимую, бессознательную и бесформенную силу, выполняющую отдаваемые вам…
+- [`oputyvanie`](../../entities/spells/oputyvanie.md) — 1; Вызов; 90 футов [конц.] — Существа, находящиеся в этой области, когда вы накладываете заклинание, должны преуспеть в спасбр… / Опутанное растениями существо может действием 250
+- [`oputyvayushchiy_udar`](../../entities/spells/oputyvayushchiy_udar.md) — 1; Вызов; На себя [конц.] — Существа с размером Большое и ещё больше совершают этот спасбросок с преимуществом. / Будучи опутанной этим заклинанием, цель получает колющий урон 1к6
+- [`pautina`](../../entities/spells/pautina.md) — 2; Вызов; 60 футов [конц.] — Любой 5-футовый куб паутины, соприкоснувшийся с огнём, сгорает за 1 раунд, причиняя урон огнём 2к… / Все существа, начинающие ход в паутине, или входящ
+- [`perenosyashchaya_dver`](../../entities/spells/perenosyashchaya_dver.md) — 4; Вызов; 500 футов — Если вы должны оказаться в месте, уже занятом существом или предметом, вы и все перемещающиеся с …
+- [`planarnyy_soyuznik`](../../entities/spells/planarnyy_soyuznik.md) — 6; Вызов; 60 футов
+- [`poisk_familyara`](../../entities/spells/poisk_familyara.md) — 1; Вызов; 10 футов — Когда хиты фамильяра опускаются до 0, он исчезает, не оставляя физического тела. / Фамильяр не может атаковать, но может совершать другие действия как обычно.
+- [`poisk_skakuna`](../../entities/spells/poisk_skakuna.md) — 2; Вызов; 30 футов
+- [`prizyv_elementalya`](../../entities/spells/prizyv_elementalya.md) — 5; Вызов; 90 футов [конц.] — Элементаль исчезает, когда его хиты опускаются до 0, или когда заклинание оканчивается. / Выберите область воды, воздуха, земли или огня, помещающуюся
+- [`prizyv_fei`](../../entities/spells/prizyv_fei.md) — 6; Вызов; 90 футов [конц.] — Оно исчезает, когда его хиты опускаются до 0, или когда заклинание оканчивается. / Если ваша концентрация нарушена, существо не исчезает.
+- [`prizyv_lesnykh_obitateley`](../../entities/spells/prizyv_lesnykh_obitateley.md) — 4; Вызов; 60 футов [конц.] — Призванное существо исчезает, когда его хиты опускаются до 0, или когда заклинание оканчивается. / это заклинание, используя ячейки большего уровня, вы
+- [`prizyv_malykh_elementaley`](../../entities/spells/prizyv_malykh_elementaley.md) — 4; Вызов; 90 футов [конц.] — Выберите один из вариантов того, кто появляется: • • • • Один элементаль с показателем опасности … / это заклинание, используя ячейки большего уровня,
+- [`prizyv_molnii`](../../entities/spells/prizyv_molnii.md) — 3; Вызов; 120 футов [конц.] — Существо получает урон электричеством 3к10 при провале или половину этого урона в случае успешног… / Появляется туча в форме цилиндра 10 футов в высот
+- [`prizyv_nebozhitelya`](../../entities/spells/prizyv_nebozhitelya.md) — 7; Вызов; 90 футов [конц.] — Небожитель исчезает, когда его хиты опускаются до 0, или когда заклинание оканчивается.
+- [`prizyv_zagrazhdeniya`](../../entities/spells/prizyv_zagrazhdeniya.md) — 3; Вызов; На себя (60-футовый конус) — При провале существо получает урон 3к8, а при успехе половину этого урона. / Вид урона такой же, как у оружия или боеприпаса, использованного
+- [`prizyv_zalpa`](../../entities/spells/prizyv_zalpa.md) — 5; Вызов; 150 футов — Все существа в цилиндре с радиусом 40 футов и высотой 20 футов должны совершить спасбросок Ловкости. / При провале существо получает урон 8к8, а при успехе по
+- [`prizyv_zhivotnykh`](../../entities/spells/prizyv_zhivotnykh.md) — 3; Вызов; 60 футов [конц.] — Выберите один из вариантов того, кто появляется: • • • • Один зверь с показателем опасности 2 или… / это заклинание, используя ячейки большего уровня,
+- [`puteshestvie_cherez_rasteniya`](../../entities/spells/puteshestvie_cherez_rasteniya.md) — 6; Вызов; 10 футов
+- [`pylayushchiy_shar`](../../entities/spells/pylayushchiy_shar.md) — 2; Вызов; 60 футов [конц.] — Все существа, оканчивающие ход в пределах 5 футов от шара, должны совершать спасбросок Ловкости. / Существа получают урон огнём 2к6 при провале или пол
+- [`ruki_khadara`](../../entities/spells/ruki_khadara.md) — 1; Вызов; На себя (10-футовый радиус) — В случае провала цель получает урон некротической энергией 2к6 и в следующем ходу не может соверш… / Все существа в этой области должны сове
+- [`skolzhenie`](../../entities/spells/skolzhenie.md) — 1; Вызов; 60 футов — Скользкий жир покрывает пол в квадрате с длиной стороны 10 футов с центром на точке в пределах ди…
+- [`sotvorenie_pishchi_i_vody`](../../entities/spells/sotvorenie_pishchi_i_vody.md) — 3; Вызов; 30 футов
+- [`strazh_very`](../../entities/spells/strazh_very.md) — 4; Вызов; 30 футов — При провале такое существо получает урон излучением 20, или половину этого урона при успехе. / Страж исчезает, когда причинит суммарно 60 урона.
+- [`teleport`](../../entities/spells/teleport.md) — 7; Вызов; 10 футов — Если целью является предмет, он должен полностью помещаться в куб с длиной ребра 10 футов, и его …
+- [`tenzerov_paryashchiy_disk`](../../entities/spells/tenzerov_paryashchiy_disk.md) — 1; Вызов; 30 футов — Он может перелетать по неровной поверхности, перемещаться по лестницам, склонам и подобным препят…
+- [`ternovaya_stena`](../../entities/spells/ternovaya_stena.md) — 6; Вызов; 120 футов [конц.] — Когда стена появляется, все существа, находящиеся в ней, должны совершить спасбросок Ловкости. / При провале существо получает колющий урон 7к8, или п
+- [`tsepkaya_loza`](../../entities/spells/tsepkaya_loza.md) — 4; Вызов; 30 футов [конц.]
+- [`tsunami`](../../entities/spells/tsunami.md) — 8; Вызов; Видимость [конц.] — Когда стена появляется, все существа в её области должны совершить спасбросок Силы. / При провале они получают дробящий урон 6к10 или половину этого у
+- [`tumannoe_oblako`](../../entities/spells/tumannoe_oblako.md) — 1; Вызов; 120 футов [конц.] — Вы создаёте сферу с радиусом 20 футов из тумана с центром на точке в пределах дистанции.
+- [`tumannyy_shag`](../../entities/spells/tumannyy_shag.md) — 2; Вызов; На себя
+- [`ukhod_v_inoy_mir`](../../entities/spells/ukhod_v_inoy_mir.md) — 7; Вызов; Касание — Выберите существо в пределах досягаемости и совершите по нему рукопашную атаку заклинанием. / При попадании существо должно совершить спасбросок Харизмы.
+- [`velikolepnyy_osobnyak_mordenkaynena`](../../entities/spells/velikolepnyy_osobnyak_mordenkaynena.md) — 7; Вызов; 300 футов — Дверь невидима, когда закрыта. / Вы можете создать любую планировку, но пространство не может превышать 50 кубов с длиной ребра в …
+- [`vosplamenyayushchayasya_tucha`](../../entities/spells/vosplamenyayushchayasya_tucha.md) — 8; Вызов; 150 футов [конц.] — Когда облако появляется, все существа, находящиеся в нём, должны совершить спасбросок Ловкости. / Существо получает урон огнём 10к8 при провале или по
+- [`zlovonnoe_oblako`](../../entities/spells/zlovonnoe_oblako.md) — 3; Вызов; 90 футов [конц.] — Все существа, находящиеся полностью в облаке в начале своего хода, должны совершить спасбросок Те… / Вы создаёте сферу с радиусом 20 футов жёлтого тошн
+
+## иллюзия
+
+- [`prizrachnyy_skakun`](../../entities/spells/prizrachnyy_skakun.md) — 3; Иллюзия; 30 футов — Заклинание оканчивается, если вы окончите его действием или если скакун получит какой-либо урон.
+- [`tishina`](../../entities/spells/tishina.md) — 2; Иллюзия; 120 футов [конц.] — Все существа и предметы, полностью находящиеся в сфере, получают иммунитет к урону звуком, и суще… / Пока заклинание активно, никакие звуки не могут
+
+## некромантия
+
+- [`pritvornaya_smert`](../../entities/spells/pritvornaya_smert.md) — 3; Некромантия; Касание — Цель получает сопротивление всем видам урона кроме психической энергии.
+
+## ограждение
+
+- [`signal_trevogi`](../../entities/spells/signal_trevogi.md) — 1; Ограждение; 30 футов — Выберите дверь, окно или область в пределах дистанции не больше куба с длиной ребра 20 футов.
+
+## очарование
+
+- [`pochtovoe_zhivotnoe`](../../entities/spells/pochtovoe_zhivotnoe.md) — 2; Очарование; 30 футов
+
+## преобразование
+
+- [`khozhdenie_po_vode`](../../entities/spells/khozhdenie_po_vode.md) — 3; Преобразование; 30 футов — Это заклинание дарует способность перемещаться по жидкой поверхности — такой как вода, кислота, г…
+- [`ochishchenie_pishchi_i_pitya`](../../entities/spells/ochishchenie_pishchi_i_pitya.md) — 1; Преобразование; 10 футов — Вся немагическая еда и питьё в пределах сферы с радиусом 5 футов с центром на точке, выбранной ва…
+- [`podvodnoe_dykhanie`](../../entities/spells/podvodnoe_dykhanie.md) — 3; Преобразование; 30 футов
+- [`sliyanie_s_kamnem`](../../entities/spells/sliyanie_s_kamnem.md) — 3; Преобразование; Касание — Небольшие физические повреждения камня не причиняют вам вреда, но частичное разрушение или измене… / Полное разрушение камня (или превращение его в дру
+
+## прорицание
+
+- [`detect_magic`](../../entities/spells/detect_magic.md) — 1; Прорицание; На себя [конц.]
+- [`mentalnaya_svyaz_reri`](../../entities/spells/mentalnaya_svyaz_reri.md) — 5; Прорицание; 30 футов — Общение возможно на любом расстоянии, но оно не может простираться на другие планы существования.
+- [`obshchenie`](../../entities/spells/obshchenie.md) — 5; Прорицание; На себя
+- [`obshchenie_s_prirodoy`](../../entities/spells/obshchenie_s_prirodoy.md) — 5; Прорицание; На себя — В пещерах и естественном подземном окружении радиус 300 футов.
+- [`poisk_zhivotnykh_ili_rasteniy`](../../entities/spells/poisk_zhivotnykh_ili_rasteniy.md) — 2; Прорицание; На себя
+- [`ponimanie_yazykov`](../../entities/spells/ponimanie_yazykov.md) — 1; Прорицание; На себя
+- [`predskazanie`](../../entities/spells/predskazanie.md) — 4; Прорицание; На себя
+- [`razgovor_s_zhivotnymi`](../../entities/spells/razgovor_s_zhivotnymi.md) — 1; Прорицание; На себя
+- [`svyaz_s_inym_mirom`](../../entities/spells/svyaz_s_inym_mirom.md) — 5; Прорицание; На себя — Накладывая это заклинание, вы совершаете спасбросок Интеллекта со Сл 15. / При провале вы получаете урон психической энергией 6к6 и становитесь безумным до
+- [`zhivotnye_chuvstva`](../../entities/spells/zhivotnye_chuvstva.md) — 2; Прорицание; Касание [конц.] — Пока заклинание активно, вы можете использовать свою базовую характеристику вместо Силы для броск… / Воспринимая чувствами зверя, вы пользуетесь пр

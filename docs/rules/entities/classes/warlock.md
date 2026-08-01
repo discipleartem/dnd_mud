@@ -1,25 +1,21 @@
 ---
+id: warlock
+type: class
 phb_chapter: 3
-phb_section: Колдун
 phb_pages:
 - 105
 - 111
-phb_part: 1
-id: warlock
-type: class
-tags:
-- class
-mud_status: planned
 quick: к8; Харизма; магия договора; воззвания
+aliases:
+- warlock
+- Колдун
 ---
 
 # Колдун
 
-> Источник: PHB, стр. 105–111. Только механика.
+> Источник: PHB 2014. Пересказ механики, не дословная копия.
 
-## Правила (PHB)
-
-<!-- phb:auto:summary -->
+## Механика
 ### Хиты и основа
 
 - Кость хитов: 1к8; покровитель и договор с 1/3 уровня.
@@ -46,14 +42,3 @@ quick: к8; Харизма; магия договора; воззвания
 - **Цепи:** Фамильяр.
 - **Клинок:** Призыв оружия договора.
 - **Книга:** Книга теней.
-<!-- /phb:auto:summary -->
-
-## Реализация в MUD
-
-<!-- mud:implementation -->
-| Аспект | Значение |
-|--------|----------|
-| Статус | planned |
-| YAML | — |
-| Core | `core/classes.py`, `core/subclasses.py` |
-<!-- /mud:implementation -->

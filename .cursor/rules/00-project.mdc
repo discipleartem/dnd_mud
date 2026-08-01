@@ -34,18 +34,29 @@ Verify/review policy — [`dnd-mud-workflow.mdc`](dnd-mud-workflow.mdc) §Verify
 
 **Канон редакции:** Player's Handbook **2014** (рус. перевод PHantom, 2016). **Не** редакция правил 2024.
 
-Код, YAML и [`docs/DND_RULES.md`](docs/DND_RULES.md) описывают **реализацию в MUD**. Пересказ механики для агентов — [`docs/rules/`](docs/rules/). При расхождении с официальным PHB 2014 / SRD 5.1 — уточнить по веб-источнику (шаг 2) и обновить `docs/rules/` (пересказ, не дословная копия).
+| Слой | Где | Содержание |
+|------|-----|------------|
+| Механика PHB (агенты + люди) | [`docs/rules/`](docs/rules/) | Пересказ **только механики**, без лора; без `mud_*` / `phb:auto` |
+| Статус реализации в MUD | [`docs/DND_RULES.md`](docs/DND_RULES.md), `database/` | Что уже в игре |
+| Официальные правила | веб PHB 2014 / SRD 5.1 | При пробелах и конфликтах |
+
+Локальный PDF PHB (`docs/*.pdf`) — рабочая копия, **не** в git и **не** шаг поиска по умолчанию.
 
 ### Алгоритм поиска (агенты и разработчики)
 
-Искать информацию **строго по порядку**; переходить к следующему шагу только если на текущем ответа нет или он явно неполный. **Не опираться на память модели** и не выдумывать правила.
+Искать **строго по порядку**; к следующему шагу — только если на текущем ответа нет или он явно неполный. **Не опираться на память модели** и не выдумывать правила.
 
 | Шаг | Источник | Как искать |
 |-----|----------|------------|
-| **1** | [`docs/rules/`](docs/rules/) | [`_index/lookup.yaml`](docs/rules/_index/lookup.yaml) (`by_alias` / `by_id`); детали — markdown `phb:auto`; обзор — [`docs/rules/README.md`](docs/rules/README.md), [`docs/DND_RULES.md`](docs/DND_RULES.md) |
-| **2** | Интернет | Официальные правила **D&D 5e до редакции 2024** (PHB 2014 / SRD 5.1). **Не** использовать правила PHB 2024+ как канон для этого проекта |
+| **1a** | [`docs/rules/_index/lookup.yaml`](docs/rules/_index/lookup.yaml) | `by_alias` (RU/EN/slug, регистр не важен) → `id`, или сразу `by_id` |
+| **1b** | та же запись `by_id` | Прочитать `quick` — краткая механика **без** открытия файла |
+| **1c** | `file` из `by_id` | Детали карточки (параметры, эффекты, таблицы) |
+| **1d** | обзор / статус | Человек: [`docs/rules/INDEX.md`](docs/rules/INDEX.md); guide: [`docs/rules/README.md`](docs/rules/README.md); MUD: [`docs/DND_RULES.md`](docs/DND_RULES.md) |
+| **2** | Интернет | Официальные правила **D&D 5e до редакции 2024** (PHB 2014 / SRD 5.1). **Не** PHB 2024+ |
 
-**При противоречии:** официальные правила 5e до 2024 (шаг 2) > пересказ в `docs/rules/` (шаг 1). После уточнения дополняй `docs/rules/`. После правок справочника при необходимости — `python scripts/build_rules_index.py` (нормализация индексов).
+**Вспомогательные индексы** (не вместо lookup): [`toc.yaml`](docs/rules/toc.yaml), [`_index/entities.yaml`](docs/rules/_index/entities.yaml), [`_index/spells.yaml`](docs/rules/_index/spells.yaml), заклинания [по уровню](docs/rules/_index/spells/by-level.md) / [по школе](docs/rules/_index/spells/by-school.md).
+
+**При противоречии:** шаг 2 > шаг 1. После уточнения обнови карточку в `docs/rules/` (`quick`, `aliases`) и вручную `lookup.yaml` / `toc.yaml` / `_index/*`. Генераторов индексов нет.
 
 Подробнее: [`docs/rules/README.md`](../docs/rules/README.md).
 

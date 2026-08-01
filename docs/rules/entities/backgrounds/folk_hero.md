@@ -1,27 +1,22 @@
 ---
+id: folk_hero
+type: background
 phb_chapter: 4
-phb_section: Народный герой
 phb_pages:
 - 121
 - 142
-phb_part: 1
-id: folk_hero
-tags:
-- background
-mud_status: partial
-type: background
-mud_refs:
-  yaml: database/backgrounds/backgrounds.yaml#folk_hero
 quick: 'Выживание, Уход за животными; умение: Деревенское гостеприимство'
+aliases:
+- folk_hero
+- folk hero
+- Народный герой
 ---
 
 # Народный герой
 
-> Источник: PHB, гл. 4. Только механика (навыки, снаряжение, умение).
+> Источник: PHB 2014. Пересказ механики, не дословная копия.
 
-## Правила (PHB)
-
-<!-- phb:auto:summary -->
+## Механика
 ### Навыки
 
 - Выживание
@@ -43,15 +38,3 @@ quick: 'Выживание, Уход за животными; умение: Де
 ### Умение: Деревенское гостеприимство
 
 - Среди простых людей легко найти укрытие, отдых и помощь.
-
-<!-- /phb:auto:summary -->
-
-## Реализация в MUD
-
-<!-- mud:implementation -->
-| Аспект | Значение |
-|--------|----------|
-| Статус | partial |
-| YAML | `database/backgrounds/backgrounds.yaml#folk_hero` |
-| Core | `core/backgrounds.py` |
-<!-- /mud:implementation -->

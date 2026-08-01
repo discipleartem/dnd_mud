@@ -1,26 +1,33 @@
 ---
+id: videnie_nevidimogo
+type: spell
 phb_chapter: 11
-phb_section: Видение Невидимого
 phb_pages:
 - 211
 - 289
-phb_part: 3
-id: videnie_nevidimogo
-tags:
-- spell
-- divination
-- level-2
-mud_status: planned
-type: spell
+quick: 2; divination; На себя — Пока заклинание активно, вы видите невидимых существ и предметы, как если
+  бы они были видимы, и в…
+aliases:
+- videnie_nevidimogo
+- videnie nevidimogo
+- Видение Невидимого
+level: 2
+school: divination
+casting_time: 1 действие
+range: На себя
+components: В, С, М (щепотка талька и толчёного серебра)
+duration: 1 час
 ---
 
 # Видение Невидимого
 
-> Источник: PHB, гл. 11. Пересказ правил, не дословная копия PHB.
+> Источник: PHB 2014. Пересказ механики, не дословная копия.
 
 ## Параметры
 
-<!-- phb:auto:parameters -->
+
+
+
 | Параметр | Значение |
 |----------|----------|
 | Уровень | 2 уровень |
@@ -29,20 +36,6 @@ type: spell
 | Дистанция | На себя |
 | Компоненты | В, С, М (щепотка талька и толчёного серебра) |
 | Длительность | 1 час |
-<!-- /phb:auto:parameters -->
 
 ## Эффект
-
-<!-- phb:auto:effect -->
 - Пока заклинание активно, вы видите невидимых существ и предметы, как если бы они были видимы, и ваше зрение простирается на Эфирный 214
-<!-- /phb:auto:effect -->
-
-## Реализация в MUD
-
-<!-- mud:implementation -->
-| Аспект | Значение |
-|--------|----------|
-| Статус | planned |
-| YAML | — |
-| Core | — |
-<!-- /mud:implementation -->

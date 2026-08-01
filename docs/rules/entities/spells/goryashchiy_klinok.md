@@ -1,26 +1,32 @@
 ---
+id: goryashchiy_klinok
+type: spell
 phb_chapter: 11
-phb_section: Горящий Клинок
 phb_pages:
 - 211
 - 289
-phb_part: 3
-id: goryashchiy_klinok
-tags:
-- spell
-- evocation
-- level-2
-mud_status: planned
-type: spell
+quick: 2; evocation; На себя [конц.]
+aliases:
+- goryashchiy_klinok
+- goryashchiy klinok
+- Горящий Клинок
+level: 2
+school: evocation
+casting_time: 1 бонусное действие
+range: На себя
+components: В, С, М (лист сумаха)
+duration: Концентрация, вплоть до 10 минут
 ---
 
 # Горящий Клинок
 
-> Источник: PHB, гл. 11. Пересказ правил, не дословная копия PHB.
+> Источник: PHB 2014. Пересказ механики, не дословная копия.
 
 ## Параметры
 
-<!-- phb:auto:parameters -->
+
+
+
 | Параметр | Значение |
 |----------|----------|
 | Уровень | 2 уровень |
@@ -29,22 +35,7 @@ type: spell
 | Дистанция | На себя |
 | Компоненты | В, С, М (лист сумаха) |
 | Длительность | Концентрация, вплоть до 10 минут |
-<!-- /phb:auto:parameters -->
 
 ## Эффект
-
-<!-- phb:auto:effect -->
 - Вы создаёте горящий клинок в свободной руке.
 - Этот клинок похож размерами и формой на скимитар, и он существует, пока заклинание активно.
-- Если вы выпустите клинок из рук, он исчезает, но 220
-<!-- /phb:auto:effect -->
-
-## Реализация в MUD
-
-<!-- mud:implementation -->
-| Аспект | Значение |
-|--------|----------|
-| Статус | planned |
-| YAML | — |
-| Core | — |
-<!-- /mud:implementation -->

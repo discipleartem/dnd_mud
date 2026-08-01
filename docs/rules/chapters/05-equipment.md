@@ -1,24 +1,21 @@
 ---
+id: 05-equipment
+type: chapter
 phb_chapter: 5
-phb_section: Снаряжение
 phb_pages:
 - 143
 - 161
-phb_part: 1
-id: 05-equipment
-tags:
-- chapter
-mud_status: partial
-type: chapter
+quick: Монеты, доспехи, оружие, снаряжение, инструменты, расходы
+aliases:
+- 05-equipment
+- Снаряжение
 ---
 
 # Снаряжение
 
-> Источник: PHB, стр. 143–161. Пересказ правил, не дословная копия PHB.
+> Источник: PHB 2014. Пересказ механики, не дословная копия.
 
-## Правила (PHB)
-
-<!-- phb:auto:summary -->
+## Механика
 ### Ынки Городов Заполнены Самыми
 
 - разнообразными покупателями и продавцами: тут и кузнецы дварфов, и эльфы резчики по дереву, и фермеры полуросликов и ювелиры гномов, не говоря уже о людях самых разных национальностей и культур.
@@ -115,59 +112,3 @@ type: chapter
 
 - СРЕДНИЙ ДОСПЕХ Средние доспехи предлагают лучшую защиту, чем лёгкие, но немного ограничивают перемещение.
 - Если вы носите средний доспех, вы при определении Класса Доспеха к базовому числу, предоставленному доспехом, добавляете модификатор Ловкости, но не более +2.
-<!-- /phb:auto:summary -->
-## Реализация в MUD
-
-<!-- mud:implementation -->
-| Аспект | Значение |
-|--------|----------|
-| Статус | **Частично:** каталог YAML + владения + API КД/атаки; **инвентарь и стартовое снаряжение класса при создании**; боевой цикл — Phase 2 |
-| YAML | [`database/equipment/armor.yaml`](../../database/equipment/armor.yaml), [`weapon.yaml`](../../database/equipment/weapon.yaml), [`equipment.yaml`](../../database/equipment/equipment.yaml), [`tools.yaml`](../../database/equipment/tools.yaml) |
-| Core | [`core/equipment.py`](../../core/equipment.py), [`core/proficiencies.py`](../../core/proficiencies.py), [`core/inventory.py`](../../core/inventory.py), [`core/starting_equipment.py`](../../core/starting_equipment.py) |
-| UI | [`ui/menus/proficiencies.py`](../../ui/menus/proficiencies.py), [`ui/menus/equipment.py`](../../ui/menus/equipment.py) |
-| Заметки | На персонаже — **токены** владений; `inventory` / `equipped` в JSON; `armor_id`/`weapon_id` в combat API передаются явно |
-
-### Владение (PHB)
-
-| Источник | Поведение в MUD |
-|----------|-----------------|
-| Класс / раса / подкласс / предыстория | Фиксированные токены через `build_fixed_proficiencies()` |
-| Выбор инструментов (`choice: true` в YAML) | Только `ProficiencyChoice`; в fixed не попадают варианты пула (напр. дварф — 1 из 3 ремесленных) |
-| Оружие | `has_weapon_proficiency()` — конкретный id или категория `simple` / `martial` |
-| Доспех / щит | `has_armor_proficiency()` — категория `light` / `medium` / `heavy` / `shield` |
-| Инструмент | `has_tool_proficiency()` — id, категория или пул (`artisans_tools`, …) |
-
-**Атака оружием:** владение → +бонус мастерства (`attack_roll_modifier`).
-
-**Доспех без владения:** помеха на проверки/спасброски/атаки Str и Dex (`armor_wearing_penalty`); запрет заклинаний — Phase 2.
-
-**Щит:** +2 к КД всегда при `shield=True` в `compute_ac()`; без владения щитом `armor_wearing_penalty(character, "shield")` → `True`.
-
-**Инструменты:** +бонус мастерства к проверке (`tool_check_modifier`); wiring в Phase 2 engine.
-
-**Дубли владений** (PHB гл. 4: замена на другое того же вида) — Phase 2.
-
-### Реализовано сейчас
-
-| Механика | Модуль |
-|----------|--------|
-| Загрузка оружия, доспехов, инструментов, наборов PHB | `core/equipment.py` |
-| Владения (класс/раса/предыстория/подкласс) | `core/proficiencies.py` |
-| Инвентарь, авто-экипировка, `compute_ac` | `core/inventory.py` |
-| Стартовое снаряжение класса (`starting_equipment` в YAML) | `core/starting_equipment.py` |
-| Стартовое снаряжение предыстории | `core/backgrounds.py` → merge в `build_new_character` / `persist_character` |
-| Шаг выбора инструментов при создании | `ui/menus/proficiencies.py` |
-| Шаг выбора снаряжения класса (а/б) | `ui/menus/equipment.py` |
-| Карточка персонажа: инвентарь, экипировка, КД | `ui/menus/display/` |
-
-### Запланировано (Phase 2)
-
-- Смена экипировки после создания (меню «надеть/снять»)
-- Покупка за золото, переносимость и encumbrance
-- Полный боевой цикл (урон, инициатива) — см. [09-combat.md](09-combat.md)
-
-### Зависимости engine
-
-- Расчёт КД и атак — [09-combat.md](09-combat.md)
-- Владения — [01-character-creation.md](chapters/01-character-creation.md), [`classes.yaml`](../../database/classes/classes.yaml)
-<!-- /mud:implementation -->

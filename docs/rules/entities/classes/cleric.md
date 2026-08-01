@@ -1,27 +1,21 @@
 ---
+id: cleric
+type: class
 phb_chapter: 3
-phb_section: Жрец
 phb_pages:
 - 56
 - 63
-phb_part: 1
-id: cleric
-type: class
-tags:
-- class
-mud_status: partial
 quick: к8; Мудрость; заклинатель; божественный домен с 1 ур.
-mud_refs:
-  yaml: database/classes/classes.yaml#cleric
+aliases:
+- cleric
+- Жрец
 ---
 
 # Жрец
 
-> Источник: PHB, стр. 56–63. Только механика.
+> Источник: PHB 2014. Пересказ механики, не дословная копия.
 
-## Правила (PHB)
-
-<!-- phb:auto:summary -->
+## Механика
 ### Хиты и основа
 
 - Кость хитов: 1к8; божественный домен с 1 уровня.
@@ -48,14 +42,3 @@ mud_refs:
 - **Жизни:** Тяжёлые доспехи; Поборник жизни; Сохранение жизни (канал).
 - **Света:** Заговор «Огненный снаряд»; Благословение дневного света; Сияние рассвета (канал).
 - **Обмана:** Благословение обманщика; Двуличность (канал); Божественный обман (клон).
-<!-- /phb:auto:summary -->
-
-## Реализация в MUD
-
-<!-- mud:implementation -->
-| Аспект | Значение |
-|--------|----------|
-| Статус | partial |
-| YAML | `database/classes/classes.yaml#cleric` |
-| Core | `core/classes.py`, `core/subclasses.py` |
-<!-- /mud:implementation -->

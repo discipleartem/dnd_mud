@@ -1,27 +1,21 @@
 ---
+id: outlander
+type: background
 phb_chapter: 4
-phb_section: Чужеземец
 phb_pages:
 - 121
 - 142
-phb_part: 1
-id: outlander
-tags:
-- background
-mud_status: partial
-type: background
-mud_refs:
-  yaml: database/backgrounds/backgrounds.yaml#outlander
 quick: 'Атлетика, Выживание; умение: Странник'
+aliases:
+- outlander
+- Чужеземец
 ---
 
 # Чужеземец
 
-> Источник: PHB, гл. 4. Только механика (навыки, снаряжение, умение).
+> Источник: PHB 2014. Пересказ механики, не дословная копия.
 
-## Правила (PHB)
-
-<!-- phb:auto:summary -->
+## Механика
 ### Навыки
 
 - Атлетика
@@ -46,15 +40,3 @@ quick: 'Атлетика, Выживание; умение: Странник'
 ### Умение: Странник
 
 - Отличная память на местность; еда и вода для себя и пятерых спутников.
-
-<!-- /phb:auto:summary -->
-
-## Реализация в MUD
-
-<!-- mud:implementation -->
-| Аспект | Значение |
-|--------|----------|
-| Статус | partial |
-| YAML | `database/backgrounds/backgrounds.yaml#outlander` |
-| Core | `core/backgrounds.py` |
-<!-- /mud:implementation -->

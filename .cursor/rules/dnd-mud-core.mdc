@@ -36,7 +36,13 @@ message = "New Game"                            # ❌
 
 ## D&D механика
 
-Поиск правил — [`00-project.mdc`](00-project.mdc) §D&D 5e — источник истины и поиск правил (`docs/rules/` → веб, 5e до 2024).
+Поиск правил — [`00-project.mdc`](00-project.mdc) §D&D 5e:
+
+1. [`docs/rules/_index/lookup.yaml`](../docs/rules/_index/lookup.yaml) (`by_alias` → `quick` → `file`)
+2. веб PHB 2014 / SRD 5.1 (не 2024+)
+3. статус в MUD — [`docs/DND_RULES.md`](../docs/DND_RULES.md)
+
+Оглавление для людей: [`docs/rules/INDEX.md`](../docs/rules/INDEX.md). Guide: [`docs/rules/README.md`](../docs/rules/README.md).
 
 - Модели в `core/character/models.py` — `dataclass` для `Character`, `Adventure`
 - `class_id: CharacterClass` на `Character` (`core/types.py`, `StrEnum`); legacy JSON с `str` нормализуется в `__post_init__`

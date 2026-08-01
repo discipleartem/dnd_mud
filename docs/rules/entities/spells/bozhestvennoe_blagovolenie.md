@@ -1,26 +1,30 @@
 ---
+id: bozhestvennoe_blagovolenie
+type: spell
 phb_chapter: 11
-phb_section: Божественное Благоволение
 phb_pages:
 - 211
 - 289
-phb_part: 3
-id: bozhestvennoe_blagovolenie
-tags:
-- spell
-- evocation
-- level-1
-mud_status: planned
-type: spell
+quick: 1; evocation; На себя [конц.] — оружие +1к4 излучением
+aliases:
+- bozhestvennoe_blagovolenie
+- Божественное Благоволение
+- Divine Favor
+- bozhestvennoe blagovolenie
+level: 1
+school: evocation
+casting_time: 1 бонусное действие
+range: На себя
+components: В, С
+duration: Концентрация, вплоть до 1 минуты
 ---
 
 # Божественное Благоволение
 
-> Источник: PHB, гл. 11. Пересказ правил, не дословная копия PHB.
+> Источник: PHB 2014. Пересказ механики, не дословная копия.
 
 ## Параметры
 
-<!-- phb:auto:parameters -->
 | Параметр | Значение |
 |----------|----------|
 | Уровень | 1 уровень |
@@ -29,20 +33,7 @@ type: spell
 | Дистанция | На себя |
 | Компоненты | В, С |
 | Длительность | Концентрация, вплоть до 1 минуты |
-<!-- /phb:auto:parameters -->
 
 ## Эффект
 
-<!-- phb:auto:effect -->
-_См. PHB._
-<!-- /phb:auto:effect -->
-
-## Реализация в MUD
-
-<!-- mud:implementation -->
-| Аспект | Значение |
-|--------|----------|
-| Статус | planned |
-| YAML | — |
-| Core | — |
-<!-- /mud:implementation -->
+- Пока заклинание активно, ваши попадания оружием наносят дополнительно 1к4 урона излучением.

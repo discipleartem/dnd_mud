@@ -3,6 +3,10 @@
 ## [Unreleased]
 
 ### Changed
+- **Spell cards fix:** восстановлены пустые `## Эффект` (23); `major_image` → `magic_mouth`; словари RU↔EN дополнены
+- **Справочник PHB UX/agent:** обязательный `quick` у всех карточек; эффекты заклинаний без флавора; `rules/INDEX.md` для людей; aliases в обоих регистрах
+- **Алгоритм поиска PHB:** `00-project.mdc` / `AGENTS.md` / `DND_RULES` — `lookup.yaml` (`by_alias` → `quick` → `file`) → веб 2014/SRD; без `phb:auto` / генераторов
+- **Справочник PHB `docs/rules/` (agent-v2):** полная замена — только механика без лора и без MUD-блоков; ручные `lookup.yaml` / `toc.yaml`; статус MUD — в [`DND_RULES.md`](DND_RULES.md)
 - **Architecture package restructure:** `core/` разбит на пакеты (`platform/`, `catalogs/`, `grants/`, `character/`, `feats/`, `progression/`, `inventory/`, `mechanics/`, `engine/` + `combat/`); leaf-imports без package facades; `CatalogSession` в `platform/catalog_session.py`; grant format в `core/grants/format.py`; `ui/menus/` — `hub/`, `creation/`, `progression/`, `scenario/`, `display/`, `feats/`, `stats/`; тесты зеркалят пакеты (`tests/core/…`, `tests/ui/`, `tests/data/`)
 - **Clean Code epic (B+C):** leaf `grants_resolve` / `feat_catalog`; sibling-модули feats/progression/inventory + фасады; UI `console.py` вместо `_common`; `grant_labels`, `session_runner`, `creation_finalize`; docs sync (нет `character_builder` / `_display`)
 - **Code slim refactor:** purge мёртвого API; `core/combat.py` вместо пакета; `ui/menus/display/` вместо `_display` god-file; `core/hp_bonus.py` + `core/expertise.py` sibling-модули; dedupe UI picks / scenario checks; slim `character_build`
@@ -11,6 +15,7 @@
 - **Mod gating:** после сессии приключения `reset_session_catalogs()` возвращает gating к `normal` (`new_game` / `load_game`)
 
 ### Removed
+- **`scripts/build_rules_index.py` / `scripts/rules_class_data.py`:** индексы справочника ведутся вручную; локальный PDF PHB в `docs/*.pdf` игнорируется git
 - **PDF-workflow:** `scripts/phb_spell_parse.py` и синк заклинаний из PDF в `build_rules_index.py`; алгоритм поиска правил — `docs/rules/` → веб (PHB 2014 / SRD 5.1), без локального PDF
 - **kwargs-`build_new_character` / `to_kwargs` / draft plan:** единственный API — `build_new_character(CharacterBuildParams)`; удалены мёртвые `_handle_action_result`, `_versatile_can_switch_to_two_hands`; черновик `docs/refactor-simplify-ae2709.md`
 - **Черновик `docs/tokenize.md`:** правила минимального контекста LLM перенесены в global User Rules (`~/.cursor/rules/ai-context.mdc`)
