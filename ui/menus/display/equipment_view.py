@@ -94,6 +94,19 @@ def _print_character_equipment(
             else:
                 print()
 
+        if char.inventory:
+            inv_line = format_inventory_line(
+                char.inventory, language, equipped=char.equipped
+            )
+            if inv_line:
+                inv_display = f"{Fore.CYAN}{inv_line}{Style.RESET_ALL}"
+                _print_labeled_field(
+                    strings,
+                    "choose_character.field_inventory",
+                    inv_display,
+                    indent=indent,
+                )
+
 
 def format_inventory_line(
     inventory: list[InventoryItem],
