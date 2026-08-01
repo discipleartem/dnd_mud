@@ -17,6 +17,12 @@ type StringsDict = dict[str, Any]
 type GameDifficulty = Literal["easy", "normal", "hardcore"]
 type LanguageCode = Literal["ru", "en"]
 
+def parse_game_difficulty(raw: object) -> GameDifficulty
+```
+
+Нормализует строку/значение из JSON в `GameDifficulty`; неизвестное → `"normal"`.
+
+```python
 class CharacterClass(StrEnum):
     FIGHTER = "fighter"
     ROGUE = "rogue"
@@ -71,8 +77,6 @@ class CharacterBuildParams:
     class_features_applied: bool = False
     apply_feat_stat_bonuses: bool = True
     unique_save_slug: Callable[[str], str] = lambda name: name
-```
-
 ```
 
 Re-export типов: `core.types`. Функции персонажа — leaf-модули (`character_storage`, `stats`, `races`, …).
@@ -156,11 +160,11 @@ class Adventure:
 ### Константы и save/load
 
 ```python
-STANDARD_ARRAY = [15, 14, 13, 12, 10, 8]  # core.mechanics.stats
-STAT_NAMES = [...]  # core.mechanics.stats
+STANDARD_ARRAY = [15, 14, 13, 12, 10, 8]  # core.constants
+STAT_NAMES = [...]  # core.mechanics.stats (из abilities.yaml)
 CHARACTERS_DIR = Path("saves/characters")  # core.character.storage
-RACES_FILE = Path("database/races/races.yaml")  # core.catalogs.races
-CLASSES_FILE = Path("database/classes/classes.yaml")  # core.catalogs.classes
+RACES_FILE = Path("database/races/races.yaml")  # core.platform.paths
+CLASSES_FILE = Path("database/classes/classes.yaml")  # core.platform.paths
 ```
 
 ### Сохранение и загрузка
@@ -187,13 +191,13 @@ get_effective_race_bonuses(
     choice_bonuses: StatMap | None = None,
 ) -> StatMap
 
-POINT_BUY_BUDGET = 27
-POINT_BUY_COSTS: dict[int, int]
-point_buy_cost(score: int) -> int
+POINT_BUY_BUDGET = 27  # core.constants
+POINT_BUY_COSTS: dict[int, int]  # core.constants
+point_buy_cost(score: int) -> int  # core.mechanics.stats
 point_buy_total_cost(values: list[int]) -> int
 can_assign_point_buy_value(current: StatMap, stat: str, new_value: int) -> bool
 validate_final_stats(stats: StatMap) -> tuple[str, int] | None
-ABILITY_SCORE_MIN = 1
+ABILITY_SCORE_MIN = 1  # core.constants
 ABILITY_SCORE_DEFAULT = 10
 ABILITY_SCORE_MAX = 20
 ```
@@ -209,7 +213,7 @@ Flow создания: `_CreationState.to_character()` (передаёт `unique
 
 ### Генерация характеристик
 
-**Константы** (`core/mechanics/stats.py`):
+**Константы:** `STANDARD_ARRAY`, `POINT_BUY_*`, `ABILITY_SCORE_*` — `core.constants`; `STAT_NAMES` — `core.mechanics.stats` (из `abilities.yaml`).
 
 ```python
 STANDARD_ARRAY = [15, 14, 13, 12, 10, 8]
@@ -420,17 +424,34 @@ load_catalog_items(
 reload_catalogs() -> None
 ```
 
-Deep-merge модов через `mod_loader` (overlay по полю `target` — путь к базовому YAML в `manifest.yaml`); кэш `@lru_cache` на `load_catalog` и `load_merged_catalog`.  
+Deep-merge модов через `mod_loader` (overlay по полю `target` — путь к базовому YAML в `manifest.yaml`); кэш `@lru_cache` на `load_catalog` и `load_merged_catalog`. Сброс кэшей — только `reload_catalogs()` (или `CatalogSession.reset()`).  
 `load_catalog_items` — универсальный загрузчик элементов каталога с локализацией (DRY для `load_races`, `load_languages` и т.д.).  
 Bootstrap/reset mod gating — `CatalogSession.bootstrap` / `.reset` (`core/platform/catalog_session.py`); UI: `get_catalog_session()` в `new_game` / `load_game`.
+
+---
+
+## core.platform.paths — Пути к данным и сохранениям
+
+Единый источник `Path`-констант для каталогов, saves и mods:
+
+```python
+CONSTANTS_FILE, ABILITIES_FILE, SKILLS_FILE, LANGUAGES_FILE
+SETTINGS_PATH, MODS_STATE_FILE
+RACES_FILE, CLASSES_FILE, BACKGROUNDS_FILE
+WEAPONS_FILE, ARMOR_FILE, TOOLS_FILE, EQUIPMENT_FILE
+FEATS_FILE, ADVENTURES_FILE, STRINGS_DIR
+SAVES_DIR, SESSIONS_DIR, CREATION_DRAFT_PATH, MODS_DIR
+```
+
+Loaders и storage импортируют пути отсюда; `CHARACTERS_DIR` — `SAVES_DIR / "characters"` в `core.character.storage`.
 
 ---
 
 ## core.platform.mod_loader — Overlay модов (низкий уровень)
 
 ```python
-MODS_DIR = Path("mods")
-MODS_STATE_FILE = Path("database/core/mods_state.json")
+MODS_DIR  # re-export из core.platform.paths
+MODS_STATE_FILE
 
 load_merged_yaml(path: Path) -> dict[str, Any]
 load_merged_catalog(path_str: str, catalog_key: str) -> dict[str, Any]
@@ -461,6 +482,11 @@ armor_category(armor_id: str) -> str
 tool_category(tool_id: str) -> str
 tools_by_category(category: str) -> list[str]
 resolve_tool_pool(pool: str) -> list[str]
+```
+
+Пулы инструментов (`artisans_tools`, `musical_instruments`, …) — в `database/equipment/tools.yaml` (`tool_pools`).
+
+```python
 get_weapon_name(weapon_id: str, language: str = "ru") -> str
   # melee + two_handed: префикс weapon_name.two_handed_prefix, если его ещё нет в имени
 get_armor_name(armor_id: str, language: str = "ru") -> str
@@ -510,23 +536,45 @@ format_inventory_line(inventory, language="ru", *, equipped=None) -> str
 
 ```python
 get_class_starting_equipment_config(class_id: str) -> dict
-equipment_choice_label(choice_id, strings) -> str
 resolve_starting_items(class_id, choices, weapon_proficiencies, armor_proficiencies) -> list[dict]
 weapons_for_pool(pool: str, weapon_proficiencies: list[str]) -> list[str]
 ```
 
----
-
-## core.constants — Константы PHB
-
-Источник: `database/core/constants.yaml`.
+Подписи и сводки UI — `core.inventory.starting_equipment_labels`:
 
 ```python
+equipment_choice_label(choice_id, strings) -> str
+format_equipment_option_label(option, strings, language="ru") -> str
+summarize_class_starting_equipment(class_id, strings, language="ru") -> str
+```
+
+---
+
+## core.constants — Константы PHB и прогрессии
+
+Источник модификаторов/PB/DC: `database/core/constants.yaml` (без `hit_dice` — SoT в `classes.yaml`).
+
+```python
+MAX_CHARACTER_LEVEL = 10
+EASY_START_LEVEL = 3
+XP_THRESHOLDS: list[int]  # PHB, уровни 1–10
+
+STANDARD_ARRAY = [15, 14, 13, 12, 10, 8]
+POINT_BUY_BUDGET = 27
+POINT_BUY_COSTS: dict[int, int]
+ABILITY_SCORE_MIN = 1
+ABILITY_SCORE_DEFAULT = 10
+ABILITY_SCORE_MAX = 20
+
 ABILITY_MODIFIER_SCORE_MIN = 1
 ABILITY_MODIFIER_SCORE_MAX = 30
-proficiency_bonus(level: int) -> int
-ability_modifier(score: int) -> int  # clamp 1–30, таблица ability_modifiers из YAML
+
+def clamp_level(level: int) -> int
+def proficiency_bonus(level: int) -> int
+def ability_modifier(score: int) -> int  # clamp 1–30, таблица ability_modifiers из YAML
 ```
+
+`XP_THRESHOLDS` re-export в `core.progression.xp_levels`.
 
 ---
 
@@ -547,7 +595,7 @@ ability_for_skill(skill_id: str) -> str | None
 
 ## core.feats — Черты
 
-Источник: `database/progression/feats.yaml`. Leaf-модули: `core.feats.catalog`, `apply`, `text`, `requirements`. UI: пакет `ui/menus/feats/` (`select_creation_feats`, `select_level_up_feat_or_asi`).
+Источник: `database/progression/feats.yaml`. Leaf-модули: `core.feats.catalog`, `apply`, `text`, `requirements`, `requirement_handlers`. UI: пакет `ui/menus/feats/` (`select_creation_feats`, `select_level_up_feat_or_asi`).
 
 ```python
 load_feats() -> list[dict[str, Any]]
@@ -559,10 +607,14 @@ build_feat_selection_context(stats, race_id, subrace_id, background_id, class_id
 list_feats_for_selection(ctx, existing_ids) -> tuple[eligible, blocked, hidden]
 resolve_feat_grants(feat_id, choices) -> tuple[weapons, armors, tools, skills]
 get_feat_skill_ids(feat_ids, feat_choices) -> list[str]
+get_feat_proficiency_tokens(feat_ids: list[str]) -> tuple[...]  # core.feats.catalog
 apply_feats_to_stats(stats, feat_ids, feat_choices) -> StatMap
+apply_feat_pick(stats, feat_id, subchoices=None) -> StatMap
 apply_feat_grants_to_character(character, feat_id, choices) -> Character
 tough_hp_adjustment_on_acquire(level) -> int
 ```
+
+`requirement_handlers.py` — реестр проверок и текстов требований по `type` (вместо разрозненных helpers).
 
 `apply_feat_grants_to_character` — владения, навыки, языки и экспертиза одной черты; вызывается при левелапе (`progression/level_up.py`, `process_pending_level_ups`).
 
@@ -589,6 +641,7 @@ expertise_step_required(class_id, character_level) -> bool
 pending_expertise_grants(character) -> list[ExpertiseGrant]
 validate_expertise_selection(...) -> bool
 default_rogue_tool_expertise() -> list[str]
+merge_expertise_lists(skill_expertise, tool_expertise, new_skills, new_tools) -> tuple[list[str], list[str]]
 ```
 
 Импорт из leaf-модуля (без package facade).
@@ -600,6 +653,8 @@ ASI и связанные helpers живут в `core/progression/asi.py`.
 ```python
 class_grants_asi_at_level(class_id, level) -> bool
 pending_asi_at_level(character, new_level) -> bool
+would_exceed_cap(current: int, amount: int) -> bool
+apply_asi_pick(stats, picks: tuple[str, str]) -> StatMap
 apply_asi_two_one(stats, stat) -> StatMap
 con_hp_bonus_from_asi(old_stats, new_stats, level) -> int
 ```
@@ -608,28 +663,33 @@ con_hp_bonus_from_asi(old_stats, new_stats, level) -> int
 
 ## core.mechanics.proficiencies — Владения
 
-Merge токенов из класса, подкласса, расы, предыстории и черт. На персонаже хранятся **токены** (`simple`, `martial`, `longsword`, `light`, `thieves_tools`, …), не развёрнутые списки предметов.
+Сбор токенов — `core.mechanics.proficiency_collect`; проверки — `core.mechanics.proficiencies`. Merge списков — `core.platform.io.merge_unique`.
 
 ```python
 ProficiencyChoice  # dataclass: pool, count, label
 
-merge_proficiency_tokens(*parts: list[str]) -> list[str]
+# proficiency_collect.py
 get_class_proficiency_tokens(class_id: str) -> tuple[list[str], list[str], list[str]]
 get_class_tool_choices(class_id: str) -> list[ProficiencyChoice]
 get_subclass_proficiency_tokens(class_id, subclass_id, level) -> tuple[...]
 get_racial_proficiency_tokens(race_id, subrace_id) -> tuple[...]
 get_background_tool_proficiencies(background_id) -> tuple[list[str], list[ProficiencyChoice]]
-get_feat_proficiency_tokens(feat_ids: list[str]) -> tuple[...]
 get_proficiency_choices(...) -> list[ProficiencyChoice]
-build_fixed_proficiencies(...) -> tuple[list[str], list[str], list[str]]
+get_class_saving_throws(class_id: str) -> list[str]
+
+# proficiencies.py — проверки
 has_weapon_proficiency(proficiencies, weapon_id) -> bool
 has_armor_proficiency(proficiencies, armor_id) -> bool
 has_tool_proficiency(proficiencies, tool_id) -> bool
-get_class_saving_throws(class_id: str) -> list[str]
+
+# grants/resolve.py
+build_fixed_proficiencies(...) -> tuple[list[str], list[str], list[str]]
+
+# progression/subclass_proficiencies.py
 apply_subclass_proficiencies_to_character(character) -> Character
 ```
 
-Импорт из `core.mechanics.proficiencies`.
+Импорт leaf-модулей напрямую (без package facade).
 
 ---
 
@@ -734,7 +794,7 @@ get_string(
 ## core.platform.settings — Настройки пользователя
 
 ```python
-SETTINGS_PATH = Path("database/core/settings.json")
+SETTINGS_PATH  # core.platform.paths
 load_settings() -> RuntimeSettings
 save_settings(language: str) -> None
 ```
@@ -868,6 +928,7 @@ grants_at_level(class_info: dict[str, Any], level: int) -> list[dict[str, Any]]
 ## core.progression.class_progression — Подклассы и режимы
 
 ```python
+def subclass_active_at_level(class_id, subclass_id, level) -> bool
 def features_up_to_level(features: list, max_level: int = MAX_CHARACTER_LEVEL) -> list
 def start_level_for_difficulty(difficulty: GameDifficulty) -> int
 def subclass_offered_at_creation(difficulty: GameDifficulty, class_id: str, start_level: int | None = None) -> bool
@@ -876,6 +937,8 @@ def needs_subclass_npc(character: Character) -> bool
 def effective_subclass_id(character: Character) -> str | None
 ```
 
+`subclass_active_at_level` — замена удалённых `subclass_skills_active` / `subclass_proficiencies_active`.
+
 ---
 
 ## core.progression — Опыт и уровни
@@ -883,7 +946,7 @@ def effective_subclass_id(character: Character) -> str | None
 Leaf-модули: `xp_levels`, `hp`, `asi`, `class_progression`, `level_up` (без package facade).
 
 ```python
-XP_THRESHOLDS: list[int]  # PHB, уровни 1–10
+XP_THRESHOLDS: list[int]  # core.constants; re-export в xp_levels
 
 def level_from_xp(experience: int) -> int
 def hp_gain_for_level(
@@ -901,6 +964,9 @@ def max_hp_for_level(
 def grant_experience(character: Character, amount: int) -> Character
 def has_pending_level_up(character: Character) -> bool
 def apply_level_up(character: Character, hp_gain: int) -> Character
+def resolve_level_up_asi(
+    character, new_level, *, stats, feat_ids, feat_choices, asi_value,
+) -> AsiResolution
 def process_pending_level_ups(
     character: Character,
     *,
@@ -911,7 +977,7 @@ def process_pending_level_ups(
 
 **HP по режиму:** Normal/Easy — макс. кость на 1 ур. (`max(1, …)`), среднее на 2+; HardCore — бросок кости на каждом уровне с полом `max(1, кость + CON)`.
 
-**Левелап:** сценарии и UI начисляют XP через `grant_experience`; повышение — по одному уровню (`apply_level_up` + экран `ui/menus/progression/level_up.py`).
+**Левелап:** сценарии и UI начисляют XP через `grant_experience`; повышение — `process_pending_level_ups` (headless) или UI `run_pending_level_ups`.
 
 **UI:** `run_pending_level_ups(strings, character, language) -> Character` (`ui/menus/progression/level_up.py`).
 
@@ -974,6 +1040,7 @@ load_adventures() -> list[Adventure]
 ```python
 roll(count=1, sides=20, modifier=0) -> int
 roll_ability_score() -> int
+roll_stat_pool() -> list[int]  # 6× roll_ability_score
 ability_modifier(score: int) -> int  # re-export из core.constants
 ```
 
@@ -1036,3 +1103,40 @@ safe_input(prompt: str, strings: dict | None = None) -> str
 get_int_input(prompt: str, min_val: int, max_val: int, strings: dict | None = None) -> int
 get_str_input(prompt: str, min_length: int = 1, only_letters: bool = False, strings: dict | None = None) -> str
 ```
+
+---
+
+## ui.menus.console — UI toolkit
+
+```python
+print_screen_header(title: str) -> None
+read_numbered_choice(...) -> int
+run_numbered_menu(strings, options, *, prompt_key, ...) -> int | None
+pick_n_from_pool(strings, pool, count, *, header, label_for, prompt_key) -> list[str] | None
+```
+
+`run_numbered_menu` — замена удалённого `run_options_with_back`.
+
+---
+
+## ui.menus.display — Отображение
+
+| Модуль | Назначение |
+|--------|-----------|
+| `display/grants_text.py` | Текстовое форматирование grants (бывший `core/grants/format.py`) |
+| `display/character_list.py` | Список персонажей в hub-меню |
+| `display/character_card.py` | Карточка одного персонажа |
+| `display/equipment_view.py` | Строки инвентаря |
+
+---
+
+## ui.menus.hub._characters_cache — Кэш персонажей
+
+```python
+@dataclass
+class CharactersLoadSession:
+    def characters(self, strings: StringsDict) -> list[Character]
+    def invalidate(self) -> None
+```
+
+Ленивая загрузка `LoadCharactersResult` с однократным показом предупреждений о битых сейвах; `characters_menu.py` сбрасывает кэш после create/delete.

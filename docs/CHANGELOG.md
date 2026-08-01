@@ -6,6 +6,7 @@
 - **Черновик создания персонажа:** `saves/creation_draft.json`, пункт «Продолжить» в главном меню; autosave между шагами; Ctrl+C на вводе игнорируется (`safe_input` + safety-net в `main`)
 
 ### Changed
+- **Clean Code SOLID pass (8 parts):** leaf-import hygiene; `core/platform/paths.py`; grant display → `ui/menus/display/grants_text.py`; `CharactersLoadSession`; `requirement_handlers`; XP/point-buy constants → `core/constants.py`; `merge_unique` вместо merge-proficiency helpers; `run_numbered_menu` вместо `run_options_with_back`; `subclass_active_at_level`; `tool_pools` в `tools.yaml`; docs sync API/ARCHITECTURE
 - **Clean Code architecture pass:** `Adventure` → `catalogs/adventure`; background gear → `inventory/background_equipment`; racial HP → `mechanics/hp_bonus`; mod gating API → `CatalogSession`; `proficiency_collect` + `feats/grant_merge` (leaf `grants.resolve`); grant format registry; `equipment_text` / `equipped_display`; UI pool-pick helpers (`SCREEN_WIDTH`, `pick_from_pool_loop`)
 - **Spell cards fix:** восстановлены пустые `## Эффект` (23); `major_image` → `magic_mouth`; словари RU↔EN дополнены
 - **Справочник PHB UX/agent:** обязательный `quick` у всех карточек; эффекты заклинаний без флавора; `rules/INDEX.md` для людей; aliases в обоих регистрах
@@ -21,6 +22,7 @@
 - **Mod gating:** после сессии приключения `CatalogSession.reset()` возвращает gating к `normal` (`new_game` / `load_game`)
 
 ### Removed
+- **Clean Code SOLID pass:** `core/engine/combat/` (Phase 2 rewrite); dead API (`apply_experience`, `resolve_pending_level_ups`, `passive_skill`, `difficulty_class`, `delete_session`, `get_feat_proficiency_grants`, `proficiency_tokens_from_grant`, `merge_feat_languages`, `clear_catalog_cache` / `clear_all_catalog_caches`, `run_options_with_back`, `merge_proficiencies` / `merge_proficiency_tokens`, `subclass_skills_active` / `subclass_proficiencies_active`); `hit_dice` из `constants.yaml`
 - **Dead code audit:** пустой stub `core/engine/combat/turn_order.py`; неиспользуемые `filter_available_options`, `roll_hp_gain_for_level_up`, `racial_languages_step_required`, `get_race_skill_choices`, `bootstrap_session_catalogs`, `reset_session_catalogs`; путь CLI `scripts/validate_data.py` → `tests/data/test_data_schema.py`
 - **`scripts/build_rules_index.py` / `scripts/rules_class_data.py`:** индексы справочника ведутся вручную; локальный PDF PHB в `docs/*.pdf` игнорируется git
 - **PDF-workflow:** `scripts/phb_spell_parse.py` и синк заклинаний из PDF в `build_rules_index.py`; алгоритм поиска правил — `docs/rules/` → веб (PHB 2014 / SRD 5.1), без локального PDF

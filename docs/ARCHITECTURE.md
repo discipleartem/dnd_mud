@@ -27,7 +27,8 @@
 | `ui/menus/hub/load_game.py` | Flow «Загрузить игру» (сессии в `saves/sessions/`) |
 | `ui/menus/hub/mods_menu.py` | Включение/выключение модов |
 | `ui/menus/hub/new_game.py` | Flow «Новая игра» |
-| `ui/menus/hub/characters_menu.py` | Список персонажей; кэш `LoadCharactersResult`, reload после create/delete |
+| `ui/menus/hub/characters_menu.py` | Список персонажей; `CharactersLoadSession` (`_characters_cache.py`), reload после create/delete |
+| `ui/menus/hub/_characters_cache.py` | `CharactersLoadSession` — ленивая загрузка и предупреждения о битых сейвах |
 | `ui/menus/hub/settings.py` | Настройки, языки, выбор сложности |
 | `ui/menus/creation/` | Flow «Создать персонажа»: steps, handlers, navigation, state, finalize |
 | `ui/menus/creation/selectors.py` | Общие селекторы расы, класса, подкласса |
@@ -47,8 +48,10 @@
 | `ui/menus/stats/stats_methods.py` | Standard array, point-buy, random |
 | `ui/menus/stats/stats_choice_bonuses.py` | Выборные расовые бонусы |
 | `ui/menus/feats/` | Выбор черт при создании и левелапе (публичный API в `__init__.py`) |
-| `ui/menus/display/` | Отображение: grants, раса/фон, stats, карточка, экипировка, класс |
-| `ui/menus/console.py` | Публичный UI toolkit: `print_screen_header`, `read_numbered_choice`, … |
+| `ui/menus/display/` | Отображение: `grants_text`, `character_list`, `character_card`, раса/фон, stats, экипировка, класс |
+| `ui/menus/display/grants_text.py` | Текстовое форматирование grants (бывший `core/grants/format.py`) |
+| `ui/menus/display/character_list.py` | Список персонажей (split из `character_card`) |
+| `ui/menus/console.py` | Публичный UI toolkit: `print_screen_header`, `run_numbered_menu`, `pick_n_from_pool`, … |
 | `ui/terminal_wrap.py` | Перенос текста под ширину терминала |
 | `ui/input_handler.py` | Валидация ввода, UTF-8 для stdin/stdout |
 
@@ -63,8 +66,9 @@ UI не читает файлы данных напрямую — только �
 | Пакет / модуль | Назначение |
 |----------------|-----------|
 | `core/types.py` | Типы домена: `StatMap`, `CharacterClass`, `CharacterBuildParams`, … |
-| `core/constants.py` | PB, DC; `MAX_CHARACTER_LEVEL`, `clamp_level`; ability modifier |
-| **`core/platform/`** | I/O, каталоги, локализация, настройки, моды |
+| `core/constants.py` | PB, DC; `MAX_CHARACTER_LEVEL`, `XP_THRESHOLDS`, point-buy/ability-score; ability modifier |
+| **`core/platform/`** | I/O, каталоги, локализация, настройки, моды, пути |
+| `platform/paths.py` | Канонические `Path`-константы (`RACES_FILE`, `SESSIONS_DIR`, …) |
 | `platform/io.py` | `load_file()`, `load_yaml()` / `load_json()` (`strict`), `save_json()` / `merge_unique()` |
 | `platform/catalog_loader.py` | `load_catalog()`, `load_catalog_items()`, `reload_catalogs()` |
 | `platform/catalog_session.py` | `CatalogSession` — gating модов (`set_mod_gating_difficulty` / `get_mod_gating_difficulty`) и сброс кэшей; `get_catalog_session()` |
@@ -100,11 +104,12 @@ UI не читает файлы данных напрямую — только �
 | `feats/selection_side_effects.py` | Накопление weapon/skill/tool после выбора черты |
 | `feats/text.py` / `requirement_text.py` | PHB-текст и описания требований |
 | `feats/requirements.py` | Видимость / требования |
+| `feats/requirement_handlers.py` | Реестр проверок и текстов требований по `type` |
 | **`core/progression/`** | XP, HP, ASI, class features, level-up |
 | `progression/xp_levels.py` | Пороги XP |
 | `progression/hp.py` | HP по уровню / режиму |
 | `progression/asi.py` | ASI helpers |
-| `progression/class_progression.py` | Подклассы, старт по difficulty, class features |
+| `progression/class_progression.py` | Подклассы, `subclass_active_at_level`, старт по difficulty, class features |
 | `progression/subclass_proficiencies.py` | Apply владений подкласса / picked tools |
 | `progression/level_up.py` | Разрешение pending level-ups |
 | **`core/inventory/`** | Инвентарь, КД, стартовое снаряжение |
@@ -115,7 +120,7 @@ UI не читает файлы данных напрямую — только �
 | `inventory/equipped_display.py` | Данные экипировки для карточки (`get_equipped_display`) |
 | `inventory/equip_defaults.py` | Авто-экипировка |
 | `inventory/starting_equipment.py` | Resolve стартового снаряжения класса из YAML |
-| `inventory/starting_equipment_labels.py` | Подписи и сводки стартового снаряжения |
+| `inventory/starting_equipment_labels.py` | Подписи и сводки стартового снаряжения (presentation) |
 | **`core/mechanics/`** | Броски, проверки, владения, характеристики |
 | `mechanics/dice.py` | `roll()`, `roll_ability_score()`, `ability_modifier()` |
 | `mechanics/stats.py` | Генерация/валидация характеристик |
@@ -148,7 +153,8 @@ UI не читает файлы данных напрямую — только �
 | `database/progression/feats.yaml` | Черты | YAML | `feats/catalog.py` |
 | `database/core/abilities.yaml` | Характеристики и привязка навыков | YAML | `catalogs/abilities.py` |
 | `database/core/skills.yaml` | Метаданные навыков | YAML | `catalogs/skills.py` |
-| `database/core/constants.yaml` | PB, DC, cover, sizes, ability modifiers | YAML | `constants.py` |
+| `database/core/constants.yaml` | PB, DC, cover, sizes, ability modifiers (без `hit_dice` — SoT в `classes.yaml`) | YAML | `constants.py` |
+| `database/equipment/tools.yaml` | Инструменты; `tool_pools` для категориальных пулов | YAML | `catalogs/equipment.py` |
 | `database/core/languages.yaml` | Языки PHB | YAML | `catalogs/languages.py` |
 | `database/core/settings.json` | Настройки | JSON | `platform/settings.py` |
 | `database/core/mods_state.json` | Включённые моды | JSON | `platform/mod_loader.py` |
