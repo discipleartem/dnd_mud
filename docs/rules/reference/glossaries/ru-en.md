@@ -2,13 +2,9 @@
 id: ru-en
 type: glossary
 phb_chapter: 0
-phb_pages:
-- 317
-- 320
-quick: Словарь PHB RU→EN
-aliases:
-- ru-en
-- Русско-английский словарь
+phb_pages: [317, 320]
+quick: "Словарь PHB RU→EN (312 терминов)"
+aliases: [ru-en, Русско-английский словарь, русско-английский словарь]
 ---
 
 # Русско-английский словарь
@@ -198,3 +194,132 @@ aliases:
 - **Огненная стена** — Wall of fire
 - **Огненные ладони** — Burning hands
 - **Огненный снаряд** — Fire bolt
+- **Ловкость рук** — Sleight of Hand
+- **Подмога** — Aid
+- **Сигнал тревоги** — Alarm
+- **Смена обличья** — Alter self
+- **Дружба с животными** — Animal friendship
+- **Почтовое животное** — Animal messenger
+- **Превращение в животных** — Animal shapes
+- **Оживление вещей** — Animate objects
+- **Преграда жизни** — Antilife shell
+- **Преграда магии** — Antimagic field
+- **Доспех Агатиса** — Armor of Agathys
+- **Руки Хадара** — Arms of Hadar
+- **Проекция в астрал** — Astral projection
+- **Пробуждение разума** — Awaken
+- **Порча** — Bane
+- **Изгоняющая кара** — Banishing smite
+- **Изгнание** — Banishment
+- **Дубовая кора** — Barkskin
+- **Животные чувства** — Beast sense
+- **Проклятие** — Bestow curse
+- **Стена клинков** — Blade barrier
+- **Защита от оружия** — Blade ward
+- **Усыхание** — Blight
+- **Ослепляющая кара** — Blinding smite
+- **Размытый образ** — Blur
+- **Клеймящая кара** — Branding smite
+- **Призыв молнии** — Call lightning
+- **Умиротворение** — Calm emotions
+- **Пляшущая молния** — Chain lightning
+- **Очарование личности** — Charm person
+- **Леденящее прикосновение** — Chill touch
+- **Цветной шарик** — Chromatic orb
+- **Круг смерти** — Circle of death
+- **Круг силы** — Circle of power
+- **Подсматривание** — Clairvoyance
+- **Сверкающие брызги** — Color spray
+- **Приказ** — Command
+- **Понимание языков** — Comprehend languages
+- **Принуждение** — Compulsion
+- **Конус холода** — Cone of cold
+- **Смятение** — Confusion
+- **Эвардовы чёрные щупальца** — Evard's black tentackles
+- **Поспешное отступление** — Expeditious retreat
+- **Разящее око** — Eyebite
+- **Изготовление** — Fabricate
+- **Огонь фей** — Faerie fire
+- **Псевдожизнь** — False life
+- **Ужас** — Fear
+- **Падение пёрышком** — Feather fall
+- **Слабоумие** — Feeblemind
+- **Притворная смерть** — Feign death
+- **Поиск фамильяра** — Find familiar
+- **Поиск скакуна** — Find steed
+- **Поиск пути** — Find the path
+- **Поиск ловушек** — Find traps
+- **Перст смерти** — Finger of death
+- **Огненный щит** — Fire shield
+- **Огненный шар** — Fireball
+- **Пылающий шар** — Flaming sphere
+- **Окаменение** — Flesh to stone
+- **Полёт** — Fly
+- **Туманное облако** — Fog cloud
+- **Запрет** — Forbiddance
+- **Узилище** — Forcecage
+- **Предвидение** — Foresight
+- **Свобода перемещения** — Freedom of movement
+- **Дружба** — Friends
+- **Сфера неуязвимости** — Globe of invulnerability
+- **Охранные руны** — Glyph of warding
+- **Чудо-ягоды** — Goodberry
+- **Цепкая лоза** — Grasping vine
+- **Скольжение** — Grease
+- **Страж веры** — Guardian of faith
+- **Стражи** — Guards and wards
+- **Указание** — Guidance
+- **Порыв ветра** — Gust of wind
+- **Святилище** — Hallow
+- **Поражение** — Harm
+- **Ускорение** — Haste
+- **Полное исцеление** — Heal
+- **Лечащее слово** — Healing word
+- **Раскалённый металл** — Heat metal
+- **Сглаз** — Hex
+- **Удержание чудовища** — Hold monster
+- **Удержание личности** — Hold person
+- **Создание прохода** — Passwall
+- **Прирачный скакун** — Phantom steed
+- **Планарный союзник** — Planar ally
+- **Планарные узы** — Planar binding
+- **Уход в иной мир** — Plane shift
+- **Рост растений** — Plant growth
+- **Ядовитые брызги** — Poison spray
+- **Превращение** — Polymorph
+- **Слово Силы: исцеление** — Power word heal
+- **Слово Силы: смерть** — Power word kill
+- **Слово Силы: оглушение** — Power word stun
+- **Фокусы** — Prestidigitation
+- **Радужные брызги** — Prismatic spray
+- **Радужная стена** — Prismatic wall
+- **Сотворение пламени** — Produce flame
+- **Заданная иллюзия** — Programmed illusion
+- **Проекция** — Project image
+- **Защита от энергии** — Protection from energy
+- **Защита от добра и зла** — Protection from evil and
+- **Чудотворство** — good                                                   Thaumaturgy
+- **Защита от яда** — Protection from poison
+- **Очищение пищи и питья** — Purify food and drink
+- **Оживление** — Raise dead
+- **Регенерация** — Regenerate
+- **Реинкарнация** — Reincarnate
+- **Снятие проклятья** — Remove curse
+- **Сопротивление** — Resistance
+- **Изменение тяготения** — Reverse gravity
+- **Трюк с верёвкой** — Rope trick
+- **Священное пламя** — Sacred flame
+- **Убежище** — Sanctuary
+- **Палящий луч** — Scorching ray
+- **Палящая кара** — Searing smite
+- **Притворство** — Seeming
+- **Послание** — Sending
+- **Изоляция** — Sequester
+- **Полное превращение** — Shapechange
+- **Дребезги** — Shatter
+- **Щит** — Shield
+- **Щит веры** — Shield of faith
+- **Дубинка** — Shillelagh
+- **Электрошок** — Shocking grasp
+- **Тишина** — Silence
+- **Подобие** — Simulacrum

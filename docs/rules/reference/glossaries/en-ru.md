@@ -2,13 +2,9 @@
 id: en-ru
 type: glossary
 phb_chapter: 0
-phb_pages:
-- 313
-- 316
-quick: Словарь PHB EN→RU
-aliases:
-- en-ru
-- Англо-русский словарь
+phb_pages: [313, 316]
+quick: "Словарь PHB EN→RU (236 терминов)"
+aliases: [en-ru, Англо-русский словарь, англо-русский словарь]
 ---
 
 # Англо-русский словарь
@@ -78,7 +74,7 @@ aliases:
 - **Alter self** — Смена обличья
 - **Animal friendship** — Дружба с животными
 - **Animal messenger** — Почтовое животное
-- **Animal shapes** — Превращение в животных                                элементалей
+- **Animal shapes** — Превращение в животных
 - **Animate dead** — Восставший труп
 - **Animate objects** — Оживление вещей
 - **Antilife shell** — Преграда жизни
@@ -91,7 +87,7 @@ aliases:
 - **Arms of Hadar** — Руки Хадара
 - **Astral projection** — Проекция в астрал
 - **Augury** — Гадание
-- **Aura of life** — Аура жизни                                            уничтожение воды
+- **Aura of life** — Аура жизни
 - **Aura of purity** — Аура очищения
 - **Aura of vitality** — Аура живучести
 - **Awaken** — Пробуждение разума
@@ -155,7 +151,7 @@ aliases:
 - **Flame blade** — Горящий клинок
 - **Flame strike** — Небесный огонь
 - **Flaming sphere** — Пылающий шар
-- **Flesh to stone** — Окаменение                                             растений
+- **Flesh to stone** — Окаменение
 - **Fly** — Полёт
 - **Fog cloud** — Туманное облако
 - **Forbiddance** — Запрет
@@ -169,9 +165,9 @@ aliases:
 - **Gentle repose** — Нетленные останки
 - **Giant insect** — Гигантское насекомое
 - **Glibness** — Находчивость
-- **Globe of invulnerability** — Сфера неуязвимости                                     исцеление
+- **Globe of invulnerability** — Сфера неуязвимости
 - **Glyph of warding** — Охранные руны
-- **Goodberry** — Чудо-ягоды                                             слово
+- **Goodberry** — Чудо-ягоды
 - **Grasping vine** — Цепкая лоза
 - **Grease** — Скольжение
 - **Greater invisibility** — Высшая невидимость
@@ -218,7 +214,7 @@ aliases:
 - **Project image** — Проекция
 - **Protection from energy** — Защита от энергии
 - **Protection from evil and** — Защита от добра и зла
-- **good** — Thaumaturgy
+- **good                                                   Thaumaturgy** — Чудотворство
 - **Protection from poison** — Защита от яда
 - **Purify food and drink** — Очищение пищи и питья
 - **Raise dead** — Оживление

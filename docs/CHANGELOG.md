@@ -3,6 +3,7 @@
 ## [Unreleased]
 
 ### Changed
+- **Spell cards fix:** восстановлены пустые `## Эффект` (23); `major_image` → `magic_mouth`; словари RU↔EN дополнены
 - **Справочник PHB UX/agent:** обязательный `quick` у всех карточек; эффекты заклинаний без флавора; `rules/INDEX.md` для людей; aliases в обоих регистрах
 - **Алгоритм поиска PHB:** `00-project.mdc` / `AGENTS.md` / `DND_RULES` — `lookup.yaml` (`by_alias` → `quick` → `file`) → веб 2014/SRD; без `phb:auto` / генераторов
 - **Справочник PHB `docs/rules/` (agent-v2):** полная замена — только механика без лора и без MUD-блоков; ручные `lookup.yaml` / `toc.yaml`; статус MUD — в [`DND_RULES.md`](DND_RULES.md)

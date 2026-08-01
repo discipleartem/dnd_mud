@@ -750,7 +750,7 @@ entries:
   - 211
   - 289
   level: 6
-  school: вызов
+  school: conjuration
 - id: druzhba_s_zhivotnymi
   type: spell
   file: entities/spells/druzhba_s_zhivotnymi.md
@@ -1135,6 +1135,14 @@ entries:
   - 289
   level: 1
   school: evocation
+- id: magic_mouth
+  type: spell
+  file: entities/spells/magic_mouth.md
+  pages:
+  - 211
+  - 289
+  level: 2
+  school: illusion
 - id: magicheskiy_glaz
   type: spell
   file: entities/spells/magicheskiy_glaz.md
@@ -1151,14 +1159,6 @@ entries:
   - 289
   level: 2
   school: transmutation
-- id: major_image
-  type: spell
-  file: entities/spells/major_image.md
-  pages:
-  - 211
-  - 289
-  level: 2
-  school: иллюзия
 - id: maloe_vosstanovlenie
   type: spell
   file: entities/spells/maloe_vosstanovlenie.md
@@ -1326,7 +1326,7 @@ entries:
   - 211
   - 289
   level: 2
-  school: некромантия
+  school: necromancy
 - id: nevidimoe_pismo
   type: spell
   file: entities/spells/nevidimoe_pismo.md
@@ -1334,7 +1334,7 @@ entries:
   - 211
   - 289
   level: 1
-  school: иллюзия
+  school: illusion
 - id: nevidimyy_sluga
   type: spell
   file: entities/spells/nevidimyy_sluga.md
@@ -2654,7 +2654,7 @@ entries:
   - 211
   - 289
   level: 6
-  school: ограждение
+  school: abjuration
 - id: zarazhenie
   type: spell
   file: entities/spells/zarazhenie.md

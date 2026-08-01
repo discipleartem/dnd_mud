@@ -3,7 +3,7 @@
 ## 1
 
 - [`bless`](../../entities/spells/bless.md) — 1; enchantment; 30 футов [конц.] — Каждый раз, когда до окончания заклинания цель совершает бросок атаки или спасбросок, она может б…
-- [`bozhestvennoe_blagovolenie`](../../entities/spells/bozhestvennoe_blagovolenie.md) — 1; evocation; На себя [конц.]
+- [`bozhestvennoe_blagovolenie`](../../entities/spells/bozhestvennoe_blagovolenie.md) — 1; evocation; На себя [конц.] — оружие +1к4 излучением
 - [`burning_hands`](../../entities/spells/burning_hands.md) — 1; evocation; На себя (15-футовый конус) — Существо получает урон огнём 3к6 в случае провала и половину этого урона в случае успеха. / Все существа в пределах 15-футового конуса до
 - [`charm_person`](../../entities/spells/charm_person.md) — 1; enchantment; 30 футов — Он должен совершить спасбросок Мудрости, с преимуществом, если вы или ваши спутники сражаетесь с … / Если он проваливает спасбросок, он очарован вами, по
 - [`cure_wounds`](../../entities/spells/cure_wounds.md) — 1; evocation; Касание — Существо, которого вы касаетесь, восстанавливает количество хитов, равное 1к8 + ваш модификатор б…
@@ -23,7 +23,7 @@
 - [`metka_okhotnika`](../../entities/spells/metka_okhotnika.md) — 1; divination; 90 футов [конц.] — Пока заклинание активно, вы причиняете цели дополнительный урон 1к6 каждый раз, когда попадаете п… / Если хиты цели опускаются до 0, пока заклинан
 - [`nanesenie_ran`](../../entities/spells/nanesenie_ran.md) — 1; necromancy; Касание — Совершите рукопашную атаку заклинанием по существу в пределах досягаемости. / При попадании цель получает урон некротической энергией 3к10.
 - [`napravlennyy_snaryad`](../../entities/spells/napravlennyy_snaryad.md) — 1; evocation; 120 футов — При попадании цель получает урон излучением 4к6, и следующий бросок атаки по цели, совершённый до… / Совершите дальнобойную атаку заклинанием по цели.
-- [`nevidimoe_pismo`](../../entities/spells/nevidimoe_pismo.md) — 1; Иллюзия; Касание
+- [`nevidimoe_pismo`](../../entities/spells/nevidimoe_pismo.md) — 1; illusion; Касание [ритуал] — скрытое письмо; читают вы и указанные
 - [`nevidimyy_sluga`](../../entities/spells/nevidimyy_sluga.md) — 1; Вызов; 60 футов — Если его хиты опускаются до 0, заклинание оканчивается. / Это заклинание создаёт невидимую, бессознательную и бесформенную силу, выполняющую отдаваемые вам…
 - [`ochishchenie_pishchi_i_pitya`](../../entities/spells/ochishchenie_pishchi_i_pitya.md) — 1; Преобразование; 10 футов — Вся немагическая еда и питьё в пределах сферы с радиусом 5 футов с центром на точке, выбранной ва…
 - [`oputyvanie`](../../entities/spells/oputyvanie.md) — 1; Вызов; 90 футов [конц.] — Существа, находящиеся в этой области, когда вы накладываете заклинание, должны преуспеть в спасбр… / Опутанное растениями существо может действием 250
@@ -39,12 +39,12 @@
 - [`razgovor_s_zhivotnymi`](../../entities/spells/razgovor_s_zhivotnymi.md) — 1; Прорицание; На себя
 - [`ruki_khadara`](../../entities/spells/ruki_khadara.md) — 1; Вызов; На себя (10-футовый радиус) — В случае провала цель получает урон некротической энергией 2к6 и в следующем ходу не может соверш… / Все существа в этой области должны сове
 - [`sglaz`](../../entities/spells/sglaz.md) — 1; enchantment; 90 футов [конц.] — Пока заклинание активно, вы причиняете цели урон некротической энергией 1к6 каждый раз, когда поп… / Если хиты цели опускаются до 0, пока заклина
-- [`shield_of_faith`](../../entities/spells/shield_of_faith.md) — 1; abjuration; 60 футов [конц.]
+- [`shield_of_faith`](../../entities/spells/shield_of_faith.md) — 1; abjuration; 60 футов [конц.] — цель +2 КД
 - [`signal_trevogi`](../../entities/spells/signal_trevogi.md) — 1; Ограждение; 30 футов — Выберите дверь, окно или область в пределах дистанции не больше куба с длиной ребра 20 футов.
 - [`skolzhenie`](../../entities/spells/skolzhenie.md) — 1; Вызов; 60 футов — Скользкий жир покрывает пол в квадрате с длиной стороны 10 футов с центром на точке в пределах ди…
 - [`sleep`](../../entities/spells/sleep.md) — 1; enchantment; 90 футов — Бросьте 5к8; результат будет количеством хитов существ, на которых это заклинание может подейство… / Начиная с существа с наименьшим количеством текущих
 - [`sotvorenie_ili_unichtozhenie_vody`](../../entities/spells/sotvorenie_ili_unichtozhenie_vody.md) — 1; transmutation; 30 футов — это заклинание, используя ячейку 2 уровня или выше, вы создаёте или уничтожаете 10 дополнительных… / В качестве альтернативы, вы уничтожаете туман в ку
-- [`sverkayushchie_bryzgi`](../../entities/spells/sverkayushchie_bryzgi.md) — 1; illusion; На себя (15-футовый конус)
+- [`sverkayushchie_bryzgi`](../../entities/spells/sverkayushchie_bryzgi.md) — 1; illusion; конус 15 фт. — 6к10 хитов ослеплены до конца след. хода
 - [`tenzerov_paryashchiy_disk`](../../entities/spells/tenzerov_paryashchiy_disk.md) — 1; Вызов; 30 футов — Он может перелетать по неровной поверхности, перемещаться по лестницам, склонам и подобным препят…
 - [`tsvetnoy_sharik`](../../entities/spells/tsvetnoy_sharik.md) — 1; evocation; 90 футов — Выберите звук, кислоту, огонь, холод, электричество или яд при создании сферы, а затем совершите … / Если атака попадает, существо получает урон 3к8 выбран
 - [`tumannoe_oblako`](../../entities/spells/tumannoe_oblako.md) — 1; Вызов; 120 футов [конц.] — Вы создаёте сферу с радиусом 20 футов из тумана с центром на точке в пределах дистанции.
@@ -65,11 +65,11 @@
 - [`levitatsiya`](../../entities/spells/levitatsiya.md) — 2; transmutation; 60 футов [конц.]
 - [`luch_slabosti`](../../entities/spells/luch_slabosti.md) — 2; necromancy; 60 футов [конц.] — Совершите по цели дальнобойную атаку заклинанием. / При попадании цель до конца действия заклинания причиняет только половину урона атаками оружие
 - [`lunnyy_luch`](../../entities/spells/lunnyy_luch.md) — 2; evocation; 120 футов [конц.] — Когда существо впервые за ход входит в область заклинания или начинает там ход, оно окутывается п… / Бледный серебристый луч сияет в цилиндре с ра
+- [`magic_mouth`](../../entities/spells/magic_mouth.md) — 2; illusion; 30 футов [ритуал] — сообщение на предмете по условию
 - [`magicheskoe_oruzhie`](../../entities/spells/magicheskoe_oruzhie.md) — 2; transmutation; Касание [конц.] — Пока заклинание активно, это оружие становится магическим оружием с бонусом +1 к броскам атаки и …
-- [`major_image`](../../entities/spells/major_image.md) — 2; Иллюзия; 30 футов
 - [`maloe_vosstanovlenie`](../../entities/spells/maloe_vosstanovlenie.md) — 2; abjuration; Касание
 - [`moleben_lecheniya`](../../entities/spells/moleben_lecheniya.md) — 2; evocation; 30 футов — 3 уровень, воплощение 3 уровень, преобразование Время накладывания: 1 бонусное действие Дистанция… / Каждое из шести существ на ваш выбор, видимых в предел
-- [`netlennye_ostanki`](../../entities/spells/netlennye_ostanki.md) — 2; Некромантия; Касание
+- [`netlennye_ostanki`](../../entities/spells/netlennye_ostanki.md) — 2; necromancy; Касание [ритуал] — труп не гниёт; не становится нежитью
 - [`nistulova_lozhnaya_magiya`](../../entities/spells/nistulova_lozhnaya_magiya.md) — 2; illusion; Касание
 - [`obnaruzhenie_mysley`](../../entities/spells/obnaruzhenie_mysley.md) — 2; divination; На себя [конц.] — Если вы погружаетесь глубже, цель должна совершить спасбросок Мудрости. / Если у выбранного существа Интеллект равен 3 или ниже, или если оно не мо
 - [`otkryvanie`](../../entities/spells/otkryvanie.md) — 2; transmutation; 60 футов
@@ -87,7 +87,7 @@
 - [`pylayushchiy_shar`](../../entities/spells/pylayushchiy_shar.md) — 2; Вызов; 60 футов [конц.] — Все существа, оканчивающие ход в пределах 5 футов от шара, должны совершать спасбросок Ловкости. / Существа получают урон огнём 2к6 при провале или пол
 - [`raskalennyy_metall`](../../entities/spells/raskalennyy_metall.md) — 2; transmutation; 60 футов [конц.] — Если оно не может уронить предмет, то до начала вашего следующего хода совершает с помехой броски… / Все существа, находящиеся в физическом кон
 - [`razmytyy_obraz`](../../entities/spells/razmytyy_obraz.md) — 2; illusion; На себя [конц.] — Пока заклинание активно, все существа совершают по вам броски атаки с помехой. / Атакующий получает иммунитет к этому эффекту, если полагается не на
-- [`rech_zlatousta`](../../entities/spells/rech_zlatousta.md) — 2; enchantment; 60 футов
+- [`rech_zlatousta`](../../entities/spells/rech_zlatousta.md) — 2; enchantment; 60 футов — помеха на Внимательность к другим (Муд)
 - [`temnoe_zrenie`](../../entities/spells/temnoe_zrenie.md) — 2; transmutation; Касание
 - [`tishina`](../../entities/spells/tishina.md) — 2; Иллюзия; 120 футов [конц.] — Все существа и предметы, полностью находящиеся в сфере, получают иммунитет к урону звуком, и суще… / Пока заклинание активно, никакие звуки не могут
 - [`tma`](../../entities/spells/tma.md) — 2; evocation; 60 футов [конц.] — Из точки, выбранной вами в пределах дистанции, расползается магическая тьма сферой с радиусом 15 … / Существа с тёмным зрением не могут видеть скво
@@ -96,7 +96,7 @@
 - [`uderzhanie_lichnosti`](../../entities/spells/uderzhanie_lichnosti.md) — 2; enchantment; 60 футов [конц.]
 - [`umirotvorenie`](../../entities/spells/umirotvorenie.md) — 2; enchantment; 60 футов [конц.] — Все гуманоиды в сфере с радиусом 20 футов с центром в точке, выбранной в пределах дистанции, долж… / Если существо проваливает спасбросок, выбери
 - [`videnie_nevidimogo`](../../entities/spells/videnie_nevidimogo.md) — 2; divination; На себя — Пока заклинание активно, вы видите невидимых существ и предметы, как если бы они были видимы, и в…
-- [`volshebnyy_zamok`](../../entities/spells/volshebnyy_zamok.md) — 2; abjuration; Касание
+- [`volshebnyy_zamok`](../../entities/spells/volshebnyy_zamok.md) — 2; abjuration; Касание — магический замок; Сл взлома +10
 - [`voobrazhaemaya_sila`](../../entities/spells/voobrazhaemaya_sila.md) — 2; illusion; 60 футов [конц.] — Цель должна совершить спасбросок Интеллекта. / Цель настолько уверена в существовании иллюзии, что даже будет получать от неё урон.
 - [`zashchita_ot_yada`](../../entities/spells/zashchita_ot_yada.md) — 2; abjuration; Касание — Пока заклинание активно, цель совершает с преимуществом спасброски от отравленного состояния и по…
 - [`zavesa_strel`](../../entities/spells/zavesa_strel.md) — 2; transmutation; 5 футов — Существо должно преуспеть в спасброске Ловкости, иначе оно получит колющий урон 1к6.
@@ -120,7 +120,7 @@
 - [`mertsanie`](../../entities/spells/mertsanie.md) — 3; transmutation; На себя
 - [`neobnaruzhimost`](../../entities/spells/neobnaruzhimost.md) — 3; abjuration; Касание — Цель не может стать целью магии школы Прорицания, и её не воспринимают магические наблюдательные …
 - [`obraz`](../../entities/spells/obraz.md) — 3; illusion; 120 футов [конц.] — Вы не можете создать жар или холод, достаточный для получения урона, звук, громкость которого мож… / Вы создаёте образ предмета, существа или друго
-- [`okhrannye_runy`](../../entities/spells/okhrannye_runy.md) — 3; abjuration; Касание
+- [`okhrannye_runy`](../../entities/spells/okhrannye_runy.md) — 3; abjuration; Касание — глиф: взрыв 5к8 (Лов) или хранимое заклинание
 - [`podsmatrivanie`](../../entities/spells/podsmatrivanie.md) — 3; divination; 1 миля [конц.] — Вы создаёте невидимый сенсор в пределах дистанции в известном вам месте (месте, которое вы уже ви… / Существо, способное увидеть сенсор (например, н
 - [`podvodnoe_dykhanie`](../../entities/spells/podvodnoe_dykhanie.md) — 3; Преобразование; 30 футов
 - [`poslanie`](../../entities/spells/poslanie.md) — 3; evocation; Неограниченная
@@ -140,7 +140,7 @@
 - [`stena_vetrov`](../../entities/spells/stena_vetrov.md) — 3; evocation; 120 футов [конц.] — Существо получает дробящий урон 3к8 при провале, или половину этого урона при успехе.
 - [`stikhiynoe_oruzhie`](../../entities/spells/stikhiynoe_oruzhie.md) — 3; transmutation; Касание [конц.] — Выберите один из следующих видов урона: звук, кислота, огонь, холод или электричество. / Пока заклинание активно, оружие получает бонус +1 к бро
 - [`uskorenie`](../../entities/spells/uskorenie.md) — 3; transmutation; 30 футов [конц.]
-- [`vosstavshiy_trup`](../../entities/spells/vosstavshiy_trup.md) — 3; necromancy; 10 футов
+- [`vosstavshiy_trup`](../../entities/spells/vosstavshiy_trup.md) — 3; necromancy; 10 футов — скелет/зомби; контроль 24 ч; upcast +2
 - [`vozrozhdenie`](../../entities/spells/vozrozhdenie.md) — 3; necromancy; Касание — Это заклинание не может оживить существ, умерших от старости, а также не восстанавливает отсутств…
 - [`zamedlenie`](../../entities/spells/zamedlenie.md) — 3; transmutation; 120 футов [конц.] — Вы изменяете время для шести существ на ваш выбор, находящихся в кубе с длиной ребра 40 футов в п… / Скорость попавшего под действие существа
 - [`zashchita_ot_energii`](../../entities/spells/zashchita_ot_energii.md) — 3; abjuration; Касание [конц.] — Пока заклинание активно, согласное существо, которого вы коснулись, получает сопротивление к одно…
@@ -175,7 +175,7 @@
 - [`tsepkaya_loza`](../../entities/spells/tsepkaya_loza.md) — 4; Вызов; 30 футов [конц.]
 - [`usykhanie`](../../entities/spells/usykhanie.md) — 4; necromancy; 30 футов — Если цель — растительное существо или магическое растение, оно совершает спасбросок с помехой, и … / Цель должна совершить спасбросок Телосложения.
 - [`voobrazhaemyy_ubiytsa`](../../entities/spells/voobrazhaemyy_ubiytsa.md) — 4; illusion; 120 футов [конц.] — Цель должна совершить спасбросок Мудрости. / В конце каждого своего хода, пока заклинание активно, цель должна преуспевать в спасброске Мудрос…
-- [`vysshaya_nevidimost`](../../entities/spells/vysshaya_nevidimost.md) — 4; illusion; Касание [конц.]
+- [`vysshaya_nevidimost`](../../entities/spells/vysshaya_nevidimost.md) — 4; illusion; Касание [конц.] — невидимость не срывается атакой/заклинанием
 - [`zashchita_ot_smerti`](../../entities/spells/zashchita_ot_smerti.md) — 4; abjuration; Касание — Когда хиты цели впервые опускаются до 0 изза получения урона, хиты цели опускаются всего лишь до … / Если заклинание ещё действует, а цель попадает под дей
 
 ## 5
@@ -184,7 +184,7 @@
 - [`dlan_bigbi`](../../entities/spells/dlan_bigbi.md) — 5; evocation; 120 футов [конц.] — Рука перемещается так, что находится между вами и целью, предоставляя вам от цели укрытие на поло… / Когда хиты руки опускаются до 0, заклинание о
 - [`drevesnyy_put`](../../entities/spells/drevesnyy_put.md) — 5; Вызов; На себя [конц.] — Оба дерева должны быть живыми, и размер обоих должен быть не меньше вашего.
 - [`falshivyy_dvoynik`](../../entities/spells/falshivyy_dvoynik.md) — 5; illusion; На себя [конц.] — Вы становитесь невидимым, и в то же время в том месте, где вы были, появляется ваш иллюзорный дво… / Двойник существует, пока заклинание активно, но
-- [`izgonyayushchaya_kara`](../../entities/spells/izgonyayushchaya_kara.md) — 5; abjuration; На себя [конц.]
+- [`izgonyayushchaya_kara`](../../entities/spells/izgonyayushchaya_kara.md) — 5; abjuration; На себя [конц.] — след. попадание +5к10 силовым; ≤50 HP — изгнание
 - [`izmenenie_pamyati`](../../entities/spells/izmenenie_pamyati.md) — 5; enchantment; 30 футов [конц.] — Если вы с ним сражаетесь, оно совершает спасбросок с преимуществом. / Одно существо, которое вы видите, должно совершить спасбросок Мудрости.
 - [`kamennaya_stena`](../../entities/spells/kamennaya_stena.md) — 5; evocation; 120 футов [конц.] — Если существо со всех сторон окружается стеной (или стеной и другой сплошной поверхностью), это с… / Стена является предметом, изготовленным из ка
 - [`konus_kholoda`](../../entities/spells/konus_kholoda.md) — 5; evocation; На себя (60-футовый конус) — Все существа в 60-футовом конусе должны совершить спасбросок Телосложения. / Существа получают урон холодом 8к8 при провале, или половину
@@ -194,7 +194,7 @@
 - [`nablyudenie`](../../entities/spells/nablyudenie.md) — 5; divination; На себя [конц.] — Цель должна совершить спасбросок Мудрости, модифицируемый тем, как хорошо вы знаете цель, и тем, … / Если цель знает, что вы накладываете это закли
 - [`nashestvie_nasekomykh`](../../entities/spells/nashestvie_nasekomykh.md) — 5; Вызов; 300 футов [конц.] — Когда сфера появляется, все находящиеся в ней существа должны совершить спасбросок Телосложения. / Существо получает колющий урон 4к10 при провале, ил
 - [`nebesnyy_ogon`](../../entities/spells/nebesnyy_ogon.md) — 5; evocation; 60 футов — Все существа в цилиндре с радиусом 10 футов и высотой 40 футов с центром на точке в пределах дист… / Существо получает урон излучением 4к6 и урон огнём 4к6
-- [`obet`](../../entities/spells/obet.md) — 5; enchantment; 60 футов
+- [`obet`](../../entities/spells/obet.md) — 5; enchantment; 60 футов — приказ; провал Муд → очарование; ослушание 5к10 психич./день
 - [`obshchenie`](../../entities/spells/obshchenie.md) — 5; Прорицание; На себя
 - [`obshchenie_s_prirodoy`](../../entities/spells/obshchenie_s_prirodoy.md) — 5; Прорицание; На себя — В пещерах и естественном подземном окружении радиус 300 футов.
 - [`ozhivlenie`](../../entities/spells/ozhivlenie.md) — 5; necromancy; Касание — Все цели оживают и становятся существами под вашим контролем до окончания действия заклинания или… / ПАРАМЕТРЫ ОЖИВЛЁННОГО ПРЕДМЕТА Размер Хиты КД Крошечны
@@ -214,11 +214,11 @@
 - [`uderzhanie_chudovishcha`](../../entities/spells/uderzhanie_chudovishcha.md) — 5; enchantment; 90 футов [конц.]
 - [`veshchiy_son`](../../entities/spells/veshchiy_son.md) — 5; illusion; Особая — Если у вас есть часть тела, клок волос, обрезки ногтей или другая подобная часть тела цели, она с… / В этом случае посыльный может передать послание не длинне
 - [`vysshee_vosstanovlenie`](../../entities/spells/vysshee_vosstanovlenie.md) — 5; abjuration; Касание — Вы можете уменьшить уровень истощения цели на 1, или окончить на ней один из следующих эффектов: …
-- [`zarazhenie`](../../entities/spells/zarazhenie.md) — 5; necromancy; Касание
+- [`zarazhenie`](../../entities/spells/zarazhenie.md) — 5; necromancy; Касание — атака заклинанием; болезнь после 3 провалов Тел
 
 ## 6
 
-- [`dromidzhevo_poyavlenie`](../../entities/spells/dromidzhevo_poyavlenie.md) — 6; Вызов; Касание
+- [`dromidzhevo_poyavlenie`](../../entities/spells/dromidzhevo_poyavlenie.md) — 6; conjuration; Касание [ритуал] — метка на предмете; раздавить сапфир → предмет в руке
 - [`dvizhenie_pochvy`](../../entities/spells/dvizhenie_pochvy.md) — 6; transmutation; 120 футов [конц.] — Высота таких изменений не может превышать половины самой большой стороны области. / В конце каждых 10 минут концентрации на этом заклинании вы
 - [`istinnoe_zrenie`](../../entities/spells/istinnoe_zrenie.md) — 6; divination; Касание
 - [`khozhdenie_po_vetru`](../../entities/spells/khozhdenie_po_vetru.md) — 6; transmutation; 30 футов — Находясь в форме облака, существо получает скорость полёта 300 футов и сопротивление к урону от н… / Возврат занимает 1 минуту, во время которой сущест
@@ -229,13 +229,13 @@
 - [`otilyukov_ledyanoy_shar`](../../entities/spells/otilyukov_ledyanoy_shar.md) — 6; evocation; 300 футов — Все существа в этой области должны совершить спасбросок Телосложения. / При провале существо получает урон холодом 10к6.
 - [`planarnyy_soyuznik`](../../entities/spells/planarnyy_soyuznik.md) — 6; Вызов; 60 футов
 - [`plyashushchaya_molniya`](../../entities/spells/plyashushchaya_molniya.md) — 6; evocation; 150 футов — Цель должна совершить спасбросок Ловкости. / Цель получает урон электричеством 10к8 при провале спасброска или половину этого урона в случае у…
-- [`poisk_puti`](../../entities/spells/poisk_puti.md) — 6; divination; На себя [конц.]
+- [`poisk_puti`](../../entities/spells/poisk_puti.md) — 6; divination; На себя [конц.] — кратчайший путь к известному месту
 - [`polnoe_istselenie`](../../entities/spells/polnoe_istselenie.md) — 6; evocation; 60 футов
-- [`predostorozhnost`](../../entities/spells/predostorozhnost.md) — 6; evocation; На себя
+- [`predostorozhnost`](../../entities/spells/predostorozhnost.md) — 6; evocation; На себя — отложенное заклинание ≤5 ур. по условию
 - [`prizyv_fei`](../../entities/spells/prizyv_fei.md) — 6; Вызов; 90 футов [конц.] — Оно исчезает, когда его хиты опускаются до 0, или когда заклинание оканчивается. / Если ваша концентрация нарушена, существо не исчезает.
 - [`puteshestvie_cherez_rasteniya`](../../entities/spells/puteshestvie_cherez_rasteniya.md) — 6; Вызов; 10 футов
 - [`raspad`](../../entities/spells/raspad.md) — 6; transmutation; 60 футов — Существо, ставшее целью этого заклинания, должно совершить спасбросок Ловкости. / При провале оно получает урон силовым полем 10к6 + 40.
-- [`razyashchee_oko`](../../entities/spells/razyashchee_oko.md) — 6; necromancy; На себя [конц.]
+- [`razyashchee_oko`](../../entities/spells/razyashchee_oko.md) — 6; necromancy; На себя [конц.] — каждый ход: сон / паника / болезнь (Муд)
 - [`sfera_neuyazvimosti`](../../entities/spells/sfera_neuyazvimosti.md) — 6; abjuration; На себя (10-футовый радиус) [конц.] — Все заклинания 5 уровня и ниже, наложенные снаружи барьера, не могут подействовать на существ и п… / это заклинание, используя
 - [`solnechnyy_luch`](../../entities/spells/solnechnyy_luch.md) — 6; evocation; На себя (60-футовая линия) [конц.] — Нежить и слизи совершают этот спасбросок с помехой. / Все существа в этой линии должны совершить спасбросок Телосложения.
 - [`sotvorenie_nezhiti`](../../entities/spells/sotvorenie_nezhiti.md) — 6; necromancy; 10 футов — Такое использование заклинания только поддерживает контроль над уже созданными существами, количе…
@@ -244,13 +244,13 @@
 - [`ternovaya_stena`](../../entities/spells/ternovaya_stena.md) — 6; Вызов; 120 футов [конц.] — Когда стена появляется, все существа, находящиеся в ней, должны совершить спасбросок Ловкости. / При провале существо получает колющий урон 7к8, или п
 - [`volshebnyy_sosud`](../../entities/spells/volshebnyy_sosud.md) — 6; necromancy; На себя
 - [`zadannaya_illyuziya`](../../entities/spells/zadannaya_illyuziya.md) — 6; illusion; 120 футов
-- [`zapret`](../../entities/spells/zapret.md) — 6; Ограждение; Касание
+- [`zapret`](../../entities/spells/zapret.md) — 6; abjuration; Касание [ритуал] — блок телепортов; 5к10 выбранным видам
 
 ## 7
 
 - [`bozhestvennoe_slovo`](../../entities/spells/bozhestvennoe_slovo.md) — 7; evocation; 30 футов — Все эти существа, слышащие вас, должны совершить спасбросок Харизмы. / При провале существо попадает под действие эффекта, основанного на текущем количеств
 - [`izmenenie_tyagoteniya`](../../entities/spells/izmenenie_tyagoteniya.md) — 7; transmutation; 100 футов [конц.] — Это заклинание обращает гравитацию в цилиндре с радиусом 50 футов и высотой 100 футов с центром н…
-- [`izolyatsiya`](../../entities/spells/izolyatsiya.md) — 7; transmutation; Касание
+- [`izolyatsiya`](../../entities/spells/izolyatsiya.md) — 7; transmutation; Касание — скрытие от прорицаний; существо: стазис + невидимость
 - [`mech_mordenkaynena`](../../entities/spells/mech_mordenkaynena.md) — 7; evocation; 60 футов [конц.] — Когда меч появляется, вы совершаете рукопашную атаку заклинанием по цели на ваш выбор, находящейс… / При попадании цель получает урон силовым полем
 - [`ognennaya_burya`](../../entities/spells/ognennaya_burya.md) — 7; evocation; 150 футов — Этот урон повреждает предметы и воспламеняет горючие предметы, которые никто не несёт и не носит. / Все существа в этом пространстве должны совершить спас
 - [`perst_smerti`](../../entities/spells/perst_smerti.md) — 7; necromancy; 60 футов — Цель должна совершить спасбросок Телосложения. / В случае провала она получает урон некротической энергией 7к8 + 30, или половину этого урона в сл…
@@ -260,7 +260,7 @@
 - [`raduzhnye_bryzgi`](../../entities/spells/raduzhnye_bryzgi.md) — 7; evocation; На себя (60-футовый конус) — Все существа в пределах 60-футового конуса должны совершить спасбросок Ловкости. / Цель получает урон огнём 10к6 при провале или половину
 - [`regeneratsiya`](../../entities/spells/regeneratsiya.md) — 7; transmutation; Касание — Цель восстанавливает 4к8 + 15 хитов. / Вы совершаете действием рукопашную атаку заклинанием по исчадию, небожителю, нежити, фее или элем…
 - [`resurrection`](../../entities/spells/resurrection.md) — 7; necromancy; Касание — Пока вы не окончите продолжительный отдых, вы не можете накладывать заклинания, и совершаете с по…
-- [`tainstvennyy_mirazh`](../../entities/spells/tainstvennyy_mirazh.md) — 7; illusion; Обзор
+- [`tainstvennyy_mirazh`](../../entities/spells/tainstvennyy_mirazh.md) — 7; illusion; обзор — иллюзия местности до 1 мили² на 10 дней
 - [`teleport`](../../entities/spells/teleport.md) — 7; Вызов; 10 футов — Если целью является предмет, он должен полностью помещаться в куб с длиной ребра 10 футов, и его …
 - [`ukhod_v_inoy_mir`](../../entities/spells/ukhod_v_inoy_mir.md) — 7; Вызов; Касание — Выберите существо в пределах досягаемости и совершите по нему рукопашную атаку заклинанием. / При попадании существо должно совершить спасбросок Харизмы.
 - [`uzilishche`](../../entities/spells/uzilishche.md) — 7; evocation; 100 футов — Вокруг области, выбранной вами в пределах дистанции, возникает неподвижная, невидимая тюрьма в фо… / Существо, находящееся в узилище, не может покинуть ег
@@ -272,14 +272,14 @@
 
 - [`aura_svyatosti`](../../entities/spells/aura_svyatosti.md) — 8; abjuration; На себя [конц.] — это заклинание, используя ячейку 2 уровня или выше, вы можете сделать целью одно дополнительное с… / Пока заклинание активно, ваши атаки оружием пр
 - [`demiplan`](../../entities/spells/demiplan.md) — 8; Вызов; 60 футов
-- [`dvoynik`](../../entities/spells/dvoynik.md) — 8; necromancy; Касание
+- [`dvoynik`](../../entities/spells/dvoynik.md) — 8; necromancy; Касание — выращивание клона 120 дней; смерть → перенос души
 - [`labirint`](../../entities/spells/labirint.md) — 8; Вызов; 60 футов [конц.]
 - [`nakhodchivost`](../../entities/spells/nakhodchivost.md) — 8; transmutation; На себя
 - [`podchinenie_chudovishcha`](../../entities/spells/podchinenie_chudovishcha.md) — 8; enchantment; 60 футов [конц.] — Если вы или дружественные вам существа сражаются с ним, оно совершает спасбросок с преимуществом. / это заклинание с уровнем ячейки 9, концентрац
 - [`pregrada_magii`](../../entities/spells/pregrada_magii.md) — 8; abjuration; На себя (сфера радиусом 10 футов) [конц.] — Ячейка, потраченная на накладывание подавленного заклинания, всё равно тратится. / Вас окружает невидимая сфера антимагии
 - [`prevrashchenie_v_zhivotnykh`](../../entities/spells/prevrashchenie_v_zhivotnykh.md) — 8; transmutation; 30 футов [конц.] — Превращение держится всю длительность заклинания, или пока хиты цели не опустятся до 0, или она н… / Цель принимает хиты нового облика, а по во
 - [`slaboumie`](../../entities/spells/slaboumie.md) — 8; enchantment; 150 футов — Цель получает урон психической энергией 4к6 и должна совершить спасбросок Интеллекта. / В конце каждых 30 дней существо может повторять спасбросок от эт
-- [`sokrytie_razuma`](../../entities/spells/sokrytie_razuma.md) — 8; abjuration; Касание
+- [`sokrytie_razuma`](../../entities/spells/sokrytie_razuma.md) — 8; abjuration; Касание — иммунитет к психич. урону и чтению мыслей
 - [`solnechnyy_ozhog`](../../entities/spells/solnechnyy_ozhog.md) — 8; evocation; 150 футов — Нежить и слизи совершают этот спасбросок с помехой. / Все существа, находящиеся в нём, должны совершить спасбросок Телосложения.
 - [`telepatiya`](../../entities/spells/telepatiya.md) — 8; evocation; Без ограничений
 - [`tsunami`](../../entities/spells/tsunami.md) — 8; Вызов; Видимость [конц.] — Когда стена появляется, все существа в её области должны совершить спасбросок Силы. / При провале они получают дробящий урон 6к10 или половину этого у
