@@ -6,20 +6,19 @@ from colorama import Fore, Style
 
 from core.catalogs.adventure import Adventure, load_adventures
 from core.character.models import Character
-from core.character.storage import load_characters
 from core.engine.difficulty import adventure_unavailable_reason
 from core.platform.catalog_session import get_catalog_session
 from core.platform.localization import get_string
 from core.types import RuntimeSettings, StringsDict
-from ui.input_handler import get_int_input
 from ui.menus.console import (
     press_enter,
     print_screen_header,
+    read_numbered_choice,
     run_numbered_menu,
 )
 from ui.menus.creation import steps as _creation_steps
-from ui.menus.creation.corrupt_saves import show_corrupt_save_warnings_if_any
 from ui.menus.display import _print_characters_list
+from ui.menus.hub._characters_cache import CharactersLoadSession
 from ui.menus.scenario.flow import run_scenario
 
 SelectCharacterResult = Character | Literal["create"] | None
@@ -37,27 +36,26 @@ def _select_character(
     char_count = len(characters)
     create_idx = char_count + 1
     enter_hint = get_string(strings, "common.press_enter")
-    print()
-    print(
-        f"  {Fore.GREEN}{get_string(strings, 'choose_character.create_new')}"
-        f" {Fore.LIGHTBLACK_EX}{enter_hint}{Style.RESET_ALL}"
-    )
-    print()
-    print(
-        f"  {Fore.YELLOW}0{Style.RESET_ALL}."
-        f" {Fore.LIGHTBLACK_EX}{get_string(strings, 'choose_character.back')}"
-        f"{Style.RESET_ALL}"
-    )
-    print()
-    choice = get_int_input(
-        get_string(strings, "choose_character.prompt", count=char_count),
-        0,
-        create_idx,
+
+    def _print_create_new() -> None:
+        print()
+        create_label = get_string(strings, "choose_character.create_new")
+        print(
+            f"  {Fore.GREEN}{create_label}"
+            f" {Fore.LIGHTBLACK_EX}{enter_hint}{Style.RESET_ALL}"
+        )
+
+    _print_create_new()
+    choice = read_numbered_choice(
         strings,
-        default=create_idx,
+        create_idx,
+        prompt_key="choose_character.prompt",
+        back_label_key="choose_character.back",
+        default_choice=create_idx,
+        back_muted=True,
     )
 
-    if choice == 0:
+    if choice is None:
         return None
     if choice == create_idx:
         return "create"
@@ -160,23 +158,15 @@ def show_new_game_flow(
 ) -> None:
     """Flow «Новая игра»: персонаж → приключение."""
     language = settings["language"]
-    load_result = None
-    corrupt_warning_shown = False
+    load_session = CharactersLoadSession()
 
     while True:
-        if load_result is None:
-            load_result = load_characters()
-            corrupt_warning_shown = show_corrupt_save_warnings_if_any(
-                strings,
-                corrupt_labels=load_result.corrupt_save_warnings,
-                already_shown=corrupt_warning_shown,
-            )
-        characters = list(load_result.characters)
+        characters = load_session.characters(strings)
         if not characters:
             character = _creation_steps.show_create_character_flow(
                 strings, language
             )
-            load_result = None
+            load_session.invalidate()
         else:
             result = _select_character(strings, characters, language)
             if result is None:
@@ -185,7 +175,7 @@ def show_new_game_flow(
                 character = _creation_steps.show_create_character_flow(
                     strings, language
                 )
-                load_result = None
+                load_session.invalidate()
             else:
                 character = result
 

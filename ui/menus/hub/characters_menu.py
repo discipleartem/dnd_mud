@@ -6,7 +6,6 @@ from core.character.models import Character
 from core.character.storage import (
     delete_all_characters,
     delete_character,
-    load_characters,
 )
 from core.platform.localization import get_string
 from core.types import LanguageCode, StringsDict
@@ -19,8 +18,8 @@ from ui.menus.console import (
     run_numbered_menu,
 )
 from ui.menus.creation import steps as _creation_steps
-from ui.menus.creation.corrupt_saves import show_corrupt_save_warnings_if_any
 from ui.menus.display import _print_characters_list
+from ui.menus.hub._characters_cache import CharactersLoadSession
 
 
 def _select_character_to_delete(
@@ -94,17 +93,9 @@ def show_characters_menu(
     strings: StringsDict, language: LanguageCode = "ru"
 ) -> None:
     """Меню управления персонажами: список, создание, удаление."""
-    load_result = None
-    corrupt_warning_shown = False
+    load_session = CharactersLoadSession()
     while True:
-        if load_result is None:
-            load_result = load_characters()
-            corrupt_warning_shown = show_corrupt_save_warnings_if_any(
-                strings,
-                corrupt_labels=load_result.corrupt_save_warnings,
-                already_shown=corrupt_warning_shown,
-            )
-        characters = list(load_result.characters)
+        characters = load_session.characters(strings)
         has_characters = bool(characters)
 
         print_screen_header(get_string(strings, "characters_menu.caption"))
@@ -139,14 +130,14 @@ def show_characters_menu(
 
         if choice == option_create:
             _creation_steps.show_create_character_flow(strings, language)
-            load_result = None
+            load_session.invalidate()
             continue
 
         if has_characters and choice == option_delete_one:
             _delete_one_character(strings, characters, language)
-            load_result = None
+            load_session.invalidate()
             continue
 
         if has_characters and choice == option_delete_all:
             _delete_all_characters(strings, len(characters))
-            load_result = None
+            load_session.invalidate()

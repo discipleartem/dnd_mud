@@ -13,7 +13,7 @@ from core.platform.localization import get_string
 from core.types import StringsDict
 from ui.input_handler import get_int_input
 from ui.menus.console import (
-    pick_from_pool_loop,
+    pick_n_from_pool_loop,
     print_back_row,
     print_screen_header,
     skill_name,
@@ -29,42 +29,40 @@ def _pick_expertise_skills(
 ) -> list[str] | None:
     """Выбрать навыки для компетентности."""
     taken_suffix = get_string(strings, "character.skills_taken_suffix")
-    selected: list[str] = []
     header = get_string(strings, "character.expertise_caption")
     heading = get_string(
         strings,
         "character.expertise_feature_heading",
         name=grant.feature_name,
     )
-    for current in range(1, pick_count + 1):
-        prompt = get_string(
+
+    def before_heading(_picked: list[str]) -> None:
+        print(f"{Fore.CYAN}{Style.BRIGHT}{heading}{Style.RESET_ALL}")
+        print()
+
+    def taken_for_pick(picked: list[str]) -> set[str]:
+        return set(already_expert) | set(picked)
+
+    def prompt_at(current: int, total: int) -> str:
+        return get_string(
             strings,
             "character.expertise_pick_prompt",
             current=current,
-            total=pick_count,
+            total=total,
         )
-        blocked = set(already_expert) | set(selected)
 
-        def _before_heading() -> None:
-            print(f"{Fore.CYAN}{Style.BRIGHT}{heading}{Style.RESET_ALL}")
-            print()
-
-        picked = pick_from_pool_loop(
-            strings,
-            list(proficiencies),
-            blocked,
-            label_for=lambda skill_id: skill_name(strings, skill_id),
-            taken_suffix=taken_suffix,
-            prompt=prompt,
-            empty_key="character.expertise_pool_empty",
-            header=header,
-            before_list=_before_heading,
-        )
-        if picked is None:
-            return None
-        selected.append(picked)
-
-    return selected
+    return pick_n_from_pool_loop(
+        strings,
+        pick_count,
+        pool_for_pick=lambda _picked: list(proficiencies),
+        taken_for_pick=taken_for_pick,
+        label_for=lambda skill_id: skill_name(strings, skill_id),
+        taken_suffix=taken_suffix,
+        prompt_at=prompt_at,
+        header=header,
+        empty_key="character.expertise_pool_empty",
+        before_list=before_heading,
+    )
 
 
 def _select_rogue_expertise(

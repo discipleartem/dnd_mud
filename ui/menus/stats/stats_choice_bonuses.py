@@ -12,12 +12,10 @@ from core.catalogs.races import (
 from core.mechanics.stats import STAT_NAMES, apply_bonuses_to_stats
 from core.platform.localization import get_string
 from core.types import StatMap, StringsDict
-from ui.input_handler import get_int_input
 from ui.menus.console import (
     ability_name,
-    choice_prompt,
-    print_back_row,
     print_screen_header,
+    run_numbered_menu,
 )
 
 
@@ -70,24 +68,22 @@ def _select_choice_ability_bonuses(
             f"{get_string(strings, 'character.stats_current')}"
             f"{Style.RESET_ALL}"
         )
-        for idx, stat in enumerate(available, 1):
-            stat_name = ability_name(strings, stat)
-            stat_msg = get_string(
+        labels = [
+            get_string(
                 strings,
                 "character.stat_line",
-                stat=stat_name,
+                stat=ability_name(strings, stat),
                 value=stats[stat],
             )
-            print(f"  {Fore.YELLOW}{idx}{Style.RESET_ALL}. {stat_msg}")
-
-        print()
-        print_back_row(strings)
-        print()
-
-        choice = get_int_input(
-            choice_prompt(strings), 0, len(available), strings
+            for stat in available
+        ]
+        choice = run_numbered_menu(
+            strings,
+            labels,
+            prompt_key="common.choice_prompt",
+            back_label_key="character.back",
         )
-        if choice == 0:
+        if choice is None:
             return None
 
         chosen_stats.append(available[choice - 1])
