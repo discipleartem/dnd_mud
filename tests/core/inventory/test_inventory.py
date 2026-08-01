@@ -301,7 +301,7 @@ def test_get_equipped_display_hands_and_occupied() -> None:
         },
     )
     labels, muted = get_equipped_display(char, "ru")
-    assert labels["main_hand"] == "Секира"
+    assert labels["main_hand"] == "Двуручный Секира"
     assert labels["off_hand"] == "двуручное"
     assert muted is True
 

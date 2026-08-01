@@ -265,33 +265,6 @@ def list_equipment_options_by_group(
     return result
 
 
-def filter_available_options(
-    class_id: str,
-    weapon_proficiencies: list[str],
-    armor_proficiencies: list[str],
-) -> dict[str, list[dict[str, Any]]]:
-    """Доступные опции по группам выбора."""
-    result: dict[str, list[dict[str, Any]]] = {}
-    for choice_group in list_equipment_choices(class_id):
-        choice_id = str(choice_group.get("id", ""))
-        if not choice_id:
-            continue
-        options = choice_group.get("options", [])
-        if not isinstance(options, list):
-            continue
-        available = [
-            dict(opt)
-            for opt in options
-            if isinstance(opt, dict)
-            and _option_available(
-                opt, weapon_proficiencies, armor_proficiencies
-            )
-        ]
-        if available:
-            result[choice_id] = available
-    return result
-
-
 def option_needs_weapon_pick(option: dict[str, Any]) -> list[str]:
     """Пулы оружия, требующие выбора в опции."""
     pools: list[str] = []

@@ -13,7 +13,6 @@ from core.platform.mod_loader import (
     clear_mod_loader_cache,
     load_merged_catalog,
 )
-from core.types import GameDifficulty
 
 
 def load_catalog(path: Path | str, root_key: str) -> dict[str, Any]:
@@ -38,16 +37,6 @@ def clear_all_catalog_caches() -> None:
 def reload_catalogs() -> None:
     """Перезагрузить каталоги и строки без рестарта интерпретатора."""
     get_catalog_session().clear_caches()
-
-
-def bootstrap_session_catalogs(difficulty: GameDifficulty) -> None:
-    """Синхронизировать mod overlay перед сессией приключения."""
-    get_catalog_session().bootstrap(difficulty)
-
-
-def reset_session_catalogs() -> None:
-    """Вернуть mod gating к normal после сессии приключения."""
-    get_catalog_session().reset()
 
 
 def load_catalog_items(

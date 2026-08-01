@@ -123,12 +123,3 @@ def resolve_language_pool(
         candidates = _language_ids_by_category("common")
 
     return [lang_id for lang_id in candidates if lang_id not in known]
-
-
-def racial_languages_step_required(
-    race_id: str, subrace_id: str | None = None
-) -> bool:
-    """Нужен ли экран языков (фиксированные или выборные)."""
-    fixed = get_fixed_racial_languages(race_id, subrace_id)
-    choices = get_racial_language_choices(race_id, subrace_id)
-    return bool(fixed) or bool(choices)
