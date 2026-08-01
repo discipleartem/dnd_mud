@@ -122,7 +122,9 @@ def _seed_inventory(
     if params.inventory is not None:
         return list(params.inventory)
 
-    from core.catalogs.backgrounds import get_background_equipment_items
+    from core.inventory.background_equipment import (
+        get_background_equipment_items,
+    )
     from core.inventory.items import add_items_to_inventory
     from core.inventory.starting_equipment import resolve_starting_items
 

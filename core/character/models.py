@@ -1,4 +1,4 @@
-"""Типизированные модели данных для персонажей и приключений.
+"""Типизированные модели данных для персонажей.
 
 Используем dataclasses для type-safety и удобной сериализации.
 """
@@ -8,7 +8,6 @@ from dataclasses import dataclass, field
 from typing import Any, cast
 
 from core.constants import clamp_level
-from core.platform.localization import resolve_localized_text
 from core.types import (
     CharacterClass,
     EquippedState,
@@ -240,40 +239,4 @@ class Character:
             ),
             save_slug=str(save_slug) if save_slug is not None else None,
             created_at=str(created_at) if created_at is not None else None,
-        )
-
-
-@dataclass
-class Adventure:
-    """Модель приключения."""
-
-    id: str
-    name: dict[str, str] | str = field(default_factory=dict)
-    description: str = ""
-    content_tier: str = "normal"
-    author: str = ""
-    version: str = "1.0"
-    allowed_game_difficulties: list[str] | None = None
-    hardcore_only: bool = False
-    min_level: int = 1
-    script_file: str = ""
-
-    def get_name(self, language: str = "ru") -> str:
-        """Получить название на нужном языке."""
-        return resolve_localized_text(self.name, language)
-
-    @classmethod
-    def from_dict(cls, data: dict[str, Any]) -> "Adventure":
-        """Создать из словаря."""
-        return cls(
-            id=data.get("id", ""),
-            name=data.get("name", {}),
-            description=data.get("description", ""),
-            content_tier=data.get("content_tier", "normal"),
-            author=data.get("author", ""),
-            version=data.get("version", "1.0"),
-            allowed_game_difficulties=data.get("allowed_game_difficulties"),
-            hardcore_only=bool(data.get("hardcore_only", False)),
-            min_level=int(data.get("min_level", 1)),
-            script_file=str(data.get("script_file", "")),
         )

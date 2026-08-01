@@ -5,9 +5,10 @@ from pathlib import Path
 import pytest
 
 import core.catalogs.adventure as adventure_mod
+from core.catalogs.adventure import Adventure
 from core.catalogs.backgrounds import get_background_skills, load_backgrounds
 from core.catalogs.skill_ids import PHB_SKILL_IDS
-from core.character.models import Adventure, Character
+from core.character.models import Character
 from core.engine.scenario_actions import apply_scenario_action, load_scenario
 from core.types import CharacterClass
 

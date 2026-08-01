@@ -43,3 +43,13 @@ _SESSION = CatalogSession()
 def get_catalog_session() -> CatalogSession:
     """Процессный экземпляр сессии каталогов."""
     return _SESSION
+
+
+def set_mod_gating_difficulty(difficulty: GameDifficulty | None) -> None:
+    """Режим для фильтрации модов с ``requires_game_difficulty``."""
+    get_catalog_session().set_difficulty(difficulty)
+
+
+def get_mod_gating_difficulty() -> GameDifficulty | None:
+    """Текущий режим gating модов (None — без фильтра по сложности)."""
+    return get_catalog_session().difficulty

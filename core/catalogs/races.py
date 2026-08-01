@@ -152,17 +152,6 @@ def build_bonuses_from_choices(
     return bonuses
 
 
-def get_racial_hp_bonus_sources(
-    race_id: str, subrace_id: str | None = None
-) -> list[Any]:
-    """Именованные бонусы HP за уровень из grants расы/подрасы."""
-    from core.mechanics.hp_bonus import hit_point_bonus_sources_from_grants
-
-    return hit_point_bonus_sources_from_grants(
-        collect_race_grants(race_id, subrace_id)
-    )
-
-
 def get_effective_race_bonuses(
     race_id: str,
     subrace_id: str | None = None,

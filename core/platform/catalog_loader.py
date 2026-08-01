@@ -4,11 +4,13 @@ from collections.abc import Callable
 from pathlib import Path
 from typing import Any
 
-from core.platform.catalog_session import get_catalog_session
+from core.platform.catalog_session import (
+    get_catalog_session,
+    get_mod_gating_difficulty,
+)
 from core.platform.localization import resolve_localized_text
 from core.platform.mod_loader import (
     clear_mod_loader_cache,
-    get_mod_gating_difficulty,
     load_merged_catalog,
 )
 from core.types import GameDifficulty

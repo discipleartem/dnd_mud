@@ -14,20 +14,6 @@ MODS_DIR = Path("mods")
 MODS_STATE_FILE = Path("database/core/mods_state.json")
 
 
-def set_mod_gating_difficulty(difficulty: GameDifficulty | None) -> None:
-    """Режим для фильтрации модов с ``requires_game_difficulty``."""
-    from core.platform.catalog_session import get_catalog_session
-
-    get_catalog_session().set_difficulty(difficulty)
-
-
-def get_mod_gating_difficulty() -> GameDifficulty | None:
-    """Текущий режим gating модов (None — без фильтра по сложности)."""
-    from core.platform.catalog_session import get_catalog_session
-
-    return get_catalog_session().difficulty
-
-
 def _mod_allowed_for_difficulty(
     manifest: dict[str, Any],
     difficulty: GameDifficulty | None,
@@ -172,11 +158,7 @@ def _enabled_mod_ids(
     enabled = state.get("enabled", [])
     if not isinstance(enabled, list):
         return []
-    difficulty = (
-        game_difficulty
-        if game_difficulty is not None
-        else get_mod_gating_difficulty()
-    )
+    difficulty = game_difficulty
     result: list[str] = []
     for mod_id in enabled:
         mod_key = str(mod_id)

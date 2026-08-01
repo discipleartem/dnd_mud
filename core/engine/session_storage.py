@@ -6,7 +6,8 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
-from core.character.models import Adventure, Character
+from core.catalogs.adventure import Adventure
+from core.character.models import Character
 from core.character.storage import CHARACTERS_DIR, try_load_character_file
 from core.platform.io import load_json, save_json
 from core.types import GameDifficulty
