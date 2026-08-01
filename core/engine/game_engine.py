@@ -113,44 +113,50 @@ class GameEngine:
 
     def step_choice(self, choice: dict[str, Any]) -> EngineResult:
         """Обработать выбор игрока: action + переход."""
-        action = choice.get("action")
-        message_key: str | None = None
-        message_params: dict[str, Any] | None = None
-        if isinstance(action, str):
-            engine_result = self.apply_action(action, choice)
-            if engine_result.exit_scenario:
-                return engine_result
-            self._session.character = engine_result.character
-            message_key = engine_result.message_key
-            message_params = engine_result.message_params
-            if engine_result.pending_ui:
-                return engine_result
-        next_id = choice.get("next")
-        if next_id:
-            self._session.current_node_id = str(next_id)
-        return EngineResult(
-            character=self._session.character,
-            next_node_id=self._session.current_node_id,
-            message_key=message_key,
-            message_params=message_params,
+        return self._step_node(
+            choice,
+            exit_before_character_update=True,
+            clear_node_without_next=False,
+            stop_on_pending_ui_only=True,
         )
 
     def step_auto_node(self, node: dict[str, Any]) -> EngineResult:
         """Узел с единственным action и next."""
+        return self._step_node(
+            node,
+            exit_before_character_update=False,
+            clear_node_without_next=True,
+            stop_on_pending_ui_only=False,
+        )
+
+    def _step_node(
+        self,
+        node_data: dict[str, Any],
+        *,
+        exit_before_character_update: bool,
+        clear_node_without_next: bool,
+        stop_on_pending_ui_only: bool,
+    ) -> EngineResult:
+        """Шаблон шага узла: action, персонаж, сообщение, next."""
         message_key: str | None = None
         message_params: dict[str, Any] | None = None
-        action = node.get("action")
+        action = node_data.get("action")
         if isinstance(action, str):
-            engine_result = self.apply_action(action, node)
+            engine_result = self.apply_action(action, node_data)
+            if exit_before_character_update and engine_result.exit_scenario:
+                return engine_result
             self._session.character = engine_result.character
             message_key = engine_result.message_key
             message_params = engine_result.message_params
-            if engine_result.pending_ui or engine_result.exit_scenario:
+            if stop_on_pending_ui_only:
+                if engine_result.pending_ui:
+                    return engine_result
+            elif engine_result.pending_ui or engine_result.exit_scenario:
                 return engine_result
-        next_id = node.get("next")
+        next_id = node_data.get("next")
         if next_id:
             self._session.current_node_id = str(next_id)
-        else:
+        elif clear_node_without_next:
             self._session.current_node_id = None
         return EngineResult(
             character=self._session.character,

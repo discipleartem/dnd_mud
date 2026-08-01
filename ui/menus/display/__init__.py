@@ -7,6 +7,8 @@ from core.inventory.equipped_display import (
 from ui.menus.display.character_card import (
     _format_character_feats,
     _print_character_card,
+)
+from ui.menus.display.character_list import (
     _print_characters_list,
 )
 from ui.menus.display.class_info import (
