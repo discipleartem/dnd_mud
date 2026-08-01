@@ -3,6 +3,7 @@
 ## [Unreleased]
 
 ### Changed
+- **Clean Code epic (B+C):** leaf `grants_resolve` / `feat_catalog`; sibling-модули feats/progression/inventory + фасады; UI `console.py` вместо `_common`; `grant_labels`, `session_runner`, `creation_finalize`; docs sync (нет `character_builder` / `_display`)
 - **Code slim refactor:** purge мёртвого API; `core/combat.py` вместо пакета; `ui/menus/display/` вместо `_display` god-file; `core/hp_bonus.py` + `core/expertise.py` sibling-модули; dedupe UI picks / scenario checks; slim `character_build`
 
 ### Fixed
