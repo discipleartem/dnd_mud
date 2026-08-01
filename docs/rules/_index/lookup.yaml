@@ -98,6 +98,20 @@ by_id:
     - 189
     - 198
     quick: ''
+  10-spellcasting:
+    type: chapter
+    file: chapters/10-spellcasting.md
+    pages:
+    - 201
+    - 206
+    quick: ''
+  11-spells:
+    type: chapter
+    file: chapters/11-spells.md
+    pages:
+    - 207
+    - 289
+    quick: ''
   acolyte:
     type: background
     file: entities/backgrounds/acolyte.md
@@ -630,6 +644,2463 @@ by_id:
     - 42
     - 43
     quick: Интеллект +1, Харизма +2; тёмное зрение; сопротивление огню; дьявольское наследие
+  aura_of_life:
+    type: spell
+    file: entities/spells/aura_of_life.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  aura_of_purity:
+    type: spell
+    file: entities/spells/aura_of_purity.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  aura_of_vitality:
+    type: spell
+    file: entities/spells/aura_of_vitality.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  aura_svyatosti:
+    type: spell
+    file: entities/spells/aura_svyatosti.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  bless:
+    type: spell
+    file: entities/spells/bless.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  bozhestvennoe_blagovolenie:
+    type: spell
+    file: entities/spells/bozhestvennoe_blagovolenie.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  bozhestvennoe_oruzhie:
+    type: spell
+    file: entities/spells/bozhestvennoe_oruzhie.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  bozhestvennoe_slovo:
+    type: spell
+    file: entities/spells/bozhestvennoe_slovo.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  burning_hands:
+    type: spell
+    file: entities/spells/burning_hands.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  bystryy_kolchan:
+    type: spell
+    file: entities/spells/bystryy_kolchan.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  charm_person:
+    type: spell
+    file: entities/spells/charm_person.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  cure_wounds:
+    type: spell
+    file: entities/spells/cure_wounds.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  demiplan:
+    type: spell
+    file: entities/spells/demiplan.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  detect_magic:
+    type: spell
+    file: entities/spells/detect_magic.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  dispel_magic:
+    type: spell
+    file: entities/spells/dispel_magic.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  dissoniruyushchiy_shepot:
+    type: spell
+    file: entities/spells/dissoniruyushchiy_shepot.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  dlan_bigbi:
+    type: spell
+    file: entities/spells/dlan_bigbi.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  dnevnoy_svet:
+    type: spell
+    file: entities/spells/dnevnoy_svet.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  dospekh_agatisa:
+    type: spell
+    file: entities/spells/dospekh_agatisa.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  dospekhi_maga:
+    type: spell
+    file: entities/spells/dospekhi_maga.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  drebezgi:
+    type: spell
+    file: entities/spells/drebezgi.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  drevesnyy_put:
+    type: spell
+    file: entities/spells/drevesnyy_put.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  dromidzhevo_poyavlenie:
+    type: spell
+    file: entities/spells/dromidzhevo_poyavlenie.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  druzhba_s_zhivotnymi:
+    type: spell
+    file: entities/spells/druzhba_s_zhivotnymi.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  dvizhenie_pochvy:
+    type: spell
+    file: entities/spells/dvizhenie_pochvy.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  dvoynik:
+    type: spell
+    file: entities/spells/dvoynik.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  faerie_fire:
+    type: spell
+    file: entities/spells/faerie_fire.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  falshivyy_dvoynik:
+    type: spell
+    file: entities/spells/falshivyy_dvoynik.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  fireball:
+    type: spell
+    file: entities/spells/fireball.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  fly:
+    type: spell
+    file: entities/spells/fly.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  gaseous_form:
+    type: spell
+    file: entities/spells/gaseous_form.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  gigantskoe_nasekomoe:
+    type: spell
+    file: entities/spells/gigantskoe_nasekomoe.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  gipnoticheskiy_uzor:
+    type: spell
+    file: entities/spells/gipnoticheskiy_uzor.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  gnevnaya_kara:
+    type: spell
+    file: entities/spells/gnevnaya_kara.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  golod_khadara:
+    type: spell
+    file: entities/spells/golod_khadara.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  goryashchiy_klinok:
+    type: spell
+    file: entities/spells/goryashchiy_klinok.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  grad:
+    type: spell
+    file: entities/spells/grad.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  grad_shipov:
+    type: spell
+    file: entities/spells/grad_shipov.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  groza_gneva:
+    type: spell
+    file: entities/spells/groza_gneva.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  healing_word:
+    type: spell
+    file: entities/spells/healing_word.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  heroism:
+    type: spell
+    file: entities/spells/heroism.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  invisibility:
+    type: spell
+    file: entities/spells/invisibility.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  ispolnenie_zhelaniy:
+    type: spell
+    file: entities/spells/ispolnenie_zhelaniy.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  istinnoe_voskreshenie:
+    type: spell
+    file: entities/spells/istinnoe_voskreshenie.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  istinnoe_zrenie:
+    type: spell
+    file: entities/spells/istinnoe_zrenie.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  izgnanie:
+    type: spell
+    file: entities/spells/izgnanie.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  izgonyayushchaya_kara:
+    type: spell
+    file: entities/spells/izgonyayushchaya_kara.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  izgotovlenie:
+    type: spell
+    file: entities/spells/izgotovlenie.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  izmenenie_formy_kamnya:
+    type: spell
+    file: entities/spells/izmenenie_formy_kamnya.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  izmenenie_pamyati:
+    type: spell
+    file: entities/spells/izmenenie_pamyati.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  izmenenie_tyagoteniya:
+    type: spell
+    file: entities/spells/izmenenie_tyagoteniya.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  izolyatsiya:
+    type: spell
+    file: entities/spells/izolyatsiya.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  kamennaya_kozha:
+    type: spell
+    file: entities/spells/kamennaya_kozha.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  kamennaya_stena:
+    type: spell
+    file: entities/spells/kamennaya_stena.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  khozhdenie_po_vetru:
+    type: spell
+    file: entities/spells/khozhdenie_po_vetru.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  khozhdenie_po_vode:
+    type: spell
+    file: entities/spells/khozhdenie_po_vode.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  kleymyashchaya_kara:
+    type: spell
+    file: entities/spells/kleymyashchaya_kara.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  konus_kholoda:
+    type: spell
+    file: entities/spells/konus_kholoda.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  korona_bezumiya:
+    type: spell
+    file: entities/spells/korona_bezumiya.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  krug_smerti:
+    type: spell
+    file: entities/spells/krug_smerti.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  krug_teleportatsii:
+    type: spell
+    file: entities/spells/krug_teleportatsii.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  labirint:
+    type: spell
+    file: entities/spells/labirint.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  ledyanaya_stena:
+    type: spell
+    file: entities/spells/ledyanaya_stena.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  leomundov_potaynoy_sunduk:
+    type: spell
+    file: entities/spells/leomundov_potaynoy_sunduk.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  leomundova_khizhina:
+    type: spell
+    file: entities/spells/leomundova_khizhina.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  levitatsiya:
+    type: spell
+    file: entities/spells/levitatsiya.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  lightning_bolt:
+    type: spell
+    file: entities/spells/lightning_bolt.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  luch_bolezni:
+    type: spell
+    file: entities/spells/luch_bolezni.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  luch_slabosti:
+    type: spell
+    file: entities/spells/luch_slabosti.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  lunnyy_luch:
+    type: spell
+    file: entities/spells/lunnyy_luch.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  magic_missile:
+    type: spell
+    file: entities/spells/magic_missile.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  magicheskiy_glaz:
+    type: spell
+    file: entities/spells/magicheskiy_glaz.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  magicheskoe_oruzhie:
+    type: spell
+    file: entities/spells/magicheskoe_oruzhie.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  major_image:
+    type: spell
+    file: entities/spells/major_image.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  maloe_vosstanovlenie:
+    type: spell
+    file: entities/spells/maloe_vosstanovlenie.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  mantiya_krestonostsa:
+    type: spell
+    file: entities/spells/mantiya_krestonostsa.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  maskirovka:
+    type: spell
+    file: entities/spells/maskirovka.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  mayak_nadezhdy:
+    type: spell
+    file: entities/spells/mayak_nadezhdy.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  mech_mordenkaynena:
+    type: spell
+    file: entities/spells/mech_mordenkaynena.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  mentalnaya_svyaz_reri:
+    type: spell
+    file: entities/spells/mentalnaya_svyaz_reri.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  mertsanie:
+    type: spell
+    file: entities/spells/mertsanie.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  meteor_swarm:
+    type: spell
+    file: entities/spells/meteor_swarm.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  metka_okhotnika:
+    type: spell
+    file: entities/spells/metka_okhotnika.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  mirazh:
+    type: spell
+    file: entities/spells/mirazh.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  mnozhestvennoe_lechenie_ran:
+    type: spell
+    file: entities/spells/mnozhestvennoe_lechenie_ran.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  mnozhestvennoe_vnushenie:
+    type: spell
+    file: entities/spells/mnozhestvennoe_vnushenie.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  moleben_lecheniya:
+    type: spell
+    file: entities/spells/moleben_lecheniya.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  nablyudenie:
+    type: spell
+    file: entities/spells/nablyudenie.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  nakhodchivost:
+    type: spell
+    file: entities/spells/nakhodchivost.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  nanesenie_ran:
+    type: spell
+    file: entities/spells/nanesenie_ran.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  napravlennyy_snaryad:
+    type: spell
+    file: entities/spells/napravlennyy_snaryad.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  nashestvie_nasekomykh:
+    type: spell
+    file: entities/spells/nashestvie_nasekomykh.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  nebesnyy_ogon:
+    type: spell
+    file: entities/spells/nebesnyy_ogon.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  neobnaruzhimost:
+    type: spell
+    file: entities/spells/neobnaruzhimost.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  netlennye_ostanki:
+    type: spell
+    file: entities/spells/netlennye_ostanki.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  nevidimoe_pismo:
+    type: spell
+    file: entities/spells/nevidimoe_pismo.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  nevidimyy_sluga:
+    type: spell
+    file: entities/spells/nevidimyy_sluga.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  nistulova_lozhnaya_magiya:
+    type: spell
+    file: entities/spells/nistulova_lozhnaya_magiya.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  obet:
+    type: spell
+    file: entities/spells/obet.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  obnaruzhenie_mysley:
+    type: spell
+    file: entities/spells/obnaruzhenie_mysley.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  obraz:
+    type: spell
+    file: entities/spells/obraz.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  obshchenie:
+    type: spell
+    file: entities/spells/obshchenie.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  obshchenie_s_prirodoy:
+    type: spell
+    file: entities/spells/obshchenie_s_prirodoy.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  ochishchenie_pishchi_i_pitya:
+    type: spell
+    file: entities/spells/ochishchenie_pishchi_i_pitya.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  oglushayushchaya_kara:
+    type: spell
+    file: entities/spells/oglushayushchaya_kara.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  ognennaya_burya:
+    type: spell
+    file: entities/spells/ognennaya_burya.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  ognennaya_stena:
+    type: spell
+    file: entities/spells/ognennaya_stena.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  okamenenie:
+    type: spell
+    file: entities/spells/okamenenie.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  okhrannye_runy:
+    type: spell
+    file: entities/spells/okhrannye_runy.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  oputyvanie:
+    type: spell
+    file: entities/spells/oputyvanie.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  oputyvayushchiy_udar:
+    type: spell
+    file: entities/spells/oputyvayushchiy_udar.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  ostanovka_vremeni:
+    type: spell
+    file: entities/spells/ostanovka_vremeni.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  otilyukov_ledyanoy_shar:
+    type: spell
+    file: entities/spells/otilyukov_ledyanoy_shar.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  otilyukov_uprugiy_shar:
+    type: spell
+    file: entities/spells/otilyukov_uprugiy_shar.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  otkryvanie:
+    type: spell
+    file: entities/spells/otkryvanie.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  otrazheniya:
+    type: spell
+    file: entities/spells/otrazheniya.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  ozhivlenie:
+    type: spell
+    file: entities/spells/ozhivlenie.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  palyashchaya_kara:
+    type: spell
+    file: entities/spells/palyashchaya_kara.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  palyashchiy_luch:
+    type: spell
+    file: entities/spells/palyashchiy_luch.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  pass_without_trace:
+    type: spell
+    file: entities/spells/pass_without_trace.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  pauk:
+    type: spell
+    file: entities/spells/pauk.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  pautina:
+    type: spell
+    file: entities/spells/pautina.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  perenosyashchaya_dver:
+    type: spell
+    file: entities/spells/perenosyashchaya_dver.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  perst_smerti:
+    type: spell
+    file: entities/spells/perst_smerti.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  planarnye_uzy:
+    type: spell
+    file: entities/spells/planarnye_uzy.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  planarnyy_soyuznik:
+    type: spell
+    file: entities/spells/planarnyy_soyuznik.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  plyashushchaya_molniya:
+    type: spell
+    file: entities/spells/plyashushchaya_molniya.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  pochtovoe_zhivotnoe:
+    type: spell
+    file: entities/spells/pochtovoe_zhivotnoe.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  podchinenie_chudovishcha:
+    type: spell
+    file: entities/spells/podchinenie_chudovishcha.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  podchinenie_lichnosti:
+    type: spell
+    file: entities/spells/podchinenie_lichnosti.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  podchinenie_zverya:
+    type: spell
+    file: entities/spells/podchinenie_zverya.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  podmoga:
+    type: spell
+    file: entities/spells/podmoga.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  podobie:
+    type: spell
+    file: entities/spells/podobie.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  podsmatrivanie:
+    type: spell
+    file: entities/spells/podsmatrivanie.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  podvodnoe_dykhanie:
+    type: spell
+    file: entities/spells/podvodnoe_dykhanie.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  poisk_familyara:
+    type: spell
+    file: entities/spells/poisk_familyara.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  poisk_lovushek:
+    type: spell
+    file: entities/spells/poisk_lovushek.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  poisk_puti:
+    type: spell
+    file: entities/spells/poisk_puti.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  poisk_skakuna:
+    type: spell
+    file: entities/spells/poisk_skakuna.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  poisk_sushchestva:
+    type: spell
+    file: entities/spells/poisk_sushchestva.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  poisk_zhivotnykh_ili_rasteniy:
+    type: spell
+    file: entities/spells/poisk_zhivotnykh_ili_rasteniy.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  polnoe_istselenie:
+    type: spell
+    file: entities/spells/polnoe_istselenie.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  polnoe_prevrashchenie:
+    type: spell
+    file: entities/spells/polnoe_prevrashchenie.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  ponimanie_yazykov:
+    type: spell
+    file: entities/spells/ponimanie_yazykov.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  porcha:
+    type: spell
+    file: entities/spells/porcha.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  poryv_vetra:
+    type: spell
+    file: entities/spells/poryv_vetra.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  poslanie:
+    type: spell
+    file: entities/spells/poslanie.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  pospeshnoe_otstuplenie:
+    type: spell
+    file: entities/spells/pospeshnoe_otstuplenie.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  predostorozhnost:
+    type: spell
+    file: entities/spells/predostorozhnost.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  predskazanie:
+    type: spell
+    file: entities/spells/predskazanie.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  predvidenie:
+    type: spell
+    file: entities/spells/predvidenie.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  pregrada_magii:
+    type: spell
+    file: entities/spells/pregrada_magii.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  prevrashchenie_v_zhivotnykh:
+    type: spell
+    file: entities/spells/prevrashchenie_v_zhivotnykh.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  prikaz:
+    type: spell
+    file: entities/spells/prikaz.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  prikosnovenie_vampira:
+    type: spell
+    file: entities/spells/prikosnovenie_vampira.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  prinuzhdenie:
+    type: spell
+    file: entities/spells/prinuzhdenie.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  pritvornaya_smert:
+    type: spell
+    file: entities/spells/pritvornaya_smert.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  pritvorstvo:
+    type: spell
+    file: entities/spells/pritvorstvo.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  prizrachnyy_skakun:
+    type: spell
+    file: entities/spells/prizrachnyy_skakun.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  prizyv_elementalya:
+    type: spell
+    file: entities/spells/prizyv_elementalya.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  prizyv_fei:
+    type: spell
+    file: entities/spells/prizyv_fei.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  prizyv_lesnykh_obitateley:
+    type: spell
+    file: entities/spells/prizyv_lesnykh_obitateley.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  prizyv_malykh_elementaley:
+    type: spell
+    file: entities/spells/prizyv_malykh_elementaley.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  prizyv_molnii:
+    type: spell
+    file: entities/spells/prizyv_molnii.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  prizyv_nebozhitelya:
+    type: spell
+    file: entities/spells/prizyv_nebozhitelya.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  prizyv_zagrazhdeniya:
+    type: spell
+    file: entities/spells/prizyv_zagrazhdeniya.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  prizyv_zalpa:
+    type: spell
+    file: entities/spells/prizyv_zalpa.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  prizyv_zhivotnykh:
+    type: spell
+    file: entities/spells/prizyv_zhivotnykh.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  probuzhdenie_razuma:
+    type: spell
+    file: entities/spells/probuzhdenie_razuma.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  proektsiya:
+    type: spell
+    file: entities/spells/proektsiya.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  proklyatie:
+    type: spell
+    file: entities/spells/proklyatie.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  pryzhok:
+    type: spell
+    file: entities/spells/pryzhok.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  psevdozhizn:
+    type: spell
+    file: entities/spells/psevdozhizn.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  puteshestvie_cherez_rasteniya:
+    type: spell
+    file: entities/spells/puteshestvie_cherez_rasteniya.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  pylayushchiy_shar:
+    type: spell
+    file: entities/spells/pylayushchiy_shar.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  raduzhnaya_stena:
+    type: spell
+    file: entities/spells/raduzhnaya_stena.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  raduzhnye_bryzgi:
+    type: spell
+    file: entities/spells/raduzhnye_bryzgi.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  raskalennyy_metall:
+    type: spell
+    file: entities/spells/raskalennyy_metall.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  raspad:
+    type: spell
+    file: entities/spells/raspad.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  razgovor_s_mertvymi:
+    type: spell
+    file: entities/spells/razgovor_s_mertvymi.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  razgovor_s_rasteniyami:
+    type: spell
+    file: entities/spells/razgovor_s_rasteniyami.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  razgovor_s_zhivotnymi:
+    type: spell
+    file: entities/spells/razgovor_s_zhivotnymi.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  razmytyy_obraz:
+    type: spell
+    file: entities/spells/razmytyy_obraz.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  razrushitelnaya_volna:
+    type: spell
+    file: entities/spells/razrushitelnaya_volna.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  razyashchee_oko:
+    type: spell
+    file: entities/spells/razyashchee_oko.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  rech_zlatousta:
+    type: spell
+    file: entities/spells/rech_zlatousta.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  regeneratsiya:
+    type: spell
+    file: entities/spells/regeneratsiya.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  resurrection:
+    type: spell
+    file: entities/spells/resurrection.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  rost_rasteniy:
+    type: spell
+    file: entities/spells/rost_rasteniy.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  ruki_khadara:
+    type: spell
+    file: entities/spells/ruki_khadara.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  sfera_neuyazvimosti:
+    type: spell
+    file: entities/spells/sfera_neuyazvimosti.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  sglaz:
+    type: spell
+    file: entities/spells/sglaz.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  shield_of_faith:
+    type: spell
+    file: entities/spells/shield_of_faith.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  signal_trevogi:
+    type: spell
+    file: entities/spells/signal_trevogi.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  silovaya_stena:
+    type: spell
+    file: entities/spells/silovaya_stena.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  skolzhenie:
+    type: spell
+    file: entities/spells/skolzhenie.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  slaboumie:
+    type: spell
+    file: entities/spells/slaboumie.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  sleep:
+    type: spell
+    file: entities/spells/sleep.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  sliyanie_s_kamnem:
+    type: spell
+    file: entities/spells/sliyanie_s_kamnem.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  smertnyy_uzhas:
+    type: spell
+    file: entities/spells/smertnyy_uzhas.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  smyatenie:
+    type: spell
+    file: entities/spells/smyatenie.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  snyatie_proklyatya:
+    type: spell
+    file: entities/spells/snyatie_proklyatya.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  sokrytie_razuma:
+    type: spell
+    file: entities/spells/sokrytie_razuma.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  solnechnyy_luch:
+    type: spell
+    file: entities/spells/solnechnyy_luch.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  solnechnyy_ozhog:
+    type: spell
+    file: entities/spells/solnechnyy_ozhog.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  sotvorenie:
+    type: spell
+    file: entities/spells/sotvorenie.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  sotvorenie_ili_unichtozhenie_vody:
+    type: spell
+    file: entities/spells/sotvorenie_ili_unichtozhenie_vody.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  sotvorenie_nezhiti:
+    type: spell
+    file: entities/spells/sotvorenie_nezhiti.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  sotvorenie_pishchi_i_vody:
+    type: spell
+    file: entities/spells/sotvorenie_pishchi_i_vody.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  sozdanie_prokhoda:
+    type: spell
+    file: entities/spells/sozdanie_prokhoda.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  stena_klinkov:
+    type: spell
+    file: entities/spells/stena_klinkov.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  stena_vetrov:
+    type: spell
+    file: entities/spells/stena_vetrov.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  stikhiynoe_oruzhie:
+    type: spell
+    file: entities/spells/stikhiynoe_oruzhie.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  strazh_very:
+    type: spell
+    file: entities/spells/strazh_very.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  strazhi:
+    type: spell
+    file: entities/spells/strazhi.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  sverkayushchie_bryzgi:
+    type: spell
+    file: entities/spells/sverkayushchie_bryzgi.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  svoboda_peremeshcheniya:
+    type: spell
+    file: entities/spells/svoboda_peremeshcheniya.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  svyatilishche:
+    type: spell
+    file: entities/spells/svyatilishche.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  svyaz_s_inym_mirom:
+    type: spell
+    file: entities/spells/svyaz_s_inym_mirom.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  tainstvennyy_mirazh:
+    type: spell
+    file: entities/spells/tainstvennyy_mirazh.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  telekinez:
+    type: spell
+    file: entities/spells/telekinez.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  telepatiya:
+    type: spell
+    file: entities/spells/telepatiya.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  teleport:
+    type: spell
+    file: entities/spells/teleport.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  temnoe_zrenie:
+    type: spell
+    file: entities/spells/temnoe_zrenie.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  tenzerov_paryashchiy_disk:
+    type: spell
+    file: entities/spells/tenzerov_paryashchiy_disk.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  ternovaya_stena:
+    type: spell
+    file: entities/spells/ternovaya_stena.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  tishina:
+    type: spell
+    file: entities/spells/tishina.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  tma:
+    type: spell
+    file: entities/spells/tma.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  tryuk_s_verevkoy:
+    type: spell
+    file: entities/spells/tryuk_s_verevkoy.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  tsepkaya_loza:
+    type: spell
+    file: entities/spells/tsepkaya_loza.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  tsunami:
+    type: spell
+    file: entities/spells/tsunami.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  tsvetnoy_sharik:
+    type: spell
+    file: entities/spells/tsvetnoy_sharik.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  tumannoe_oblako:
+    type: spell
+    file: entities/spells/tumannoe_oblako.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  tumannyy_shag:
+    type: spell
+    file: entities/spells/tumannyy_shag.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  ubezhishche:
+    type: spell
+    file: entities/spells/ubezhishche.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  uderzhanie_chudovishcha:
+    type: spell
+    file: entities/spells/uderzhanie_chudovishcha.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  uderzhanie_lichnosti:
+    type: spell
+    file: entities/spells/uderzhanie_lichnosti.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  ukhod_v_inoy_mir:
+    type: spell
+    file: entities/spells/ukhod_v_inoy_mir.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  umirotvorenie:
+    type: spell
+    file: entities/spells/umirotvorenie.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  uskorenie:
+    type: spell
+    file: entities/spells/uskorenie.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  usykhanie:
+    type: spell
+    file: entities/spells/usykhanie.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  uzilishche:
+    type: spell
+    file: entities/spells/uzilishche.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  velikolepnyy_osobnyak_mordenkaynena:
+    type: spell
+    file: entities/spells/velikolepnyy_osobnyak_mordenkaynena.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  veshchiy_son:
+    type: spell
+    file: entities/spells/veshchiy_son.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  videnie_nevidimogo:
+    type: spell
+    file: entities/spells/videnie_nevidimogo.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  vlast_nad_pogodoy:
+    type: spell
+    file: entities/spells/vlast_nad_pogodoy.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  volna_groma:
+    type: spell
+    file: entities/spells/volna_groma.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  volshebnyy_sosud:
+    type: spell
+    file: entities/spells/volshebnyy_sosud.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  volshebnyy_zamok:
+    type: spell
+    file: entities/spells/volshebnyy_zamok.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  voobrazhaemaya_sila:
+    type: spell
+    file: entities/spells/voobrazhaemaya_sila.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  voobrazhaemyy_ubiytsa:
+    type: spell
+    file: entities/spells/voobrazhaemyy_ubiytsa.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  vosplamenyayushchayasya_tucha:
+    type: spell
+    file: entities/spells/vosplamenyayushchayasya_tucha.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  vosstavshiy_trup:
+    type: spell
+    file: entities/spells/vosstavshiy_trup.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  vozrozhdenie:
+    type: spell
+    file: entities/spells/vozrozhdenie.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  vysshaya_nevidimost:
+    type: spell
+    file: entities/spells/vysshaya_nevidimost.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  vysshee_vosstanovlenie:
+    type: spell
+    file: entities/spells/vysshee_vosstanovlenie.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  vyzov_na_duel:
+    type: spell
+    file: entities/spells/vyzov_na_duel.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  zadannaya_illyuziya:
+    type: spell
+    file: entities/spells/zadannaya_illyuziya.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  zamedlenie:
+    type: spell
+    file: entities/spells/zamedlenie.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  zamedlennyy_ognennyy_shar:
+    type: spell
+    file: entities/spells/zamedlennyy_ognennyy_shar.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  zapret:
+    type: spell
+    file: entities/spells/zapret.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  zarazhenie:
+    type: spell
+    file: entities/spells/zarazhenie.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  zashchita_ot_dobra_i_zla:
+    type: spell
+    file: entities/spells/zashchita_ot_dobra_i_zla.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  zashchita_ot_energii:
+    type: spell
+    file: entities/spells/zashchita_ot_energii.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  zashchita_ot_smerti:
+    type: spell
+    file: entities/spells/zashchita_ot_smerti.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  zashchita_ot_yada:
+    type: spell
+    file: entities/spells/zashchita_ot_yada.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  zatochenie:
+    type: spell
+    file: entities/spells/zatochenie.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  zavesa_strel:
+    type: spell
+    file: entities/spells/zavesa_strel.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  zemletryasenie:
+    type: spell
+    file: entities/spells/zemletryasenie.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  zhivotnye_chuvstva:
+    type: spell
+    file: entities/spells/zhivotnye_chuvstva.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  zhutkiy_smekh_tashi:
+    type: spell
+    file: entities/spells/zhutkiy_smekh_tashi.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  zlovonnoe_oblako:
+    type: spell
+    file: entities/spells/zlovonnoe_oblako.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
+  znak:
+    type: spell
+    file: entities/spells/znak.md
+    pages:
+    - 211
+    - 289
+    quick: ''
+    level: null
+    school: null
 by_alias:
   00-introduction: 00-introduction
   Введение: 00-introduction
@@ -662,6 +3133,10 @@ by_alias:
   09-combat: 09-combat
   09 combat: 09-combat
   Сражение: 09-combat
+  10-spellcasting: 10-spellcasting
+  Использование заклинаний: 10-spellcasting
+  11-spells: 11-spells
+  Заклинания: 11-spells
   acolyte: acolyte
   Прислужник: acolyte
   charlatan: charlatan
@@ -843,6 +3318,751 @@ by_alias:
   Человек: human
   tiefling: tiefling
   Тифлинг: tiefling
+  aura_of_life: aura_of_life
+  aura of life: aura_of_life
+  Аура Жизни: aura_of_life
+  aura_of_purity: aura_of_purity
+  aura of purity: aura_of_purity
+  Аура Очищения: aura_of_purity
+  aura_of_vitality: aura_of_vitality
+  aura of vitality: aura_of_vitality
+  Аура Живучести: aura_of_vitality
+  aura_svyatosti: aura_svyatosti
+  aura svyatosti: aura_svyatosti
+  Аура Святости: aura_svyatosti
+  bless: bless
+  Благословение: bless
+  bozhestvennoe_blagovolenie: bozhestvennoe_blagovolenie
+  bozhestvennoe blagovolenie: bozhestvennoe_blagovolenie
+  Божественное Благоволение: bozhestvennoe_blagovolenie
+  bozhestvennoe_oruzhie: bozhestvennoe_oruzhie
+  bozhestvennoe oruzhie: bozhestvennoe_oruzhie
+  Божественное Оружие: bozhestvennoe_oruzhie
+  bozhestvennoe_slovo: bozhestvennoe_slovo
+  bozhestvennoe slovo: bozhestvennoe_slovo
+  Божественное Слово: bozhestvennoe_slovo
+  burning_hands: burning_hands
+  burning hands: burning_hands
+  Огненные Ладони: burning_hands
+  bystryy_kolchan: bystryy_kolchan
+  bystryy kolchan: bystryy_kolchan
+  Быстрый Колчан: bystryy_kolchan
+  charm_person: charm_person
+  charm person: charm_person
+  Очарование Личности: charm_person
+  cure_wounds: cure_wounds
+  cure wounds: cure_wounds
+  Лечение Ран: cure_wounds
+  demiplan: demiplan
+  Демиплан: demiplan
+  detect_magic: detect_magic
+  detect magic: detect_magic
+  Обнаружение Магии: detect_magic
+  dispel_magic: dispel_magic
+  dispel magic: dispel_magic
+  Рассеивание Магии: dispel_magic
+  dissoniruyushchiy_shepot: dissoniruyushchiy_shepot
+  dissoniruyushchiy shepot: dissoniruyushchiy_shepot
+  Диссонирующий Шёпот: dissoniruyushchiy_shepot
+  dlan_bigbi: dlan_bigbi
+  dlan bigbi: dlan_bigbi
+  Длань Бигби: dlan_bigbi
+  dnevnoy_svet: dnevnoy_svet
+  dnevnoy svet: dnevnoy_svet
+  Дневной Свет: dnevnoy_svet
+  dospekh_agatisa: dospekh_agatisa
+  dospekh agatisa: dospekh_agatisa
+  Доспех Агатиса: dospekh_agatisa
+  dospekhi_maga: dospekhi_maga
+  dospekhi maga: dospekhi_maga
+  Доспехи Мага: dospekhi_maga
+  drebezgi: drebezgi
+  Дребезги: drebezgi
+  drevesnyy_put: drevesnyy_put
+  drevesnyy put: drevesnyy_put
+  Древесный Путь: drevesnyy_put
+  dromidzhevo_poyavlenie: dromidzhevo_poyavlenie
+  dromidzhevo poyavlenie: dromidzhevo_poyavlenie
+  Дромиджево Появление: dromidzhevo_poyavlenie
+  druzhba_s_zhivotnymi: druzhba_s_zhivotnymi
+  druzhba s zhivotnymi: druzhba_s_zhivotnymi
+  Дружба С Животными: druzhba_s_zhivotnymi
+  dvizhenie_pochvy: dvizhenie_pochvy
+  dvizhenie pochvy: dvizhenie_pochvy
+  Движение Почвы: dvizhenie_pochvy
+  dvoynik: dvoynik
+  Двойник: dvoynik
+  faerie_fire: faerie_fire
+  faerie fire: faerie_fire
+  Огонь Фей: faerie_fire
+  falshivyy_dvoynik: falshivyy_dvoynik
+  falshivyy dvoynik: falshivyy_dvoynik
+  Фальшивый Двойник: falshivyy_dvoynik
+  fireball: fireball
+  Огненный Шар: fireball
+  fly: fly
+  Полёт: fly
+  gaseous_form: gaseous_form
+  gaseous form: gaseous_form
+  Газообразная Форма: gaseous_form
+  gigantskoe_nasekomoe: gigantskoe_nasekomoe
+  gigantskoe nasekomoe: gigantskoe_nasekomoe
+  Гигантское Насекомое: gigantskoe_nasekomoe
+  gipnoticheskiy_uzor: gipnoticheskiy_uzor
+  gipnoticheskiy uzor: gipnoticheskiy_uzor
+  Гипнотический Узор: gipnoticheskiy_uzor
+  gnevnaya_kara: gnevnaya_kara
+  gnevnaya kara: gnevnaya_kara
+  Гневная Кара: gnevnaya_kara
+  golod_khadara: golod_khadara
+  golod khadara: golod_khadara
+  Голод Хадара: golod_khadara
+  goryashchiy_klinok: goryashchiy_klinok
+  goryashchiy klinok: goryashchiy_klinok
+  Горящий Клинок: goryashchiy_klinok
+  grad: grad
+  Град: grad
+  grad_shipov: grad_shipov
+  grad shipov: grad_shipov
+  Град Шипов: grad_shipov
+  groza_gneva: groza_gneva
+  groza gneva: groza_gneva
+  Гроза Гнева: groza_gneva
+  healing_word: healing_word
+  healing word: healing_word
+  Лечащее Слово: healing_word
+  heroism: heroism
+  Героизм: heroism
+  invisibility: invisibility
+  Невидимость: invisibility
+  ispolnenie_zhelaniy: ispolnenie_zhelaniy
+  ispolnenie zhelaniy: ispolnenie_zhelaniy
+  Исполнение Желаний: ispolnenie_zhelaniy
+  istinnoe_voskreshenie: istinnoe_voskreshenie
+  istinnoe voskreshenie: istinnoe_voskreshenie
+  Истинное Воскрешение: istinnoe_voskreshenie
+  istinnoe_zrenie: istinnoe_zrenie
+  istinnoe zrenie: istinnoe_zrenie
+  Истинное Зрение: istinnoe_zrenie
+  izgnanie: izgnanie
+  Изгнание: izgnanie
+  izgonyayushchaya_kara: izgonyayushchaya_kara
+  izgonyayushchaya kara: izgonyayushchaya_kara
+  Изгоняющая Кара: izgonyayushchaya_kara
+  izgotovlenie: izgotovlenie
+  Изготовление: izgotovlenie
+  izmenenie_formy_kamnya: izmenenie_formy_kamnya
+  izmenenie formy kamnya: izmenenie_formy_kamnya
+  Изменение Формы Камня: izmenenie_formy_kamnya
+  izmenenie_pamyati: izmenenie_pamyati
+  izmenenie pamyati: izmenenie_pamyati
+  Изменение Памяти: izmenenie_pamyati
+  izmenenie_tyagoteniya: izmenenie_tyagoteniya
+  izmenenie tyagoteniya: izmenenie_tyagoteniya
+  Изменение Тяготения: izmenenie_tyagoteniya
+  izolyatsiya: izolyatsiya
+  Изоляция: izolyatsiya
+  kamennaya_kozha: kamennaya_kozha
+  kamennaya kozha: kamennaya_kozha
+  Каменная Кожа: kamennaya_kozha
+  kamennaya_stena: kamennaya_stena
+  kamennaya stena: kamennaya_stena
+  Каменная Стена: kamennaya_stena
+  khozhdenie_po_vetru: khozhdenie_po_vetru
+  khozhdenie po vetru: khozhdenie_po_vetru
+  Хождение По Ветру: khozhdenie_po_vetru
+  khozhdenie_po_vode: khozhdenie_po_vode
+  khozhdenie po vode: khozhdenie_po_vode
+  Хождение По Воде: khozhdenie_po_vode
+  kleymyashchaya_kara: kleymyashchaya_kara
+  kleymyashchaya kara: kleymyashchaya_kara
+  Клеймящая Кара: kleymyashchaya_kara
+  konus_kholoda: konus_kholoda
+  konus kholoda: konus_kholoda
+  Конус Холода: konus_kholoda
+  korona_bezumiya: korona_bezumiya
+  korona bezumiya: korona_bezumiya
+  Корона Безумия: korona_bezumiya
+  krug_smerti: krug_smerti
+  krug smerti: krug_smerti
+  Круг Смерти: krug_smerti
+  krug_teleportatsii: krug_teleportatsii
+  krug teleportatsii: krug_teleportatsii
+  Круг Телепортации: krug_teleportatsii
+  labirint: labirint
+  Лабиринт: labirint
+  ledyanaya_stena: ledyanaya_stena
+  ledyanaya stena: ledyanaya_stena
+  Ледяная Стена: ledyanaya_stena
+  leomundov_potaynoy_sunduk: leomundov_potaynoy_sunduk
+  leomundov potaynoy sunduk: leomundov_potaynoy_sunduk
+  Леомундов Потайной Сундук: leomundov_potaynoy_sunduk
+  leomundova_khizhina: leomundova_khizhina
+  leomundova khizhina: leomundova_khizhina
+  Леомундова Хижина: leomundova_khizhina
+  levitatsiya: levitatsiya
+  Левитация: levitatsiya
+  lightning_bolt: lightning_bolt
+  lightning bolt: lightning_bolt
+  Молния: lightning_bolt
+  luch_bolezni: luch_bolezni
+  luch bolezni: luch_bolezni
+  Луч Болезни: luch_bolezni
+  luch_slabosti: luch_slabosti
+  luch slabosti: luch_slabosti
+  Луч Слабости: luch_slabosti
+  lunnyy_luch: lunnyy_luch
+  lunnyy luch: lunnyy_luch
+  Лунный Луч: lunnyy_luch
+  magic_missile: magic_missile
+  magic missile: magic_missile
+  Волшебная Стрела: magic_missile
+  magicheskiy_glaz: magicheskiy_glaz
+  magicheskiy glaz: magicheskiy_glaz
+  Магический Глаз: magicheskiy_glaz
+  magicheskoe_oruzhie: magicheskoe_oruzhie
+  magicheskoe oruzhie: magicheskoe_oruzhie
+  Магическое Оружие: magicheskoe_oruzhie
+  major_image: major_image
+  major image: major_image
+  Волшебные Уста: major_image
+  maloe_vosstanovlenie: maloe_vosstanovlenie
+  maloe vosstanovlenie: maloe_vosstanovlenie
+  Малое Восстановление: maloe_vosstanovlenie
+  mantiya_krestonostsa: mantiya_krestonostsa
+  mantiya krestonostsa: mantiya_krestonostsa
+  Мантия Крестоносца: mantiya_krestonostsa
+  maskirovka: maskirovka
+  Маскировка: maskirovka
+  mayak_nadezhdy: mayak_nadezhdy
+  mayak nadezhdy: mayak_nadezhdy
+  Маяк Надежды: mayak_nadezhdy
+  mech_mordenkaynena: mech_mordenkaynena
+  mech mordenkaynena: mech_mordenkaynena
+  Меч Морденкайнена: mech_mordenkaynena
+  mentalnaya_svyaz_reri: mentalnaya_svyaz_reri
+  mentalnaya svyaz reri: mentalnaya_svyaz_reri
+  Ментальная Связь Рэри: mentalnaya_svyaz_reri
+  mertsanie: mertsanie
+  Мерцание: mertsanie
+  meteor_swarm: meteor_swarm
+  meteor swarm: meteor_swarm
+  Метеоритный Дождь: meteor_swarm
+  metka_okhotnika: metka_okhotnika
+  metka okhotnika: metka_okhotnika
+  Метка Охотника: metka_okhotnika
+  mirazh: mirazh
+  Мираж: mirazh
+  mnozhestvennoe_lechenie_ran: mnozhestvennoe_lechenie_ran
+  mnozhestvennoe lechenie ran: mnozhestvennoe_lechenie_ran
+  Множественное Лечение Ран: mnozhestvennoe_lechenie_ran
+  mnozhestvennoe_vnushenie: mnozhestvennoe_vnushenie
+  mnozhestvennoe vnushenie: mnozhestvennoe_vnushenie
+  Множественное Внушение: mnozhestvennoe_vnushenie
+  moleben_lecheniya: moleben_lecheniya
+  moleben lecheniya: moleben_lecheniya
+  Молебен Лечения: moleben_lecheniya
+  nablyudenie: nablyudenie
+  Наблюдение: nablyudenie
+  nakhodchivost: nakhodchivost
+  Находчивость: nakhodchivost
+  nanesenie_ran: nanesenie_ran
+  nanesenie ran: nanesenie_ran
+  Нанесение Ран: nanesenie_ran
+  napravlennyy_snaryad: napravlennyy_snaryad
+  napravlennyy snaryad: napravlennyy_snaryad
+  Направленный Снаряд: napravlennyy_snaryad
+  nashestvie_nasekomykh: nashestvie_nasekomykh
+  nashestvie nasekomykh: nashestvie_nasekomykh
+  Нашествие Насекомых: nashestvie_nasekomykh
+  nebesnyy_ogon: nebesnyy_ogon
+  nebesnyy ogon: nebesnyy_ogon
+  Небесный Огонь: nebesnyy_ogon
+  neobnaruzhimost: neobnaruzhimost
+  Необнаружимость: neobnaruzhimost
+  netlennye_ostanki: netlennye_ostanki
+  netlennye ostanki: netlennye_ostanki
+  Нетленные Останки: netlennye_ostanki
+  nevidimoe_pismo: nevidimoe_pismo
+  nevidimoe pismo: nevidimoe_pismo
+  Невидимое Письмо: nevidimoe_pismo
+  nevidimyy_sluga: nevidimyy_sluga
+  nevidimyy sluga: nevidimyy_sluga
+  Невидимый Слуга: nevidimyy_sluga
+  nistulova_lozhnaya_magiya: nistulova_lozhnaya_magiya
+  nistulova lozhnaya magiya: nistulova_lozhnaya_magiya
+  Нистулова Ложная Магия: nistulova_lozhnaya_magiya
+  obet: obet
+  Обет: obet
+  obnaruzhenie_mysley: obnaruzhenie_mysley
+  obnaruzhenie mysley: obnaruzhenie_mysley
+  Обнаружение Мыслей: obnaruzhenie_mysley
+  obraz: obraz
+  Образ: obraz
+  obshchenie: obshchenie
+  Общение: obshchenie
+  obshchenie_s_prirodoy: obshchenie_s_prirodoy
+  obshchenie s prirodoy: obshchenie_s_prirodoy
+  Общение С Природой: obshchenie_s_prirodoy
+  ochishchenie_pishchi_i_pitya: ochishchenie_pishchi_i_pitya
+  ochishchenie pishchi i pitya: ochishchenie_pishchi_i_pitya
+  Очищение Пищи И Питья: ochishchenie_pishchi_i_pitya
+  oglushayushchaya_kara: oglushayushchaya_kara
+  oglushayushchaya kara: oglushayushchaya_kara
+  Оглушающая Кара: oglushayushchaya_kara
+  ognennaya_burya: ognennaya_burya
+  ognennaya burya: ognennaya_burya
+  Огненная Буря: ognennaya_burya
+  ognennaya_stena: ognennaya_stena
+  ognennaya stena: ognennaya_stena
+  Огненная Стена: ognennaya_stena
+  okamenenie: okamenenie
+  Окаменение: okamenenie
+  okhrannye_runy: okhrannye_runy
+  okhrannye runy: okhrannye_runy
+  Охранные Руны: okhrannye_runy
+  oputyvanie: oputyvanie
+  Опутывание: oputyvanie
+  oputyvayushchiy_udar: oputyvayushchiy_udar
+  oputyvayushchiy udar: oputyvayushchiy_udar
+  Опутывающий Удар: oputyvayushchiy_udar
+  ostanovka_vremeni: ostanovka_vremeni
+  ostanovka vremeni: ostanovka_vremeni
+  Остановка Времени: ostanovka_vremeni
+  otilyukov_ledyanoy_shar: otilyukov_ledyanoy_shar
+  otilyukov ledyanoy shar: otilyukov_ledyanoy_shar
+  Отилюков Ледяной Шар: otilyukov_ledyanoy_shar
+  otilyukov_uprugiy_shar: otilyukov_uprugiy_shar
+  otilyukov uprugiy shar: otilyukov_uprugiy_shar
+  Отилюков Упругий Шар: otilyukov_uprugiy_shar
+  otkryvanie: otkryvanie
+  Открывание: otkryvanie
+  otrazheniya: otrazheniya
+  Отражения: otrazheniya
+  ozhivlenie: ozhivlenie
+  Оживление: ozhivlenie
+  palyashchaya_kara: palyashchaya_kara
+  palyashchaya kara: palyashchaya_kara
+  Палящая Кара: palyashchaya_kara
+  palyashchiy_luch: palyashchiy_luch
+  palyashchiy luch: palyashchiy_luch
+  Палящий Луч: palyashchiy_luch
+  pass_without_trace: pass_without_trace
+  pass without trace: pass_without_trace
+  Бесследное Передвижение: pass_without_trace
+  pauk: pauk
+  Паук: pauk
+  pautina: pautina
+  Паутина: pautina
+  perenosyashchaya_dver: perenosyashchaya_dver
+  perenosyashchaya dver: perenosyashchaya_dver
+  Переносящая Дверь: perenosyashchaya_dver
+  perst_smerti: perst_smerti
+  perst smerti: perst_smerti
+  Перст Смерти: perst_smerti
+  planarnye_uzy: planarnye_uzy
+  planarnye uzy: planarnye_uzy
+  Планарные Узы: planarnye_uzy
+  planarnyy_soyuznik: planarnyy_soyuznik
+  planarnyy soyuznik: planarnyy_soyuznik
+  Планарный Союзник: planarnyy_soyuznik
+  plyashushchaya_molniya: plyashushchaya_molniya
+  plyashushchaya molniya: plyashushchaya_molniya
+  Пляшущая Молния: plyashushchaya_molniya
+  pochtovoe_zhivotnoe: pochtovoe_zhivotnoe
+  pochtovoe zhivotnoe: pochtovoe_zhivotnoe
+  Почтовое Животное: pochtovoe_zhivotnoe
+  podchinenie_chudovishcha: podchinenie_chudovishcha
+  podchinenie chudovishcha: podchinenie_chudovishcha
+  Подчинение Чудовища: podchinenie_chudovishcha
+  podchinenie_lichnosti: podchinenie_lichnosti
+  podchinenie lichnosti: podchinenie_lichnosti
+  Подчинение Личности: podchinenie_lichnosti
+  podchinenie_zverya: podchinenie_zverya
+  podchinenie zverya: podchinenie_zverya
+  Подчинение Зверя: podchinenie_zverya
+  podmoga: podmoga
+  Подмога: podmoga
+  podobie: podobie
+  Подобие: podobie
+  podsmatrivanie: podsmatrivanie
+  Подсматривание: podsmatrivanie
+  podvodnoe_dykhanie: podvodnoe_dykhanie
+  podvodnoe dykhanie: podvodnoe_dykhanie
+  Подводное Дыхание: podvodnoe_dykhanie
+  poisk_familyara: poisk_familyara
+  poisk familyara: poisk_familyara
+  Поиск Фамильяра: poisk_familyara
+  poisk_lovushek: poisk_lovushek
+  poisk lovushek: poisk_lovushek
+  Поиск Ловушек: poisk_lovushek
+  poisk_puti: poisk_puti
+  poisk puti: poisk_puti
+  Поиск Пути: poisk_puti
+  poisk_skakuna: poisk_skakuna
+  poisk skakuna: poisk_skakuna
+  Поиск Скакуна: poisk_skakuna
+  poisk_sushchestva: poisk_sushchestva
+  poisk sushchestva: poisk_sushchestva
+  Поиск Существа: poisk_sushchestva
+  poisk_zhivotnykh_ili_rasteniy: poisk_zhivotnykh_ili_rasteniy
+  poisk zhivotnykh ili rasteniy: poisk_zhivotnykh_ili_rasteniy
+  Поиск Животных Или Растений: poisk_zhivotnykh_ili_rasteniy
+  polnoe_istselenie: polnoe_istselenie
+  polnoe istselenie: polnoe_istselenie
+  Полное Исцеление: polnoe_istselenie
+  polnoe_prevrashchenie: polnoe_prevrashchenie
+  polnoe prevrashchenie: polnoe_prevrashchenie
+  Полное Превращение: polnoe_prevrashchenie
+  ponimanie_yazykov: ponimanie_yazykov
+  ponimanie yazykov: ponimanie_yazykov
+  Понимание Языков: ponimanie_yazykov
+  porcha: porcha
+  Порча: porcha
+  poryv_vetra: poryv_vetra
+  poryv vetra: poryv_vetra
+  Порыв Ветра: poryv_vetra
+  poslanie: poslanie
+  Послание: poslanie
+  pospeshnoe_otstuplenie: pospeshnoe_otstuplenie
+  pospeshnoe otstuplenie: pospeshnoe_otstuplenie
+  Поспешное Отступление: pospeshnoe_otstuplenie
+  predostorozhnost: predostorozhnost
+  Предосторожность: predostorozhnost
+  predskazanie: predskazanie
+  Предсказание: predskazanie
+  predvidenie: predvidenie
+  Предвидение: predvidenie
+  pregrada_magii: pregrada_magii
+  pregrada magii: pregrada_magii
+  Преграда Магии: pregrada_magii
+  prevrashchenie_v_zhivotnykh: prevrashchenie_v_zhivotnykh
+  prevrashchenie v zhivotnykh: prevrashchenie_v_zhivotnykh
+  Превращение В Животных: prevrashchenie_v_zhivotnykh
+  prikaz: prikaz
+  Приказ: prikaz
+  prikosnovenie_vampira: prikosnovenie_vampira
+  prikosnovenie vampira: prikosnovenie_vampira
+  Прикосновение Вампира: prikosnovenie_vampira
+  prinuzhdenie: prinuzhdenie
+  Принуждение: prinuzhdenie
+  pritvornaya_smert: pritvornaya_smert
+  pritvornaya smert: pritvornaya_smert
+  Притворная Смерть: pritvornaya_smert
+  pritvorstvo: pritvorstvo
+  Притворство: pritvorstvo
+  prizrachnyy_skakun: prizrachnyy_skakun
+  prizrachnyy skakun: prizrachnyy_skakun
+  Призрачный Скакун: prizrachnyy_skakun
+  prizyv_elementalya: prizyv_elementalya
+  prizyv elementalya: prizyv_elementalya
+  Призыв Элементаля: prizyv_elementalya
+  prizyv_fei: prizyv_fei
+  prizyv fei: prizyv_fei
+  Призыв Феи: prizyv_fei
+  prizyv_lesnykh_obitateley: prizyv_lesnykh_obitateley
+  prizyv lesnykh obitateley: prizyv_lesnykh_obitateley
+  Призыв Лесных Обитателей: prizyv_lesnykh_obitateley
+  prizyv_malykh_elementaley: prizyv_malykh_elementaley
+  prizyv malykh elementaley: prizyv_malykh_elementaley
+  Призыв Малых Элементалей: prizyv_malykh_elementaley
+  prizyv_molnii: prizyv_molnii
+  prizyv molnii: prizyv_molnii
+  Призыв Молнии: prizyv_molnii
+  prizyv_nebozhitelya: prizyv_nebozhitelya
+  prizyv nebozhitelya: prizyv_nebozhitelya
+  Призыв Небожителя: prizyv_nebozhitelya
+  prizyv_zagrazhdeniya: prizyv_zagrazhdeniya
+  prizyv zagrazhdeniya: prizyv_zagrazhdeniya
+  Призыв Заграждения: prizyv_zagrazhdeniya
+  prizyv_zalpa: prizyv_zalpa
+  prizyv zalpa: prizyv_zalpa
+  Призыв Залпа: prizyv_zalpa
+  prizyv_zhivotnykh: prizyv_zhivotnykh
+  prizyv zhivotnykh: prizyv_zhivotnykh
+  Призыв Животных: prizyv_zhivotnykh
+  probuzhdenie_razuma: probuzhdenie_razuma
+  probuzhdenie razuma: probuzhdenie_razuma
+  Пробуждение Разума: probuzhdenie_razuma
+  proektsiya: proektsiya
+  Проекция: proektsiya
+  proklyatie: proklyatie
+  Проклятие: proklyatie
+  pryzhok: pryzhok
+  Прыжок: pryzhok
+  psevdozhizn: psevdozhizn
+  Псевдожизнь: psevdozhizn
+  puteshestvie_cherez_rasteniya: puteshestvie_cherez_rasteniya
+  puteshestvie cherez rasteniya: puteshestvie_cherez_rasteniya
+  Путешествие Через Растения: puteshestvie_cherez_rasteniya
+  pylayushchiy_shar: pylayushchiy_shar
+  pylayushchiy shar: pylayushchiy_shar
+  Пылающий Шар: pylayushchiy_shar
+  raduzhnaya_stena: raduzhnaya_stena
+  raduzhnaya stena: raduzhnaya_stena
+  Радужная Стена: raduzhnaya_stena
+  raduzhnye_bryzgi: raduzhnye_bryzgi
+  raduzhnye bryzgi: raduzhnye_bryzgi
+  Радужные Брызги: raduzhnye_bryzgi
+  raskalennyy_metall: raskalennyy_metall
+  raskalennyy metall: raskalennyy_metall
+  Раскалённый Металл: raskalennyy_metall
+  raspad: raspad
+  Распад: raspad
+  razgovor_s_mertvymi: razgovor_s_mertvymi
+  razgovor s mertvymi: razgovor_s_mertvymi
+  Разговор С Мёртвыми: razgovor_s_mertvymi
+  razgovor_s_rasteniyami: razgovor_s_rasteniyami
+  razgovor s rasteniyami: razgovor_s_rasteniyami
+  Разговор С Растениями: razgovor_s_rasteniyami
+  razgovor_s_zhivotnymi: razgovor_s_zhivotnymi
+  razgovor s zhivotnymi: razgovor_s_zhivotnymi
+  Разговор С Животными: razgovor_s_zhivotnymi
+  razmytyy_obraz: razmytyy_obraz
+  razmytyy obraz: razmytyy_obraz
+  Размытый Образ: razmytyy_obraz
+  razrushitelnaya_volna: razrushitelnaya_volna
+  razrushitelnaya volna: razrushitelnaya_volna
+  Разрушительная Волна: razrushitelnaya_volna
+  razyashchee_oko: razyashchee_oko
+  razyashchee oko: razyashchee_oko
+  Разящее Око: razyashchee_oko
+  rech_zlatousta: rech_zlatousta
+  rech zlatousta: rech_zlatousta
+  Речь Златоуста: rech_zlatousta
+  regeneratsiya: regeneratsiya
+  Регенерация: regeneratsiya
+  resurrection: resurrection
+  Воскрешение: resurrection
+  rost_rasteniy: rost_rasteniy
+  rost rasteniy: rost_rasteniy
+  Рост Растений: rost_rasteniy
+  ruki_khadara: ruki_khadara
+  ruki khadara: ruki_khadara
+  Руки Хадара: ruki_khadara
+  sfera_neuyazvimosti: sfera_neuyazvimosti
+  sfera neuyazvimosti: sfera_neuyazvimosti
+  Сфера Неуязвимости: sfera_neuyazvimosti
+  sglaz: sglaz
+  Сглаз: sglaz
+  shield_of_faith: shield_of_faith
+  shield of faith: shield_of_faith
+  Щит Веры: shield_of_faith
+  signal_trevogi: signal_trevogi
+  signal trevogi: signal_trevogi
+  Сигнал Тревоги: signal_trevogi
+  silovaya_stena: silovaya_stena
+  silovaya stena: silovaya_stena
+  Силовая Стена: silovaya_stena
+  skolzhenie: skolzhenie
+  Скольжение: skolzhenie
+  slaboumie: slaboumie
+  Слабоумие: slaboumie
+  sleep: sleep
+  Усыпление: sleep
+  sliyanie_s_kamnem: sliyanie_s_kamnem
+  sliyanie s kamnem: sliyanie_s_kamnem
+  Слияние С Камнем: sliyanie_s_kamnem
+  smertnyy_uzhas: smertnyy_uzhas
+  smertnyy uzhas: smertnyy_uzhas
+  Смертный Ужас: smertnyy_uzhas
+  smyatenie: smyatenie
+  Смятение: smyatenie
+  snyatie_proklyatya: snyatie_proklyatya
+  snyatie proklyatya: snyatie_proklyatya
+  Снятие Проклятья: snyatie_proklyatya
+  sokrytie_razuma: sokrytie_razuma
+  sokrytie razuma: sokrytie_razuma
+  Сокрытие Разума: sokrytie_razuma
+  solnechnyy_luch: solnechnyy_luch
+  solnechnyy luch: solnechnyy_luch
+  Солнечный Луч: solnechnyy_luch
+  solnechnyy_ozhog: solnechnyy_ozhog
+  solnechnyy ozhog: solnechnyy_ozhog
+  Солнечный Ожог: solnechnyy_ozhog
+  sotvorenie: sotvorenie
+  Сотворение: sotvorenie
+  sotvorenie_ili_unichtozhenie_vody: sotvorenie_ili_unichtozhenie_vody
+  sotvorenie ili unichtozhenie vody: sotvorenie_ili_unichtozhenie_vody
+  Сотворение Или Уничтожение Воды: sotvorenie_ili_unichtozhenie_vody
+  sotvorenie_nezhiti: sotvorenie_nezhiti
+  sotvorenie nezhiti: sotvorenie_nezhiti
+  Сотворение Нежити: sotvorenie_nezhiti
+  sotvorenie_pishchi_i_vody: sotvorenie_pishchi_i_vody
+  sotvorenie pishchi i vody: sotvorenie_pishchi_i_vody
+  Сотворение Пищи И Воды: sotvorenie_pishchi_i_vody
+  sozdanie_prokhoda: sozdanie_prokhoda
+  sozdanie prokhoda: sozdanie_prokhoda
+  Создание Прохода: sozdanie_prokhoda
+  stena_klinkov: stena_klinkov
+  stena klinkov: stena_klinkov
+  Стена Клинков: stena_klinkov
+  stena_vetrov: stena_vetrov
+  stena vetrov: stena_vetrov
+  Стена Ветров: stena_vetrov
+  stikhiynoe_oruzhie: stikhiynoe_oruzhie
+  stikhiynoe oruzhie: stikhiynoe_oruzhie
+  Стихийное Оружие: stikhiynoe_oruzhie
+  strazh_very: strazh_very
+  strazh very: strazh_very
+  Страж Веры: strazh_very
+  strazhi: strazhi
+  Стражи: strazhi
+  sverkayushchie_bryzgi: sverkayushchie_bryzgi
+  sverkayushchie bryzgi: sverkayushchie_bryzgi
+  Сверкающие Брызги: sverkayushchie_bryzgi
+  svoboda_peremeshcheniya: svoboda_peremeshcheniya
+  svoboda peremeshcheniya: svoboda_peremeshcheniya
+  Свобода Перемещения: svoboda_peremeshcheniya
+  svyatilishche: svyatilishche
+  Святилище: svyatilishche
+  svyaz_s_inym_mirom: svyaz_s_inym_mirom
+  svyaz s inym mirom: svyaz_s_inym_mirom
+  Связь С Иным Миром: svyaz_s_inym_mirom
+  tainstvennyy_mirazh: tainstvennyy_mirazh
+  tainstvennyy mirazh: tainstvennyy_mirazh
+  Таинственный Мираж: tainstvennyy_mirazh
+  telekinez: telekinez
+  Телекинез: telekinez
+  telepatiya: telepatiya
+  Телепатия: telepatiya
+  teleport: teleport
+  Телепортация: teleport
+  temnoe_zrenie: temnoe_zrenie
+  temnoe zrenie: temnoe_zrenie
+  Тёмное Зрение: temnoe_zrenie
+  tenzerov_paryashchiy_disk: tenzerov_paryashchiy_disk
+  tenzerov paryashchiy disk: tenzerov_paryashchiy_disk
+  Тензеров Парящий Диск: tenzerov_paryashchiy_disk
+  ternovaya_stena: ternovaya_stena
+  ternovaya stena: ternovaya_stena
+  Терновая Стена: ternovaya_stena
+  tishina: tishina
+  Тишина: tishina
+  tma: tma
+  Тьма: tma
+  tryuk_s_verevkoy: tryuk_s_verevkoy
+  tryuk s verevkoy: tryuk_s_verevkoy
+  Трюк С Верёвкой: tryuk_s_verevkoy
+  tsepkaya_loza: tsepkaya_loza
+  tsepkaya loza: tsepkaya_loza
+  Цепкая Лоза: tsepkaya_loza
+  tsunami: tsunami
+  Цунами: tsunami
+  tsvetnoy_sharik: tsvetnoy_sharik
+  tsvetnoy sharik: tsvetnoy_sharik
+  Цветной Шарик: tsvetnoy_sharik
+  tumannoe_oblako: tumannoe_oblako
+  tumannoe oblako: tumannoe_oblako
+  Туманное Облако: tumannoe_oblako
+  tumannyy_shag: tumannyy_shag
+  tumannyy shag: tumannyy_shag
+  Туманный Шаг: tumannyy_shag
+  ubezhishche: ubezhishche
+  Убежище: ubezhishche
+  uderzhanie_chudovishcha: uderzhanie_chudovishcha
+  uderzhanie chudovishcha: uderzhanie_chudovishcha
+  Удержание Чудовища: uderzhanie_chudovishcha
+  uderzhanie_lichnosti: uderzhanie_lichnosti
+  uderzhanie lichnosti: uderzhanie_lichnosti
+  Удержание Личности: uderzhanie_lichnosti
+  ukhod_v_inoy_mir: ukhod_v_inoy_mir
+  ukhod v inoy mir: ukhod_v_inoy_mir
+  Уход В Иной Мир: ukhod_v_inoy_mir
+  umirotvorenie: umirotvorenie
+  Умиротворение: umirotvorenie
+  uskorenie: uskorenie
+  Ускорение: uskorenie
+  usykhanie: usykhanie
+  Усыхание: usykhanie
+  uzilishche: uzilishche
+  Узилище: uzilishche
+  velikolepnyy_osobnyak_mordenkaynena: velikolepnyy_osobnyak_mordenkaynena
+  velikolepnyy osobnyak mordenkaynena: velikolepnyy_osobnyak_mordenkaynena
+  Великолепный Особняк Морденкайнена: velikolepnyy_osobnyak_mordenkaynena
+  veshchiy_son: veshchiy_son
+  veshchiy son: veshchiy_son
+  Вещий Сон: veshchiy_son
+  videnie_nevidimogo: videnie_nevidimogo
+  videnie nevidimogo: videnie_nevidimogo
+  Видение Невидимого: videnie_nevidimogo
+  vlast_nad_pogodoy: vlast_nad_pogodoy
+  vlast nad pogodoy: vlast_nad_pogodoy
+  Власть Над Погодой: vlast_nad_pogodoy
+  volna_groma: volna_groma
+  volna groma: volna_groma
+  Волна Грома: volna_groma
+  volshebnyy_sosud: volshebnyy_sosud
+  volshebnyy sosud: volshebnyy_sosud
+  Волшебный Сосуд: volshebnyy_sosud
+  volshebnyy_zamok: volshebnyy_zamok
+  volshebnyy zamok: volshebnyy_zamok
+  Волшебный Замок: volshebnyy_zamok
+  voobrazhaemaya_sila: voobrazhaemaya_sila
+  voobrazhaemaya sila: voobrazhaemaya_sila
+  Воображаемая Сила: voobrazhaemaya_sila
+  voobrazhaemyy_ubiytsa: voobrazhaemyy_ubiytsa
+  voobrazhaemyy ubiytsa: voobrazhaemyy_ubiytsa
+  Воображаемый Убийца: voobrazhaemyy_ubiytsa
+  vosplamenyayushchayasya_tucha: vosplamenyayushchayasya_tucha
+  vosplamenyayushchayasya tucha: vosplamenyayushchayasya_tucha
+  Воспламеняющаяся Туча: vosplamenyayushchayasya_tucha
+  vosstavshiy_trup: vosstavshiy_trup
+  vosstavshiy trup: vosstavshiy_trup
+  Восставший Труп: vosstavshiy_trup
+  vozrozhdenie: vozrozhdenie
+  Возрождение: vozrozhdenie
+  vysshaya_nevidimost: vysshaya_nevidimost
+  vysshaya nevidimost: vysshaya_nevidimost
+  Высшая Невидимость: vysshaya_nevidimost
+  vysshee_vosstanovlenie: vysshee_vosstanovlenie
+  vysshee vosstanovlenie: vysshee_vosstanovlenie
+  Высшее Восстановление: vysshee_vosstanovlenie
+  vyzov_na_duel: vyzov_na_duel
+  vyzov na duel: vyzov_na_duel
+  Вызов На Дуэль: vyzov_na_duel
+  zadannaya_illyuziya: zadannaya_illyuziya
+  zadannaya illyuziya: zadannaya_illyuziya
+  Заданная Иллюзия: zadannaya_illyuziya
+  zamedlenie: zamedlenie
+  Замедление: zamedlenie
+  zamedlennyy_ognennyy_shar: zamedlennyy_ognennyy_shar
+  zamedlennyy ognennyy shar: zamedlennyy_ognennyy_shar
+  Замедленный Огненный Шар: zamedlennyy_ognennyy_shar
+  zapret: zapret
+  Запрет: zapret
+  zarazhenie: zarazhenie
+  Заражение: zarazhenie
+  zashchita_ot_dobra_i_zla: zashchita_ot_dobra_i_zla
+  zashchita ot dobra i zla: zashchita_ot_dobra_i_zla
+  Защита От Добра И Зла: zashchita_ot_dobra_i_zla
+  zashchita_ot_energii: zashchita_ot_energii
+  zashchita ot energii: zashchita_ot_energii
+  Защита От Энергии: zashchita_ot_energii
+  zashchita_ot_smerti: zashchita_ot_smerti
+  zashchita ot smerti: zashchita_ot_smerti
+  Защита От Смерти: zashchita_ot_smerti
+  zashchita_ot_yada: zashchita_ot_yada
+  zashchita ot yada: zashchita_ot_yada
+  Защита От Яда: zashchita_ot_yada
+  zatochenie: zatochenie
+  Заточение: zatochenie
+  zavesa_strel: zavesa_strel
+  zavesa strel: zavesa_strel
+  Завеса Стрел: zavesa_strel
+  zemletryasenie: zemletryasenie
+  Землетрясение: zemletryasenie
+  zhivotnye_chuvstva: zhivotnye_chuvstva
+  zhivotnye chuvstva: zhivotnye_chuvstva
+  Животные Чувства: zhivotnye_chuvstva
+  zhutkiy_smekh_tashi: zhutkiy_smekh_tashi
+  zhutkiy smekh tashi: zhutkiy_smekh_tashi
+  Жуткий Смех Таши: zhutkiy_smekh_tashi
+  zlovonnoe_oblako: zlovonnoe_oblako
+  zlovonnoe oblako: zlovonnoe_oblako
+  Зловонное Облако: zlovonnoe_oblako
+  znak: znak
+  Знак: znak
 summaries:
   00-introduction: ''
   01-character-creation: ''
@@ -858,6 +4078,8 @@ summaries:
   07-ability-scores: ''
   08-adventures: ''
   09-combat: ''
+  10-spellcasting: ''
+  11-spells: ''
   acolyte: 'Проницательность, Религия; умение: Приют для верующих'
   charlatan: 'Ловкость рук, Обман; умение: Поддельная личность'
   criminal: 'Обман, Скрытность; умение: Криминальные связи'
@@ -934,3 +4156,276 @@ summaries:
   halfling: Ловкость +2; размер Маленький; скорость 25 фт.; везунчик; храбрость
   human: 'Стандарт: все характеристики +1; вариант: +1 к двум, навык, черта, язык'
   tiefling: Интеллект +1, Харизма +2; тёмное зрение; сопротивление огню; дьявольское наследие
+  aura_of_life: ''
+  aura_of_purity: ''
+  aura_of_vitality: ''
+  aura_svyatosti: ''
+  bless: ''
+  bozhestvennoe_blagovolenie: ''
+  bozhestvennoe_oruzhie: ''
+  bozhestvennoe_slovo: ''
+  burning_hands: ''
+  bystryy_kolchan: ''
+  charm_person: ''
+  cure_wounds: ''
+  demiplan: ''
+  detect_magic: ''
+  dispel_magic: ''
+  dissoniruyushchiy_shepot: ''
+  dlan_bigbi: ''
+  dnevnoy_svet: ''
+  dospekh_agatisa: ''
+  dospekhi_maga: ''
+  drebezgi: ''
+  drevesnyy_put: ''
+  dromidzhevo_poyavlenie: ''
+  druzhba_s_zhivotnymi: ''
+  dvizhenie_pochvy: ''
+  dvoynik: ''
+  faerie_fire: ''
+  falshivyy_dvoynik: ''
+  fireball: ''
+  fly: ''
+  gaseous_form: ''
+  gigantskoe_nasekomoe: ''
+  gipnoticheskiy_uzor: ''
+  gnevnaya_kara: ''
+  golod_khadara: ''
+  goryashchiy_klinok: ''
+  grad: ''
+  grad_shipov: ''
+  groza_gneva: ''
+  healing_word: ''
+  heroism: ''
+  invisibility: ''
+  ispolnenie_zhelaniy: ''
+  istinnoe_voskreshenie: ''
+  istinnoe_zrenie: ''
+  izgnanie: ''
+  izgonyayushchaya_kara: ''
+  izgotovlenie: ''
+  izmenenie_formy_kamnya: ''
+  izmenenie_pamyati: ''
+  izmenenie_tyagoteniya: ''
+  izolyatsiya: ''
+  kamennaya_kozha: ''
+  kamennaya_stena: ''
+  khozhdenie_po_vetru: ''
+  khozhdenie_po_vode: ''
+  kleymyashchaya_kara: ''
+  konus_kholoda: ''
+  korona_bezumiya: ''
+  krug_smerti: ''
+  krug_teleportatsii: ''
+  labirint: ''
+  ledyanaya_stena: ''
+  leomundov_potaynoy_sunduk: ''
+  leomundova_khizhina: ''
+  levitatsiya: ''
+  lightning_bolt: ''
+  luch_bolezni: ''
+  luch_slabosti: ''
+  lunnyy_luch: ''
+  magic_missile: ''
+  magicheskiy_glaz: ''
+  magicheskoe_oruzhie: ''
+  major_image: ''
+  maloe_vosstanovlenie: ''
+  mantiya_krestonostsa: ''
+  maskirovka: ''
+  mayak_nadezhdy: ''
+  mech_mordenkaynena: ''
+  mentalnaya_svyaz_reri: ''
+  mertsanie: ''
+  meteor_swarm: ''
+  metka_okhotnika: ''
+  mirazh: ''
+  mnozhestvennoe_lechenie_ran: ''
+  mnozhestvennoe_vnushenie: ''
+  moleben_lecheniya: ''
+  nablyudenie: ''
+  nakhodchivost: ''
+  nanesenie_ran: ''
+  napravlennyy_snaryad: ''
+  nashestvie_nasekomykh: ''
+  nebesnyy_ogon: ''
+  neobnaruzhimost: ''
+  netlennye_ostanki: ''
+  nevidimoe_pismo: ''
+  nevidimyy_sluga: ''
+  nistulova_lozhnaya_magiya: ''
+  obet: ''
+  obnaruzhenie_mysley: ''
+  obraz: ''
+  obshchenie: ''
+  obshchenie_s_prirodoy: ''
+  ochishchenie_pishchi_i_pitya: ''
+  oglushayushchaya_kara: ''
+  ognennaya_burya: ''
+  ognennaya_stena: ''
+  okamenenie: ''
+  okhrannye_runy: ''
+  oputyvanie: ''
+  oputyvayushchiy_udar: ''
+  ostanovka_vremeni: ''
+  otilyukov_ledyanoy_shar: ''
+  otilyukov_uprugiy_shar: ''
+  otkryvanie: ''
+  otrazheniya: ''
+  ozhivlenie: ''
+  palyashchaya_kara: ''
+  palyashchiy_luch: ''
+  pass_without_trace: ''
+  pauk: ''
+  pautina: ''
+  perenosyashchaya_dver: ''
+  perst_smerti: ''
+  planarnye_uzy: ''
+  planarnyy_soyuznik: ''
+  plyashushchaya_molniya: ''
+  pochtovoe_zhivotnoe: ''
+  podchinenie_chudovishcha: ''
+  podchinenie_lichnosti: ''
+  podchinenie_zverya: ''
+  podmoga: ''
+  podobie: ''
+  podsmatrivanie: ''
+  podvodnoe_dykhanie: ''
+  poisk_familyara: ''
+  poisk_lovushek: ''
+  poisk_puti: ''
+  poisk_skakuna: ''
+  poisk_sushchestva: ''
+  poisk_zhivotnykh_ili_rasteniy: ''
+  polnoe_istselenie: ''
+  polnoe_prevrashchenie: ''
+  ponimanie_yazykov: ''
+  porcha: ''
+  poryv_vetra: ''
+  poslanie: ''
+  pospeshnoe_otstuplenie: ''
+  predostorozhnost: ''
+  predskazanie: ''
+  predvidenie: ''
+  pregrada_magii: ''
+  prevrashchenie_v_zhivotnykh: ''
+  prikaz: ''
+  prikosnovenie_vampira: ''
+  prinuzhdenie: ''
+  pritvornaya_smert: ''
+  pritvorstvo: ''
+  prizrachnyy_skakun: ''
+  prizyv_elementalya: ''
+  prizyv_fei: ''
+  prizyv_lesnykh_obitateley: ''
+  prizyv_malykh_elementaley: ''
+  prizyv_molnii: ''
+  prizyv_nebozhitelya: ''
+  prizyv_zagrazhdeniya: ''
+  prizyv_zalpa: ''
+  prizyv_zhivotnykh: ''
+  probuzhdenie_razuma: ''
+  proektsiya: ''
+  proklyatie: ''
+  pryzhok: ''
+  psevdozhizn: ''
+  puteshestvie_cherez_rasteniya: ''
+  pylayushchiy_shar: ''
+  raduzhnaya_stena: ''
+  raduzhnye_bryzgi: ''
+  raskalennyy_metall: ''
+  raspad: ''
+  razgovor_s_mertvymi: ''
+  razgovor_s_rasteniyami: ''
+  razgovor_s_zhivotnymi: ''
+  razmytyy_obraz: ''
+  razrushitelnaya_volna: ''
+  razyashchee_oko: ''
+  rech_zlatousta: ''
+  regeneratsiya: ''
+  resurrection: ''
+  rost_rasteniy: ''
+  ruki_khadara: ''
+  sfera_neuyazvimosti: ''
+  sglaz: ''
+  shield_of_faith: ''
+  signal_trevogi: ''
+  silovaya_stena: ''
+  skolzhenie: ''
+  slaboumie: ''
+  sleep: ''
+  sliyanie_s_kamnem: ''
+  smertnyy_uzhas: ''
+  smyatenie: ''
+  snyatie_proklyatya: ''
+  sokrytie_razuma: ''
+  solnechnyy_luch: ''
+  solnechnyy_ozhog: ''
+  sotvorenie: ''
+  sotvorenie_ili_unichtozhenie_vody: ''
+  sotvorenie_nezhiti: ''
+  sotvorenie_pishchi_i_vody: ''
+  sozdanie_prokhoda: ''
+  stena_klinkov: ''
+  stena_vetrov: ''
+  stikhiynoe_oruzhie: ''
+  strazh_very: ''
+  strazhi: ''
+  sverkayushchie_bryzgi: ''
+  svoboda_peremeshcheniya: ''
+  svyatilishche: ''
+  svyaz_s_inym_mirom: ''
+  tainstvennyy_mirazh: ''
+  telekinez: ''
+  telepatiya: ''
+  teleport: ''
+  temnoe_zrenie: ''
+  tenzerov_paryashchiy_disk: ''
+  ternovaya_stena: ''
+  tishina: ''
+  tma: ''
+  tryuk_s_verevkoy: ''
+  tsepkaya_loza: ''
+  tsunami: ''
+  tsvetnoy_sharik: ''
+  tumannoe_oblako: ''
+  tumannyy_shag: ''
+  ubezhishche: ''
+  uderzhanie_chudovishcha: ''
+  uderzhanie_lichnosti: ''
+  ukhod_v_inoy_mir: ''
+  umirotvorenie: ''
+  uskorenie: ''
+  usykhanie: ''
+  uzilishche: ''
+  velikolepnyy_osobnyak_mordenkaynena: ''
+  veshchiy_son: ''
+  videnie_nevidimogo: ''
+  vlast_nad_pogodoy: ''
+  volna_groma: ''
+  volshebnyy_sosud: ''
+  volshebnyy_zamok: ''
+  voobrazhaemaya_sila: ''
+  voobrazhaemyy_ubiytsa: ''
+  vosplamenyayushchayasya_tucha: ''
+  vosstavshiy_trup: ''
+  vozrozhdenie: ''
+  vysshaya_nevidimost: ''
+  vysshee_vosstanovlenie: ''
+  vyzov_na_duel: ''
+  zadannaya_illyuziya: ''
+  zamedlenie: ''
+  zamedlennyy_ognennyy_shar: ''
+  zapret: ''
+  zarazhenie: ''
+  zashchita_ot_dobra_i_zla: ''
+  zashchita_ot_energii: ''
+  zashchita_ot_smerti: ''
+  zashchita_ot_yada: ''
+  zatochenie: ''
+  zavesa_strel: ''
+  zemletryasenie: ''
+  zhivotnye_chuvstva: ''
+  zhutkiy_smekh_tashi: ''
+  zlovonnoe_oblako: ''
+  znak: ''

@@ -84,6 +84,18 @@ entries:
   pages:
   - 189
   - 198
+- id: 10-spellcasting
+  type: chapter
+  file: chapters/10-spellcasting.md
+  pages:
+  - 201
+  - 206
+- id: 11-spells
+  type: chapter
+  file: chapters/11-spells.md
+  pages:
+  - 207
+  - 289
 - id: acolyte
   type: background
   file: entities/backgrounds/acolyte.md
