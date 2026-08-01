@@ -4,26 +4,22 @@ from pathlib import Path
 
 import pytest
 
-from core.catalogs.races import RACES_FILE
-from core.platform.catalog_loader import (
-    clear_all_catalog_caches,
-    clear_catalog_cache,
-    load_catalog,
-)
+from core.platform.catalog_loader import load_catalog, reload_catalogs
 from core.platform.io import CatalogLoadError
+from core.platform.paths import RACES_FILE
 
 pytestmark = pytest.mark.usefixtures("catalog_caches_cleared")
 
 
 def test_load_catalog_returns_races() -> None:
-    clear_catalog_cache()
+    reload_catalogs()
     races = load_catalog(RACES_FILE, "races")
     assert "human" in races
 
 
-def test_clear_all_catalog_caches_resets_load_catalog() -> None:
+def test_reload_catalogs_resets_load_catalog() -> None:
     first = load_catalog(RACES_FILE, "races")
-    clear_all_catalog_caches()
+    reload_catalogs()
     second = load_catalog(RACES_FILE, "races")
     assert first is not second
 
@@ -31,7 +27,7 @@ def test_clear_all_catalog_caches_resets_load_catalog() -> None:
 def test_load_catalog_raises_on_corrupt_yaml(tmp_path: Path) -> None:
     path = tmp_path / "races.yaml"
     path.write_text(":\n  bad: [unclosed", encoding="utf-8")
-    clear_catalog_cache()
+    reload_catalogs()
     with pytest.raises(CatalogLoadError):
         load_catalog(path, "races")
 
@@ -51,7 +47,7 @@ def test_dragonborn_mod_overlay(tmp_path, monkeypatch):
     )
     monkeypatch.setattr("core.platform.mod_loader.MODS_STATE_FILE", state_path)
     clear_mod_loader_cache()
-    clear_all_catalog_caches()
+    reload_catalogs()
     races = load_merged_catalog("database/races/races.yaml", "races")
     assert "dragonborn" in races
 
@@ -79,7 +75,7 @@ def test_corrupt_mod_manifest_skips_overlay(
     monkeypatch.setattr("core.platform.mod_loader.MODS_DIR", tmp_path / "mods")
     monkeypatch.setattr("core.platform.mod_loader.MODS_STATE_FILE", state_path)
     clear_mod_loader_cache()
-    clear_all_catalog_caches()
+    reload_catalogs()
 
     races = load_merged_catalog("database/races/races.yaml", "races")
     assert "human" in races

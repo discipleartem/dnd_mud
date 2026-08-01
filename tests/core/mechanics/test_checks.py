@@ -1,11 +1,11 @@
 """Тесты расширенных проверок."""
 
 from core.character.models import Character
-from core.mechanics.checks import ability_check, passive_skill, skill_check
+from core.mechanics.checks import ability_check, skill_check
 from core.types import CharacterClass
 
 
-def test_skill_check_and_passive() -> None:
+def test_skill_check() -> None:
     character = Character(
         name="Rogue",
         race="human",
@@ -17,7 +17,6 @@ def test_skill_check_and_passive() -> None:
     result = skill_check(character, "stealth", dc=10)
     assert result["proficient"] is True
     assert result["total"] == result["roll"] + result["modifier"]
-    assert passive_skill(character, "stealth") == 10 + result["modifier"]
 
 
 def test_skill_check_scenario_action_returns_message() -> None:

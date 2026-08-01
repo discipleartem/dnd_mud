@@ -59,6 +59,9 @@ CORE_MODULE_TESTS: dict[str, list[str]] = {
     "core/inventory/starting_equipment.py": [
         "tests/core/inventory/test_starting_equipment.py"
     ],
+    "core/inventory/starting_equipment_labels.py": [
+        "tests/core/inventory/test_starting_equipment_labels.py"
+    ],
     "core/mechanics/proficiencies.py": [
         "tests/core/mechanics/test_proficiencies.py"
     ],
@@ -84,7 +87,6 @@ CORE_MODULE_TESTS: dict[str, list[str]] = {
         "tests/core/progression/test_class_features.py",
     ],
     "core/engine/game_engine.py": ["tests/core/engine/test_game_engine.py"],
-    "core/engine/combat/rolls.py": ["tests/core/engine/test_phase2_engine.py"],
 }
 
 CORE_PACKAGE_PREFIX_TESTS: list[tuple[str, list[str]]] = [

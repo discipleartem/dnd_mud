@@ -1,6 +1,12 @@
 # Инструменты, наборы и музыкальные инструменты Dungeons & Dragons 5e
 # Категория указывается полем category у каждого предмета
 
+# Пользовательские пулы инструментов (proficiencies pool-токены)
+tool_pools:
+  soldier_gaming:
+    - dice_set
+    - playing_cards
+
 tools:
   thieves_tools:
     name: "Воровские инструменты"

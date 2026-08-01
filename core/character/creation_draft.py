@@ -10,12 +10,12 @@ from typing import Any, Literal, cast
 
 from core.mechanics.stats import STAT_NAMES
 from core.platform.io import load_json, save_json
-from core.types import GameDifficulty, StatMap
+from core.platform.paths import CREATION_DRAFT_PATH
+from core.types import GameDifficulty, StatMap, parse_game_difficulty
 
 logger = logging.getLogger(__name__)
 
 CREATION_DRAFT_SCHEMA_VERSION = 1
-CREATION_DRAFT_PATH = Path("saves") / "creation_draft.json"
 
 CreationStep = Literal[
     "race",
@@ -90,7 +90,7 @@ class CreationDraft:
             return None
         if not isinstance(name, str) or not name.strip():
             return None
-        difficulty = _parse_difficulty(data.get("difficulty", "normal"))
+        difficulty = parse_game_difficulty(data.get("difficulty", "normal"))
         stats = _parse_stats(data.get("stats"))
         return cls(
             current_step=cast(CreationStep, step_raw),
@@ -122,14 +122,6 @@ class CreationDraft:
             feat_choices=_feat_choices(data.get("feat_choices")),
             hardcore_rolls=_int_list(data.get("hardcore_rolls")),
         )
-
-
-def _parse_difficulty(raw: object) -> GameDifficulty:
-    if raw == "hardcore":
-        return "hardcore"
-    if raw == "easy":
-        return "easy"
-    return "normal"
 
 
 def _optional_str(raw: object) -> str | None:

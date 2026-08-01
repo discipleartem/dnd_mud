@@ -8,7 +8,6 @@ from core.catalogs.adventure import Adventure
 from core.character.models import Character
 from core.constants import (
     ability_modifier,
-    difficulty_class,
     proficiency_bonus,
 )
 from core.engine.difficulty import (
@@ -37,8 +36,7 @@ def test_proficiency_bonus(level: int, expected_bonus: int) -> None:
     assert proficiency_bonus(level) == expected_bonus
 
 
-def test_difficulty_class_and_dice(monkeypatch: pytest.MonkeyPatch) -> None:
-    assert difficulty_class("medium") == 10
+def test_dice_roll(monkeypatch: pytest.MonkeyPatch) -> None:
     values = iter([3, 5])
     monkeypatch.setattr(random, "randint", lambda _a, _b: next(values))
     assert dice.roll(count=2, sides=6, modifier=2) == 10
@@ -61,7 +59,6 @@ def test_difficulty_class_and_dice(monkeypatch: pytest.MonkeyPatch) -> None:
 )
 def test_ability_modifier(score: int, expected: int) -> None:
     assert ability_modifier(score) == expected
-    assert dice.ability_modifier(score) == expected
 
 
 def test_validate_final_stats_bounds() -> None:

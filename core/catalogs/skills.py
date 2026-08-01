@@ -3,17 +3,17 @@
 from typing import Any
 
 from core.catalogs.classes import (
-    get_subclass_choice_level,
     get_subclass_dict,
     iter_class_grants,
     load_class_full,
 )
 from core.catalogs.races import (
     get_race_and_subrace,
+    iter_race_choice_grants,
     iter_race_grants_by_source,
 )
 from core.catalogs.skill_ids import PHB_SKILL_IDS
-from core.platform.io import merge_unique
+from core.progression.class_progression import subclass_active_at_level
 
 
 def get_class_skill_config(class_id: str) -> tuple[list[str], int]:
@@ -113,20 +113,11 @@ def get_race_skill_choices_with_source(
         return []
 
     result: list[tuple[dict[str, Any], str]] = []
-
-    def scan(grants: Any, source: str) -> None:
-        if not isinstance(grants, list):
-            return
-        for entry in grants:
-            if not isinstance(entry, dict):
-                continue
-            mechanics = _skill_proficiency_mechanics(entry)
-            if mechanics is None or not mechanics.get("choice"):
-                continue
-            result.append((mechanics, source))
-
-    for grants, source in iter_race_grants_by_source(race_id, subrace_id):
-        scan(grants, source)
+    for entry, source in iter_race_choice_grants(race_id, subrace_id):
+        mechanics = _skill_proficiency_mechanics(entry)
+        if mechanics is None or not mechanics.get("choice"):
+            continue
+        result.append((mechanics, source))
     return result
 
 
@@ -142,20 +133,11 @@ def _subclass_features(
     return iter_class_grants(sub)
 
 
-def subclass_skills_active(
-    class_id: str, subclass_id: str | None, level: int
-) -> bool:
-    """Подкласс активен на уровне — навыки подкласса можно применять."""
-    if not subclass_id:
-        return False
-    return level >= get_subclass_choice_level(class_id)
-
-
 def get_subclass_fixed_skills(
     class_id: str, subclass_id: str | None, level: int
 ) -> list[str]:
     """Фиксированные навыки подкласса с учётом уровня персонажа."""
-    if not subclass_skills_active(class_id, subclass_id, level):
+    if not subclass_active_at_level(class_id, subclass_id, level):
         return []
     result: list[str] = []
     for feat in _subclass_features(class_id, subclass_id):
@@ -172,7 +154,7 @@ def get_subclass_skill_choices(
     class_id: str, subclass_id: str | None, level: int
 ) -> list[dict[str, Any]]:
     """Выборные навыки подкласса с учётом уровня персонажа."""
-    if not subclass_skills_active(class_id, subclass_id, level):
+    if not subclass_active_at_level(class_id, subclass_id, level):
         return []
     result: list[dict[str, Any]] = []
     for feat in _subclass_features(class_id, subclass_id):
@@ -202,8 +184,3 @@ def available_skills(pool: list[str], proficient: list[str]) -> list[str]:
     """Навыки из пула, которыми персонаж ещё не владеет."""
     taken = set(proficient)
     return [skill_id for skill_id in pool if skill_id not in taken]
-
-
-def merge_proficiencies(*parts: list[str]) -> list[str]:
-    """Объединить списки владений без дублей, в порядке появления."""
-    return merge_unique(*parts)

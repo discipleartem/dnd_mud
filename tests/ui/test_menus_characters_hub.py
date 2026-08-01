@@ -11,8 +11,7 @@ def _patch_load_characters(
     monkeypatch: pytest.MonkeyPatch, characters: list[Character]
 ) -> None:
     monkeypatch.setattr(
-        characters_menu,
-        "load_characters",
+        "ui.menus.hub._characters_cache.load_characters",
         lambda: LoadCharactersResult(characters=tuple(characters)),
     )
 

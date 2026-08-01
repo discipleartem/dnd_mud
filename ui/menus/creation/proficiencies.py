@@ -11,15 +11,16 @@ from core.mechanics.proficiencies import (
     get_proficiency_choices,
     has_tool_proficiency,
     is_valid_tool_selection,
-    merge_proficiency_tokens,
 )
+from core.platform.io import merge_unique
 from core.platform.localization import get_string
 from core.progression.class_progression import start_level_for_difficulty
 from core.types import GameDifficulty, StringsDict
 from ui.menus.console import (
     format_pick_menu_label,
+    pick_from_pool_loop,
+    print_numbered_row,
     print_screen_header,
-    read_pool_pick,
     sort_ids_by_proficiency,
 )
 
@@ -62,6 +63,23 @@ def _print_summary(
     print()
 
 
+def _ordered_tool_pool(
+    pool: list[str],
+    current: list[str],
+    known_tools: list[str],
+    language: str,
+) -> list[str]:
+    """Пул инструментов: занятые, затем доступные по владению."""
+    taken_ids = [tool_id for tool_id in pool if tool_id in current]
+    selectable = sort_ids_by_proficiency(
+        [tool_id for tool_id in pool if tool_id not in current],
+        known_tools,
+        has_tool_proficiency,
+        name_key=lambda tool_id: get_tool_name(tool_id, language),
+    )
+    return taken_ids + selectable
+
+
 def _pick_tools(
     strings: StringsDict,
     choice: ProficiencyChoice,
@@ -76,62 +94,51 @@ def _pick_tools(
         return []
     added: list[str] = []
     current = list(known_tools)
+    taken_suffix = get_string(strings, "character.proficiencies_taken_suffix")
+    header = get_string(strings, "character.proficiencies_caption")
+    source_label = get_string(
+        strings, f"character.proficiencies_source_{choice.source}"
+    )
+    tool_prompt = get_string(strings, "character.proficiencies_tool_prompt")
+
     for pick_idx in range(1, choice.count + 1):
-        while True:
-            print_screen_header(
-                get_string(strings, "character.proficiencies_caption")
-            )
-            source_label = get_string(
-                strings, f"character.proficiencies_source_{choice.source}"
-            )
+        pick_current = pick_index + pick_idx - 1
+
+        def _before_source(current_pick: int = pick_current) -> None:
             prompt = get_string(
                 strings,
                 "character.proficiencies_tool_pick_prompt",
                 source=source_label,
-                current=pick_index + pick_idx - 1,
+                current=current_pick,
                 total=pick_total,
             )
             print(f"{Fore.CYAN}{prompt}{Style.RESET_ALL}")
             print()
-            taken_ids = [tool_id for tool_id in pool if tool_id in current]
-            for tool_id in taken_ids:
-                name = get_tool_name(tool_id, language)
-                taken = get_string(
-                    strings, "character.proficiencies_taken_suffix"
-                )
-                print(
-                    f"  {Fore.LIGHTBLACK_EX}{name} {taken}"
-                    f"{Style.RESET_ALL}"
-                )
-            selectable = sort_ids_by_proficiency(
-                [tool_id for tool_id in pool if tool_id not in current],
-                known_tools,
-                has_tool_proficiency,
-                name_key=lambda tool_id: get_tool_name(tool_id, language),
+
+        def _format_selectable(idx: int, tool_id: str, name: str) -> None:
+            label = format_pick_menu_label(
+                name,
+                has_tool_proficiency(known_tools, tool_id),
             )
-            for idx, tool_id in enumerate(selectable, 1):
-                name = get_tool_name(tool_id, language)
-                label = format_pick_menu_label(
-                    name,
-                    has_tool_proficiency(known_tools, tool_id),
-                )
-                print(f"  {Fore.YELLOW}{idx}{Style.RESET_ALL}. {label}")
-            tool_prompt = get_string(
-                strings, "character.proficiencies_tool_prompt"
-            )
-            picked_id = read_pool_pick(
-                strings,
-                selectable,
-                prompt=tool_prompt,
-                empty_key="character.expertise_pool_empty",
-            )
-            if picked_id == "":
-                continue
-            if picked_id is None:
-                return None
-            added.append(picked_id)
-            current.append(picked_id)
-            break
+            print_numbered_row(idx, label)
+
+        picked_id = pick_from_pool_loop(
+            strings,
+            _ordered_tool_pool(pool, current, known_tools, language),
+            set(current),
+            label_for=lambda tool_id: get_tool_name(tool_id, language),
+            taken_suffix=taken_suffix,
+            prompt=tool_prompt,
+            empty_key="character.expertise_pool_empty",
+            header=header,
+            before_list=_before_source,
+            format_selectable=_format_selectable,
+        )
+        if picked_id is None:
+            return None
+        added.append(picked_id)
+        current.append(picked_id)
+
     return added
 
 
@@ -195,7 +202,7 @@ def select_creation_proficiencies(
         pool = choice.options or []
         if not is_valid_tool_selection(picked, pool, choice.count):
             return None
-        tools = merge_proficiency_tokens(tools, picked)
+        tools = merge_unique(tools, picked)
         if choice.source == "background":
             background_tool_picks.extend(picked)
         pick_offset += choice.count

@@ -1,7 +1,6 @@
 """Каталог черт и чистое чтение grants из YAML (без apply/requirements)."""
 
 from dataclasses import dataclass
-from pathlib import Path
 from typing import Any
 
 from core.catalogs.races import collect_race_grants
@@ -11,8 +10,7 @@ from core.grants.normalize import (
     proficiency_tokens_and_skills_from_grant,
 )
 from core.platform.catalog_loader import load_catalog
-
-FEATS_FILE = Path("database/progression/feats.yaml")
+from core.platform.paths import FEATS_FILE
 
 
 @dataclass(frozen=True)
@@ -74,14 +72,6 @@ def resolve_feat_grants(
     return weapons, armors, tools, skills
 
 
-def get_feat_proficiency_grants(
-    feat_id: str,
-    choices: dict[str, Any] | None = None,
-) -> tuple[list[str], list[str], list[str], list[str]]:
-    """Владения из черты: (weapons, armors, tools, skills)."""
-    return resolve_feat_grants(feat_id, choices)
-
-
 def get_feat_proficiency_tokens(
     feat_ids: list[str],
     feat_choices: dict[str, dict[str, Any]] | None = None,
@@ -93,7 +83,7 @@ def get_feat_proficiency_tokens(
     tools: list[str] = []
     for feat_id in feat_ids:
         choices = feat_choices.get(feat_id, {})
-        w, a, t, _skills = get_feat_proficiency_grants(feat_id, choices)
+        w, a, t, _skills = resolve_feat_grants(feat_id, choices)
         weapons.extend(w)
         armors.extend(a)
         tools.extend(t)

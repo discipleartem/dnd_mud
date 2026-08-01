@@ -1,12 +1,9 @@
 """Характеристики и привязка навыков из YAML."""
 
-from pathlib import Path
 from typing import Any
 
 from core.platform.catalog_loader import load_catalog
-
-ABILITIES_FILE = Path("database/core/abilities.yaml")
-SKILLS_FILE = Path("database/core/skills.yaml")
+from core.platform.paths import ABILITIES_FILE, SKILLS_FILE
 
 _FALLBACK_ABILITY_IDS: tuple[str, ...] = (
     "strength",
@@ -37,6 +34,28 @@ _FALLBACK_SKILL_IDS: tuple[str, ...] = (
     "stealth",
     "survival",
 )
+
+# PHB skill → ability; используется, если abilities.yaml недоступен
+_FALLBACK_SKILL_ABILITY_MAP: dict[str, str] = {
+    "athletics": "strength",
+    "acrobatics": "dexterity",
+    "sleight_of_hand": "dexterity",
+    "stealth": "dexterity",
+    "arcana": "intelligence",
+    "history": "intelligence",
+    "investigation": "intelligence",
+    "nature": "intelligence",
+    "religion": "intelligence",
+    "animal_handling": "wisdom",
+    "insight": "wisdom",
+    "medicine": "wisdom",
+    "perception": "wisdom",
+    "survival": "wisdom",
+    "deception": "charisma",
+    "intimidation": "charisma",
+    "performance": "charisma",
+    "persuasion": "charisma",
+}
 
 
 def _load_abilities_yaml() -> dict[str, Any]:
@@ -77,26 +96,7 @@ def skill_ability_map() -> dict[str, str]:
                 result[str(skill_id)] = str(ability_id)
     if result:
         return result
-    return {
-        "athletics": "strength",
-        "acrobatics": "dexterity",
-        "sleight_of_hand": "dexterity",
-        "stealth": "dexterity",
-        "arcana": "intelligence",
-        "history": "intelligence",
-        "investigation": "intelligence",
-        "nature": "intelligence",
-        "religion": "intelligence",
-        "animal_handling": "wisdom",
-        "insight": "wisdom",
-        "medicine": "wisdom",
-        "perception": "wisdom",
-        "survival": "wisdom",
-        "deception": "charisma",
-        "intimidation": "charisma",
-        "performance": "charisma",
-        "persuasion": "charisma",
-    }
+    return dict(_FALLBACK_SKILL_ABILITY_MAP)
 
 
 def ability_for_skill(skill_id: str) -> str | None:

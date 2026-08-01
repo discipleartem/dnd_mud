@@ -1,13 +1,45 @@
 """Константы D&D 5e из YAML."""
 
-from pathlib import Path
 from typing import Any
 
 from core.platform.catalog_loader import load_catalog
-
-CONSTANTS_FILE = Path("database/core/constants.yaml")
+from core.platform.paths import CONSTANTS_FILE
 
 MAX_CHARACTER_LEVEL = 10
+
+XP_THRESHOLDS: list[int] = [
+    0,
+    300,
+    900,
+    2700,
+    6500,
+    14000,
+    23000,
+    34000,
+    48000,
+    64000,
+]
+
+EASY_START_LEVEL = 3
+
+STANDARD_ARRAY = [15, 14, 13, 12, 10, 8]
+STANDARD_ARRAY_MIN = min(STANDARD_ARRAY)
+STANDARD_ARRAY_MAX = max(STANDARD_ARRAY)
+
+POINT_BUY_BUDGET = 27
+POINT_BUY_COSTS: dict[int, int] = {
+    8: 0,
+    9: 1,
+    10: 2,
+    11: 3,
+    12: 4,
+    13: 5,
+    14: 7,
+    15: 9,
+}
+ABILITY_SCORE_MIN = 1
+ABILITY_SCORE_DEFAULT = 10
+ABILITY_SCORE_MAX = 20
 
 
 def clamp_level(level: int) -> int:
@@ -57,25 +89,6 @@ def proficiency_bonus(level: int) -> int:
         if isinstance(value, int):
             return value
     return _DEFAULT_PROFICIENCY_BONUS.get(level, 2)
-
-
-def difficulty_class(tier: str) -> int:
-    """Сл по имени tier (easy, medium, hard, …)."""
-    raw = _load_constants().get("difficulty_classes", {})
-    if isinstance(raw, dict):
-        value = raw.get(tier)
-        if isinstance(value, int):
-            return value
-    defaults = {
-        "trivial": 0,
-        "easy": 5,
-        "medium": 10,
-        "hard": 15,
-        "very_hard": 20,
-        "nearly_impossible": 25,
-        "impossible": 30,
-    }
-    return defaults.get(tier, 10)
 
 
 def ability_modifier(score: int) -> int:

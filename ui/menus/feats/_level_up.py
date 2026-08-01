@@ -3,14 +3,13 @@
 from typing import Any
 
 from core.character.models import Character
-from core.feats.apply import resolve_feat_ability_bonuses
+from core.feats.apply import apply_feat_pick
 from core.feats.requirements import (
     build_feat_selection_context_from_character,
     list_feats_for_selection,
 )
-from core.mechanics.stats import apply_bonuses_to_stats
 from core.platform.localization import get_string
-from core.progression.asi import cap_stats
+from core.progression.asi import apply_asi_pick
 from core.types import StatMap, StringsDict
 from ui.menus.console import print_screen_header
 from ui.menus.feats._selection import _pick_feat_from_lists
@@ -30,9 +29,6 @@ def select_level_up_feat_or_asi(
     Возвращает (character, stats, feat_ids, feat_choices, asi_choice_value)
     или None при отмене.
     """
-    from dataclasses import replace
-
-    from core.progression.asi import apply_asi_one_two, apply_asi_two_one
     from ui.menus.progression.asi import select_asi_mode, select_asi_stats
 
     print_screen_header(
@@ -54,13 +50,8 @@ def select_level_up_feat_or_asi(
         picks = select_asi_stats(strings, stats)
         if picks is None:
             return None
-        if picks[0] == picks[1]:
-            stats = apply_asi_two_one(stats, picks[0])
-        else:
-            stats = apply_asi_one_two(stats, picks[0], picks[1])
-        stats = cap_stats(stats)
-        updated = replace(character, stats=stats)
-        return updated, stats, feat_ids, feat_choices, "asi"
+        stats = apply_asi_pick(stats, picks)
+        return character, stats, feat_ids, feat_choices, "asi"
 
     ctx = build_feat_selection_context_from_character(character)
     eligible, blocked, hidden = list_feats_for_selection(ctx, feat_ids)
@@ -91,13 +82,6 @@ def select_level_up_feat_or_asi(
 
     feat_choices[feat_id] = sub
     feat_ids.append(feat_id)
-    bonuses = resolve_feat_ability_bonuses(feat_id, sub)
-    stats = cap_stats(apply_bonuses_to_stats(stats, bonuses))
-    updated = replace(
-        character,
-        stats=stats,
-        feat_ids=feat_ids,
-        feat_choices=feat_choices,
-    )
+    stats = apply_feat_pick(stats, feat_id, sub)
     asi_value = f"feat:{feat_id}"
-    return updated, stats, feat_ids, feat_choices, asi_value
+    return character, stats, feat_ids, feat_choices, asi_value

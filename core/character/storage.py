@@ -14,6 +14,7 @@ from core.character.migrate import (
 from core.character.models import Character
 from core.constants import clamp_level
 from core.platform.io import load_json, save_json
+from core.platform.paths import SAVES_DIR
 
 logger = logging.getLogger(__name__)
 
@@ -134,7 +135,6 @@ def update_character(character: Character) -> None:
     _save_character_file(character)
 
 
-SAVES_DIR = Path("saves")
 CHARACTERS_DIR = SAVES_DIR / "characters"
 
 

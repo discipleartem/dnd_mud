@@ -15,6 +15,15 @@ type GameDifficulty = Literal["easy", "normal", "hardcore"]
 type LanguageCode = Literal["ru", "en"]
 
 
+def parse_game_difficulty(raw: object) -> GameDifficulty:
+    """Режим сложности из JSON или другого сырого значения."""
+    if raw == "hardcore":
+        return "hardcore"
+    if raw == "easy":
+        return "easy"
+    return "normal"
+
+
 class CharacterClass(StrEnum):
     """Идентификаторы классов из ``database/classes/classes.yaml``."""
 
@@ -94,6 +103,7 @@ __all__ = [
     "EquippedState",
     "GameDifficulty",
     "InventoryItem",
+    "parse_game_difficulty",
     "LanguageCode",
     "RuntimeSettings",
     "StatMap",

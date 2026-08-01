@@ -4,14 +4,19 @@ from dataclasses import replace
 from typing import Any
 
 from core.catalogs.classes import get_subclass_choice_level
-from core.catalogs.skills import (
-    get_subclass_skill_choices,
-    subclass_skills_active,
-)
 from core.character.models import Character
 from core.constants import MAX_CHARACTER_LEVEL
 from core.progression.xp_levels import EASY_START_LEVEL
 from core.types import GameDifficulty
+
+
+def subclass_active_at_level(
+    class_id: str, subclass_id: str | None, level: int
+) -> bool:
+    """Подкласс активен на уровне — его grants можно применять."""
+    if not subclass_id:
+        return False
+    return level >= get_subclass_choice_level(class_id)
 
 
 def features_up_to_level(
@@ -83,7 +88,7 @@ def class_features_applied_at_creation(
     class_id: str, subclass_id: str | None, start_level: int
 ) -> bool:
     """Особенности подкласса выбраны при создании (старт >= ур. архетипа)."""
-    return subclass_skills_active(class_id, subclass_id, start_level)
+    return subclass_active_at_level(class_id, subclass_id, start_level)
 
 
 def needs_class_feature_picks(character: Character) -> bool:
@@ -95,6 +100,8 @@ def needs_class_feature_picks(character: Character) -> bool:
 
 def subclass_skill_picks_pending(character: Character) -> bool:
     """Ещё не выбраны навыки подкласса."""
+    from core.catalogs.skills import get_subclass_skill_choices
+
     if not character.subclass_id:
         return False
     return bool(

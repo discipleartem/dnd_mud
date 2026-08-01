@@ -16,6 +16,7 @@ from core.platform.catalog_session import get_catalog_session
 from core.platform.localization import get_string, load_strings
 from core.platform.settings import load_settings, save_settings
 from core.types import RuntimeSettings, StringsDict
+from ui.input_handler import print_ctrl_c_ignored
 from ui.menus import (
     show_characters_menu,
     show_languages_menu,
@@ -70,12 +71,11 @@ def _save_and_reload_settings(
     return settings, strings
 
 
-def _print_ctrl_c_ignored(strings: StringsDict) -> None:
-    print(
-        f"{Fore.YELLOW}"
-        f"{get_string(strings, 'errors.ctrl_c_ignored')}"
-        f"{Style.RESET_ALL}"
-    )
+def _after_hub_menu_action(
+    settings: RuntimeSettings, strings: StringsDict
+) -> tuple[RuntimeSettings, StringsDict]:
+    """Сохранить настройки и перезагрузить строки после hub-действия."""
+    return _save_and_reload_settings(settings, strings)
 
 
 def main() -> int:
@@ -115,36 +115,36 @@ def main() -> int:
                     running = False
                 case "continue":
                     show_continue_character_flow(strings, settings["language"])
-                    settings, strings = _save_and_reload_settings(
+                    settings, strings = _after_hub_menu_action(
                         settings, strings
                     )
                 case "new_game":
                     show_new_game_flow(strings, settings)
-                    settings, strings = _save_and_reload_settings(
+                    settings, strings = _after_hub_menu_action(
                         settings, strings
                     )
                 case "load_game":
                     show_load_game_flow(strings, settings["language"])
                 case "characters":
                     show_characters_menu(strings, settings["language"])
-                    settings, strings = _save_and_reload_settings(
+                    settings, strings = _after_hub_menu_action(
                         settings, strings
                     )
                 case "settings":
                     settings = show_settings(strings, settings)
-                    settings, strings = _save_and_reload_settings(
+                    settings, strings = _after_hub_menu_action(
                         settings, strings
                     )
                 case "languages":
                     settings = show_languages_menu(strings, settings)
-                    settings, strings = _save_and_reload_settings(
+                    settings, strings = _after_hub_menu_action(
                         settings, strings
                     )
                 case "mods":
                     show_mods_menu(strings, settings["language"])
         except KeyboardInterrupt:
             print()
-            _print_ctrl_c_ignored(strings)
+            print_ctrl_c_ignored(strings)
 
     return 0
 

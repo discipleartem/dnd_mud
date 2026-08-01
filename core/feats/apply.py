@@ -3,7 +3,6 @@
 from dataclasses import replace
 from typing import Any
 
-from core.catalogs.skills import merge_proficiencies
 from core.feats.catalog import (
     get_feat_expertise_ids,
     get_feat_language_ids,
@@ -13,12 +12,13 @@ from core.feats.catalog import (
     resolve_feat_grants,
 )
 from core.mechanics.hp_bonus import HpBonusSource, hit_point_bonus_amount
-from core.mechanics.proficiencies import merge_proficiency_tokens
 from core.mechanics.stats import (
     ABILITY_SCORE_MAX,
     STAT_NAMES,
     apply_bonuses_to_stats,
 )
+from core.platform.io import merge_unique
+from core.progression.asi import cap_stats
 from core.types import StatMap
 
 
@@ -45,6 +45,16 @@ def get_feat_hp_bonus_sources(feat_ids: list[str]) -> list[HpBonusSource]:
             name = str(grant.get("name", "")).strip() or feat_name
             sources.append(HpBonusSource(name=name, amount=amount))
     return sources
+
+
+def apply_feat_pick(
+    stats: StatMap,
+    feat_id: str,
+    subchoices: dict[str, Any] | None = None,
+) -> StatMap:
+    """Применить бонусы выбранной черты к характеристикам с учётом потолка."""
+    bonuses = resolve_feat_ability_bonuses(feat_id, subchoices)
+    return cap_stats(apply_bonuses_to_stats(stats, bonuses))
 
 
 def resolve_feat_ability_bonuses(
@@ -108,20 +118,16 @@ def apply_feat_grants_to_character(
 
     return replace(
         character,
-        weapon_proficiencies=merge_proficiency_tokens(
+        weapon_proficiencies=merge_unique(
             character.weapon_proficiencies, weapons
         ),
-        armor_proficiencies=merge_proficiency_tokens(
+        armor_proficiencies=merge_unique(
             character.armor_proficiencies, armors
         ),
-        tool_proficiencies=merge_proficiency_tokens(
-            character.tool_proficiencies, tools
-        ),
-        skills=merge_proficiencies(character.skills, skills),
+        tool_proficiencies=merge_unique(character.tool_proficiencies, tools),
+        skills=merge_unique(character.skills, skills),
         languages=merged_langs,
-        skill_expertise=merge_proficiencies(
-            character.skill_expertise, expertise
-        ),
+        skill_expertise=merge_unique(character.skill_expertise, expertise),
     )
 
 

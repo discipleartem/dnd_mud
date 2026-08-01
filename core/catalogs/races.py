@@ -1,7 +1,6 @@
 """Загрузка рас и расовых бонусов из YAML."""
 
 from collections import Counter
-from pathlib import Path
 from typing import Any
 
 from core.grants.normalize import (
@@ -16,9 +15,8 @@ from core.platform.catalog_loader import (
     load_catalog_items,
 )
 from core.platform.localization import resolve_localized_text
+from core.platform.paths import RACES_FILE
 from core.types import StatMap
-
-RACES_FILE = Path("database/races/races.yaml")
 
 
 def load_races_yaml() -> dict[str, Any]:
@@ -120,6 +118,30 @@ def iter_race_grants_by_source(
         pairs.append((grants_from_entity(subrace_info), "subrace"))
         return pairs
     return [(grants_from_entity(race_info), "race")]
+
+
+def iter_race_choice_grants(
+    race_id: str,
+    subrace_id: str | None = None,
+    grant_type: str | None = None,
+) -> list[tuple[dict[str, Any], str]]:
+    """Выборные grants расы/подрасы: (grant, source).
+
+    При ``grant_type`` отбираются только grants с ``choice=True``.
+    """
+    if not get_race_and_subrace(race_id, subrace_id)[0]:
+        return []
+
+    result: list[tuple[dict[str, Any], str]] = []
+    for grants, source in iter_race_grants_by_source(race_id, subrace_id):
+        entries: list[dict[str, Any]] = grants
+        if grant_type is not None:
+            entries = grants_of_type(grants, grant_type)
+        for entry in entries:
+            if grant_type is not None and not entry.get("choice"):
+                continue
+            result.append((entry, source))
+    return result
 
 
 def get_choice_ability_bonus_mechanics(

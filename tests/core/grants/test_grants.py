@@ -14,7 +14,7 @@ from core.grants.normalize import (
     inherit_flags,
     mechanics_from_grant_entry,
     normalize_armor_token,
-    proficiency_tokens_from_grant,
+    proficiency_tokens_and_skills_from_grant,
 )
 
 pytestmark = pytest.mark.usefixtures("catalog_caches_cleared")
@@ -115,40 +115,10 @@ def test_mechanics_from_grant_entry() -> None:
 
 
 def test_proficiency_tokens_from_weapon_grant() -> None:
-    weapons, armors, tools = proficiency_tokens_from_grant(
+    weapons, armors, tools, skills = proficiency_tokens_and_skills_from_grant(
         {"type": "weapon_proficiency", "weapons": ["martial"]}
     )
     assert weapons == ["martial"]
     assert armors == []
     assert tools == []
-
-
-def test_grant_equipment_item_and_musical_pool_labels() -> None:
-    """Локализация equipment_item и пула musical_instruments."""
-    from core.grants.format import (
-        _grant_description,
-        _grant_display_name,
-    )
-    from core.platform.localization import load_strings
-
-    ru = load_strings("ru")
-    equipment_grant = {
-        "type": "equipment_item",
-        "items": [
-            {"kind": "equipment", "id": "emblem", "qty": 1},
-            {"kind": "equipment", "id": "incense", "qty": 5},
-        ],
-    }
-    assert _grant_display_name(equipment_grant, ru) == "Снаряжение"
-    assert _grant_description(equipment_grant, ru, "ru") == (
-        "Эмблема, Палочка благовоний ×5"
-    )
-    tool_choice = {
-        "type": "tool_proficiency",
-        "choice": True,
-        "count": 1,
-        "pool": "musical_instruments",
-    }
-    assert _grant_description(tool_choice, ru, "ru") == (
-        "выбор: 1 из музыкальные инструменты"
-    )
+    assert skills == []

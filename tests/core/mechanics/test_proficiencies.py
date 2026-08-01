@@ -7,8 +7,6 @@ from core.catalogs.skills import (
     available_skills,
     get_class_skill_config,
     get_subclass_skill_choices,
-    merge_proficiencies,
-    subclass_skills_active,
 )
 from core.grants.resolve import build_fixed_proficiencies
 from core.mechanics.proficiencies import (
@@ -17,8 +15,9 @@ from core.mechanics.proficiencies import (
     get_subclass_proficiency_tokens,
     has_armor_proficiency,
     has_weapon_proficiency,
-    merge_proficiency_tokens,
 )
+from core.platform.io import merge_unique
+from core.progression.class_progression import subclass_active_at_level
 
 pytestmark = pytest.mark.usefixtures("catalog_caches_cleared")
 
@@ -30,15 +29,15 @@ def test_racial_and_class_skills() -> None:
     assert available_skills(["athletics", "perception"], ["perception"]) == [
         "athletics"
     ]
-    assert merge_proficiencies(["perception"], ["athletics"]) == [
+    assert merge_unique(["perception"], ["athletics"]) == [
         "perception",
         "athletics",
     ]
 
 
 def test_subclass_skill_choices() -> None:
-    assert subclass_skills_active("bard", "lore_college", 1) is False
-    assert subclass_skills_active("bard", "lore_college", 3) is True
+    assert subclass_active_at_level("bard", "lore_college", 1) is False
+    assert subclass_active_at_level("bard", "lore_college", 3) is True
     choices = get_subclass_skill_choices("bard", "lore_college", 3)
     assert len(choices) == 1 and int(choices[0].get("count", 0)) == 3
 
@@ -84,5 +83,5 @@ def test_background_tools_and_proficiency_checks() -> None:
     assert choices == []
     assert has_weapon_proficiency(["simple"], "club")
     assert has_armor_proficiency(["shield"], "shield")
-    merged = merge_proficiency_tokens(["simple"], ["martial", "simple"])
+    merged = merge_unique(["simple"], ["martial", "simple"])
     assert merged == ["simple", "martial"]

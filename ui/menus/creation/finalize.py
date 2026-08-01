@@ -1,21 +1,11 @@
 """Финализация и сохранение персонажа после создания."""
 
-from core.character.finalize import (
-    merge_feat_languages_into,
-    persist_built_character,
-)
+from core.character.finalize import persist_built_character
 from core.character.models import Character
 from core.platform.localization import get_string
 from core.types import StringsDict
 from ui.menus.console import print_success_and_wait
 from ui.menus.creation.state import _CreationState
-
-
-def merge_feat_languages(state: _CreationState) -> None:
-    """Добавить языки из черт к уже выбранным."""
-    state.languages = merge_feat_languages_into(
-        state.languages, state.feat_ids, state.feat_choices
-    )
 
 
 def save_created_character(state: _CreationState) -> Character | None:

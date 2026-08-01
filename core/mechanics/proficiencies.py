@@ -16,8 +16,6 @@ from core.mechanics.proficiency_collect import (
     get_proficiency_choices,
     get_racial_proficiency_tokens,
     get_subclass_proficiency_tokens,
-    merge_proficiency_tokens,
-    subclass_proficiencies_active,
 )
 
 __all__ = [
@@ -35,8 +33,6 @@ __all__ = [
     "has_weapon_pool_proficiency",
     "has_weapon_proficiency",
     "is_valid_tool_selection",
-    "merge_proficiency_tokens",
-    "subclass_proficiencies_active",
 ]
 
 

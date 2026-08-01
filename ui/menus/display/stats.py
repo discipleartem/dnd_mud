@@ -3,7 +3,7 @@
 from colorama import Fore, Style
 
 from core.character.models import Character
-from core.mechanics.dice import ability_modifier
+from core.constants import ability_modifier
 from core.mechanics.stats import POINT_BUY_COSTS, STAT_NAMES
 from core.platform.localization import (
     get_string,

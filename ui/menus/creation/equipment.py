@@ -6,24 +6,28 @@ from typing import Any
 from colorama import Fore, Style
 
 from core.catalogs.equipment import (
+    get_tool_name,
+    get_weapon_name,
+)
+from core.inventory.equipment_text import (
     format_item_list_hint,
     format_versatile_catalog_hint,
     format_weapon_list_damage,
-    get_tool_name,
-    get_weapon_name,
     weapon_property_hint,
 )
 from core.inventory.starting_equipment import (
     all_weapons_in_pool,
-    equipment_choice_label,
     equipment_option_available,
-    equipment_option_strength_warning,
-    format_equipment_option_label,
     list_equipment_options_by_group,
     list_fixed_items,
     option_needs_tool_pick,
     option_needs_weapon_pick,
     tools_for_pool,
+)
+from core.inventory.starting_equipment_labels import (
+    equipment_choice_label,
+    equipment_option_strength_warning,
+    format_equipment_option_label,
 )
 from core.mechanics.proficiencies import (
     has_tool_proficiency,

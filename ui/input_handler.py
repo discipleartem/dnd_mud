@@ -43,7 +43,7 @@ def _error(
     return default.format(**kwargs)
 
 
-def _print_ctrl_c_ignored(strings: StringsDict | None) -> None:
+def print_ctrl_c_ignored(strings: StringsDict | None) -> None:
     """Сообщение: Ctrl+C игнорируется."""
     msg = _error(
         strings,
@@ -60,7 +60,7 @@ def safe_input(prompt: str, strings: StringsDict | None = None) -> str:
             return input(prompt)
         except KeyboardInterrupt:
             print()
-            _print_ctrl_c_ignored(strings)
+            print_ctrl_c_ignored(strings)
 
 
 def get_int_input(

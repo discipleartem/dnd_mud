@@ -1,25 +1,16 @@
 """Повышение уровня персонажа (PHB): ASI/черта и HP по режиму сложности."""
 
-from dataclasses import replace
-
 from colorama import Fore, Style
 
 from core.character.models import Character
-from core.feats.apply import (
-    apply_feat_grants_to_character,
-    tough_hp_adjustment_on_acquire,
-)
 from core.feats.catalog import load_feat
 from core.platform.localization import get_string
-from core.progression.asi import (
-    con_hp_bonus_from_asi,
-    feat_id_from_asi_choice,
-    pending_asi_at_level,
-)
+from core.progression.asi import feat_id_from_asi_choice, pending_asi_at_level
 from core.progression.hp import HpGainBreakdown
 from core.progression.level_up import (
     AsiResolution,
     process_pending_level_ups,
+    resolve_level_up_asi,
 )
 from core.types import LanguageCode, StringsDict
 from ui.menus.console import press_enter, print_screen_header
@@ -119,40 +110,28 @@ def run_pending_level_ups(
     ) -> AsiResolution | None:
         if not pending_asi_at_level(char, new_level):
             return None
-        old_stats = char.stats.copy()
-        had_tough = "tough" in char.feat_ids
         result = select_level_up_feat_or_asi(
             strings, char, new_level, language
         )
         if result is None:
             return None
-        updated, stats, feat_ids, feat_choices, asi_value = result
-        asi_choices = dict(updated.asi_choices)
-        asi_choices[str(new_level)] = asi_value
-        con_bonus = con_hp_bonus_from_asi(old_stats, stats, new_level)
-        char = replace(
-            updated,
+        _character, stats, feat_ids, feat_choices, asi_value = result
+        resolution = resolve_level_up_asi(
+            char,
+            new_level,
             stats=stats,
             feat_ids=feat_ids,
             feat_choices=feat_choices,
-            asi_choices=asi_choices,
+            asi_value=asi_value,
         )
         feat_id = feat_id_from_asi_choice(asi_value)
         if feat_id:
-            char = apply_feat_grants_to_character(
-                char, feat_id, feat_choices.get(feat_id, {})
-            )
             feat = load_feat(feat_id)
             feat_name = feat.get("name", feat_id)
             msg = get_string(strings, "level_up.feat_taken", name=feat_name)
             print(f"{Fore.GREEN}{msg}{Style.RESET_ALL}")
             print()
-        tough_bonus = 0
-        if feat_id == "tough" and not had_tough:
-            tough_bonus = tough_hp_adjustment_on_acquire(new_level)
-        return AsiResolution(
-            character=char, con_bonus=con_bonus, tough_bonus=tough_bonus
-        )
+        return resolution
 
     def on_level_up_ui(
         char: Character,

@@ -2,7 +2,7 @@
 
 from core.catalogs.classes import get_class_dict, iter_class_grants
 from core.character.models import Character
-from core.mechanics.dice import ability_modifier
+from core.constants import ability_modifier
 from core.mechanics.stats import (
     ABILITY_SCORE_DEFAULT,
     ABILITY_SCORE_MAX,
@@ -41,6 +41,20 @@ def pending_asi_at_level(character: Character, new_level: int) -> bool:
     if not class_grants_asi_at_level(character.class_id, new_level):
         return False
     return str(new_level) not in character.asi_choices
+
+
+def would_exceed_cap(current: int, amount: int) -> bool:
+    """Проверить, превысит ли прибавка максимум характеристики."""
+    return current + amount > ABILITY_SCORE_MAX
+
+
+def apply_asi_pick(stats: StatMap, picks: tuple[str, str]) -> StatMap:
+    """Применить ASI (+2 к одной или +1 к двум) с ограничением потолка."""
+    if picks[0] == picks[1]:
+        result = apply_asi_two_one(stats, picks[0])
+    else:
+        result = apply_asi_one_two(stats, picks[0], picks[1])
+    return cap_stats(result)
 
 
 def apply_asi_two_one(stats: StatMap, stat: str) -> StatMap:

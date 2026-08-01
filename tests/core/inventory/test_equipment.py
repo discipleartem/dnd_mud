@@ -45,7 +45,9 @@ def test_sort_ids_by_proficiency() -> None:
 
 
 def test_option_display_label_strips_proficiency_hint() -> None:
-    from core.inventory.starting_equipment import format_equipment_option_label
+    from core.inventory.starting_equipment_labels import (
+        format_equipment_option_label,
+    )
     from core.platform.localization import load_strings
 
     ru_strings = load_strings("ru")
@@ -173,13 +175,15 @@ def test_weapon_menu_shows_unavailable_warhammer_without_proficiency(
 
 def test_weapon_and_tool_catalog() -> None:
     from core.catalogs.equipment import (
+        get_equipment_item_name,
+        weapon_ammunition_item_id,
+        weapon_range,
+    )
+    from core.inventory.equipment_text import (
         armor_equipped_hint,
         format_versatile_catalog_hint,
         format_weapon_property_labels,
-        get_equipment_item_name,
-        weapon_ammunition_item_id,
         weapon_property_hint,
-        weapon_range,
     )
 
     ru_strings = load_strings("ru")

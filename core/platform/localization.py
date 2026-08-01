@@ -5,13 +5,11 @@
 """
 
 from functools import lru_cache
-from pathlib import Path
 from typing import Any
 
 from core.platform.io import load_yaml
+from core.platform.paths import STRINGS_DIR
 from core.types import LanguageCode, StringsDict
-
-STRINGS_DIR = Path("database/strings")
 
 
 def clear_strings_cache() -> None:

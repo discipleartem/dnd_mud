@@ -10,7 +10,7 @@ _Нет открытых задач Pre-Alpha._
 
 Не backlog рефакторинга — см. [MUD_PRD.md](MUD_PRD.md) §«Нереализованная механика D&D 5e» и [DATA_SCHEMA.md](DATA_SCHEMA.md) §«Запланировано (Phase 2+)».
 
-- Game engine: бой, комнаты, полная параметризация по режиму (скелет `core/game_engine.py` и проверки — есть)
+- Game engine: бой, комнаты, полная параметризация по режиму (скелет `GameEngine` и проверки — есть; combat API будет написан заново в Phase 2)
 - Инвентарь, стартовое снаряжение, ongoing-требования черт — **реализовано** (см. CHANGELOG)
 
 _Закрыто в refactor:_ автосохранение/загрузка сессии (`saves/sessions/`, `load_game`), mod gating, terminal wrap.
