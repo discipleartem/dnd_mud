@@ -111,7 +111,7 @@ UI не читает файлы данных напрямую — только �
 | `inventory/items.py` | Операции с инвентарём |
 | `inventory/armor_class.py` | Расчёт КД |
 | `inventory/background_equipment.py` | Снаряжение предыстории |
-| `inventory/equipment_text.py` | UI-подсказки оружия/доспехов |
+| `inventory/equipment_text.py` | UI-подсказки оружия/доспехов (свойства, кубы урона, КД в списках) |
 | `inventory/equipped_display.py` | Данные экипировки для карточки (`get_equipped_display`) |
 | `inventory/equip_defaults.py` | Авто-экипировка |
 | `inventory/starting_equipment.py` | Стартовое снаряжение класса из YAML |
