@@ -93,6 +93,7 @@ UI не читает файлы данных напрямую — только �
 | `character/finalize.py` | Merge языков черт + persist собранного персонажа |
 | `character/migrate.py` | `CHARACTERS_SCHEMA_VERSION`, `migrate_character_data` |
 | `character/storage.py` | CRUD; `make_save_slug`, `unique_save_slug`; JSON в `saves/` |
+| `character/creation_draft.py` | Черновик создания (`saves/creation_draft.json`) |
 | **`core/feats/`** | Черты (leaf: catalog, apply, text, requirements) |
 | `feats/catalog.py` | YAML черт, чистое чтение grants |
 | `feats/grant_merge.py` | Слияние черт с `ResolvedGrants` (над leaf resolve) |
@@ -154,6 +155,7 @@ UI не читает файлы данных напрямую — только �
 | `database/core/mods_state.json` | Включённые моды | JSON | `platform/mod_loader.py` |
 | `database/strings/*.yaml` | Локализация | YAML | `platform/localization.py` |
 | `saves/characters/*.json` | Персонажи (по одному файлу) | JSON | `character/storage.py` |
+| `saves/creation_draft.json` | Черновик незавершённого создания | JSON | `character/creation_draft.py` |
 | `saves/sessions/*.json` | Сессии приключений (узел сценария, флаги) | JSON | `engine/session_storage.py` |
 
 ### 4. Resources (`adventures/`, `mods/`)
@@ -193,7 +195,8 @@ main.py → ui/menus/ → core.<pkg>.<module> (прямые leaf-imports)
 
 **Сценарий «Создать персонажа»:** сложность → имя → раса → подраса → характеристики → предыстория → языки → класс → подкласс → черты (если нужны) → владения → навыки → (компетентность?) → **снаряжение** → сохранение в `saves/characters/{save_slug}.json`.
 
-- Оркестрация: `ui/menus/creation/steps.py` (`show_create_character_flow`), `ui/menus/creation/handlers.py`, `ui/menus/stats/stats_flow.py`
+- Оркестрация: `ui/menus/creation/steps.py` (`show_create_character_flow` / `show_continue_character_flow`), autosave в `saves/creation_draft.json`; `ui/menus/creation/handlers.py`, `ui/menus/stats/stats_flow.py`
+- Ввод: `ui/input_handler.safe_input` глотает Ctrl+C; safety-net в `main()`
 - Снаряжение: `ui/menus/creation/equipment.py` → `core.inventory.starting_equipment`; предыстория — `core.inventory.background_equipment.get_background_equipment_items`; merge и `equip_defaults` — `core.character.build.build_new_character` / `character.storage.persist_character`, `core.inventory.*`
 - Сохранение: `_CreationState.to_character()` → `persist_character()` (без kwargs-bridge)
 - Генераторы: `core.mechanics.stats`, `core.catalogs.races`

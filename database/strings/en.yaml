@@ -6,6 +6,7 @@ welcome:
 
 menu:
   caption: "MAIN MENU"
+  continue_creation: "Continue"
   new_game: "New Game"
   load_game: "Load Game"
   characters: "Characters"
@@ -411,6 +412,7 @@ level_up:
 errors:
   invalid_input: "Error: enter a number from {min} to {max}"
   invalid_number: "Error: enter a number from {min} to {max}"
+  ctrl_c_ignored: "Ctrl+C is disabled. Use the menu to exit."
   load_not_implemented: "Load game is not yet implemented"
 
 info:

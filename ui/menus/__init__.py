@@ -1,6 +1,9 @@
 """Публичный API экранов меню."""
 
-from ui.menus.creation.steps import show_create_character_flow
+from ui.menus.creation.steps import (
+    show_continue_character_flow,
+    show_create_character_flow,
+)
 from ui.menus.hub.characters_menu import show_characters_menu
 from ui.menus.hub.load_game import show_load_game_flow
 from ui.menus.hub.main_menu import show_main_menu, show_welcome_screen
@@ -15,6 +18,7 @@ from ui.menus.stats import show_stats_generation_flow
 
 __all__ = [
     "select_difficulty",
+    "show_continue_character_flow",
     "show_create_character_flow",
     "show_characters_menu",
     "show_languages_menu",

@@ -6,6 +6,7 @@ welcome:
 
 menu:
   caption: "ГЛАВНОЕ МЕНЮ"
+  continue_creation: "Продолжить"
   new_game: "Новая игра"
   load_game: "Загрузить игру"
   characters: "Персонажи"
@@ -411,6 +412,7 @@ level_up:
 errors:
   invalid_input: "Ошибка: введите число от {min} до {max}"
   invalid_number: "Ошибка: введите число от {min} до {max}"
+  ctrl_c_ignored: "Ctrl+C отключён. Для выхода используйте меню."
   load_not_implemented: "Загрузка игры ещё не реализована"
 
 info:
