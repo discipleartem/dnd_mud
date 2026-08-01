@@ -130,15 +130,6 @@ def load_session(save_slug: str) -> SessionSnapshot | None:
         return None
 
 
-def delete_session(save_slug: str) -> bool:
-    """Удалить файл сессии."""
-    path = _session_path(save_slug)
-    if not path.exists():
-        return False
-    path.unlink()
-    return True
-
-
 def load_character_for_session(
     snapshot: SessionSnapshot,
     characters_dir: Path | None = None,

@@ -17,7 +17,7 @@ from core.catalogs.races import collect_race_grants
 from core.grants.normalize import (
     mechanics_from_grant_entry,
     normalize_armor_token,
-    proficiency_tokens_from_grant,
+    proficiency_tokens_and_skills_from_grant,
 )
 from core.platform.io import merge_unique
 
@@ -90,7 +90,7 @@ def _collect_from_grants(
         ):
             continue
         merged = mechanics_from_grant_entry(entry)
-        w, a, t = proficiency_tokens_from_grant(merged)
+        w, a, t, _skills = proficiency_tokens_and_skills_from_grant(merged)
         weapons.extend(w)
         armors.extend(a)
         tools.extend(t)

@@ -114,24 +114,6 @@ def print_back_row(
     )
 
 
-def run_options_with_back(
-    strings: StringsDict,
-    options: list[str],
-    *,
-    back_label_key: str = "character.back",
-) -> int | None:
-    """Меню: 1..N — опции, 0 — назад. None при выборе 0."""
-    for idx, label in enumerate(options, 1):
-        print_numbered_row(idx, label)
-    print()
-    print_back_row(strings, back_label_key=back_label_key)
-    print()
-    choice = get_int_input(choice_prompt(strings), 0, len(options), strings)
-    if choice == 0:
-        return None
-    return choice
-
-
 def run_numbered_menu(
     strings: StringsDict,
     options: list[str],

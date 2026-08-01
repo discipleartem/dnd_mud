@@ -396,7 +396,6 @@ grant_type(grant: dict[str, Any]) -> str
 grants_of_type(grants: list[dict[str, Any]], type_name: str) -> list[dict[str, Any]]
 normalize_armor_token(token: str) -> str
 mechanics_from_grant_entry(entry: dict[str, Any]) -> dict[str, Any]
-proficiency_tokens_from_grant(grant, choices=None) -> tuple[weapons, armors, tools]
 proficiency_tokens_and_skills_from_grant(grant, choices=None) -> tuple[weapons, armors, tools, skills]
 ```
 
@@ -418,8 +417,7 @@ load_catalog_items(
     name_key: str = "name",
     fallback: Callable[[str, str], str] | None = None,
 ) -> list[dict[str, Any]]
-clear_catalog_cache() -> None
-clear_all_catalog_caches() -> None
+reload_catalogs() -> None
 ```
 
 Deep-merge модов через `mod_loader` (overlay по полю `target` — путь к базовому YAML в `manifest.yaml`); кэш `@lru_cache` на `load_catalog` и `load_merged_catalog`.  
@@ -528,7 +526,6 @@ ABILITY_MODIFIER_SCORE_MIN = 1
 ABILITY_MODIFIER_SCORE_MAX = 30
 proficiency_bonus(level: int) -> int
 ability_modifier(score: int) -> int  # clamp 1–30, таблица ability_modifiers из YAML
-difficulty_class(tier: str) -> int
 ```
 
 ---
@@ -567,7 +564,7 @@ apply_feat_grants_to_character(character, feat_id, choices) -> Character
 tough_hp_adjustment_on_acquire(level) -> int
 ```
 
-`apply_feat_grants_to_character` — владения, навыки, языки и экспертиза одной черты; вызывается при левелапе (`progression/level_up.py`, `resolve_pending_level_ups`).
+`apply_feat_grants_to_character` — владения, навыки, языки и экспертиза одной черты; вызывается при левелапе (`progression/level_up.py`, `process_pending_level_ups`).
 
 `list_feats_for_selection` — eligible (требования OK + новые владения), blocked (требования не выполнены) и hidden (нет новых владений; показываются в конце списка, не выбираются). Уже взятые черты не возвращаются. См. [`rules/chapters/06-feats.md`](rules/chapters/06-feats.md) §«Фильтрация списка».
 
@@ -904,19 +901,17 @@ def max_hp_for_level(
 def grant_experience(character: Character, amount: int) -> Character
 def has_pending_level_up(character: Character) -> bool
 def apply_level_up(character: Character, hp_gain: int) -> Character
-def resolve_pending_level_ups(character: Character) -> Character
 def process_pending_level_ups(
     character: Character,
     *,
     resolve_asi: Callable[[Character, int], AsiResolution | None] | None = None,
     on_level_up: Callable[[Character, int, HpGainBreakdown, int, int], bool] | None = None,
 ) -> Character
-def apply_experience(character: Character, amount: int) -> Character
 ```
 
 **HP по режиму:** Normal/Easy — макс. кость на 1 ур. (`max(1, …)`), среднее на 2+; HardCore — бросок кости на каждом уровне с полом `max(1, кость + CON)`.
 
-**Левелап:** сценарии и UI начисляют XP через `grant_experience`; повышение — по одному уровню (`apply_level_up` + экран `ui/menus/progression/level_up.py`). `apply_experience` — convenience для тестов (XP + все уровни без UI).
+**Левелап:** сценарии и UI начисляют XP через `grant_experience`; повышение — по одному уровню (`apply_level_up` + экран `ui/menus/progression/level_up.py`).
 
 **UI:** `run_pending_level_ups(strings, character, language) -> Character` (`ui/menus/progression/level_up.py`).
 
