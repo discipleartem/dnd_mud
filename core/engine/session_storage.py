@@ -10,7 +10,7 @@ from core.catalogs.adventure import Adventure
 from core.character.models import Character
 from core.character.storage import CHARACTERS_DIR, try_load_character_file
 from core.platform.io import load_json, save_json
-from core.types import GameDifficulty
+from core.types import GameDifficulty, parse_game_difficulty
 
 SESSIONS_SCHEMA_VERSION = 1
 SESSIONS_DIR = Path("saves") / "sessions"
@@ -56,7 +56,7 @@ class SessionSnapshot:
                 if data.get("current_node_id") is not None
                 else None
             ),
-            difficulty=_parse_difficulty(data.get("difficulty", "normal")),
+            difficulty=parse_game_difficulty(data.get("difficulty", "normal")),
             flags=(
                 dict(data.get("flags", {}))
                 if isinstance(data.get("flags"), dict)
@@ -69,14 +69,6 @@ class SessionSnapshot:
                 else None
             ),
         )
-
-
-def _parse_difficulty(raw: object) -> GameDifficulty:
-    if raw == "hardcore":
-        return "hardcore"
-    if raw == "easy":
-        return "easy"
-    return "normal"
 
 
 def _session_path(save_slug: str) -> Path:

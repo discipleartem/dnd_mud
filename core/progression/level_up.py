@@ -9,7 +9,6 @@ from core.catalogs.classes import (
     get_subclass_dict,
     grants_at_level,
 )
-from core.catalogs.skills import merge_proficiencies
 from core.character.models import Character
 from core.feats.apply import (
     apply_feat_grants_to_character,
@@ -17,8 +16,8 @@ from core.feats.apply import (
     tough_hp_adjustment_on_acquire,
 )
 from core.grants.normalize import proficiency_tokens_and_skills_from_grant
-from core.mechanics.proficiencies import merge_proficiency_tokens
 from core.mechanics.stats import apply_bonuses_to_stats
+from core.platform.io import merge_unique
 from core.progression.asi import (
     apply_asi_two_one,
     auto_asi_bonus,
@@ -60,23 +59,21 @@ def _apply_progression_grant(
     )
     updated = replace(
         character,
-        weapon_proficiencies=merge_proficiency_tokens(
+        weapon_proficiencies=merge_unique(
             character.weapon_proficiencies, weapons
         ),
-        armor_proficiencies=merge_proficiency_tokens(
+        armor_proficiencies=merge_unique(
             character.armor_proficiencies, armors
         ),
-        tool_proficiencies=merge_proficiency_tokens(
-            character.tool_proficiencies, tools
-        ),
-        skills=merge_proficiencies(character.skills, skills),
+        tool_proficiencies=merge_unique(character.tool_proficiencies, tools),
+        skills=merge_unique(character.skills, skills),
     )
     if grant.get("type") == "save_proficiency":
         ability = grant.get("ability")
         if isinstance(ability, str):
             updated = replace(
                 updated,
-                save_proficiencies=merge_proficiencies(
+                save_proficiencies=merge_unique(
                     updated.save_proficiencies, [ability]
                 ),
             )

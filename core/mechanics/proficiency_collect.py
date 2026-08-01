@@ -8,7 +8,6 @@ from core.catalogs.backgrounds import (
 )
 from core.catalogs.classes import (
     get_class_dict,
-    get_subclass_choice_level,
     get_subclass_dict,
     iter_class_grants,
 )
@@ -19,7 +18,6 @@ from core.grants.normalize import (
     normalize_armor_token,
     proficiency_tokens_from_grant,
 )
-from core.platform.io import merge_unique
 
 __all__ = [
     "ProficiencyChoice",
@@ -30,8 +28,6 @@ __all__ = [
     "get_proficiency_choices",
     "get_racial_proficiency_tokens",
     "get_subclass_proficiency_tokens",
-    "merge_proficiency_tokens",
-    "subclass_proficiencies_active",
 ]
 
 
@@ -45,11 +41,6 @@ class ProficiencyChoice:
     options: list[str] | None = None
 
 
-def merge_proficiency_tokens(*parts: list[str]) -> list[str]:
-    """Объединить списки владений без дублей."""
-    return merge_unique(*parts)
-
-
 def get_class_saving_throws(class_id: str) -> list[str]:
     """Спасброски класса."""
     info = get_class_dict(class_id)
@@ -59,15 +50,6 @@ def get_class_saving_throws(class_id: str) -> list[str]:
     if isinstance(raw, list):
         return [str(s) for s in raw]
     return []
-
-
-def subclass_proficiencies_active(
-    class_id: str, subclass_id: str | None, level: int
-) -> bool:
-    """Подкласс даёт владения на текущем уровне."""
-    if not subclass_id:
-        return False
-    return level >= get_subclass_choice_level(class_id)
 
 
 def _collect_from_grants(

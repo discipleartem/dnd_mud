@@ -1,5 +1,18 @@
 """Ключи локализации для отображения grants (без UI I/O)."""
 
+from core.platform.localization import get_string
+from core.types import StringsDict
+
+
+def ability_name(strings: StringsDict, stat_key: str) -> str:
+    """Локализованное имя характеристики."""
+    return get_string(strings, f"stats.{stat_key}")
+
+
+def skill_name(strings: StringsDict, skill_key: str) -> str:
+    """Локализованное имя навыка."""
+    return get_string(strings, f"skills.{skill_key}")
+
 
 def grant_type_string_key(gtype: str) -> str:
     """Ключ strings для типа grant."""

@@ -2,9 +2,11 @@
 
 from colorama import Fore, Style
 
-from core.catalogs.equipment import format_item_list_hint
 from core.character.models import Character
 from core.inventory.armor_class import compute_ac
+from core.inventory.equipment_text import (
+    format_item_list_hint,
+)
 from core.inventory.equipped_display import get_equipped_display
 from core.inventory.items import (
     inventory_excluding_equipped,

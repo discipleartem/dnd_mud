@@ -9,9 +9,11 @@ from core.catalogs.equipment import (
     proficiency_token_label,
 )
 from core.grants.labels import (
+    ability_name,
     grant_damage_string_key,
     grant_pool_string_key,
     grant_type_string_key,
+    skill_name,
     spell_string_key,
 )
 from core.grants.normalize import (
@@ -21,16 +23,6 @@ from core.grants.normalize import (
 from core.inventory.items import item_display_name
 from core.platform.localization import get_string
 from core.types import StringsDict
-
-
-def _ability_name(strings: StringsDict, stat_key: str) -> str:
-    """Локализованное имя характеристики."""
-    return get_string(strings, f"stats.{stat_key}")
-
-
-def _skill_name(strings: StringsDict, skill_key: str) -> str:
-    """Локализованное имя навыка."""
-    return get_string(strings, f"skills.{skill_key}")
 
 
 def _grant_type_label(strings: StringsDict, gtype: str) -> str:
@@ -123,7 +115,7 @@ def _format_spellcasting_grant(
     if not entries:
         return ""
     ability = str(grant.get("ability", ""))
-    ability_label = _ability_name(strings, ability) if ability else ""
+    ability_label = ability_name(strings, ability) if ability else ""
     return get_string(
         strings,
         "character.grant_spellcasting_list",
@@ -172,7 +164,7 @@ def _format_skill_proficiency_labels(
         get_string(
             strings,
             "character.grant_skill_proficiency",
-            skill=_skill_name(strings, str(skill_id)),
+            skill=skill_name(strings, str(skill_id)),
         )
         for skill_id in skills
     ]
@@ -240,7 +232,7 @@ def _format_cantrip_description(
             strings,
             "character.grant_cantrip_choice",
             source=source,
-            ability=_ability_name(strings, ability),
+            ability=ability_name(strings, ability),
         )
     return None
 
@@ -267,7 +259,7 @@ def _format_skill_bonus_expertise_description(
         return get_string(
             strings,
             "character.grant_skill_expertise",
-            skill=_skill_name(strings, skill),
+            skill=skill_name(strings, skill),
         )
     return None
 
@@ -421,7 +413,7 @@ def _skill_proficiency_description(
         return get_string(
             strings,
             "character.grant_skill_proficiency",
-            skill=_skill_name(strings, skills),
+            skill=skill_name(strings, skills),
         )
     return ""
 
@@ -481,7 +473,7 @@ def _advantage_description(
         return get_string(
             strings,
             "character.grant_advantage_skill_terrain",
-            skill=_skill_name(strings, skill),
+            skill=skill_name(strings, skill),
             terrain=terrain_label,
         )
     if grant.get("save") and grant.get("effect"):
@@ -494,7 +486,7 @@ def _advantage_description(
         return get_string(
             strings,
             "character.grant_advantage_save",
-            save=_ability_name(strings, str(grant["save"])),
+            save=ability_name(strings, str(grant["save"])),
             effect=effect_label,
         )
     return ""

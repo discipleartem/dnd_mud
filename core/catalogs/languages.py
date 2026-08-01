@@ -5,9 +5,8 @@ from typing import Any, Literal
 
 from core.catalogs.races import (
     get_race_and_subrace,
-    iter_race_grants_by_source,
+    iter_race_choice_grants,
 )
-from core.grants.normalize import grants_of_type
 from core.platform.catalog_loader import load_catalog, load_catalog_items
 from core.platform.localization import resolve_localized_text
 
@@ -71,18 +70,7 @@ def get_racial_language_choices(
     race_id: str, subrace_id: str | None = None
 ) -> list[tuple[dict[str, Any], str]]:
     """Выборные языки из grants: (grant, source)."""
-    choices: list[tuple[dict[str, Any], str]] = []
-    if not get_race_and_subrace(race_id, subrace_id)[0]:
-        return []
-
-    def scan(grants: list[dict[str, Any]], source: str) -> None:
-        for grant in grants_of_type(grants, "language"):
-            if grant.get("choice"):
-                choices.append((grant, source))
-
-    for grants, source in iter_race_grants_by_source(race_id, subrace_id):
-        scan(grants, source)
-    return choices
+    return iter_race_choice_grants(race_id, subrace_id, grant_type="language")
 
 
 def _language_ids_by_category(category: str) -> list[str]:

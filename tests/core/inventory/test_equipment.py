@@ -173,13 +173,15 @@ def test_weapon_menu_shows_unavailable_warhammer_without_proficiency(
 
 def test_weapon_and_tool_catalog() -> None:
     from core.catalogs.equipment import (
+        get_equipment_item_name,
+        weapon_ammunition_item_id,
+        weapon_range,
+    )
+    from core.inventory.equipment_text import (
         armor_equipped_hint,
         format_versatile_catalog_hint,
         format_weapon_property_labels,
-        get_equipment_item_name,
-        weapon_ammunition_item_id,
         weapon_property_hint,
-        weapon_range,
     )
 
     ru_strings = load_strings("ru")

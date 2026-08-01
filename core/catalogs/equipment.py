@@ -287,26 +287,3 @@ def weapon_matches_category(category: str, weapon_id: str) -> bool:
     if category == "martial_ranged":
         return wc == "martial_ranged"
     return category == wc
-
-
-from core.inventory.equipment_text import (  # noqa: E402
-    armor_equipped_hint,
-    format_armor_list_ac,
-    format_dice_for_display,
-    format_item_list_hint,
-    format_versatile_catalog_hint,
-    format_weapon_list_damage,
-    format_weapon_property_labels,
-    weapon_property_hint,
-)
-
-__all__ = [
-    "armor_equipped_hint",
-    "format_armor_list_ac",
-    "format_dice_for_display",
-    "format_item_list_hint",
-    "format_versatile_catalog_hint",
-    "format_weapon_list_damage",
-    "format_weapon_property_labels",
-    "weapon_property_hint",
-]

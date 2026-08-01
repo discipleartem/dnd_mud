@@ -3,14 +3,11 @@
 from typing import Literal
 
 from core.catalogs.equipment import (
-    armor_equipped_hint,
     default_ammunition_pack_size,
-    format_dice_for_display,
     get_armor_name,
     get_equipment_item_name,
     weapon_ammunition_item_id,
     weapon_damage_dice,
-    weapon_property_hint,
     weapon_range,
     weapon_versatile_dice,
 )
@@ -20,6 +17,11 @@ from core.inventory.equip_defaults import (
     main_hand_uses_both_hands,
     weapon_is_two_handed,
     weapon_is_versatile,
+)
+from core.inventory.equipment_text import (
+    armor_equipped_hint,
+    format_dice_for_display,
+    weapon_property_hint,
 )
 from core.inventory.items import inventory_item_quantity, item_display_name
 from core.platform.localization import get_string, load_strings

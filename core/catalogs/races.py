@@ -122,6 +122,30 @@ def iter_race_grants_by_source(
     return [(grants_from_entity(race_info), "race")]
 
 
+def iter_race_choice_grants(
+    race_id: str,
+    subrace_id: str | None = None,
+    grant_type: str | None = None,
+) -> list[tuple[dict[str, Any], str]]:
+    """Выборные grants расы/подрасы: (grant, source).
+
+    При ``grant_type`` отбираются только grants с ``choice=True``.
+    """
+    if not get_race_and_subrace(race_id, subrace_id)[0]:
+        return []
+
+    result: list[tuple[dict[str, Any], str]] = []
+    for grants, source in iter_race_grants_by_source(race_id, subrace_id):
+        entries: list[dict[str, Any]] = grants
+        if grant_type is not None:
+            entries = grants_of_type(grants, grant_type)
+        for entry in entries:
+            if grant_type is not None and not entry.get("choice"):
+                continue
+            result.append((entry, source))
+    return result
+
+
 def get_choice_ability_bonus_mechanics(
     race_id: str, subrace_id: str | None = None
 ) -> dict[str, Any] | None:

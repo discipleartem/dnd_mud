@@ -11,8 +11,8 @@ from core.mechanics.proficiencies import (
     get_proficiency_choices,
     has_tool_proficiency,
     is_valid_tool_selection,
-    merge_proficiency_tokens,
 )
+from core.platform.io import merge_unique
 from core.platform.localization import get_string
 from core.progression.class_progression import start_level_for_difficulty
 from core.types import GameDifficulty, StringsDict
@@ -195,7 +195,7 @@ def select_creation_proficiencies(
         pool = choice.options or []
         if not is_valid_tool_selection(picked, pool, choice.count):
             return None
-        tools = merge_proficiency_tokens(tools, picked)
+        tools = merge_unique(tools, picked)
         if choice.source == "background":
             background_tool_picks.extend(picked)
         pick_offset += choice.count
