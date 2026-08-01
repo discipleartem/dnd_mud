@@ -5,7 +5,10 @@ from dataclasses import dataclass
 from core.catalogs.classes import get_class_hit_dice
 from core.constants import clamp_level
 from core.mechanics.dice import ability_modifier, roll
-from core.mechanics.hp_bonus import HpBonusSource
+from core.mechanics.hp_bonus import (
+    HpBonusSource,
+    get_racial_hp_bonus_sources,
+)
 from core.mechanics.stats import ABILITY_SCORE_DEFAULT
 from core.types import GameDifficulty, StatMap
 
@@ -16,7 +19,6 @@ def extra_hp_bonus_sources(
     feat_ids: list[str] | None = None,
 ) -> tuple[HpBonusSource, ...]:
     """Именованные бонусы HP за уровень: раса/подраса и черты."""
-    from core.catalogs.races import get_racial_hp_bonus_sources
     from core.feats.apply import get_feat_hp_bonus_sources
 
     sources: list[HpBonusSource] = []

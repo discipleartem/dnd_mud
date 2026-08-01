@@ -4,7 +4,8 @@
 и проверяется при выборе приключений.
 """
 
-from core.character.models import Adventure, Character
+from core.catalogs.adventure import Adventure
+from core.character.models import Character
 from core.types import GameDifficulty
 
 

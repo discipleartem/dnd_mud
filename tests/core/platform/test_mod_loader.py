@@ -6,16 +6,18 @@ import pytest
 
 from core.catalogs.races import RACES_FILE
 from core.platform.catalog_loader import load_catalog, reload_catalogs
+from core.platform.catalog_session import (
+    get_mod_gating_difficulty,
+    set_mod_gating_difficulty,
+)
 from core.platform.mod_loader import (
     _enabled_mod_ids,
     _mod_allowed_for_difficulty,
     get_enabled_mod_ids,
-    get_mod_gating_difficulty,
     list_available_mods,
     mod_enable_error,
     save_mods_state,
     set_mod_enabled,
-    set_mod_gating_difficulty,
 )
 from core.types import GameDifficulty
 
@@ -58,9 +60,9 @@ def test_enabled_mod_ids_respects_gating(
         "core.platform.mod_loader._load_mod_manifest",
         lambda mod_id: {"requires_game_difficulty": "hardcore"},
     )
-    assert _enabled_mod_ids() == []
+    assert _enabled_mod_ids(game_difficulty="normal") == []
     set_mod_gating_difficulty("hardcore")
-    assert _enabled_mod_ids() == ["dragonborn_pack"]
+    assert _enabled_mod_ids(game_difficulty="hardcore") == ["dragonborn_pack"]
     set_mod_gating_difficulty(None)
 
 

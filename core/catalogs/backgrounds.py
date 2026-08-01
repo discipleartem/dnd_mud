@@ -6,7 +6,6 @@ from typing import Any
 from core.grants.normalize import grants_from_entity, grants_of_type
 from core.platform.catalog_loader import load_catalog
 from core.platform.localization import resolve_localized_text
-from core.types import InventoryItem
 
 BACKGROUNDS_FILE = Path("database/backgrounds/backgrounds.yaml")
 
@@ -16,7 +15,7 @@ def _load_backgrounds_yaml() -> dict[str, Any]:
     return load_catalog(BACKGROUNDS_FILE, "backgrounds")
 
 
-def _background_info(background_id: str) -> dict[str, Any]:
+def background_info(background_id: str) -> dict[str, Any]:
     """Сырые данные предыстории."""
     info = _load_backgrounds_yaml().get(background_id, {})
     if isinstance(info, dict):
@@ -24,9 +23,9 @@ def _background_info(background_id: str) -> dict[str, Any]:
     return {}
 
 
-def _background_grants(background_id: str) -> list[dict[str, Any]]:
+def background_grants(background_id: str) -> list[dict[str, Any]]:
     """Grants предыстории."""
-    return grants_from_entity(_background_info(background_id))
+    return grants_from_entity(background_info(background_id))
 
 
 def _normalize_background(
@@ -63,7 +62,7 @@ def load_background_full(
     background_id: str, language: str = "ru"
 ) -> dict[str, Any]:
     """Полные данные одной предыстории."""
-    info = _background_info(background_id)
+    info = background_info(background_id)
     if info:
         return _normalize_background(background_id, info, language)
     return {"id": background_id, "name": background_id}
@@ -73,7 +72,7 @@ def get_background_skills(background_id: str) -> list[str]:
     """Два навыка предыстории."""
     skills: list[str] = []
     for grant in grants_of_type(
-        _background_grants(background_id), "skill_proficiency"
+        background_grants(background_id), "skill_proficiency"
     ):
         raw = grant.get("skills", [])
         if isinstance(raw, list):
@@ -85,7 +84,7 @@ def get_background_language_choice(
     background_id: str,
 ) -> dict[str, Any] | None:
     """Механика выбора языков предыстории или None."""
-    for grant in grants_of_type(_background_grants(background_id), "language"):
+    for grant in grants_of_type(background_grants(background_id), "language"):
         if grant.get("choice"):
             count = int(grant.get("count", 0))
             if count > 0:
@@ -100,7 +99,7 @@ def get_background_tool_proficiencies(
     fixed: list[str] = []
     choices: list[dict[str, Any]] = []
     for grant in grants_of_type(
-        _background_grants(background_id), "tool_proficiency"
+        background_grants(background_id), "tool_proficiency"
     ):
         if grant.get("choice"):
             choices.append(
@@ -114,52 +113,3 @@ def get_background_tool_proficiencies(
         if isinstance(raw, list):
             fixed.extend(str(t) for t in raw)
     return fixed, choices
-
-
-def _background_inventory_tool_picks(
-    background_id: str,
-    background_tool_picks: list[str] | None,
-) -> list[str]:
-    """Инструменты из выбора предыстории, входящие в снаряжение PHB."""
-    from core.catalogs.equipment import resolve_tool_pool
-
-    info = _background_info(background_id)
-    pools = info.get("inventory_tool_pools")
-    if not isinstance(pools, list) or not pools or not background_tool_picks:
-        return []
-    allowed: set[str] = set()
-    for pool in pools:
-        if isinstance(pool, str):
-            allowed.update(resolve_tool_pool(pool))
-    return [tool_id for tool_id in background_tool_picks if tool_id in allowed]
-
-
-def get_background_equipment_items(
-    background_id: str,
-    background_tool_picks: list[str] | None = None,
-) -> list[InventoryItem]:
-    """Предметы стартового снаряжения предыстории (не владения)."""
-    from core.inventory.items import (
-        merge_inventory_items,
-        normalize_inventory_item,
-    )
-
-    items: list[InventoryItem] = []
-    for grant in grants_of_type(
-        _background_grants(background_id), "equipment_item"
-    ):
-        raw_items = grant.get("items", [])
-        if not isinstance(raw_items, list):
-            continue
-        for entry in raw_items:
-            if isinstance(entry, dict):
-                normalized = normalize_inventory_item(entry)
-                if normalized:
-                    items.append(normalized)
-
-    for tool_id in _background_inventory_tool_picks(
-        background_id, background_tool_picks
-    ):
-        items.append({"kind": "tool", "id": tool_id, "qty": 1})
-
-    return merge_inventory_items(items)

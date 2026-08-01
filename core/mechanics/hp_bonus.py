@@ -5,6 +5,7 @@ from typing import Any
 
 __all__ = [
     "HpBonusSource",
+    "get_racial_hp_bonus_sources",
     "hit_point_bonus_amount",
     "hit_point_bonus_sources_from_grants",
 ]
@@ -39,3 +40,14 @@ def hit_point_bonus_sources_from_grants(
         name = str(grant.get("name", "")).strip() or "?"
         sources.append(HpBonusSource(name=name, amount=amount))
     return sources
+
+
+def get_racial_hp_bonus_sources(
+    race_id: str, subrace_id: str | None = None
+) -> list[HpBonusSource]:
+    """Именованные бонусы HP за уровень из grants расы/подрасы."""
+    from core.catalogs.races import collect_race_grants
+
+    return hit_point_bonus_sources_from_grants(
+        collect_race_grants(race_id, subrace_id)
+    )

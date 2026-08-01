@@ -6,7 +6,8 @@ from typing import Any
 
 import pytest
 
-from core.character.models import Adventure, Character
+from core.catalogs.adventure import Adventure
+from core.character.models import Character
 from core.constants import MAX_CHARACTER_LEVEL, clamp_level
 from core.progression.hp import (
     hp_gain_breakdown_for_level_up,

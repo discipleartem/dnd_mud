@@ -4,8 +4,8 @@ from typing import Literal
 
 from colorama import Fore, Style
 
-from core.catalogs.adventure import load_adventures
-from core.character.models import Adventure, Character
+from core.catalogs.adventure import Adventure, load_adventures
+from core.character.models import Character
 from core.character.storage import load_characters
 from core.engine.difficulty import adventure_unavailable_reason
 from core.platform.catalog_session import get_catalog_session

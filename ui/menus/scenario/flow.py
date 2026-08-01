@@ -5,7 +5,8 @@ from typing import Any
 
 from colorama import Fore, Style
 
-from core.character.models import Adventure, Character
+from core.catalogs.adventure import Adventure
+from core.character.models import Character
 from core.character.storage import update_character
 from core.engine.game_engine import GameEngine, GameSession, UiAction
 from core.engine.session_runner import (
