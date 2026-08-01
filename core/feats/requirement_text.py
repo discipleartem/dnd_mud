@@ -2,7 +2,7 @@
 
 from typing import Any
 
-from core.catalogs.equipment import proficiency_token_label
+from core.feats.requirement_handlers import format_requirement_text
 from core.feats.requirements import FeatRequirementContext
 from core.platform.localization import get_string
 from core.types import StringsDict
@@ -60,30 +60,4 @@ def _format_requirement_text(
     language: str,
 ) -> str:
     """Текст одного требования для экрана выбора."""
-    rtype = req.get("type", "")
-    if rtype == "ability_score":
-        target = str(req.get("target", ""))
-        value = int(req.get("value", 0))
-        current = int(ctx.stats.get(target, 0))
-        return get_string(
-            strings,
-            "character.feat_req_ability",
-            ability=get_string(strings, f"stats.{target}"),
-            value=value,
-            current=current,
-        )
-    if rtype == "armor_proficiency":
-        raw = req.get("armors", [])
-        armors = [str(a) for a in raw] if isinstance(raw, list) else []
-        labels = [
-            proficiency_token_label(armor, strings, language)
-            for armor in armors
-        ]
-        return get_string(
-            strings,
-            "character.feat_req_armor",
-            armors=", ".join(labels),
-        )
-    if rtype == "spellcasting":
-        return get_string(strings, "character.feat_req_spellcasting")
-    return ""
+    return format_requirement_text(strings, req, ctx, language)
