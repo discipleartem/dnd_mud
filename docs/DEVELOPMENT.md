@@ -88,9 +88,8 @@ dnd_mud/
 │       ├── feats/           # Выбор черт (creation + level-up)
 │       ├── settings.py
 │       ├── stats/           # Генерация характеристик (подпакет)
-│       ├── _common.py       # _print_numbered_row, _run_numbered_menu, …
+│       ├── console.py       # print_screen_header, run_numbered_menu, …
 │       ├── display/         # Отображение (класс, раса, stats, персонаж)
-│       ├── _display.py      # Compat re-export → display/
 │       └── _selectors.py
 ├── database/                # YAML-справочники D&D 5e
 │   ├── races/

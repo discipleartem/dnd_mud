@@ -158,7 +158,7 @@ type: chapter
 | Стартовое снаряжение предыстории | `core/backgrounds.py` → merge в `build_new_character` / `persist_character` |
 | Шаг выбора инструментов при создании | `ui/menus/proficiencies.py` |
 | Шаг выбора снаряжения класса (а/б) | `ui/menus/equipment.py` |
-| Карточка персонажа: инвентарь, экипировка, КД | `ui/menus/_display.py` |
+| Карточка персонажа: инвентарь, экипировка, КД | `ui/menus/display/` |
 
 ### Запланировано (Phase 2)
 

@@ -45,7 +45,7 @@
 | `ui/menus/feats/` | Выбор черт при создании и левелапе (публичный API в `__init__.py`) |
 | `ui/menus/_creation_handlers.py`, `_creation_navigation.py`, `_creation_finalize.py`, `_creation_state.py` | State machine создания персонажа |
 | `ui/menus/display/` | Отображение: grants, раса/фон, stats, карточка, экипировка, класс |
-| `ui/menus/_display.py` | Совместимый re-export → `ui.menus.display` |
+| `ui/menus/console.py` | Публичный UI toolkit: `print_screen_header`, `read_numbered_choice`, … |
 | `ui/menus/_subclass_picks.py` | Общий flow выбора владений/навыков/компетентности подкласса |
 | `ui/input_handler.py` | Валидация ввода, UTF-8 для stdin/stdout |
 
@@ -59,7 +59,15 @@ UI не читает файлы данных напрямую — только �
 |--------|-----------|
 | `core/models.py` | `Character` (`class_id: CharacterClass`), `Adventure` (dataclass); JSON coerce helpers |
 | `core/grants_context.py` | `CreationContext`, `ResolvedGrants` — dataclass контекста создания |
-| `core/character_build.py` | `build_new_character(CharacterBuildParams)` / `resolve_creation_grants` — сборка модели без записи на диск |
+| `core/character_build.py` | `build_new_character(CharacterBuildParams)` — сборка модели без записи на диск |
+| `core/grants_resolve.py` | `resolve_grants_for_context` / `resolve_creation_grants` — leaf без циклов с feats |
+| `core/feat_catalog.py` | YAML черт, чистое чтение grants |
+| `core/feat_apply.py` / `feat_text.py` / `feat_requirements.py` | Apply, PHB-текст, видимость/требования; фасад `core/feats.py` |
+| `core/xp_levels.py` / `progression_hp.py` / `asi.py` / `class_progression.py` / `level_up_resolve.py` | Sibling-модули прогрессии; фасад `core/progression.py` |
+| `core/inventory_items.py` / `armor_class.py` / `equip_defaults.py` | Sibling-модули инвентаря; фасад `core/inventory.py` |
+| `core/grant_labels.py` | Ключи локализации для отображения grants |
+| `core/session_runner.py` | Persist сессии и UI-action wiring без I/O |
+| `core/creation_finalize.py` | Merge языков черт + persist собранного персонажа |
 | `core/character_migrate.py` | `CHARACTERS_SCHEMA_VERSION`, `migrate_character_data` — версия JSON сейва при load |
 | `core/character_storage.py` | CRUD персонажей; `make_save_slug`, `unique_save_slug`; JSON в `saves/` |
 | `core/session_storage.py` | Снимки сессий приключений (`saves/sessions/`) |
@@ -77,11 +85,11 @@ UI не читает файлы данных напрямую — только �
 | `core/languages.py` | Каталог языков PHB, пулы выбора |
 | `core/proficiencies.py` | Сбор и проверки владений |
 | `core/checks.py` | Проверки характеристик, навыков, спасбросков (`ability_check`, `skill_check`, …) |
-| `core/inventory.py` | Инвентарь, экипировка, `compute_ac`, авто-экипировка |
+| `core/inventory.py` | Фасад: инвентарь, КД, авто-экипировка |
 | `core/starting_equipment.py` | Стартовое снаряжение класса из YAML |
 | `core/equipment.py` | Оружие, доспехи, инструменты из YAML |
-| `core/feats.py` | Черты: loader, apply, requirements, visibility, descriptions |
-| `core/progression.py` | XP, уровни, HP, ASI, expertise, class features, подклассы (lazy-imports к `feats`/`races`) |
+| `core/feats.py` | Фасад черт (см. `feat_*` siblings выше) |
+| `core/progression.py` | Фасад XP/HP/ASI/подклассы (см. siblings выше) |
 | `core/constants.py` | PB, DC; `MAX_CHARACTER_LEVEL`, `clamp_level` |
 | `core/grants.py` | Нормализация `grants[]`; proficiency-токены (`normalize_armor_token`, …) |
 | `core/backgrounds.py` | Каталог предысторий PHB |
@@ -135,7 +143,7 @@ main.py → ui/menus/ → core/* (прямые leaf-imports)
 
 **Сценарий «Новая игра»:** персонаж → приключение (фильтр по режиму) → `run_scenario()` / `run_scenario_with_engine()` в `ui/menus/scenario_flow.py` (автосохранение сессии, grant XP, subclass training, skill_check).
 
-**Сценарий «Загрузить игру»:** список `saves/sessions/` → `session_storage.load_character_for_session` (через `character_storage._try_load_character_file`) и `current_node_id` → продолжение через `GameEngine`.
+**Сценарий «Загрузить игру»:** список `saves/sessions/` → `session_storage.load_character_for_session` (через `character_storage.try_load_character_file`) и `current_node_id` → продолжение через `GameEngine`.
 
 **Сценарий «Создать персонажа»:** сложность → имя → раса → подраса → характеристики → предыстория → языки → класс → подкласс → черты (если нужны) → владения → навыки → (компетентность?) → **снаряжение** → сохранение в `saves/characters/{save_slug}.json`.
 
