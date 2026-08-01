@@ -467,6 +467,7 @@ tool_category(tool_id: str) -> str
 tools_by_category(category: str) -> list[str]
 resolve_tool_pool(pool: str) -> list[str]
 get_weapon_name(weapon_id: str, language: str = "ru") -> str
+  # melee + two_handed: префикс weapon_name.two_handed_prefix, если его ещё нет в имени
 get_armor_name(armor_id: str, language: str = "ru") -> str
 get_tool_name(tool_id: str, language: str = "ru") -> str
 get_equipment_item_name(item_id: str, language: str = "ru") -> str

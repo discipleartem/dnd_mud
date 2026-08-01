@@ -16,6 +16,7 @@
 - **Code slim refactor:** purge мёртвого API; `core/combat.py` вместо пакета; `ui/menus/display/` вместо `_display` god-file; `core/hp_bonus.py` + `core/expertise.py` sibling-модули; dedupe UI picks / scenario checks; slim `character_build`
 
 ### Fixed
+- **Создание персонажа UI:** локализация grants `equipment_item` и пулов `musical_instruments` / `artisans_tools`; в a/b-выборе снаряжения — КД/кубы и состав наборов; префикс «Двуручный» у двуручного ближнего оружия; текст ошибки имени про пробелы
 - **Снаряжение UI:** заголовки выбора групп (`melee`/`ranged`/…) локализованы; в списках инвентаря и стартового снаряжения у оружия — кубы урона, у доспехов/щитов — КД
 - **Mod gating:** после сессии приключения `reset_session_catalogs()` возвращает gating к `normal` (`new_game` / `load_game`)
 

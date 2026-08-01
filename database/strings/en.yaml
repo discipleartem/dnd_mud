@@ -20,7 +20,7 @@ character:
   creation_caption: "CHARACTER CREATION"
   name_prompt: "Enter character name (at least 2 characters, letters only): "
   name_empty: "Name must be at least 2 characters long"
-  name_invalid: "Name can contain only letters (Cyrillic or Latin)"
+  name_invalid: "Name can contain only letters (Cyrillic or Latin); spaces and double names are not allowed"
   race_caption: "CHOOSE RACE"
   subrace_caption: "RACE DESCRIPTION AND SUBRACE SELECTION"
   race_description: "  {desc}"
@@ -127,6 +127,7 @@ character:
   grant_type_resistance: "Resistance"
   grant_type_hit_point_bonus: "Hit point bonus"
   grant_type_multiple_proficiency: "Mixed proficiencies"
+  grant_type_equipment_item: "Equipment"
   grant_pool_all: "all"
   grant_pool_all_skills: "all skills"
   grant_pool_all_feats: "all feats"
@@ -134,6 +135,8 @@ character:
   grant_pool_exotic: "exotic languages"
   grant_pool_any: "any language"
   grant_pool_gaming_sets: "gaming sets"
+  grant_pool_musical_instruments: "musical instruments"
+  grant_pool_artisans_tools: "artisan's tools"
   grant_hp_per_level: "max HP +{amount}, +{amount} HP per level"
   grant_speed_ignore: "wearing {armors} does not reduce speed"
   grant_resistance: "resistance to {types} damage"
@@ -484,6 +487,9 @@ equipment_choice:
   pack: "pack"
   instrument: "instrument"
   focus: "focus"
+
+weapon_name:
+  two_handed_prefix: "Two-handed "
 
 weapon_property:
   light: "light"

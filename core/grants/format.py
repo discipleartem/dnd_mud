@@ -18,6 +18,7 @@ from core.grants.normalize import (
     ABILITY_INCREASE,
     armor_tokens_from_grant,
 )
+from core.inventory.items import item_display_name
 from core.platform.localization import get_string
 from core.types import StringsDict
 
@@ -197,6 +198,34 @@ def _format_tool_proficiency_description(
             get_tool_name(str(tool_id), language) for tool_id in raw_tools
         )
     return None
+
+
+def _format_equipment_item_description(
+    grant: dict[str, Any],
+    _strings: StringsDict,
+    language: str,
+) -> str | None:
+    """Список предметов grant ``equipment_item``."""
+    raw_items = grant.get("items", [])
+    if not isinstance(raw_items, list) or not raw_items:
+        return None
+    labels: list[str] = []
+    for entry in raw_items:
+        if not isinstance(entry, dict):
+            continue
+        kind = str(entry.get("kind", "equipment"))
+        item_id = str(entry.get("id", ""))
+        if not item_id:
+            continue
+        name = item_display_name(kind, item_id, language)
+        qty = int(entry.get("qty", 1))
+        if qty > 1:
+            labels.append(f"{name} ×{qty}")
+        else:
+            labels.append(name)
+    if not labels:
+        return None
+    return ", ".join(labels)
 
 
 def _format_cantrip_description(
@@ -475,6 +504,7 @@ _GRANT_DESCRIPTION_HANDLERS: dict[
     str, Callable[[dict[str, Any], StringsDict, str], str | None]
 ] = {
     "tool_proficiency": _format_tool_proficiency_description,
+    "equipment_item": _format_equipment_item_description,
     "spellcasting": lambda g, s, _l: _format_spellcasting_grant(g, s),
     "cantrip": _format_cantrip_description,
     "immunity": _format_immunity_description,
