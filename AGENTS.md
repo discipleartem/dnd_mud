@@ -6,7 +6,7 @@
 
 ## Поиск правил D&D (PHB)
 
-Канон алгоритма и PDF — [`00-project.mdc`](.cursor/rules/00-project.mdc) §D&D 5e. Guide: [`docs/rules/README.md`](docs/rules/README.md). Не использовать память модели.
+Канон алгоритма — [`00-project.mdc`](.cursor/rules/00-project.mdc) §D&D 5e. Guide: [`docs/rules/README.md`](docs/rules/README.md). Не использовать память модели.
 
 ## Agent-loop
 

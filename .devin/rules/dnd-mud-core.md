@@ -36,7 +36,7 @@ message = "New Game"                            # ❌
 
 ## D&D механика
 
-Поиск правил — [`00-project.md`](00-project.md) §D&D 5e — источник истины и поиск правил (`docs/rules/` → PHB PDF → веб, 5e до 2024).
+Поиск правил — [`00-project.md`](00-project.md) §D&D 5e — источник истины и поиск правил (`docs/rules/` → веб, 5e до 2024).
 
 - Модели в `core/models.py` — `dataclass` для `Character`, `Adventure`
 - `class_id: CharacterClass` на `Character` (`core/types.py`, `StrEnum`); legacy JSON с `str` нормализуется в `__post_init__`

@@ -10,6 +10,7 @@
 - **Mod gating:** после сессии приключения `reset_session_catalogs()` возвращает gating к `normal` (`new_game` / `load_game`)
 
 ### Removed
+- **PDF-workflow:** `scripts/phb_spell_parse.py` и синк заклинаний из PDF в `build_rules_index.py`; алгоритм поиска правил — `docs/rules/` → веб (PHB 2014 / SRD 5.1), без локального PDF
 - **kwargs-`build_new_character` / `to_kwargs` / draft plan:** единственный API — `build_new_character(CharacterBuildParams)`; удалены мёртвые `_handle_action_result`, `_versatile_can_switch_to_two_hands`; черновик `docs/refactor-simplify-ae2709.md`
 - **Черновик `docs/tokenize.md`:** правила минимального контекста LLM перенесены в global User Rules (`~/.cursor/rules/ai-context.mdc`)
 

@@ -1,5 +1,5 @@
 layout: agent-v2
-source: docs/PHB_ D&D_2023 RUS.pdf
+source: Player's Handbook 2014 (PHantom 2016)
 agent_entry:
   readme: README.md
   lookup: _index/lookup.yaml

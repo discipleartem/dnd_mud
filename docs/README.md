@@ -43,14 +43,14 @@ docs/rules/
 | Действие | Где |
 |----------|-----|
 | Найти правило по RU-названию | `lookup.yaml` → `by_alias` → `quick` / `file` |
-| Обновить пересказ из PDF | Блоки `<!-- phb:auto:* -->` в `.md`; процедура — [`rules/README.md`](rules/README.md) |
+| Обновить пересказ механики | Блоки `<!-- phb:auto:* -->` в `.md`; guide — [`rules/README.md`](rules/README.md) |
 | Пересобрать индексы | `python scripts/build_rules_index.py` |
 
-**Канон механики:** локальный `docs/PHB_ D&D_2023 RUS.pdf` (не в git). При расхождении: PDF > `rules/` > веб.
+**Канон механики:** PHB **2014** / SRD 5.1 (не редакция 2024). При расхождении: официальные правила 5e до 2024 > `rules/`.
 
 ## Связанные файлы вне `docs/`
 
 | Файл | Назначение |
 |------|------------|
 | [`AGENTS.md`](../AGENTS.md) | Agent-loop, поиск правил, skills |
-| [`.cursor/rules/00-project.mdc`](../.cursor/rules/00-project.mdc) | Stack, команды, доступ к PHB PDF |
+| [`.cursor/rules/00-project.mdc`](../.cursor/rules/00-project.mdc) | Stack, команды, алгоритм поиска правил D&D |
