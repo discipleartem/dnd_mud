@@ -9,7 +9,8 @@ from core.platform.localization import get_string
 from core.types import StringsDict
 from ui.input_handler import get_int_input
 
-SEPARATOR = f"{Fore.YELLOW}{'=' * 78}{Style.RESET_ALL}"
+SCREEN_WIDTH = 78
+SEPARATOR = f"{Fore.YELLOW}{'=' * SCREEN_WIDTH}{Style.RESET_ALL}"
 
 
 def ability_name(strings: StringsDict, stat_key: str) -> str:
@@ -75,7 +76,7 @@ def print_screen_header(caption: str) -> None:
     """Заголовок экрана: разделитель, подпись по центру, разделитель."""
     from ui.terminal_wrap import terminal_width, wrap_text
 
-    width = min(78, terminal_width())
+    width = min(SCREEN_WIDTH, terminal_width())
     print(SEPARATOR)
     for line in wrap_text(caption, width=width).splitlines():
         print(f"{Fore.YELLOW}{line.center(width)}{Style.RESET_ALL}")
@@ -86,18 +87,49 @@ def print_screen_header(caption: str) -> None:
 def stats_caption_line(strings: StringsDict) -> str:
     """Заголовок экрана генерации характеристик."""
     caption = get_string(strings, "character.stats_generation_caption")
-    return f"{Fore.YELLOW}{caption.center(78)}{Style.RESET_ALL}"
+    return f"{Fore.YELLOW}{caption.center(SCREEN_WIDTH)}{Style.RESET_ALL}"
 
 
 def stats_total_line(strings: StringsDict) -> str:
     """Заголовок итоговых характеристик."""
     total = get_string(strings, "character.stats_total")
-    return f"{Fore.YELLOW}{total.center(78)}{Style.RESET_ALL}"
+    return f"{Fore.YELLOW}{total.center(SCREEN_WIDTH)}{Style.RESET_ALL}"
 
 
 def print_numbered_row(idx: int, label: str, *, prefix: str = "  ") -> None:
     """Строка нумерованного меню: жёлтый индекс и подпись."""
     print(f"{prefix}{Fore.YELLOW}{idx}{Style.RESET_ALL}. {label}")
+
+
+def print_back_row(
+    strings: StringsDict,
+    *,
+    back_label_key: str = "character.back",
+    prefix: str = "  ",
+) -> None:
+    """Строка «0. Назад» для нумерованного меню."""
+    print(
+        f"{prefix}{Fore.YELLOW}0{Style.RESET_ALL}."
+        f" {get_string(strings, back_label_key)}"
+    )
+
+
+def run_options_with_back(
+    strings: StringsDict,
+    options: list[str],
+    *,
+    back_label_key: str = "character.back",
+) -> int | None:
+    """Меню: 1..N — опции, 0 — назад. None при выборе 0."""
+    for idx, label in enumerate(options, 1):
+        print_numbered_row(idx, label)
+    print()
+    print_back_row(strings, back_label_key=back_label_key)
+    print()
+    choice = get_int_input(choice_prompt(strings), 0, len(options), strings)
+    if choice == 0:
+        return None
+    return choice
 
 
 def run_numbered_menu(
@@ -115,10 +147,7 @@ def run_numbered_menu(
     if before_back is not None:
         before_back()
     print()
-    print(
-        f"  {Fore.YELLOW}0{Style.RESET_ALL}."
-        f" {get_string(strings, back_label_key)}"
-    )
+    print_back_row(strings, back_label_key=back_label_key)
     print()
 
     kwargs = dict(prompt_kwargs or {})
@@ -175,10 +204,7 @@ def read_numbered_choice(
 ) -> int | None:
     """Ввод номера после кастомного рендера списка (0 — назад)."""
     print()
-    print(
-        f"  {Fore.YELLOW}0{Style.RESET_ALL}."
-        f" {get_string(strings, back_label_key)}"
-    )
+    print_back_row(strings, back_label_key=back_label_key)
     print()
     kwargs = dict(prompt_kwargs or {})
     kwargs.setdefault("count", count)
@@ -263,21 +289,54 @@ def read_pool_pick(
     if not selectable:
         print(f"{Fore.RED}{get_string(strings, empty_key)}{Style.RESET_ALL}")
         print()
-        print(
-            f"  {Fore.YELLOW}0{Style.RESET_ALL}. "
-            f"{get_string(strings, back_label_key)}"
-        )
+        print_back_row(strings, back_label_key=back_label_key)
         print()
         if get_int_input(prompt, 0, 0, strings) == 0:
             return None
         return ""
 
-    print(
-        f"  {Fore.YELLOW}0{Style.RESET_ALL}. "
-        f"{get_string(strings, back_label_key)}"
-    )
+    print_back_row(strings, back_label_key=back_label_key)
     print()
     choice = get_int_input(prompt, 0, len(selectable), strings)
     if choice == 0:
         return None
     return selectable[choice - 1]
+
+
+def pick_from_pool_loop(
+    strings: StringsDict,
+    pool: list[str],
+    taken: set[str],
+    *,
+    label_for: Callable[[str], str],
+    taken_suffix: str,
+    prompt: str,
+    empty_key: str,
+    header: str | None = None,
+    before_list: Callable[[], None] | None = None,
+    format_selectable: Callable[[int, str, str], None] | None = None,
+    back_label_key: str = "character.back",
+) -> str | None:
+    """Цикл выбора из пула; None — «Назад», повтор при пустом пуле."""
+    while True:
+        if header is not None:
+            print_screen_header(header)
+        if before_list is not None:
+            before_list()
+        selectable = print_pick_list(
+            pool,
+            taken,
+            label_for=label_for,
+            taken_suffix=taken_suffix,
+            format_selectable=format_selectable,
+        )
+        picked = read_pool_pick(
+            strings,
+            selectable,
+            prompt=prompt,
+            empty_key=empty_key,
+            back_label_key=back_label_key,
+        )
+        if picked == "":
+            continue
+        return picked

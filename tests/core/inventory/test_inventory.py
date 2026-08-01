@@ -8,16 +8,14 @@ from core.inventory.equip_defaults import (
     default_equipped,
     equip_defaults,
 )
+from core.inventory.equipped_display import get_equipped_display
 from core.inventory.items import (
     add_items_to_inventory,
     expand_pack_contents,
     inventory_excluding_equipped,
 )
 from core.types import CharacterClass, EquippedState, InventoryItem
-from ui.menus.display import (
-    format_inventory_line,
-    get_equipped_display,
-)
+from ui.menus.display import format_inventory_line
 
 pytestmark = pytest.mark.usefixtures("catalog_caches_cleared")
 

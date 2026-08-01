@@ -16,9 +16,7 @@ from core.feats.catalog import get_feat_skill_ids
 from core.platform.localization import get_string
 from core.types import StringsDict
 from ui.menus.console import (
-    print_pick_list,
-    print_screen_header,
-    read_pool_pick,
+    pick_from_pool_loop,
     skill_name,
 )
 
@@ -73,24 +71,19 @@ def _pick_one_skill(
         current=current,
         total=total,
     )
-    while True:
-        print_screen_header(get_string(strings, "character.skills_caption"))
-        _print_proficient_summary(strings, proficient, sources)
-        selectable = print_pick_list(
-            pool,
-            set(proficient),
-            label_for=lambda skill_id: skill_name(strings, skill_id),
-            taken_suffix=taken_suffix,
-        )
-        picked = read_pool_pick(
-            strings,
-            selectable,
-            prompt=prompt,
-            empty_key="character.expertise_pool_empty",
-        )
-        if picked == "":
-            continue
-        return picked
+    return pick_from_pool_loop(
+        strings,
+        pool,
+        set(proficient),
+        label_for=lambda skill_id: skill_name(strings, skill_id),
+        taken_suffix=taken_suffix,
+        prompt=prompt,
+        empty_key="character.expertise_pool_empty",
+        header=get_string(strings, "character.skills_caption"),
+        before_list=lambda: _print_proficient_summary(
+            strings, proficient, sources
+        ),
+    )
 
 
 def _add_proficiency(

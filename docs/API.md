@@ -117,6 +117,8 @@ class Character:
 
 ### Adventure
 
+Модель в `core.catalogs.adventure` (не в `character.models`).
+
 ```python
 @dataclass
 class Adventure:
@@ -485,14 +487,18 @@ saving_throw(character, ability_id, *, dc=None, advantage=False, disadvantage=Fa
 
 ## core.inventory — Инвентарь и КД
 
-Leaf-модули: `items`, `armor_class`, `equip_defaults` (без package facade).
+Leaf-модули: `items`, `armor_class`, `equip_defaults`, `equipped_display`,
+`background_equipment`, `equipment_text` (без package facade).
 
 ```python
 add_items_to_inventory(inventory, new_items) -> list[dict]
 equip_defaults(character: Character) -> dict[str, Any]
 compute_ac(character: Character) -> int
 format_inventory_line(inventory, language="ru") -> str
+# core.inventory.equipped_display
 get_equipped_display(character, language="ru") -> dict[str, str]
+# core.inventory.background_equipment
+get_background_equipment_items(background_id, background_tool_picks=None) -> list
 ```
 
 ---
@@ -780,7 +786,7 @@ save_settings(language: str) -> None
 
 - Параметризация правил в `game_engine` по режиму (HardCore = полная механика D&D 5e)
 
-**Mod gating:** `set_mod_gating_difficulty()` / `get_mod_gating_difficulty()` в `core/platform/mod_loader.py` (состояние — `CatalogSession` в `core/platform/catalog_session.py`); `load_catalog()` передаёт режим в overlay. По умолчанию в `main.py` — `normal`; перед игрой — `character.difficulty` (`new_game`, `load_game`).
+**Mod gating:** `set_mod_gating_difficulty()` / `get_mod_gating_difficulty()` в `core/platform/catalog_session.py` (владелец состояния — `CatalogSession`); `load_catalog()` передаёт режим в overlay. `mod_loader` принимает `game_difficulty` аргументом и не импортирует session. По умолчанию в `main.py` — `normal`; перед игрой — `character.difficulty` (`new_game` / `load_game`).
 
 ---
 
@@ -941,6 +947,7 @@ def run_scenario(
 ## core.catalogs.adventure — Приключения
 
 ```python
+class Adventure: ...
 load_adventures() -> list[Adventure]
 ```
 

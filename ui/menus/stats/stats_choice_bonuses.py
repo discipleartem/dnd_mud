@@ -16,6 +16,7 @@ from ui.input_handler import get_int_input
 from ui.menus.console import (
     ability_name,
     choice_prompt,
+    print_back_row,
     print_screen_header,
 )
 
@@ -80,10 +81,7 @@ def _select_choice_ability_bonuses(
             print(f"  {Fore.YELLOW}{idx}{Style.RESET_ALL}. {stat_msg}")
 
         print()
-        print(
-            f"  {Fore.YELLOW}0{Style.RESET_ALL}."
-            f" {get_string(strings, 'character.back')}"
-        )
+        print_back_row(strings)
         print()
 
         choice = get_int_input(

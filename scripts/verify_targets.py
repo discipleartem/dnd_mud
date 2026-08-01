@@ -62,6 +62,9 @@ CORE_MODULE_TESTS: dict[str, list[str]] = {
     "core/mechanics/proficiencies.py": [
         "tests/core/mechanics/test_proficiencies.py"
     ],
+    "core/mechanics/proficiency_collect.py": [
+        "tests/core/mechanics/test_proficiencies.py"
+    ],
     "core/mechanics/dice.py": ["tests/core/mechanics/test_stats.py"],
     "core/constants.py": ["tests/core/mechanics/test_stats.py"],
     "core/engine/difficulty.py": ["tests/core/mechanics/test_stats.py"],

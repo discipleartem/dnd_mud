@@ -21,6 +21,7 @@ from ui.menus.console import (
     SEPARATOR,
     ability_name,
     choice_prompt,
+    run_options_with_back,
     stats_total_line,
 )
 from ui.menus.display import (
@@ -191,25 +192,11 @@ def _confirm_stats(
         _print_final_stat_line(strings, stat, stat_value, race_bonuses)
 
     print()
-    print(
-        f"  {Fore.YELLOW}1{Style.RESET_ALL}. "
-        f"{get_string(strings, 'character.stats_confirm')}"
-    )
+    options = [get_string(strings, "character.stats_confirm")]
     if allow_reroll:
-        print(
-            f"  {Fore.YELLOW}2{Style.RESET_ALL}. "
-            f"{get_string(strings, reroll_label_key)}"
-        )
-    print(
-        f"  {Fore.YELLOW}0{Style.RESET_ALL}."
-        f" {get_string(strings, 'character.back')}"
-    )
-    print()
-
-    max_choice = 2 if allow_reroll else 1
-    choice = get_int_input(choice_prompt(strings), 0, max_choice, strings)
-
-    if choice == 0:
+        options.append(get_string(strings, reroll_label_key))
+    choice = run_options_with_back(strings, options)
+    if choice is None:
         return "back"
     if choice == 2:
         return "reroll"

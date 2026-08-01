@@ -1,15 +1,16 @@
 """Авто-экипировка и свойства оружия для выбора слотов."""
 
 import re
-from typing import Any
 
 from core.catalogs.classes import character_has_spellcasting
 from core.catalogs.equipment import (
     armor_category,
     load_armor,
-    load_weapon,
     meets_armor_strength_requirement,
     weapon_category,
+    weapon_damage_dice,
+    weapon_properties_raw,
+    weapon_versatile_dice,
 )
 from core.character.models import Character
 from core.feats.apply import has_non_light_dual_wield
@@ -30,17 +31,12 @@ def _parse_dice_average(dice: str) -> float:
     return count * (sides + 1) / 2
 
 
-def _weapon_properties(weapon_id: str) -> dict[str, Any]:
-    props = load_weapon(weapon_id).get("properties")
-    return dict(props) if isinstance(props, dict) else {}
-
-
 def _weapon_is_two_handed(weapon_id: str) -> bool:
-    return bool(_weapon_properties(weapon_id).get("two_handed"))
+    return bool(weapon_properties_raw(weapon_id).get("two_handed"))
 
 
 def _weapon_is_light(weapon_id: str) -> bool:
-    return bool(_weapon_properties(weapon_id).get("light"))
+    return bool(weapon_properties_raw(weapon_id).get("light"))
 
 
 def _weapon_is_melee(weapon_id: str) -> bool:
@@ -51,37 +47,23 @@ def _weapon_is_one_handed_melee(weapon_id: str) -> bool:
     return _weapon_is_melee(weapon_id) and not _weapon_is_two_handed(weapon_id)
 
 
-def _weapon_base_damage_dice(weapon_id: str) -> str:
-    damage = load_weapon(weapon_id).get("damage", {})
-    if isinstance(damage, dict):
-        return str(damage.get("dice", "1d4"))
-    return "1d4"
-
-
 def _weapon_is_versatile(weapon_id: str) -> bool:
-    return bool(_weapon_properties(weapon_id).get("versatile"))
-
-
-def _weapon_versatile_damage_dice(weapon_id: str) -> str:
-    versatile = _weapon_properties(weapon_id).get("versatile")
-    if versatile:
-        return str(versatile)
-    return _weapon_base_damage_dice(weapon_id)
+    return bool(weapon_properties_raw(weapon_id).get("versatile"))
 
 
 def _weapon_one_handed_damage(weapon_id: str) -> float:
     """Средний урон одной рукой (без versatile в двухручном режиме)."""
     if _weapon_is_two_handed(weapon_id):
         return 0.0
-    return _parse_dice_average(_weapon_base_damage_dice(weapon_id))
+    return _parse_dice_average(weapon_damage_dice(weapon_id))
 
 
 def _weapon_auto_equip_damage(weapon_id: str) -> tuple[float, bool]:
     """Урон для авто-экипировки и флаг «нативно двуручное»."""
     if _weapon_is_two_handed(weapon_id):
-        return _parse_dice_average(_weapon_base_damage_dice(weapon_id)), True
+        return _parse_dice_average(weapon_damage_dice(weapon_id)), True
     if _weapon_is_versatile(weapon_id):
-        dice = _weapon_versatile_damage_dice(weapon_id)
+        dice = weapon_versatile_dice(weapon_id)
         return _parse_dice_average(dice), False
     return _weapon_one_handed_damage(weapon_id), False
 

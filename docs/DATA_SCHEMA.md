@@ -114,7 +114,7 @@ backgrounds:
       description: { ru: "...", en: "..." }
 ```
 
-Grant `equipment_item` — фиксированные предметы предыстории (`core/backgrounds.get_background_equipment_items`).
+Grant `equipment_item` — фиксированные предметы предыстории (`core.inventory.background_equipment.get_background_equipment_items`).
 
 `inventory_tool_pools` — whitelist пулов: выбранные на шаге владений инструменты попадают в инвентарь только если id входит в разрешённый пул (например `soldier_gaming` → `dice_set` / `playing_cards`). Владение без предмета (thieves' tools у преступника) — только `tool_proficiency`, не `equipment_item`.
 

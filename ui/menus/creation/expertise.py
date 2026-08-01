@@ -13,16 +13,11 @@ from core.platform.localization import get_string
 from core.types import StringsDict
 from ui.input_handler import get_int_input
 from ui.menus.console import (
-    print_pick_list,
+    pick_from_pool_loop,
+    print_back_row,
     print_screen_header,
-    read_pool_pick,
     skill_name,
 )
-
-
-def _tool_name(strings: StringsDict, tool_id: str) -> str:
-    """Локализованное имя инструмента."""
-    return get_string(strings, f"tools.{tool_id}")
 
 
 def _pick_expertise_skills(
@@ -42,9 +37,6 @@ def _pick_expertise_skills(
         name=grant.feature_name,
     )
     for current in range(1, pick_count + 1):
-        print_screen_header(header)
-        print(f"{Fore.CYAN}{Style.BRIGHT}{heading}{Style.RESET_ALL}")
-        print()
         prompt = get_string(
             strings,
             "character.expertise_pick_prompt",
@@ -52,25 +44,25 @@ def _pick_expertise_skills(
             total=pick_count,
         )
         blocked = set(already_expert) | set(selected)
-        while True:
-            selectable = print_pick_list(
-                list(proficiencies),
-                blocked,
-                label_for=lambda skill_id: skill_name(strings, skill_id),
-                taken_suffix=taken_suffix,
-            )
-            picked = read_pool_pick(
-                strings,
-                selectable,
-                prompt=prompt,
-                empty_key="character.expertise_pool_empty",
-            )
-            if picked == "":
-                continue
-            if picked is None:
-                return None
-            selected.append(picked)
-            break
+
+        def _before_heading() -> None:
+            print(f"{Fore.CYAN}{Style.BRIGHT}{heading}{Style.RESET_ALL}")
+            print()
+
+        picked = pick_from_pool_loop(
+            strings,
+            list(proficiencies),
+            blocked,
+            label_for=lambda skill_id: skill_name(strings, skill_id),
+            taken_suffix=taken_suffix,
+            prompt=prompt,
+            empty_key="character.expertise_pool_empty",
+            header=header,
+            before_list=_before_heading,
+        )
+        if picked is None:
+            return None
+        selected.append(picked)
 
     return selected
 
@@ -98,10 +90,7 @@ def _select_rogue_expertise(
             strings, "character.expertise_rogue_mode_skill_tools"
         )
         print(f"  {Fore.YELLOW}2{Style.RESET_ALL}. " f"{skill_tools_label}")
-        print(
-            f"  {Fore.YELLOW}0{Style.RESET_ALL}. "
-            f"{get_string(strings, 'character.back')}"
-        )
+        print_back_row(strings)
         print()
         mode = get_int_input(
             get_string(strings, "character.expertise_mode_prompt"),
@@ -201,17 +190,3 @@ def apply_pending_expertise(
                 all_tool_expertise.append(tool_id)
 
     return all_skill_expertise, all_tool_expertise
-
-
-def format_expertise_display(
-    strings: StringsDict,
-    skill_expertise: list[str],
-    tool_expertise: list[str],
-) -> str:
-    """Строка компетентности для карточки персонажа."""
-    parts: list[str] = []
-    for skill_id in skill_expertise:
-        parts.append(skill_name(strings, skill_id))
-    for tool_id in tool_expertise:
-        parts.append(_tool_name(strings, tool_id))
-    return ", ".join(parts) if parts else ""

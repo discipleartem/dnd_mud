@@ -4,7 +4,8 @@ from pathlib import Path
 
 import pytest
 
-from core.character.models import Adventure, Character
+from core.catalogs.adventure import Adventure
+from core.character.models import Character
 from core.engine.game_engine import GameEngine, GameSession
 from core.engine.session_storage import (
     SessionSnapshot,

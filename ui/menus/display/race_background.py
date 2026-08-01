@@ -170,14 +170,7 @@ def _print_race_info(
 
     bonuses = info.get("ability_bonuses", {})
     if bonuses:
-        bonus_parts = []
-        for stat, val in bonuses.items():
-            stat_label = ability_name(strings, stat)
-            bonus_parts.append(
-                f"{Fore.CYAN}{stat_label}{Style.RESET_ALL}"
-                f"+{Fore.GREEN}{val}{Style.RESET_ALL}"
-            )
-        bonuses_str = ", ".join(bonus_parts)
+        bonuses_str = ", ".join(_format_ability_bonus_parts(bonuses, strings))
         print(
             get_string(
                 strings, "character.ability_bonuses_label", bonuses=bonuses_str
@@ -194,6 +187,24 @@ def _print_race_info(
     )
 
 
+def _format_ability_bonus_parts(
+    bonuses: StatMap, strings: StringsDict
+) -> list[str]:
+    """Части строки расовых бонусов характеристик."""
+    parts: list[str] = []
+    for stat, bonus in bonuses.items():
+        stat_name = ability_name(strings, stat)
+        parts.append(
+            get_string(
+                strings,
+                "character.stats_bonus_format",
+                stat=stat_name,
+                bonus=bonus,
+            )
+        )
+    return parts
+
+
 def _format_bonuses(bonuses: StatMap, strings: StringsDict) -> str:
     """Отформатировать расовые бонусы для отображения."""
     if not bonuses:
@@ -203,19 +214,7 @@ def _format_bonuses(bonuses: StatMap, strings: StringsDict) -> str:
             f"{Style.RESET_ALL}"
         )
 
-    bonus_strs = []
-    for stat, bonus in bonuses.items():
-        stat_name = ability_name(strings, stat)
-        bonus_strs.append(
-            get_string(
-                strings,
-                "character.stats_bonus_format",
-                stat=stat_name,
-                bonus=bonus,
-            )
-        )
-
-    bonus_line = ", ".join(bonus_strs)
+    bonus_line = ", ".join(_format_ability_bonus_parts(bonuses, strings))
     race_msg = get_string(
         strings, "character.stats_race_bonuses", bonuses=bonus_line
     )
@@ -247,11 +246,6 @@ def _print_race_bonuses(
         return
 
     print(_format_bonuses(bonuses, strings))
-
-
-# ============================================================================
-# Отображение предысторий
-# ============================================================================
 
 
 def _print_background_grants(
@@ -316,8 +310,3 @@ def _print_background_info(
                     name=feature["name"],
                 )
             )
-
-
-# ============================================================================
-# Отображение характеристик при генерации
-# ============================================================================

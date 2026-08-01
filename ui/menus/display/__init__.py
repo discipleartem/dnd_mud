@@ -1,5 +1,9 @@
 """Публичный API отображения меню."""
 
+from core.inventory.equipped_display import (
+    format_versatile_damage_dice,
+    get_equipped_display,
+)
 from ui.menus.display.character_card import (
     _format_character_feats,
     _print_character_card,
@@ -11,14 +15,9 @@ from ui.menus.display.class_info import (
     _print_class_summary,
     _print_subclass_info,
 )
-from ui.menus.display.equipment_view import (
-    format_inventory_line,
-    format_versatile_damage_dice,
-    get_equipped_display,
-)
+from ui.menus.display.equipment_view import format_inventory_line
 from ui.menus.display.grants import (
     format_grant_line_text,
-    format_grant_lines,
 )
 from ui.menus.display.race_background import (
     _format_bonuses,
@@ -52,7 +51,6 @@ __all__ = [
     "_print_stats_generation_header",
     "_print_subclass_info",
     "format_grant_line_text",
-    "format_grant_lines",
     "format_inventory_line",
     "format_versatile_damage_dice",
     "get_equipped_display",

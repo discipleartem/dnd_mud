@@ -1,5 +1,6 @@
 """Чистое текстовое форматирование grants (без print)."""
 
+from collections.abc import Callable
 from typing import Any
 
 from core.catalogs.equipment import (
@@ -15,7 +16,7 @@ from core.grants.labels import (
 )
 from core.grants.normalize import (
     ABILITY_INCREASE,
-    normalize_armor_token,
+    armor_tokens_from_grant,
 )
 from core.platform.localization import get_string
 from core.types import StringsDict
@@ -55,10 +56,9 @@ def _armor_labels_from_grant(
     grant: dict[str, Any], strings: StringsDict, language: str
 ) -> str:
     """Локализованные подписи типов доспехов из grant."""
-    raw = grant.get("armor_types", grant.get("armors", []))
-    if not isinstance(raw, list) or not raw:
+    tokens = armor_tokens_from_grant(grant)
+    if not tokens:
         return ""
-    tokens = [normalize_armor_token(str(item)) for item in raw]
     return ", ".join(
         proficiency_token_label(token, strings, language) for token in tokens
     )
@@ -186,6 +186,129 @@ def _grant_display_name(grant: dict[str, Any], strings: StringsDict) -> str:
     return _grant_type_label(strings, str(grant.get("type", "")))
 
 
+def _format_tool_proficiency_description(
+    grant: dict[str, Any],
+    strings: StringsDict,
+    language: str,
+) -> str | None:
+    raw_tools = grant.get("tools", [])
+    if isinstance(raw_tools, list) and raw_tools:
+        return ", ".join(
+            get_tool_name(str(tool_id), language) for tool_id in raw_tools
+        )
+    return None
+
+
+def _format_cantrip_description(
+    grant: dict[str, Any],
+    strings: StringsDict,
+    _language: str,
+) -> str | None:
+    source = str(grant.get("source", ""))
+    ability = str(grant.get("ability", ""))
+    if source and ability:
+        return get_string(
+            strings,
+            "character.grant_cantrip_choice",
+            source=source,
+            ability=_ability_name(strings, ability),
+        )
+    return None
+
+
+def _format_immunity_description(
+    grant: dict[str, Any],
+    strings: StringsDict,
+    _language: str,
+) -> str | None:
+    if grant.get("effect") == "magical_sleep":
+        return get_string(strings, "character.grant_immunity_magical_sleep")
+    return None
+
+
+def _format_skill_bonus_expertise_description(
+    grant: dict[str, Any],
+    strings: StringsDict,
+    _language: str,
+) -> str | None:
+    if not grant.get("expertise"):
+        return None
+    skill = grant.get("skill")
+    if isinstance(skill, str) and skill:
+        return get_string(
+            strings,
+            "character.grant_skill_expertise",
+            skill=_skill_name(strings, skill),
+        )
+    return None
+
+
+def _format_armor_proficiency_description(
+    grant: dict[str, Any],
+    strings: StringsDict,
+    language: str,
+) -> str:
+    return _armor_labels_from_grant(grant, strings, language) or ""
+
+
+def _format_speed_ignore_penalty_description(
+    grant: dict[str, Any],
+    strings: StringsDict,
+    language: str,
+) -> str | None:
+    armor_labels = _armor_labels_from_grant(grant, strings, language)
+    if armor_labels:
+        return get_string(
+            strings,
+            "character.grant_speed_ignore",
+            armors=armor_labels,
+        )
+    return None
+
+
+def _format_speed_bonus_description(
+    grant: dict[str, Any],
+    strings: StringsDict,
+    _language: str,
+) -> str | None:
+    speed = grant.get("amount")
+    if speed is not None:
+        return get_string(
+            strings,
+            "character.grant_speed_value",
+            speed=speed,
+        )
+    return None
+
+
+def _format_rest_description(
+    grant: dict[str, Any],
+    strings: StringsDict,
+    _language: str,
+) -> str | None:
+    if grant.get("duration") is not None:
+        return get_string(
+            strings,
+            "character.grant_rest_trance",
+            duration=int(grant["duration"]),
+        )
+    return None
+
+
+def _format_darkvision_description(
+    grant: dict[str, Any],
+    strings: StringsDict,
+    _language: str,
+) -> str | None:
+    if grant.get("range") is not None:
+        return get_string(
+            strings,
+            "character.grant_darkvision",
+            range=grant["range"],
+        )
+    return None
+
+
 def _grant_description(
     grant: dict[str, Any],
     strings: StringsDict,
@@ -214,77 +337,11 @@ def _grant_description(
     if grant.get("choice"):
         return _grant_choice_description(grant, strings, language, gtype)
 
-    match gtype:
-        case "tool_proficiency":
-            raw_tools = grant.get("tools", [])
-            if isinstance(raw_tools, list) and raw_tools:
-                return ", ".join(
-                    get_tool_name(str(tool_id), language)
-                    for tool_id in raw_tools
-                )
-        case "spellcasting":
-            return _format_spellcasting_grant(grant, strings)
-        case "cantrip":
-            source = str(grant.get("source", ""))
-            ability = str(grant.get("ability", ""))
-            if source and ability:
-                return get_string(
-                    strings,
-                    "character.grant_cantrip_choice",
-                    source=source,
-                    ability=_ability_name(strings, ability),
-                )
-        case "immunity":
-            if grant.get("effect") == "magical_sleep":
-                return get_string(
-                    strings, "character.grant_immunity_magical_sleep"
-                )
-        case "disadvantage":
-            return _format_disadvantage_grant(grant, strings)
-        case "skill_bonus" if grant.get("expertise"):
-            skill = grant.get("skill")
-            if isinstance(skill, str) and skill:
-                return get_string(
-                    strings,
-                    "character.grant_skill_expertise",
-                    skill=_skill_name(strings, skill),
-                )
-        case "skill_proficiency":
-            return _skill_proficiency_description(grant, strings)
-        case "armor_proficiency":
-            return _armor_labels_from_grant(grant, strings, language) or ""
-        case "speed_ignore_penalty":
-            armor_labels = _armor_labels_from_grant(grant, strings, language)
-            if armor_labels:
-                return get_string(
-                    strings,
-                    "character.grant_speed_ignore",
-                    armors=armor_labels,
-                )
-        case "resistance":
-            return _resistance_description(grant, strings)
-        case "speed_bonus":
-            speed = grant.get("amount")
-            if speed is not None:
-                return get_string(
-                    strings,
-                    "character.grant_speed_value",
-                    speed=speed,
-                )
-        case "advantage":
-            return _advantage_description(grant, strings)
-        case "rest" if grant.get("duration") is not None:
-            return get_string(
-                strings,
-                "character.grant_rest_trance",
-                duration=int(grant["duration"]),
-            )
-        case "darkvision" if grant.get("range") is not None:
-            return get_string(
-                strings,
-                "character.grant_darkvision",
-                range=grant["range"],
-            )
+    handler = _GRANT_DESCRIPTION_HANDLERS.get(gtype)
+    if handler is not None:
+        result = handler(grant, strings, language)
+        if result is not None:
+            return result
 
     weapons = grant.get("weapons", [])
     if isinstance(weapons, list) and weapons:
@@ -414,6 +471,26 @@ def _advantage_description(
     return ""
 
 
+_GRANT_DESCRIPTION_HANDLERS: dict[
+    str, Callable[[dict[str, Any], StringsDict, str], str | None]
+] = {
+    "tool_proficiency": _format_tool_proficiency_description,
+    "spellcasting": lambda g, s, _l: _format_spellcasting_grant(g, s),
+    "cantrip": _format_cantrip_description,
+    "immunity": _format_immunity_description,
+    "disadvantage": lambda g, s, _l: _format_disadvantage_grant(g, s),
+    "skill_bonus": _format_skill_bonus_expertise_description,
+    "skill_proficiency": lambda g, s, _l: _skill_proficiency_description(g, s),
+    "armor_proficiency": _format_armor_proficiency_description,
+    "speed_ignore_penalty": _format_speed_ignore_penalty_description,
+    "resistance": lambda g, s, _l: _resistance_description(g, s),
+    "speed_bonus": _format_speed_bonus_description,
+    "advantage": lambda g, s, _l: _advantage_description(g, s),
+    "rest": _format_rest_description,
+    "darkvision": _format_darkvision_description,
+}
+
+
 def format_grant_line_text(
     grant: dict[str, Any],
     strings: StringsDict,
@@ -434,14 +511,3 @@ def format_grant_line_text(
         "character.feature_line_name_only",
         name=name,
     )
-
-
-def format_grant_lines(
-    grants: list[dict[str, Any]],
-    strings: StringsDict,
-    language: str = "ru",
-) -> list[str]:
-    """Строки особенностей для списка grants."""
-    return [
-        format_grant_line_text(grant, strings, language) for grant in grants
-    ]

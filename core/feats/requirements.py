@@ -6,9 +6,10 @@ from typing import Any
 from core.catalogs.classes import character_has_spellcasting
 from core.catalogs.equipment import all_tool_ids, all_weapon_ids
 from core.catalogs.skill_ids import PHB_SKILL_IDS
+from core.character.models import Character
 from core.feats.catalog import load_feat, load_feats
 from core.grants.context import CreationContext
-from core.grants.normalize import normalize_armor_token
+from core.grants.normalize import armor_tokens_from_grant
 from core.grants.resolve import resolve_grants_for_context
 from core.mechanics.proficiencies import (
     has_tool_proficiency,
@@ -83,7 +84,7 @@ def creation_known_for_feat_picks(
     ctx = _creation_context(
         race_id, subrace_id, background_id, class_id, subclass_id, level
     )
-    grants = resolve_grants_for_context(ctx, include_feat_languages=False)
+    grants = resolve_grants_for_context(ctx)
     return (
         list(grants.skill_ids),
         list(grants.tool_tokens),
@@ -120,7 +121,7 @@ def build_feat_selection_context(
         weapon_tokens=weapon_tokens,
         tool_tokens=tool_tokens,
     )
-    grants = resolve_grants_for_context(ctx, include_feat_languages=False)
+    grants = resolve_grants_for_context(ctx)
     return FeatRequirementContext(
         stats=stats,
         weapon_tokens=list(grants.weapon_tokens),
@@ -140,7 +141,7 @@ def build_feat_selection_context(
 
 
 def build_feat_selection_context_from_character(
-    character: Any,
+    character: Character,
 ) -> FeatRequirementContext:
     """Контекст видимости и требований черт при левелапе."""
     return FeatRequirementContext(
@@ -163,13 +164,6 @@ def build_feat_selection_context_from_character(
     )
 
 
-def _armor_tokens_from_grant(grant: dict[str, Any]) -> list[str]:
-    raw = grant.get("armor_types", grant.get("armors", []))
-    if not isinstance(raw, list):
-        return []
-    return [normalize_armor_token(str(armor)) for armor in raw]
-
-
 def _any_new_weapon(
     ctx: FeatRequirementContext, weapon_ids: list[str]
 ) -> bool:
@@ -187,7 +181,7 @@ def _any_new_tool(ctx: FeatRequirementContext, tool_ids: list[str]) -> bool:
 
 
 def _any_new_armor(ctx: FeatRequirementContext, grant: dict[str, Any]) -> bool:
-    armors = _armor_tokens_from_grant(grant)
+    armors = armor_tokens_from_grant(grant)
     if not armors:
         return True
     return any(armor not in ctx.armor_tokens for armor in armors)
@@ -213,7 +207,7 @@ def _grant_adds_new_proficiency(
                 )
             else:
                 weapons_new = False
-            armors = _armor_tokens_from_grant(grant)
+            armors = armor_tokens_from_grant(grant)
             armors_new = (
                 any(armor not in ctx.armor_tokens for armor in armors)
                 if armors
@@ -342,7 +336,7 @@ def feat_meets_requirements(feat_id: str, ctx: FeatRequirementContext) -> bool:
     return True
 
 
-def active_feat_ids(character: Any) -> list[str]:
+def active_feat_ids(character: Character) -> list[str]:
     """Черты персонажа, проходящие ongoing-проверку требований."""
     ctx = build_feat_selection_context_from_character(character)
     return [
@@ -352,16 +346,9 @@ def active_feat_ids(character: Any) -> list[str]:
     ]
 
 
-def feat_requirement_context_from_character(
-    character: Any,
-) -> FeatRequirementContext:
-    """Контекст требований черт из персонажа (alias для visibility)."""
-    return build_feat_selection_context_from_character(character)
-
-
 def feat_is_active(
     feat_id: str,
-    character: Any,
+    character: Character,
     *,
     ctx: FeatRequirementContext | None = None,
 ) -> bool:
@@ -369,7 +356,7 @@ def feat_is_active(
     if feat_id not in getattr(character, "feat_ids", []):
         return False
     if ctx is None:
-        ctx = feat_requirement_context_from_character(character)
+        ctx = build_feat_selection_context_from_character(character)
     return feat_meets_requirements(feat_id, ctx)
 
 

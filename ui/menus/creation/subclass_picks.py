@@ -1,12 +1,12 @@
 """Общая логика выбора владений/навыков/экспертизы подкласса."""
 
 from core.character.models import Character
-from core.mechanics.proficiencies import (
-    apply_subclass_proficiencies_to_character,
-    is_valid_tool_selection,
-    merge_proficiency_tokens,
-)
+from core.mechanics.proficiencies import is_valid_tool_selection
 from core.progression.class_progression import subclass_skill_picks_pending
+from core.progression.subclass_proficiencies import (
+    apply_picked_tools_to_character,
+    apply_subclass_proficiencies_to_character,
+)
 from core.types import LanguageCode, StringsDict
 from ui.menus.creation.expertise import apply_pending_expertise
 from ui.menus.creation.proficiencies import _pick_tools
@@ -43,9 +43,7 @@ def apply_subclass_picks(
             pool = choice.options or []
             if not is_valid_tool_selection(picked, pool, choice.count):
                 return None
-            character.tool_proficiencies = merge_proficiency_tokens(
-                character.tool_proficiencies, picked
-            )
+            apply_picked_tools_to_character(character, picked)
             pick_offset += choice.count
 
     if apply_skills:

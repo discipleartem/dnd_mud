@@ -1,6 +1,7 @@
 """Тесты UI меню — новая игра."""
 
-from core.character.models import Adventure, Character
+from core.catalogs.adventure import Adventure
+from core.character.models import Character
 from core.character.storage import LoadCharactersResult
 from core.types import CharacterClass
 from ui.menus.creation import steps as _creation_steps
