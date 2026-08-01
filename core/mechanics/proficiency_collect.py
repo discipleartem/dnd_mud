@@ -1,0 +1,255 @@
+"""Сбор токенов владений из grants (без Character и без feats)."""
+
+from dataclasses import dataclass
+from typing import Any
+
+from core.catalogs.backgrounds import (
+    get_background_tool_proficiencies as _bg_tools,
+)
+from core.catalogs.classes import (
+    get_class_dict,
+    get_subclass_choice_level,
+    get_subclass_dict,
+    iter_class_grants,
+)
+from core.catalogs.equipment import resolve_tool_pool
+from core.catalogs.races import collect_race_grants
+from core.grants.normalize import (
+    mechanics_from_grant_entry,
+    normalize_armor_token,
+    proficiency_tokens_from_grant,
+)
+from core.platform.io import merge_unique
+
+__all__ = [
+    "ProficiencyChoice",
+    "get_background_tool_proficiencies",
+    "get_class_proficiency_tokens",
+    "get_class_saving_throws",
+    "get_class_tool_choices",
+    "get_proficiency_choices",
+    "get_racial_proficiency_tokens",
+    "get_subclass_proficiency_tokens",
+    "merge_proficiency_tokens",
+    "subclass_proficiencies_active",
+]
+
+
+@dataclass
+class ProficiencyChoice:
+    """Выбор владения игроком."""
+
+    count: int
+    pool: str
+    source: str
+    options: list[str] | None = None
+
+
+def merge_proficiency_tokens(*parts: list[str]) -> list[str]:
+    """Объединить списки владений без дублей."""
+    return merge_unique(*parts)
+
+
+def get_class_saving_throws(class_id: str) -> list[str]:
+    """Спасброски класса."""
+    info = get_class_dict(class_id)
+    if not info:
+        return []
+    raw = info.get("saving_throws", [])
+    if isinstance(raw, list):
+        return [str(s) for s in raw]
+    return []
+
+
+def subclass_proficiencies_active(
+    class_id: str, subclass_id: str | None, level: int
+) -> bool:
+    """Подкласс даёт владения на текущем уровне."""
+    if not subclass_id:
+        return False
+    return level >= get_subclass_choice_level(class_id)
+
+
+def _collect_from_grants(
+    grants: list[dict[str, Any]],
+    level: int,
+    *,
+    require_level: bool,
+) -> tuple[list[str], list[str], list[str], list[ProficiencyChoice]]:
+    """Владения и выборы из grants или class features."""
+    weapons: list[str] = []
+    armors: list[str] = []
+    tools: list[str] = []
+    choices: list[ProficiencyChoice] = []
+    for entry in grants:
+        feat_level = entry.get("level")
+        if (
+            require_level
+            and isinstance(feat_level, int)
+            and feat_level > level
+        ):
+            continue
+        merged = mechanics_from_grant_entry(entry)
+        w, a, t = proficiency_tokens_from_grant(merged)
+        weapons.extend(w)
+        armors.extend(a)
+        tools.extend(t)
+        if merged.get("choice") and merged.get("type") == "tool_proficiency":
+            count = int(merged.get("count", 1))
+            pool = str(merged.get("pool", ""))
+            raw_opts = merged.get("tools", [])
+            options = (
+                [str(o) for o in raw_opts]
+                if isinstance(raw_opts, list)
+                else None
+            )
+            if pool and not options:
+                options = resolve_tool_pool(pool)
+            choices.append(
+                ProficiencyChoice(
+                    count=count,
+                    pool=pool or "tools",
+                    source="feature",
+                    options=options,
+                )
+            )
+    return weapons, armors, tools, choices
+
+
+def get_class_proficiency_tokens(
+    class_id: str,
+) -> tuple[list[str], list[str], list[str]]:
+    """Базовые владения класса."""
+    info = get_class_dict(class_id)
+    if not info:
+        return [], [], []
+    prof = info.get("proficiencies", {})
+    if not isinstance(prof, dict):
+        return [], [], []
+    raw_w = prof.get("weapons", [])
+    weapons = [str(w) for w in raw_w] if isinstance(raw_w, list) else []
+    raw_a = prof.get("armor", [])
+    armors = (
+        [normalize_armor_token(str(a)) for a in raw_a]
+        if isinstance(raw_a, list)
+        else []
+    )
+    raw_t = prof.get("tools", [])
+    tools = [str(t) for t in raw_t] if isinstance(raw_t, list) else []
+    return weapons, armors, tools
+
+
+def get_class_tool_choices(class_id: str) -> list[ProficiencyChoice]:
+    """Выборы инструментов класса."""
+    info = get_class_dict(class_id)
+    if not info:
+        return []
+    prof = info.get("proficiencies", {})
+    if not isinstance(prof, dict):
+        return []
+    result: list[ProficiencyChoice] = []
+    raw = prof.get("tool_choices", [])
+    if not isinstance(raw, list):
+        return result
+    for entry in raw:
+        if not isinstance(entry, dict):
+            continue
+        count = int(entry.get("count", 1))
+        pool = str(entry.get("pool", ""))
+        result.append(
+            ProficiencyChoice(
+                count=count,
+                pool=pool,
+                source="class",
+                options=resolve_tool_pool(pool) if pool else None,
+            )
+        )
+    return result
+
+
+def get_subclass_proficiency_tokens(
+    class_id: str,
+    subclass_id: str | None,
+    level: int,
+) -> tuple[list[str], list[str], list[str], list[ProficiencyChoice]]:
+    """Владения подкласса с учётом уровня feature."""
+    if not subclass_id:
+        return [], [], [], []
+    sub = get_subclass_dict(class_id, subclass_id)
+    if sub is None:
+        return [], [], [], []
+    return _collect_from_grants(
+        iter_class_grants(sub),
+        level,
+        require_level=True,
+    )
+
+
+def get_racial_proficiency_tokens(
+    race_id: str,
+    subrace_id: str | None = None,
+) -> tuple[list[str], list[str], list[str], list[ProficiencyChoice]]:
+    """Расовые владения из grants."""
+    grants = collect_race_grants(race_id, subrace_id)
+    return _collect_from_grants(grants, level=99, require_level=False)
+
+
+def get_background_tool_proficiencies(
+    background_id: str,
+) -> tuple[list[str], list[ProficiencyChoice]]:
+    """Инструменты предыстории: fixed + choices."""
+    fixed, raw_choices = _bg_tools(background_id)
+    choices: list[ProficiencyChoice] = []
+    for entry in raw_choices:
+        count = int(entry.get("count", 1))
+        pool = str(entry.get("pool", ""))
+        choices.append(
+            ProficiencyChoice(
+                count=count,
+                pool=pool,
+                source="background",
+                options=resolve_tool_pool(pool) if pool else None,
+            )
+        )
+    return fixed, choices
+
+
+def get_proficiency_choices(
+    race_id: str,
+    subrace_id: str | None,
+    class_id: str,
+    background_id: str | None,
+    subclass_id: str | None,
+    level: int,
+) -> list[ProficiencyChoice]:
+    """Все выборы владений при создании."""
+    choices: list[ProficiencyChoice] = []
+    _, _, _, racial_choices = get_racial_proficiency_tokens(
+        race_id, subrace_id
+    )
+    for rc in racial_choices:
+        choices.append(
+            ProficiencyChoice(
+                count=rc.count,
+                pool=rc.pool,
+                source="race",
+                options=rc.options,
+            )
+        )
+    choices.extend(get_class_tool_choices(class_id))
+    if background_id:
+        _, bg_choices = get_background_tool_proficiencies(background_id)
+        choices.extend(bg_choices)
+    _, _, _, sub_choices = get_subclass_proficiency_tokens(
+        class_id, subclass_id, level
+    )
+    for sc in sub_choices:
+        choices.append(
+            ProficiencyChoice(
+                count=sc.count,
+                pool=sc.pool,
+                source="subclass",
+                options=sc.options,
+            )
+        )
+    return choices
