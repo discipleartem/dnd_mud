@@ -6,6 +6,7 @@ import pytest
 
 from core.inventory.starting_equipment import (
     all_weapons_in_pool,
+    equipment_choice_label,
     equipment_option_available,
     equipment_option_strength_warning,
     format_equipment_option_label,
@@ -31,6 +32,16 @@ def test_all_weapons_in_pool_includes_non_proficient() -> None:
     proficient = weapons_for_pool("simple", ["club"])
     assert "club" in all_simple
     assert len(all_simple) > len(proficient)
+
+
+def test_equipment_choice_label_localizes_melee(
+    ru_strings: dict[str, Any],
+) -> None:
+    assert equipment_choice_label("melee", ru_strings) == "ближний бой"
+    assert equipment_choice_label("ranged", ru_strings) == "дальний бой"
+    assert equipment_choice_label("unknown_group", ru_strings) == (
+        "unknown_group"
+    )
 
 
 def test_format_equipment_option_label_armor_hints(

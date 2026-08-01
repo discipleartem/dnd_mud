@@ -53,7 +53,7 @@ character:
   class_starting_equipment_choice: "      • {label}"
   equipment_caption: "СТАРТОВОЕ СНАРЯЖЕНИЕ КЛАССА"
   equipment_fixed_heading: "  Фиксированное снаряжение:"
-  equipment_choice_heading: "Выбор: {id}"
+  equipment_choice_heading: "Выбор: {label}"
   equipment_option_prompt: "Выберите вариант: "
   equipment_weapon_pick: "ВЫБОР ОРУЖИЯ"
   equipment_weapon_prompt: "Выберите оружие: "
@@ -465,6 +465,23 @@ armor_equipped_hint:
   heavy: "{category}, КД {ac}"
   strength: "Сил {value}"
   stealth: "помеха скрытности"
+
+armor_list_hint:
+  light: "КД {ac} + Лов"
+  medium: "КД {ac} + Лов, макс. 2"
+  heavy: "КД {ac}"
+  shield: "+{bonus} КД"
+
+equipment_choice:
+  melee: "ближний бой"
+  ranged: "дальний бой"
+  armor: "доспехи"
+  weapon: "оружие"
+  weapon_primary: "основное оружие"
+  ranged_or_axes: "дальний бой или топоры"
+  pack: "набор"
+  instrument: "инструмент"
+  focus: "фокус"
 
 weapon_property:
   light: "лёгкое"

@@ -2,6 +2,7 @@
 
 from colorama import Fore, Style
 
+from core.catalogs.equipment import format_item_list_hint
 from core.character.models import Character
 from core.inventory.armor_class import compute_ac
 from core.inventory.equipped_display import get_equipped_display
@@ -9,7 +10,7 @@ from core.inventory.items import (
     inventory_excluding_equipped,
     item_display_name,
 )
-from core.platform.localization import get_string
+from core.platform.localization import get_string, load_strings
 from core.types import EquippedState, InventoryItem, StringsDict
 from ui.menus.display.shared import _print_labeled_field
 
@@ -115,6 +116,7 @@ def format_inventory_line(
     equipped: EquippedState | None = None,
 ) -> str:
     """Сжатый список инвентаря для UI (без экипированных предметов)."""
+    strings = load_strings(language)
     display_items = inventory_excluding_equipped(inventory, equipped)
     parts: list[str] = []
     for item in display_items:
@@ -122,6 +124,9 @@ def format_inventory_line(
         item_id = str(item.get("id", ""))
         qty = int(item.get("qty", 1))
         name = item_display_name(kind, item_id, language)
+        hint = format_item_list_hint(kind, item_id, strings, language)
+        if hint:
+            name = f"{name} ({hint})"
         if qty > 1:
             parts.append(f"{name} ×{qty}")
         else:
