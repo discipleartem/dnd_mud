@@ -10,10 +10,10 @@ from core.catalogs.adventure import Adventure
 from core.character.models import Character
 from core.character.storage import CHARACTERS_DIR, try_load_character_file
 from core.platform.io import load_json, save_json
+from core.platform.paths import SESSIONS_DIR
 from core.types import GameDifficulty
 
 SESSIONS_SCHEMA_VERSION = 1
-SESSIONS_DIR = Path("saves") / "sessions"
 
 
 @dataclass

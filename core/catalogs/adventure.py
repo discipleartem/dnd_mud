@@ -4,13 +4,11 @@
 """
 
 from dataclasses import dataclass, field
-from pathlib import Path
 from typing import Any
 
 from core.platform.io import load_yaml
 from core.platform.localization import resolve_localized_text
-
-ADVENTURES_FILE = Path("database/content/adventures.yaml")
+from core.platform.paths import ADVENTURES_FILE
 
 
 @dataclass

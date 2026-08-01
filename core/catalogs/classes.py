@@ -1,13 +1,12 @@
 """Загрузка классов персонажей из YAML."""
 
-from pathlib import Path
 from typing import Any
 
 from core.platform.catalog_loader import load_catalog
 from core.platform.localization import resolve_localized_text
+from core.platform.paths import CLASSES_FILE
 from core.types import CharacterClass
 
-CLASSES_FILE = Path("database/classes/classes.yaml")
 DEFAULT_SUBCLASS_CHOICE_LEVEL = 3
 
 

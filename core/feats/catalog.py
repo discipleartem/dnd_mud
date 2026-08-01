@@ -1,7 +1,6 @@
 """Каталог черт и чистое чтение grants из YAML (без apply/requirements)."""
 
 from dataclasses import dataclass
-from pathlib import Path
 from typing import Any
 
 from core.catalogs.races import collect_race_grants
@@ -11,8 +10,7 @@ from core.grants.normalize import (
     proficiency_tokens_and_skills_from_grant,
 )
 from core.platform.catalog_loader import load_catalog
-
-FEATS_FILE = Path("database/progression/feats.yaml")
+from core.platform.paths import FEATS_FILE
 
 
 @dataclass(frozen=True)

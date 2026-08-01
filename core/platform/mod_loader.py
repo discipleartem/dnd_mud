@@ -6,12 +6,10 @@ from pathlib import Path
 from typing import Any
 
 from core.platform.io import CatalogLoadError, load_json, load_yaml
+from core.platform.paths import MODS_DIR, MODS_STATE_FILE
 from core.types import GameDifficulty
 
 logger = logging.getLogger(__name__)
-
-MODS_DIR = Path("mods")
-MODS_STATE_FILE = Path("database/core/mods_state.json")
 
 
 def _mod_allowed_for_difficulty(

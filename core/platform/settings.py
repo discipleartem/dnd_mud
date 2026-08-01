@@ -3,13 +3,12 @@
 Настройки хранятся в JSON-файле database/core/settings.json.
 """
 
-from pathlib import Path
 from typing import Any
 
 from core.platform.io import load_json, save_json
+from core.platform.paths import SETTINGS_PATH
 from core.types import LanguageCode, RuntimeSettings
 
-SETTINGS_PATH = Path("database/core/settings.json")
 DEFAULT_LANGUAGE: LanguageCode = "ru"
 SCHEMA_VERSION = 1
 

@@ -1,7 +1,6 @@
 """Загрузка рас и расовых бонусов из YAML."""
 
 from collections import Counter
-from pathlib import Path
 from typing import Any
 
 from core.grants.normalize import (
@@ -16,9 +15,8 @@ from core.platform.catalog_loader import (
     load_catalog_items,
 )
 from core.platform.localization import resolve_localized_text
+from core.platform.paths import RACES_FILE
 from core.types import StatMap
-
-RACES_FILE = Path("database/races/races.yaml")
 
 
 def load_races_yaml() -> dict[str, Any]:

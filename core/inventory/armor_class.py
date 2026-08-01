@@ -2,12 +2,12 @@
 
 from core.catalogs.equipment import load_armor
 from core.character.models import Character
+from core.constants import ability_modifier
 from core.feats.apply import dual_wielder_ac_bonus_from_feats
 from core.inventory.equip_defaults import (
     _weapon_is_one_handed_melee,
     main_hand_uses_both_hands,
 )
-from core.mechanics.dice import ability_modifier
 from core.mechanics.stats import ABILITY_SCORE_DEFAULT
 from core.types import EquippedState
 

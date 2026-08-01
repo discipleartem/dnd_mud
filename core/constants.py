@@ -1,13 +1,45 @@
 """Константы D&D 5e из YAML."""
 
-from pathlib import Path
 from typing import Any
 
 from core.platform.catalog_loader import load_catalog
-
-CONSTANTS_FILE = Path("database/core/constants.yaml")
+from core.platform.paths import CONSTANTS_FILE
 
 MAX_CHARACTER_LEVEL = 10
+
+XP_THRESHOLDS: list[int] = [
+    0,
+    300,
+    900,
+    2700,
+    6500,
+    14000,
+    23000,
+    34000,
+    48000,
+    64000,
+]
+
+EASY_START_LEVEL = 3
+
+STANDARD_ARRAY = [15, 14, 13, 12, 10, 8]
+STANDARD_ARRAY_MIN = min(STANDARD_ARRAY)
+STANDARD_ARRAY_MAX = max(STANDARD_ARRAY)
+
+POINT_BUY_BUDGET = 27
+POINT_BUY_COSTS: dict[int, int] = {
+    8: 0,
+    9: 1,
+    10: 2,
+    11: 3,
+    12: 4,
+    13: 5,
+    14: 7,
+    15: 9,
+}
+ABILITY_SCORE_MIN = 1
+ABILITY_SCORE_DEFAULT = 10
+ABILITY_SCORE_MAX = 20
 
 
 def clamp_level(level: int) -> int:

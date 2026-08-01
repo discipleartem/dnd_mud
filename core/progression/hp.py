@@ -3,8 +3,8 @@
 from dataclasses import dataclass
 
 from core.catalogs.classes import get_class_hit_dice
-from core.constants import clamp_level
-from core.mechanics.dice import ability_modifier, roll
+from core.constants import ability_modifier, clamp_level
+from core.mechanics.dice import roll
 from core.mechanics.hp_bonus import (
     HpBonusSource,
     get_racial_hp_bonus_sources,
