@@ -195,7 +195,7 @@ explorers_pack:
 | `name` | `string` | Имя персонажа |
 | `difficulty` | `normal` \| `hardcore` \| `easy` | Сложность |
 | `race_id` / `subrace_id` / `class_id` / … | `string \| null` | Поля выбора (как в `_CreationState`) |
-| `stats` | `object \| null` | `{ str, dex, con, int, wis, cha }` |
+| `stats` | `object \| null` | `{ strength, dexterity, constitution, intelligence, wisdom, charisma }` |
 | `languages` / `skills` / … | `string[] \| null` | Списки выборов |
 | `equipment_choices` | `{ choice_id: option_id }` | Выборы стартового снаряжения |
 | `feat_ids` / `feat_choices` | `string[]` / `object` | Черты при создании |

@@ -77,7 +77,10 @@ def run_creation_steps(
                 clear_creation_draft()
                 return result.character
             if result.next_step is None:
-                clear_creation_draft()
+                # Осознанная отмена: state ещё нельзя собрать в Character.
+                # Неудачный finalize: state полный — черновик оставляем.
+                if state.to_character() is None:
+                    clear_creation_draft()
                 return None
             step = result.next_step
             _persist_draft(state, step)

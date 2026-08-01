@@ -8,6 +8,7 @@ from dataclasses import asdict, dataclass, field
 from pathlib import Path
 from typing import Any, Literal, cast
 
+from core.mechanics.stats import STAT_NAMES
 from core.platform.io import load_json, save_json
 from core.types import GameDifficulty, StatMap
 
@@ -184,9 +185,8 @@ def _parse_stats(raw: object) -> StatMap | None:
         return None
     if not isinstance(raw, dict):
         return None
-    required = ("str", "dex", "con", "int", "wis", "cha")
     try:
-        return {key: int(raw[key]) for key in required}
+        return {key: int(raw[key]) for key in STAT_NAMES}
     except (KeyError, TypeError, ValueError):
         return None
 
