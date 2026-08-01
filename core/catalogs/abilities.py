@@ -35,6 +35,28 @@ _FALLBACK_SKILL_IDS: tuple[str, ...] = (
     "survival",
 )
 
+# PHB skill → ability; используется, если abilities.yaml недоступен
+_FALLBACK_SKILL_ABILITY_MAP: dict[str, str] = {
+    "athletics": "strength",
+    "acrobatics": "dexterity",
+    "sleight_of_hand": "dexterity",
+    "stealth": "dexterity",
+    "arcana": "intelligence",
+    "history": "intelligence",
+    "investigation": "intelligence",
+    "nature": "intelligence",
+    "religion": "intelligence",
+    "animal_handling": "wisdom",
+    "insight": "wisdom",
+    "medicine": "wisdom",
+    "perception": "wisdom",
+    "survival": "wisdom",
+    "deception": "charisma",
+    "intimidation": "charisma",
+    "performance": "charisma",
+    "persuasion": "charisma",
+}
+
 
 def _load_abilities_yaml() -> dict[str, Any]:
     """Загрузить abilities из YAML."""
@@ -74,7 +96,7 @@ def skill_ability_map() -> dict[str, str]:
                 result[str(skill_id)] = str(ability_id)
     if result:
         return result
-    return {}
+    return dict(_FALLBACK_SKILL_ABILITY_MAP)
 
 
 def ability_for_skill(skill_id: str) -> str | None:
