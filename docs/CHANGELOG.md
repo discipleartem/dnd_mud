@@ -3,6 +3,7 @@
 ## [Unreleased]
 
 ### Changed
+- **Clean Code architecture pass:** `Adventure` → `catalogs/adventure`; background gear → `inventory/background_equipment`; racial HP → `mechanics/hp_bonus`; mod gating API → `CatalogSession`; `proficiency_collect` + `feats/grant_merge` (leaf `grants.resolve`); grant format registry; `equipment_text` / `equipped_display`; UI pool-pick helpers (`SCREEN_WIDTH`, `pick_from_pool_loop`)
 - **Spell cards fix:** восстановлены пустые `## Эффект` (23); `major_image` → `magic_mouth`; словари RU↔EN дополнены
 - **Справочник PHB UX/agent:** обязательный `quick` у всех карточек; эффекты заклинаний без флавора; `rules/INDEX.md` для людей; aliases в обоих регистрах
 - **Алгоритм поиска PHB:** `00-project.mdc` / `AGENTS.md` / `DND_RULES` — `lookup.yaml` (`by_alias` → `quick` → `file`) → веб 2014/SRD; без `phb:auto` / генераторов

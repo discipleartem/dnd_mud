@@ -67,10 +67,10 @@ UI не читает файлы данных напрямую — только �
 | **`core/platform/`** | I/O, каталоги, локализация, настройки, моды |
 | `platform/io.py` | `load_file()`, `load_yaml()` / `load_json()` (`strict`), `save_json()` / `merge_unique()` |
 | `platform/catalog_loader.py` | `load_catalog()`, `load_catalog_items()`, `bootstrap_session_catalogs()`, `reload_catalogs()` |
-| `platform/catalog_session.py` | `CatalogSession` — gating модов и сброс кэшей; `get_catalog_session()` |
+| `platform/catalog_session.py` | `CatalogSession` — gating модов (`set_mod_gating_difficulty` / `get_mod_gating_difficulty`) и сброс кэшей; `get_catalog_session()` |
 | `platform/localization.py` | `load_strings()` (кэш), `get_string()` |
 | `platform/settings.py` | Настройки в `database/core/settings.json` |
-| `platform/mod_loader.py` | Deep-merge overlay модов; `requires`/`conflicts`; `delete`/`replace_entity`; gating |
+| `platform/mod_loader.py` | Deep-merge overlay модов; `requires`/`conflicts`; `delete`/`replace_entity`; difficulty только аргументом |
 | **`core/catalogs/`** | YAML-справочники PHB |
 | `catalogs/abilities.py` | Характеристики и навыки (метаданные) из YAML |
 | `catalogs/races.py` | Расы, `collect_race_grants`, расовые бонусы |
@@ -80,22 +80,24 @@ UI не читает файлы данных напрямую — только �
 | `catalogs/languages.py` | Каталог языков PHB, пулы выбора |
 | `catalogs/backgrounds.py` | Предыстории PHB |
 | `catalogs/equipment.py` | Оружие, доспехи, инструменты из YAML |
-| `catalogs/adventure.py` | `load_adventures()` |
+| `catalogs/adventure.py` | `Adventure` + `load_adventures()` |
 | **`core/grants/`** | Нормализация и разрешение grants |
 | `grants/normalize.py` | Нормализация `grants[]`; proficiency-токены |
-| `grants/format.py` | Чистое текстовое форматирование grants (без print) |
+| `grants/format.py` | Чистое текстовое форматирование grants (без print); registry по типу |
 | `grants/labels.py` | Ключи локализации для отображения grants |
 | `grants/context.py` | `CreationContext`, `ResolvedGrants` |
-| `grants/resolve.py` | `resolve_grants_for_context` / `resolve_creation_grants` |
+| `grants/resolve.py` | Leaf: `resolve_grants_for_context` / `resolve_creation_grants` (без feats) |
 | **`core/character/`** | Модель, сборка, хранение |
-| `character/models.py` | `Character`, `Adventure` (dataclass); JSON coerce helpers |
+| `character/models.py` | `Character` (dataclass); JSON coerce helpers |
 | `character/build.py` | `build_new_character(CharacterBuildParams)` — сборка без записи на диск |
 | `character/finalize.py` | Merge языков черт + persist собранного персонажа |
 | `character/migrate.py` | `CHARACTERS_SCHEMA_VERSION`, `migrate_character_data` |
 | `character/storage.py` | CRUD; `make_save_slug`, `unique_save_slug`; JSON в `saves/` |
 | **`core/feats/`** | Черты (leaf: catalog, apply, text, requirements) |
 | `feats/catalog.py` | YAML черт, чистое чтение grants |
+| `feats/grant_merge.py` | Слияние черт с `ResolvedGrants` (над leaf resolve) |
 | `feats/apply.py` | Применение эффектов черт |
+| `feats/selection_side_effects.py` | Накопление weapon/skill/tool после выбора черты |
 | `feats/text.py` / `requirement_text.py` | PHB-текст и описания требований |
 | `feats/requirements.py` | Видимость / требования |
 | **`core/progression/`** | XP, HP, ASI, class features, level-up |
@@ -103,19 +105,24 @@ UI не читает файлы данных напрямую — только �
 | `progression/hp.py` | HP по уровню / режиму |
 | `progression/asi.py` | ASI helpers |
 | `progression/class_progression.py` | Подклассы, старт по difficulty, class features |
+| `progression/subclass_proficiencies.py` | Apply владений подкласса / picked tools |
 | `progression/level_up.py` | Разрешение pending level-ups |
 | **`core/inventory/`** | Инвентарь, КД, стартовое снаряжение |
 | `inventory/items.py` | Операции с инвентарём |
 | `inventory/armor_class.py` | Расчёт КД |
+| `inventory/background_equipment.py` | Снаряжение предыстории |
+| `inventory/equipment_text.py` | UI-подсказки оружия/доспехов |
+| `inventory/equipped_display.py` | Данные экипировки для карточки (`get_equipped_display`) |
 | `inventory/equip_defaults.py` | Авто-экипировка |
 | `inventory/starting_equipment.py` | Стартовое снаряжение класса из YAML |
 | **`core/mechanics/`** | Броски, проверки, владения, характеристики |
 | `mechanics/dice.py` | `roll()`, `roll_ability_score()`, `ability_modifier()` |
 | `mechanics/stats.py` | Генерация/валидация характеристик |
 | `mechanics/checks.py` | `ability_check`, `skill_check`, спасброски |
-| `mechanics/proficiencies.py` | Сбор и проверки владений |
+| `mechanics/proficiencies.py` | Проверки владений (`has_*`) |
+| `mechanics/proficiency_collect.py` | Сбор токенов владений из grants |
 | `mechanics/expertise.py` | Компетентность (expertise) из class features |
-| `mechanics/hp_bonus.py` | `HpBonusSource`, бонусы HP из grants |
+| `mechanics/hp_bonus.py` | `HpBonusSource`, `get_racial_hp_bonus_sources` |
 | **`core/engine/`** | Сценарии, сессии, сложность (+ `combat/`) |
 | `engine/game_engine.py` | `GameEngine`, `GameSession` — state machine сценария |
 | `engine/session_runner.py` | Persist сессии и UI-action wiring без UI I/O (storage I/O допустим) |
@@ -187,7 +194,7 @@ main.py → ui/menus/ → core.<pkg>.<module> (прямые leaf-imports)
 **Сценарий «Создать персонажа»:** сложность → имя → раса → подраса → характеристики → предыстория → языки → класс → подкласс → черты (если нужны) → владения → навыки → (компетентность?) → **снаряжение** → сохранение в `saves/characters/{save_slug}.json`.
 
 - Оркестрация: `ui/menus/creation/steps.py` (`show_create_character_flow`), `ui/menus/creation/handlers.py`, `ui/menus/stats/stats_flow.py`
-- Снаряжение: `ui/menus/creation/equipment.py` → `core.inventory.starting_equipment`; предыстория — `core.catalogs.backgrounds.get_background_equipment_items`; merge и `equip_defaults` — `core.character.build.build_new_character` / `character.storage.persist_character`, `core.inventory.*`
+- Снаряжение: `ui/menus/creation/equipment.py` → `core.inventory.starting_equipment`; предыстория — `core.inventory.background_equipment.get_background_equipment_items`; merge и `equip_defaults` — `core.character.build.build_new_character` / `character.storage.persist_character`, `core.inventory.*`
 - Сохранение: `_CreationState.to_character()` → `persist_character()` (без kwargs-bridge)
 - Генераторы: `core.mechanics.stats`, `core.catalogs.races`
 - Броски 4d6: `core.mechanics.dice` (`roll_ability_score`)
@@ -200,7 +207,7 @@ main.py → ui/menus/ → core.<pkg>.<module> (прямые leaf-imports)
 
 ```
 select_difficulty() → show_stats_generation_flow() → adventure_allows_difficulty()
-                    → set_mod_gating_difficulty(character.difficulty) → load_catalog / overlay
+                    → CatalogSession.set_difficulty(character.difficulty) → load_catalog / overlay
                     → run_scenario_with_engine() (GameEngine)
 ```
 
