@@ -11,6 +11,7 @@ from pathlib import Path
 
 from colorama import Fore, Style, init
 
+from core.character.creation_draft import has_creation_draft
 from core.platform.catalog_session import get_catalog_session
 from core.platform.localization import get_string, load_strings
 from core.platform.settings import load_settings, save_settings
@@ -25,6 +26,7 @@ from ui.menus import (
     show_settings,
     show_welcome_screen,
 )
+from ui.menus.creation.steps import show_continue_character_flow
 
 _PROJECT_ROOT = Path(__file__).resolve().parent
 
@@ -68,6 +70,14 @@ def _save_and_reload_settings(
     return settings, strings
 
 
+def _print_ctrl_c_ignored(strings: StringsDict) -> None:
+    print(
+        f"{Fore.YELLOW}"
+        f"{get_string(strings, 'errors.ctrl_c_ignored')}"
+        f"{Style.RESET_ALL}"
+    )
+
+
 def main() -> int:
     """Запустить игру.
 
@@ -91,39 +101,50 @@ def main() -> int:
     # Главный цикл меню
     running = True
     while running:
-        choice = show_main_menu(strings)
+        try:
+            action = show_main_menu(
+                strings, has_creation_draft=has_creation_draft()
+            )
 
-        match choice:
-            case 0:
-                print(
-                    f"{Fore.GREEN}{get_string(strings, 'info.goodbye')}"
-                    f"{Style.RESET_ALL}"
-                )
-                running = False
-            case 1:
-                show_new_game_flow(strings, settings)
-                settings, strings = _save_and_reload_settings(
-                    settings, strings
-                )
-            case 2:
-                show_load_game_flow(strings, settings["language"])
-            case 3:
-                show_characters_menu(strings, settings["language"])
-                settings, strings = _save_and_reload_settings(
-                    settings, strings
-                )
-            case 4:
-                settings = show_settings(strings, settings)
-                settings, strings = _save_and_reload_settings(
-                    settings, strings
-                )
-            case 5:
-                settings = show_languages_menu(strings, settings)
-                settings, strings = _save_and_reload_settings(
-                    settings, strings
-                )
-            case 6:
-                show_mods_menu(strings, settings["language"])
+            match action:
+                case "exit":
+                    print(
+                        f"{Fore.GREEN}{get_string(strings, 'info.goodbye')}"
+                        f"{Style.RESET_ALL}"
+                    )
+                    running = False
+                case "continue":
+                    show_continue_character_flow(strings, settings["language"])
+                    settings, strings = _save_and_reload_settings(
+                        settings, strings
+                    )
+                case "new_game":
+                    show_new_game_flow(strings, settings)
+                    settings, strings = _save_and_reload_settings(
+                        settings, strings
+                    )
+                case "load_game":
+                    show_load_game_flow(strings, settings["language"])
+                case "characters":
+                    show_characters_menu(strings, settings["language"])
+                    settings, strings = _save_and_reload_settings(
+                        settings, strings
+                    )
+                case "settings":
+                    settings = show_settings(strings, settings)
+                    settings, strings = _save_and_reload_settings(
+                        settings, strings
+                    )
+                case "languages":
+                    settings = show_languages_menu(strings, settings)
+                    settings, strings = _save_and_reload_settings(
+                        settings, strings
+                    )
+                case "mods":
+                    show_mods_menu(strings, settings["language"])
+        except KeyboardInterrupt:
+            print()
+            _print_ctrl_c_ignored(strings)
 
     return 0
 

@@ -7,7 +7,7 @@ from colorama import Fore, Style
 
 from core.platform.localization import get_string
 from core.types import StringsDict
-from ui.input_handler import get_int_input
+from ui.input_handler import get_int_input, safe_input
 
 SCREEN_WIDTH = 78
 SEPARATOR = f"{Fore.YELLOW}{'=' * SCREEN_WIDTH}{Style.RESET_ALL}"
@@ -26,7 +26,7 @@ def skill_name(strings: StringsDict, skill_key: str) -> str:
 def press_enter(strings: StringsDict) -> None:
     """Ожидание нажатия Enter."""
     prompt = get_string(strings, "common.press_enter")
-    input(f"{Fore.CYAN}{prompt}{Style.RESET_ALL}")
+    safe_input(f"{Fore.CYAN}{prompt}{Style.RESET_ALL}", strings)
 
 
 def confirm_yes_no(

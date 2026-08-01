@@ -43,6 +43,26 @@ def _error(
     return default.format(**kwargs)
 
 
+def _print_ctrl_c_ignored(strings: StringsDict | None) -> None:
+    """Сообщение: Ctrl+C игнорируется."""
+    msg = _error(
+        strings,
+        "errors.ctrl_c_ignored",
+        "Ctrl+C отключён. Для выхода используйте меню.",
+    )
+    print(f"{Fore.YELLOW}{msg}{Style.RESET_ALL}")
+
+
+def safe_input(prompt: str, strings: StringsDict | None = None) -> str:
+    """Прочитать строку; Ctrl+C не прерывает — повтор prompt."""
+    while True:
+        try:
+            return input(prompt)
+        except KeyboardInterrupt:
+            print()
+            _print_ctrl_c_ignored(strings)
+
+
 def get_int_input(
     prompt: str,
     min_val: int,
@@ -57,7 +77,7 @@ def get_int_input(
     """
     while True:
         try:
-            raw = input(f"{Fore.CYAN}{prompt}{Style.RESET_ALL}")
+            raw = safe_input(f"{Fore.CYAN}{prompt}{Style.RESET_ALL}", strings)
             if not raw.strip():
                 if default is not None and min_val <= default <= max_val:
                     return default
@@ -92,7 +112,7 @@ def get_str_input(
 ) -> str:
     """Запросить строку минимальной длины."""
     while True:
-        raw = input(f"{Fore.CYAN}{prompt}{Style.RESET_ALL}")
+        raw = safe_input(f"{Fore.CYAN}{prompt}{Style.RESET_ALL}", strings)
         value = raw.strip()
 
         if only_letters and not value.isalpha():

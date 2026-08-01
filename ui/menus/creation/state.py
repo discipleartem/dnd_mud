@@ -1,9 +1,10 @@
 """Состояние и типы flow создания персонажа."""
 
 from dataclasses import dataclass, field
-from typing import Any, Literal
+from typing import Any
 
 from core.character.build import build_new_character
+from core.character.creation_draft import CreationDraft, CreationStep
 from core.character.models import Character
 from core.character.storage import unique_save_slug
 from core.progression.class_progression import (
@@ -12,19 +13,11 @@ from core.progression.class_progression import (
 )
 from core.types import CharacterBuildParams, GameDifficulty, StatMap
 
-CreationStep = Literal[
-    "race",
-    "subrace",
-    "languages",
-    "stats",
-    "background",
-    "feats",
-    "class",
-    "subclass",
-    "proficiencies",
-    "skills",
-    "expertise",
-    "equipment",
+__all__ = [
+    "CreationStep",
+    "_CreationState",
+    "draft_from_state",
+    "state_from_draft",
 ]
 
 
@@ -93,3 +86,64 @@ class _CreationState:
                 unique_save_slug=unique_save_slug,
             )
         )
+
+
+def draft_from_state(
+    state: _CreationState, current_step: CreationStep
+) -> CreationDraft:
+    """Собрать черновик из UI-состояния и текущего шага."""
+    return CreationDraft(
+        current_step=current_step,
+        name=state.name,
+        difficulty=state.difficulty,
+        race_id=state.race_id,
+        subrace_id=state.subrace_id,
+        languages=state.languages,
+        stats=state.stats,
+        background_id=state.background_id,
+        background_skills=list(state.background_skills),
+        class_id=state.class_id,
+        subclass_id=state.subclass_id,
+        skills=state.skills,
+        skill_expertise=state.skill_expertise,
+        tool_expertise=state.tool_expertise,
+        weapon_proficiencies=state.weapon_proficiencies,
+        armor_proficiencies=state.armor_proficiencies,
+        tool_proficiencies=state.tool_proficiencies,
+        background_tool_picks=list(state.background_tool_picks),
+        equipment_choices=dict(state.equipment_choices),
+        feat_ids=list(state.feat_ids),
+        feat_choices={
+            key: dict(value) for key, value in state.feat_choices.items()
+        },
+        hardcore_rolls=list(state.hardcore_rolls),
+    )
+
+
+def state_from_draft(draft: CreationDraft) -> _CreationState:
+    """Восстановить UI-состояние из черновика."""
+    return _CreationState(
+        name=draft.name,
+        difficulty=draft.difficulty,
+        race_id=draft.race_id,
+        subrace_id=draft.subrace_id,
+        languages=draft.languages,
+        stats=draft.stats,
+        background_id=draft.background_id,
+        background_skills=list(draft.background_skills),
+        class_id=draft.class_id,
+        subclass_id=draft.subclass_id,
+        skills=draft.skills,
+        skill_expertise=draft.skill_expertise,
+        tool_expertise=draft.tool_expertise,
+        weapon_proficiencies=draft.weapon_proficiencies,
+        armor_proficiencies=draft.armor_proficiencies,
+        tool_proficiencies=draft.tool_proficiencies,
+        background_tool_picks=list(draft.background_tool_picks),
+        equipment_choices=dict(draft.equipment_choices),
+        feat_ids=list(draft.feat_ids),
+        feat_choices={
+            key: dict(value) for key, value in draft.feat_choices.items()
+        },
+        hardcore_rolls=list(draft.hardcore_rolls),
+    )

@@ -812,6 +812,21 @@ load_character_for_session(snapshot, characters_dir) -> Character | None
 
 ---
 
+## core.character.creation_draft — Черновик создания
+
+```python
+CreationStep  # Literal шагов FSM
+CreationDraft  # current_step + поля состояния создания
+has_creation_draft(path=None) -> bool
+load_creation_draft(path=None) -> CreationDraft | None
+save_creation_draft(draft: CreationDraft, path=None) -> None
+clear_creation_draft(path=None) -> None
+```
+
+Файл: `saves/creation_draft.json` — см. [DATA_SCHEMA.md](DATA_SCHEMA.md) §Save JSON — черновик создания персонажа.
+
+---
+
 ## core.engine.difficulty — Режим сложности и приключения
 
 ```python
@@ -983,13 +998,16 @@ main() -> int
 
 | № | Пункт | Обработчик |
 |---|-------|------------|
-| 1 | Новая игра | `show_new_game_flow` |
-| 2 | Загрузить игру | `show_load_game_flow` |
-| 3 | Персонажи | `show_characters_menu` |
-| 4 | Настройки | `show_settings` |
-| 5 | Languages / Языки (кросс-локально) | `show_languages_menu` |
-| 6 | Модификации | `show_mods_menu` |
+| 1* | Продолжить | `show_continue_character_flow` (если есть черновик) |
+| 1/2 | Новая игра | `show_new_game_flow` |
+| 2/3 | Загрузить игру | `show_load_game_flow` |
+| 3/4 | Персонажи | `show_characters_menu` |
+| 4/5 | Настройки | `show_settings` |
+| 5/6 | Languages / Языки (кросс-локально) | `show_languages_menu` |
+| 6/7 | Модификации | `show_mods_menu` |
 | 0 | Выход | завершение |
+
+Номера сдвигаются при «Продолжить». `main.py` диспатчит по **action id** (`continue`, `new_game`, …).
 
 После изменения настроек или языка вызывается `_save_and_reload_settings`.
 
@@ -999,19 +1017,21 @@ main() -> int
 
 ```python
 show_welcome_screen(version: str, strings: dict) -> None
-show_main_menu(strings: dict) -> int
+show_main_menu(strings: dict, *, has_creation_draft: bool = False) -> str
 select_difficulty(strings: dict) -> str | None
 show_new_game_flow(strings: dict, settings: dict) -> None
 show_load_game_flow(strings: dict, language: str = "ru") -> None
 show_characters_menu(strings: dict, language: str = "ru") -> None
 show_mods_menu(strings: dict, language: str = "ru") -> None
-show_create_character_flow(strings: dict, language: str = "ru") -> Character | None  # ui/menus/creation/steps.py; из hub «Персонажи»
+show_create_character_flow(strings: dict, language: str = "ru") -> Character | None
+show_continue_character_flow(strings: dict, language: str = "ru") -> Character | None
 show_stats_generation_flow(strings: StringsDict, race_id: str, subrace_id: str | None, difficulty: GameDifficulty) -> StatMap | None
 show_settings(strings: dict, settings: dict) -> dict
 show_languages_menu(strings: dict, settings: dict) -> dict
 ```
 
 Создание персонажа: сложность → имя → раса → подраса → **характеристики** → **предыстория** → **языки** → класс → подкласс → **владения** → **навыки** → (компетентность?) → сохранение.  
+Между шагами — `saves/creation_draft.json`; аварийный выход → пункт «Продолжить». Ctrl+C на вводе игнорируется.  
 Режимы сложности: `easy`, `normal`, `hardcore`. HardCore — ключевой режим для механики, приключений и модов.  
 Подробности: [MUD_PRD.md §3.2.1](MUD_PRD.md#321-режимы-сложности-игры), [§3.4](MUD_PRD.md#34-flow-создать-персонажа).
 
@@ -1020,6 +1040,7 @@ show_languages_menu(strings: dict, settings: dict) -> dict
 ## ui.input_handler — Ввод
 
 ```python
+safe_input(prompt: str, strings: dict | None = None) -> str
 get_int_input(prompt: str, min_val: int, max_val: int, strings: dict | None = None) -> int
 get_str_input(prompt: str, min_length: int = 1, only_letters: bool = False, strings: dict | None = None) -> str
 ```

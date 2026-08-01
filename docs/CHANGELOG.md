@@ -2,6 +2,9 @@
 
 ## [Unreleased]
 
+### Added
+- **Черновик создания персонажа:** `saves/creation_draft.json`, пункт «Продолжить» в главном меню; autosave между шагами; Ctrl+C на вводе игнорируется (`safe_input` + safety-net в `main`)
+
 ### Changed
 - **Clean Code architecture pass:** `Adventure` → `catalogs/adventure`; background gear → `inventory/background_equipment`; racial HP → `mechanics/hp_bonus`; mod gating API → `CatalogSession`; `proficiency_collect` + `feats/grant_merge` (leaf `grants.resolve`); grant format registry; `equipment_text` / `equipped_display`; UI pool-pick helpers (`SCREEN_WIDTH`, `pick_from_pool_loop`)
 - **Spell cards fix:** восстановлены пустые `## Эффект` (23); `major_image` → `magic_mouth`; словари RU↔EN дополнены

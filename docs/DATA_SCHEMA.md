@@ -184,6 +184,25 @@ explorers_pack:
 | `equipped` | object | `armor`, `shield`, `main_hand`, `off_hand`, `main_hand_grip` |
 | `equipment_choices` | `{ choice_id: option_id }` | Аудит выборов а/б при создании |
 
+## Save JSON — черновик создания персонажа
+
+Файл `saves/creation_draft.json` (`CreationDraft`, `core/character/creation_draft.py`). Один черновик на установку: появляется при незавершённом создании (закрытие терминала / kill); пункт «Продолжить» в главном меню.
+
+| Ключ | Тип | Описание |
+|------|-----|----------|
+| `schema_version` | `int` | Версия схемы (сейчас `1`) |
+| `current_step` | `string` | Шаг FSM: `race`, `subrace`, `stats`, … `equipment` |
+| `name` | `string` | Имя персонажа |
+| `difficulty` | `normal` \| `hardcore` \| `easy` | Сложность |
+| `race_id` / `subrace_id` / `class_id` / … | `string \| null` | Поля выбора (как в `_CreationState`) |
+| `stats` | `object \| null` | `{ str, dex, con, int, wis, cha }` |
+| `languages` / `skills` / … | `string[] \| null` | Списки выборов |
+| `equipment_choices` | `{ choice_id: option_id }` | Выборы стартового снаряжения |
+| `feat_ids` / `feat_choices` | `string[]` / `object` | Черты при создании |
+| `hardcore_rolls` | `int[]` | Броски HardCore |
+
+Битый файл удаляется при загрузке. Успешный create / осознанная отмена — `clear_creation_draft()`.
+
 ## Save JSON — сессия приключения
 
 Файлы `saves/sessions/{save_slug}.json` (`SessionSnapshot`, `core/session_storage.py`). `save_slug` обычно `{character_save_slug}_{adventure_id}`.

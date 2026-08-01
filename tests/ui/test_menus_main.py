@@ -29,7 +29,23 @@ def test_show_main_menu_includes_mods_item(
     patch_int_input: Any,
 ) -> None:
     patch_int_input(monkeypatch, [6])
-    assert main_menu.show_main_menu(ru_strings) == 6
+    assert main_menu.show_main_menu(ru_strings) == "mods"
+
+
+def test_show_main_menu_continue_when_draft(
+    monkeypatch: pytest.MonkeyPatch,
+    ru_strings: dict[str, Any],
+    patch_int_input: Any,
+) -> None:
+    patch_int_input(monkeypatch, [1])
+    assert (
+        main_menu.show_main_menu(ru_strings, has_creation_draft=True)
+        == "continue"
+    )
+    patch_int_input(monkeypatch, [7])
+    assert (
+        main_menu.show_main_menu(ru_strings, has_creation_draft=True) == "mods"
+    )
 
 
 def test_select_difficulty_back_and_hardcore(
@@ -66,3 +82,19 @@ def test_input_handler_validation(
     assert (
         get_str_input("name: ", min_length=2, only_letters=True) == "Aragorn"
     )
+
+
+def test_safe_input_ignores_keyboard_interrupt(
+    monkeypatch: pytest.MonkeyPatch, capsys: Any, ru_strings: dict[str, Any]
+) -> None:
+    calls = {"n": 0}
+
+    def _input(_prompt: str) -> str:
+        calls["n"] += 1
+        if calls["n"] == 1:
+            raise KeyboardInterrupt
+        return "3"
+
+    monkeypatch.setattr("builtins.input", _input)
+    assert get_int_input("test: ", 0, 5, ru_strings) == 3
+    assert "Ctrl+C" in capsys.readouterr().out
