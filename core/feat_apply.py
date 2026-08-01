@@ -1,5 +1,6 @@
 """Применение черт: бонусы, grants, dual wield, HP."""
 
+from dataclasses import replace
 from typing import Any
 
 from core.feat_catalog import (
@@ -11,6 +12,13 @@ from core.feat_catalog import (
     resolve_feat_grants,
 )
 from core.hp_bonus import HpBonusSource, hit_point_bonus_amount
+from core.proficiencies import merge_proficiency_tokens
+from core.skills import merge_proficiencies
+from core.stats import (
+    ABILITY_SCORE_MAX,
+    STAT_NAMES,
+    apply_bonuses_to_stats,
+)
 from core.types import StatMap
 
 
@@ -43,8 +51,6 @@ def resolve_feat_ability_bonuses(
     feat_id: str, choices: dict[str, Any] | None = None
 ) -> StatMap:
     """Бонусы к характеристикам из черты."""
-    from core.stats import STAT_NAMES
-
     feat = load_feat(feat_id)
     choices = choices or {}
     bonuses: StatMap = {}
@@ -69,12 +75,6 @@ def apply_feats_to_stats(
     feat_choices: dict[str, dict[str, Any]] | None = None,
 ) -> StatMap:
     """Применить бонусы характеристик от всех черт."""
-    from core.stats import (
-        ABILITY_SCORE_MAX,
-        STAT_NAMES,
-        apply_bonuses_to_stats,
-    )
-
     feat_choices = feat_choices or {}
     result = stats.copy()
     for feat_id in feat_ids:
@@ -94,11 +94,6 @@ def apply_feat_grants_to_character(
     choices: dict[str, Any] | None = None,
 ) -> Any:
     """Добавить на персонажа владения, навыки и языки из одной черты."""
-    from dataclasses import replace
-
-    from core.proficiencies import merge_proficiency_tokens
-    from core.skills import merge_proficiencies
-
     choices = choices or {}
     feat_choices = {feat_id: choices}
     weapons, armors, tools, _ = resolve_feat_grants(feat_id, choices)

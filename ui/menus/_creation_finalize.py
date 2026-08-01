@@ -4,8 +4,11 @@ from core.creation_finalize import (
     merge_feat_languages_into,
     persist_built_character,
 )
+from core.localization import get_string
 from core.models import Character
+from core.types import StringsDict
 from ui.menus._creation_state import _CreationState
+from ui.menus.console import print_success_and_wait
 
 
 def merge_feat_languages(state: _CreationState) -> None:
@@ -21,3 +24,15 @@ def save_created_character(state: _CreationState) -> Character | None:
     if character is None:
         return None
     return persist_built_character(character)
+
+
+def finalize_creation(
+    strings: StringsDict, state: _CreationState
+) -> Character | None:
+    """Сохранить персонажа и показать сообщение об успехе."""
+    character = save_created_character(state)
+    if character is None:
+        return None
+    msg = get_string(strings, "character.save_success", name=state.name)
+    print_success_and_wait(strings, msg)
+    return character

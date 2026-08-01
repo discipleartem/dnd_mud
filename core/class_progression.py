@@ -6,7 +6,7 @@ from typing import Any
 from core.classes import get_subclass_choice_level
 from core.constants import MAX_CHARACTER_LEVEL
 from core.models import Character
-from core.skills import subclass_skills_active
+from core.skills import get_subclass_skill_choices, subclass_skills_active
 from core.types import GameDifficulty
 from core.xp_levels import EASY_START_LEVEL
 
@@ -92,8 +92,6 @@ def needs_class_feature_picks(character: Character) -> bool:
 
 def subclass_skill_picks_pending(character: Character) -> bool:
     """Ещё не выбраны навыки подкласса."""
-    from core.skills import get_subclass_skill_choices
-
     if not character.subclass_id:
         return False
     return bool(

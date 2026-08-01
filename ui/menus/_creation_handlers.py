@@ -12,7 +12,7 @@ from core.progression import (
 from core.races import load_races
 from core.stats import ABILITY_SCORE_DEFAULT
 from core.types import StringsDict
-from ui.menus._creation_finalize import merge_feat_languages
+from ui.menus._creation_finalize import finalize_creation, merge_feat_languages
 from ui.menus._creation_navigation import (
     back_step_from_equipment,
     back_step_from_feats,
@@ -21,7 +21,6 @@ from ui.menus._creation_navigation import (
     step_after_class_choice,
 )
 from ui.menus._creation_state import CreationStep, _CreationState
-from ui.menus._creation_steps import finalize_creation
 from ui.menus._selectors import select_class, select_subclass, select_subrace
 from ui.menus.backgrounds import select_creation_background
 from ui.menus.console import print_screen_header, run_numbered_menu

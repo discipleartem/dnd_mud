@@ -2,7 +2,7 @@
 
 from typing import Any
 
-from core.skills import PHB_SKILL_IDS
+from core.skill_ids import PHB_SKILL_IDS
 
 ABILITY_INCREASE = "ability_increase"
 

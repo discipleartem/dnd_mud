@@ -8,7 +8,7 @@ import core.adventure as adventure_mod
 from core.backgrounds import get_background_skills, load_backgrounds
 from core.models import Adventure, Character
 from core.scenario_actions import apply_scenario_action, load_scenario
-from core.skills import PHB_SKILL_IDS
+from core.skill_ids import PHB_SKILL_IDS
 from core.types import CharacterClass
 
 pytestmark = pytest.mark.usefixtures("catalog_caches_cleared")

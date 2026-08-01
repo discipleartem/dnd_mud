@@ -2,8 +2,8 @@
 
 import pytest
 
+from core.grants_resolve import build_fixed_proficiencies
 from core.proficiencies import (
-    build_fixed_proficiencies,
     get_background_tool_proficiencies,
     get_class_proficiency_tokens,
     get_subclass_proficiency_tokens,

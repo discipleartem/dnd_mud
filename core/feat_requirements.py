@@ -4,10 +4,13 @@ from dataclasses import dataclass, field
 from typing import Any
 
 from core.classes import character_has_spellcasting
+from core.equipment import all_tool_ids, all_weapon_ids
 from core.feat_catalog import load_feat, load_feats
 from core.grants import normalize_armor_token
 from core.grants_context import CreationContext
 from core.grants_resolve import resolve_grants_for_context
+from core.proficiencies import has_tool_proficiency, has_weapon_proficiency
+from core.skill_ids import PHB_SKILL_IDS
 from core.types import StatMap
 
 _PROFICIENCY_GRANT_TYPES = frozenset(
@@ -167,8 +170,6 @@ def _armor_tokens_from_grant(grant: dict[str, Any]) -> list[str]:
 def _any_new_weapon(
     ctx: FeatRequirementContext, weapon_ids: list[str]
 ) -> bool:
-    from core.proficiencies import has_weapon_proficiency
-
     return any(
         not has_weapon_proficiency(ctx.weapon_tokens, weapon_id)
         for weapon_id in weapon_ids
@@ -176,8 +177,6 @@ def _any_new_weapon(
 
 
 def _any_new_tool(ctx: FeatRequirementContext, tool_ids: list[str]) -> bool:
-    from core.proficiencies import has_tool_proficiency
-
     return any(
         not has_tool_proficiency(ctx.tool_tokens, tool_id)
         for tool_id in tool_ids
@@ -195,9 +194,6 @@ def _grant_adds_new_proficiency(
     grant: dict[str, Any], ctx: FeatRequirementContext
 ) -> bool:
     """Даёт ли grant новое владение относительно контекста."""
-    from core.equipment import all_tool_ids, all_weapon_ids
-    from core.skills import PHB_SKILL_IDS
-
     mtype = str(grant.get("type", ""))
     if mtype not in _PROFICIENCY_GRANT_TYPES:
         return True

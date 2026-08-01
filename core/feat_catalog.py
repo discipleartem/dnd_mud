@@ -9,7 +9,8 @@ from core.grants import (
     grants_of_type,
     proficiency_tokens_and_skills_from_grant,
 )
-from core.skills import PHB_SKILL_IDS
+from core.races import collect_race_grants
+from core.skill_ids import PHB_SKILL_IDS
 
 FEATS_FILE = Path("database/progression/feats.yaml")
 
@@ -174,8 +175,6 @@ def get_race_feat_grants(
     race_id: str, subrace_id: str | None = None
 ) -> list[FeatGrant]:
     """Слоты выбора черты из grants расы/подрасы."""
-    from core.races import collect_race_grants
-
     result: list[FeatGrant] = []
     for grant in grants_of_type(
         collect_race_grants(race_id, subrace_id), "feat"

@@ -6,6 +6,7 @@
 from dataclasses import dataclass
 from typing import Any
 
+from core.backgrounds import get_background_tool_proficiencies as _bg_tools
 from core.classes import (
     get_class_dict,
     get_subclass_choice_level,
@@ -279,8 +280,6 @@ def get_background_tool_proficiencies(
     background_id: str,
 ) -> tuple[list[str], list[ProficiencyChoice]]:
     """Инструменты предыстории: fixed + choices."""
-    from core.backgrounds import get_background_tool_proficiencies as _bg_tools
-
     fixed, raw_choices = _bg_tools(background_id)
     choices: list[ProficiencyChoice] = []
     for entry in raw_choices:
@@ -356,33 +355,6 @@ def get_proficiency_choices(
     return choices
 
 
-def build_fixed_proficiencies(
-    race_id: str,
-    subrace_id: str | None,
-    class_id: str,
-    background_id: str | None,
-    subclass_id: str | None,
-    level: int,
-    feat_ids: list[str] | None = None,
-    feat_choices: dict[str, dict[str, Any]] | None = None,
-) -> tuple[list[str], list[str], list[str]]:
-    """Собрать фиксированные владения без игровых выборов."""
-    from core.grants_resolve import (
-        build_fixed_proficiencies as _build_fixed,
-    )
-
-    return _build_fixed(
-        race_id,
-        subrace_id,
-        class_id,
-        background_id,
-        subclass_id,
-        level,
-        feat_ids=feat_ids,
-        feat_choices=feat_choices,
-    )
-
-
 def apply_subclass_proficiencies_to_character(
     character: Character,
     subclass_id: str,
@@ -423,6 +395,5 @@ __all__ = [
     "get_background_tool_proficiencies",
     "get_feat_proficiency_tokens",
     "get_proficiency_choices",
-    "build_fixed_proficiencies",
     "apply_subclass_proficiencies_to_character",
 ]

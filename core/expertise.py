@@ -5,7 +5,7 @@ from typing import Any
 
 from core.classes import load_class_full
 from core.models import Character
-from core.skills import THIEVES_TOOLS_ID
+from core.skill_ids import THIEVES_TOOLS_ID
 
 __all__ = [
     "ExpertiseAlternative",

@@ -5,10 +5,10 @@ from typing import Any
 from colorama import Fore, Style
 
 from core.equipment import get_tool_name, proficiency_token_label
+from core.grants_resolve import build_fixed_proficiencies
 from core.localization import get_string
 from core.proficiencies import (
     ProficiencyChoice,
-    build_fixed_proficiencies,
     get_proficiency_choices,
     has_tool_proficiency,
     is_valid_tool_selection,

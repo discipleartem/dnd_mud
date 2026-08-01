@@ -2,7 +2,6 @@
 
 from typing import Any
 
-from core.abilities import skill_ids
 from core.classes import (
     get_subclass_choice_level,
     get_subclass_dict,
@@ -10,10 +9,8 @@ from core.classes import (
     load_class_full,
 )
 from core.io import merge_unique
-
-PHB_SKILL_IDS: tuple[str, ...] = skill_ids()
-
-THIEVES_TOOLS_ID = "thieves_tools"
+from core.races import get_race_and_subrace, iter_race_grants_by_source
+from core.skill_ids import PHB_SKILL_IDS
 
 
 def get_class_skill_config(class_id: str) -> tuple[list[str], int]:
@@ -95,8 +92,6 @@ def get_fixed_racial_proficiencies_with_source(
     race_id: str, subrace_id: str | None = None
 ) -> list[tuple[str, str]]:
     """Фиксированные расовые владения: (skill_id, race|subrace)."""
-    from core.races import get_race_and_subrace, iter_race_grants_by_source
-
     if not get_race_and_subrace(race_id, subrace_id)[0]:
         return []
 
@@ -123,8 +118,6 @@ def get_race_skill_choices_with_source(
     race_id: str, subrace_id: str | None = None
 ) -> list[tuple[dict[str, Any], str]]:
     """Выборные расовые владения: (mechanics, race|subrace)."""
-    from core.races import get_race_and_subrace, iter_race_grants_by_source
-
     if not get_race_and_subrace(race_id, subrace_id)[0]:
         return []
 

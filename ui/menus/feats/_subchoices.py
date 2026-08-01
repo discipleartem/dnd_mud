@@ -13,7 +13,8 @@ from core.languages import (
     load_languages,
 )
 from core.localization import get_string
-from core.skills import PHB_SKILL_IDS
+from core.proficiencies import has_tool_proficiency, has_weapon_proficiency
+from core.skill_ids import PHB_SKILL_IDS
 from core.types import StatMap, StringsDict
 from ui.menus.console import (
     ability_name,
@@ -59,8 +60,6 @@ def _pick_weapons_for_feat(
     weapon_proficiencies: list[str] | None = None,
 ) -> list[str] | None:
     """Выбор видов оружия для weapon_master."""
-    from core.proficiencies import has_weapon_proficiency
-
     proficiencies = weapon_proficiencies or []
     pool = [
         w
@@ -86,8 +85,6 @@ def _pick_skills_or_tools(
     known_tools: list[str] | None = None,
 ) -> list[dict[str, str]] | None:
     """Выбор навыков или инструментов для skilled."""
-    from core.proficiencies import has_tool_proficiency
-
     known_skills = known_skills or []
     known_tools = known_tools or []
     picked: list[dict[str, str]] = []

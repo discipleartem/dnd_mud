@@ -13,8 +13,17 @@ from core.asi import (
     pending_asi_at_level,
 )
 from core.classes import get_class_dict, get_subclass_dict, grants_at_level
+from core.feats import (
+    apply_feat_grants_to_character,
+    resolve_feat_ability_bonuses,
+    tough_hp_adjustment_on_acquire,
+)
+from core.grants import proficiency_tokens_and_skills_from_grant
 from core.models import Character
+from core.proficiencies import merge_proficiency_tokens
 from core.progression_hp import HpGainBreakdown, hp_gain_breakdown_for_level_up
+from core.skills import merge_proficiencies
+from core.stats import apply_bonuses_to_stats
 from core.xp_levels import grant_experience, has_pending_level_up
 
 
@@ -41,9 +50,6 @@ def _apply_progression_grant(
     """Применить один grant progression без UI-подвыборов."""
     if grant.get("choice"):
         return character
-    from core.grants import proficiency_tokens_and_skills_from_grant
-    from core.proficiencies import merge_proficiency_tokens
-    from core.skills import merge_proficiencies
 
     weapons, armors, tools, skills = proficiency_tokens_and_skills_from_grant(
         grant
@@ -102,13 +108,6 @@ def _headless_asi_resolution(
     character: Character, new_level: int
 ) -> AsiResolution:
     """Авто-ASI или сохранённый выбор (без UI)."""
-    from core.feats import (
-        apply_feat_grants_to_character,
-        resolve_feat_ability_bonuses,
-        tough_hp_adjustment_on_acquire,
-    )
-    from core.stats import apply_bonuses_to_stats
-
     char = character
     old_stats = char.stats.copy()
     con_bonus = 0
