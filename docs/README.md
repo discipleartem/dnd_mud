@@ -27,7 +27,7 @@
 
 ## Справочник правил (`rules/`)
 
-Layout **`agent-v2`**. Точка входа для поиска — [`rules/_index/lookup.yaml`](rules/_index/lookup.yaml).
+Layout **`agent-v2`**. Точка входа для поиска — [`rules/_index/lookup.yaml`](rules/_index/lookup.yaml). Только механика PHB (без лора и без MUD-блоков в карточках).
 
 ```text
 docs/rules/
@@ -43,10 +43,10 @@ docs/rules/
 | Действие | Где |
 |----------|-----|
 | Найти правило по RU-названию | `lookup.yaml` → `by_alias` → `quick` / `file` |
-| Обновить пересказ механики | Блоки `<!-- phb:auto:* -->` в `.md`; guide — [`rules/README.md`](rules/README.md) |
-| Пересобрать индексы | `python scripts/build_rules_index.py` |
+| Обновить пересказ механики | Markdown-карточка + `quick`/`aliases`; guide — [`rules/README.md`](rules/README.md) |
+| Обновить индексы | Вручную: `toc.yaml`, `_index/*.yaml`, `lookup.yaml` |
 
-**Канон механики:** PHB **2014** / SRD 5.1 (не редакция 2024). При расхождении: официальные правила 5e до 2024 > `rules/`.
+**Канон механики:** PHB **2014** / SRD 5.1 (не редакция 2024). При расхождении: официальные правила 5e до 2024 > `rules/`. Статус MUD — [`DND_RULES.md`](DND_RULES.md).
 
 ## Связанные файлы вне `docs/`
 

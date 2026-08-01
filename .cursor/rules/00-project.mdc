@@ -42,10 +42,10 @@ Verify/review policy — [`dnd-mud-workflow.mdc`](dnd-mud-workflow.mdc) §Verify
 
 | Шаг | Источник | Как искать |
 |-----|----------|------------|
-| **1** | [`docs/rules/`](docs/rules/) | [`_index/lookup.yaml`](docs/rules/_index/lookup.yaml) (`by_alias` / `by_id`); детали — markdown `phb:auto`; обзор — [`docs/rules/README.md`](docs/rules/README.md), [`docs/DND_RULES.md`](docs/DND_RULES.md) |
+| **1** | [`docs/rules/`](docs/rules/) | [`_index/lookup.yaml`](docs/rules/_index/lookup.yaml) (`by_alias` / `by_id` → `quick`, `file`); обзор — [`docs/rules/README.md`](docs/rules/README.md); статус MUD — [`docs/DND_RULES.md`](docs/DND_RULES.md) |
 | **2** | Интернет | Официальные правила **D&D 5e до редакции 2024** (PHB 2014 / SRD 5.1). **Не** использовать правила PHB 2024+ как канон для этого проекта |
 
-**При противоречии:** официальные правила 5e до 2024 (шаг 2) > пересказ в `docs/rules/` (шаг 1). После уточнения дополняй `docs/rules/`. После правок справочника при необходимости — `python scripts/build_rules_index.py` (нормализация индексов).
+**При противоречии:** официальные правила 5e до 2024 (шаг 2) > пересказ в `docs/rules/` (шаг 1). После уточнения дополняй `docs/rules/` и вручную обнови `lookup.yaml` / `toc.yaml`. Индексы без автогенераторов.
 
 Подробнее: [`docs/rules/README.md`](../docs/rules/README.md).
 

@@ -17,6 +17,9 @@ __pycache__/
 .pytest_cache/
 .coverage
 build/
+.devin
+.devin_cache/
+devin_cache/
 
 # Локальная копия PHB (© WotC); не коммитить
 docs/*.pdf
