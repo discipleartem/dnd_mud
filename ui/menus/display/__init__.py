@@ -16,7 +16,7 @@ from ui.menus.display.class_info import (
     _print_subclass_info,
 )
 from ui.menus.display.equipment_view import format_inventory_line
-from ui.menus.display.grants import (
+from ui.menus.display.grants_text import (
     format_grant_line_text,
 )
 from ui.menus.display.race_background import (

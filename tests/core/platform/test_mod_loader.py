@@ -4,7 +4,6 @@ from pathlib import Path
 
 import pytest
 
-from core.catalogs.races import RACES_FILE
 from core.platform.catalog_loader import load_catalog, reload_catalogs
 from core.platform.catalog_session import (
     get_mod_gating_difficulty,
@@ -19,6 +18,7 @@ from core.platform.mod_loader import (
     save_mods_state,
     set_mod_enabled,
 )
+from core.platform.paths import RACES_FILE
 from core.types import GameDifficulty
 
 pytestmark = pytest.mark.usefixtures("catalog_caches_cleared")

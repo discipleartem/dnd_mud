@@ -4,9 +4,9 @@ from pathlib import Path
 
 import pytest
 
-from core.catalogs.races import RACES_FILE
 from core.platform.catalog_loader import load_catalog, reload_catalogs
 from core.platform.io import CatalogLoadError
+from core.platform.paths import RACES_FILE
 
 pytestmark = pytest.mark.usefixtures("catalog_caches_cleared")
 

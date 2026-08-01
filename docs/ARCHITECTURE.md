@@ -83,7 +83,6 @@ UI не читает файлы данных напрямую — только �
 | `catalogs/adventure.py` | `Adventure` + `load_adventures()` |
 | **`core/grants/`** | Нормализация и разрешение grants |
 | `grants/normalize.py` | Нормализация `grants[]`; proficiency-токены |
-| `grants/format.py` | Чистое текстовое форматирование grants (без print); registry по типу |
 | `grants/labels.py` | Ключи локализации для отображения grants |
 | `grants/context.py` | `CreationContext`, `ResolvedGrants` |
 | `grants/resolve.py` | Leaf: `resolve_grants_for_context` / `resolve_creation_grants` (без feats) |
@@ -115,7 +114,8 @@ UI не читает файлы данных напрямую — только �
 | `inventory/equipment_text.py` | UI-подсказки оружия/доспехов (свойства, кубы урона, КД в списках) |
 | `inventory/equipped_display.py` | Данные экипировки для карточки (`get_equipped_display`) |
 | `inventory/equip_defaults.py` | Авто-экипировка |
-| `inventory/starting_equipment.py` | Стартовое снаряжение класса из YAML |
+| `inventory/starting_equipment.py` | Resolve стартового снаряжения класса из YAML |
+| `inventory/starting_equipment_labels.py` | Подписи и сводки стартового снаряжения |
 | **`core/mechanics/`** | Броски, проверки, владения, характеристики |
 | `mechanics/dice.py` | `roll()`, `roll_ability_score()`, `ability_modifier()` |
 | `mechanics/stats.py` | Генерация/валидация характеристик |

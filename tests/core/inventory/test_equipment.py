@@ -45,7 +45,9 @@ def test_sort_ids_by_proficiency() -> None:
 
 
 def test_option_display_label_strips_proficiency_hint() -> None:
-    from core.inventory.starting_equipment import format_equipment_option_label
+    from core.inventory.starting_equipment_labels import (
+        format_equipment_option_label,
+    )
     from core.platform.localization import load_strings
 
     ru_strings = load_strings("ru")
