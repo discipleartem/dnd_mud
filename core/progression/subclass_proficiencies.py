@@ -7,7 +7,20 @@ from core.mechanics.proficiency_collect import (
     merge_proficiency_tokens,
 )
 
-__all__ = ["apply_subclass_proficiencies_to_character"]
+__all__ = [
+    "apply_picked_tools_to_character",
+    "apply_subclass_proficiencies_to_character",
+]
+
+
+def apply_picked_tools_to_character(
+    character: Character,
+    picked: list[str],
+) -> None:
+    """Добавить выбранные инструменты к владениям персонажа."""
+    character.tool_proficiencies = merge_proficiency_tokens(
+        character.tool_proficiencies, picked
+    )
 
 
 def apply_subclass_proficiencies_to_character(
