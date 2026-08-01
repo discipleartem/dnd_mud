@@ -6,17 +6,15 @@ from core.feats.apply import (
     apply_feats_to_stats,
     resolve_feat_ability_bonuses,
 )
-from core.feats.catalog import (
-    get_feat_skill_ids,
-    get_race_feat_grants,
-    load_feat,
-)
+from core.feats.catalog import get_race_feat_grants
 from core.feats.requirements import (
     build_feat_selection_context,
     creation_known_for_feat_picks,
     list_feats_for_selection,
 )
-from core.grants.normalize import proficiency_tokens_and_skills_from_grant
+from core.feats.selection_side_effects import (
+    accumulate_feat_proficiency_knowledge,
+)
 from core.mechanics.stats import apply_bonuses_to_stats
 from core.platform.localization import get_string
 from core.progression.asi import cap_stats
@@ -117,28 +115,13 @@ def select_creation_feats(
             working_stats = cap_stats(
                 apply_bonuses_to_stats(working_stats, bonuses)
             )
-            for g in load_feat(feat_id).get("grants", []):
-                if not isinstance(g, dict):
-                    continue
-                weapons, _armor, tools, skills = (
-                    proficiency_tokens_and_skills_from_grant(g, sub)
-                )
-                for weapon_id in weapons:
-                    token = str(weapon_id)
-                    if token not in weapon_profs:
-                        weapon_profs.append(token)
-                for skill_id in skills:
-                    if skill_id not in known_skills:
-                        known_skills.append(skill_id)
-                for tool_id in tools:
-                    if tool_id not in known_tools:
-                        known_tools.append(tool_id)
-            for skill_id in get_feat_skill_ids([feat_id], {feat_id: sub}):
-                if skill_id not in known_skills:
-                    known_skills.append(skill_id)
-            for weapon_id in sub.get("weapons", []):
-                if weapon_id not in weapon_profs:
-                    weapon_profs.append(str(weapon_id))
+            accumulate_feat_proficiency_knowledge(
+                feat_id,
+                sub,
+                weapon_profs=weapon_profs,
+                known_skills=known_skills,
+                known_tools=known_tools,
+            )
 
     final_stats = apply_feats_to_stats(stats, feat_ids, feat_choices)
     return feat_ids, feat_choices, final_stats
