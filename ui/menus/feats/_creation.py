@@ -17,7 +17,7 @@ from core.localization import get_string
 from core.progression import cap_stats
 from core.stats import apply_bonuses_to_stats
 from core.types import StatMap, StringsDict
-from ui.menus._common import _print_screen_header
+from ui.menus.console import print_screen_header
 from ui.menus.feats._selection import _pick_feat_from_lists
 from ui.menus.feats._subchoices import _resolve_feat_subchoices
 
@@ -71,14 +71,14 @@ def select_creation_feats(
             )
             eligible, blocked, hidden = list_feats_for_selection(ctx, feat_ids)
             if not eligible:
-                _print_screen_header(
+                print_screen_header(
                     get_string(strings, "character.feat_caption")
                 )
                 print(get_string(strings, "character.feat_none_available"))
                 print()
                 return None
 
-            _print_screen_header(get_string(strings, "character.feat_caption"))
+            print_screen_header(get_string(strings, "character.feat_caption"))
             print(
                 get_string(
                     strings,

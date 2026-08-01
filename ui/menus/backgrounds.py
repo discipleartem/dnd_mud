@@ -11,7 +11,7 @@ from core.backgrounds import (
 )
 from core.localization import get_string
 from core.types import StringsDict
-from ui.menus._common import _print_screen_header, _read_numbered_choice
+from ui.menus.console import print_screen_header, read_numbered_choice
 from ui.menus.display import _print_background_info
 
 
@@ -21,7 +21,7 @@ def select_creation_background(
 ) -> tuple[str, list[str]] | None:
     """Выбор предыстории; (id, навыки) или None. Языки — на следующем шаге."""
     backgrounds = load_backgrounds(language)
-    _print_screen_header(get_string(strings, "character.background_caption"))
+    print_screen_header(get_string(strings, "character.background_caption"))
 
     details: list[dict[str, Any]] = []
     for bg in backgrounds:
@@ -39,7 +39,7 @@ def select_creation_background(
         _print_background_info(bg, strings, language)
 
     print()
-    choice = _read_numbered_choice(
+    choice = read_numbered_choice(
         strings,
         len(details),
         prompt_key="character.background_prompt",

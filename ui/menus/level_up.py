@@ -20,7 +20,7 @@ from core.progression import (
     process_pending_level_ups,
 )
 from core.types import LanguageCode, StringsDict
-from ui.menus._common import _press_enter, _print_screen_header
+from ui.menus.console import press_enter, print_screen_header
 from ui.menus.feats import select_level_up_feat_or_asi
 
 
@@ -32,7 +32,7 @@ def _print_level_up_screen(
     extra_hp: int = 0,
 ) -> None:
     """Экран одного повышения уровня."""
-    _print_screen_header(get_string(strings, "level_up.caption"))
+    print_screen_header(get_string(strings, "level_up.caption"))
     reached = get_string(strings, "level_up.reached", level=new_level)
     print(f"{Fore.YELLOW}{Style.BRIGHT}{reached}{Style.RESET_ALL}")
     print()
@@ -171,7 +171,7 @@ def run_pending_level_ups(
             print(f"{Fore.CYAN}{msg}{Style.RESET_ALL}")
         if con_bonus or tough_bonus:
             print()
-        _press_enter(strings)
+        press_enter(strings)
         return True
 
     return process_pending_level_ups(

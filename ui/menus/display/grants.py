@@ -7,6 +7,12 @@ from core.equipment import (
     get_weapon_name,
     proficiency_token_label,
 )
+from core.grant_labels import (
+    grant_damage_string_key,
+    grant_pool_string_key,
+    grant_type_string_key,
+    spell_string_key,
+)
 from core.grants import (
     ABILITY_INCREASE,
     normalize_armor_token,
@@ -17,9 +23,9 @@ from core.localization import (
 from core.types import (
     StringsDict,
 )
-from ui.menus._common import (
-    _ability_name,
-    _skill_name,
+from ui.menus.console import (
+    ability_name,
+    skill_name,
 )
 
 # ============================================================================
@@ -31,7 +37,7 @@ def _grant_type_label(strings: StringsDict, gtype: str) -> str:
     """Локализованное имя типа grant без поля name в YAML."""
     if not gtype:
         return ""
-    return get_string(strings, f"character.grant_type_{gtype}", default=gtype)
+    return get_string(strings, grant_type_string_key(gtype), default=gtype)
 
 
 def _grant_pool_label(
@@ -40,20 +46,8 @@ def _grant_pool_label(
     """Локализованная подпись пула выбора (all, common, …)."""
     if not pool:
         return ""
-    if pool == "all":
-        if gtype == "skill_proficiency":
-            return get_string(
-                strings,
-                "character.grant_pool_all_skills",
-                default=pool,
-            )
-        if gtype == "feat":
-            return get_string(
-                strings,
-                "character.grant_pool_all_feats",
-                default=pool,
-            )
-    direct = get_string(strings, f"character.grant_pool_{pool}", default="")
+    key = grant_pool_string_key(pool, gtype=gtype)
+    direct = get_string(strings, key, default="")
     if direct:
         return direct
     return pool
@@ -78,16 +72,14 @@ def _damage_type_labels(strings: StringsDict, types: list[Any]) -> str:
     for item in types:
         token = str(item)
         labels.append(
-            get_string(
-                strings, f"character.grant_damage_{token}", default=token
-            )
+            get_string(strings, grant_damage_string_key(token), default=token)
         )
     return ", ".join(labels)
 
 
 def _spell_name(strings: StringsDict, spell_id: str) -> str:
     """Локализованное имя заклинания."""
-    return get_string(strings, f"spells.{spell_id}", default=spell_id)
+    return get_string(strings, spell_string_key(spell_id), default=spell_id)
 
 
 def _spell_uses_label(strings: StringsDict, spell: dict[str, Any]) -> str:
@@ -132,7 +124,7 @@ def _format_spellcasting_grant(
     if not entries:
         return ""
     ability = str(grant.get("ability", ""))
-    ability_label = _ability_name(strings, ability) if ability else ""
+    ability_label = ability_name(strings, ability) if ability else ""
     return get_string(
         strings,
         "character.grant_spellcasting_list",
@@ -181,7 +173,7 @@ def _format_skill_proficiency_labels(
         get_string(
             strings,
             "character.grant_skill_proficiency",
-            skill=_skill_name(strings, str(skill_id)),
+            skill=skill_name(strings, str(skill_id)),
         )
         for skill_id in skills
     ]
@@ -242,7 +234,7 @@ def _grant_description(
                     strings,
                     "character.grant_cantrip_choice",
                     source=source,
-                    ability=_ability_name(strings, ability),
+                    ability=ability_name(strings, ability),
                 )
         case "immunity":
             if grant.get("effect") == "magical_sleep":
@@ -257,7 +249,7 @@ def _grant_description(
                 return get_string(
                     strings,
                     "character.grant_skill_expertise",
-                    skill=_skill_name(strings, skill),
+                    skill=skill_name(strings, skill),
                 )
         case "skill_proficiency":
             return _skill_proficiency_description(grant, strings)
@@ -345,7 +337,7 @@ def _skill_proficiency_description(
         return get_string(
             strings,
             "character.grant_skill_proficiency",
-            skill=_skill_name(strings, skills),
+            skill=skill_name(strings, skills),
         )
     return ""
 
@@ -405,7 +397,7 @@ def _advantage_description(
         return get_string(
             strings,
             "character.grant_advantage_skill_terrain",
-            skill=_skill_name(strings, skill),
+            skill=skill_name(strings, skill),
             terrain=terrain_label,
         )
     if grant.get("save") and grant.get("effect"):
@@ -418,7 +410,7 @@ def _advantage_description(
         return get_string(
             strings,
             "character.grant_advantage_save",
-            save=_ability_name(strings, str(grant["save"])),
+            save=ability_name(strings, str(grant["save"])),
             effect=effect_label,
         )
     return ""

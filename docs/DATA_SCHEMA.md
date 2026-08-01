@@ -233,11 +233,11 @@ races:
 
 ### Сборка персонажа
 
-**Реализовано:** `core/grants_context.py` — `CreationContext`, `ResolvedGrants`; `core/character_builder.py` — `resolve_creation_grants`, `resolve_grants_for_context`, `merge_languages_with_feats`.
+**Реализовано:** `core/grants_context.py` — `CreationContext`, `ResolvedGrants`; `core/grants_resolve.py` — `resolve_creation_grants`, `resolve_grants_for_context`, `merge_languages_with_feats` (реэкспорт из `character_build`).
 
 | ID | Задача | Статус |
 |----|--------|--------|
-| `char-builder` | `grants_context` + `character_builder`, единый `resolve_creation_grants` | ✅ реализовано |
+| `char-builder` | `grants_context` + `grants_resolve` / `character_build`, единый `resolve_creation_grants` | ✅ реализовано |
 
 ### Классы и progression
 

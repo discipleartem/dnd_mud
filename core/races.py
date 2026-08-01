@@ -21,14 +21,14 @@ from core.types import StatMap
 RACES_FILE = Path("database/races/races.yaml")
 
 
-def _load_races_yaml() -> dict[str, Any]:
+def load_races_yaml() -> dict[str, Any]:
     """Загрузить данные рас из YAML."""
     return load_catalog(RACES_FILE, "races")
 
 
 def resolve_subrace_id(race_id: str, subrace_id: str | None) -> str | None:
     """Нормализовать id подрасы (fallback human → standard)."""
-    race_info = _load_races_yaml().get(race_id, {})
+    race_info = load_races_yaml().get(race_id, {})
     if not isinstance(race_info, dict):
         return subrace_id
     subraces = race_info.get("subraces", {})
@@ -47,7 +47,7 @@ def get_race_and_subrace(
     race_id: str, subrace_id: str | None = None
 ) -> tuple[dict[str, Any], dict[str, Any] | None]:
     """Получить данные расы и подрасы из YAML."""
-    races = _load_races_yaml()
+    races = load_races_yaml()
     race_info = races.get(race_id, {})
     if not isinstance(race_info, dict):
         return {}, None
@@ -201,7 +201,7 @@ def _localize_race_info(
 
 def load_races(language: str = "ru") -> list[dict[str, Any]]:
     """Загрузить список всех доступных рас."""
-    return load_catalog_items(_load_races_yaml(), language)
+    return load_catalog_items(load_races_yaml(), language)
 
 
 def load_race_full(race_id: str, language: str = "ru") -> dict[str, Any]:

@@ -27,9 +27,9 @@ from core.starting_equipment import (
 from core.types import (
     StringsDict,
 )
-from ui.menus._common import (
-    _ability_name,
-    _skill_name,
+from ui.menus.console import (
+    ability_name,
+    skill_name,
 )
 
 # ============================================================================
@@ -91,7 +91,7 @@ def _format_class_skills(
     count = int(class_info.get("skill_choices_count", 0))
     if not isinstance(skills, list) or not skills:
         return ""
-    skill_names = ", ".join(_skill_name(strings, str(s)) for s in skills)
+    skill_names = ", ".join(skill_name(strings, str(s)) for s in skills)
     if count:
         return get_string(
             strings,
@@ -110,7 +110,7 @@ def _format_class_saving_throws(
     saves = class_info.get("saving_throws", [])
     if not isinstance(saves, list) or not saves:
         return ""
-    names = ", ".join(_ability_name(strings, str(s)) for s in saves)
+    names = ", ".join(ability_name(strings, str(s)) for s in saves)
     return get_string(
         strings,
         "character.class_saving_throws_label",
@@ -283,7 +283,7 @@ def _print_class_summary(
 
     prime = class_info.get("prime_ability", "")
     if prime:
-        ability = _ability_name(strings, str(prime))
+        ability = ability_name(strings, str(prime))
         prefix = get_string(strings, "character.class_prime_ability_label")
         if "{ability}" in prefix:
             prefix = prefix.split("{ability}")[0].rstrip(": ").rstrip()

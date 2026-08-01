@@ -18,7 +18,7 @@ from core.equipment import (
     tool_category,
     weapon_matches_category,
 )
-from core.feats import get_feat_proficiency_grants
+from core.feat_catalog import get_feat_proficiency_grants
 from core.grants import (
     mechanics_from_grant_entry,
     normalize_armor_token,
@@ -367,24 +367,19 @@ def build_fixed_proficiencies(
     feat_choices: dict[str, dict[str, Any]] | None = None,
 ) -> tuple[list[str], list[str], list[str]]:
     """Собрать фиксированные владения без игровых выборов."""
-    from core.character_build import resolve_grants_for_context
-    from core.grants_context import CreationContext
-
-    ctx = CreationContext(
-        race_id=race_id,
-        subrace_id=subrace_id,
-        class_id=class_id,
-        background_id=background_id,
-        subclass_id=subclass_id,
-        level=level,
-        feat_ids=tuple(feat_ids) if feat_ids else (),
-        feat_choices=feat_choices,
+    from core.grants_resolve import (
+        build_fixed_proficiencies as _build_fixed,
     )
-    grants = resolve_grants_for_context(ctx, include_feat_languages=False)
-    return (
-        list(grants.weapon_tokens),
-        list(grants.armor_tokens),
-        list(grants.tool_tokens),
+
+    return _build_fixed(
+        race_id,
+        subrace_id,
+        class_id,
+        background_id,
+        subclass_id,
+        level,
+        feat_ids=feat_ids,
+        feat_choices=feat_choices,
     )
 
 

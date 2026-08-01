@@ -21,8 +21,8 @@ from core.types import (
     StatMap,
     StringsDict,
 )
-from ui.menus._common import (
-    _ability_name,
+from ui.menus.console import (
+    ability_name,
 )
 from ui.menus.display.grants import (
     _grant_description,
@@ -170,7 +170,7 @@ def _print_race_info(
     if bonuses:
         bonus_parts = []
         for stat, val in bonuses.items():
-            stat_label = _ability_name(strings, stat)
+            stat_label = ability_name(strings, stat)
             bonus_parts.append(
                 f"{Fore.CYAN}{stat_label}{Style.RESET_ALL}"
                 f"+{Fore.GREEN}{val}{Style.RESET_ALL}"
@@ -203,7 +203,7 @@ def _format_bonuses(bonuses: StatMap, strings: StringsDict) -> str:
 
     bonus_strs = []
     for stat, bonus in bonuses.items():
-        stat_name = _ability_name(strings, stat)
+        stat_name = ability_name(strings, stat)
         bonus_strs.append(
             get_string(
                 strings,

@@ -35,7 +35,7 @@ def test_point_buy_finish_blocked_with_unspent_points(
         raise StopLoopError
 
     monkeypatch.setattr(stats_shared, "_confirm_stats", lambda *a, **k: "back")
-    monkeypatch.setattr(stats_methods, "_press_enter", fake_press_enter)
+    monkeypatch.setattr(stats_methods, "press_enter", fake_press_enter)
     patch_int_input(monkeypatch, [0])
     with pytest.raises(StopLoopError):
         stats_methods._select_stats_point_buy(ru_strings, "human", None)
@@ -64,7 +64,7 @@ def test_hardcore_4d6_no_regenerate_option(
     monkeypatch, capsys, ru_strings, patch_int_input
 ):
     monkeypatch.setattr(stats_methods, "roll_ability_score", lambda: 12)
-    monkeypatch.setattr(stats_methods, "_press_enter", lambda strings: None)
+    monkeypatch.setattr(stats_methods, "press_enter", lambda strings: None)
     patch_int_input(monkeypatch, [1])
     stats_methods._select_stats_random_hardcore(ru_strings, "elf", None)
     output = capsys.readouterr().out

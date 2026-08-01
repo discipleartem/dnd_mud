@@ -329,7 +329,15 @@ class ResolvedGrants:
     save_ids: tuple[str, ...]
 ```
 
-Тонкий модуль без imports из `progression` / `proficiencies` — разрыв циклических зависимостей. Re-export: `core.character_builder`.
+Тонкий модуль без imports из `progression` / `proficiencies` — разрыв циклических зависимостей.
+
+---
+
+## core.grants_resolve — Сборка владений
+
+`resolve_grants_for_context`, `resolve_creation_grants`, `merge_languages_with_feats`,
+`merge_expertise_with_feats`, `build_fixed_proficiencies` — leaf-модуль.
+`character_build` реэкспортирует resolve/merge для совместимости.
 
 ---
 
@@ -352,7 +360,7 @@ merge_expertise_with_feats(skill_expertise, feat_ids, feat_choices) -> list[str]
 
 Единственный API сборки — `build_new_character(CharacterBuildParams)`.  
 Creation flow передаёт `unique_save_slug` из `core.character_storage`.  
-Функции `resolve_grants_for_context`, `resolve_creation_grants`, `merge_languages_with_feats`, `merge_expertise_with_feats` перенесены из удалённого `character_builder.py`.
+Функции `resolve_grants_for_context`, `resolve_creation_grants`, `merge_languages_with_feats`, `merge_expertise_with_feats` живут в `core/grants_resolve.py` и реэкспортируются из `character_build`.
 
 ---
 
@@ -532,7 +540,7 @@ ability_for_skill(skill_id: str) -> str | None
 
 ## core.feats — Черты
 
-Источник: `database/progression/feats.yaml`. Всё в `core/feats.py` (loader, apply, requirements, visibility, descriptions). UI: пакет `ui/menus/feats/` (`select_creation_feats`, `select_level_up_feat_or_asi`).
+Источник: `database/progression/feats.yaml`. Фасад `core/feats.py`; реализация — `feat_catalog`, `feat_apply`, `feat_text`, `feat_requirements`. UI: пакет `ui/menus/feats/` (`select_creation_feats`, `select_level_up_feat_or_asi`).
 
 ```python
 load_feats() -> list[dict[str, Any]]
@@ -785,7 +793,7 @@ load_session(save_slug: str) -> SessionSnapshot | None
 load_character_for_session(snapshot, characters_dir) -> Character | None
 ```
 
-`load_character_for_session` загружает JSON через `character_storage._try_load_character_file` — те же правила битых сейвов, что у `load_characters()`.
+`load_character_for_session` загружает JSON через `character_storage.try_load_character_file` — те же правила битых сейвов, что у `load_characters()`.
 
 Файлы: `saves/sessions/{save_slug}.json` — см. [DATA_SCHEMA.md](DATA_SCHEMA.md) §Save JSON — сессия приключения.
 

@@ -16,12 +16,12 @@ from core.models import Adventure, Character
 from core.types import RuntimeSettings, StringsDict
 from ui.input_handler import get_int_input
 from ui.menus import _creation_steps
-from ui.menus._common import (
-    _press_enter,
-    _print_screen_header,
-    _run_numbered_menu,
-)
 from ui.menus._corrupt_saves import show_corrupt_save_warnings_if_any
+from ui.menus.console import (
+    press_enter,
+    print_screen_header,
+    run_numbered_menu,
+)
 from ui.menus.display import _print_characters_list
 from ui.menus.scenario_flow import run_scenario
 
@@ -34,7 +34,7 @@ def _select_character(
     language: str = "ru",
 ) -> SelectCharacterResult:
     """Экран выбора персонажа из списка сохранённых."""
-    _print_screen_header(get_string(strings, "choose_character.caption"))
+    print_screen_header(get_string(strings, "choose_character.caption"))
     _print_characters_list(strings, characters, language)
 
     char_count = len(characters)
@@ -83,7 +83,7 @@ def _select_adventure(
             f"{Style.RESET_ALL}"
         )
         print()
-        _press_enter(strings)
+        press_enter(strings)
         return None
 
     matching: list[Adventure] = []
@@ -102,7 +102,7 @@ def _select_adventure(
             f"{Style.RESET_ALL}"
         )
         print()
-        _press_enter(strings)
+        press_enter(strings)
         return None
 
     def _print_unavailable() -> None:
@@ -142,9 +142,9 @@ def _select_adventure(
         for adv in matching
     ]
 
-    _print_screen_header(get_string(strings, "adventures.caption"))
+    print_screen_header(get_string(strings, "adventures.caption"))
 
-    choice = _run_numbered_menu(
+    choice = run_numbered_menu(
         strings,
         options,
         prompt_key="adventures.prompt",

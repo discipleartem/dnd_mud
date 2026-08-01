@@ -16,10 +16,10 @@ from core.session_storage import (
     load_session,
 )
 from core.types import LanguageCode, StringsDict
-from ui.menus._common import (
-    _press_enter,
-    _print_screen_header,
-    _read_numbered_choice,
+from ui.menus.console import (
+    press_enter,
+    print_screen_header,
+    read_numbered_choice,
 )
 from ui.menus.scenario_flow import run_scenario_with_engine
 
@@ -31,24 +31,24 @@ def show_load_game_flow(
     """Выбор сохранённой сессии и возобновление сценария."""
     sessions = list_sessions()
     if not sessions:
-        _print_screen_header(get_string(strings, "load_game.caption"))
+        print_screen_header(get_string(strings, "load_game.caption"))
         print(
             f"{Fore.YELLOW}"
             f"{get_string(strings, 'load_game.no_sessions')}"
             f"{Style.RESET_ALL}"
         )
         print()
-        _press_enter(strings)
+        press_enter(strings)
         return
 
-    _print_screen_header(get_string(strings, "load_game.caption"))
+    print_screen_header(get_string(strings, "load_game.caption"))
     for idx, snapshot in enumerate(sessions, 1):
         print(
             f"  {Fore.YELLOW}{idx}{Style.RESET_ALL}."
             f" {snapshot.adventure_id} — {snapshot.character_save_slug}"
         )
     print()
-    choice = _read_numbered_choice(
+    choice = read_numbered_choice(
         strings,
         len(sessions),
         prompt_key="load_game.prompt",
@@ -70,7 +70,7 @@ def show_load_game_flow(
             f"{Style.RESET_ALL}"
         )
         print()
-        _press_enter(strings)
+        press_enter(strings)
         return
 
     adventures = load_adventures()
@@ -82,7 +82,7 @@ def show_load_game_flow(
             f"{Style.RESET_ALL}"
         )
         print()
-        _press_enter(strings)
+        press_enter(strings)
         return
 
     bootstrap_session_catalogs(loaded.difficulty)

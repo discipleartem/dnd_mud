@@ -12,7 +12,6 @@ from core.progression import (
 from core.races import load_races
 from core.stats import ABILITY_SCORE_DEFAULT
 from core.types import StringsDict
-from ui.menus._common import _print_screen_header, _run_numbered_menu
 from ui.menus._creation_finalize import merge_feat_languages
 from ui.menus._creation_navigation import (
     back_step_from_equipment,
@@ -25,6 +24,7 @@ from ui.menus._creation_state import CreationStep, _CreationState
 from ui.menus._creation_steps import finalize_creation
 from ui.menus._selectors import select_class, select_subclass, select_subrace
 from ui.menus.backgrounds import select_creation_background
+from ui.menus.console import print_screen_header, run_numbered_menu
 from ui.menus.equipment import select_creation_equipment
 from ui.menus.expertise import select_creation_expertise
 from ui.menus.feats import select_creation_feats
@@ -58,8 +58,8 @@ def _handle_race(
     strings: StringsDict, state: _CreationState, language: str
 ) -> StepResult:
     races = load_races(language)
-    _print_screen_header(get_string(strings, "character.race_caption"))
-    choice = _run_numbered_menu(
+    print_screen_header(get_string(strings, "character.race_caption"))
+    choice = run_numbered_menu(
         strings,
         [race.get("name", "?") for race in races],
         prompt_key="character.race_prompt",

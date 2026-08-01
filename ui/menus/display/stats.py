@@ -12,10 +12,10 @@ from core.types import (
     StatMap,
     StringsDict,
 )
-from ui.menus._common import (
+from ui.menus.console import (
     SEPARATOR,
-    _ability_name,
-    _stats_caption_line,
+    ability_name,
+    stats_caption_line,
 )
 
 # ============================================================================
@@ -55,7 +55,7 @@ def _format_character_stats_compact(
         value = char.stats.get(stat)
         if value is None:
             continue
-        abbr = _ability_name(strings, stat)[:3]
+        abbr = ability_name(strings, stat)[:3]
         mod = ability_modifier(int(value))
         mod_part = _colored_ability_modifier(mod)
         segment = (
@@ -75,7 +75,7 @@ def _print_final_stat_line(
     race_bonuses: StatMap,
 ) -> None:
     """Вывести итоговую характеристику с пометкой расового бонуса (+N)."""
-    stat_name = _ability_name(strings, stat)
+    stat_name = ability_name(strings, stat)
     bonus = race_bonuses.get(stat, 0)
     if bonus > 0:
         print(
@@ -93,7 +93,7 @@ def _print_stats_generation_header(
 ) -> None:
     """Заголовок генерации характеристик и расовые бонусы."""
     print(SEPARATOR)
-    print(_stats_caption_line(strings))
+    print(stats_caption_line(strings))
     print(SEPARATOR)
     print()
     if race_id is not None:

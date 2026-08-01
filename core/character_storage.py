@@ -98,7 +98,7 @@ def _corrupt_label_from_data(data: dict[str, Any], path: Path) -> str:
     return path.stem
 
 
-def _try_load_character_file(
+def try_load_character_file(
     path: Path,
 ) -> tuple[Character | None, str | None]:
     """Загрузить персонажа; при битом сейве — (None, подпись)."""
@@ -187,7 +187,7 @@ def _save_character_file(character: Character) -> None:
 
 def _load_character_file(path: Path) -> Character | None:
     """Загрузить одного персонажа из JSON-файла."""
-    character, _corrupt_label = _try_load_character_file(path)
+    character, _corrupt_label = try_load_character_file(path)
     return character
 
 
@@ -209,7 +209,7 @@ def load_characters() -> LoadCharactersResult:
     entries: list[tuple[float, Character]] = []
     corrupt_labels: list[str] = []
     for path in CHARACTERS_DIR.glob("*.json"):
-        character, corrupt_label = _try_load_character_file(path)
+        character, corrupt_label = try_load_character_file(path)
         if character is not None:
             entries.append(
                 (_character_created_at_timestamp(character, path), character)

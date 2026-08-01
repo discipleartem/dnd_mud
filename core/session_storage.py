@@ -6,7 +6,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
-from core.character_storage import CHARACTERS_DIR, _try_load_character_file
+from core.character_storage import CHARACTERS_DIR, try_load_character_file
 from core.io import load_json, save_json
 from core.models import Adventure, Character
 from core.types import GameDifficulty
@@ -145,7 +145,7 @@ def load_character_for_session(
     """Загрузить персонажа сессии из ``saves/characters/``."""
     base = characters_dir if characters_dir is not None else CHARACTERS_DIR
     path = base / f"{snapshot.character_save_slug}.json"
-    character, _corrupt = _try_load_character_file(path)
+    character, _corrupt = try_load_character_file(path)
     return character
 
 

@@ -64,9 +64,9 @@ def test_variant_human_inherits_race_language_grant() -> None:
 
 def test_subrace_yaml_grants_do_not_duplicate_parent() -> None:
     """В YAML подраса не повторяют grants базовой расы с тем же type и name."""
-    from core.races import _load_races_yaml
+    from core.races import load_races_yaml
 
-    for race_id, race_info in _load_races_yaml().items():
+    for race_id, race_info in load_races_yaml().items():
         if not isinstance(race_info, dict):
             continue
         parent_keys = {

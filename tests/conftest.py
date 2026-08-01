@@ -114,7 +114,7 @@ def patch_int_input():
 
         # Прямые импорты get_int_input — патчим точки использования.
         for target in (
-            "ui.menus._common.get_int_input",
+            "ui.menus.console.get_int_input",
             "ui.menus.new_game.get_int_input",
             "ui.menus.stats.stats_methods.get_int_input",
             "ui.menus.stats.stats_shared.get_int_input",
@@ -130,10 +130,10 @@ def patch_int_input():
 
 @pytest.fixture
 def patch_press_enter(monkeypatch: pytest.MonkeyPatch) -> None:
-    """Заглушка _press_enter для UI smoke-тестов."""
-    from ui.menus import _common
+    """Заглушка press_enter для UI smoke-тестов."""
+    from ui.menus import console
 
-    monkeypatch.setattr(_common, "_press_enter", lambda strings: None)
+    monkeypatch.setattr(console, "press_enter", lambda strings: None)
 
 
 @pytest.fixture
@@ -187,7 +187,7 @@ def patch_level_up_ui(monkeypatch: pytest.MonkeyPatch) -> None:
     """Заглушки UI повышения уровня."""
     from ui.menus import level_up as level_up_menu
 
-    monkeypatch.setattr(level_up_menu, "_press_enter", lambda strings: None)
+    monkeypatch.setattr(level_up_menu, "press_enter", lambda strings: None)
     monkeypatch.setattr(
-        level_up_menu, "_print_screen_header", lambda strings: None
+        level_up_menu, "print_screen_header", lambda strings: None
     )

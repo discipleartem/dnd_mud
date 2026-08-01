@@ -18,7 +18,7 @@ from core.types import (
 )
 
 
-def _parse_character_class(raw: object) -> CharacterClass:
+def parse_character_class(raw: object) -> CharacterClass:
     """Идентификатор класса из JSON или кода."""
     if isinstance(raw, CharacterClass):
         return raw
@@ -127,7 +127,7 @@ class Character:
     def __post_init__(self) -> None:
         """Привести class_id к enum при создании из str."""
         object.__setattr__(
-            self, "class_id", _parse_character_class(self.class_id)
+            self, "class_id", parse_character_class(self.class_id)
         )
 
     def to_dict(self) -> dict[str, Any]:
@@ -194,7 +194,7 @@ class Character:
         return cls(
             name=str(data.get("name", "")),
             race=str(data.get("race", "")),
-            class_id=_parse_character_class(data.get("class_id")),
+            class_id=parse_character_class(data.get("class_id")),
             level=clamp_level(int(data.get("level", 1))),
             stats=data.get("stats", {}),
             current_hp=current_hp,

@@ -12,11 +12,11 @@ from core.localization import get_string
 from core.models import Character
 from core.types import StringsDict
 from ui.input_handler import get_int_input
-from ui.menus._common import (
-    _print_pick_list,
-    _print_screen_header,
-    _read_pool_pick,
-    _skill_name,
+from ui.menus.console import (
+    print_pick_list,
+    print_screen_header,
+    read_pool_pick,
+    skill_name,
 )
 
 
@@ -42,7 +42,7 @@ def _pick_expertise_skills(
         name=grant.feature_name,
     )
     for current in range(1, pick_count + 1):
-        _print_screen_header(header)
+        print_screen_header(header)
         print(f"{Fore.CYAN}{Style.BRIGHT}{heading}{Style.RESET_ALL}")
         print()
         prompt = get_string(
@@ -53,13 +53,13 @@ def _pick_expertise_skills(
         )
         blocked = set(already_expert) | set(selected)
         while True:
-            selectable = _print_pick_list(
+            selectable = print_pick_list(
                 list(proficiencies),
                 blocked,
-                label_for=lambda skill_id: _skill_name(strings, skill_id),
+                label_for=lambda skill_id: skill_name(strings, skill_id),
                 taken_suffix=taken_suffix,
             )
-            picked = _read_pool_pick(
+            picked = read_pool_pick(
                 strings,
                 selectable,
                 prompt=prompt,
@@ -82,9 +82,7 @@ def _select_rogue_expertise(
 ) -> tuple[list[str], list[str]] | None:
     """Компетентность плута: 2 навыка или 1 навык + воровские инструменты."""
     while True:
-        _print_screen_header(
-            get_string(strings, "character.expertise_caption")
-        )
+        print_screen_header(get_string(strings, "character.expertise_caption"))
         heading = get_string(
             strings,
             "character.expertise_feature_heading",
@@ -213,7 +211,7 @@ def format_expertise_display(
     """Строка компетентности для карточки персонажа."""
     parts: list[str] = []
     for skill_id in skill_expertise:
-        parts.append(_skill_name(strings, skill_id))
+        parts.append(skill_name(strings, skill_id))
     for tool_id in tool_expertise:
         parts.append(_tool_name(strings, tool_id))
     return ", ".join(parts) if parts else ""

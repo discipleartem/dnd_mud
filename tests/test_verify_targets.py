@@ -38,7 +38,7 @@ def test_core_and_ui_mapping() -> None:
     assert vt.source_to_tests("ui/menus/stats/stats_flow.py") == [
         "tests/test_menus_stats.py"
     ]
-    assert vt.source_to_tests("ui/menus/_display.py") == [
+    assert vt.source_to_tests("ui/menus/display/__init__.py") == [
         "tests/test_equipment.py"
     ]
     assert vt.source_to_tests("ui/menus/characters_menu.py") == [

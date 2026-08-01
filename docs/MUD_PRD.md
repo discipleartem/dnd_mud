@@ -408,12 +408,13 @@ dnd_mud/
 ├── core/                            # ядро (модели, механика, loaders)
 │   ├── models.py, character.py, character_storage.py
 │   ├── game_engine.py, scenario_actions.py, session_storage.py
-│   ├── grants.py, character_builder.py, progression/, inventory/, feats/
-│   ├── dice.py, checks.py, localization.py, mod_loader.py
+│   ├── grants.py, grants_resolve.py, character_build.py
+│   ├── progression.py (+ xp_levels/asi/… siblings), inventory.py (+ siblings)
+│   ├── feats.py (+ feat_* siblings), dice.py, checks.py, localization.py
 │   └── …                            # см. docs/ARCHITECTURE.md
 ├── ui/                              # пользовательский интерфейс
 │   ├── input_handler.py, terminal_wrap.py
-│   └── menus/                       # flows, _creation_*, _display.py, feats/
+│   └── menus/                       # flows, console.py, display/, feats/
 ├── database/                        # YAML-справочники + JSON-конфиг
 │   ├── races/races.yaml
 │   ├── classes/classes.yaml

@@ -4,14 +4,14 @@ from core.localization import get_string
 from core.models import Character
 from core.types import StringsDict
 from ui.input_handler import get_str_input
-from ui.menus._common import (
-    _print_screen_header,
-    _print_success_and_wait,
-)
 from ui.menus._creation_finalize import (
     save_created_character,
 )
 from ui.menus._creation_state import _CreationState
+from ui.menus.console import (
+    print_screen_header,
+    print_success_and_wait,
+)
 from ui.menus.settings import select_difficulty
 
 
@@ -23,7 +23,7 @@ def finalize_creation(
     if character is None:
         return None
     msg = get_string(strings, "character.save_success", name=state.name)
-    _print_success_and_wait(strings, msg)
+    print_success_and_wait(strings, msg)
     return character
 
 
@@ -35,7 +35,7 @@ def show_create_character_flow(
     if difficulty is None:
         return None
 
-    _print_screen_header(get_string(strings, "character.creation_caption"))
+    print_screen_header(get_string(strings, "character.creation_caption"))
 
     name = get_str_input(
         get_string(strings, "character.name_prompt"),
