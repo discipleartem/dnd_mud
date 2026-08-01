@@ -72,6 +72,14 @@ def normalize_armor_token(token: str) -> str:
     return _ARMOR_ALIASES.get(token, token)
 
 
+def armor_tokens_from_grant(grant: dict[str, Any]) -> list[str]:
+    """Нормализованные токены доспехов из grant."""
+    raw = grant.get("armor_types", grant.get("armors", []))
+    if not isinstance(raw, list):
+        return []
+    return [normalize_armor_token(str(armor)) for armor in raw]
+
+
 def mechanics_from_grant_entry(entry: dict[str, Any]) -> dict[str, Any]:
     """Плоский grant или mechanics из class feature."""
     if "mechanics" in entry:
