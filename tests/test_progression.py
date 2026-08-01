@@ -46,7 +46,7 @@ def test_level_up_preserves_excess_xp(
 ) -> None:
     """Левелап не обрезает опыт до порога уровня."""
     monkeypatch.setattr(
-        "core.progression.roll",
+        "core.progression_hp.roll",
         lambda count, sides, modifier=0: 8 + modifier,
     )
     char = grant_experience(fighter_l1_hardcore, 1500)
@@ -136,7 +136,7 @@ def test_resolve_pending_level_ups_records_asi_and_feat(
         feat_choices={},
     )
     monkeypatch.setattr(
-        "core.progression.roll",
+        "core.progression_hp.roll",
         lambda count, sides, modifier=0: 8 + modifier,
     )
     updated = resolve_pending_level_ups(char)
@@ -177,7 +177,7 @@ def test_run_scenario_grant_xp_levels_character(
 ) -> None:
     rolls = iter([8, 3])
     monkeypatch.setattr(
-        "core.progression.roll",
+        "core.progression_hp.roll",
         lambda count, sides, modifier=0: next(rolls) + modifier,
     )
     character = Character(
