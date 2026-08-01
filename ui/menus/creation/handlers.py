@@ -4,6 +4,7 @@ from collections.abc import Callable
 from dataclasses import dataclass
 
 from core.catalogs.races import load_races
+from core.character.finalize import merge_feat_languages_into
 from core.character.models import Character
 from core.mechanics.expertise import expertise_step_required
 from core.mechanics.stats import ABILITY_SCORE_DEFAULT
@@ -14,7 +15,7 @@ from ui.menus.console import print_screen_header, run_numbered_menu
 from ui.menus.creation.backgrounds import select_creation_background
 from ui.menus.creation.equipment import select_creation_equipment
 from ui.menus.creation.expertise import select_creation_expertise
-from ui.menus.creation.finalize import finalize_creation, merge_feat_languages
+from ui.menus.creation.finalize import finalize_creation
 from ui.menus.creation.languages import select_creation_languages
 from ui.menus.creation.navigation import (
     back_step_from_equipment,
@@ -190,7 +191,9 @@ def _handle_feats(
     state.feat_ids = feat_ids
     state.feat_choices = feat_choices
     state.stats = updated_stats
-    merge_feat_languages(state)
+    state.languages = merge_feat_languages_into(
+        state.languages, state.feat_ids, state.feat_choices
+    )
     return _advance("proficiencies")
 
 

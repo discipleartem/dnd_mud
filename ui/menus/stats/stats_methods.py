@@ -26,7 +26,7 @@ from ui.menus.console import (
     choice_prompt,
     press_enter,
     print_back_row,
-    run_options_with_back,
+    run_numbered_menu,
 )
 from ui.menus.display import (
     _print_point_buy_cost_table,
@@ -265,12 +265,14 @@ def _select_stats_random_normal(
         )
         print(f"  {rolls_display}")
         print()
-        roll_choice = run_options_with_back(
+        roll_choice = run_numbered_menu(
             strings,
             [
                 get_string(strings, "character.stats_random_accept"),
                 get_string(strings, "character.stats_random_regenerate"),
             ],
+            prompt_key="common.choice_prompt",
+            back_label_key="character.back",
         )
         if roll_choice is None:
             return None

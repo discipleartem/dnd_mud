@@ -9,10 +9,7 @@ from core.platform.catalog_session import (
     get_mod_gating_difficulty,
 )
 from core.platform.localization import resolve_localized_text
-from core.platform.mod_loader import (
-    clear_mod_loader_cache,
-    load_merged_catalog,
-)
+from core.platform.mod_loader import load_merged_catalog
 
 
 def load_catalog(path: Path | str, root_key: str) -> dict[str, Any]:
@@ -24,18 +21,8 @@ def load_catalog(path: Path | str, root_key: str) -> dict[str, Any]:
     )
 
 
-def clear_catalog_cache() -> None:
-    """Сбросить кэш каталогов (для тестов)."""
-    clear_mod_loader_cache()
-
-
-def clear_all_catalog_caches() -> None:
-    """Сбросить все кэши загрузчиков каталогов и строк (для тестов)."""
-    get_catalog_session().clear_caches()
-
-
 def reload_catalogs() -> None:
-    """Перезагрузить каталоги и строки без рестарта интерпретатора."""
+    """Сбросить кэши каталогов, модов и строк."""
     get_catalog_session().clear_caches()
 
 

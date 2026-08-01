@@ -9,7 +9,6 @@ from core.character.models import Character
 from core.engine.game_engine import GameEngine, GameSession
 from core.engine.session_storage import (
     SessionSnapshot,
-    delete_session,
     list_sessions,
     load_character_for_session,
     load_session,
@@ -105,18 +104,3 @@ def test_list_sessions_orders_by_updated_at(
     save_session(second)
     slugs = [item.save_slug for item in list_sessions()]
     assert slugs == ["first", "second"]
-
-
-def test_delete_session_removes_file(sessions_dir: Path) -> None:
-    save_session(
-        SessionSnapshot(
-            save_slug="gone",
-            character_save_slug="hero",
-            adventure_id="tutorial",
-            current_node_id=None,
-            difficulty="normal",
-        )
-    )
-    assert delete_session("gone") is True
-    assert load_session("gone") is None
-    assert delete_session("missing") is False

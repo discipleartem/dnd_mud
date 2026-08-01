@@ -124,7 +124,7 @@ UI не читает файлы данных напрямую — только �
 | `mechanics/proficiency_collect.py` | Сбор токенов владений из grants |
 | `mechanics/expertise.py` | Компетентность (expertise) из class features |
 | `mechanics/hp_bonus.py` | `HpBonusSource`, `get_racial_hp_bonus_sources` |
-| **`core/engine/`** | Сценарии, сессии, сложность (+ `combat/`) |
+| **`core/engine/`** | Сценарии, сессии, сложность |
 | `engine/game_engine.py` | `GameEngine`, `GameSession` — state machine сценария |
 | `engine/session_runner.py` | Persist сессии и UI-action wiring без UI I/O (storage I/O допустим) |
 | `engine/session_storage.py` | Снимки сессий приключений (`saves/sessions/`) |
@@ -132,7 +132,6 @@ UI не читает файлы данных напрямую — только �
 | `engine/scenario_actions.py` | Чистая логика action-узлов (без UI) |
 | `engine/engine_rules.py` | Преимущество/помеха проверок по `GameDifficulty` |
 | `engine/difficulty.py` | `adventure_allows_difficulty()` |
-| `engine/combat/` | Phase 2: `roll_initiative`, `attack_roll` (`rolls`) |
 
 ### 3. Data Layer (`database/`, `saves/`)
 

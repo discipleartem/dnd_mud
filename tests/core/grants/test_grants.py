@@ -14,7 +14,7 @@ from core.grants.normalize import (
     inherit_flags,
     mechanics_from_grant_entry,
     normalize_armor_token,
-    proficiency_tokens_from_grant,
+    proficiency_tokens_and_skills_from_grant,
 )
 
 pytestmark = pytest.mark.usefixtures("catalog_caches_cleared")
@@ -115,12 +115,13 @@ def test_mechanics_from_grant_entry() -> None:
 
 
 def test_proficiency_tokens_from_weapon_grant() -> None:
-    weapons, armors, tools = proficiency_tokens_from_grant(
+    weapons, armors, tools, skills = proficiency_tokens_and_skills_from_grant(
         {"type": "weapon_proficiency", "weapons": ["martial"]}
     )
     assert weapons == ["martial"]
     assert armors == []
     assert tools == []
+    assert skills == []
 
 
 def test_grant_equipment_item_and_musical_pool_labels() -> None:

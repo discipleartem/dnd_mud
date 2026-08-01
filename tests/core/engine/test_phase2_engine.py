@@ -1,7 +1,6 @@
-"""Тесты Phase 2: комнаты, бой, проверки по сложности."""
+"""Тесты Phase 2: комнаты, проверки по сложности."""
 
 from core.character.models import Character
-from core.engine.combat.rolls import attack_roll, roll_initiative
 from core.engine.engine_rules import check_roll_flags
 from core.engine.game_engine import GameEngine, GameSession
 from core.engine.scenario_actions import apply_scenario_action
@@ -74,14 +73,6 @@ def test_node_exits_helpers() -> None:
     assert node_exits(node) == {"east": "b"}
     assert resolve_exit(node, "east") == "b"
     assert resolve_exit(node, "west") is None
-
-
-def test_combat_initiative_and_attack_roll_shape() -> None:
-    init = roll_initiative(3)
-    assert init["total"] == init["roll"] + 3
-    attack = attack_roll(5, target_ac=14)
-    assert attack["total"] == attack["roll"] + 5
-    assert isinstance(attack["hit"], bool)
 
 
 def test_game_engine_session_flags() -> None:

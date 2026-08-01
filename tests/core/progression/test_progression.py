@@ -14,10 +14,7 @@ from core.progression.hp import (
     hp_gain_for_level,
     max_hp_for_level,
 )
-from core.progression.level_up import (
-    apply_experience,
-    resolve_pending_level_ups,
-)
+from core.progression.level_up import process_pending_level_ups
 from core.progression.xp_levels import (
     grant_experience,
     has_pending_level_up,
@@ -56,7 +53,7 @@ def test_level_up_preserves_excess_xp(
     )
     char = grant_experience(fighter_l1_hardcore, 1500)
     assert level_from_xp(char.experience) == 3
-    updated = resolve_pending_level_ups(char)
+    updated = process_pending_level_ups(char)
     assert updated.level == 3
     assert updated.experience == 1500
     assert xp_covers_level(updated.experience, updated.level)
@@ -103,7 +100,7 @@ def test_hp_gain_hardcore_floors_class_part_to_one(
     assert breakdown.total == 2  # +1 от Dwarven Toughness
 
 
-def test_resolve_pending_level_ups_matches_apply_experience(
+def test_process_pending_level_ups_applies_xp(
     monkeypatch: pytest.MonkeyPatch,
     fighter_l1_hardcore: Character,
 ) -> None:
@@ -117,14 +114,12 @@ def test_resolve_pending_level_ups_matches_apply_experience(
         )
 
     patch_rolls([8, 3])
-    via_resolve = resolve_pending_level_ups(grant_experience(char, 900))
-    patch_rolls([8, 3])
-    via_apply = apply_experience(char, 900)
-    assert via_resolve.level == via_apply.level == 3
-    assert via_resolve.max_hp == via_apply.max_hp == 22
+    updated = process_pending_level_ups(grant_experience(char, 900))
+    assert updated.level == 3
+    assert updated.max_hp == 22
 
 
-def test_resolve_pending_level_ups_records_asi_and_feat(
+def test_process_pending_level_ups_records_asi_and_feat(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     char = Character(
@@ -144,7 +139,7 @@ def test_resolve_pending_level_ups_records_asi_and_feat(
         "core.progression.hp.roll",
         lambda count, sides, modifier=0: 8 + modifier,
     )
-    updated = resolve_pending_level_ups(char)
+    updated = process_pending_level_ups(char)
     assert updated.level == 4
     assert updated.feat_ids == ["tough"]
 

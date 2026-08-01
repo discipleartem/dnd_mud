@@ -74,14 +74,6 @@ def resolve_feat_grants(
     return weapons, armors, tools, skills
 
 
-def get_feat_proficiency_grants(
-    feat_id: str,
-    choices: dict[str, Any] | None = None,
-) -> tuple[list[str], list[str], list[str], list[str]]:
-    """Владения из черты: (weapons, armors, tools, skills)."""
-    return resolve_feat_grants(feat_id, choices)
-
-
 def get_feat_proficiency_tokens(
     feat_ids: list[str],
     feat_choices: dict[str, dict[str, Any]] | None = None,
@@ -93,7 +85,7 @@ def get_feat_proficiency_tokens(
     tools: list[str] = []
     for feat_id in feat_ids:
         choices = feat_choices.get(feat_id, {})
-        w, a, t, _skills = get_feat_proficiency_grants(feat_id, choices)
+        w, a, t, _skills = resolve_feat_grants(feat_id, choices)
         weapons.extend(w)
         armors.extend(a)
         tools.extend(t)

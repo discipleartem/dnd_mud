@@ -153,12 +153,3 @@ def proficiency_tokens_and_skills_from_grant(
                 if sid in PHB_SKILL_IDS:
                     skills.append(sid)
     return weapons, armors, tools, skills
-
-
-def proficiency_tokens_from_grant(
-    grant: dict[str, Any],
-    choices: dict[str, Any] | None = None,
-) -> tuple[list[str], list[str], list[str]]:
-    """Оружие, доспехи и инструменты из grant."""
-    w, a, t, _ = proficiency_tokens_and_skills_from_grant(grant, choices)
-    return w, a, t

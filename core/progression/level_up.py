@@ -28,7 +28,7 @@ from core.progression.asi import (
     pending_asi_at_level,
 )
 from core.progression.hp import HpGainBreakdown, hp_gain_breakdown_for_level_up
-from core.progression.xp_levels import grant_experience, has_pending_level_up
+from core.progression.xp_levels import has_pending_level_up
 
 
 def apply_level_up(character: Character, hp_gain: int) -> Character:
@@ -213,13 +213,3 @@ def process_pending_level_ups(
             break
         char = apply_level_up(char, breakdown.total + con_bonus + tough_bonus)
     return char
-
-
-def resolve_pending_level_ups(character: Character) -> Character:
-    """Применить все ожидающие повышения без UI."""
-    return process_pending_level_ups(character)
-
-
-def apply_experience(character: Character, amount: int) -> Character:
-    """Добавить опыт и сразу применить все повышения уровня (без UI)."""
-    return resolve_pending_level_ups(grant_experience(character, amount))

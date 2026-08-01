@@ -21,7 +21,7 @@ from ui.menus.console import (
     SEPARATOR,
     ability_name,
     choice_prompt,
-    run_options_with_back,
+    run_numbered_menu,
     stats_total_line,
 )
 from ui.menus.display import (
@@ -195,7 +195,12 @@ def _confirm_stats(
     options = [get_string(strings, "character.stats_confirm")]
     if allow_reroll:
         options.append(get_string(strings, reroll_label_key))
-    choice = run_options_with_back(strings, options)
+    choice = run_numbered_menu(
+        strings,
+        options,
+        prompt_key="common.choice_prompt",
+        back_label_key="character.back",
+    )
     if choice is None:
         return "back"
     if choice == 2:

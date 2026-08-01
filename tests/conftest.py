@@ -12,11 +12,11 @@ import pytest
 @pytest.fixture
 def catalog_caches_cleared() -> Generator[None, None, None]:
     """Сбросить кэши каталогов до и после теста."""
-    from core.platform.catalog_loader import clear_all_catalog_caches
+    from core.platform.catalog_loader import reload_catalogs
 
-    clear_all_catalog_caches()
+    reload_catalogs()
     yield
-    clear_all_catalog_caches()
+    reload_catalogs()
 
 
 @pytest.fixture

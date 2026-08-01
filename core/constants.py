@@ -59,25 +59,6 @@ def proficiency_bonus(level: int) -> int:
     return _DEFAULT_PROFICIENCY_BONUS.get(level, 2)
 
 
-def difficulty_class(tier: str) -> int:
-    """Сл по имени tier (easy, medium, hard, …)."""
-    raw = _load_constants().get("difficulty_classes", {})
-    if isinstance(raw, dict):
-        value = raw.get(tier)
-        if isinstance(value, int):
-            return value
-    defaults = {
-        "trivial": 0,
-        "easy": 5,
-        "medium": 10,
-        "hard": 15,
-        "very_hard": 20,
-        "nearly_impossible": 25,
-        "impossible": 30,
-    }
-    return defaults.get(tier, 10)
-
-
 def ability_modifier(score: int) -> int:
     """Модификатор характеристики (PHB): таблица из YAML, clamp 1–30."""
     clamped = max(

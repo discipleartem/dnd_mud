@@ -109,15 +109,6 @@ def skill_check(
     return result
 
 
-def passive_skill(character: Character, skill_id: str) -> int:
-    """Пассивное значение навыка: 10 + модификатор проверки."""
-    ability_id = _skill_ability_id(skill_id)
-    modifier = ability_modifier_for_character(character, ability_id)
-    if _has_skill_proficiency(character, skill_id):
-        modifier += proficiency_bonus(character.level)
-    return 10 + modifier
-
-
 def saving_throw(
     character: Character,
     ability_id: str,
