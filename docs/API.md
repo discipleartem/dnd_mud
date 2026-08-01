@@ -494,11 +494,16 @@ Leaf-модули: `items`, `armor_class`, `equip_defaults`, `equipped_display`,
 add_items_to_inventory(inventory, new_items) -> list[dict]
 equip_defaults(character: Character) -> dict[str, Any]
 compute_ac(character: Character) -> int
-format_inventory_line(inventory, language="ru") -> str
+# core.inventory.equipment_text
+format_weapon_list_damage(weapon_id, language="ru") -> str
+format_armor_list_ac(armor_id, strings, language="ru") -> str
+format_item_list_hint(kind, item_id, strings, language="ru") -> str
 # core.inventory.equipped_display
 get_equipped_display(character, language="ru") -> dict[str, str]
 # core.inventory.background_equipment
 get_background_equipment_items(background_id, background_tool_picks=None) -> list
+# ui.menus.display.equipment_view
+format_inventory_line(inventory, language="ru", *, equipped=None) -> str
 ```
 
 ---
@@ -509,6 +514,7 @@ get_background_equipment_items(background_id, background_tool_picks=None) -> lis
 
 ```python
 get_class_starting_equipment_config(class_id: str) -> dict
+equipment_choice_label(choice_id, strings) -> str
 resolve_starting_items(class_id, choices, weapon_proficiencies, armor_proficiencies) -> list[dict]
 filter_available_options(class_id, weapon_proficiencies, armor_proficiencies) -> dict
 weapons_for_pool(pool: str, weapon_proficiencies: list[str]) -> list[str]

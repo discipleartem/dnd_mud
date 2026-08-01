@@ -57,6 +57,12 @@ STARTING_EQUIPMENT_SECTION_KEYS: dict[str, str] = {
 }
 
 
+def equipment_choice_label(choice_id: str, strings: StringsDict) -> str:
+    """Локализованная подпись группы выбора стартового снаряжения."""
+    label = get_string(strings, f"equipment_choice.{choice_id}", default="")
+    return label or choice_id
+
+
 def get_class_starting_equipment_config(class_id: str) -> dict[str, Any]:
     """Конфиг стартового снаряжения класса."""
     info = get_class_dict(class_id)

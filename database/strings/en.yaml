@@ -53,7 +53,7 @@ character:
   class_starting_equipment_choice: "      • {label}"
   equipment_caption: "CLASS STARTING EQUIPMENT"
   equipment_fixed_heading: "  Fixed gear:"
-  equipment_choice_heading: "Choice: {id}"
+  equipment_choice_heading: "Choice: {label}"
   equipment_option_prompt: "Choose option: "
   equipment_weapon_pick: "WEAPON CHOICE"
   equipment_weapon_prompt: "Choose weapon: "
@@ -465,6 +465,23 @@ armor_equipped_hint:
   heavy: "{category}, AC {ac}"
   strength: "Str {value}"
   stealth: "stealth disadvantage"
+
+armor_list_hint:
+  light: "AC {ac} + Dex"
+  medium: "AC {ac} + Dex, max 2"
+  heavy: "AC {ac}"
+  shield: "+{bonus} AC"
+
+equipment_choice:
+  melee: "melee"
+  ranged: "ranged"
+  armor: "armor"
+  weapon: "weapon"
+  weapon_primary: "primary weapon"
+  ranged_or_axes: "ranged or handaxes"
+  pack: "pack"
+  instrument: "instrument"
+  focus: "focus"
 
 weapon_property:
   light: "light"

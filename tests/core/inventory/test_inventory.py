@@ -423,6 +423,7 @@ def test_format_inventory_line_omits_equipped() -> None:
     inventory: list[InventoryItem] = [
         {"kind": "armor", "id": "leather", "qty": 1},
         {"kind": "weapon", "id": "rapier", "qty": 1},
+        {"kind": "weapon", "id": "dagger", "qty": 2},
         {"kind": "tool", "id": "lute", "qty": 1},
     ]
     equipped: EquippedState = {
@@ -433,4 +434,17 @@ def test_format_inventory_line_omits_equipped() -> None:
     line = format_inventory_line(inventory, "ru", equipped=equipped)
     assert "Кожаный доспех" not in line
     assert "Рапира" not in line
+    assert "Кинжал (1к4) ×2" in line
     assert "Лютня" in line
+
+
+def test_format_inventory_line_shows_weapon_and_armor_stats() -> None:
+    inventory: list[InventoryItem] = [
+        {"kind": "weapon", "id": "longsword", "qty": 1},
+        {"kind": "armor", "id": "chain_mail", "qty": 1},
+        {"kind": "armor", "id": "shield", "qty": 1},
+    ]
+    line = format_inventory_line(inventory, "ru")
+    assert "Длинный меч (1к8/1к10)" in line
+    assert "Кольчуга (КД 16)" in line
+    assert "Щит (+2 КД)" in line

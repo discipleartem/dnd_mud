@@ -83,6 +83,46 @@ def weapon_property_hint(
     )
 
 
+def format_weapon_list_damage(weapon_id: str, language: str = "ru") -> str:
+    """Кубы урона для списка: 1к8 или 1к8/1к10 (универсальное)."""
+    one_dice = format_dice_for_display(weapon_damage_dice(weapon_id), language)
+    if "versatile" not in weapon_properties_raw(weapon_id):
+        return one_dice
+    two_dice = format_dice_for_display(
+        weapon_versatile_dice(weapon_id), language
+    )
+    return f"{one_dice}/{two_dice}"
+
+
+def format_armor_list_ac(
+    armor_id: str, strings: StringsDict, language: str = "ru"
+) -> str:
+    """КД/бонус КД для списка снаряжения."""
+    cat = armor_category(armor_id)
+    info = load_armor(armor_id)
+    if cat == "shield":
+        bonus = int(info.get("armor_class_bonus", 2))
+        return get_string(strings, "armor_list_hint.shield", bonus=bonus)
+    if cat not in ("light", "medium", "heavy"):
+        return ""
+    ac = int(info.get("armor_class", 10))
+    return get_string(strings, f"armor_list_hint.{cat}", ac=ac)
+
+
+def format_item_list_hint(
+    kind: str,
+    item_id: str,
+    strings: StringsDict,
+    language: str = "ru",
+) -> str:
+    """Механика предмета для списка: кубы урона или КД."""
+    if kind == "weapon":
+        return format_weapon_list_damage(item_id, language)
+    if kind == "armor":
+        return format_armor_list_ac(item_id, strings, language)
+    return ""
+
+
 def armor_equipped_hint(
     armor_id: str, strings: StringsDict, language: str = "ru"
 ) -> str:

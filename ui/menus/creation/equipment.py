@@ -6,13 +6,16 @@ from typing import Any
 from colorama import Fore, Style
 
 from core.catalogs.equipment import (
+    format_item_list_hint,
     format_versatile_catalog_hint,
+    format_weapon_list_damage,
     get_tool_name,
     get_weapon_name,
     weapon_property_hint,
 )
 from core.inventory.starting_equipment import (
     all_weapons_in_pool,
+    equipment_choice_label,
     equipment_option_available,
     equipment_option_strength_warning,
     format_equipment_option_label,
@@ -67,16 +70,21 @@ def _format_weapon_menu_label(
     strings: StringsDict,
     language: str,
 ) -> str:
-    """Подпись оружия в меню: имя + свойства PHB серым."""
+    """Подпись оружия в меню: имя + кубы урона / свойства PHB серым."""
     name = get_weapon_name(weapon_id, language)
     line = format_pick_menu_label(name, proficient)
+    parts: list[str] = []
     catalog = format_versatile_catalog_hint(weapon_id, strings, language)
     if catalog:
-        line += f" {Fore.LIGHTBLACK_EX}({catalog}){Style.RESET_ALL}"
+        parts.append(catalog)
     else:
-        hint = weapon_property_hint(weapon_id, strings, language)
-        if hint:
-            line += f" {Fore.LIGHTBLACK_EX}({hint}){Style.RESET_ALL}"
+        parts.append(format_weapon_list_damage(weapon_id, language))
+    prop_hint = weapon_property_hint(weapon_id, strings, language)
+    if prop_hint:
+        parts.append(prop_hint)
+    if parts:
+        joined = ", ".join(parts)
+        line += f" {Fore.LIGHTBLACK_EX}({joined}){Style.RESET_ALL}"
     return line
 
 
@@ -165,7 +173,11 @@ def _pick_option_for_group(
         )
     ]
     print_screen_header(
-        get_string(strings, "character.equipment_choice_heading", id=choice_id)
+        get_string(
+            strings,
+            "character.equipment_choice_heading",
+            label=equipment_choice_label(choice_id, strings),
+        )
     )
     for opt in options:
         label = _format_equipment_menu_label(opt, strings, language, strength)
@@ -241,6 +253,9 @@ def select_creation_equipment(
                 from core.catalogs.equipment import get_equipment_item_name
 
                 name = get_equipment_item_name(item_id, language)
+            mech = format_item_list_hint(kind, item_id, strings, language)
+            if mech:
+                name = f"{name} ({mech})"
             line = f"  {Fore.CYAN}• {name}{Style.RESET_ALL}"
             if qty > 1:
                 line += f" {Fore.LIGHTBLACK_EX}×{qty}{Style.RESET_ALL}"
