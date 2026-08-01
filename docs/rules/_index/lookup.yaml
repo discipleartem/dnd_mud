@@ -3934,12 +3934,11 @@ by_alias:
   Волшебная Стрела: magic_missile
   волшебная стрела: magic_missile
   magic_mouth: magic_mouth
-  волшебные уста: magic_mouth
   Magic Mouth: magic_mouth
   magic mouth: magic_mouth
+  Волшебные Уста: magic_mouth
+  волшебные уста: magic_mouth
   major_image: magic_mouth
-  Major Image: magic_mouth
-  major image: magic_mouth
   magicheskiy_glaz: magicheskiy_glaz
   magicheskiy glaz: magicheskiy_glaz
   Магический Глаз: magicheskiy_glaz
@@ -4051,6 +4050,8 @@ by_alias:
   obraz: obraz
   Образ: obraz
   образ: obraz
+  Major Image: obraz
+  major image: obraz
   obshchenie: obshchenie
   Общение: obshchenie
   общение: obshchenie

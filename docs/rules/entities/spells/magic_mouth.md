@@ -8,10 +8,11 @@ phb_pages:
 quick: 2; illusion; 30 футов [ритуал] — сообщение на предмете по условию
 aliases:
 - magic_mouth
-- волшебные уста
 - Magic Mouth
+- magic mouth
+- Волшебные Уста
+- волшебные уста
 - major_image
-- Major Image
 level: 2
 school: illusion
 casting_time: 1 минута

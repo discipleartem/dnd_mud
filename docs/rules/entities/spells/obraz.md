@@ -10,6 +10,7 @@ quick: 3; illusion; 120 футов [конц.] — Вы не можете соз
 aliases:
 - obraz
 - Образ
+- Major Image
 level: 3
 school: illusion
 casting_time: 1 действие
