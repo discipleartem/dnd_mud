@@ -1,5 +1,6 @@
 """Требования и видимость черт при выборе."""
 
+from collections.abc import Callable
 from dataclasses import dataclass, field
 from typing import Any
 
@@ -9,7 +10,7 @@ from core.catalogs.skill_ids import PHB_SKILL_IDS
 from core.character.models import Character
 from core.feats.catalog import load_feat, load_feats
 from core.grants.context import CreationContext
-from core.grants.normalize import armor_tokens_from_grant
+from core.grants.normalize import proficiency_tokens_and_skills_from_grant
 from core.grants.resolve import resolve_grants_for_context
 from core.mechanics.proficiencies import (
     has_tool_proficiency,
@@ -181,10 +182,92 @@ def _any_new_tool(ctx: FeatRequirementContext, tool_ids: list[str]) -> bool:
 
 
 def _any_new_armor(ctx: FeatRequirementContext, grant: dict[str, Any]) -> bool:
-    armors = armor_tokens_from_grant(grant)
+    _, armors, _, _ = proficiency_tokens_and_skills_from_grant(grant)
     if not armors:
         return True
     return any(armor not in ctx.armor_tokens for armor in armors)
+
+
+def _grant_adds_new_bonus_proficiencies(
+    grant: dict[str, Any], ctx: FeatRequirementContext
+) -> bool:
+    """Новое владение из grant bonus_proficiencies."""
+    raw_w = grant.get("weapons", [])
+    weapons_listed = isinstance(raw_w, list) and bool(raw_w)
+    if grant.get("choice"):
+        weapons_new = _any_new_weapon(ctx, list(all_weapon_ids()))
+    elif weapons_listed:
+        weapons_new = _any_new_weapon(
+            ctx, [str(weapon_id) for weapon_id in raw_w]
+        )
+    else:
+        weapons_new = False
+    _, armors, _, _ = proficiency_tokens_and_skills_from_grant(grant)
+    armors_new = (
+        any(armor not in ctx.armor_tokens for armor in armors)
+        if armors
+        else False
+    )
+    if weapons_listed or grant.get("choice"):
+        return weapons_new or armors_new if armors else weapons_new
+    return armors_new if armors else True
+
+
+def _grant_adds_new_weapon_proficiency(
+    grant: dict[str, Any], ctx: FeatRequirementContext
+) -> bool:
+    """Новое владение из grant weapon_proficiency."""
+    if grant.get("choice"):
+        return _any_new_weapon(ctx, list(all_weapon_ids()))
+    weapons, _, _, _ = proficiency_tokens_and_skills_from_grant(grant)
+    if not weapons:
+        return True
+    return _any_new_weapon(ctx, weapons)
+
+
+def _grant_adds_new_skill_proficiency(
+    grant: dict[str, Any], ctx: FeatRequirementContext
+) -> bool:
+    """Новое владение из grant skill_proficiency."""
+    _, _, _, grant_skills = proficiency_tokens_and_skills_from_grant(grant)
+    if not grant_skills:
+        if grant.get("choice"):
+            return any(skill not in ctx.skills for skill in PHB_SKILL_IDS)
+        return True
+    return any(skill not in ctx.skills for skill in grant_skills)
+
+
+def _grant_adds_new_tool_proficiency(
+    grant: dict[str, Any], ctx: FeatRequirementContext
+) -> bool:
+    """Новое владение из grant tool_proficiency."""
+    if grant.get("choice"):
+        return _any_new_tool(ctx, list(all_tool_ids()))
+    _, _, tools, _ = proficiency_tokens_and_skills_from_grant(grant)
+    if not tools:
+        return True
+    return _any_new_tool(ctx, tools)
+
+
+def _grant_adds_new_multiple_proficiency(
+    grant: dict[str, Any], ctx: FeatRequirementContext
+) -> bool:
+    """Новое владение из grant multiple_proficiency."""
+    return any(skill not in ctx.skills for skill in PHB_SKILL_IDS) or (
+        _any_new_tool(ctx, list(all_tool_ids()))
+    )
+
+
+_GRANT_ADDS_NEW_PROFICIENCY_HANDLERS: dict[
+    str, Callable[[dict[str, Any], FeatRequirementContext], bool]
+] = {
+    "bonus_proficiencies": _grant_adds_new_bonus_proficiencies,
+    "armor_proficiency": lambda grant, ctx: _any_new_armor(ctx, grant),
+    "weapon_proficiency": _grant_adds_new_weapon_proficiency,
+    "skill_proficiency": _grant_adds_new_skill_proficiency,
+    "tool_proficiency": _grant_adds_new_tool_proficiency,
+    "multiple_proficiency": _grant_adds_new_multiple_proficiency,
+}
 
 
 def _grant_adds_new_proficiency(
@@ -194,65 +277,10 @@ def _grant_adds_new_proficiency(
     mtype = str(grant.get("type", ""))
     if mtype not in _PROFICIENCY_GRANT_TYPES:
         return True
-
-    match mtype:
-        case "bonus_proficiencies":
-            raw_w = grant.get("weapons", [])
-            weapons_listed = isinstance(raw_w, list) and bool(raw_w)
-            if grant.get("choice"):
-                weapons_new = _any_new_weapon(ctx, list(all_weapon_ids()))
-            elif weapons_listed:
-                weapons_new = _any_new_weapon(
-                    ctx, [str(weapon_id) for weapon_id in raw_w]
-                )
-            else:
-                weapons_new = False
-            armors = armor_tokens_from_grant(grant)
-            armors_new = (
-                any(armor not in ctx.armor_tokens for armor in armors)
-                if armors
-                else False
-            )
-            if weapons_listed or grant.get("choice"):
-                return weapons_new or armors_new if armors else weapons_new
-            return armors_new if armors else True
-        case "armor_proficiency":
-            return _any_new_armor(ctx, grant)
-        case "weapon_proficiency":
-            if grant.get("choice"):
-                return _any_new_weapon(ctx, list(all_weapon_ids()))
-            raw = grant.get("weapons", [])
-            if not isinstance(raw, list) or not raw:
-                return True
-            return _any_new_weapon(ctx, [str(weapon_id) for weapon_id in raw])
-        case "skill_proficiency":
-            grant_skills: list[str] = []
-            raw = grant.get("skills", [])
-            if isinstance(raw, list):
-                grant_skills.extend(str(skill) for skill in raw)
-            skill_one = grant.get("skill")
-            if isinstance(skill_one, str) and skill_one:
-                grant_skills.append(skill_one)
-            if not grant_skills:
-                if grant.get("choice"):
-                    return any(
-                        skill not in ctx.skills for skill in PHB_SKILL_IDS
-                    )
-                return True
-            return any(skill not in ctx.skills for skill in grant_skills)
-        case "tool_proficiency":
-            if grant.get("choice"):
-                return _any_new_tool(ctx, list(all_tool_ids()))
-            raw = grant.get("tools", [])
-            if not isinstance(raw, list) or not raw:
-                return True
-            return _any_new_tool(ctx, [str(tool_id) for tool_id in raw])
-        case "multiple_proficiency":
-            return any(skill not in ctx.skills for skill in PHB_SKILL_IDS) or (
-                _any_new_tool(ctx, list(all_tool_ids()))
-            )
-        case _:
-            return True
+    handler = _GRANT_ADDS_NEW_PROFICIENCY_HANDLERS.get(mtype)
+    if handler is None:
+        return True
+    return handler(grant, ctx)
 
 
 def feat_visible_for_selection(
@@ -275,35 +303,14 @@ def feat_visible_for_selection(
 # ============================================================================
 
 
-def _armor_requirement_met(
-    required: list[str], armor_tokens: list[str]
-) -> bool:
-    """Проверка владения доспехом для требования черты."""
-    return any(armor in armor_tokens for armor in required)
-
-
 def _requirement_met(
     req: dict[str, Any],
     ctx: FeatRequirementContext,
 ) -> bool:
     """Одно требование черты."""
-    rtype = req.get("type", "")
-    if rtype == "ability_score":
-        target = str(req.get("target", ""))
-        value = int(req.get("value", 0))
-        if target not in ctx.stats:
-            return False
-        return int(ctx.stats[target]) >= value
-    if rtype == "armor_proficiency":
-        raw = req.get("armors", [])
-        if isinstance(raw, list):
-            return _armor_requirement_met(
-                [str(a) for a in raw], ctx.armor_tokens
-            )
-        return False
-    if rtype == "spellcasting":
-        return ctx.has_spellcasting
-    return True
+    from core.feats.requirement_handlers import check_requirement
+
+    return check_requirement(req, ctx)
 
 
 def requirement_met(req: dict[str, Any], ctx: FeatRequirementContext) -> bool:
