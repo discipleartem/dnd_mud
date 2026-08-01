@@ -87,7 +87,6 @@ CORE_MODULE_TESTS: dict[str, list[str]] = {
         "tests/core/progression/test_class_features.py",
     ],
     "core/engine/game_engine.py": ["tests/core/engine/test_game_engine.py"],
-    "core/engine/combat/rolls.py": ["tests/core/engine/test_phase2_engine.py"],
 }
 
 CORE_PACKAGE_PREFIX_TESTS: list[tuple[str, list[str]]] = [
