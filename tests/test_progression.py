@@ -85,7 +85,7 @@ def test_hp_gain_hardcore_floors_class_part_to_one(
 ) -> None:
     """HardCore: прирост от кости + CON не опускается ниже 1."""
     monkeypatch.setattr(
-        "core.progression.roll",
+        "core.progression_hp.roll",
         lambda count, sides, modifier=0: 1 + modifier,
     )
     stats = {"constitution": 8}  # модификатор −1
@@ -107,7 +107,7 @@ def test_resolve_pending_level_ups_matches_apply_experience(
     def patch_rolls(values: list[int]) -> None:
         rolls = iter(values)
         monkeypatch.setattr(
-            "core.progression.roll",
+            "core.progression_hp.roll",
             lambda count, sides, modifier=0: next(rolls) + modifier,
         )
 
