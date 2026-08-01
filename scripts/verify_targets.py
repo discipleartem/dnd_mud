@@ -59,6 +59,9 @@ CORE_MODULE_TESTS: dict[str, list[str]] = {
     "core/inventory/starting_equipment.py": [
         "tests/core/inventory/test_starting_equipment.py"
     ],
+    "core/inventory/starting_equipment_labels.py": [
+        "tests/core/inventory/test_starting_equipment_labels.py"
+    ],
     "core/mechanics/proficiencies.py": [
         "tests/core/mechanics/test_proficiencies.py"
     ],

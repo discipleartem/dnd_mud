@@ -1,14 +1,11 @@
-"""Вывод grants (print-обёртки над core.grants.format)."""
+"""Вывод grants (print-обёртки над grants_text)."""
 
 from typing import Any
 
-from core.grants.format import (
-    format_grant_line_text,
-)
 from core.types import StringsDict
+from ui.menus.display.grants_text import format_grant_line_text
 
 __all__ = [
-    "format_grant_line_text",
     "_print_grant_line",
 ]
 

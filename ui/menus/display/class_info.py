@@ -12,7 +12,7 @@ from core.catalogs.equipment import (
     proficiency_token_label,
 )
 from core.character.models import Character
-from core.inventory.starting_equipment import (
+from core.inventory.starting_equipment_labels import (
     STARTING_EQUIPMENT_SECTION_KEYS,
     STARTING_EQUIPMENT_SECTION_ORDER,
     summarize_class_starting_equipment,
