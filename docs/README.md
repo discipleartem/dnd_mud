@@ -16,7 +16,7 @@
 
 | Файл | Назначение |
 |------|------------|
-| [`DND_RULES.md`](DND_RULES.md) | Оглавление PHB, глоссарий, режимы сложности; ссылки на `rules/` |
+| [`DND_RULES.md`](DND_RULES.md) | Статус реализации PHB в MUD + алгоритм поиска; механика — в `rules/` |
 | [`MUD_PRD.md`](MUD_PRD.md) | Требования к UI, flow создания персонажа, scope Pre-Alpha |
 | [`API.md`](API.md) | Публичные функции `core/` и контракты |
 | [`ARCHITECTURE.md`](ARCHITECTURE.md) | Слои UI / core / data, потоки данных |
@@ -27,11 +27,17 @@
 
 ## Справочник правил (`rules/`)
 
-Layout **`agent-v2`**. Точка входа для поиска — [`rules/_index/lookup.yaml`](rules/_index/lookup.yaml). Только механика PHB (без лора и без MUD-блоков в карточках).
+Layout **`agent-v2`**. Только механика PHB (без лора и без MUD-блоков в карточках).
+
+| Аудитория | Вход |
+|-----------|------|
+| Человек | [`rules/INDEX.md`](rules/INDEX.md) |
+| Агент | [`rules/_index/lookup.yaml`](rules/_index/lookup.yaml) → `by_alias` → `quick` → `file` |
 
 ```text
 docs/rules/
-  README.md           # guide для агентов
+  INDEX.md            # оглавление для людей
+  README.md           # guide + алгоритм для агентов
   toc.yaml            # каталог PHB
   chapters/           # обзорные главы 00–11
   entities/           # races, classes, backgrounds, spells, feats
@@ -42,7 +48,7 @@ docs/rules/
 
 | Действие | Где |
 |----------|-----|
-| Найти правило по RU-названию | `lookup.yaml` → `by_alias` → `quick` / `file` |
+| Найти правило по имени | `lookup.yaml` → `by_alias` → `quick` / `file` (канон — [`00-project.mdc`](../.cursor/rules/00-project.mdc) §D&D 5e) |
 | Обновить пересказ механики | Markdown-карточка + `quick`/`aliases`; guide — [`rules/README.md`](rules/README.md) |
 | Обновить индексы | Вручную: `toc.yaml`, `_index/*.yaml`, `lookup.yaml` |
 

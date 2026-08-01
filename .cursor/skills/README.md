@@ -2,10 +2,13 @@
 
 Индекс project skills. **Policy** — [`dnd-mud-workflow.mdc`](../rules/dnd-mud-workflow.mdc). **Оркестрация / loop** — [`AGENTS.md`](../../AGENTS.md).
 
+**Поиск правил PHB:** [`00-project.mdc`](../rules/00-project.mdc) §D&D 5e · [`AGENTS.md`](../../AGENTS.md) §Поиск правил · [`docs/rules/README.md`](../../docs/rules/README.md).
+
 | Слой | Где |
 |------|-----|
 | Policy | `dnd-mud-workflow.mdc` |
 | Loop / steps | `AGENTS.md` |
+| PHB lookup | `docs/rules/_index/lookup.yaml` |
 | Процедуры | skills ниже |
 
 ## Skills

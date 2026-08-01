@@ -38,7 +38,8 @@ description: >-
 |-----------|----------|
 | Публичные функции, модули `core/`, контракты | `docs/API.md` |
 | Слои, потоки данных, новые модули | `docs/ARCHITECTURE.md` |
-| D&D-механика, правила игры | `docs/DND_RULES.md`, `docs/rules/*.md` |
+| D&D-механика, правила игры | `docs/DND_RULES.md` (статус MUD); `docs/rules/` (+ `INDEX.md`, `lookup.yaml`, карточки) |
+| Алгоритм поиска PHB / agent guide | `.cursor/rules/00-project.mdc` §D&D 5e, `AGENTS.md`, `docs/rules/README.md` |
 | Продуктовые требования, scope | `docs/MUD_PRD.md` |
 | Заметные фичи / фиксы для пользователей | `docs/CHANGELOG.md` |
 | Workflow разработки, команды | `docs/DEVELOPMENT.md`, `.cursor/rules/dnd-mud-workflow.mdc` |
