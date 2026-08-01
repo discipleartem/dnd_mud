@@ -7,6 +7,12 @@ from core.equipment import (
     get_weapon_name,
     proficiency_token_label,
 )
+from core.grant_labels import (
+    grant_damage_string_key,
+    grant_pool_string_key,
+    grant_type_string_key,
+    spell_string_key,
+)
 from core.grants import (
     ABILITY_INCREASE,
     normalize_armor_token,
@@ -31,7 +37,7 @@ def _grant_type_label(strings: StringsDict, gtype: str) -> str:
     """Локализованное имя типа grant без поля name в YAML."""
     if not gtype:
         return ""
-    return get_string(strings, f"character.grant_type_{gtype}", default=gtype)
+    return get_string(strings, grant_type_string_key(gtype), default=gtype)
 
 
 def _grant_pool_label(
@@ -40,20 +46,8 @@ def _grant_pool_label(
     """Локализованная подпись пула выбора (all, common, …)."""
     if not pool:
         return ""
-    if pool == "all":
-        if gtype == "skill_proficiency":
-            return get_string(
-                strings,
-                "character.grant_pool_all_skills",
-                default=pool,
-            )
-        if gtype == "feat":
-            return get_string(
-                strings,
-                "character.grant_pool_all_feats",
-                default=pool,
-            )
-    direct = get_string(strings, f"character.grant_pool_{pool}", default="")
+    key = grant_pool_string_key(pool, gtype=gtype)
+    direct = get_string(strings, key, default="")
     if direct:
         return direct
     return pool
@@ -78,16 +72,14 @@ def _damage_type_labels(strings: StringsDict, types: list[Any]) -> str:
     for item in types:
         token = str(item)
         labels.append(
-            get_string(
-                strings, f"character.grant_damage_{token}", default=token
-            )
+            get_string(strings, grant_damage_string_key(token), default=token)
         )
     return ", ".join(labels)
 
 
 def _spell_name(strings: StringsDict, spell_id: str) -> str:
     """Локализованное имя заклинания."""
-    return get_string(strings, f"spells.{spell_id}", default=spell_id)
+    return get_string(strings, spell_string_key(spell_id), default=spell_id)
 
 
 def _spell_uses_label(strings: StringsDict, spell: dict[str, Any]) -> str:
