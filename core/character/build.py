@@ -4,13 +4,12 @@ from datetime import UTC, datetime
 
 from core.character.models import Character, parse_character_class
 from core.constants import clamp_level
-from core.grants.context import CreationContext, ResolvedGrants
-from core.grants.resolve import (
+from core.feats.grant_merge import (
     merge_expertise_with_feats,
     merge_languages_with_feats,
-    resolve_creation_grants,
-    resolve_grants_for_context,
+    resolve_grants_for_context_with_feats,
 )
+from core.grants.context import CreationContext
 from core.mechanics.stats import STANDARD_ARRAY, generate_stats_standard_array
 from core.progression.class_progression import start_level_for_difficulty
 from core.progression.hp import max_hp_for_level
@@ -87,7 +86,9 @@ def _resolve_proficiency_fields(
         feat_ids=tuple(params.feat_ids) if params.feat_ids else (),
         feat_choices=params.feat_choices,
     )
-    grants = resolve_grants_for_context(ctx, include_feat_languages=False)
+    grants = resolve_grants_for_context_with_feats(
+        ctx, include_feat_languages=False
+    )
     return (
         (
             list(grants.weapon_tokens)
@@ -224,12 +225,4 @@ def build_new_character(params: CharacterBuildParams) -> Character:
     return character
 
 
-__all__ = [
-    "build_new_character",
-    "CreationContext",
-    "ResolvedGrants",
-    "merge_expertise_with_feats",
-    "merge_languages_with_feats",
-    "resolve_creation_grants",
-    "resolve_grants_for_context",
-]
+__all__ = ["build_new_character"]

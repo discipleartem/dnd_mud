@@ -4,8 +4,8 @@ from unittest.mock import patch
 
 import pytest
 
-from core.character.build import resolve_creation_grants
 from core.character.models import Character
+from core.feats.grant_merge import resolve_creation_grants_with_feats
 from core.mechanics.checks import saving_throw, saving_throw_modifier
 from core.mechanics.proficiencies import get_class_saving_throws
 from core.types import CharacterClass
@@ -27,7 +27,7 @@ def test_class_saving_throws_yaml(class_id: str, expected: list[str]) -> None:
 
 
 def test_resolve_creation_grants_includes_saves() -> None:
-    grants = resolve_creation_grants(
+    grants = resolve_creation_grants_with_feats(
         "human",
         "standard",
         "fighter",
@@ -72,7 +72,7 @@ def test_saving_throw_with_dc() -> None:
 
 
 def test_resolve_creation_grants_resilient_save() -> None:
-    grants = resolve_creation_grants(
+    grants = resolve_creation_grants_with_feats(
         "human",
         "standard",
         "fighter",

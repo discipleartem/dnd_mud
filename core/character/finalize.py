@@ -4,7 +4,7 @@ from typing import Any
 
 from core.character.models import Character
 from core.character.storage import persist_character
-from core.grants.resolve import merge_languages_with_feats
+from core.feats.grant_merge import merge_languages_with_feats
 
 
 def merge_feat_languages_into(

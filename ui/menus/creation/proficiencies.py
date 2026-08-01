@@ -5,7 +5,7 @@ from typing import Any
 from colorama import Fore, Style
 
 from core.catalogs.equipment import get_tool_name, proficiency_token_label
-from core.grants.resolve import build_fixed_proficiencies
+from core.feats.grant_merge import resolve_creation_grants_with_feats
 from core.mechanics.proficiencies import (
     ProficiencyChoice,
     get_proficiency_choices,
@@ -157,7 +157,7 @@ def select_creation_proficiencies(
         subclass_id,
         start_level,
     )
-    weapons, armors, tools = build_fixed_proficiencies(
+    grants = resolve_creation_grants_with_feats(
         race_id,
         subrace_id,
         class_id,
@@ -166,7 +166,11 @@ def select_creation_proficiencies(
         start_level,
         feat_ids=feat_ids,
         feat_choices=feat_choices,
+        include_feat_languages=False,
     )
+    weapons = list(grants.weapon_tokens)
+    armors = list(grants.armor_tokens)
+    tools = list(grants.tool_tokens)
     if not choices:
         return weapons, armors, tools, []
 

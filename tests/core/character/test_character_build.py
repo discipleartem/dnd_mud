@@ -1,14 +1,13 @@
-"""Тесты core/character_build.py."""
+"""Тесты core/character/build и grant_merge."""
 
 import pytest
 
-from core.character.build import (
-    CreationContext,
-    ResolvedGrants,
+from core.feats.grant_merge import (
     merge_languages_with_feats,
-    resolve_creation_grants,
-    resolve_grants_for_context,
+    resolve_creation_grants_with_feats,
+    resolve_grants_for_context_with_feats,
 )
+from core.grants.context import CreationContext, ResolvedGrants
 from tests.creation_helpers import fighter_acolyte_creation
 
 pytestmark = pytest.mark.usefixtures("catalog_caches_cleared")
@@ -16,7 +15,7 @@ pytestmark = pytest.mark.usefixtures("catalog_caches_cleared")
 
 def test_resolve_creation_grants_fighter_human_acolyte() -> None:
     ctx = fighter_acolyte_creation()
-    grants = resolve_creation_grants(
+    grants = resolve_creation_grants_with_feats(
         ctx["race_id"],
         ctx["subrace_id"],
         ctx["class_id"],
@@ -32,7 +31,7 @@ def test_resolve_creation_grants_fighter_human_acolyte() -> None:
 
 
 def test_resolve_creation_grants_includes_feat_proficiencies() -> None:
-    grants = resolve_creation_grants(
+    grants = resolve_creation_grants_with_feats(
         "human",
         "standard",
         "fighter",
@@ -67,7 +66,7 @@ def test_resolve_grants_for_context_merges_extra_skills() -> None:
         level=ctx["level"],
         extra_skills=("athletics",),
     )
-    grants = resolve_grants_for_context(
+    grants = resolve_grants_for_context_with_feats(
         creation_ctx, include_feat_languages=False
     )
     assert "athletics" in grants.skill_ids

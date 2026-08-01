@@ -83,7 +83,7 @@ def creation_known_for_feat_picks(
     ctx = _creation_context(
         race_id, subrace_id, background_id, class_id, subclass_id, level
     )
-    grants = resolve_grants_for_context(ctx, include_feat_languages=False)
+    grants = resolve_grants_for_context(ctx)
     return (
         list(grants.skill_ids),
         list(grants.tool_tokens),
@@ -120,7 +120,7 @@ def build_feat_selection_context(
         weapon_tokens=weapon_tokens,
         tool_tokens=tool_tokens,
     )
-    grants = resolve_grants_for_context(ctx, include_feat_languages=False)
+    grants = resolve_grants_for_context(ctx)
     return FeatRequirementContext(
         stats=stats,
         weapon_tokens=list(grants.weapon_tokens),
